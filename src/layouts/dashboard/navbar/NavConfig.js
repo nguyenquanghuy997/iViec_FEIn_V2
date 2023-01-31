@@ -176,9 +176,8 @@ const sidebarConfig = [
           },
           {
             title: "Quy trình tuyển dụng",
-            path: "/settings/basic/companyinfor",
-            icon: ICONS.job,
-            roles: ROLES[PAGES.Jobs],
+            path: "/settings/pipeline",
+            roles: ROLES[PAGES.Pipeline],
           },
           {
             title: "Quy trình phê duyệt",
