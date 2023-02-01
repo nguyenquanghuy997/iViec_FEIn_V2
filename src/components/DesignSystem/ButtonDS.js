@@ -1,8 +1,8 @@
 import { View } from "../FlexStyled";
 import PropTypes from "prop-types";
 import { LoadingButton } from "@mui/lab";
-export const ButtonDS = (props) => {
-  const {size,isSubmitting,tittle,color ,type} = props;
+export default function ButtonDS(props) {
+  const {size,isSubmitting,tittle,color ,type,width} = props;
   
   return (
     <View>
@@ -13,7 +13,7 @@ export const ButtonDS = (props) => {
         type={type}
         size={size}
         style={{
-          width:255,
+          width:width,
           height:44,
           borderRadius: 6,
           backgroundColor: "#1976D2",
@@ -23,7 +23,7 @@ export const ButtonDS = (props) => {
       </LoadingButton>
       </View>
   );
-};
+}
 
 ButtonDS.prototype = {
   type:PropTypes.any,

@@ -1,10 +1,10 @@
 import Page from "@/components/Page";
+
 import {
   ButtonDS,
-} from "@/components/DesignSystem/ButtonDS";
-import {
   AvatarDS,
-} from "@/components/DesignSystem/AvatarDS";
+  DividerDS
+} from "@/components/DesignSystem";
 import { Container } from '@mui/material'
 import HeaderBreadcrumbs from '@/components/HeaderBreadcrumbs'
 import Box from '@mui/material/Box';
@@ -15,6 +15,9 @@ import {
   RHFTextField,
 } from "@/components/hook-form";
 import { useForm } from "react-hook-form";
+import {
+  LogoHeader
+} from "@/components/BaseComponents";
 export default function Jobs() {
   const defaultValues = {
     name: "",
@@ -32,6 +35,7 @@ export default function Jobs() {
         <HeaderBreadcrumbs
           heading={"Design systems"}
         />
+        <LogoHeader/>
         <ButtonDS
           size='large'
           tittle={'ĐĂNG NHẬP'}
@@ -50,6 +54,8 @@ export default function Jobs() {
           <RHFSwitch name={"isActive"} label={"Đang hoạt động"} />
           <RHFTextField name={"name"} />
         </FormProvider>
+        <DividerDS/>
+        
       </Container>
 
 
