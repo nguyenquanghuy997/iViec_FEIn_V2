@@ -5,17 +5,15 @@ import {
   RHFCheckbox,
   RHFTextField,
 } from "@/components/hook-form";
+import {
+  ButtonDS
+} from "@/components/DesignSystem/ButtonDS";
 // hooks
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
 import { PATH_AUTH } from "@/routes/paths";
 // form
 import { yupResolver } from "@hookform/resolvers/yup";
-// next
-// import NextLink from 'next/link'
-// import Link from 'next/link'
-// @mui
-import { LoadingButton } from "@mui/lab";
 import {
   Alert,
   IconButton,
@@ -125,16 +123,13 @@ export default function LoginForm() {
           </NextLink>
         </Typography>
       </Stack>
-
-      <LoadingButton
-        fullWidth
-        size="large"
+      <ButtonDS
+        size='large'
+        tittle={'ĐĂNG NHẬP'}
+        isSubmitting={isSubmitting}
         type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
-        ĐĂNG NHẬP
-      </LoadingButton>
+      />
+  
     </FormProvider>
   );
 }

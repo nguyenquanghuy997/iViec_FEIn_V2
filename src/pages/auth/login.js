@@ -34,19 +34,7 @@ export default function Login() {
     <GuestGuard>
       <Page title="Login">
         <RootStyle>
-          {/* {mdUp && (
-            <SectionStyle>
-              <Typography variant='h3' sx={{ px: 5, mt: 10, mb: 5 }}>
-                {translate('pages.login.welcome')}
-              </Typography>
-              <Image
-                visibleByDefault
-                disabledEffect
-                src='/assets/illustrations/illustration_login.png'
-                alt='login'
-              />
-            </SectionStyle>
-          )} */}
+   
 
           <Container maxWidth="sm">
             <ContentStyle>
@@ -70,13 +58,9 @@ export default function Login() {
                   <Typography variant="h4" gutterBottom>
                     ĐĂNG NHẬP
                   </Typography>
-                  {/* <Typography sx={{ color: 'text.secondary' }}>
-                  Doanh nghiệp của bạn chưa có tài khoản? Đăng ký ngay!
-                  </Typography> */}
                 </Box>
               </Stack>
               <LoginForm />
-
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                 Doanh nghiệp của bạn chưa có tài khoản?{" "}
                 <NextLink href={PATH_AUTH.register} passHref>
