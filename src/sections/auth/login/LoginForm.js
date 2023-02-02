@@ -6,8 +6,8 @@ import {
   RHFTextField,
 } from "@/components/hook-form";
 import {
-  ButtonDS
-} from "@/components/DesignSystem/ButtonDS";
+  ButtonDS,
+} from "@/components/DesignSystem";
 // hooks
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
@@ -87,9 +87,19 @@ export default function LoginForm() {
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
 
-        <RHFTextField name="email" label="Tên đăng nhập" />
+        <RHFTextField name="email" label="Tên đăng nhập" style={{
+            width:440,
+            height:44,
+        }}
+        sx={{ mb: 2 }} 
+        />
 
         <RHFTextField
+        style={{
+          width:440,
+          height:44
+      }}
+      sx={{ mb: 2}} 
           name="password"
           label="Mật khẩu"
           type={showPassword ? "text" : "password"}
@@ -114,16 +124,26 @@ export default function LoginForm() {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        sx={{ my: 2 }}
+        sx={{ my: 4 }}
+        
       >
-        <RHFCheckbox name="remember" label="Duy trì đăng nhập" />
-        <Typography variant="body2" align="center">
+        <RHFCheckbox name="remember" label="Duy trì đăng nhập" style={{
+            width:220,
+            height:20
+        }}
+        sx={{ ml: 1 }}
+        />
+        <Typography variant="body2" align="center" style={{
+            width:200,
+            height:20
+        }}>
           <NextLink href={PATH_AUTH.resetPassword} passHref>
             <Link variant="subtitle2">Quên mật khẩu </Link>
           </NextLink>
         </Typography>
       </Stack>
       <ButtonDS
+        width="440px"
         size='large'
         tittle={'ĐĂNG NHẬP'}
         isSubmitting={isSubmitting}
