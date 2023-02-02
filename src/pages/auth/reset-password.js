@@ -1,28 +1,32 @@
 // next
-import NextLink from 'next/link'
+// import NextLink from 'next/link'
 
 // @mui
-import { Button, Container, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import {Box} from '@mui/material'
+// import { Button, Container, Typography ,Box} from '@mui/material'
+// import { styled } from '@mui/material/styles'
 
 // components
 import Page from '@/components/Page'
 // layouts
 import Layout from '@/layouts'
 // routes
-import { PATH_AUTH } from '@/routes/paths'
+// import { PATH_AUTH } from '@/routes/paths'
 // sections
 import { ResetPasswordForm } from '@/sections/auth/reset-password'
-import Logo from "@/components/Logo";
-const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
-  margin: 'auto',
-  minHeight: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  padding: theme.spacing(12, 0),
-}))
+// import Logo from "@/components/Logo";
+import {
+  LogoHeader
+} from "@/components/BaseComponents";
+// const ContentStyle = styled('div')(({ theme }) => ({
+//   maxWidth: 480,
+//   margin: 'auto',
+//   minHeight: '100vh',
+//   display: 'flex',
+//   justifyContent: 'center',
+//   flexDirection: 'column',
+//   padding: theme.spacing(12, 0),
+// }))
 
 ResetPassword.getLayout = function getLayout(data, page) {
   return (
@@ -35,7 +39,11 @@ ResetPassword.getLayout = function getLayout(data, page) {
 export default function ResetPassword() {
   return (
     <Page title='Reset Password'>
-      <Container>
+       <LogoHeader />
+       <Box sx={{ padding: "36px", bgcolor: '#FDFDFD', boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)" }}>
+       <ResetPasswordForm />
+       </Box>
+      {/* <Container>
 
         <ContentStyle sx={{ textAlign: 'center' }}>
         <div
@@ -68,7 +76,7 @@ export default function ResetPassword() {
             </Button>
           </NextLink>
         </ContentStyle>
-      </Container>
+      </Container> */}
     </Page>
   )
 }

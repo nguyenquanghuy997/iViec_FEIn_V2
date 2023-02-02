@@ -134,7 +134,7 @@ export default function LoginForm() {
         sx={{ ml: 1 }}
         />
         <Typography variant="body2" align="center" style={{
-            width:220,
+            width:200,
             height:20
         }}>
           <NextLink href={PATH_AUTH.resetPassword} passHref>
