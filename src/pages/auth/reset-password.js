@@ -1,9 +1,10 @@
-// next
+// // next
 // import NextLink from 'next/link'
-
+// import SvgIcon from "@/components/SvgIcon";
 // @mui
-import {Box} from '@mui/material'
-// import { Button, Container, Typography ,Box} from '@mui/material'
+// import {Box} from '@mui/material'
+import GuestGuard from "@/guards/GuestGuard";
+import { Box, Stack, Typography } from "@mui/material";
 // import { styled } from '@mui/material/styles'
 
 // components
@@ -18,6 +19,7 @@ import { ResetPasswordForm } from '@/sections/auth/reset-password'
 import {
   LogoHeader
 } from "@/components/BaseComponents";
+import IconForgotPassword from '@/assets/icon_forgot_password'
 // const ContentStyle = styled('div')(({ theme }) => ({
 //   maxWidth: 480,
 //   margin: 'auto',
@@ -38,45 +40,41 @@ ResetPassword.getLayout = function getLayout(data, page) {
 
 export default function ResetPassword() {
   return (
+    <GuestGuard>
+
+   
     <Page title='Reset Password'>
-       <LogoHeader />
-       <Box sx={{ padding: "36px", bgcolor: '#FDFDFD', boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)" }}>
-       <ResetPasswordForm />
-       </Box>
-      {/* <Container>
+    <Box
+  position="fixed"
+  top={0}
+  height="100px"
+  width="100%"
+>
+<LogoHeader />
+</Box>
+<Box marginTop="136px">
+<Box    display="flex"
+          justifyContent="center"
+          alignItems="center">
+          <Box sx={{ maxHeight: 'calc(100% - 96px)',padding: "36px", bgcolor: '#FDFDFD', boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)" }}>
+     
+            <Stack display="flex"
+                justifyContent="center"
+                alignItems="center" sx={{ mb: 2 }}>
+          <IconForgotPassword/>
+              <Typography variant="h4" gutterBottom>
+                Quên mật khẩu
+              </Typography>
+            </Stack>
+            <ResetPasswordForm />
+  
+          </Box>
 
-        <ContentStyle sx={{ textAlign: 'center' }}>
-        <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingBottom: 20,
-                }}
-              >
-                <Logo />
-                <Typography variant="h4" gutterBottom sx={{ mt: 3 }}>
-                  IVIEC
-                </Typography>
-              </div>
-          <Typography variant='h3' paragraph>
-            QUÊN MẬT KHẨU
-          </Typography>
+        </Box>
+</Box>
+   
 
-          <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-          Nhập email và hệ thống sẽ gửi link tạo mật khẩu mới!
-          </Typography>
-
-          <ResetPasswordForm />
-
-          <NextLink href={PATH_AUTH.login} passHref>
-            <Button fullWidth size='large' sx={{ mt: 1 }}>
-              Quay Lại
-            </Button>
-          </NextLink>
-        </ContentStyle>
-      </Container> */}
     </Page>
+    </GuestGuard>
   )
 }

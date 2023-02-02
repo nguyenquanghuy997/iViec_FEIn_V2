@@ -24,12 +24,17 @@ Document
 -- Đối với các biến boolean sử dụng tiền tố 'is', 'are', 'has'
 --> example: isAction, areEqual, hasEncryption
 Quy tắc đặt tên branch.
--- Branch name convention: [ProjectName]-[TicketNumber]-[Initial]-[BranchName].
---> example: PT-01-feat/Home
+-- Branch name convention: [UserName]/Task
+--> example: thangtn/login
 Quy tắc đặt tên commit
--- feat: đây là 1 cái commit
--- fix: fix homeScreen sai UI
-Initial types: 'feat', 'fix', 'refactor', 'revert'
+[ProjectName]-[TicketNumber]/[tille]/[content]
+-ProjectName: PT
+-TicketNumber : task trên azudevops
+-tille :
+    -- feat: đây là 1 cái commit
+    -- fix: fix homeScreen sai UI
+    Initial types: 'feat', 'fix', 'refactor', 'revert'
+-content: nội dung commnit
 Quy trình chuyển task trong dự án
 Document
 
@@ -68,6 +73,6 @@ Clone this repo
 
 Link
 Admin https://iviec-inside.vercel.app
-Figma https://www.figma.com/file/FC5cMJZNUwagalfLEm8iOA/IVIEC-INSIDE-VERSION-3.0?node-id=2%3A121&t=hFd86OgPaViIyY1j-0
+Figma https://www.figma.com/files/team/1143803997256806376/iVIEC-Design-Hub?fuid=706899021609054164
 API Document https://sapi.iviec.vn/swagger/ui/index
-Task https://docs.google.com/spreadsheets/d/1IE7VJKz-1K14QX0v1ps1l5WuXYkuEXmwc8mJurAC3e0/edit#gid=948605022
+Task https://fptcloud.sharepoint.com/:x:/r/sites/iVIEC.vn/_layouts/15/Doc.aspx?sourcedoc=%7B221286A4-3CBE-421A-B539-E83DBBC72BE4%7D&file=IVIEC_V2.xlsx&action=default&mobileredirect=true&cid=548a53e1-ced7-4985-b99e-9853177e4840
