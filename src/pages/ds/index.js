@@ -15,9 +15,13 @@ import {
   RHFTextField,
 } from "@/components/hook-form";
 import { useForm } from "react-hook-form";
+<<<<<<< HEAD
+import { DropDown } from "@/components/DesignSystem/DropDown";
+=======
 import {
   LogoHeader
 } from "@/components/BaseComponents";
+>>>>>>> 57aa54743efbf9df515c3e43956097b48680998a
 export default function Jobs() {
   const defaultValues = {
     name: "",
@@ -44,7 +48,8 @@ export default function Jobs() {
         />
         <Box mt={2} />
         <AvatarDS linkAvatar={`https://www.elle.vn/wp-content/uploads/2017/07/25/hinh-anh-dep-1.jpg`} />
-
+        <br/>
+        <DropDown />
         <Box mt={2} />
         <FormProvider methods={methods}>
           <RHFCheckbox
