@@ -121,7 +121,7 @@ function AuthProvider({ children }) {
       "password": password,
     });
     const response = await _postApi(API_LOGIN, data);
-    console.log('response',response)
+
 //     var myHeaders = new Headers();
 // myHeaders.append("accept", "application/json");
 // myHeaders.append("Content-Type", "application/json-patch+json");
@@ -153,7 +153,6 @@ function AuthProvider({ children }) {
     };
 
     const user = await axios(config);
-    console.log('data',data)
     const userData = user?.data?.Data;
     setRememberMe(remember);
     setSession(response.token);
