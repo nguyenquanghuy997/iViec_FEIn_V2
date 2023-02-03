@@ -1,26 +1,20 @@
 // next
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-
-// @mui
-import { Box, IconButton, Link, Stack, Typography } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-
+import { IconRegisterSuccess } from "@/assets/icon_register_success";
 // component
 import { LogoHeader } from "@/components/BaseComponents";
 import Iconify from "@/components/Iconify";
 import Page from "@/components/Page";
-
 // guards
 import GuestGuard from "@/guards/GuestGuard";
-
 // routes
 import { PATH_AUTH } from "@/routes/paths";
-
 // sections
 import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
-import { ImageIcon } from "@/sections/auth/register/ImageIcon";
-
+import { LoadingButton } from "@mui/lab";
+// @mui
+import { Box, IconButton, Link, Stack, Typography } from "@mui/material";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 const ResultRegister = () => {
   const router = useRouter();
@@ -73,7 +67,7 @@ const ResultRegister = () => {
             <Stack justifyContent="center" alignItems="center">
               {/* Image */}
               <Stack sx={{ mb: 5 }}>
-                <ImageIcon />
+                <IconRegisterSuccess />
               </Stack>
               {/* Content */}
               <Stack>
