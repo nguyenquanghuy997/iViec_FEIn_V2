@@ -75,4 +75,16 @@ Link
 Admin https://iviec-inside.vercel.app
 Figma https://www.figma.com/files/team/1143803997256806376/iVIEC-Design-Hub?fuid=706899021609054164
 API Document https://sapi.iviec.vn/swagger/ui/index
-Task https://fptcloud.sharepoint.com/:x:/r/sites/iVIEC.vn/_layouts/15/Doc.aspx?sourcedoc=%7B221286A4-3CBE-421A-B539-E83DBBC72BE4%7D&file=IVIEC_V2.xlsx&action=default&mobileredirect=true&cid=548a53e1-ced7-4985-b99e-9853177e4840
+Task 
+
+
+// build code
+
+ssh -i iviec-dev.pem root@103.176.149.147
+
+pm2 start yarn --name "nextjs" --interpreter bash -- start
+
+git pull
+yarn install
+yarn build
+pm2 restart nextjs

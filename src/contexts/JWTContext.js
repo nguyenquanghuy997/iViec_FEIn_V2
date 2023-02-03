@@ -5,7 +5,6 @@ import { _postApi } from "@/utils/axios";
 import { setRefreshToken, setRememberMe, setSession } from "@/utils/jwt";
 import axios from "axios";
 import PropTypes from "prop-types";
-import * as qs from "qs";
 import { createContext, useEffect, useReducer } from "react";
 
 const initialState = {
@@ -72,7 +71,7 @@ function AuthProvider({ children }) {
 
         if (accessToken) {
           // const user = await getUserInfo(accessToken);
-          var data = qs.stringify({});
+          var data 
           var config = {
             method: "get",
             url: DOMAIN_SERVER_API + API_USER_INFO,
@@ -116,28 +115,48 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password, remember) => {
-    var data = qs.stringify({
-      grant_type: "password",
-      ip: "null",
-      password: password,
-      username: email,
+
+    var data = JSON.stringify({
+      "userName": email,
+      "password": password,
     });
     const response = await _postApi(API_LOGIN, data);
+    console.log('response',response)
+//     var myHeaders = new Headers();
+// myHeaders.append("accept", "application/json");
+// myHeaders.append("Content-Type", "application/json-patch+json");
 
-    var data = qs.stringify({});
+// var raw = JSON.stringify({
+//   "userName": "quy.vu.0101@gmail.com",
+//   "password": "Abcd@2021"
+// });
+
+// var requestOptions = {
+//   method: 'POST',
+//   headers: myHeaders,
+//   body: raw,
+//   redirect: 'follow'
+// };
+
+// fetch("http://103.176.149.158:5001/api/identity/Identity/Login", requestOptions)
+//   .then(response => response.text())
+//   .then(result => console.log(result))
+//   .catch(error => console.log('error', error));
+
+
     var config = {
       method: "get",
       url: DOMAIN_SERVER_API + API_USER_INFO,
       headers: {
-        Authorization: "Bearer " + response.access_token,
+        Authorization: "Bearer " + response.token,
       },
-      data: data,
     };
 
     const user = await axios(config);
+    console.log('data',data)
     const userData = user?.data?.Data;
     setRememberMe(remember);
-    setSession(response.access_token);
+    setSession(response.token);
     //set access_token to Cookie
     // let expires = new Date()
     // expires.setTime(expires.getTime() + (response.expires_in * 1000))
