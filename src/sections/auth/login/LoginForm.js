@@ -46,8 +46,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: "FTI.iVIEC@gmail.com",
-    password: "mk1.iviec@1234",
+    email: "quy.vu.0101@gmail.com",
+    password: "Abcd@2021",
     // email: "",
     // password: "",
     remember: true,

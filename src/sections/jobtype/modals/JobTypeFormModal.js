@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-const Editor = dynamic(() => import("../../../sections/companyinfor/editor"), {
+const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
   ssr: false,
 });
 

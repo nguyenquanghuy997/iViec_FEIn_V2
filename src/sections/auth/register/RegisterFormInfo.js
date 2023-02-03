@@ -1,12 +1,23 @@
 // react
-import { useEffect, useState } from "react";
-
-// next
-import NextLink from "next/link";
-
-import * as qs from "qs";
-import * as Yup from "yup";
-import { useForm } from "react-hook-form";
+// components
+import { RegisterFormSectionLabel } from ".";
+import { STYLE_CONSTANT } from "./constants";
+import Iconify from "@/components/Iconify";
+import {
+  FormProvider,
+  RHFBasicSelect,
+  RHFCheckbox,
+  RHFTextField,
+} from "@/components/hook-form";
+// hooks
+import { PATH_AUTH } from "@/routes/paths";
+import {
+  useLazyGetDistrictByProvinceIdQuery,
+  useLazyGetProvinceQuery,
+  useRegisterMutation,
+} from "@/sections/auth/authSlice";
+import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
+import { LIST_BRANCH_SIZE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
 // @mui
 import { LoadingButton } from "@mui/lab";
@@ -19,40 +30,26 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
-// components
-import { RegisterFormSectionLabel } from ".";
-import Iconify from "@/components/Iconify";
-import {
-  FormProvider,
-  RHFBasicSelect,
-  RHFCheckbox,
-  RHFTextField,
-} from "@/components/hook-form";
-// hooks
-import { PATH_AUTH } from "@/routes/paths";
-import { useRegisterMutation } from "@/sections/auth/authSlice";
-import {
-  useGetJobCategoriesQuery,
-  useGetProviceMutation,
-} from "@/sections/companyinfor/companyInforSlice";
-import { LIST_BRANCH_SIZE } from "@/utils/formatString";
-
-import { STYLE_CONSTANT } from "./constants";
+// next
+import NextLink from "next/link";
+import * as qs from "qs";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
 
 const InputStyle = { width: 440, minHeight: 44 };
 
 export default function RegisterForm({}) {
-  const [fetchProvice, { data: { DataList: ProviceList = [] } = {} }] =
-    useGetProviceMutation();
-  const { data: { DataList: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
-  useEffect(() => {
-    fetchProvice().unwrap();
-  }, []);
-  const [postRegister] = useRegisterMutation();
-
-  const [showPassword, setShowPassword] = useState(false);
+  const defaultValues = {
+    companyEmail: "",
+    companyPhoneNumber: "",
+    companyDistrictId: "",
+    companyProvinceId: "",
+    password: "",
+    rePassword: "",
+    companyName: "",
+    acceptTerms: true,
+  };
 
   const RegisterSchema = Yup.object().shape({
     companyPhoneNumber: Yup.string()
@@ -80,25 +77,24 @@ export default function RegisterForm({}) {
     ),
   });
 
-  const defaultValues = {
-    companyEmail: "",
-    companyPhoneNumber: "",
-    password: "",
-    rePassword: "",
-    companyName: "",
-    acceptTerms: true,
-  };
-
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
     defaultValues,
   });
+
+  const [postRegister] = useRegisterMutation();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     handleSubmit,
     watch,
     formState: { isSubmitting, errors },
   } = methods;
+
+  const watchHasEmailValue = watch("companyEmail");
+  const watchProvinceId = watch("companyProvinceId");
+
   const onSubmit = async (data) => {
     try {
       const body = {
@@ -119,12 +115,24 @@ export default function RegisterForm({}) {
     }
   };
 
-  const watchHasEmailValue = watch("companyEmail");
-
   const handleClearField = (field) => {
     if (!field) return;
     else methods.resetField(field);
   };
+
+  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] = useLazyGetProvinceQuery();
+  const [getDistrictByProvinceId, { data: { items: DistrictList = [] } = {} }] = useLazyGetDistrictByProvinceIdQuery();
+  const { data: { items: JobCategoryList = [] } = {} } = useGetJobCategoriesQuery();
+
+  useEffect(() => {
+    fetchProvice().unwrap();
+  }, []);
+
+  useEffect(() => {
+    if (watchProvinceId) {
+      getDistrictByProvinceId(watchProvinceId).unwrap();
+    }
+  }, [watchProvinceId]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -177,7 +185,9 @@ export default function RegisterForm({}) {
                         >
                           <Iconify
                             icon={
-                              showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"
+                              showPassword
+                                ? "ic:outline-remove-red-eye"
+                                : "mdi:eye-off-outline"
                             }
                           />
                         </IconButton>
@@ -216,7 +226,9 @@ export default function RegisterForm({}) {
                         >
                           <Iconify
                             icon={
-                              showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"
+                              showPassword
+                                ? "ic:outline-remove-red-eye"
+                                : "mdi:eye-off-outline"
                             }
                           />
                         </IconButton>
@@ -236,7 +248,7 @@ export default function RegisterForm({}) {
             >
               <Stack>
                 <RHFTextField
-                  name="branchName"
+                  name="companyName"
                   placeholder="Bắt buộc"
                   label="Tên doanh nghiệp"
                   required
@@ -289,27 +301,29 @@ export default function RegisterForm({}) {
             >
               <Stack>
                 <RHFBasicSelect
-                  name="city"
+                  name="companyProvinceId"
                   label="Tỉnh/Thành phố"
                   placeholder="Bắt buộc"
                   required
                   style={{ ...InputStyle }}
-                  options={ProviceList.map((i) => ({
-                    value: i.ID,
-                    label: i.ProvinceName,
+                  options={ProviceList?.map((i) => ({
+                    value: i?.id,
+                    label: i?.name,
+                    slug: i?.slug,
                   }))}
                 />
               </Stack>
               <Stack>
                 <RHFBasicSelect
-                  name="district"
+                  name="companyDistrictId"
                   label="Quận/Huyện"
                   placeholder="Bắt buộc"
                   required
                   style={{ ...InputStyle }}
-                  options={ProviceList.map((i) => ({
-                    value: i.ID,
-                    label: i.ProvinceName,
+                  options={DistrictList?.map((i) => ({
+                    value: i?.id,
+                    label: i?.name,
+                    slug: i?.slug,
                   }))}
                 />
               </Stack>

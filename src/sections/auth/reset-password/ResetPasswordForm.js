@@ -6,7 +6,10 @@ import { useForgotPasswordMutation } from "@/sections/auth/authSlice";
 // form
 import { yupResolver } from "@hookform/resolvers/yup";
 // @mui
-import { LoadingButton } from "@mui/lab";
+import {
+  ButtonDS,
+} from "@/components/DesignSystem";
+// import { LoadingButton } from "@mui/lab";
 import { Stack } from "@mui/material";
 import * as qs from "qs";
 import { useForm } from "react-hook-form";
@@ -48,9 +51,15 @@ export default function ResetPasswordForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email address" />
-
-        <LoadingButton
+        <RHFTextField name="email" label="Nhập Email muốn khôi phục mật khẩu" />
+        <ButtonDS
+        width="440px"
+        size='large'
+        tittle={'Khôi phục mật khẩu'}
+        isSubmitting={isSubmitting}
+        type="submit"
+      />
+        {/* <LoadingButton
           fullWidth
           size="large"
           type="submit"
@@ -58,7 +67,7 @@ export default function ResetPasswordForm() {
           loading={isSubmitting}
         >
           Đăng ký tạo mật khẩu mới
-        </LoadingButton>
+        </LoadingButton> */}
       </Stack>
     </FormProvider>
   );
