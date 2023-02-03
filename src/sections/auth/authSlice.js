@@ -1,5 +1,10 @@
 import { apiSlice } from "@/redux/api/apiSlice";
-import { API_FORGET_PASSWORD, API_REGISTER } from "@/routes/api";
+import {
+  API_FORGET_PASSWORD,
+  API_GET_DISTRICT,
+  API_GET_PROVINCE,
+  API_REGISTER,
+} from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["Auth"],
@@ -23,7 +28,30 @@ export const authSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["Register"],
     }),
+    // get province & district
+    getProvince: builder.query({
+      query: () => ({
+        url: `${API_GET_PROVINCE}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["Provinces"],
+    }),
+    getDistrictByProvinceId: builder.query({
+      query: (provinceId) => ({
+        url: `${API_GET_DISTRICT}`,
+        method: "GET",
+        params: { ProvinceId: provinceId },
+      }),
+      invalidatesTags: ["Districts"],
+    }),
   }),
 });
 
-export const { useForgotPasswordMutation, useRegisterMutation } = authSlice;
+export const {
+  useForgotPasswordMutation,
+  useRegisterMutation,
+  useGetProvinceQuery,
+  useLazyGetProvinceQuery,
+  useGetDistrictByProvinceIdQuery,
+  useLazyGetDistrictByProvinceIdQuery,
+} = authSlice;
