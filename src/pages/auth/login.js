@@ -16,10 +16,13 @@ export default function Login() {
     <GuestGuard>
       <Page title="Login">
         <LogoHeader />
-        <Box mt={"36px"} mb={"36px"} display="flex"
+        <Box mt={"36px"} mb={"36px"} 
+          display="flex"
           justifyContent="center"
-          alignItems="center">
-          <Box sx={{ padding: "36px", bgcolor: '#FDFDFD', boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)" }}>
+          alignItems="center"
+
+          >
+          <Box sx={{maxHeight: 'calc(100% - 0px)', padding: "36px", bgcolor: '#FDFDFD', boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)" }}>
             <Stack direction="row" alignItems="center" sx={{ mb: 2 }}>
               <Typography variant="h4" gutterBottom>
                 ĐĂNG NHẬP

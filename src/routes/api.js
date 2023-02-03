@@ -62,8 +62,9 @@ export const API_LIST_TAGS = "/api/v1/tags";
 export const API_JOB_REMOVE_ASSIGNMENT = "/api/remove/assignment";
 
 // New API
-export const API_LOGIN = "/token";
-export const API_USER_INFO = "/api/Users/GetUserInfo";
+export const API_LOGIN = "/identity/Identity/Login"; //new
+
+export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 //auth
 export const API_FORGET_PASSWORD = "/api/Users/ForgetPassword";
 export const API_REGISTER = "api/Users/Register";
@@ -149,3 +150,4 @@ export const API_GET_PREVIEW_JOBTYPE = "JobType/GetJobTypeById";
 export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
 export const API_ADD_JOBTYPE = "JobType/CreateNewJobType";
 export const API_UPDATE_JOBTYPE = "JobType/UpdateJobType";
+

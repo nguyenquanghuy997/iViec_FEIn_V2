@@ -11,7 +11,7 @@ export default function LogoHeader() {
 
     return (
         <View bgColor="#FDFDFD" width={"100%"}>
-            <Box mt={"28px"} display="flex"
+            <Box  display="flex"
                 justifyContent="center"
                 alignItems="center"
                 minHeight="100px"
@@ -21,7 +21,7 @@ export default function LogoHeader() {
             </Box>
 
 
-            <Box mb={"28px"} />
+            {/* <Box mb={"28px"} /> */}
             <Divider color="#FDFDFD" sx={{ boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)" }} />
         </View>
     );
