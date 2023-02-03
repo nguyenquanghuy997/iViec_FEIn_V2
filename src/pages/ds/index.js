@@ -26,7 +26,7 @@ export default function Jobs() {
   };
   const methods = useForm({
     defaultValues,
-    // resolver: yupResolver(Schema),
+
   });
   return (
     <Page title={"Design systems"}>
