@@ -1,29 +1,101 @@
 // @mui
-import { TextField } from '@mui/material'
-
-import PropTypes from 'prop-types'
+import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
+import { InputLabel, Stack, TextField } from "@mui/material";
+import PropTypes from "prop-types";
 // form
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from "react-hook-form";
 
-RHFTextField.propTypes = {
-  name: PropTypes.string,
-}
+const InputLabelStyle = {
+  fontSize: STYLE_CONSTANT.FONT_SM,
+  color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
+  fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+  marginBottom: 1,
+};
 
-export default function RHFTextField({ name, ...other }) {
-  const { control } = useFormContext()
+const InputLabelErrorStyle = {
+  color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
+};
 
+const sxDefault = {
+  ".MuiInputBase-root": {
+    height: "44px",
+    fontSize: STYLE_CONSTANT.FONT_SM,
+    borderRadius: 0.75,
+    width: STYLE_CONSTANT.WIDTH_FULL,
+  },
+  ".MuiInputBase-root.Mui-error": {
+    height: "44px",
+    fontSize: STYLE_CONSTANT.FONT_SM,
+    borderRadius: 0.75,
+    width: STYLE_CONSTANT.WIDTH_FULL,
+  },
+  ".MuiInputBase-input": {
+    height: "44px",
+    py: "0 !important",
+  },
+  ".MuiFormHelperText-root": {
+    marginTop: 1,
+    marginLeft: 0,
+    fontSize: STYLE_CONSTANT.FONT_XS,
+    color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
+  },
+};
+
+export default function RHFTextField({ name, ...props }) {
+  const { control } = useFormContext();
+  const { htmlFor, required, label, placeholder, hasLabel = true, sx } = props;
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <TextField
-          {...field}
-          error={!!error}
-          helperText={error?.message}
-          {...other}
-        />
+        <Stack>
+          {hasLabel && (
+            <InputLabel
+              htmlFor={htmlFor || name}
+              required={required}
+              sx={
+                error
+                  ? { ...InputLabelStyle, ...InputLabelErrorStyle }
+                  : { ...InputLabelStyle }
+              }
+            >
+              {label}
+            </InputLabel>
+          )}
+          <TextField
+            fullWidth
+            {...field}
+            id={name}
+            error={!!error}
+            {...props}
+            helperText={error?.message}
+            required={false}
+            hiddenLabel={!hasLabel}
+            label={hasLabel ? null : label}
+            sx={sx ? sx : sxDefault}
+            placeholder={placeholder || label}
+          />
+        </Stack>
       )}
     />
-  )
+  );
 }
+
+RHFTextField.propTypes = {
+  name: PropTypes.string,
+  htmlFor: PropTypes.string,
+  required: PropTypes.bool,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  sx: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+};
+
+RHFTextField.defaultProps = {
+  name: "",
+  htmlFor: "",
+  required: false,
+  label: "",
+  placeholder: "",
+  sx: sxDefault,
+};
