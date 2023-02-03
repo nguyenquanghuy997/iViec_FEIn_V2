@@ -22,6 +22,19 @@ export default function RHFTextField({ name, ...other }) {
           fullWidth
           error={!!error}
           helperText={error?.message}
+          placeholder
+          sx={{
+            input: {
+              fontFamily: 'Inter',
+              '&::placeholder': {
+                textOverflow: 'ellipsis !important',
+                color: '#8A94A5',
+                fontWeight: '400',
+                fontSize: '14px',
+                fontFamily: 'Inter',
+              }
+            }
+          }}
           {...other}
         />
       )}

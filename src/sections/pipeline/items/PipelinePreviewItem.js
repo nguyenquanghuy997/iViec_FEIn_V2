@@ -1,5 +1,5 @@
 import { Text, View } from "@/components/FlexStyled";
-import SvgIcon from "@/components/SvgIcon";
+
 
 export const PipelinePreviewItem = ({ data, index }) => {
   const renderItemPoint = (_, index) => {
@@ -13,20 +13,7 @@ export const PipelinePreviewItem = ({ data, index }) => {
     );
   };
 
-  const renderItemResult = (item, index) => {
-    return (
-      <View flex1 flexRow jcCenter atCenter pv={10} onPress={() => {}}>
-        {!!index && (
-          <View absolute l={0} width={1} height={"100%"} bgColor={"#C9D9E0"} />
-        )}
-        <SvgIcon>{item.icon}</SvgIcon>
 
-        <Text ml={12} lineHeight={20 / 12}>
-          {item.name}
-        </Text>
-      </View>
-    );
-  };
 
   return (
     <>
@@ -66,7 +53,7 @@ export const PipelinePreviewItem = ({ data, index }) => {
         </View>
       </View>
 
-      <View p={16} mt={24} borderRadius={6} bgColor={"#F1F5F8"}>
+      {/* <View p={16} mt={24} borderRadius={6} bgColor={"#F1F5F8"}>
         <Text flexRow atCenter fontSize={17} fontWeight={"700"}>
           {"Kết luận"}
           <Text ml={4} color={"#E82E25"}>
@@ -103,7 +90,7 @@ export const PipelinePreviewItem = ({ data, index }) => {
             <Text color={"#929292"}>{"Nhập nội dung đánh giá"}</Text>
           </View>
         </View>
-      </View>
+      </View> */}
     </>
   );
 };

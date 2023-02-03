@@ -93,6 +93,13 @@ export default function LoginForm() {
           name="password"
           label="Mật khẩu"
           type={showPassword ? "text" : "password"}
+          sx={{
+            input: {
+              "&::-ms-reveal": {
+                display: "none",
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

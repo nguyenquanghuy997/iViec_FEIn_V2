@@ -4,11 +4,10 @@ import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Modal } from "@mui/material";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-const defaultValues = {
+const defaultValuess = {
   name: "",
   des: "",
 };
@@ -27,17 +26,18 @@ export const PipelineAddModal = ({
     name: Yup.string().required("Chưa nhập tiêu chí đánh giá"),
     des: Yup.string(),
   });
-  const methods = useForm({
-    defaultValues,
+  const methodss = useForm({
+    defaultValuess,
     resolver: yupResolver(ProfileSchema),
   });
-  const { setValue, handleSubmit } = methods;
+  const { handleSubmit } = methodss;
 
   const pressHide = () => {
     setShow(false);
   };
 
   const pressSave = handleSubmit((d) => {
+    debugger
     onSubmit?.(d);
     pressHide();
   });
@@ -47,18 +47,7 @@ export const PipelineAddModal = ({
     pressHide();
   };
 
-  useEffect(() => {
-    if (!show) {
-      setValue("name", defaultValues.name);
-      setValue("des", defaultValues.des);
-      return;
-    }
 
-    if (!isEdit) return;
-
-    setValue("name", editData.name);
-    setValue("des", editData.des);
-  }, [show]);
 
   return (
     <Modal
@@ -66,7 +55,7 @@ export const PipelineAddModal = ({
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       onBackdropClick={pressHide}
     >
-      <FormProvider methods={methods}>
+      <FormProvider methods={methodss}>
         <View hidden width={668} borderRadius={8} bgColor={"#fff"}>
           <View p={24}>
             <View flexRow atCenter mb={24}>
