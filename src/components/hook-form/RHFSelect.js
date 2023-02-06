@@ -18,7 +18,15 @@ const InputLabelErrorStyle = {
 
 export default function RHFSelect({ name, children, ...props }) {
   const { control } = useFormContext();
-  const { hasLabel = true, htmlFor, required, label, placeholder, sx } = props;
+  const {
+    hasLabel = true,
+    htmlFor,
+    required,
+    label,
+    placeholder,
+    sx,
+    multiple = false,
+  } = props;
   return (
     <Controller
       name={name}
@@ -43,7 +51,7 @@ export default function RHFSelect({ name, children, ...props }) {
             select
             id={name}
             fullWidth
-            SelectProps={{ native: true }}
+            SelectProps={{ native: true, multiple: multiple }}
             error={!!error}
             {...props}
             helperText={error?.message}
