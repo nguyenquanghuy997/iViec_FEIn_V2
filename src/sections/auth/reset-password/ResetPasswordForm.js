@@ -1,4 +1,4 @@
-// next
+
 // components
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 // routes
@@ -10,8 +10,7 @@ import {
   ButtonDS,
 } from "@/components/DesignSystem";
 // import { LoadingButton } from "@mui/lab";
-import { Stack } from "@mui/material";
-import * as qs from "qs";
+import { Stack,Alert } from "@mui/material";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -19,8 +18,8 @@ export default function ResetPasswordForm() {
   const [forgotPassword] = useForgotPasswordMutation();
   const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
+    .email("Email không đúng định dạng")
+    .required("Email không được bỏ trống"),
   });
 
   const methods = useForm({
@@ -28,29 +27,31 @@ export default function ResetPasswordForm() {
     defaultValues: { email: "" },
   });
   const {
+    setError,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const body = {
-        Email: data.email,
-        FullName: "thang",
-      };
-      await forgotPassword(qs.stringify(body)).unwrap();
-      // sessionStorage.setItem('email-recovery', data.email)
-
-      // push(PATH_AUTH.newPassword)
+      var body = JSON.stringify({
+        "userName": data.email,
+      });
+      await forgotPassword(body).unwrap();
     } catch (error) {
-      // TODO
+      const message =
+      error?.status
+      setError("afterSubmit", { ...error, message });
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
+        {!!errors.afterSubmit && (
+          <Alert severity="error">{errors.afterSubmit.message}</Alert>
+        )}
         <RHFTextField name="email" label="Nhập Email muốn khôi phục mật khẩu" />
         <ButtonDS
         width="440px"
@@ -59,15 +60,6 @@ export default function ResetPasswordForm() {
         isSubmitting={isSubmitting}
         type="submit"
       />
-        {/* <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-        >
-          Đăng ký tạo mật khẩu mới
-        </LoadingButton> */}
       </Stack>
     </FormProvider>
   );

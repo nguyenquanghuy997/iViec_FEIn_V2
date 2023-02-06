@@ -66,7 +66,7 @@ export const API_LOGIN = "/identity/Identity/Login"; //new
 
 export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 //auth
-export const API_FORGET_PASSWORD = "/api/Users/ForgetPassword";
+export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword"; //new
 export const API_REGISTER = "api/Users/Register";
 // Common
 
