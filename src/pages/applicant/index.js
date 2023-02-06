@@ -53,7 +53,7 @@ export default function Setting() {
 
         {/* button add */}
         
-        <Link href={PATH_DASHBOARD.dashboard.view('123')} passHref>
+        <Link href={PATH_DASHBOARD.applicant.view('123')} passHref>
           <LinkRootStyle>
           <View
           flexRow
