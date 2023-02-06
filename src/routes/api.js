@@ -153,3 +153,13 @@ export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
 export const API_ADD_JOBTYPE = "JobType/CreateNewJobType";
 export const API_UPDATE_JOBTYPE = "JobType/UpdateJobType";
 
+// Pipeline
+export const API_GET_ALL_PIPELINE = "api/Pipeline/PipelineSearchPaging";
+export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm";
+export const API_ADD_PIPELINE = "ReviewForm/InsertReviewForm";
+export const API_UPDATE_PIPELINE = "ReviewForm/UpdateReviewForm";
+export const API_DELETE_PIPELINE = "ReviewForm/DeleteReviewForm";
+
+// Ứng viên
+export const API_GET_ALL_SEARCH = "api/Applicants/GetAllSearch";
+export const API_GET_APPLICANT_BY_ID = "ApplicantApply/GetApplicantById";

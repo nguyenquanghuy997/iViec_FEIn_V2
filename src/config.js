@@ -76,6 +76,7 @@ export const PAGES = {
   Dashboard: "Dashboard",
   Notification: "Notification",
   Candidates: "Candidates",
+  Applicant: "Applicant",
   Interview: "Interview",
   Board: "Board",
   Calculator: "Calculator",
@@ -86,6 +87,7 @@ export const PAGES = {
   Task: "Task",
   Blogs: "Blogs",
   Reports: "Reports",
+  Pipeline: "Pipeline",
 
   // Create Router step 1.1
   Products: "Products",
@@ -118,6 +120,7 @@ export const ROLE_BY_PAGES = [
       PAGES.Notification,
       PAGES.Interview,
       PAGES.Candidates,
+      PAGES.Applicant,
       PAGES.Board,
       PAGES.Calculator,
       PAGES.Recruiter,
@@ -128,6 +131,7 @@ export const ROLE_BY_PAGES = [
       PAGES.Task,
       PAGES.Blogs,
       PAGES.Reports,
+      PAGES.Pipeline,
       // PAGES.Account,
       // Create Router step 1.2
       PAGES.Products,

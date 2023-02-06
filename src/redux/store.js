@@ -21,6 +21,7 @@ const store = configureStore({
     salary: salaryReducer,
     candidates: candidateReducer,
     jobs: jobDetailReducer,
+    applicant: jobDetailReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
