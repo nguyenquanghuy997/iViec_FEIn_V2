@@ -3,7 +3,6 @@ import SvgIcon from "@/components/SvgIcon";
 import { useGetBranchByUserQuery } from "@/sections/companyinfor/companyInforSlice";
 import {
   formatBranchSize,
-  formatRemoteUrl,
   joinArrStr,
 } from "@/utils/formatString";
 import NextLink from "next/link";
@@ -13,7 +12,7 @@ export default function CompanyInfor() {
   // const { data: { DataList: [Data = {}] = [] } = {} } =
   //   useGetBranchByUserQuery();
   const { data: Data} = useGetBranchByUserQuery();
-  console.log('DataDataData',Data)
+
   const renderRow = (child1, child2) => {
     return (
       <div style={{ display: "flex", flexDirection: "row" }}>

@@ -8,7 +8,7 @@ import {
   useGetBranchByIdMutation,
   useGetBranchByUserQuery,
   useGetJobCategoriesQuery,
-  useGetProviceMutation,
+  useLazyGetProvinceQuery,
   useUpdateBranchMutation,
 } from "@/sections/companyinfor/companyInforSlice";
 import { formatRemoteUrl, LIST_BRANCH_SIZE } from "@/utils/formatString";
@@ -67,11 +67,15 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
   const [fetchData, { data: { Data } = {} }] = useGetBranchByIdMutation();
   const [updateData] = useUpdateBranchMutation();
 
-  const [fetchProvice, { data: { DataList: ProviceList = [] } = {} }] =
-    useGetProviceMutation();
-  const { data: { DataList: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
+  // const [fetchProvice, { data: { DataList: ProviceList = [] } = {} }] =
+  //   useGetProviceMutation();
 
+  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
+    useLazyGetProvinceQuery();
+
+  const { data: { items: JobCategoryList = [] } = {} } =
+    useGetJobCategoriesQuery();
+  console.log("opbject", { ProviceList, JobCategoryList });
   const onSelectAvatar = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -366,7 +370,6 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
             }))}
           />
         </div>
-        
 
         <div style={{ marginTop: 32 }}>
           <span

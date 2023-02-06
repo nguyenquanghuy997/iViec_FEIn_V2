@@ -14,49 +14,9 @@ import {
 } from "@/components/hook-form";
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
-import {
-  makeStyles,
-  /*withStyles*/
-} from "@mui/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 
-const useStyles = makeStyles({
-  firstStyle: {
-    width: `300px`,
-    color: "#1976D2",
-    borderRadius: `6px`,
-    padding: `14px 0`,
-    maxHeight: `44px`,
-    backgroundColor: "#E3F2FD",
-    "&:hover": {
-      backgroundColor: "#BBDEFB",
-    },
-  },
-  secondStyle:{
-    width: `100%`,
-    color: "#455570",
-    "&:hover": {
-      backgroundColor: "#EFF3F6",
-      borderColor:'#455570'
-    },
-    justifyContent: `space-between`,
-    border:`1px solid #455570`,
-    borderRadius: `6px`,
-    padding: `14px 18px`,
-    maxHeight: `44px`,
-  },
-  thirdStyle: {
-    width: `300px`,
-    color: "white",
-    borderRadius: `6px`,
-    padding: `14px 0`,
-    maxHeight: `44px`,
-    backgroundColor: "#1976D2",
-    "&:hover": {
-      backgroundColor: "#1565C0",
-    },
-  },
-});
 export default function Jobs() {
   const defaultValues = {
     name: "",
@@ -75,7 +35,35 @@ export default function Jobs() {
     />
   );
   const Icon = { plus: getIcon("ic_plus") };
-  const classes = useStyles();
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#1976D2",
+        contrastText: "#fff",
+      },
+      warning: {
+        main: "#F77A0C",
+        contrastText: "#fff",
+      },
+      basic: {
+        main: "#455570",
+        contrastText: "#455570",
+      },
+      success: {
+        main: "#388E3C",
+        contrastText: "#fff",
+      },
+      error: {
+        main: "#D32F2F",
+        contrastText: "#fff",
+      },
+      neutral: {
+        main: "#FBBD2B",
+        contrastText: "#fff",
+      },
+    },
+  });
   return (
     <Page title={"Design systems"}>
       <Container maxWidth={"lg"}>
@@ -96,15 +84,38 @@ export default function Jobs() {
         <br />
         <ButtonIcon content={Icon.plus} />
         <br />
-        <ButtonSystem variant="outlined" className={classes.secondStyle} icon={Icon.plus} text="Đăng nhập bằng Google" variant="outlined" />
+        <ThemeProvider theme={theme}>
+          <ButtonSystem
+            color="basic"
+            icon={Icon.plus}
+            text="Đăng nhập bằng Google - basic"
+            variant="outlined"
+          />
+        </ThemeProvider>
         <br />
-        <ButtonSystem text="Đăng nhập" variant="contained" className={classes.thirdStyle}/>
+        <ThemeProvider theme={theme}>
+          <ButtonSystem color="primary" text="primary" variant="contained" />
+        </ThemeProvider>
         <br />
-        <ButtonSystem
-          className={classes.firstStyle}
-          text="Button"
-          variant="contained"
-        />
+        {/* button */}
+        <ThemeProvider theme={theme}>
+          <ButtonSystem color="warning" text="Warning" variant="contained" />
+        </ThemeProvider>
+        <br />
+        {/* button */}
+        <ThemeProvider theme={theme}>
+          <ButtonSystem color="success" text="Success" variant="contained" />
+        </ThemeProvider>
+        <br />
+        {/* button */}
+        <ThemeProvider theme={theme}>
+          <ButtonSystem color="error" text="error" variant="contained" />
+        </ThemeProvider>
+        <br />
+        {/* button */}
+        <ThemeProvider theme={theme}>
+          <ButtonSystem color="neutral" text="neutral" variant="contained" />
+        </ThemeProvider>
 
         <Box mt={2} />
         <FormProvider methods={methods}>
