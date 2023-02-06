@@ -21,7 +21,10 @@ export const PATH_AUTH = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
-  dashboard: path(ROOTS_DASHBOARD, "candidates"),
+  dashboard: {
+    root: path(ROOTS_DASHBOARD, "applicant"),
+    view: (id) => path(ROOTS_DASHBOARD, `applicant/${id}`),
+  },
 
   profile: {
     root: path(ROOTS_DASHBOARD, "profile/"),

@@ -159,3 +159,7 @@ export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm";
 export const API_ADD_PIPELINE = "ReviewForm/InsertReviewForm";
 export const API_UPDATE_PIPELINE = "ReviewForm/UpdateReviewForm";
 export const API_DELETE_PIPELINE = "ReviewForm/DeleteReviewForm";
+
+// Ứng viên
+export const API_GET_ALL_SEARCH = "api/Applicants/GetAllSearch";
+export const API_GET_APPLICANT_BY_ID = "ApplicantApply/GetApplicantById";
