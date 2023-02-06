@@ -60,7 +60,7 @@ export default function RegisterForm({}) {
       .email("Email không đúng định dạng")
       .required("Email không được bỏ trống"),
     companyName: Yup.string().required("Tên doanh nghiệp không được bỏ trống"),
-    companyCategory: Yup.array().max(3, 'Chọn tối đa 3 ngành nghê').required("Ngành nghề không được bỏ trống"),
+    companyCategory: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, 'Chọn tối đa 3 ngành nghê'),
     size: Yup.string().required("Quy mô nhân sự không được bỏ trống"),
     companyProvinceId: Yup.string().required(
       "Tỉnh/Thành phố không được bỏ trống"
