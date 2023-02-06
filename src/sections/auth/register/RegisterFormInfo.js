@@ -17,13 +17,16 @@ import {
   useRegisterMutation,
 } from "@/sections/auth/authSlice";
 import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
-import { LIST_BRANCH_SIZE } from "@/utils/formatString";
+import errorMessages from "@/utils/errorMessages";
+import { LIST_ORGANIZATION_SIZE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
 // @mui
 import { LoadingButton } from "@mui/lab";
 import {
+  Alert,
   Box,
   Divider,
+  FormHelperText,
   IconButton,
   InputAdornment,
   Link,
@@ -32,7 +35,7 @@ import {
 } from "@mui/material";
 // next
 import NextLink from "next/link";
-import * as qs from "qs";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -41,37 +44,47 @@ const InputStyle = { width: 440, minHeight: 44 };
 
 export default function RegisterForm({}) {
   const defaultValues = {
-    companyEmail: "",
-    companyPhoneNumber: "",
-    companyDistrictId: "",
-    companyProvinceId: "",
-    companyCategory: [],
+    userName: "",
     password: "",
     rePassword: "",
-    companyName: "",
+    organizationName: "",
+    organizationPhoneNumber: "",
+    jobCategoryIds: [],
+    organizationSize: "",
+    organizationProvinceId: "",
+    organizationDistrictId: "",
+    organizationAddress: "",
     acceptTerms: true,
   };
 
   const RegisterSchema = Yup.object().shape({
-    companyPhoneNumber: Yup.string()
-      .required("Số điện thoại không được bỏ trống")
-      .matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
-    companyEmail: Yup.string()
+    userName: Yup.string()
       .email("Email không đúng định dạng")
       .required("Email không được bỏ trống"),
-    companyName: Yup.string().required("Tên doanh nghiệp không được bỏ trống"),
-    companyCategory: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, 'Chọn tối đa 3 ngành nghê'),
-    size: Yup.string().required("Quy mô nhân sự không được bỏ trống"),
-    companyProvinceId: Yup.string().required(
-      "Tỉnh/Thành phố không được bỏ trống"
-    ),
-    companyDistrictId: Yup.string().required("Quận/Huyện không được bỏ trống"),
     password: Yup.string()
       .min(6, "Mật khẩu cần tối thiểu 6 ký tự")
       .required("Mật khẩu không được bỏ trống"),
     rePassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng")
       .required("Mật khẩu xác nhận không được bỏ trống"),
+    organizationName: Yup.string().required(
+      "Tên doanh nghiệp không được bỏ trống"
+    ),
+    organizationPhoneNumber: Yup.string()
+      .required("Số điện thoại không được bỏ trống")
+      .matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
+    jobCategoryIds: Yup.array()
+      .min(1, "Ngành nghề không được bỏ trống")
+      .max(3, "Chọn tối đa 3 ngành nghê"),
+    organizationSize: Yup.string().required(
+      "Quy mô nhân sự không được bỏ trống"
+    ),
+    organizationProvinceId: Yup.string().required(
+      "Tỉnh/Thành phố không được bỏ trống"
+    ),
+    organizationDistrictId: Yup.string().required(
+      "Quận/Huyện không được bỏ trống"
+    ),
     acceptTerms: Yup.bool().oneOf(
       [true],
       "Vui lòng đồng ý với chính sách bảo mật"
@@ -83,36 +96,40 @@ export default function RegisterForm({}) {
     defaultValues,
   });
 
+  const router = useRouter();
+
   const [postRegister] = useRegisterMutation();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const {
+    setError,
     handleSubmit,
     watch,
     formState: { isSubmitting, errors },
   } = methods;
 
-  const watchHasEmailValue = watch("companyEmail");
-  const watchProvinceId = watch("companyProvinceId");
+  const watchHasEmailValue = watch("userName");
+  const watchProvinceId = watch("organizationProvinceId");
 
   const onSubmit = async (data) => {
     try {
       const body = {
-        FULL_NAME: data.fullName,
-        EMAIL: data.email,
-        PhoneNumber: data.phone,
-        BranchName: data.fullName,
-        BranchNickName: data.fullName,
-        BranchJobCategoryId: data.type,
-        BranchProvinceId: data.city,
-        BranchSize: data.size,
-        PASSWORD: data.password,
-        REPASSWORD: data.rePassword,
+        userName: data.userName, // organization username (Email đăng nhập)
+        password: data.password, // organization password
+        organizationName: data.organizationName, // organization name
+        organizationPhoneNumber: data.organizationPhoneNumber, // organization phone number
+        jobCategoryIds: data.jobCategoryIds, // organization name
+        organizationSize: parseInt(data.organizationSize), // organization size
+        organizationProvinceId: data.organizationProvinceId, // organization province
+        organizationDistrictId: data.organizationDistrictId, // organization district
+        organizationAddress: data.organizationAddress, // organization address
       };
-      await postRegister(qs.stringify(body)).unwrap();
+      await postRegister(body).unwrap();
+      router.push(`/auth/register/success?username=${body.userName}`);
     } catch (error) {
-      // TODO
+      const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
+      setError("afterSubmit", { ...error, message });
     }
   };
 
@@ -121,9 +138,12 @@ export default function RegisterForm({}) {
     else methods.resetField(field);
   };
 
-  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] = useLazyGetProvinceQuery();
-  const [getDistrictByProvinceId, { data: { items: DistrictList = [] } = {} }] = useLazyGetDistrictByProvinceIdQuery();
-  const { data: { items: JobCategoryList = [] } = {} } = useGetJobCategoriesQuery();
+  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
+    useLazyGetProvinceQuery();
+  const [getDistrictByProvinceId, { data: { items: DistrictList = [] } = {} }] =
+    useLazyGetDistrictByProvinceIdQuery();
+  const { data: { items: JobCategoryList = [] } = {} } =
+    useGetJobCategoriesQuery();
 
   useEffect(() => {
     fetchProvice().unwrap();
@@ -138,7 +158,12 @@ export default function RegisterForm({}) {
   return (
     <Box sx={{ width: "100%" }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <Stack>
+          {!!errors.afterSubmit && (
+            <Alert severity="error" sx={{ mt: 5 }}>
+              {errors.afterSubmit.message}
+            </Alert>
+          )}
           <RegisterFormSectionLabel title="THÔNG TIN TÀI KHOẢN DOANH NGHIỆP" />
           <Stack>
             <Stack
@@ -148,7 +173,7 @@ export default function RegisterForm({}) {
             >
               <Stack>
                 <RHFTextField
-                  name="companyEmail"
+                  name="userName"
                   label="Email đăng nhập"
                   placeholder="Email đăng nhập (bắt buộc)"
                   required
@@ -158,7 +183,7 @@ export default function RegisterForm({}) {
                       <InputAdornment position="end">
                         <IconButton
                           edge="end"
-                          onClick={() => handleClearField("companyEmail")}
+                          onClick={() => handleClearField("userName")}
                         >
                           <Iconify icon="ic:baseline-highlight-off" />
                         </IconButton>
@@ -249,7 +274,7 @@ export default function RegisterForm({}) {
             >
               <Stack>
                 <RHFTextField
-                  name="companyName"
+                  name="organizationName"
                   placeholder="Bắt buộc"
                   label="Tên doanh nghiệp"
                   required
@@ -258,7 +283,7 @@ export default function RegisterForm({}) {
               </Stack>
               <Stack>
                 <RHFTextField
-                  name="companyPhoneNumber"
+                  name="organizationPhoneNumber"
                   required
                   placeholder="Bắt buộc"
                   label="Số điện thoại doanh nghiệp"
@@ -272,7 +297,7 @@ export default function RegisterForm({}) {
               sx={{ mb: 2.5 }}
             >
               <RHFBasicSelect
-                name="companyCategory"
+                name="jobCategoryIds"
                 placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"
                 label="Ngành nghề"
                 required
@@ -284,13 +309,13 @@ export default function RegisterForm({}) {
                 }))}
               />
               <RHFBasicSelect
-                name="size"
+                name="organizationSize"
                 label="Quy mô nhân sự"
                 placeholder="Bắt buộc"
                 style={{ ...InputStyle }}
                 required
-                options={LIST_BRANCH_SIZE.map((i) => ({
-                  value: i.id,
+                options={LIST_ORGANIZATION_SIZE.map((i) => ({
+                  value: i.value,
                   label: i.name,
                 }))}
               />
@@ -303,7 +328,7 @@ export default function RegisterForm({}) {
             >
               <Stack>
                 <RHFBasicSelect
-                  name="companyProvinceId"
+                  name="organizationProvinceId"
                   label="Tỉnh/Thành phố"
                   placeholder="Bắt buộc"
                   required
@@ -317,7 +342,7 @@ export default function RegisterForm({}) {
               </Stack>
               <Stack>
                 <RHFBasicSelect
-                  name="companyDistrictId"
+                  name="organizationDistrictId"
                   label="Quận/Huyện"
                   placeholder="Bắt buộc"
                   required
@@ -339,7 +364,7 @@ export default function RegisterForm({}) {
             >
               <Stack sx={{ width: STYLE_CONSTANT.WIDTH_FULL }}>
                 <RHFTextField
-                  name="companyAddress"
+                  name="organizationAddress"
                   placeholder="Số nhà, tên đường, xã/phường..."
                   label="Địa chỉ chi tiết doanh nghiệp"
                 />
@@ -385,8 +410,14 @@ export default function RegisterForm({}) {
                 </Typography>
               </Stack>
             </Stack>
+            <Stack>
+              {errors.acceptTerms?.message && (
+                <FormHelperText error={!!errors.acceptTerms}>
+                  {errors.acceptTerms?.message}
+                </FormHelperText>
+              )}
+            </Stack>
           </Stack>
-
           <Stack sx={{ mt: 2 }}>
             <LoadingButton
               fullWidth
@@ -403,7 +434,7 @@ export default function RegisterForm({}) {
               Đăng ký
             </LoadingButton>
           </Stack>
-        </div>
+        </Stack>
       </FormProvider>
     </Box>
   );
