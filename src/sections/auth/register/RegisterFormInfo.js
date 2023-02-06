@@ -17,11 +17,13 @@ import {
   useRegisterMutation,
 } from "@/sections/auth/authSlice";
 import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
+import errorMessages from "@/utils/errorMessages";
 import { LIST_ORGANIZATION_SIZE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
 // @mui
 import { LoadingButton } from "@mui/lab";
 import {
+  Alert,
   Box,
   Divider,
   FormHelperText,
@@ -101,6 +103,7 @@ export default function RegisterForm({}) {
   const [showPassword, setShowPassword] = useState(false);
 
   const {
+    setError,
     handleSubmit,
     watch,
     formState: { isSubmitting, errors },
@@ -125,8 +128,8 @@ export default function RegisterForm({}) {
       await postRegister(body).unwrap();
       router.push(`/auth/register/success?username=${body.userName}`);
     } catch (error) {
-      // TODO
-      console.log(error);
+      const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
+      setError("afterSubmit", { ...error, message });
     }
   };
 
@@ -155,7 +158,12 @@ export default function RegisterForm({}) {
   return (
     <Box sx={{ width: "100%" }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <Stack>
+          {!!errors.afterSubmit && (
+            <Alert severity="error" sx={{ mt: 5 }}>
+              {errors.afterSubmit.message}
+            </Alert>
+          )}
           <RegisterFormSectionLabel title="THÔNG TIN TÀI KHOẢN DOANH NGHIỆP" />
           <Stack>
             <Stack
@@ -410,7 +418,6 @@ export default function RegisterForm({}) {
               )}
             </Stack>
           </Stack>
-
           <Stack sx={{ mt: 2 }}>
             <LoadingButton
               fullWidth
@@ -427,7 +434,7 @@ export default function RegisterForm({}) {
               Đăng ký
             </LoadingButton>
           </Stack>
-        </div>
+        </Stack>
       </FormProvider>
     </Box>
   );
