@@ -74,10 +74,12 @@ export const API_REGISTER = "api/Users/Register";
 export const API_GET_ORGANIZATION = "/api/organization/GetOrganization";
 
 // Lấy danh sách tỉnh / thành phố
-export const API_GET_PROVINCE = "RecruitmentNews/GetProvincePaging";
+export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
+// Lấy danh sách quận / huyện
+export const API_GET_DISTRICT = "/masterData/District/GetDistricts";
 
 // Lấy danh sách job category
-export const API_GET_JOB_CATEGORIES = "RecruitmentNews/GetAllJobCategories";
+export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories";
 
 // Báo cáo
 
