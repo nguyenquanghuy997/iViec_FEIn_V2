@@ -66,8 +66,8 @@ export const API_LOGIN = "/identity/Identity/Login"; //new
 
 export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 //auth
-export const API_FORGET_PASSWORD = "/api/Users/ForgetPassword";
 export const API_REGISTER = "/organization/Organization/CreateOrganizationWithUser";  // new
+export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword"; //new
 // Common
 
 // Lấy danh sách phòng ban
@@ -153,3 +153,13 @@ export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
 export const API_ADD_JOBTYPE = "JobType/CreateNewJobType";
 export const API_UPDATE_JOBTYPE = "JobType/UpdateJobType";
 
+// Pipeline
+export const API_GET_ALL_PIPELINE = "api/Pipeline/PipelineSearchPaging";
+export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm";
+export const API_ADD_PIPELINE = "ReviewForm/InsertReviewForm";
+export const API_UPDATE_PIPELINE = "ReviewForm/UpdateReviewForm";
+export const API_DELETE_PIPELINE = "ReviewForm/DeleteReviewForm";
+
+// Ứng viên
+export const API_GET_ALL_SEARCH = "api/Applicants/GetAllSearch";
+export const API_GET_APPLICANT_BY_ID = "ApplicantApply/GetApplicantById";

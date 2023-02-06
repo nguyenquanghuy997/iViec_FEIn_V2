@@ -50,9 +50,9 @@ const sidebarConfig = [
     items: [
       {
         title: "Ứng Viên",
-        path: "/candidates",
+        path: "/applicant",
         icon: ICONS.invoice,
-        roles: ROLES[PAGES.Candidates],
+        roles: ROLES[PAGES.Applicant],
       },
       {
         title: "Tin Tuyển Dụng",
@@ -176,9 +176,8 @@ const sidebarConfig = [
           },
           {
             title: "Quy trình tuyển dụng",
-            path: "/settings/basic/companyinfor",
-            icon: ICONS.job,
-            roles: ROLES[PAGES.Jobs],
+            path: "/settings/pipeline",
+            roles: ROLES[PAGES.Pipeline],
           },
           {
             title: "Quy trình phê duyệt",
