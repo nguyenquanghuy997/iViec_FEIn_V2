@@ -11,7 +11,13 @@ RHFBasicSelect.propTypes = {
   name: PropTypes.string,
   options: PropTypes.array,
   hasBlankOption: PropTypes.bool,
+  multiple: PropTypes.bool,
 }
+
+RHFBasicSelect.defaultProps = {
+  multiple: false
+}
+
 
 const styles = {
   mx: 1,
@@ -24,6 +30,7 @@ export default function RHFBasicSelect({
   name,
   options = [],
   hasBlankOption = false,
+  multiple,
   ...other
 }) {
   const destOptions = React.useMemo(
@@ -78,6 +85,7 @@ export default function RHFBasicSelect({
         MenuProps: {
           sx: { '& .MuiPaper-root': { maxHeight: 260 } },
         },
+        multiple: multiple
       }}
       {...other}
     >
