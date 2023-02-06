@@ -62,8 +62,9 @@ export const API_LIST_TAGS = "/api/v1/tags";
 export const API_JOB_REMOVE_ASSIGNMENT = "/api/remove/assignment";
 
 // New API
-export const API_LOGIN = "/token";
-export const API_USER_INFO = "/api/Users/GetUserInfo";
+export const API_LOGIN = "/identity/Identity/Login"; //new
+
+export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 //auth
 export const API_FORGET_PASSWORD = "/api/Users/ForgetPassword";
 export const API_REGISTER = "api/Users/Register";
@@ -73,10 +74,12 @@ export const API_REGISTER = "api/Users/Register";
 export const API_GET_ORGANIZATION = "/api/organization/GetOrganization";
 
 // Lấy danh sách tỉnh / thành phố
-export const API_GET_PROVINCE = "RecruitmentNews/GetProvincePaging";
+export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
+// Lấy danh sách quận / huyện
+export const API_GET_DISTRICT = "/masterData/District/GetDistricts";
 
 // Lấy danh sách job category
-export const API_GET_JOB_CATEGORIES = "RecruitmentNews/GetAllJobCategories";
+export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories";
 
 // Báo cáo
 

@@ -1,71 +1,87 @@
-import Logo from "@/components/Logo";
+// next
+import NextLink from "next/link";
+
+// @mui
+import { Box, Link, Stack, Typography } from "@mui/material";
+
+// components
+import { LogoHeader } from "@/components/BaseComponents";
 import Page from "@/components/Page";
+
 // guards
 import GuestGuard from "@/guards/GuestGuard";
+
 // routes
 import { PATH_AUTH } from "@/routes/paths";
+
 // sections
 import { RegisterFormInfo } from "@/sections/auth/register";
-// @mui
-import { Box, Container, Link, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import NextLink from "next/link";
-import * as React from "react";
+import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
 
-const RootStyle = styled("div")(({ theme }) => ({
-  [theme.breakpoints.up("md")]: {
-    display: "flex",
-  },
-}));
-
-const ContentStyle = styled("div")(({ theme }) => ({
-  maxWidth: 540,
-  margin: "auto",
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  flexDirection: "column",
-  padding: theme.spacing(12, 0),
-}));
 
 export default function Register() {
   return (
     <GuestGuard>
-      <Page title="Register">
-        <RootStyle>
-          <Container>
-            <ContentStyle>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingBottom: 20,
+      <Page title="Đăng ký">
+        <LogoHeader />
+        <Box
+          mt={"36px"}
+          mb={"36px"}
+          position="relative"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box
+            sx={{
+              padding: 7.5,
+              bgcolor: STYLE_CONSTANT.COLOR_BACKGROUND,
+              minWidth: "1020px",
+              mb: 4.5,
+              boxShadow:
+                "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+            }}
+          >
+            <Stack>
+              <Typography
+                variant="h4"
+                width={STYLE_CONSTANT.WIDTH_FULL}
+                sx={{
+                  fontSize: STYLE_CONSTANT.FONT_2XL,
+                  fontWeight: STYLE_CONSTANT.FONT_BOLD,
+                  mb: 1,
+                  color: STYLE_CONSTANT.COLOR_TEXT_PRIMARY
                 }}
               >
-                <Logo />
-                <Typography variant="h4" gutterBottom sx={{ mt: 3 }}>
-                  IVIEC
-                </Typography>
-              </div>
-              <Box sx={{ mb: 5, display: "flex", alignItems: "center" }}>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h4" gutterBottom>
-                    Đăng kí
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt: 3 }}>
-                    Doanh nghiệp của bạn có tài khoản?{" "}
-                    <NextLink href={PATH_AUTH.login} passHref>
-                      <Link variant="subtitle2">Đăng Nhập</Link>
-                    </NextLink>
-                  </Typography>
-                </Box>
-              </Box>
-              <RegisterFormInfo />
-            </ContentStyle>
-          </Container>
-        </RootStyle>
+                Đăng ký tài khoản doanh nghiệp
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: 13,
+                  fontWeight: STYLE_CONSTANT.FONT_NORMAL,
+                  width: STYLE_CONSTANT.WIDTH_FULL,
+                }}
+              >
+                Bạn đã có tài khoản iVIEC Bussiness?
+                <NextLink href={PATH_AUTH.login} passHref>
+                  <Link
+                    variant="subtitle2"
+                    sx={{
+                      marginLeft: 1.25,
+                      fontWeight: STYLE_CONSTANT.FONT_SEMIBOLD,
+                      color: STYLE_CONSTANT.COLOR_PRIMARY,
+                      fontSize: STYLE_CONSTANT.FONT_SM,
+                    }}
+                  >
+                    Đăng nhập ngay!
+                  </Link>
+                </NextLink>
+              </Typography>
+            </Stack>
+            <RegisterFormInfo />
+          </Box>
+        </Box>
       </Page>
     </GuestGuard>
   );

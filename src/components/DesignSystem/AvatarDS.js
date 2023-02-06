@@ -1,7 +1,7 @@
 import { View } from "../FlexStyled";
 import { Avatar } from '@mui/material'
 import PropTypes from "prop-types"
-export const AvatarDS = (props) => {
+export default function AvatarDS(props) {
     const { linkAvatar } = props;
 
     return (
@@ -12,7 +12,7 @@ export const AvatarDS = (props) => {
             />
         </View>
     );
-};
+}
 
 AvatarDS.prototype = {
     linkAvatar: PropTypes.any,

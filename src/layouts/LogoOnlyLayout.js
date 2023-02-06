@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 
 // components
-import Logo from '@/components/Logo'
+// import Logo from '@/components/Logo'
 
 const HeaderStyle = styled('header')(({ theme }) => ({
   top: 0,
@@ -26,7 +26,7 @@ export default function LogoOnlyLayout({ children }) {
   return (
     <>
       <HeaderStyle>
-        <Logo />
+        {/* <Logo /> */}
       </HeaderStyle>
       {children}
     </>

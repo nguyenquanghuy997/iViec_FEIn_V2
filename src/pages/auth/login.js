@@ -1,75 +1,90 @@
-import Logo from "@/components/Logo";
+import NextLink from "next/link";
+
+import { Box, Stack, Typography, Link } from "@mui/material";
+
+import { LogoHeader } from "@/components/BaseComponents";
 import Page from "@/components/Page";
 // guards
 import GuestGuard from "@/guards/GuestGuard";
 import { PATH_AUTH } from "@/routes/paths";
 // sections
 import { LoginForm } from "@/sections/auth/login";
-import { Box, Container, Stack, Typography, Link } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import NextLink from "next/link";
-
-// import Logo from '../../theme/Logo'
-// import { BlockContent } from '@/components/upload'
-// import { isBlock } from 'typescript'
-
-const RootStyle = styled("div")(({ theme }) => ({
-  [theme.breakpoints.up("md")]: {
-    display: "flex",
-  },
-}));
-
-const ContentStyle = styled("div")(({ theme }) => ({
-  maxWidth: 480,
-  margin: "auto",
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  flexDirection: "column",
-  padding: theme.spacing(12, 0),
-}));
+import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
 
 export default function Login() {
   return (
     <GuestGuard>
-      <Page title="Login">
-        <RootStyle>
-   
-
-          <Container maxWidth="sm">
-            <ContentStyle>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingBottom: 20,
+      <Page title="Đăng nhập">
+        <LogoHeader />
+        <Box
+          mt={"36px"}
+          mb={"36px"}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box
+            sx={{
+              padding: 7.5,
+              bgcolor: STYLE_CONSTANT.COLOR_BACKGROUND,
+              width: "560px",
+              maxHeight: "784px",
+              mb: 4.5,
+              borderRadius: 0.75,
+              boxShadow:
+                "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+            }}
+          >
+            <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontSize: STYLE_CONSTANT.FONT_2XL,
+                  fontWeight: STYLE_CONSTANT.FONT_BOLD,
+                  width: STYLE_CONSTANT.WIDTH_FULL,
+                  color: STYLE_CONSTANT.COLOR_TEXT_PRIMARY,
                 }}
               >
-                <Logo />
-                <Typography variant="h4" gutterBottom sx={{ mt: 3 }}>
-                  IVIEC
-                </Typography>
-              </div>
-
-              <Stack direction="row" alignItems="center" sx={{ mb: 4 }}>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h4" gutterBottom>
-                    ĐĂNG NHẬP
-                  </Typography>
-                </Box>
-              </Stack>
-              <LoginForm />
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Doanh nghiệp của bạn chưa có tài khoản?{" "}
+                Đăng nhập
+              </Typography>
+            </Stack>
+            <LoginForm />
+            <Stack sx={{ mt: "214px" }}>
+              <Typography
+                variant="body2"
+                align="center"
+                sx={{
+                  mt: 2,
+                  color: "#8A94A5",
+                  fontSize: STYLE_CONSTANT.FONT_SM,
+                  fontWeight: STYLE_CONSTANT.FONT_NORMAL,
+                }}
+              >
+                Bạn chưa có tài khoản nhà tuyển dụng?
+              </Typography>
+              <Typography
+                variant="body2"
+                align="center"
+                sx={{
+                  mt: 1.5,
+                }}
+              >
                 <NextLink href={PATH_AUTH.register} passHref>
-                  <Link variant="subtitle2">Đăng ký ngay!</Link>
+                  <Link
+                    variant="subtitle2"
+                    sx={{
+                      color: "#1976D2",
+                      fontSize: STYLE_CONSTANT.FONT_SM,
+                      fontWeight: STYLE_CONSTANT.FONT_SEMIBOLD,
+                    }}
+                  >
+                    Đăng ký miễn phí
+                  </Link>
                 </NextLink>
               </Typography>
-            </ContentStyle>
-          </Container>
-        </RootStyle>
+            </Stack>
+          </Box>
+        </Box>
       </Page>
     </GuestGuard>
   );

@@ -1,13 +1,12 @@
 // components
+import { STYLE_CONSTANT } from "../register/constants";
+import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import {
   FormProvider,
   RHFCheckbox,
   RHFTextField,
 } from "@/components/hook-form";
-import {
-  ButtonDS
-} from "@/components/DesignSystem/ButtonDS";
 // hooks
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
@@ -41,14 +40,14 @@ export default function LoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+      .email("Email không đúng định dạng")
+      .required("Email không được bỏ trống"),
+    password: Yup.string().required("Mật khẩu không được bỏ trống"),
   });
 
   const defaultValues = {
-    email: "FTI.iVIEC@gmail.com",
-    password: "mk1.iviec@1234",
+    email: "quy.vu.0101@gmail.com",
+    password: "Abcd@2021",
     // email: "",
     // password: "",
     remember: true,
@@ -87,34 +86,58 @@ export default function LoginForm() {
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
 
-        <RHFTextField name="email" label="Tên đăng nhập" />
+        <Stack>
+          <RHFTextField
+            name="email"
+            label="Email đăng nhập"
+            placeholder="Bắt buộc"
+            required
+            style={{
+              width: 440,
+              minHeight: 44,
+            }}
+          />
+        </Stack>
 
-        <RHFTextField
-          name="password"
-          label="Mật khẩu"
-          type={showPassword ? "text" : "password"}
-          sx={{
-            input: {
-              "&::-ms-reveal": {
-                display: "none",
-              },
-            },
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Stack>
+          <RHFTextField
+            style={{
+              width: 440,
+              minHeight: 44
+            }}
+            name="password"
+            label="Mật khẩu"
+            type={showPassword ? "text" : "password"}
+            placeholder="Bắt buộc"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify
+                      icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {!errors.password && (
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: STYLE_CONSTANT.FONT_XS,
+                color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
+                fontWeight: STYLE_CONSTANT.FONT_NORMAL,
+                mt: 1,
+              }}
+            >
+              Mật khẩu cần tối thiểu 6 ký tự
+            </Typography>
+          )}
+        </Stack>
       </Stack>
 
       <Stack
@@ -123,20 +146,24 @@ export default function LoginForm() {
         justifyContent="space-between"
         sx={{ my: 2 }}
       >
-        <RHFCheckbox name="remember" label="Duy trì đăng nhập" />
-        <Typography variant="body2" align="center">
+        <RHFCheckbox
+          defaultChecked={false}
+          name="remember"
+          label="Duy trì đăng nhập"
+        />
+        <Typography variant="body2" align="right">
           <NextLink href={PATH_AUTH.resetPassword} passHref>
             <Link variant="subtitle2">Quên mật khẩu </Link>
           </NextLink>
         </Typography>
       </Stack>
       <ButtonDS
-        size='large'
-        tittle={'ĐĂNG NHẬP'}
+        width="440px"
+        size="large"
+        tittle="Đăng nhập"
         isSubmitting={isSubmitting}
         type="submit"
       />
-  
     </FormProvider>
   );
 }
