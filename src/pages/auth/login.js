@@ -28,7 +28,6 @@ export default function Login() {
               padding: 7.5,
               bgcolor: STYLE_CONSTANT.COLOR_BACKGROUND,
               width: "560px",
-              maxHeight: "784px",
               mb: 4.5,
               borderRadius: 0.75,
               boxShadow:

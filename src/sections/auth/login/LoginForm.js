@@ -42,7 +42,7 @@ export default function LoginForm() {
     email: Yup.string()
       .email("Email không đúng định dạng")
       .required("Email không được bỏ trống"),
-    password: Yup.string().required("Mật khẩu không được bỏ trống"),
+    password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
   });
 
   const defaultValues = {
