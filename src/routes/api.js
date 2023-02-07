@@ -72,6 +72,9 @@ export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPass
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken"; //new
 // Common
 
+//Ứng viên
+export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new
+
 // Lấy danh sách phòng ban
 export const API_GET_ORGANIZATION = "/api/organization/GetOrganization";
 
@@ -162,6 +165,4 @@ export const API_ADD_PIPELINE = "ReviewForm/InsertReviewForm";
 export const API_UPDATE_PIPELINE = "ReviewForm/UpdateReviewForm";
 export const API_DELETE_PIPELINE = "ReviewForm/DeleteReviewForm";
 
-// Ứng viên
-export const API_GET_ALL_SEARCH = "api/Applicants/GetAllSearch";
-export const API_GET_APPLICANT_BY_ID = "ApplicantApply/GetApplicantById";
+
