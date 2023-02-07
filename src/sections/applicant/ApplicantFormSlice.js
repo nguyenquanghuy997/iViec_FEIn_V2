@@ -1,5 +1,6 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
+  API_GET_ALL_APPLICANTS,
   API_ADD_REVIEW_FORM,
   API_DELETE_REVIEW_FORM,
   API_GET_ALL_REVIEW_FORM_OWNER,
@@ -14,7 +15,14 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
+  
   endpoints: (builder) => ({
+    getListApplicants: builder.query({
+      query: () => ({
+        url: API_GET_ALL_APPLICANTS,
+        method: 'GET',
+      }),
+    }),
     getAllApplicant: builder.mutation({
       query: (data) => ({
         url: API_GET_ALL_SEARCH,
@@ -60,6 +68,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
+  useGetListApplicantsQuery,
   useGetAllApplicantMutation,
   useGetAllApplicantFormOwnerQuery,
   useSetDefaultApplicantFormMutation,
