@@ -1,17 +1,19 @@
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
+import { ButtonDS } from "@/components/DesignSystem";
+import Iconify from "@/components/Iconify";
 import {
   Avatar,
   Badge,
   Box,
   Card,
   CardContent,
+  Divider,
   Grid,
-  styled,
+  Stack,
   Typography,
 } from "@mui/material";
 import React from "react";
-import SvgIcon from "@/components/SvgIcon";
 
 // const JobDesTitleStyled = styled(Grid)(
 //   ({ theme, ownerState: { smDown } = {} }) => ({
@@ -21,11 +23,7 @@ import SvgIcon from "@/components/SvgIcon";
 //     marginBottom: theme.spacing(1),
 //   })
 // )
-const avatarStyles = styled({
-  height: 56,
-  width: 64,
-  radius: 8,
-});
+
 function ApplicantPreviewItem({}) {
   return (
     <Card
@@ -52,15 +50,23 @@ function ApplicantPreviewItem({}) {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Grid display="flex">
-              <Badge
-                badgeContent=""
-                variant="dot"
-                color="success"
-              >
+            <Grid
+              display="flex"
+              alignItems="center"
+              sx={{
+                "& .MuiBadge-dot": {
+                  width: "6px",
+                  minWidth: "6px",
+                  height: "6px",
+                  top: 3,
+                  right: 3,
+                },
+              }}
+            >
+              <Badge badgeContent="" variant="dot" color="success">
                 <Avatar
                   variant={"rounded"}
-                  classes={avatarStyles}
+                  sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
                   src={
                     "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
                   }
@@ -68,29 +74,130 @@ function ApplicantPreviewItem({}) {
               </Badge>
 
               <Box pl={2}>
-                <Typography>
-                  Đinh Tiến Thành 
-                  <SvgIcon>
-              {
-                '<svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.54325 11.8334L11.7272 4.64948L10.7256 3.6479L3.54167 10.8318V11.8334H4.54325ZM5.13046 13.2501H2.125V10.2446L10.2248 2.14481C10.3576 2.01202 10.5378 1.93742 10.7256 1.93742C10.9134 1.93742 11.0935 2.01202 11.2264 2.14481L13.2302 4.14869C13.363 4.28152 13.4376 4.46166 13.4376 4.64948C13.4376 4.83731 13.363 5.01744 13.2302 5.15027L5.13046 13.2501ZM2.125 14.6667H14.875V16.0834H2.125V14.6667Z" fill="#09121F"/></svg>'
-              }
-            </SvgIcon>
+                <Typography
+                  display="flex"
+                  fontSize="20px"
+                  fontWeight="600"
+                  alignItems="center"
+                >
+                  Đinh Tiến Thành
+                  <Iconify
+                    icon={"ri:edit-2-fill"}
+                    width={20}
+                    height={20}
+                    color="#8A94A5"
+                    ml={1}
+                  />
                 </Typography>
-                <Typography>Most Awaited - Figma Launches Plugin</Typography>
+                <Stack
+                  direction="row"
+                  divider={<Divider orientation="vertical" flexItem />}
+                  spacing={2}
+                  color="#172B4D"
+                >
+                  <Typography fontSize="14px">0123456789</Typography>
+                  <Typography fontSize="14px">ThanhDT58@fpt.com.vn</Typography>
+                </Stack>
               </Box>
             </Grid>
-            <Grid>
-              <Avatar
-                variant={"rounded"}
-                classes={avatarStyles}
-                src={
-                  "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
+            <Grid display="flex">
+              <ButtonDS
+                tittle={"Thêm vào tin khác"}
+                type="submit"
+                sx={{
+                  color: "#455570",
+                  backgroundColor: "#F3F4F6",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#E7E9ED",
+                  },
+                  marginRight: "12px",
+                  fontSize: "14px",
+                  padding: "6px 12px",
+                }}
+                icon={
+                  <Iconify
+                    icon={"icon-park-outline:share-three"}
+                    width={20}
+                    height={20}
+                    color="#455570"
+                    mr={1}
+                  />
                 }
               />
-              <Box>
-                <Typography>Design</Typography>
-                <Typography>Most Awaited - Figma Launches Plugin</Typography>
-              </Box>
+              <ButtonDS
+                tittle={"Đặt lịch phỏng vấn"}
+                type="submit"
+                sx={{
+                  color: "#fdfdfd",
+                  backgroundColor: "#1976D2",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#1565C0",
+                  },
+                  marginRight: "12px",
+                  fontSize: "14px",
+                  padding: "6px 12px",
+                  textTransform: "none"
+                }}
+                icon={
+                  <Iconify
+                    icon={"mdi:calendar-check"}
+                    width={20}
+                    height={20}
+                    color="#fdfdfd"
+                    mr={1}
+                  />
+                }
+              />
+              <ButtonDS
+                tittle={"Đánh giá"}
+                type="submit"
+                isDisabled="true"
+                mr={2}
+                sx={{
+                  color: "#8A94A5",
+                  backgroundColor: "#1976D2",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#01B6A7",
+                  },
+                  marginRight: "12px",
+                  textTransform: "none",
+                }}
+                icon={
+                  <Iconify
+                    icon={"ph:user-focus-fill"}
+                    width={20}
+                    height={20}
+                    color="#8A94A5"
+                    mr={1}
+                  />
+                }
+              />
+              <ButtonDS
+                tittle={"Gửi offer"}
+                type="submit"
+                isDisabled="true"
+                sx={{
+                  color: "#8A94A5",
+                  backgroundColor: "#1976D2",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#01B6A7",
+                  },
+                  textTransform: "none"
+                }}
+                icon={
+                  <Iconify
+                    icon={"ri:pen-nib-fill"}
+                    width={20}
+                    height={20}
+                    color="#8A94A5"
+                    mr={1}
+                  />
+                }
+              />
             </Grid>
           </Grid>
           <Grid
