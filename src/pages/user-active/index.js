@@ -1,40 +1,50 @@
 // next
-import { IconRegisterSuccess } from "@/assets/icon_register_success";
+import UserActiveSuccess from "../../sections/user-active/UserActiveSuccess";
 // component
 import { LogoHeader } from "@/components/BaseComponents";
 import {
   CardInfoBody,
-  CardInfoIcon,
   CardInfoLabel,
-  CardSubInfoLabel,
 } from "@/components/BaseComponents/CardInfo";
-import Iconify from "@/components/Iconify";
 import Page from "@/components/Page";
 // guards
 import GuestGuard from "@/guards/GuestGuard";
 // routes
-import { PATH_AUTH, PATH_PAGE } from "@/routes/paths";
+import { PATH_PAGE } from "@/routes/paths";
+import { useLazyConfirmEmailQuery } from "@/sections/auth/authSlice";
 import NewPasswordForm from "@/sections/auth/new-password/NewPasswordForm";
-// import { useLazyConfirmEmailQuery } from "@/sections/auth/authSlice";
-import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
 import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
-// sections
-import { LoadingButton } from "@mui/lab";
+import UserActiveFailure from "@/sections/user-active/UserActiveFailure";
 // @mui
-import { Box, IconButton, Link, Stack } from "@mui/material";
-import NextLink from "next/link";
+import { Box, Stack } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const UserActivePage = () => {
+  const [statusActiveUser, setStatusActiveUser] = useState(false);
   const router = useRouter();
   const { USER_NAME, OTPCode, setpassword } = router.query;
+  const [confirmEmail] = useLazyConfirmEmailQuery();
 
   useEffect(() => {
     if (!USER_NAME && !OTPCode) {
       router.push(PATH_PAGE.page404);
     }
   }, [USER_NAME, OTPCode]);
+
+  useEffect(() => {
+    async function fetchConfirmEmail() {
+      if (parseInt(setpassword) === 0 && USER_NAME && OTPCode) {
+        try {
+          await confirmEmail({ email: USER_NAME, token: OTPCode }).unwrap();
+          setStatusActiveUser(true);
+        } catch (e) {
+          setStatusActiveUser(false);
+        }
+      }
+    }
+    fetchConfirmEmail();
+  }, [setpassword, USER_NAME, OTPCode]);
 
   return (
     <GuestGuard>
@@ -49,69 +59,6 @@ const UserActivePage = () => {
       >
         <LogoHeader />
         <Box sx={{ ...BoxWrapperStyle }}>
-          {parseInt(setpassword) === 0 && (
-            <Box sx={{ ...BoxInnerStyle }}>
-              <Stack sx={{ position: "absolute", top: 8, left: 8 }}>
-                <IconButton
-                  edge="end"
-                  onClick={() => router.push(PATH_AUTH.register)}
-                >
-                  <Iconify icon="material-symbols:arrow-back" />
-                </IconButton>
-              </Stack>
-              <Stack justifyContent="center" alignItems="center">
-                <CardInfoIcon>
-                  <IconRegisterSuccess sx={{ mb: 5 }} />
-                </CardInfoIcon>
-                <CardInfoBody>
-                  <CardInfoLabel label="Kích hoạt tài khoản thành công" />
-                  <CardSubInfoLabel sx={{ mt: 1.5 }}>
-                    Bạn đã có thể đăng nhập bằng email
-                    {USER_NAME && OTPCode && parseInt(setpassword) === 0 ? (
-                      <>
-                        {" "}
-                        <NextLink href={PATH_AUTH.register}>
-                          <Link
-                            style={{
-                              color: STYLE_CONSTANT.COLOR_PRIMARY,
-                              fontStyle: "italic",
-                              fontWeight: STYLE_CONSTANT.FONT_SEMIBOLD,
-                              textDecoration: "none",
-                              pointerEvents: "none",
-                            }}
-                          >
-                            {USER_NAME}
-                          </Link>
-                        </NextLink>{" "}
-                      </>
-                    ) : (
-                      " bạn vừa đăng ký "
-                    )}
-                    để bắt đầu trải nghiệm các tính năng tuyển dụng từ iVIEC.
-                  </CardSubInfoLabel>
-                  <CardSubInfoLabel sx={{ mt: 1.5 }}>
-                    Cảm ơn bạn đã đồng hành cùng iVIEC Bussiness!
-                  </CardSubInfoLabel>
-                  <Stack sx={{ mt: 4.5, width: STYLE_CONSTANT.WIDTH_FULL }}>
-                    <LoadingButton
-                      fullWidth
-                      size="large"
-                      variant="contained"
-                      onClick={() => router.push(PATH_AUTH.login)}
-                      sx={{
-                        backgroundColor: STYLE_CONSTANT.COLOR_PRIMARY,
-                        textTransform: "none",
-                        borderRadius: 0.75,
-                        fontWeight: STYLE_CONSTANT.FONT_SEMIBOLD,
-                      }}
-                    >
-                      Trở về trang đăng nhập
-                    </LoadingButton>
-                  </Stack>
-                </CardInfoBody>
-              </Stack>
-            </Box>
-          )}
           {parseInt(setpassword) === 1 && (
             <Box sx={{ ...BoxInnerStyle, minHeight: "784px" }}>
               <Stack justifyContent="center" alignItems="center">
@@ -124,6 +71,12 @@ const UserActivePage = () => {
                 </CardInfoBody>
               </Stack>
             </Box>
+          )}
+          {parseInt(setpassword) === 0 && statusActiveUser && (
+            <UserActiveSuccess USER_NAME={USER_NAME} />
+          )}
+          {parseInt(setpassword) === 0 && !statusActiveUser && (
+            <UserActiveFailure />
           )}
         </Box>
       </Page>
