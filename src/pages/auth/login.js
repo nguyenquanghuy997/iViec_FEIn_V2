@@ -1,7 +1,3 @@
-import NextLink from "next/link";
-
-import { Box, Stack, Typography, Link } from "@mui/material";
-
 import { LogoHeader } from "@/components/BaseComponents";
 import Page from "@/components/Page";
 // guards
@@ -10,30 +6,17 @@ import { PATH_AUTH } from "@/routes/paths";
 // sections
 import { LoginForm } from "@/sections/auth/login";
 import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
+import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
+import { Box, Stack, Typography, Link } from "@mui/material";
+import NextLink from "next/link";
 
 export default function Login() {
   return (
     <GuestGuard>
       <Page title="Đăng nhập">
         <LogoHeader />
-        <Box
-          mt={"36px"}
-          mb={"36px"}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Box
-            sx={{
-              padding: 7.5,
-              bgcolor: STYLE_CONSTANT.COLOR_BACKGROUND,
-              width: "560px",
-              mb: 4.5,
-              borderRadius: 0.75,
-              boxShadow:
-                "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-            }}
-          >
+        <Box sx={{ ...BoxWrapperStyle }}>
+          <Box sx={{ ...BoxInnerStyle, minHeight: "784px" }}>
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Typography
                 variant="h4"

@@ -29,7 +29,7 @@ const IconForgotPassword = () => (
 </g>
 <path d="M111.338 68.9863L106.451 71.5201C105.818 71.8821 105.546 72.787 105.818 73.4205L107.99 77.7641" fill="#D5DAE6"/>
 <path d="M99.212 66.6333C99.4835 66.7238 99.6645 66.9048 99.9359 66.9953C100.207 67.0858 100.388 67.2668 100.66 67.5382C100.931 67.8097 101.112 67.9907 101.293 68.2622C101.565 68.5336 101.746 68.8051 101.927 69.1671C102.198 69.5291 102.289 70.072 102.289 70.434C102.379 70.8865 102.289 71.2484 102.289 71.7009C102.198 72.0629 102.017 72.4248 101.836 72.7868C101.565 73.1488 101.203 73.4203 100.841 73.6012C100.569 73.7822 100.117 73.8727 99.755 73.9632C99.4835 74.0537 99.031 74.0537 98.7595 73.9632C98.488 73.8727 98.1261 73.8727 97.8546 73.6917L97.1307 73.3298C96.9497 73.2393 96.6782 73.1488 96.4972 73.0583C96.3162 72.9678 96.0447 72.9678 95.9543 73.1488L94.7779 73.6012L94.1444 72.2438L95.3208 71.4294C95.5018 71.2484 95.7733 71.2484 96.0447 71.2484C96.3162 71.2484 96.4972 71.2484 96.7687 71.3389C97.0402 71.4294 97.2212 71.6104 97.4021 71.7009C97.6736 71.7914 97.8546 71.9724 98.2166 72.0629C98.4881 72.1534 98.669 72.1534 99.031 72.2438C99.3025 72.2438 99.574 72.1534 99.9359 71.9724C100.207 71.7914 100.569 71.5199 100.569 71.0674C100.66 70.8865 100.569 70.7055 100.569 70.434C100.479 70.253 100.479 70.072 100.298 69.8005C100.207 69.5291 100.026 69.3481 99.8454 69.0766C99.755 68.9861 99.574 68.8051 99.393 68.7146C99.3025 68.6241 99.1215 68.5336 99.031 68.4432C98.9405 68.3527 98.85 68.3527 98.7595 68.1717C98.669 68.0812 98.669 67.8097 98.7595 67.7192L99.212 66.6333ZM90.7962 72.8773C90.9772 72.7868 91.0676 72.6963 91.3391 72.7868C91.5201 72.6963 91.7011 72.7868 91.7916 72.7868C92.1536 72.8773 92.425 73.1488 92.5155 73.4203C92.606 73.6012 92.606 73.7822 92.606 73.9632C92.606 74.0537 92.606 74.3252 92.606 74.4157C92.5155 74.6872 92.244 75.0491 91.9726 75.1396C91.7916 75.2301 91.6106 75.2301 91.4296 75.2301C91.3391 75.2301 91.0676 75.2301 90.9772 75.2301C90.6152 75.1396 90.3437 74.8681 90.2532 74.5967C90.1627 74.4157 90.1627 74.2347 90.1627 74.0537C90.0722 73.8727 90.1627 73.6917 90.1627 73.6012C90.2532 73.4203 90.3437 73.3298 90.3437 73.1488C90.4342 73.0583 90.7057 73.0583 90.7962 72.8773Z" fill="#CED6E2"/>
-<path d="M89.2576 67.4481V82.4698C89.2576 84.3702 87.6288 85.9991 85.7284 85.9991H36.0479C34.1475 85.9991 32.5187 84.3702 32.5187 82.4698V66.1812" stroke="#1676EE" stroke-width="2.99132" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M89.2576 67.4481V82.4698C89.2576 84.3702 87.6288 85.9991 85.7284 85.9991H36.0479C34.1475 85.9991 32.5187 84.3702 32.5187 82.4698V66.1812" stroke="#1676EE" strokeWidth="2.99132" strokeLinecap="round" strokeLinejoin="round"/>
 <path d="M87.3574 57.7651H70.3448C68.7159 57.7651 67.0871 58.3081 65.8202 59.394L61.2955 63.0137C60.0286 64.0091 58.3998 64.6426 56.7709 64.6426H37.4054C35.5051 64.6426 33.8762 66.181 33.8762 68.1718C33.8762 68.3528 33.8762 68.5338 33.9667 68.7148L37.4959 87.2658C37.7674 88.9851 39.3058 90.3425 41.0251 90.3425H82.3803C84.1902 90.3425 85.6381 89.0756 85.9096 87.3563L90.8867 61.8373C91.1581 59.937 89.8912 58.1271 87.9004 57.8556C87.7194 57.7651 87.5384 57.7651 87.3574 57.7651Z" fill="white"/>
 <g filter="url(#filter4_d_174_5851)">
 <path d="M92.0631 54.417H71.7927C69.8924 54.417 67.9016 55.1409 66.4537 56.3173L61.0241 60.7515C59.4857 62.0184 57.5854 62.6518 55.685 62.6518H32.4284C30.1661 62.6518 28.1752 64.4617 28.1752 66.905C28.1752 67.086 28.1752 67.3575 28.2657 67.5384L32.5189 90.0711C32.8809 92.1525 34.6002 93.7813 36.772 93.7813H86.0906C88.1719 93.7813 89.9818 92.243 90.3438 90.1616L96.2258 59.3036C96.5878 57.0413 95.0494 54.779 92.6966 54.417C92.5156 54.417 92.2441 54.417 92.0631 54.417Z" fill="url(#paint1_linear_174_5851)"/>
@@ -38,11 +38,11 @@ const IconForgotPassword = () => (
 <path d="M69.8923 77.7641C71.0688 77.7641 72.0642 76.7686 72.0642 75.5922C72.0642 74.4158 71.0688 73.4204 69.8923 73.4204C68.7159 73.4204 67.7205 74.4158 67.7205 75.5922C67.7205 76.7686 68.7159 77.7641 69.8923 77.7641Z" fill="#989FB0"/>
 <path d="M66.0012 81.384H64.8247C63.8293 79.3932 61.386 78.5788 59.4857 79.6647C58.6712 80.0266 58.0378 80.7506 57.7663 81.384H56.5899C57.5853 78.7597 60.5716 77.4023 63.1054 78.3978C64.4628 78.9407 65.4582 80.0266 66.0012 81.384Z" fill="#989FB0"/>
 <path d="M100.298 101.111C99.3026 101.111 99.6645 101.202 91.9727 93.51C84.5523 99.03 74.2361 93.691 74.2361 84.6417C74.2361 78.5787 79.2132 73.6016 85.2762 73.6016C94.054 73.6016 99.4836 83.4653 94.3255 90.9762L101.474 98.1251C102.651 99.211 101.927 101.111 100.298 101.111ZM85.3667 77.1308C81.204 77.1308 77.7653 80.479 77.7653 84.7322C77.7653 88.9853 81.1135 92.3336 85.3667 92.3336C85.8192 92.3336 86.2716 92.3336 86.7241 92.2431C87.1765 92.1526 87.629 92.0621 87.991 91.8811C88.4434 91.7001 88.8054 91.5191 89.1674 91.3381C89.6199 91.0667 89.9818 90.7952 90.3438 90.4332C90.6153 90.1617 90.9772 89.7998 91.2487 89.5283C91.5202 89.1663 91.7917 88.8043 91.9727 88.4424C92.1536 88.0804 92.3346 87.6279 92.5156 87.1755C92.6966 86.723 92.7871 86.2705 92.7871 85.8181C92.7871 85.4561 92.8776 85.1846 92.8776 84.8227C92.9681 80.479 89.5294 77.1308 85.3667 77.1308Z" fill="#989FB0"/>
-<path d="M47.6309 72.2439L52.5175 69.6196" stroke="#989FB0" stroke-width="1.49566" stroke-miterlimit="10"/>
-<path d="M74.1454 70.977L69.2588 68.2622" stroke="#989FB0" stroke-width="1.49566" stroke-miterlimit="10"/>
+<path d="M47.6309 72.2439L52.5175 69.6196" stroke="#989FB0" strokeWidth="1.49566" strokeMiterlimit="10"/>
+<path d="M74.1454 70.977L69.2588 68.2622" stroke="#989FB0" strokeWidth="1.49566" strokeMiterlimit="10"/>
 <defs>
-<filter id="filter0_d_174_5851" x="48.5493" y="0.605551" width="79.2956" height="86.2131" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter0_d_174_5851" x="48.5493" y="0.605551" width="79.2956" height="86.2131" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="10.9682"/>
 <feGaussianBlur stdDeviation="10.9682"/>
@@ -50,8 +50,8 @@ const IconForgotPassword = () => (
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_174_5851"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_5851" result="shape"/>
 </filter>
-<filter id="filter1_d_174_5851" x="-13.3649" y="10.8717" width="77.9222" height="74.1545" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter1_d_174_5851" x="-13.3649" y="10.8717" width="77.9222" height="74.1545" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="10.9682"/>
 <feGaussianBlur stdDeviation="10.9682"/>
@@ -59,8 +59,8 @@ const IconForgotPassword = () => (
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_174_5851"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_5851" result="shape"/>
 </filter>
-<filter id="filter2_d_174_5851" x="16.2032" y="21.4693" width="70.196" height="76.4298" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter2_d_174_5851" x="16.2032" y="21.4693" width="70.196" height="76.4298" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="10.9682"/>
 <feGaussianBlur stdDeviation="10.9682"/>
@@ -68,8 +68,8 @@ const IconForgotPassword = () => (
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_174_5851"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_5851" result="shape"/>
 </filter>
-<filter id="filter3_d_174_5851" x="58.0596" y="44.7745" width="75.3054" height="75.4274" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter3_d_174_5851" x="58.0596" y="44.7745" width="75.3054" height="75.4274" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="10.9682"/>
 <feGaussianBlur stdDeviation="10.9682"/>
@@ -77,8 +77,8 @@ const IconForgotPassword = () => (
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_174_5851"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_5851" result="shape"/>
 </filter>
-<filter id="filter4_d_174_5851" x="6.23887" y="43.4488" width="111.976" height="83.237" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter4_d_174_5851" x="6.23887" y="43.4488" width="111.976" height="83.237" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="10.9682"/>
 <feGaussianBlur stdDeviation="10.9682"/>
@@ -87,12 +87,12 @@ const IconForgotPassword = () => (
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_5851" result="shape"/>
 </filter>
 <linearGradient id="paint0_linear_174_5851" x1="60.7524" y1="50.5586" x2="60.7524" y2="64.686" gradientUnits="userSpaceOnUse">
-<stop stop-color="#B0BACC"/>
-<stop offset="1" stop-color="#969EAE"/>
+<stop stopColor="#B0BACC"/>
+<stop offset="1" stopColor="#969EAE"/>
 </linearGradient>
 <linearGradient id="paint1_linear_174_5851" x1="62.2047" y1="53.5065" x2="62.2047" y2="94.2057" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FDFEFF"/>
-<stop offset="0.9964" stop-color="#ECF0F5"/>
+<stop stopColor="#FDFEFF"/>
+<stop offset="0.9964" stopColor="#ECF0F5"/>
 </linearGradient>
 </defs>
 </svg>

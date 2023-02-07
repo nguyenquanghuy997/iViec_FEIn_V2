@@ -37,7 +37,7 @@ const BoxInnerStyle = {
   position: "relative",
 }
 
-const ResultRegister = () => {
+const SuccessRegister = () => {
   const router = useRouter();
 
   const handleGoToPageByUrl = (url = "") => {
@@ -47,7 +47,7 @@ const ResultRegister = () => {
 
   return (
     <GuestGuard>
-      <Page title="Đăng ký thành công">
+      <Page title="Đăng ký">
         <LogoHeader />
         <Box sx={{ ...BoxWrapperStyle }} >
           <Box sx={{ ...BoxInnerStyle }}>
@@ -64,7 +64,7 @@ const ResultRegister = () => {
               </CardInfoIcon>
               {/* Content */}
               <CardInfoBody>
-                <CardInfoLabel label="Đăng ký thành công" />
+                <CardInfoLabel label="Đăng ký" />
                 <CardSubInfoLabel sx={{ mt: 1.5 }}>
                   Vui lòng truy cập email
                   {router.query.username ? (
@@ -114,4 +114,4 @@ const ResultRegister = () => {
   );
 };
 
-export default ResultRegister;
+export default SuccessRegister;

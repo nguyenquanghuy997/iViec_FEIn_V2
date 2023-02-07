@@ -152,6 +152,7 @@ export default function RegisterForm({}) {
   useEffect(() => {
     if (watchProvinceId) {
       getDistrictByProvinceId(watchProvinceId).unwrap();
+      methods.resetField('organizationDistrictId')
     }
   }, [watchProvinceId]);
 
