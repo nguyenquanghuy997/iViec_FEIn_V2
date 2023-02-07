@@ -38,7 +38,7 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
       setStatusResetPass(true);
       router.push(`?username=${data.email}`);
     } catch (error) {
-      const message = errorMessages[`${error.code}`] || "Lỗi hệ thống";
+      const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
       setError("afterSubmit", { ...error, message });
     }
   };
