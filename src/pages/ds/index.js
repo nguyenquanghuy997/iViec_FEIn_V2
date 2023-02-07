@@ -14,7 +14,6 @@ import {
 } from "@/components/hook-form";
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 
 export default function Jobs() {
@@ -36,40 +35,6 @@ export default function Jobs() {
   );
   const Icon = { plus: getIcon("ic_plus") };
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#1976D2",
-        contrastText: "#fff",
-      },
-      secondary: {
-        main: "#F77A0C",
-        contrastText: "#fff",
-      },
-      basic: {
-        main: "#455570",
-        contrastText: "#455570",
-      },
-      success: {
-        main: "#388E3C",
-        contrastText: "#fff",
-      },
-      error: {
-        main: "#D32F2F",
-        contrastText: "#fff",
-      },
-      warning: {
-        main: "#FBBD2B",
-        contrastText: "#fff",
-      },
-    },
-  });
-
-
-  // const [loading, setLoading] = React.useState(true);
-  // function handleClick() {
-  //   setLoading(true);
-  // }
   return (
     <Page title={"Design systems"}>
       <Container maxWidth={"lg"}>
@@ -90,38 +55,21 @@ export default function Jobs() {
         <br />
         <ButtonIcon content={Icon.plus} />
         <br />
-        <ThemeProvider theme={theme}>
-          <ButtonSystem
-            color="basic"
-            icon={Icon.plus}
-            text="Đăng nhập bằng Google - basic"
-            variant="outlined"
-          />
-        </ThemeProvider>
-        <br />
-        <ThemeProvider theme={theme}>
-          <ButtonSystem color="primary" text="primary" variant="contained" />
-        </ThemeProvider>
-        <br />
-        {/* button */}
-        <ThemeProvider theme={theme}>
-          <ButtonSystem color="secondary" text="secondary" variant="contained" />
-        </ThemeProvider>
-        <br />
-        {/* button */}
-        <ThemeProvider theme={theme}>
-          <ButtonSystem color="success" text="Success" variant="contained" />
-        </ThemeProvider>
-        <br />
-        {/* button */}
-        <ThemeProvider theme={theme}>
-          <ButtonSystem color="error" text="error" variant="contained" />
-        </ThemeProvider>
-        <br />
-        {/* button */}
-        <ThemeProvider theme={theme}>
-          <ButtonSystem color="warning" text="warning" variant="contained" />
-        </ThemeProvider>
+
+        <ButtonSystem
+          color="basic"
+          icon={Icon.plus}
+          text="Đăng nhập bằng Google - basic"
+          variant="outlined"
+        />
+        <br/>
+        <ButtonSystem
+        color="warning"
+        hoverColor='#FAB428'
+        text="Cảnh báo"
+        variant="contained"
+      />
+
 
         <Box mt={2} />
         <FormProvider methods={methods}>
