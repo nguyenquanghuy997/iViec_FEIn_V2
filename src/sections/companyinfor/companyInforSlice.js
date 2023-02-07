@@ -1,5 +1,10 @@
 import { apiSlice } from "@/redux/api/apiSlice";
-import { API_GET_JOB_CATEGORIES, API_USER_INFO } from "@/routes/api";
+import {
+  API_GET_JOB_CATEGORIES,
+  API_USER_INFO,
+  API_GET_PROVINCE,
+  API_GET_DISTRICT,
+} from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["CompanyInfor"],
@@ -27,6 +32,21 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
         method: "GET",
       }),
     }),
+    getProvince: builder.query({
+      query: () => ({
+        url: `${API_GET_PROVINCE}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["Provinces"],
+    }),
+    getDistrictByProvinceId: builder.query({
+      query: (provinceId) => ({
+        url: `${API_GET_DISTRICT}`,
+        method: "GET",
+        params: { ProvinceId: provinceId },
+      }),
+      invalidatesTags: ["Districts"],
+    }),
   }),
 });
 
@@ -35,4 +55,8 @@ export const {
   useGetBranchByUserQuery,
   useGetJobCategoriesQuery,
   useLazyGetJobCategoriesQuery,
+  useGetProvinceQuery,
+  useLazyGetProvinceQuery,
+  useGetDistrictByProvinceIdQuery,
+  useLazyGetDistrictByProvinceIdQuery,
 } = companyInforSlice;
