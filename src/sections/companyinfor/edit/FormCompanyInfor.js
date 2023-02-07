@@ -321,8 +321,8 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
             placeholder={"Chọn Tỉnh/Thành"}
             style={{ marginRight: 10 }}
             options={ProviceList.map((i) => ({
-              value: i.ID,
-              label: i.ProvinceName,
+              value: i.id,
+              label: i.name,
             }))}
           />
 
@@ -353,17 +353,21 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
             name={"type"}
             label={"Ngành nghề"}
             placeholder={"Chọn ngành nghề"}
-            style={{ marginRight: 10 }}
+            style={{ marginRight: 
+              20 }}
             options={JobCategoryList.map((i) => ({
-              value: i.JobCategoryId,
-              label: i.CategoryName,
+              value: i.id,
+              label: i.name,
             }))}
+       
           />
 
           <RHFBasicSelect
             name={"size"}
             label={"Quy mô nhân sự"}
             placeholder={"Chọn quy mô nhân sự"}
+            style={{ marginRight: 
+              20 }}
             options={LIST_BRANCH_SIZE.map((i) => ({
               value: i.id,
               label: i.name,

@@ -42,7 +42,7 @@ export default function Jobs() {
         main: "#1976D2",
         contrastText: "#fff",
       },
-      warning: {
+      secondary: {
         main: "#F77A0C",
         contrastText: "#fff",
       },
@@ -58,12 +58,18 @@ export default function Jobs() {
         main: "#D32F2F",
         contrastText: "#fff",
       },
-      neutral: {
+      warning: {
         main: "#FBBD2B",
         contrastText: "#fff",
       },
     },
   });
+
+
+  // const [loading, setLoading] = React.useState(true);
+  // function handleClick() {
+  //   setLoading(true);
+  // }
   return (
     <Page title={"Design systems"}>
       <Container maxWidth={"lg"}>
@@ -99,7 +105,7 @@ export default function Jobs() {
         <br />
         {/* button */}
         <ThemeProvider theme={theme}>
-          <ButtonSystem color="warning" text="Warning" variant="contained" />
+          <ButtonSystem color="secondary" text="secondary" variant="contained" />
         </ThemeProvider>
         <br />
         {/* button */}
@@ -114,7 +120,7 @@ export default function Jobs() {
         <br />
         {/* button */}
         <ThemeProvider theme={theme}>
-          <ButtonSystem color="neutral" text="neutral" variant="contained" />
+          <ButtonSystem color="warning" text="warning" variant="contained" />
         </ThemeProvider>
 
         <Box mt={2} />
