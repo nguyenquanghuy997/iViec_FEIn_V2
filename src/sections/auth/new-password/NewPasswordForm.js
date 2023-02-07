@@ -74,7 +74,7 @@ export default function NewPasswordForm({ userName, otpCode }) {
       // push(PATH_DASHBOARD.root);
     } catch (error) {
       // TODO
-      const message = errorMessages[`${error.code}`] || "Lỗi hệ thống";
+      const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
       setError("afterSubmit", { ...error, message });
     }
   };
