@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { View } from "@/components/FlexStyled";
-import { Table ,Tag} from "antd";
+import { Table ,Tag,Dropdown, Menu,Checkbox,Button} from "antd";
 import ReactDragListView from "react-drag-listview";
 import { useGetListApplicantsQuery } from "@/sections/applicant";
 // import { calculateColumnsWidth } from "./DynamicColumnsHelper";
 
 export const ApplicantItem = () => {
   const { data: Data} = useGetListApplicantsQuery();
+  // const initialColumns =[];
+
   const [columns, setColumns] = useState([
   {
     title: 'STT',
     key: 'index',
-    render : (index) => index+1,
-    fixed: "left"
+    // eslint-disable-next-line
+    render:(item, record, index)=>(<>{index+1}</>),
+    width: "3%",
+    fixed: "left",
   },
   { dataIndex: "fullName", title: "Họ và tên" ,fixed: "left",width: "6%"},
   { dataIndex: "phoneNumber", title: "Số điện thoại",fixed: "left" ,width: "6%"},
@@ -101,10 +105,80 @@ export const ApplicantItem = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  // const hasSelected = selectedRowKeys.length > 0;
-  // const dataTable = calculateColumnsWidth(columns, data, maxWidthPerCell);
+
+  //
+  // const [value, setValue] = useState(false)
+
+
+  const [initialColumns, setInitialColumns] = useState([])
+  const [checkedColumns, setCheckedColumns] = useState([])
+  const [visibleMenuSettings, setVisibleMenuSettings] = useState(false)
+  useEffect(() => {
+    setInitialColumns(columns)
+  }, [])
+  const handleVisibleChange = flag => {
+    setVisibleMenuSettings(flag)
+  };
+  const onChange = (e) => {
+    var checkedColumnsNew= checkedColumns
+    if(e.target.checked){
+      checkedColumnsNew = checkedColumns.filter(id => {return id !== e.target.id})
+    
+    }
+    else if(!e.target.checked){
+    checkedColumnsNew.push(e.target.id)
+  
+    }
+
+  var filtered = initialColumns;
+    for(var i =0;i< checkedColumnsNew.length; i++)
+    filtered = filtered.filter(el => {return el.dataIndex !== checkedColumns[i]})
+    setCheckedColumns(checkedColumnsNew)
+    setColumns(filtered)
+
+  }
+  const menu = (
+    <Menu>  
+      <Menu.ItemGroup title="Columns" >
+      <Menu.Item key="1" ><Checkbox id="dateOfBirth" onChange={onChange} defaultChecked>Ngày sinh</Checkbox></Menu.Item>
+        <Menu.Item key="2"><Checkbox id="email" onChange={onChange} defaultChecked>Email</Checkbox></Menu.Item>
+
+        <Menu.Item  key="3"><Checkbox id="fullName" onChange={onChange} defaultChecked>Tin tuyển dụng</Checkbox></Menu.Item>
+        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Bước tuyển dụng</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Ngày ứng tuyển</Checkbox></Menu.Item>
+        <Menu.Item  key="3"><Checkbox id="fullName" onChange={onChange} defaultChecked>Đơn vị</Checkbox></Menu.Item>
+        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Nguồn</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Cán bộ tuyển dụng</Checkbox></Menu.Item>
+        <Menu.Item  key="3"><Checkbox id="fullName" onChange={onChange} defaultChecked>Mức lương mong muốn</Checkbox></Menu.Item>
+        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Cán bộ tạo ứng viên</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="academicLevel" onChange={onChange} defaultChecked>Học vấn</Checkbox></Menu.Item>
+        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Kinh nghiệm làm việc</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Ngành nghề</Checkbox></Menu.Item>
+        <Menu.Item  key="3"><Checkbox id="yearOfExperience" onChange={onChange} defaultChecked>Số năm kinh nghiệm</Checkbox></Menu.Item>
+        <Menu.Item key="4"><Checkbox id="applicantSkills" onChange={onChange} defaultChecked>Kỹ năng</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="identityNumber" onChange={onChange} defaultChecked>Số CCCD/CMND</Checkbox></Menu.Item>
+        <Menu.Item  key="3"><Checkbox id="sex" onChange={onChange} defaultChecked>Giới tính</Checkbox></Menu.Item>
+        <Menu.Item key="4"><Checkbox id="maritalStatus" onChange={onChange} defaultChecked>Tình trạng hôn nhân</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="height" onChange={onChange} defaultChecked>Chiều cao</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="weight" onChange={onChange} defaultChecked>Cân nặng</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Nơi làm việc mong muố</Checkbox></Menu.Item>
+        <Menu.Item  key="3"><Checkbox id="expectedSalaryTo" onChange={onChange} defaultChecked>Mức lương mong muốn</Checkbox></Menu.Item>
+        <Menu.Item key="4"><Checkbox id="provinceName" onChange={onChange} defaultChecked>Nơi ở hiện tại</Checkbox></Menu.Item>
+        <Menu.Item  key="5"><Checkbox id="homeTower" onChange={onChange} defaultChecked>Quê quán</Checkbox></Menu.Item>
+       
+        
+      </Menu.ItemGroup>
+    </Menu>
+);
   return (
     <View pv={20} ph={24}>
+        <Dropdown
+        overlay={menu}
+        onVisibleChange={handleVisibleChange}
+        visible={visibleMenuSettings}
+      >
+        <Button>Cài đặt cột</Button>
+      </Dropdown>
     <ReactDragListView.DragColumn {...dragProps}>
     <Table 
         rowSelection={rowSelection}
@@ -117,3 +191,5 @@ export const ApplicantItem = () => {
     </View>
   );
 };
+
+
