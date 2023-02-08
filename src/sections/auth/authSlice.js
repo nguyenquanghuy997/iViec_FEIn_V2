@@ -33,10 +33,10 @@ export const authSlice = apiWithTag.injectEndpoints({
     }),
     // CONFIRM EMAIL
     confirmEmail: builder.query({
-      query: (email, token) => ({
+      query: (data) => ({
         url: API_CONFIRM_EMAIL,
         method: "GET",
-        params: { Email: email, Token: token },
+        params: { Email: data.email, Token: data.token },
       }),
       invalidatesTags: ["ConfirmEmail"],
     }),

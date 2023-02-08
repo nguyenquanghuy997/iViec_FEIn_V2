@@ -69,7 +69,7 @@ export default function RegisterForm({}) {
       .required("Mật khẩu xác nhận không được bỏ trống"),
     organizationName: Yup.string().required(
       "Tên doanh nghiệp không được bỏ trống"
-    ),
+    ).max(50, "Tên doanh nghiệp tối đa 50 ký tự"),
     organizationPhoneNumber: Yup.string()
       .required("Số điện thoại không được bỏ trống")
       .matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
@@ -85,6 +85,7 @@ export default function RegisterForm({}) {
     organizationDistrictId: Yup.string().required(
       "Quận/Huyện không được bỏ trống"
     ),
+    organizationAddress: Yup.string().max(255, "Địa chỉ cụ thể doanh nghiệp tối đa 255 ký tự"),
     acceptTerms: Yup.bool().oneOf(
       [true],
       "Vui lòng đồng ý với chính sách bảo mật"
