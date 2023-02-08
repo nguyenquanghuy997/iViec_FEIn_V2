@@ -1,6 +1,6 @@
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
-import { ButtonDS } from "@/components/DesignSystem";
+import { ButtonDS, SelectAutoCompleteDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import {
   Avatar,
@@ -208,7 +208,7 @@ function ApplicantPreviewItem({}) {
             <Grid gap={3}>
               <Box direction="row">
                 <Box>
-                  <Typography>Pipeline</Typography>
+                  <SelectAutoCompleteDS />
                 </Box>
               </Box>
             </Grid>
