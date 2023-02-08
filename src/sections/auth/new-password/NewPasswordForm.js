@@ -1,64 +1,49 @@
+import { useChangePasswordWithTokenMutation } from "../authSlice";
+import { STYLE_CONSTANT } from "../register/constants";
 import Iconify from "@/components/Iconify";
 // components
 import { FormProvider, RHFTextField } from "@/components/hook-form";
+import errorMessages from "@/utils/errorMessages";
 // routes
-import { PATH_DASHBOARD } from "@/routes/paths";
 import { yupResolver } from "@hookform/resolvers/yup";
 // @mui
 import { LoadingButton } from "@mui/lab";
 import {
-  FormHelperText,
+  Alert,
   IconButton,
   InputAdornment,
-  OutlinedInput,
   Stack,
+  Typography,
 } from "@mui/material";
 // next
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useState } from "react";
 // form
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-export default function NewPasswordForm() {
-  const { push } = useRouter();
+const InputStyle = { width: 440, minHeight: 44 };
+
+export default function NewPasswordForm({ userName, otpCode }) {
+  // const { push } = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
+  const [changePasswordWithToken] = useChangePasswordWithTokenMutation(); // result
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const emailRecovery =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("email-recovery")
-      : "";
-
   const VerifyCodeSchema = Yup.object().shape({
-    code1: Yup.string().required("Code is required"),
-    code2: Yup.string().required("Code is required"),
-    code3: Yup.string().required("Code is required"),
-    code4: Yup.string().required("Code is required"),
-    code5: Yup.string().required("Code is required"),
-    code6: Yup.string().required("Code is required"),
-    email: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
+      .required("Mật khẩu không được bỏ trống")
+      .min(6, "Mật khẩu cần tối thiểu 6 ký tự"),
     confirmPassword: Yup.string()
-      .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), null], "Passwords must match"),
+      .required("Mật khẩu xác nhận không được bỏ trống")
+      .oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng"),
   });
 
   const defaultValues = {
-    code1: "",
-    code2: "",
-    code3: "",
-    code4: "",
-    code5: "",
-    code6: "",
-    email: emailRecovery || "",
     password: "",
     confirmPassword: "",
   };
@@ -70,174 +55,134 @@ export default function NewPasswordForm() {
   });
 
   const {
-    control,
-    setValue,
+    setError,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
 
-  useEffect(() => {
-    const target = document.querySelector("input.field-code");
-
-    target?.addEventListener("paste", handlePaste);
-
-    return () => {
-      target?.removeEventListener("paste", handlePaste);
-    };
-  }, []);
-
-  const handlePaste = (event) => {
-    let data = event.clipboardData.getData("text");
-
-    data = data.split("");
-    [].forEach.call(document.querySelectorAll(".field-code"), (node, index) => {
-      node.value = data[index];
-
-      const fieldIndex = `code${index + 1}`;
-
-      setValue(fieldIndex, data[index]);
-    });
-
-    event.preventDefault();
-  };
-
-  const handleChangeWithNextField = (event, handleChange) => {
-    const { maxLength, value, name } = event.target;
-
-    const fieldIndex = name.replace("code", "");
-
-    const fieldIntIndex = Number(fieldIndex);
-
-    if (value.length >= maxLength) {
-      if (fieldIntIndex < 6) {
-        const nextfield = document.querySelector(
-          `input[name=code${fieldIntIndex + 1}]`
-        );
-
-        if (nextfield !== null) {
-          nextfield.focus();
-        }
-      }
-    }
-
-    handleChange(event);
-  };
-
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     try {
+      const body = {
+        email: userName,
+        token: otpCode,
+        newPassword: data.password,
+      };
+      console.log(body);
       await new Promise((resolve) => setTimeout(resolve, 500));
-      // eslint-disable-next-line no-console
-
-      sessionStorage.removeItem("email-recovery");
-
+      await changePasswordWithToken(body).unwrap();
       enqueueSnackbar("Change password success!");
-
-      push(PATH_DASHBOARD.root);
+      // push(PATH_DASHBOARD.root);
     } catch (error) {
       // TODO
+      const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
+      setError("afterSubmit", { ...error, message });
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email" disabled={!!emailRecovery} />
-
-        <Stack direction="row" spacing={2} justifyContent="center">
-          {["code1", "code2", "code3", "code4", "code5", "code6"].map(
-            (name, index) => (
-              <Controller
-                key={name}
-                name={`code${index + 1}`}
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <OutlinedInput
-                    {...field}
-                    error={!!error}
-                    autoFocus={index === 0}
-                    placeholder="-"
-                    onChange={(event) =>
-                      handleChangeWithNextField(event, field.onChange)
-                    }
-                    inputProps={{
-                      className: "field-code",
-                      maxLength: 1,
-                      sx: {
-                        p: 0,
-                        textAlign: "center",
-                        width: { xs: 36, sm: 56 },
-                        height: { xs: 36, sm: 56 },
-                      },
-                    }}
-                  />
-                )}
-              />
-            )
+        {!!errors.afterSubmit && (
+          <Alert severity="error">{errors.afterSubmit.message}</Alert>
+        )}
+        <Stack>
+          <RHFTextField
+            name="password"
+            label="Mật khẩu"
+            placeholder="Bắt buộc"
+            required
+            type={showPassword ? "text" : "password"}
+            style={{ ...InputStyle }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    edge="end"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <Iconify
+                      icon={
+                        showPassword
+                          ? "ic:outline-remove-red-eye"
+                          : "mdi:eye-off-outline"
+                      }
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {!errors.password && (
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: STYLE_CONSTANT.FONT_XS,
+                color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
+                fontWeight: STYLE_CONSTANT.FONT_NORMAL,
+                mt: 1,
+              }}
+            >
+              Mật khẩu cần tối thiểu 6 ký tự
+            </Typography>
           )}
         </Stack>
-
-        {(!!errors.code1 ||
-          !!errors.code2 ||
-          !!errors.code3 ||
-          !!errors.code4 ||
-          !!errors.code5 ||
-          !!errors.code6) && (
-          <FormHelperText error sx={{ px: 2 }}>
-            Code is required
-          </FormHelperText>
-        )}
-
-        <RHFTextField
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <RHFTextField
-          name="confirmPassword"
-          label="Confirm New Password"
-          type={showPassword ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-          sx={{ mt: 3 }}
-        >
-          Change password
-        </LoadingButton>
+        <Stack>
+          <RHFTextField
+            name="confirmPassword"
+            label="Xác nhận lại mật khẩu mới"
+            placeholder="Bắt buộc"
+            required
+            type={showPassword ? "text" : "password"}
+            style={{ ...InputStyle }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    edge="end"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <Iconify
+                      icon={
+                        showPassword
+                          ? "ic:outline-remove-red-eye"
+                          : "mdi:eye-off-outline"
+                      }
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
+        <Stack>
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            sx={{
+              mt: 4,
+              textTransform: "initial",
+              backgroundColor: STYLE_CONSTANT.COLOR_PRIMARY,
+              textTransform: "none",
+              borderRadius: 0.75,
+            }}
+          >
+            Xác nhận và đăng nhập
+          </LoadingButton>
+        </Stack>
       </Stack>
     </FormProvider>
   );
 }
+
+NewPasswordForm.propTypes = {
+  userName: PropTypes.string,
+  otpCode: PropTypes.string,
+};
+
+NewPasswordForm.defaultProps = {
+  userName: "",
+  otpCode: "",
+};

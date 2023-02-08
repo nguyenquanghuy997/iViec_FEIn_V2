@@ -9,7 +9,7 @@ import {
 } from "@/components/hook-form";
 // hooks
 import useAuth from "@/hooks/useAuth";
-import useIsMountedRef from "@/hooks/useIsMountedRef";
+// import useIsMountedRef from "@/hooks/useIsMountedRef";
 import { PATH_AUTH } from "@/routes/paths";
 // form
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,7 +26,7 @@ import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-
+import  errorMessages from '@/utils/errorMessages'
 // routes
 // import { PATH_AUTH } from '@/routes/paths'
 
@@ -34,7 +34,7 @@ export default function LoginForm() {
   const { login } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
 
-  const isMountedRef = useIsMountedRef();
+  // const isMountedRef = useIsMountedRef();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -42,14 +42,12 @@ export default function LoginForm() {
     email: Yup.string()
       .email("Email không đúng định dạng")
       .required("Email không được bỏ trống"),
-    password: Yup.string().required("Mật khẩu không được bỏ trống"),
+    password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
   });
 
   const defaultValues = {
     email: "quy.vu.0101@gmail.com",
     password: "Abcd@2021",
-    // email: "",
-    // password: "",
     remember: true,
   };
 
@@ -67,15 +65,11 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password, data.remember);
-      enqueueSnackbar("Login success!");
+      enqueueSnackbar("Đăng nhập thành công!");
     } catch (error) {
-      if (isMountedRef.current) {
-        const message =
-          error?.validation?.body?.message ||
-          error?.data?.message ||
-          error?.message;
-        setError("afterSubmit", { ...error, message });
-      }
+      const message =errorMessages[`${error.code}`] ||'Lỗi hệ thống'
+      setError("afterSubmit", { ...error, message });
+
     }
   };
 

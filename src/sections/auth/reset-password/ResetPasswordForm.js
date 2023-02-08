@@ -1,73 +1,72 @@
-// next
-// components
+import { ButtonDS } from "@/components/DesignSystem";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
-// routes
 import { useForgotPasswordMutation } from "@/sections/auth/authSlice";
-// form
+import errorMessages from "@/utils/errorMessages";
 import { yupResolver } from "@hookform/resolvers/yup";
-// @mui
-import {
-  ButtonDS,
-} from "@/components/DesignSystem";
-// import { LoadingButton } from "@mui/lab";
-import { Stack } from "@mui/material";
-import * as qs from "qs";
+import { Stack, Alert } from "@mui/material";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-export default function ResetPasswordForm() {
+export default function ResetPasswordForm({ setStatusResetPass }) {
+  const router = useRouter();
   const [forgotPassword] = useForgotPasswordMutation();
   const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
+      .email("Email không đúng định dạng")
+      .required("Email không được bỏ trống"),
   });
 
   const methods = useForm({
     resolver: yupResolver(ResetPasswordSchema),
     defaultValues: { email: "" },
   });
+
   const {
+    setError,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const body = {
-        Email: data.email,
-        FullName: "thang",
-      };
-      await forgotPassword(qs.stringify(body)).unwrap();
-      // sessionStorage.setItem('email-recovery', data.email)
-
-      // push(PATH_AUTH.newPassword)
+      var body = JSON.stringify({
+        userName: data.email,
+      });
+      await forgotPassword(body).unwrap();
+      setStatusResetPass(true);
+      router.push(`?username=${data.email}`);
     } catch (error) {
-      // TODO
+      const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
+      setError("afterSubmit", { ...error, message });
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Nhập Email muốn khôi phục mật khẩu" />
-        <ButtonDS
-        width="440px"
-        size='large'
-        tittle={'Khôi phục mật khẩu'}
-        isSubmitting={isSubmitting}
-        type="submit"
-      />
-        {/* <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-        >
-          Đăng ký tạo mật khẩu mới
-        </LoadingButton> */}
+        {!!errors.afterSubmit && (
+          <Alert severity="error">{errors.afterSubmit.message}</Alert>
+        )}
+        <Stack sx={{ mb: 5 }}>
+          <RHFTextField
+            name="email"
+            label="Email đăng nhập"
+            placeholder="Nhập Email muốn khôi phục mật khẩu"
+            required
+          />
+        </Stack>
+        <Stack>
+          <ButtonDS
+            width="440px"
+            size="large"
+            tittle={"Khôi phục mật khẩu"}
+            loading={isSubmitting}
+            type="submit"
+            sx={{ textTransform: "initial" }}
+          />
+        </Stack>
       </Stack>
     </FormProvider>
   );

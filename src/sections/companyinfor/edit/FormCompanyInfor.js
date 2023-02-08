@@ -8,7 +8,7 @@ import {
   useGetBranchByIdMutation,
   useGetBranchByUserQuery,
   useGetJobCategoriesQuery,
-  useGetProviceMutation,
+  useLazyGetProvinceQuery,
   useUpdateBranchMutation,
 } from "@/sections/companyinfor/companyInforSlice";
 import { formatRemoteUrl, LIST_BRANCH_SIZE } from "@/utils/formatString";
@@ -67,11 +67,15 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
   const [fetchData, { data: { Data } = {} }] = useGetBranchByIdMutation();
   const [updateData] = useUpdateBranchMutation();
 
-  const [fetchProvice, { data: { DataList: ProviceList = [] } = {} }] =
-    useGetProviceMutation();
-  const { data: { DataList: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
+  // const [fetchProvice, { data: { DataList: ProviceList = [] } = {} }] =
+  //   useGetProviceMutation();
 
+  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
+    useLazyGetProvinceQuery();
+
+  const { data: { items: JobCategoryList = [] } = {} } =
+    useGetJobCategoriesQuery();
+  console.log("opbject", { ProviceList, JobCategoryList });
   const onSelectAvatar = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -317,8 +321,8 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
             placeholder={"Chọn Tỉnh/Thành"}
             style={{ marginRight: 10 }}
             options={ProviceList.map((i) => ({
-              value: i.ID,
-              label: i.ProvinceName,
+              value: i.id,
+              label: i.name,
             }))}
           />
 
@@ -349,24 +353,27 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
             name={"type"}
             label={"Ngành nghề"}
             placeholder={"Chọn ngành nghề"}
-            style={{ marginRight: 10 }}
+            style={{ marginRight: 
+              20 }}
             options={JobCategoryList.map((i) => ({
-              value: i.JobCategoryId,
-              label: i.CategoryName,
+              value: i.id,
+              label: i.name,
             }))}
+       
           />
 
           <RHFBasicSelect
             name={"size"}
             label={"Quy mô nhân sự"}
             placeholder={"Chọn quy mô nhân sự"}
+            style={{ marginRight: 
+              20 }}
             options={LIST_BRANCH_SIZE.map((i) => ({
               value: i.id,
               label: i.name,
             }))}
           />
         </div>
-        
 
         <div style={{ marginTop: 32 }}>
           <span

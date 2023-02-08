@@ -91,7 +91,7 @@ export const DropDown = () => {
     select: {
       padding: `4px 2px`,
       color: `#5C6A82`,
-      borderRadius: `8px 8px 0 0`,
+      // borderRadius: `8px 8px 0 0`,
       background: `#EFF3F7`,
       boxShadow: `inset 0px -1px 0px #E7E9ED`,
     },
@@ -102,6 +102,9 @@ export const DropDown = () => {
       lineHeight: `20px`,
       justifyContent: `center`,
       display: `flex`,
+      '&:before': {
+        borderBottom: `none`,
+      },
     },
     search: {
       "&,&:before, &:hover": {

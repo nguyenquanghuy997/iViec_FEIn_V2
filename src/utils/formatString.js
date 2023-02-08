@@ -9,6 +9,33 @@ export const LIST_BRANCH_SIZE = [
   { id: "Greater10000", value: "[10000-00]", name: "Trên 10000" },
 ];
 
+export const LIST_ORGANIZATION_SIZE = [
+  { id: "LessThanTen", value: 0, name: "Dưới 10" },
+  { id: "BetweenTenAndFortyNine", value: 1, name: "10-49" },
+  { id: "BetweenFiftyAndNinetyNine", value: 2, name: "50-99" },
+  {
+    id: "BetweenOneHundredAndFourHundredNinetyNine",
+    value: 3,
+    name: "100-499",
+  },
+  {
+    id: "BetweenFiveHundredAndNineHundredNinetyNine",
+    value: 4,
+    name: "500-999",
+  },
+  {
+    id: "BetweenOneThousandAndFourThousandNineHundredNinetyNine",
+    value: 5,
+    name: "1000-4999",
+  },
+  {
+    id: "BetweenFiveThousandAndNineThousandNineHundredNinetyNine",
+    value: 6,
+    name: "5000-9999",
+  },
+  { id: "LargeTenThousand", value: 7, name: "Trên 10000" },
+];
+
 export function joinArrStr(arr, key) {
   return Array.isArray(arr) ? arr.filter((item) => !!item).join(key) : "";
 }
