@@ -1,158 +1,115 @@
 import React, { useState } from "react";
 import { View } from "@/components/FlexStyled";
-import { Table } from "antd";
+import { Table ,Tag} from "antd";
 import ReactDragListView from "react-drag-listview";
+import { useGetListApplicantsQuery } from "@/sections/applicant";
 // import { calculateColumnsWidth } from "./DynamicColumnsHelper";
-const data = [
-  {
-    id: 1,
-    title: "Lorem Ipsum",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-    date: "2019-30-09",
-    excerpt:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 2,
-    title: "Neque porro quisquam",
-    description:
-      "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    date: "2019-29-09",
-    excerpt:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 3,
-    title: "All the Lorem Ipsum",
-    description:
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-    date: "2019-28-09",
-    excerpt:
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 4,
-    title: "Lorem Ipsum",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-    date: "2019-30-09",
-    excerpt:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 5,
-    title: "Neque porro quisquam",
-    description:
-      "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    date: "2019-29-09",
-    excerpt:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 6,
-    title: "All the Lorem Ipsum",
-    description:
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-    date: "2019-28-09",
-    excerpt:
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 7,
-    title: "Lorem Ipsum",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-    date: "2019-30-09",
-    excerpt:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 8,
-    title: "Neque porro quisquam",
-    description:
-      "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    date: "2019-29-09",
-    excerpt:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  },
-  {
-    id: 9,
-    title: "All the Lorem Ipsum",
-    description:
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-    date: "2019-28-09",
-    excerpt:
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-    author: "Some author",
-    url: "http://www.lipsum.com",
-    fixed1: "-",
-    fixed2: "-"
-  }
-];
 
 export const ApplicantItem = () => {
+  const { data: Data} = useGetListApplicantsQuery();
   const [columns, setColumns] = useState([
-  { dataIndex: "id", title: "STT" ,fixed: "left" },
-  { dataIndex: "title", title: "Họ và tên" ,fixed: "left"},
-  { dataIndex: "description", title: "SĐT" },
-  { dataIndex: "date", title: "Ngày sinh" },
-  { dataIndex: "excerpt", title: "Email" },
-  { dataIndex: "author", title: "tin tuyển dụng" },
-  { dataIndex: "url", title: "Bước tuyển dụng" },
-  { dataIndex: "fixed1", title: "Fixed 1", fixed: "right" },
+  {
+    title: 'STT',
+    key: 'index',
+    render : (index) => index+1,
+    fixed: "left"
+  },
+  { dataIndex: "fullName", title: "Họ và tên" ,fixed: "left",width: "6%"},
+  { dataIndex: "phoneNumber", title: "Số điện thoại",fixed: "left" ,width: "6%"},
+  { dataIndex: "dateOfBirth", title: "Ngày sinh",width: "8%" },
+  { dataIndex: "email", title: "Email",width: "8%" },
+  { dataIndex: "fullName", title: "Tin tuyển dụng" },
+  { dataIndex: "fullName", title: "Bước tuyển dụng" },
+  { dataIndex: "fullName", title: "Ngày ứng tuyển" },
+  { dataIndex: "fullName", title: "Đơn vị"},
+  { dataIndex: "fullName", title: "Nguồn"},
+  { dataIndex: "fullName", title: "Cán bộ tuyển dụng" },
+  { dataIndex: "fullName", title: "Cán bộ tạo ứng viên"},
+  {
+    title: 'Học vấn',
+    dataIndex: ['academicLevel', 'name'], // antd v4
+    key: 'name',
+    render: (text) =>  <Tag>
+    {text}
+  </Tag>
+  
+  },
+  { dataIndex: "fullName", title: "Kinh nghiệm làm việc" },
+  { dataIndex: "fullName", title: "Ngành nghề" },
+  { dataIndex: "yearOfExperience", title: "Số năm kinh nghiệm" },
+  {
+    title: 'Kỹ năng',
+    key: 'applicantSkills',
+    dataIndex: 'applicantSkills',
+    render: (_, { applicantSkills }) => (
+      <>
+        {applicantSkills.map((item) => {
+       let color = item.length > 5 ? 'geekblue' : 'green';
+          return (
+            <Tag color={color} key={item}>
+              {item.name.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
+    width: "8%"
+  },
+  { dataIndex: "identityNumber", title: "Số CCCD/CMND" },
+  { dataIndex: "sex", title: "Giới tính" },
+  { dataIndex: "maritalStatus", title: "Tình trạng hôn nhân" },
+  { dataIndex: "height", title: "Chiều cao" },
+  { dataIndex: "weight", title: "Cân nặng" },
+  { dataIndex: "fullName", title: "Nơi làm việc mong muốn" },
+  { dataIndex: "expectedSalaryTo", title: "Mức lương mong muốn" },
+  { dataIndex: "provinceName", title: "Nơi ở hiện tại" },
+  { dataIndex: "homeTower", title: "Quê quán" },
   ]);
+
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
-      console.log(`dragged from ${fromIndex} to ${toIndex}`);
-      const newColumns = [...columns];
-      const item = newColumns.splice(fromIndex, 1)[0];
-      newColumns.splice(toIndex, 0, item);
-      setColumns(newColumns);
+      if(fromIndex>3){
+        console.log(`dragged from ${fromIndex} to ${toIndex}`);
+        const newColumns = [...columns];
+        const item = newColumns.splice(fromIndex, 1)[0];
+        newColumns.splice(toIndex, 0, item);
+        setColumns(newColumns);
+      }
+
     },
     nodeSelector: "th"
   };
   // const maxWidthPerCell = 2000;
   const tableHeight = 1800;
   const rowKey = "id";
+  
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  // const start = () => {
+  //   setLoading(true);
+  //   // ajax request after empty completing
+  //   setTimeout(() => {
+  //     setSelectedRowKeys([]);
+  //     setLoading(false);
+  //   }, 1000);
+  // };
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  // const hasSelected = selectedRowKeys.length > 0;
   // const dataTable = calculateColumnsWidth(columns, data, maxWidthPerCell);
   return (
     <View pv={20} ph={24}>
     <ReactDragListView.DragColumn {...dragProps}>
-    <Table columns={columns} 
-        dataSource={data}
+    <Table 
+        rowSelection={rowSelection}
+        columns={columns} 
+        dataSource={Data?.items}
         rowKey={rowKey}
         scroll={{ x: 3000, y: tableHeight }}
     />
