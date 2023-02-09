@@ -13,18 +13,27 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
-
-// const JobDesTitleStyled = styled(Grid)(
-//   ({ theme, ownerState: { smDown } = {} }) => ({
-//     display: 'flex',
-//     flexDirection: smDown ? 'column' : 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: theme.spacing(1),
-//   })
-// )
+import React, { useState } from "react";
 
 function ApplicantPreviewItem({}) {
+  const allOptions = [
+    { id: 5141, name: "Tuyển nhân viên kinh doanh phần mềm tại Hà Nội" },
+    { id: 214, name: "Tiêu đề tin tuyển dụng 2" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 3" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 4" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 5" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 6" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 7" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 8" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 9" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 10" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 11" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 12" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 13" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 14" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 15" },
+  ];
+  const [selectedOption, setSelectedOption] = useState(allOptions[0].name);
   return (
     <Card
       sx={{
@@ -49,6 +58,7 @@ function ApplicantPreviewItem({}) {
             display="flex"
             alignItems="center"
             justifyContent="space-between"
+            marginBottom={"32px"}
           >
             <Grid
               display="flex"
@@ -138,7 +148,7 @@ function ApplicantPreviewItem({}) {
                   marginRight: "12px",
                   fontSize: "14px",
                   padding: "6px 12px",
-                  textTransform: "none"
+                  textTransform: "none",
                 }}
                 icon={
                   <Iconify
@@ -186,7 +196,7 @@ function ApplicantPreviewItem({}) {
                   ":hover": {
                     backgroundColor: "#01B6A7",
                   },
-                  textTransform: "none"
+                  textTransform: "none",
                 }}
                 icon={
                   <Iconify
@@ -206,11 +216,26 @@ function ApplicantPreviewItem({}) {
             alignItems="center"
           >
             <Grid gap={3}>
-              <Box direction="row">
-                <Box>
-                  <SelectAutoCompleteDS />
-                </Box>
-              </Box>
+              <SelectAutoCompleteDS
+                width="35%"
+                selectedOption={selectedOption}
+                setSelectedOption={setSelectedOption}
+                data={allOptions}
+                sx={{
+                  background: "#F3F4F6",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#F3F4F6",
+                    borderRadius: "6px",
+                  },
+                  "&:hover, &.Mui-focused": {
+                    background: "#E7E9ED",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
+                    {
+                      borderColor: "#E7E9ED",
+                    },
+                }}
+              />
             </Grid>
           </Grid>
         </Grid>
