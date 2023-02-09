@@ -37,8 +37,8 @@ function NavSectionHorizontal({ navConfig }) {
   return (
     <Stack
       direction='row'
-      justifyContent='center'
-      sx={{ bgcolor: 'background.neutral', borderRadius: 1, px: 0.5 }}
+      justifyContent='space-between'
+      sx={{ bgcolor: 'transparent', borderRadius: 1, px: 0.5 }}
     >
       <Stack direction='row' sx={{ ...hideScrollbar, py: 1 }}>
         {navConfigBaseRole.map((group) => (

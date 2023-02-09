@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 
 // config
-import { HEADER, NAVBAR } from '@/config'
+import { HEADER, NAVBAR, DASHBOARD_CONTENT_WIDTH } from '@/config'
 // guards
 import RoleBasedGuard from '@/guards/RoleBasedGuard'
 // hooks
@@ -21,15 +21,20 @@ import DashboardHeader from './header'
 import NavbarHorizontal from './navbar/NavbarHorizontal'
 import NavbarVertical from './navbar/NavbarVertical'
 
+import DashboardAppBar from './header/AppBar'
+
 const MainStyle = styled('main', {
   shouldForwardProp: (prop) => prop !== 'collapseClick',
 })(({ collapseClick, theme }) => ({
   flexGrow: 1,
-  paddingTop: HEADER.MOBILE_HEIGHT + 16,
   paddingBottom: 24,
   [theme.breakpoints.up('lg')]: {
     paddingTop: HEADER.DASHBOARD_DESKTOP_HEIGHT,
-    width: `calc(100% - ${NAVBAR.DASHBOARD_WIDTH}px)`,
+    width: '100%',
+    maxWidth: DASHBOARD_CONTENT_WIDTH,
+    margin: '0 auto',
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
     transition: theme.transitions.create('margin-left', {
       duration: theme.transitions.duration.shorter,
     }),
@@ -99,17 +104,11 @@ export default function DashboardLayout({ roles, children }) {
         minHeight: { lg: 1 },
       }}
     >
-      <DashboardHeader
+      <DashboardAppBar
         isCollapse={isCollapse}
         onOpenSidebar={() => setOpen(true)}
       />
-
-      <NavbarVertical
-        isOpenSidebar={open}
-        onCloseSidebar={() => setOpen(false)}
-      />
-
-      <MainStyle collapseClick={collapseClick} style={{position:'relative'}}>
+      <MainStyle collapseClick={collapseClick} style={{ position: 'relative' }}>
         {!roles || !Array.isArray(roles) ? (
           children
         ) : (
