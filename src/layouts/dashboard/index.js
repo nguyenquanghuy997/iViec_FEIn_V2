@@ -17,8 +17,6 @@ import useSettings from '@/hooks/useSettings'
 
 //
 import InstructionPopover from '../InstructionPopover'
-import DashboardHeader from './header'
-import NavbarHorizontal from './navbar/NavbarHorizontal'
 import NavbarVertical from './navbar/NavbarVertical'
 
 import DashboardAppBar from './header/AppBar'
@@ -63,36 +61,34 @@ export default function DashboardLayout({ roles, children }) {
   if (verticalLayout) {
     return (
       <>
-        <DashboardHeader
+        <DashboardAppBar
           onOpenSidebar={() => setOpen(true)}
           verticalLayout={verticalLayout}
         />
 
-        {isDesktop ? (
+        {/* {isDesktop ? (
           <NavbarHorizontal />
         ) : (
           <NavbarVertical
             isOpenSidebar={open}
             onCloseSidebar={() => setOpen(false)}
           />
+        )} */}
+
+          {!isDesktop && verticalLayout && <NavbarVertical
+            isOpenSidebar={open}
+            onCloseSidebar={() => setOpen(false)}
+          />}
+
+<MainStyle collapseClick={collapseClick} style={{ position: 'relative' }}>
+        {!roles || !Array.isArray(roles) ? (
+          children
+        ) : (
+          <RoleBasedGuard roles={roles}>{children}</RoleBasedGuard>
         )}
 
-        <Box
-          component='main'
-          sx={{
-            px: { lg: 2 },
-            pt: {
-              xs: `${HEADER.MOBILE_HEIGHT + 24}px`,
-              lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 80}px`,
-            },
-            pb: {
-              xs: `${HEADER.MOBILE_HEIGHT + 24}px`,
-              lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 24}px`,
-            },
-          }}
-        >
-          {children}
-        </Box>
+        <InstructionPopover />
+      </MainStyle>
       </>
     )
   }
