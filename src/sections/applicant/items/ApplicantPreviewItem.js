@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import { PipelineApplicant } from "../others";
 
 function ApplicantPreviewItem({}) {
   const allOptions = [
@@ -33,6 +34,7 @@ function ApplicantPreviewItem({}) {
     { id: 3155, name: "Tiêu đề tin tuyển dụng 14" },
     { id: 3155, name: "Tiêu đề tin tuyển dụng 15" },
   ];
+
   const [selectedOption, setSelectedOption] = useState(allOptions[0].name);
   return (
     <Card
@@ -237,6 +239,7 @@ function ApplicantPreviewItem({}) {
                 }}
               />
             </Grid>
+            <PipelineApplicant />
           </Grid>
         </Grid>
         <Grid container>

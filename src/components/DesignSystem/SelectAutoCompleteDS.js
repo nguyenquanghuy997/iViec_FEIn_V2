@@ -6,7 +6,6 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  createTheme,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import PropTypes from "prop-types";
@@ -33,7 +32,7 @@ const usePlaceholderStyles = makeStyles(() => ({
       lineHeight: "20px",
       padding: "10px 16px",
       background: "#FDFDFD",
-boxShadow: "inset 0px -1px 0px #E7E9ED"
+      boxShadow: "inset 0px -1px 0px #E7E9ED",
     },
     "&::-webkit-scrollbar": {
       width: "5px",
@@ -62,12 +61,6 @@ export default function SelectAutoCompleteDS(props) {
     () => data.filter((option) => containsText(option.name, searchText)),
     [searchText]
   );
-  const theme = createTheme({
-    root: {
-      // Some CSS
-      borderRadius: "6px !important",
-    },
-  });
 
   return (
     <FormControl
@@ -78,7 +71,6 @@ export default function SelectAutoCompleteDS(props) {
             borderRadius: "6px",
           },
       }}
-      theme={theme}
     >
       <Select
         MenuProps={{ autoFocus: false, classes: { paper: classes.paper } }}
