@@ -1,5 +1,5 @@
 // next
-import UserActiveSuccess from "../../sections/user-activate/UserActiveSuccess";
+import UserActiveSuccess from "@/sections/auth/user-activate/UserActiveFailure";
 // component
 import { LogoHeader } from "@/components/BaseComponents";
 import {
@@ -14,7 +14,7 @@ import { PATH_PAGE } from "@/routes/paths";
 import { useLazyConfirmEmailQuery } from "@/sections/auth/authSlice";
 import NewPasswordForm from "@/sections/auth/new-password/NewPasswordForm";
 import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
-import UserActiveFailure from "@/sections/user-activate/UserActiveFailure";
+import UserActiveFailure from "@/sections/auth/user-activate/UserActiveFailure";
 // @mui
 import { Box, Stack } from "@mui/material";
 import { useRouter } from "next/router";
@@ -24,11 +24,12 @@ const UserActivePage = () => {
   const [statusActiveUser, setStatusActiveUser] = useState(false);
   const router = useRouter();
  
-  const { USER_NAME, SetPassword } = router.query;
+  const { USER_NAME,OTPCode, SetPassword } = router.query;
   const [confirmEmail] = useLazyConfirmEmailQuery();
-  let str = router.asPath;
-  const OTPCode = str.substring(str.indexOf('OTPCode') - 7);
+  // let str = router.asPath;
+  // const OTPCode = str.substring(str.indexOf('OTPCode') - 7);
   console.log('OTPCode',OTPCode)
+  console.log('encodeURI',encodeURI(OTPCode))
 
   useEffect(() => {
     if (!USER_NAME && !OTPCode) {
@@ -42,7 +43,7 @@ const UserActivePage = () => {
         try {
           console.log('USER_NAME',USER_NAME)
           console.log('OTPCode',OTPCode)
-          await confirmEmail({ email: USER_NAME, token: OTPCode }).unwrap();
+          await confirmEmail({ email: USER_NAME, token: encodeURI(OTPCode) }).unwrap();
           setStatusActiveUser(true);
         } catch (e) {
           setStatusActiveUser(false);
