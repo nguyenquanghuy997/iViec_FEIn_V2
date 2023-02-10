@@ -154,7 +154,7 @@ NavItemContent.propTypes = {
   title: PropTypes.string,
 }
 
-function NavItemContent({ icon, title, children, subItem }) {
+export default function NavItemContent({ icon, title, children, subItem }) {
   return (
     <>
       {icon && (
@@ -170,7 +170,6 @@ function NavItemContent({ icon, title, children, subItem }) {
           {icon}
         </Box>
       )}
-
       {title}
 
       {children && (

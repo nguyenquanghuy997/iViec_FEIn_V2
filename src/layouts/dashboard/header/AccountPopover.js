@@ -1,6 +1,5 @@
 import MenuPopover from "@/components/MenuPopover";
 // components
-import { IconButtonAnimate } from "@/components/animate";
 import { DOMAIN_SERVER_API } from "@/config";
 // hooks
 import useAuth from "@/hooks/useAuth";
@@ -8,11 +7,13 @@ import useIsMountedRef from "@/hooks/useIsMountedRef";
 import useLocales from "@/hooks/useLocales";
 import { useSelector } from "@/redux/store";
 import { PATH_DASHBOARD } from "@/routes/paths";
+import { useLazyGetCurrentUserQuery } from "@/sections/auth/authSlice";
 // @mui
 import {
   Avatar,
   Box,
   Divider,
+  IconButton,
   MenuItem,
   Stack,
   Typography,
@@ -21,12 +22,18 @@ import { alpha } from "@mui/material/styles";
 // next
 import NextLink from "next/link";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AccountPopover() {
-  // const router = useRouter();
   const { translate } = useLocales();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
+
+  const [getCurrentUser, { data: currentUser }] = useLazyGetCurrentUserQuery();
+
+  useEffect(() => {
+    getCurrentUser().unwrap();
+  }, [])
+
   const MENU_OPTIONS = [
     {
       label: "home",
@@ -34,7 +41,7 @@ export default function AccountPopover() {
     },
     {
       label: "setting",
-      linkTo: PATH_DASHBOARD.profile.root + user?.userId,
+      linkTo: PATH_DASHBOARD.profile.root + currentUser?.id,
     },
   ];
   const isMountedRef = useIsMountedRef();
@@ -62,7 +69,15 @@ export default function AccountPopover() {
 
   return (
     <>
-      <IconButtonAnimate
+      <Stack justifyContent="flex-end" sx={{ textAlign: 'right' }}>
+        <Typography variant="subtitle2" noWrap sx={{ fontSize: 13, fontWeight: 700, color: '#E7E9ED' }}>
+          {currentUser && `${currentUser?.lastName} ${currentUser?.firstName}`}
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: 12, fontWeight: 400, color: '#E7E9ED' }} noWrap>
+          {currentUser && currentUser?.email}
+        </Typography>
+      </Stack>
+      <IconButton
         onClick={handleOpen}
         sx={{
           p: 0,
@@ -72,7 +87,7 @@ export default function AccountPopover() {
               content: "''",
               width: "100%",
               height: "100%",
-              borderRadius: "50%",
+              borderRadius: "10px",
               position: "absolute",
               bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
             },
@@ -81,16 +96,18 @@ export default function AccountPopover() {
       >
         {Object.keys(avatar.avatar).length === 0 ? (
           <Avatar
-            src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
-            alt={user?.displayName}
+            sx={{ borderRadius: '10px' }}
+            src={`${DOMAIN_SERVER_API}/${currentUser?.linkAvatar}`}
+            alt={currentUser?.displayName}
           />
         ) : (
           <Avatar
+            sx={{ borderRadius: '10px' }}
             src={`${DOMAIN_SERVER_API}/${avatar?.avatar}`}
-            alt={user?.displayName}
+            alt={currentUser?.displayName}
           />
         )}
-      </IconButtonAnimate>
+      </IconButton>
 
       <MenuPopover
         open={Boolean(open)}
@@ -108,13 +125,13 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {currentUser && `${currentUser?.lastName} ${currentUser?.firstName}`}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {user?.email}
+            {currentUser && currentUser?.email}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {user?.role}
+            {currentUser?.role}
           </Typography>
         </Box>
 

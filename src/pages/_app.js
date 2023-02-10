@@ -63,8 +63,8 @@ export default function MyApp(props) {
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
-      <AuthProvider>
-        <ReduxProvider store={store}>
+      <ReduxProvider store={store}>
+        <AuthProvider>
           <RoleProvider>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <CollapseDrawerProvider>
@@ -74,13 +74,13 @@ export default function MyApp(props) {
                       <ThemeSettings>
                         <NotistackProvider>
                           {/* <SocketProvider> */}
-                            <NotificationProvider>
-                              <ProgressBar />
-                              {getLayout(
-                                pageProps,
-                                <Component {...pageProps} />
-                              )}
-                            </NotificationProvider>
+                          <NotificationProvider>
+                            <ProgressBar />
+                            {getLayout(
+                              pageProps,
+                              <Component {...pageProps} />
+                            )}
+                          </NotificationProvider>
                           {/* </SocketProvider> */}
                         </NotistackProvider>
                       </ThemeSettings>
@@ -90,8 +90,8 @@ export default function MyApp(props) {
               </CollapseDrawerProvider>
             </LocalizationProvider>
           </RoleProvider>
-        </ReduxProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </ReduxProvider>
     </>
   )
 }
