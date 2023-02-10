@@ -1,7 +1,9 @@
 // components
+import ListJobHeader from "../../sections/job/ListJobHeader";
 import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
 import Iconify from "@/components/Iconify";
 import Page from "@/components/Page";
+import PageWrapper from "@/components/PageWrapper";
 // config
 import { PAGES } from "@/config";
 // hooks
@@ -16,7 +18,7 @@ import JobModal from "@/sections/job/jobform/JobModal";
 // utils
 import { getRolesByPage } from "@/utils/role";
 // @mui
-import { Button, Container } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React, { useCallback, useState } from "react";
 
 Jobs.getLayout = function getLayout({ roles = [] }, page) {
@@ -48,33 +50,36 @@ export default function Jobs() {
   }, []);
 
   return (
-    <Page title={translate("nav.jobs")}>
-      <Container maxWidth={themeStretch ? false : "xl"}>
-        <HeaderBreadcrumbs
-          heading={translate("pages.jobs.heading")}
-          links={[
-            {
-              name: translate("nav.dashboard"),
-              href: PATH_DASHBOARD.dashboard,
-            },
-            { name: translate("pages.jobs.heading") },
-          ]}
-          action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon={"eva:plus-fill"} />}
-              onClick={handleOpenJobForm}
-            >
-              {translate("pages.jobs.newJob")}
-            </Button>
-          }
-        />
+    <PageWrapper title={translate("nav.jobs")}>
+      <ListJobHeader />
+      <Page>
+        <Box maxWidth={themeStretch ? false : "xl"}>
+          <HeaderBreadcrumbs
+            heading={translate("pages.jobs.heading")}
+            links={[
+              {
+                name: translate("nav.dashboard"),
+                href: PATH_DASHBOARD.dashboard,
+              },
+              { name: translate("pages.jobs.heading") },
+            ]}
+            action={
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon={"eva:plus-fill"} />}
+                onClick={handleOpenJobForm}
+              >
+                {translate("pages.jobs.newJob")}
+              </Button>
+            }
+          />
 
-        <>
-          <ListJobTable />
-          <JobModal isOpen={isOpen} onClose={handleCloseJobForm} />
-        </>
-      </Container>
-    </Page>
+          <>
+            <ListJobTable />
+            <JobModal isOpen={isOpen} onClose={handleCloseJobForm} />
+          </>
+        </Box>
+      </Page>
+    </PageWrapper>
   );
 }

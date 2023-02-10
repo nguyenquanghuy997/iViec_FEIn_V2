@@ -11,7 +11,6 @@ import {
 import { PAGES } from "@/config";
 import { useDebounce } from "@/hooks/useDebounce";
 import useTable from "@/hooks/useTable";
-import Layout from "@/layouts";
 import {
   JobTypeFormModal,
   JobTypeItem,
@@ -21,9 +20,14 @@ import { getRolesByPage } from "@/utils/role";
 import { Card } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import SettingLayout from "@/layouts/setting";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <Layout roles={roles}>{page}</Layout>;
+  return (
+    <SettingLayout roles={roles}>
+      {page}
+    </SettingLayout>
+  );
 };
 
 export async function getStaticProps() {

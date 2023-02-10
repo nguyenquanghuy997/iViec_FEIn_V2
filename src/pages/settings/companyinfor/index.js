@@ -2,13 +2,17 @@ import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
 import Page from "@/components/Page";
 import { PAGES } from "@/config";
 import useSettings from "@/hooks/useSettings";
-import Layout from "@/layouts";
+import SettingLayout from "@/layouts/setting";
 import { CompanyInfor } from "@/sections/companyinfor";
 import { getRolesByPage } from "@/utils/role";
 import { Container } from "@mui/material";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <Layout roles={roles}>{page}</Layout>;
+  return (
+    <SettingLayout roles={roles}>
+      {page}
+    </SettingLayout>
+  );
 };
 
 export default function Setting() {

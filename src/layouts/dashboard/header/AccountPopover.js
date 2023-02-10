@@ -8,6 +8,7 @@ import useLocales from "@/hooks/useLocales";
 import { useSelector } from "@/redux/store";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useLazyGetCurrentUserQuery } from "@/sections/auth/authSlice";
+import styled from "@emotion/styled";
 // @mui
 import {
   Avatar,
@@ -23,6 +24,12 @@ import { alpha } from "@mui/material/styles";
 import NextLink from "next/link";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+
+const TypographyStyle = styled(Typography)(({ theme }) => ({
+  [theme.breakpoints.down("md")]: {
+    color: 'black'
+  },
+}));
 
 export default function AccountPopover() {
   const { translate } = useLocales();
@@ -70,12 +77,12 @@ export default function AccountPopover() {
   return (
     <>
       <Stack justifyContent="flex-end" sx={{ textAlign: 'right' }}>
-        <Typography variant="subtitle2" noWrap sx={{ fontSize: 13, fontWeight: 700, color: '#E7E9ED' }}>
+        <TypographyStyle variant="subtitle2" noWrap sx={{ fontSize: 13, fontWeight: 700, color: '#E7E9ED' }}>
           {currentUser && `${currentUser?.lastName} ${currentUser?.firstName}`}
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: 12, fontWeight: 400, color: '#E7E9ED' }} noWrap>
+        </TypographyStyle>
+        <TypographyStyle variant="body2" sx={{ fontSize: 12, fontWeight: 400, color: '#E7E9ED' }} noWrap>
           {currentUser && currentUser?.email}
-        </Typography>
+        </TypographyStyle>
       </Stack>
       <IconButton
         onClick={handleOpen}

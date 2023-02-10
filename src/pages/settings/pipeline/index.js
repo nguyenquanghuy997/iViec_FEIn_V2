@@ -2,7 +2,7 @@ import { Text, View } from "@/components/FlexStyled";
 import Page from "@/components/Page";
 import SvgIcon from "@/components/SvgIcon";
 import { PAGES } from "@/config";
-import Layout from "@/layouts";
+import SettingLayout from "@/layouts/setting";
 import {
   PipelineFormModal,
   PipelineItem,
@@ -12,7 +12,11 @@ import { getRolesByPage } from "@/utils/role";
 import { useRef, useState } from "react";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <Layout roles={roles}>{page}</Layout>;
+  return (
+    <SettingLayout roles={roles}>
+      {page}
+    </SettingLayout>
+  );
 };
 
 export async function getStaticProps() {
