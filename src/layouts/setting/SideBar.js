@@ -50,7 +50,6 @@ export default function SideBar({ navConfig, isCollapse = false, ...other }) {
           <ListSubheaderStyle>
             {translate(group.subheader) || ""}
           </ListSubheaderStyle>
-
           {group.items.map((list) => (
             <SideBarListRoot
               key={list.title + list.path}

@@ -11,6 +11,7 @@ import {
 import { PAGES } from "@/config";
 import { useDebounce } from "@/hooks/useDebounce";
 import useTable from "@/hooks/useTable";
+import SettingLayout from "@/layouts/setting";
 import {
   JobTypeFormModal,
   JobTypeItem,
@@ -20,14 +21,10 @@ import { getRolesByPage } from "@/utils/role";
 import { Card } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import SettingLayout from "@/layouts/setting";
+import PageWrapper from "@/components/PageWrapper";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return (
-    <SettingLayout roles={roles}>
-      {page}
-    </SettingLayout>
-  );
+  return <SettingLayout roles={roles}>{page}</SettingLayout>;
 };
 
 export async function getStaticProps() {
@@ -121,118 +118,117 @@ export default function Setting() {
   }, [status, search]);
 
   return (
-    <Page
-      title={"Vị trí công việc"}
-      style={{ height: "100%", background: "#FAFBFD" }}
-    >
-      {/* header */}
-      <View
-        flexRow
-        atCenter
-        ph={24}
-        pv={16}
-        bgColor={"#fff"}
-        boxShadow={"inset 0px -1px 0px #DBE6EB"}
-      >
-        {/* title */}
-        <Text fontSize={22} fontWeight={"600"}>
-          {"Vị trí công việc"}
-        </Text>
-        <View flex1 />
-
-        {/* button add */}
+    <PageWrapper title={"Vị trí công việc"}>
+      <Page>
+        {/* header */}
         <View
           flexRow
           atCenter
-          pv={8}
-          ph={12}
-          borderRadius={4}
-          bgColor={"#01B6A7"}
-          onPress={() => setShowForm(true)}
+          ph={24}
+          pv={16}
+          bgColor={"#fff"}
+          boxShadow={"inset 0px -1px 0px #DBE6EB"}
         >
-          <SvgIcon>
-            {
-              '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.9167 9H3.58333C3.26444 9 3 8.66 3 8.25C3 7.84 3.26444 7.5 3.58333 7.5H12.9167C13.2356 7.5 13.5 7.84 13.5 8.25C13.5 8.66 13.2356 9 12.9167 9Z" fill="white"/><path d="M8.24994 13.5C7.83994 13.5 7.49994 13.2356 7.49994 12.9167V3.58333C7.49994 3.26444 7.83994 3 8.24994 3C8.65994 3 8.99994 3.26444 8.99994 3.58333V12.9167C8.99994 13.2356 8.65994 13.5 8.24994 13.5Z" fill="white"/></svg>'
-            }
-          </SvgIcon>
-
-          <Text
-            ml={12}
-            color={"#fff"}
-            fontSize={15}
-            lineHeight={20 / 15}
-            fontWeight={"600"}
-          >
-            {"Thêm vị trí công việc"}
+          {/* title */}
+          <Text fontSize={22} fontWeight={"600"}>
+            {"Vị trí công việc"}
           </Text>
-        </View>
-      </View>
+          <View flex1 />
 
-      {/* body */}
-      <View pv={20} ph={24}>
-        {/* table option */}
-        <FormProvider methods={methods}>
-          <View flexRow atCenter mb={20}>
-            {/* status */}
-            <View width={160}>
-              <RHFBasicSelect
-                name="status"
-                label="Trạng thái"
-                options={LIST_STATUS}
-                style={{ background: "#fff" }}
-              />
-            </View>
-            <View flex1 />
-
-            {/* search */}
-            <View width={550}>
-              <RHFSearchTextField
-                name="search"
-                label="Tìm kiếm vị trí công việc"
-                style={{ background: "#fff" }}
-              />
-            </View>
-          </View>
-        </FormProvider>
-
-        {/* table detail */}
-        <Card>
-          <View pv={20}>
-            <BasicTable
-              page={page}
-              rowsPerPage={
-                isLoading
-                  ? rowsPerPage
-                  : Math.min(rowsPerPage, DataList?.length)
+          {/* button add */}
+          <View
+            flexRow
+            atCenter
+            pv={8}
+            ph={12}
+            borderRadius={4}
+            bgColor={"#01B6A7"}
+            onPress={() => setShowForm(true)}
+          >
+            <SvgIcon>
+              {
+                '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.9167 9H3.58333C3.26444 9 3 8.66 3 8.25C3 7.84 3.26444 7.5 3.58333 7.5H12.9167C13.2356 7.5 13.5 7.84 13.5 8.25C13.5 8.66 13.2356 9 12.9167 9Z" fill="white"/><path d="M8.24994 13.5C7.83994 13.5 7.49994 13.2356 7.49994 12.9167V3.58333C7.49994 3.26444 7.83994 3 8.24994 3C8.65994 3 8.99994 3.26444 8.99994 3.58333V12.9167C8.99994 13.2356 8.65994 13.5 8.24994 13.5Z" fill="white"/></svg>'
               }
-              columns={TABLE_HEAD}
-              isLoading={isLoading}
-              dataSource={DataList}
-              TableRowComp={(data, order) => (
-                <JobTypeItem
-                  data={data}
-                  order={order}
-                  onRefreshData={refreshData}
-                />
-              )}
-            />
+            </SvgIcon>
 
-            <Pagination
-              page={page}
-              rowsPerPage={rowsPerPage}
-              totalRecord={TotalRecords}
-              onChangePage={_onChangePage}
-              onChangeRowsPerPage={_onChangeRowsPerPage}
-            />
+            <Text
+              ml={12}
+              color={"#fff"}
+              fontSize={15}
+              lineHeight={20 / 15}
+              fontWeight={"600"}
+            >
+              {"Thêm vị trí công việc"}
+            </Text>
           </View>
-        </Card>
+        </View>
 
-        <JobTypeFormModal
-          show={showForm}
-          setShow={setShowForm}
-          onRefreshData={refreshData}
-        />
-      </View>
-    </Page>
+        {/* body */}
+        <View pv={20} ph={24}>
+          {/* table option */}
+          <FormProvider methods={methods}>
+            <View flexRow atCenter mb={20}>
+              {/* status */}
+              <View width={160}>
+                <RHFBasicSelect
+                  name="status"
+                  label="Trạng thái"
+                  options={LIST_STATUS}
+                  style={{ background: "#fff" }}
+                />
+              </View>
+              <View flex1 />
+
+              {/* search */}
+              <View width={550}>
+                <RHFSearchTextField
+                  name="search"
+                  label="Tìm kiếm vị trí công việc"
+                  style={{ background: "#fff" }}
+                />
+              </View>
+            </View>
+          </FormProvider>
+
+          {/* table detail */}
+          <Card>
+            <View pv={20}>
+              <BasicTable
+                page={page}
+                rowsPerPage={
+                  isLoading
+                    ? rowsPerPage
+                    : Math.min(rowsPerPage, DataList?.length)
+                }
+                columns={TABLE_HEAD}
+                isLoading={isLoading}
+                dataSource={DataList}
+                TableRowComp={(data, order) => (
+                  <JobTypeItem
+                    data={data}
+                    order={order}
+                    onRefreshData={refreshData}
+                  />
+                )}
+              />
+
+              <Pagination
+                page={page}
+                rowsPerPage={rowsPerPage}
+                totalRecord={TotalRecords}
+                onChangePage={_onChangePage}
+                onChangeRowsPerPage={_onChangeRowsPerPage}
+              />
+            </View>
+          </Card>
+
+          <JobTypeFormModal
+            show={showForm}
+            setShow={setShowForm}
+            onRefreshData={refreshData}
+          />
+        </View>
+      </Page>
+    </PageWrapper>
   );
 }

@@ -1,42 +1,61 @@
 import HeadingBar from "../../components/heading-bar/HeadingBar";
-import { getActive } from "@/components/nav-section";
-import { Stack } from "@mui/material";
-import { styled } from "@mui/styles";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import React from "react";
+import ApplicantFilterModal from "./modals/ApplicantFilterModal";
+import Iconify from "@/components/Iconify";
+import { FormProvider, RHFSearchTextField } from "@/components/hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Button, IconButton, Stack } from "@mui/material";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
 
-const LinkDefaultStyle = styled("a")(({ isActive, theme }) => ({
-  color: "blue",
-  display: "block",
-  padding: theme.spacing(1, 2),
-  ...(isActive && {
-    color: "black",
-    borderBottom: "1px solid black",
-  }),
-}));
-
-const ActiveLink = ({ children, href }) => {
-  const router = useRouter();
-  const isActive = getActive(href, router.pathname, router.asPath);
-  return (
-    <Link href={href} scroll={false}>
-      <LinkDefaultStyle isActive={isActive}>{children}</LinkDefaultStyle>
-    </Link>
-  );
+const defaultValues = {
+  search: "",
 };
 
-const ApplicantHeader = () => {
+const ApplicantHeader = ({
+  columns,
+  isOpen,
+  onOpenFilterForm,
+  onCloseFilterForm,
+}) => {
+  // form
+  const Schema = Yup.object().shape({
+    search: Yup.string(),
+  });
+  const methods = useForm({
+    defaultValues,
+    resolver: yupResolver(Schema),
+  });
+
   return (
     <HeadingBar>
-      <Stack flexDirection='row'>
-        <ActiveLink href="/jobs">Applicant 1</ActiveLink>
-        <ActiveLink href="/applicant">Applicant 2</ActiveLink>
-        <ActiveLink href="/settings/jobtype">Applicant 3</ActiveLink>
-        <ActiveLink href="/settings/billing">Applicant 4</ActiveLink>
-        <ActiveLink href="/settings/notifications">Link 5</ActiveLink>
-        <ActiveLink href="/settings/security">Applicant 6</ActiveLink>
+      <Stack flexDirection="row">
+        <FormProvider methods={methods}>
+          <RHFSearchTextField
+            hasLabel={false}
+            name="search"
+            placeholder="Tìm kiếm..."
+          />
+        </FormProvider>
+        <Button
+          onClick={onOpenFilterForm}
+          sx={{
+            backgroundColor: "#F3F4F6",
+            padding: "12px 16px",
+            height: "44px",
+            borderRadius: "6px",
+          }}
+        >
+          <IconButton>
+            <Iconify icon="material-symbols:filter-alt-outline" />
+          </IconButton>
+          Bộ lọc
+        </Button>
       </Stack>
+      <ApplicantFilterModal
+        columns={columns}
+        isOpen={isOpen}
+        onClose={onCloseFilterForm}
+      />
     </HeadingBar>
   );
 };

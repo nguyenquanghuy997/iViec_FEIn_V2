@@ -10,7 +10,7 @@ const HeadingBarStyle = styled("div")(() => ({
 
 const HeadingBarInnerStyle = styled("div")(({ theme }) => ({
   width: "100%",
-  padding: theme.spacing(0, 3),
+  padding: theme.spacing(3),
   margin: '0 auto',
   [theme.breakpoints.up("lg")]: {
     maxWidth: DASHBOARD_CONTENT_WIDTH,

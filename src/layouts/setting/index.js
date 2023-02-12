@@ -1,6 +1,6 @@
 import SideBar from "./SideBar";
 import { sidebarConfig, SIDEBAR_CONSTANTS } from "./SideBarConfig";
-import { NAVBAR } from "@/config";
+import { NAVBAR, DASHBOARD_CONTENT_WIDTH } from "@/config";
 // guards
 import AuthGuard from "@/guards/AuthGurad";
 import useCollapseDrawer from "@/hooks/useCollapseDrawer";
@@ -17,6 +17,18 @@ import { useEffect } from "react";
 const RootStyle = styled("div")(({ theme }) => ({
   minWidth: SIDEBAR_CONSTANTS.SIDEBAR_WIDTH,
   padding: theme.spacing(0),
+}));
+
+const BoxWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  margin: "0 auto",
+  padding: theme.spacing(4.5, 3, 0, 3),
+  maxWidth: DASHBOARD_CONTENT_WIDTH,
+}));
+
+const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
+  paddingLeft: isDesktop ? theme.spacing(4.5) : theme.spacing(0),
+  minWidth: isDesktop ? "1020px" : "100%",
 }));
 
 const SideBarWrapper = ({ isOpenSidebar, onCloseSidebar }) => {
@@ -69,12 +81,10 @@ export default function SettingLayout({ roles, children }) {
   return (
     <AuthGuard>
       <DashboardLayout roles={roles}>
-        <Box sx={{ display: "flex" }}>
+        <BoxWrapper>
           {isDesktop && <SideBarWrapper />}
-          <Box sx={{ width: "100%", paddingLeft: isDesktop ? 4.5 : 0 }}>
-            {children}
-          </Box>
-        </Box>
+          <BoxContentStyle isDesktop>{children}</BoxContentStyle>
+        </BoxWrapper>
       </DashboardLayout>
     </AuthGuard>
   );
