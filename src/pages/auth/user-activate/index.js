@@ -1,5 +1,5 @@
 // next
-import UserActiveSuccess from "@/sections/auth/user-activate/UserActiveFailure";
+import UserActiveSuccess from "@/sections/auth/user-activate/UserActiveSuccess";
 // component
 import { LogoHeader } from "@/components/BaseComponents";
 import {
@@ -28,8 +28,6 @@ const UserActivePage = () => {
   const [confirmEmail] = useLazyConfirmEmailQuery();
   // let str = router.asPath;
   // const OTPCode = str.substring(str.indexOf('OTPCode') - 7);
-  console.log('OTPCode',OTPCode)
-  console.log('encodeURI',encodeURI(OTPCode))
 
   useEffect(() => {
     if (!USER_NAME && !OTPCode) {
@@ -41,12 +39,23 @@ const UserActivePage = () => {
     async function fetchConfirmEmail() {
       if (parseInt(SetPassword) === 0 && USER_NAME && OTPCode) {
         try {
-          console.log('USER_NAME',USER_NAME)
-          console.log('OTPCode',OTPCode)
-          await confirmEmail({ email: USER_NAME, token: encodeURI(OTPCode) }).unwrap();
+
+         await confirmEmail({ email: USER_NAME, token: unescape(OTPCode) }).unwrap(
+         (res)=> console.log('res',res)
+         );
           setStatusActiveUser(true);
-        } catch (e) {
-          setStatusActiveUser(false);
+        } catch (error) {
+          // const message =error.code
+          console.log('error.status',error.status =='AUE_05')
+          if(error.status =='AUE_05'){
+            
+            setStatusActiveUser(true);
+          }
+          else{
+            setStatusActiveUser(false);
+          }
+         
+         
         }
       }
     }
@@ -66,7 +75,8 @@ const UserActivePage = () => {
       >
         <LogoHeader />
         <Box sx={{ ...BoxWrapperStyle }}>
-          {parseInt(SetPassword) === 1 && (
+        {
+        parseInt(SetPassword) === 1 ?
             <Box sx={{ ...BoxInnerStyle, minHeight: "784px" }}>
               <Stack justifyContent="center" alignItems="center">
                 <CardInfoBody>
@@ -77,14 +87,12 @@ const UserActivePage = () => {
                   <NewPasswordForm userName={USER_NAME} otpCode={OTPCode} />
                 </CardInfoBody>
               </Stack>
-            </Box>
-          )}
-          {parseInt(SetPassword) === 0 && statusActiveUser && (
-            <UserActiveSuccess USER_NAME={USER_NAME} />
-          )}
-          {parseInt(SetPassword) === 0 && !statusActiveUser && (
-            <UserActiveFailure />
-          )}
+            </Box> 
+        :
+        <Box >
+         {statusActiveUser? <UserActiveSuccess USER_NAME={USER_NAME} />:  <UserActiveFailure />}
+         </Box>
+         }
         </Box>
       </Page>
     </GuestGuard>
