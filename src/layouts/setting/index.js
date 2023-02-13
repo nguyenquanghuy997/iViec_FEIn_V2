@@ -22,13 +22,25 @@ const RootStyle = styled("div")(({ theme }) => ({
 const BoxWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   margin: "0 auto",
-  padding: theme.spacing(4.5, 3, 0, 3),
-  maxWidth: DASHBOARD_CONTENT_WIDTH,
+  [theme.breakpoints.up("xl")]: {
+    padding: theme.spacing(4.5, 3, 0, 3),
+    width: DASHBOARD_CONTENT_WIDTH,
+  },
+  [theme.breakpoints.up("2k")]: {
+    padding: theme.spacing(4.5, 34, 0, 34),
+    width: "100%",
+  },
 }));
 
 const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
-  paddingLeft: isDesktop ? theme.spacing(4.5) : theme.spacing(0),
-  minWidth: isDesktop ? "1020px" : "100%",
+  marginLeft: isDesktop ? theme.spacing(4.5) : theme.spacing(0),
+  backgroundColor: "#FDFDFD",
+  [theme.breakpoints.up("xl")]: {
+    width: '100%'
+  },
+  [theme.breakpoints.up("2k")]: {
+    width: '100%'
+  },
 }));
 
 const SideBarWrapper = ({ isOpenSidebar, onCloseSidebar }) => {

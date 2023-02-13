@@ -1,7 +1,7 @@
 import InstructionPopover from "../InstructionPopover";
 import DashboardAppBar from "./header/AppBar";
 import NavbarVertical from "./navbar/NavbarVertical";
-import { NAVBAR } from "@/config";
+import {HEADER, NAVBAR} from "@/config";
 import RoleBasedGuard from "@/guards/RoleBasedGuard";
 import useCollapseDrawer from "@/hooks/useCollapseDrawer";
 import useResponsive from "@/hooks/useResponsive";
@@ -19,14 +19,11 @@ const WrapperStyle = styled("div")(({ theme }) => ({
   padding: theme.spacing(0),
 }));
 
-const MainStyle = styled("main", {
-  shouldForwardProp: (prop) => prop !== "collapseClick",
-})(({ collapseClick, theme }) => ({
+const MainStyle = styled("main", { shouldForwardProp: (prop) => prop !== "collapseClick"})(({ collapseClick, theme }) => ({
   position: 'relative',
-  flexGrow: 1,
   paddingBottom: 24,
-  marginTop: theme.spacing(8),
-  [theme.breakpoints.up("lg")]: {
+  marginTop: HEADER.MOBILE_HEIGHT,
+  [theme.breakpoints.up("xl")]: {
     width: "100%",
     transition: theme.transitions.create("margin-left", {
       duration: theme.transitions.duration.shorter,
@@ -35,7 +32,7 @@ const MainStyle = styled("main", {
       marginLeft: NAVBAR.DASHBOARD_COLLAPSE_WIDTH,
     }),
   },
-  [theme.breakpoints.up("xl")]: {
+  [theme.breakpoints.up("2k")]: {
     width: "100%",
     maxWidth: '100%',
     transition: theme.transitions.create("margin-left", {

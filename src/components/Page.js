@@ -8,13 +8,13 @@ import { forwardRef } from "react";
 const PageStyle = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3, 0),
   margin: '0 auto',
-  [theme.breakpoints.up("lg")]: {
+  [theme.breakpoints.up("xl")]: {
     width: "100%",
     maxWidth: DASHBOARD_CONTENT_WIDTH,
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
   },
-  [theme.breakpoints.up("xl")]: {
+  [theme.breakpoints.up("2k")]: {
     width: "100%",
     maxWidth: "100%",
     paddingLeft: theme.spacing(34),
