@@ -8,18 +8,14 @@ import {ButtonDS} from "@/components/DesignSystem";
 
 ApplicantFilterModal.propTypes = {
   isOpen: PropTypes.bool,
-  isEdit: PropTypes.bool,
   onClose: PropTypes.func,
-  job: PropTypes.object,
   onSubmit: PropTypes.func,
 };
 
 function ApplicantFilterModal({
   columns,
   isOpen,
-  isEdit,
   onClose,
-  job,
   onSubmit,
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,7 +27,6 @@ function ApplicantFilterModal({
   return (
     <Drawer
       open={isOpen}
-      // onClose={onClose}
       anchor="right"
       PaperProps={{
         sx: { width: { xs: 1, sm: 560, md: 384 } },
@@ -56,8 +51,6 @@ function ApplicantFilterModal({
               <ApplicantFilterForm
                   columns={columns}
                   onClose={onClose}
-                  isEdit={isEdit}
-                  job={job}
                   onEditSubmit={onSubmit}
                   isScrolled={isScrolled}
               />

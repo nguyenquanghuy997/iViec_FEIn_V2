@@ -11,94 +11,12 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useDebounce} from "@/hooks/useDebounce";
 import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
+import {columns} from "@/sections/applicant/others/columns";
 
 Applicant.getLayout = function getLayout({roles = []}, page) {
     return <Layout roles={roles}>{page}</Layout>;
 };
 
-const columns = [
-    {
-        name: "unit",
-        type: "select",
-        multiple: true,
-        between: false,
-        placeholder: "Chọn một hoặc nhiều đơn vị",
-        label: "Đơn vị",
-        options: [
-            {id: 214, name: "Đơn vị 1"},
-            {id: 3155, name: "Đơn vị 2"},
-            {id: 3155, name: "Đơn vị 3"},
-            {id: 3155, name: "Đơn vị 4"},
-            {id: 3155, name: "Đơn vị 5"},
-        ]
-    },
-    {
-        name: "experience_number",
-        type: "select",
-        multiple: false,
-        between: false,
-        placeholder: "Chọn số năm kinh nghiệm",
-        label: "Số năm kinh nghiệm",
-        options: [
-            {id: 214, name: "1 năm"},
-            {id: 3155, name: "2 năm"},
-            {id: 3155, name: "3 năm"},
-            {id: 3155, name: "4 năm"},
-            {id: 3155, name: "5 năm"},
-        ]
-    },
-    {name: "date_apply", type: "date", label: "Ngày ứng tuyển"},
-    {
-        name: "married", type: "select", label: "Tình trạng hôn nhân", options: [
-            {id: 214, name: "Đã kết hôn"},
-            {id: 3155, name: "Chưa kết hôn"},
-        ]
-    },
-    {
-        name: "gender",
-        type: "radio",
-        label: "Giới tính",
-        placeholder: "",
-        options: [{label: 'Nam', value: 1}, {label: 'Nữ', value: 0}, {label: 'Khác', value: 2}]
-    },
-    {name: "experience", type: "text", placeholder: "Tìm kiếm", label: "Kinh nghiệm làm việc"},
-    {
-        name: "salary", type: "select", placeholder: "", label: "Mức lương mong muốn",
-        options: [
-            {id: 214, name: "1 năm"},
-            {id: 3155, name: "2 năm"},
-            {id: 3155, name: "3 năm"},
-            {id: 3155, name: "4 năm"},
-            {id: 3155, name: "5 năm"},
-        ]
-    },
-    {name: "height", type: "text", numberic: true, placeholder: "", label: "Chiều cao"},
-    {
-        name: "current_address",
-        type: "select",
-        multiple: false,
-        between: true,
-        placeholder: "",
-        label: "Nơi ở hiện tại",
-        options: [
-            {id: 214, name: "1 năm"},
-            {id: 3155, name: "2 năm"},
-            {id: 3155, name: "3 năm"},
-            {id: 3155, name: "4 năm"},
-            {id: 3155, name: "5 năm"},
-        ]
-    },
-    {
-        name: "hometown", type: "select", multiple: false, between: true, placeholder: "", label: "Quê quán",
-        options: [
-            {id: 214, name: "1 năm"},
-            {id: 3155, name: "2 năm"},
-            {id: 3155, name: "3 năm"},
-            {id: 3155, name: "4 năm"},
-            {id: 3155, name: "5 năm"},
-        ]
-    },
-];
 
 const defaultValues = {
     search: "",

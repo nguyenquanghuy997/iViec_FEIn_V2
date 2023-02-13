@@ -1,6 +1,5 @@
 import React from "react";
-import {InputAdornment, TextField} from "@mui/material";
-import Iconify from "@/components/Iconify";
+import {TextField} from "@mui/material";
 import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
 
 const sxDefault = {
@@ -49,20 +48,11 @@ const InputFilter = ({name, placeholder, type, ...props}) => {
             fullWidth
             id={name}
             {...props}
+            type={type}
             required={false}
             label={hasLabel ? null : label}
             sx={sx ? {...sxDefault, ...sx} : sxDefault}
             placeholder={placeholder}
-            InputProps={{
-                startAdornment: (
-                    type === 'text' && <InputAdornment position='start'>
-                        <Iconify
-                            icon={'eva:search-fill'}
-                            sx={{color: 'text.disabled', width: 20, height: 20}}
-                        />
-                    </InputAdornment>
-                ),
-            }}
         />
     );
 };
