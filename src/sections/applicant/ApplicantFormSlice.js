@@ -18,9 +18,10 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
   
   endpoints: (builder) => ({
     getListApplicants: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: API_GET_ALL_APPLICANTS,
         method: 'GET',
+        params
       }),
     }),
     getAllApplicant: builder.mutation({
@@ -69,6 +70,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetListApplicantsQuery,
+  useLazyGetListApplicantsQuery,
   useGetAllApplicantMutation,
   useGetAllApplicantFormOwnerQuery,
   useSetDefaultApplicantFormMutation,

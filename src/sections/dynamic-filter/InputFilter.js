@@ -1,15 +1,70 @@
-import { RHFTextField } from "@/components/hook-form";
 import React from "react";
+import {InputAdornment, TextField} from "@mui/material";
+import Iconify from "@/components/Iconify";
+import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
 
-const InputFilter = ({ name, placeholder, type, ...props }) => {
-  return (
-    <RHFTextField
-      name={name}
-      placeholder={placeholder || ""}
-      type={type}
-      {...props}
-    />
-  );
+const sxDefault = {
+    input: {
+        "&:-webkit-autofill": {
+            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+        },
+        "&:-webkit-autofill:hover": {
+            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+        },
+        "&:-webkit-autofill:focus": {
+            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+        },
+        "&:-webkit-autofill:active": {
+            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+        },
+    },
+    ".MuiInputBase-root": {
+        height: "44px",
+        fontSize: STYLE_CONSTANT.FONT_SM,
+        borderRadius: 0.75,
+        width: STYLE_CONSTANT.WIDTH_FULL,
+    },
+    ".MuiInputBase-root.Mui-error": {
+        height: "44px",
+        fontSize: STYLE_CONSTANT.FONT_SM,
+        borderRadius: 0.75,
+        width: STYLE_CONSTANT.WIDTH_FULL,
+    },
+    ".MuiInputBase-input": {
+        height: "44px",
+        py: "0 !important",
+    },
+    ".MuiFormHelperText-root": {
+        marginTop: 1,
+        marginLeft: 0,
+        fontSize: STYLE_CONSTANT.FONT_XS,
+        color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
+    },
+};
+
+const InputFilter = ({name, placeholder, type, ...props}) => {
+    const {label, hasLabel = true, sx} = props;
+    return (
+        <TextField
+            fullWidth
+            id={name}
+            {...props}
+            required={false}
+            label={hasLabel ? null : label}
+            sx={sx ? {...sxDefault, ...sx} : sxDefault}
+            placeholder={placeholder}
+            InputProps={{
+                startAdornment: (
+                    type === 'text' && <InputAdornment position='start'>
+                        <Iconify
+                            icon={'eva:search-fill'}
+                            sx={{color: 'text.disabled', width: 20, height: 20}}
+                        />
+                    </InputAdornment>
+                ),
+            }}
+        />
+    );
 };
 
 export default InputFilter;

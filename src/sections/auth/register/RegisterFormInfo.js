@@ -93,6 +93,7 @@ export default function RegisterForm({}) {
   });
 
   const methods = useForm({
+    mode: 'onChange',
     resolver: yupResolver(RegisterSchema),
     defaultValues,
   });
