@@ -63,20 +63,21 @@ const SearchIconStyle = styled("div")(({ theme, ownerState }) => {
   const left = isCollapse
     ? NAVBAR.DASHBOARD_COLLAPSE_WIDTH``
     : NAVBAR.DASHBOARD_WIDTH;
-  const pl =  (window.innerWidth - theme.breakpoints.values["xl"] - left) / 2;
+  const paddingLeft =
+    (window.innerWidth - theme.breakpoints.values["xl"] - left) / 2;
 
   return {
     top: HEADER.MOBILE_HEIGHT / 4,
     left: NAVBAR.DASHBOARD_COLLAPSE_WIDTH,
     zIndex: 1101,
     position: "fixed",
-    [theme.breakpoints.up("xl")]: {
+    [theme.breakpoints.up("lg")]: {
       top: HEADER.DASHBOARD_DESKTOP_HEIGHT / 4,
       left,
       paddingLeft: theme.spacing(2),
     },
-    [theme.breakpoints.up("2k")]: {
-      paddingLeft: pl + parseInt(theme.spacing(2)),
+    [theme.breakpoints.up("xl")]: {
+      paddingLeft: paddingLeft + parseInt(theme.spacing(2)),
     },
   };
 });

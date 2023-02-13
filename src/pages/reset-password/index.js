@@ -23,12 +23,12 @@ import { useEffect, useState } from "react";
 const ResetPasswordPage = () => {
   const [statusActiveUser, setStatusActiveUser] = useState(false);
   const router = useRouter();
-  const { USER_NAME ,OTPCode} = router.query;
+  const { USER_NAME } = router.query;
   const [confirmEmail] = useLazyConfirmEmailQuery();
-  // let str = router.asPath;
-  // const OTPCode = str.substring(str.indexOf('OTPCode') + 7);
-  // console.log('OTPCode1',str)
-  // console.log('OTPCode',OTPCode)
+  let str = router.asPath;
+  const OTPCode = str.substring(str.indexOf('OTPCode') + 7);
+  console.log('OTPCode1',str)
+  console.log('OTPCode',OTPCode)
   useEffect(() => {
     if (!USER_NAME && !OTPCode) {
       router.push(PATH_PAGE.page404);
@@ -41,7 +41,7 @@ const ResetPasswordPage = () => {
         try {
           console.log('USER_NAME',USER_NAME)
           console.log('USER_NAME',OTPCode)
-          await confirmEmail({ email: USER_NAME, token: encodeURI(OTPCode) }).unwrap();
+          await confirmEmail({ email: USER_NAME, token: OTPCode }).unwrap();
           setStatusActiveUser(true);
         } catch (e) {
           setStatusActiveUser(false);

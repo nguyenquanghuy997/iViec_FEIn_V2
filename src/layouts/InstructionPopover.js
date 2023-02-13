@@ -62,7 +62,6 @@ export default function NotificationsPopover() {
 
     return (
       <li
-        key={index}
         style={{
           cursor: "pointer",
           position: "relative",
@@ -134,7 +133,7 @@ export default function NotificationsPopover() {
           cursor: "pointer",
           display: "flex",
           padding: "8px 12px",
-          position: "fixed",
+          position: "absolute",
           alignItems: "center",
           justifyContent: "center",
           color: "#ffffff",
@@ -159,8 +158,8 @@ export default function NotificationsPopover() {
         open={!!openState}
         anchorEl={openState}
         onClose={pressClose}
-        anchorOrigin={{ vertical: 'top', horizontal: "right" }}
-        transformOrigin={{ vertical: "bottom", horizontal: 'right' }}
+        anchorOrigin={{ horizontal: "right" }}
+        transformOrigin={{ vertical: "bottom" }}
         sx={{
           p: 0,
           width: 324,

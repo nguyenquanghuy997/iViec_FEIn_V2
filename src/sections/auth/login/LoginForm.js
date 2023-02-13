@@ -155,7 +155,7 @@ export default function LoginForm() {
         width="440px"
         size="large"
         tittle="Đăng nhập"
-        loading={isSubmitting}
+        isSubmitting={isSubmitting}
         type="submit"
       />
     </FormProvider>

@@ -348,7 +348,6 @@ export default function RegisterForm({}) {
                   label="Quận/Huyện"
                   placeholder="Bắt buộc"
                   required
-                  disabled={!watchProvinceId}
                   style={{ ...InputStyle }}
                   options={DistrictList?.map((i) => ({
                     value: i?.id,

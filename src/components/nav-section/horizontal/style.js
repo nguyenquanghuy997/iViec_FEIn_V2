@@ -1,6 +1,6 @@
 // @mui
 import { Button, Popover } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 
 // config
 import { NAVBAR } from '@/config'
@@ -12,23 +12,26 @@ export const ListItemStyle = styled(Button, {
     prop !== 'subItem' &&
     prop !== 'open',
 })(({ activeRoot, activeSub, subItem, open, theme }) => {
+  const isLight = theme.palette.mode === 'light'
+
   const activeRootStyle = {
-    color: NAVBAR.DASHBOARD_MENU_ITEM_ACTIVE_COLOR,
-    backgroundColor: NAVBAR.DASHBOARD_MENU_ITEM_BG_COLOR,
+    color: theme.palette.grey[800],
+    backgroundColor: theme.palette.common.white,
+    boxShadow: `-2px 4px 6px 0 ${alpha(
+      isLight ? theme.palette.grey[500] : theme.palette.common.black,
+      0.16
+    )}`,
   }
 
   return {
     ...theme.typography.body2,
     margin: theme.spacing(0, 0.5),
-    padding: theme.spacing(1, 2),
-    borderRadius: theme.spacing(0.75),
-    color: NAVBAR.DASHBOARD_MENU_ITEM_COLOR,
-    fontWeight: NAVBAR.MENU_ITEM_WEIGHT_SEMIBOLD,
-    textTransform: 'none',
-    height: NAVBAR.DASHBOARD_ITEM_HORIZONTAL_MENU_HEIGHT,
+    padding: theme.spacing(0, 1),
+    color: theme.palette.text.secondary,
+    height: NAVBAR.DASHBOARD_ITEM_HORIZONTAL_HEIGHT,
     '&:hover': {
-      color: NAVBAR.DASHBOARD_MENU_ITEM_ACTIVE_COLOR,
-      backgroundColor: NAVBAR.DASHBOARD_MENU_ITEM_BG_COLOR,
+      color: theme.palette.text.primary,
+      backgroundColor: theme.palette.background.paper,
     },
     // activeRoot
     ...(activeRoot && {
@@ -52,9 +55,9 @@ export const ListItemStyle = styled(Button, {
     // open
     ...(open &&
       !activeRoot && {
-      color: theme.palette.text.primary,
-      backgroundColor: theme.palette.action.hover,
-    }),
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.action.hover,
+      }),
   }
 })
 
