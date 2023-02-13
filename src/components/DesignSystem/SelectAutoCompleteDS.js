@@ -47,7 +47,7 @@ const usePlaceholderStyles = makeStyles(() => ({
 }));
 
 export default function SelectAutoCompleteDS(props) {
-  const { width, sx, selectedOption, setSelectedOption, data, allowClear } =
+  const { width, sx, selectedOption, setSelectedOption, data, allowClear, onChange } =
     props;
   const classes = usePlaceholderStyles();
   const Placeholder = ({ children }) => {
@@ -77,7 +77,7 @@ export default function SelectAutoCompleteDS(props) {
         labelId="search-select-label"
         id="search-select"
         value={selectedOption}
-        onChange={(e) => setSelectedOption(e.target.value)}
+        onChange={onChange}
         onClose={() => setSearchText("")}
         displayEmpty
         sx={{
@@ -177,6 +177,7 @@ SelectAutoCompleteDS.prototype = {
   sx: PropTypes.object,
   selectedOption: PropTypes.any,
   setSelectedOption: PropTypes.any,
+  onChange: PropTypes.any,
   data: PropTypes.object,
   allowClear: boolean,
 };

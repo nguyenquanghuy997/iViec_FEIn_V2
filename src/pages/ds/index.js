@@ -48,7 +48,7 @@ export default function Jobs() {
         />
         <Box mt={2} />
         <AvatarDS
-          linkAvatar={`https://www.elle.vn/wp-content/uploads/2017/07/25/hinh-anh-dep-1.jpg`}
+          src={`https://www.elle.vn/wp-content/uploads/2017/07/25/hinh-anh-dep-1.jpg`}
         />
         <br />
         <DropDown />
