@@ -17,7 +17,6 @@ export const PATH_AUTH = {
   register: path(ROOTS_AUTH, "/register"),
   resetPassword: path(ROOTS_AUTH, "/reset-password"),
   newPassword: path(ROOTS_AUTH, "/new-password"),
-  userActivate: path(ROOTS_AUTH, "/user-activate"),
 };
 
 export const PATH_DASHBOARD = {

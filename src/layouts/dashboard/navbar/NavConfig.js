@@ -209,42 +209,4 @@ const sidebarConfig = [
   },
 ];
 
-export const headerMenuConfig = [
-  {
-    subheader: "Quản Lý",
-    items: [
-      {
-        title: "Tin tuyển dụng",
-        path: "/jobs",
-        // icon: ICONS.job,
-        roles: ROLES[PAGES.Jobs],
-      },
-      {
-        title: "Ứng viên",
-        path: "/applicant",
-        // icon: ICONS.invoice,
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Lịch phỏng vấn",
-        path: "/interview",
-        // icon: ICONS.interview,
-        roles: ROLES[PAGES.Interview],
-      },
-      {
-        title: "Kho ứng viên",
-        path: "/stores",
-        // icon: ICONS.client,
-        roles: ROLES[PAGES.Jobs],
-      },
-      {
-        title: "Báo cáo",
-        path: "/report",
-        // icon: ICONS.report,
-        roles: ROLES[PAGES.Report1],
-      },
-    ],
-  },
-]
-
 export default sidebarConfig;

@@ -17,20 +17,6 @@ const InputLabelErrorStyle = {
 };
 
 const sxDefault = {
-  input: {
-    "&:-webkit-autofill": {
-      "-webkit-box-shadow": "0 0 0 30px white inset !important",
-    },
-    "&:-webkit-autofill:hover": {
-      "-webkit-box-shadow": "0 0 0 30px white inset !important",
-    },
-    "&:-webkit-autofill:focus": {
-      "-webkit-box-shadow": "0 0 0 30px white inset !important",
-    },
-    "&:-webkit-autofill:active": {
-      "-webkit-box-shadow": "0 0 0 30px white inset !important",
-    },
-  },
   ".MuiInputBase-root": {
     height: "44px",
     fontSize: STYLE_CONSTANT.FONT_SM,
@@ -87,7 +73,7 @@ export default function RHFTextField({ name, ...props }) {
             required={false}
             hiddenLabel={!hasLabel}
             label={hasLabel ? null : label}
-            sx={sx ? { ...sxDefault, ...sx } : sxDefault}
+            sx={sx ? sx : sxDefault}
             placeholder={placeholder}
           />
         </Stack>

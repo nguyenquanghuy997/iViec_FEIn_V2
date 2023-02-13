@@ -6,24 +6,14 @@ import {
   API_GET_DISTRICT,
   API_GET_PROVINCE,
   API_REGISTER,
-  API_USER_INFO,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["Auth"],
 });
 
-
 export const authSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
-    // get current user login
-    getCurrentUser: builder.query({
-      query: () => ({
-        url: API_USER_INFO,
-        method: "GET",
-      }),
-      invalidatesTags: ["ForgotPassword"],
-    }),
     forgotPassword: builder.mutation({
       query: (data) => ({
         url: API_FORGET_PASSWORD,
@@ -88,6 +78,4 @@ export const {
   useGetDistrictByProvinceIdQuery,
   useLazyGetDistrictByProvinceIdQuery,
   useChangePasswordWithTokenMutation,
-  useGetCurrentUserQuery,
-  useLazyGetCurrentUserQuery
 } = authSlice;
