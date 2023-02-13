@@ -67,7 +67,7 @@ export const defaultSettings = {
   themeMode: "light",
   themeDirection: "ltr",
   themeContrast: "default",
-  themeLayout: "horizontal",
+  themeLayout: "vertical",
   themeColorPresets: "yellow",
   themeStretch: false,
 };
