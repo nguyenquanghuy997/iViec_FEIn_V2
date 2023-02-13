@@ -33,16 +33,19 @@ const ApplicantHeader = ({
           <RHFSearchTextField
             hasLabel={false}
             name="search"
-            placeholder="Tìm kiếm..."
+            placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
+            sx={{ width: '510px' }}
           />
         </FormProvider>
         <Button
           onClick={onOpenFilterForm}
           sx={{
+              marginLeft: 1,
             backgroundColor: "#F3F4F6",
             padding: "12px 16px",
             height: "44px",
             borderRadius: "6px",
+              color: '#455570'
           }}
         >
           <IconButton>

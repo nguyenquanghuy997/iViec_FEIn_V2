@@ -87,7 +87,7 @@ export default function RHFTextField({ name, ...props }) {
             required={false}
             hiddenLabel={!hasLabel}
             label={hasLabel ? null : label}
-            sx={sx ? sx : sxDefault}
+            sx={sx ? { ...sxDefault, ...sx } : sxDefault}
             placeholder={placeholder}
           />
         </Stack>
