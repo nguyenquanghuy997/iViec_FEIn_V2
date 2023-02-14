@@ -1,7 +1,6 @@
 import React, {useMemo, useState} from "react";
-import {FormControl, InputAdornment, MenuItem, Select, Stack, TextField} from "@mui/material";
+import {FormControl, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
 import Iconify from "@/components/Iconify";
-import {isEmpty} from 'lodash';
 import ChipDS from "@/components/DesignSystem/ChipDS";
 import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
 
@@ -55,6 +54,11 @@ const SelectFilter = ({options, value, data, name, multiple, placeholder, onChan
 
   return (
       <FormControl fullWidth>
+        {!multiple && <InputLabel sx={{ fontSize: '14px',
+          "&.MuiInputLabel-root[data-shrink='false']": {
+              transform: 'translate(14px, 12px) scale(1)'
+          }
+        }}>{placeholder}</InputLabel>}
         {multiple ? <>
           <Select
               value={value}
@@ -95,8 +99,8 @@ const SelectFilter = ({options, value, data, name, multiple, placeholder, onChan
             ))}
           </Select>
           <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-            {value?.map((item) => {
-              return <ChipDS key={item?.value} sx={{
+            {value?.map((item, index) => {
+              return <ChipDS key={index} sx={{
                 padding: '5px 8px',
                 color: '#455570',
                 fontSize: 12,
@@ -111,7 +115,8 @@ const SelectFilter = ({options, value, data, name, multiple, placeholder, onChan
             onChange={onChange}
             displayEmpty
             onClose={() => setSearchText("")}
-            renderValue={() => isEmpty(value) ? placeholder : value.name}
+            placeholder={placeholder}
+            label={placeholder}
             {...props}
             sx={{...SelectStyle}}
         >
@@ -136,7 +141,7 @@ const SelectFilter = ({options, value, data, name, multiple, placeholder, onChan
                 />
             )}
           {displayedOptions?.map((option, i) => (
-              <MenuItem sx={{...MenuItemStyle}} key={i} value={option}>
+              <MenuItem sx={{...MenuItemStyle}} key={i} value={option.id}>
                 {option.name}
               </MenuItem>
           ))}

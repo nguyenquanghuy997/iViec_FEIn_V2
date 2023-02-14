@@ -5,16 +5,16 @@ import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
 const sxDefault = {
     input: {
         "&:-webkit-autofill": {
-            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+            WebkitBoxShadow: "0 0 0 30px white inset !important",
         },
         "&:-webkit-autofill:hover": {
-            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+            WebkitBoxShadow: "0 0 0 30px white inset !important",
         },
         "&:-webkit-autofill:focus": {
-            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+            WebkitBoxShadow: "0 0 0 30px white inset !important",
         },
         "&:-webkit-autofill:active": {
-            "-webkit-box-shadow": "0 0 0 30px white inset !important",
+            WebkitBoxShadow: "0 0 0 30px white inset !important",
         },
     },
     ".MuiInputBase-root": {

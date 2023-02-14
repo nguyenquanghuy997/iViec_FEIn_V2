@@ -13,19 +13,36 @@ ApplicantFilterModal.propTypes = {
 
 function ApplicantFilterModal({ columns, isOpen, onClose }) {
     const [,setIsScrolled] = useState(false);
-
+    // input state
     const [stateFilter, setStateFilter] = useState({
         experience: "",
-        startHeight: "",
-        endHeight: "",
+        education: "",
         startSalary: "",
         endSalary: "",
+        startHeight: "",
+        endHeight: "",
+        startWeight: "",
+        endWeight: "",
         gender: "1",
     })
-    const [selectMultiFilter, setSelectMultiFilter] = useState({
+    // select state
+    const [selectFilter, setSelectFilter] = useState({
         units: [],
-        newsRecruiment: [],
-        experienceNumber: {},
+        newsRecruitment: [],
+        steps: [],
+        sources: [],
+        hrs: [],
+        createdBy: [],
+        group: [],
+        career: [],
+        experienceNumber: null,
+        skills: [],
+        workAddress: [],
+        married: null,
+        currentAddressProvince: null,
+        currentAddressDistrict: null,
+        hometownProvince: null,
+        hometownDistrict: null,
     })
 
     const [valuesDate, setValuesDate] = useState({});
@@ -34,20 +51,20 @@ function ApplicantFilterModal({ columns, isOpen, onClose }) {
         setValuesDate((prev) => ({ ...prev, [key]: date }))
     }
 
-    const handleChangeMultiSelectFilter = (e) => {
+    const handleChangeSelectFilter = (e) => {
         const { target: { value, name } } = e;
-        setSelectMultiFilter({
-            ...selectMultiFilter,
+        setSelectFilter({
+            ...selectFilter,
             [name]: value
         });
     }
 
     const handleDeleteSelect = (item, name) => {
-        const newSelected = selectMultiFilter[name].filter((selectValue) => {
+        const newSelected = selectFilter[name].filter((selectValue) => {
             return item?.id !== selectValue?.id;
         })
-        setSelectMultiFilter({
-            ...selectMultiFilter,
+        setSelectFilter({
+            ...selectFilter,
             [name]: newSelected
         });
     }
@@ -67,8 +84,7 @@ function ApplicantFilterModal({ columns, isOpen, onClose }) {
     const handleSubmitFilter = () => {
         console.log(valuesDate)
         console.log(stateFilter)
-        // console.log(selectSingleFilter)
-        console.log(selectMultiFilter)
+        console.log(selectFilter)
     }
 
     return (
@@ -101,8 +117,8 @@ function ApplicantFilterModal({ columns, isOpen, onClose }) {
                             handleChange={handleChange}
                             stateFilter={stateFilter}
 
-                            selectMultiFilter={selectMultiFilter}
-                            onChangeMultiSelectFilter={handleChangeMultiSelectFilter}
+                            selectFilter={selectFilter}
+                            onChangeSelectFilter={handleChangeSelectFilter}
                             onDeleteSelect={handleDeleteSelect}
                         />
                     </Stack>

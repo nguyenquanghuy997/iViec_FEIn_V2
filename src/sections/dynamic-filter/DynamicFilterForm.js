@@ -18,7 +18,7 @@ import InputFilter from "@/sections/dynamic-filter/InputFilter";
 import SelectFilter from "@/sections/dynamic-filter/SelectFilter";
 import Iconify from "@/components/Iconify";
 
-const TypographyStyle = {
+export const TypographyStyle = {
     color: '#455570',
     fontSize: "14px",
     fontWeight: "600",
@@ -28,8 +28,8 @@ const TypographyStyle = {
 const DynamicFilterForm = (props) => {
     const {
         // select
-        selectMultiFilter,
-        onChangeMultiSelectFilter,
+        selectFilter,
+        onChangeSelectFilter,
         onDeleteSelect,
         // input
         handleChange,
@@ -38,7 +38,6 @@ const DynamicFilterForm = (props) => {
         valuesDate,
         onChangeDate,
     } = props;
-    console.log(stateFilter)
         return (
             <Stack>
                 {props.columns.map((column) => {
@@ -96,9 +95,9 @@ const DynamicFilterForm = (props) => {
                                                         name={item.name}
                                                         multiple={item.multiple || false}
                                                         placeholder={item.placeholder || "Tìm kiếm..."}
-                                                        value={selectMultiFilter[item.name]}
+                                                        value={selectFilter[item.name]}
                                                         data={item.options}
-                                                        onChange={onChangeMultiSelectFilter}
+                                                        onChange={onChangeSelectFilter}
                                                     />
                                                 </div>
                                             )
@@ -174,9 +173,9 @@ const DynamicFilterForm = (props) => {
                                         name={column.name}
                                         multiple={column.multiple || false}
                                         placeholder={column.placeholder || "Tìm kiếm..."}
-                                        value={selectMultiFilter[column.name]}
+                                        value={selectFilter[column.name]}
                                         data={column.options}
-                                        onChange={onChangeMultiSelectFilter}
+                                        onChange={onChangeSelectFilter}
                                         onDeleteSelect={column.multiple ? onDeleteSelect : null}
                                     />
                                 </Stack>
