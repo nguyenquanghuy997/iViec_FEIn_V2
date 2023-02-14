@@ -98,11 +98,12 @@ function AuthProvider({ children }) {
     initialize();
   }, []);
 
-  const login = async (email, password, remember) => {
+  const login = async (email, password, userLoginType, remember) => {
 
     var data = JSON.stringify({
       "userName": email,
       "password": password,
+      "userLoginType": userLoginType
     });
     const response = await _postApi(API_LOGIN, data);
 

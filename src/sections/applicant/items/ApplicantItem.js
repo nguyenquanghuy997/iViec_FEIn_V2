@@ -3,34 +3,29 @@ import { View } from "@/components/FlexStyled";
 import NextLink from 'next/link'
 import { Table, Tag, Dropdown, Menu, Checkbox} from "antd";
 import ReactDragListView from "react-drag-listview";
-import { useGetListApplicantsQuery } from "@/sections/applicant";
+import {useLazyGetListApplicantsQuery} from "@/sections/applicant";
 import { fDate } from "@/utils/formatTime";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
 import Iconify from "@/components/Iconify";
 import TextMaxLine from '@/components/TextMaxLine'
+import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
 // import { calculateColumnsWidth } from "./DynamicColumnsHelper";
 
-export const ApplicantItem = () => {
-  // const [
-  //   fetchData,
-  //   { isLoading, data: Data},
-  // ] = useGetListApplicantsQuery();
-  // const { data: Data} = useGetListApplicantsQuery();
-  const
-    {
-      data: Data,
-      isLoading,
-      // isFetching,
-      // isError,
-      // error,
-    }
-      = useGetListApplicantsQuery();
-  // const refreshData = () => {
-  //   fetchData(refRequest.current).unwrap();
-  // };
+import { columns as columnsTest } from '@/sections/applicant/others/columns'
+import Content from "@/components/BaseComponents/Content";
+import * as Yup from "yup";
+import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {useDebounce} from "@/hooks/useDebounce";
+import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
 
-  // const initialColumns =[];
+const defaultValues = {
+    search: "",
+};
+
+export const ApplicantItem = () => {
+    const [getListApplicants, { data: Data, isLoading }] = useLazyGetListApplicantsQuery();
 
   const [columns, setColumns] = useState([
     {
@@ -115,7 +110,6 @@ export const ApplicantItem = () => {
     { dataIndex: "homeTower", title: "Quê quán", width: "160px" },
   ]);
 
-
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
       if (fromIndex > 3) {
@@ -129,8 +123,6 @@ export const ApplicantItem = () => {
     },
     nodeSelector: "th"
   };
-  // const maxWidthPerCell = 2000;
-  // const tableHeight = 1800;
   const [tableHeight, setTableHeight] = useState(600);
   const ref = useRef < HTMLDivElement > (null);
   useLayoutEffect(() => {
@@ -144,15 +136,7 @@ export const ApplicantItem = () => {
   const rowKey = "id";
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const start = () => {
-  //   setLoading(true);
-  //   // ajax request after empty completing
-  //   setTimeout(() => {
-  //     setSelectedRowKeys([]);
-  //     setLoading(false);
-  //   }, 1000);
-  // };
+
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -161,10 +145,6 @@ export const ApplicantItem = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
-  //
-  // const [value, setValue] = useState(false)
-
 
   const [initialColumns, setInitialColumns] = useState([])
   const [checkedColumns, setCheckedColumns] = useState([])
@@ -227,9 +207,46 @@ export const ApplicantItem = () => {
     </Menu>
   );
 
-  return (
-    <View pv={20} ph={24}>
+  // form search
+    const Schema = Yup.object().shape({
+        search: Yup.string(),
+    });
+    const methods = useForm({
+        mode: 'onChange',
+        defaultValues,
+        resolver: yupResolver(Schema)
+    });
 
+    const {watch} = methods;
+
+    const searchValue = useDebounce(watch('search'), 1000);
+
+    useEffect(() => {
+        getListApplicants({SearchKey: searchValue})
+    }, [searchValue])
+
+    // open filter form
+    const [isOpen, setIsOpen] = useState(true);
+
+    // filter modal
+    const handleOpenFilterForm = () => {
+        setIsOpen(true);
+    };
+
+    const handleCloseFilterForm = () => {
+        setIsOpen(false);
+    };
+
+  return (
+    <View>
+        <ApplicantHeader
+            methods={methods}
+            columns={columnsTest}
+            isOpen={isOpen}
+            onOpenFilterForm={handleOpenFilterForm}
+            onCloseFilterForm={handleCloseFilterForm}
+        />
+        <Content>
       <View flexRow atCenter mb={24}>
         <Dropdown
           overlay={menu}
@@ -247,7 +264,6 @@ export const ApplicantItem = () => {
           </TextMaxLine>
         </View>
       </View>
-
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
           rowSelection={rowSelection}
@@ -262,6 +278,12 @@ export const ApplicantItem = () => {
         />
 
       </ReactDragListView.DragColumn>
+        </Content>
+        <ApplicantFilterModal
+            columns={columnsTest}
+            isOpen={isOpen}
+            onClose={handleCloseFilterForm}
+        />
     </View>
   );
 };

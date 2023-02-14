@@ -47,6 +47,7 @@ const InputFilter = ({name, placeholder, type, ...props}) => {
         <TextField
             fullWidth
             id={name}
+            name={name}
             {...props}
             type={type}
             required={false}
