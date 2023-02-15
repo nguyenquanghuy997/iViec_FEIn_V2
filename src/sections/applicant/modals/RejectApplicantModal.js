@@ -1,10 +1,10 @@
-import { ButtonDS } from "@/components/DesignSystem";
-import { Text, View } from "@/components/FlexStyled";
+import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
+import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider } from "@/components/hook-form";
 import { Grid, Modal, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
 import React from "react";
+import { useForm } from "react-hook-form";
 
 export const RejectApplicantModal = ({
   applicantId,
@@ -12,8 +12,6 @@ export const RejectApplicantModal = ({
   show,
   setShow,
 }) => {
-  // const [updateForm] = useUpdateApplicantFormMutation();
-
   const form = useForm({
     applicantId: applicantId,
     recruimentId: recruimentId,
@@ -26,75 +24,63 @@ export const RejectApplicantModal = ({
       onBackdropClick={() => setShow(false)}
     >
       <FormProvider methods={form}>
-        <View contentCenter width={600} borderRadius={8} bgColor={"#fff"}>
-          <ButtonDS
-            type="submit"
-            sx={{
-              padding: "8px",
-              minWidth: "unset",
-              backgroundColor: "#fff",
-              boxShadow: "none",
-              ":hover": {
-                backgroundColor: "#EFF3F7",
-              },
-              textTransform: "none",
-            }}
-            onClick={() => setShow(false)}
-            icon={
+        <View width={600} borderRadius={8} bgColor={"#fff"}>
+          <View pt={8} pb={36} ph={24}>
+            <ButtonDS
+              type="submit"
+              sx={{
+                justifyContent: "end",
+                padding: "8px",
+                minWidth: "unset",
+                backgroundColor: "#fff",
+                boxShadow: "none",
+                ":hover": {
+                  backgroundColor: "#EFF3F7",
+                },
+                textTransform: "none",
+              }}
+              onClick={() => setShow(false)}
+              icon={
+                <Iconify
+                  icon={"iconoir:cancel"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
+                />
+              }
+            />
+
+            <Typography
+              fontSize={20}
+              fontWeight={"700"}
+              color="#E53935"
+              textAlign={"center"}
+            >
               <Iconify
-                icon={"iconoir:cancel"}
-                width={20}
-                height={20}
-                color="#5C6A82"
+                icon={"mdi:alert-circle-outline"}
+                width={60}
+                height={60}
+                color="#E53935"
               />
-            }
-          />
-
-          <Iconify
-            icon={"mdi:alert-circle-outline"}
-            width={60}
-            height={60}
-            color="#E53935"
-          />
-
-          <Text
-            centerAlign
-            mt={24}
-            mb={12}
-            fontSize={20}
-            fontWeight={"700"}
-            color="#E53935"
-          >
-            {"Xác nhận loại ứng viên"}
-          </Text>
-
-          <Typography centerAlign fontSize={15} color="#455570">
-            {`Sau khi bị loại ứng viên sẽ được chuyển sang bước `}
-            <strong>{`Kết quả - Loại.`}</strong>
-          </Typography>
-          <Text flexRow mt={24} mb={10} fontWeight={"600"}>
-            {"Mô tả tiêu chí đánh giá"}
-          </Text>
-
-          {/* <TextArea
-      placeholder="Type in here…"
-      value={text}
-      onChange={(event) => setText(event.target.value)}
-      minRows={2}
-      maxRows={4}
-      endDecorator={
-        <Typography level="body3" sx={{ ml: 'auto' }}>
-          {text.length} character(s)
-        </Typography>
-      }
-      sx={{ minWidth: 300 }}
-    /> */}
+              <br />
+              {"Xác nhận loại ứng viên"}
+            </Typography>
+            <Typography fontSize={15} color="#455570" textAlign={"center"}>
+              {`Sau khi bị loại ứng viên sẽ được chuyển sang bước `}
+              <strong>{`Kết quả - Loại.`}</strong>
+            </Typography>
+            <TextAreaDS
+              tittle="Lý do loại ứng viên"
+              isRequired={true}
+              maxLength={150}
+              placeholder="Nhập lý do..."
+            />
+          </View>
           <Grid
             container
             padding="16px 24px"
             borderTop="1px solid #E7E9ED"
             justifyContent="end"
-            marginTop="36px"
             background="#FDFDFD"
           >
             <ButtonDS
