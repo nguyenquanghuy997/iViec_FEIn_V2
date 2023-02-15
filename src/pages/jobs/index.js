@@ -16,8 +16,9 @@ import JobModal from "@/sections/job/jobform/JobModal";
 // utils
 import {getRolesByPage} from "@/utils/role";
 // @mui
-import {Box, Button} from "@mui/material";
+import {Button} from "@mui/material";
 import React, {useCallback, useState} from "react";
+import Content from "@/components/BaseComponents/Content";
 
 Jobs.getLayout = function getLayout({ roles = [] }, page) {
   return <Layout roles={roles}>{page}</Layout>;
@@ -48,8 +49,8 @@ export default function Jobs() {
 
   return (
     <PageWrapper title={translate("nav.jobs")}>
-      <Page>
-        <Box>
+      <Page title={translate("nav.jobs")}>
+        <Content>
           <HeaderBreadcrumbs
             heading={translate("pages.jobs.heading")}
             links={[
@@ -74,7 +75,7 @@ export default function Jobs() {
             <ListJobTable />
             <JobModal isOpen={isOpen} onClose={handleCloseJobForm} />
           </>
-        </Box>
+        </Content>
       </Page>
     </PageWrapper>
   );

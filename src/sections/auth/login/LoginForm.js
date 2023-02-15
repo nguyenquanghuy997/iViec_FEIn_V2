@@ -46,9 +46,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: "quy.vu.0101@gmail.com",
-    password: "Abcd@2021",
-    userLoginType: 1,
+    email: "ngocthang1493@gmail.com",
+    password: "123456789",
     remember: true,
   };
 

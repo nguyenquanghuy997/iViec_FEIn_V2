@@ -91,7 +91,8 @@ function ApplicantFilterModal({ columns, isOpen, onClose }) {
         <Drawer
             open={isOpen}
             anchor="right"
-            PaperProps={{ sx: {width: {xs: 1, sm: 560, md: 384}}, onScroll: handleScroll,}}
+            variant="persistent"
+            PaperProps={{ sx: {width: {xs: 1, sm: 560, md: 384, boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'}}, onScroll: handleScroll,}}
         >
             <Stack flexDirection='row' sx={{px: 2, py: 2, alignItems: 'center', justifyContent: 'space-between'}}>
                 <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>

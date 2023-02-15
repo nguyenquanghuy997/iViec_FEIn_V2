@@ -1,10 +1,13 @@
+import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
-import { ButtonDS, SelectAutoCompleteDS } from "@/components/DesignSystem";
+import {
+  AvatarDS,
+  ButtonDS,
+  SelectAutoCompleteDS,
+} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import {
-  Avatar,
-  Badge,
   Box,
   Card,
   CardContent,
@@ -14,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { PipelineApplicant } from "../others";
+import { RejectApplicantModal } from "../modals";
 
 function ApplicantPreviewItem({}) {
   const allOptions = [
@@ -34,8 +37,35 @@ function ApplicantPreviewItem({}) {
     { id: 3155, name: "Tiêu đề tin tuyển dụng 14" },
     { id: 3155, name: "Tiêu đề tin tuyển dụng 15" },
   ];
-
+  const pipelines = [
+    { id: 5141, name: "Ứng tuyển", isActive: 0, stageType: 1, type: null },
+    { id: 214, name: "Thi tuyển1", isActive: 0, stageType: 2, type: null },
+    { id: 213, name: "Thi tuyển2", isActive: 0, stageType: 2, type: null },
+    { id: 3155, name: "Phỏng vấn1", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Phỏng vấn2", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Phỏng vấn3", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Kết quả - Đạt", isActive: 1, stageType: 4, type: 1 },
+    //{ id: 3155, name: "Kết quả - Cân nhắc", isActive:1, stageType:4, type:2 },
+    // { id: 3155, name: "Kết quả - Loại", isActive:1, stageType:4, type:3 },
+    { id: 3155, name: "Mời nhận việc", isActive: 0, stageType: 4, type: 4 },
+  ];
+  const pipeline1s = [
+    { id: 5141, name: "Ứng tuyển", isActive: 0, stageType: 1, type: null },
+    { id: 3155, name: "Phỏng vấn3", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Kết quả - Đạt", isActive: 1, stageType: 4, type: 1 },
+    { id: 3155, name: "Kết quả - Cân nhắc", isActive:1, stageType:4, type:2 },
+     { id: 3155, name: "Kết quả - Loại", isActive:1, stageType:4, type:3 },
+    { id: 3155, name: "Mời nhận việc", isActive: 0, stageType: 4, type: 4 },
+  ];
   const [selectedOption, setSelectedOption] = useState(allOptions[0].name);
+  const [pipe, setPipe] = useState(pipelines);
+  const [showRejectApplicant, setRejectApplicant] = useState(false);
+
+  const onChangeRecruiment = (e) => {
+    setSelectedOption(e.target.value);
+    setPipe(pipeline1s)
+  };
+  
   return (
     <Card
       sx={{
@@ -75,17 +105,13 @@ function ApplicantPreviewItem({}) {
                 },
               }}
             >
-              <Badge badgeContent="" variant="dot" color="success">
-                <Avatar
-                  variant={"rounded"}
-                  sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
-                  src={
-                    "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
-                  }
-                />
-              </Badge>
-
-              <Box pl={2}>
+              <AvatarDS
+                sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
+                src={
+                  "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
+                }
+              ></AvatarDS>
+              <Box pl={1}>
                 <Typography
                   display="flex"
                   fontSize="20px"
@@ -217,11 +243,12 @@ function ApplicantPreviewItem({}) {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Grid gap={3}>
+            <Grid>
               <SelectAutoCompleteDS
                 width="35%"
                 selectedOption={selectedOption}
                 setSelectedOption={setSelectedOption}
+                onChange={onChangeRecruiment}
                 data={allOptions}
                 sx={{
                   background: "#F3F4F6",
@@ -239,7 +266,88 @@ function ApplicantPreviewItem({}) {
                 }}
               />
             </Grid>
-            <PipelineApplicant />
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="flex-end"
+              marginTop="28px"
+            >
+              <Grid md={10} container>
+                <Grid sx={{ width: "80%" }}>
+                  <PipelineApplicant steps={pipe} />
+                </Grid>
+                <Grid sx={{ display: "flex" }}>
+                  <ButtonDS
+                    tittle={"Chuyển bước"}
+                    type="submit"
+                    sx={{
+                      color: "#455570",
+                      backgroundColor: "#F3F4F6",
+                      boxShadow: "none",
+                      ":hover": {
+                        backgroundColor: "#E7E9ED",
+                      },
+                      textTransform: "none",
+                    }}
+                    icon={
+                      <Iconify
+                        icon={"ci:transfer"}
+                        width={16}
+                        height={16}
+                        color="#455570"
+                        mr={1}
+                      />
+                    }
+                  />
+                  <ButtonDS
+                    type="submit"
+                    sx={{
+                      padding: "8px",
+                      minWidth: "unset",
+                      backgroundColor: "#fff",
+                      boxShadow: "none",
+                      ":hover": {
+                        backgroundColor: "#EFF3F7",
+                      },
+                      textTransform: "none",
+                      marginLeft: "12px",
+                    }}
+                    onClick={() => setRejectApplicant(true)}
+                    icon={
+                      <Iconify
+                        icon={"ic:outline-remove-circle"}
+                        width={20}
+                        height={20}
+                        color="#D32F2F"
+                      />
+                    }
+                  />
+                </Grid>
+              </Grid>
+              <Grid color="#455570" fontSize="13px">
+                <div>{"Phụ trách"}</div>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    marginTop: "8px",
+                  }}
+                >
+                  <AvatarDS
+                    sx={{
+                      height: "20px",
+                      width: "20px",
+                      borderRadius: "100px",
+                    }}
+                    src={
+                      "https://www.elle.vn/wp-content/uploads/2017/07/25/hinh-anh-dep-1.jpg"
+                    }
+                  ></AvatarDS>
+                  <Typography fontSize="14px" fontWeight="600" color="#172B4D">
+                    {"Phạm Xuân Chung"}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Grid container>
@@ -251,6 +359,13 @@ function ApplicantPreviewItem({}) {
           </Grid>
         </Grid>
       </CardContent>
+
+      <RejectApplicantModal
+        applicantId= {"5141"}
+        recruimentId= {"123"}
+        show={showRejectApplicant}
+        setShow={setRejectApplicant}
+      />
     </Card>
   );
 }
