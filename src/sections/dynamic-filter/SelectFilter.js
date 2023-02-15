@@ -2,48 +2,13 @@ import React, {useMemo, useState} from "react";
 import {FormControl, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
 import Iconify from "@/components/Iconify";
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
+import {
+  MenuItemStyle,
+  SearchInputStyle,
+  SelectStyle,
+} from '@/components/hook-form/style';
+import {containsText} from "@/utils/function";
 
-const containsText = (text, searchText) => text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-
-const SelectStyle = {
-  "&.MuiInputBase-root": {
-    height: "44px",
-    fontSize: STYLE_CONSTANT.FONT_SM,
-    borderRadius: 0.75,
-    width: STYLE_CONSTANT.WIDTH_FULL,
-  },
-  "& .MuiSelect-select": {
-    borderRadius: 0.75,
-  },
-  ".MuiFormHelperText-root": {
-    marginTop: 1,
-    marginLeft: 0,
-  },
-}
-
-const SearchInputStyle = {
-  boxShadow: "inset 0px -1px 0px #E7E9ED",
-  "& .MuiInputBase-input": {
-    color: "#5C6A82",
-    padding: "10px 0",
-    fontFamily: "Inter",
-    fontWeight: "500",
-    fontSize: "15px",
-    lineHeight: "20px",
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
-    border: "none",
-    padding: 0,
-  },
-}
-
-const MenuItemStyle = {
-  color: "#172B4D",
-  padding: "10px 16px",
-  fontSize: "14px",
-  fontWeight: 400
-}
 
 const SelectFilter = ({options, value, data, name, multiple, placeholder, onChange, onDeleteSelect, ...props}) => {
   const [searchText, setSearchText] = useState("");

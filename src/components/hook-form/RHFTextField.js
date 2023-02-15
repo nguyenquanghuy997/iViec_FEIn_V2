@@ -4,17 +4,7 @@ import { InputLabel, Stack, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 // form
 import { Controller, useFormContext } from "react-hook-form";
-
-const InputLabelStyle = {
-  fontSize: STYLE_CONSTANT.FONT_SM,
-  color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
-  fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
-  marginBottom: 1,
-};
-
-const InputLabelErrorStyle = {
-  color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
-};
+import { InputLabelStyle, InputLabelErrorStyle,} from './style';
 
 const sxDefault = {
   input: {
