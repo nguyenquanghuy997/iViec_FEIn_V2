@@ -1,4 +1,4 @@
-// @mui
+import { memo } from 'react';
 import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
 import { InputLabel, Stack, TextField } from "@mui/material";
 import PropTypes from "prop-types";
@@ -45,7 +45,7 @@ const sxDefault = {
   },
 };
 
-export default function RHFTextField({ name, ...props }) {
+function RHFTextField({ name, ...props }) {
   const { control } = useFormContext();
   const { htmlFor, required, label, placeholder, hasLabel = true, sx } = props;
   return (
@@ -103,3 +103,5 @@ RHFTextField.defaultProps = {
   placeholder: "",
   sx: sxDefault,
 };
+
+export default memo(RHFTextField) ;

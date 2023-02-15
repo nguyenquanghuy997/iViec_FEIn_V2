@@ -1,21 +1,14 @@
-// react
-// components
+import React, {useEffect, useState} from 'react';
 import {RegisterFormSectionLabel} from ".";
 import {STYLE_CONSTANT} from "./constants";
 import Iconify from "@/components/Iconify";
-import {
-  FormProvider,
-  RHFBasicSelect,
-  RHFCheckbox,
-  RHFTextField,
-} from "@/components/hook-form";
+import {FormProvider, RHFAutocomplete, RHFCheckbox, RHFTextField,} from "@/components/hook-form";
 // hooks
 import {PATH_AUTH} from "@/routes/paths";
+import {useRegisterMutation,} from "@/sections/auth/authSlice";
 import {
-  useRegisterMutation,
-} from "@/sections/auth/authSlice";
-import {
-  useGetJobCategoriesQuery, useLazyGetDistrictByProvinceIdQuery,
+  useGetJobCategoriesQuery,
+  useLazyGetDistrictByProvinceIdQuery,
   useLazyGetProvinceQuery,
 } from "@/sections/companyinfor/companyInforSlice";
 import errorMessages from "@/utils/errorMessages";
@@ -23,28 +16,18 @@ import {LIST_ORGANIZATION_SIZE} from "@/utils/formatString";
 import {yupResolver} from "@hookform/resolvers/yup";
 // @mui
 import {LoadingButton} from "@mui/lab";
-import {
-  Alert,
-  Box,
-  Divider,
-  FormHelperText,
-  IconButton,
-  InputAdornment,
-  Link,
-  Stack,
-  Typography,
-} from "@mui/material";
+import {Alert, Box, Divider, FormHelperText, IconButton, InputAdornment, Link, Stack, Typography,} from "@mui/material";
 // next
 import NextLink from "next/link";
 import {useRouter} from "next/router";
-import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import ChipDS from "@/components/DesignSystem/ChipDS";
 
 const InputStyle = {width: 440, minHeight: 44};
 
-export default function RegisterForm({}) {
+function RegisterForm() {
   const defaultValues = {
     userName: "",
     password: "",
@@ -60,38 +43,17 @@ export default function RegisterForm({}) {
   };
 
   const RegisterSchema = Yup.object().shape({
-    userName: Yup.string()
-      .email("Email không đúng định dạng")
-      .required("Email không được bỏ trống"),
-    password: Yup.string()
-      .min(6, "Mật khẩu cần tối thiểu 6 ký tự")
-      .required("Mật khẩu không được bỏ trống"),
-    rePassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng")
-      .required("Mật khẩu xác nhận không được bỏ trống"),
-    organizationName: Yup.string().required(
-      "Tên doanh nghiệp không được bỏ trống"
-    ).max(50, "Tên doanh nghiệp tối đa 50 ký tự"),
-    organizationPhoneNumber: Yup.string()
-        .required("Số điện thoại không được bỏ trống")
-        .matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
-    jobCategoryIds: Yup.array()
-      .min(1, "Ngành nghề không được bỏ trống")
-      .max(3, "Chọn tối đa 3 ngành nghê"),
-    organizationSize: Yup.string().required(
-        "Quy mô nhân sự không được bỏ trống"
-    ),
-    organizationProvinceId: Yup.string().required(
-      "Tỉnh/Thành phố không được bỏ trống"
-    ),
-    organizationDistrictId: Yup.string().required(
-      "Quận/Huyện không được bỏ trống"
-    ),
+    userName: Yup.string().email("Email không đúng định dạng").required("Email không được bỏ trống"),
+    password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
+    rePassword: Yup.string().oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng").required("Mật khẩu xác nhận không được bỏ trống"),
+    organizationName: Yup.string().required("Tên doanh nghiệp không được bỏ trống").max(50, "Tên doanh nghiệp tối đa 50 ký tự"),
+    organizationPhoneNumber: Yup.string().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
+    jobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghê"),
+    organizationSize: Yup.string().required("Quy mô nhân sự không được bỏ trống"),
+    organizationProvinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống"),
+    organizationDistrictId: Yup.string().required("Quận/Huyện không được bỏ trống"),
     organizationAddress: Yup.string().max(255, "Địa chỉ cụ thể doanh nghiệp tối đa 255 ký tự"),
-    acceptTerms: Yup.bool().oneOf(
-      [true],
-      "Vui lòng đồng ý với chính sách bảo mật"
-    ),
+    acceptTerms: Yup.bool().oneOf([true], "Vui lòng đồng ý với chính sách bảo mật"),
   });
 
   const methods = useForm({
@@ -123,18 +85,21 @@ export default function RegisterForm({}) {
         password: data.password, // organization password
         organizationName: data.organizationName, // organization name
         organizationPhoneNumber: data.organizationPhoneNumber, // organization phone number
-        jobCategoryIds: data.jobCategoryIds, // organization name
+        jobCategoryIds: data.jobCategoryIds?.map(item => item?.value), // organization name
         organizationSize: parseInt(data.organizationSize), // organization size
         organizationProvinceId: data.organizationProvinceId, // organization province
         organizationDistrictId: data.organizationDistrictId, // organization district
         organizationAddress: data.organizationAddress, // organization address
       };
-      console.log(data)
       await postRegister(body).unwrap();
-      router.push(`/auth/register/success?username=${body.userName}`);
+      await router.push(`/auth/register/success?username=${body.userName}`);
     } catch (error) {
+      console.log(error)
+      const { status } = error;
       const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
-      setError("afterSubmit", {...error, message});
+      if(status === "AUE_06") {
+        setError('userName', { type: "custom", message: "Email đã được đăng ký" }, { shouldFocus: true })
+      } else setError("afterSubmit", {...error, message});
     }
   };
 
@@ -143,12 +108,10 @@ export default function RegisterForm({}) {
     else methods.resetField(field);
   };
 
-  const [fetchProvice, {data: {items: ProviceList = []} = {}}] =
-      useLazyGetProvinceQuery();
-  const [getDistrictByProvinceId, {data: {items: DistrictList = []} = {}}] =
-      useLazyGetDistrictByProvinceIdQuery();
-  const {data: {items: JobCategoryList = []} = {}} =
-      useGetJobCategoriesQuery();
+  const [fetchProvice, {data: {items: ProviceList = []} = {}}] = useLazyGetProvinceQuery();
+  const [getDistrictByProvinceId, {data: {items: DistrictList = []} = {}}] = useLazyGetDistrictByProvinceIdQuery();
+  const {data: {items: JobCategoryList = []} = {}} = useGetJobCategoriesQuery();
+
 
   useEffect(() => {
     fetchProvice().unwrap();
@@ -205,7 +168,7 @@ export default function RegisterForm({}) {
                         endAdornment: (
                             <InputAdornment position="end">
                               <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
-                                <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"} />
+                                <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
                               </IconButton>
                             </InputAdornment>
                         ),
@@ -237,7 +200,7 @@ export default function RegisterForm({}) {
                         endAdornment: (
                             <InputAdornment position="end">
                               <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
-                                <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"} />
+                                <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
                               </IconButton>
                             </InputAdornment>
                         ),
@@ -273,33 +236,44 @@ export default function RegisterForm({}) {
                   justifyContent="space-between"
                   sx={{mb: 2.5}}
               >
-                {/*<RHFBasicSelect*/}
-                {/*    name="jobCategoryIds"*/}
-                {/*    placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"*/}
-                {/*    label="Ngành nghề"*/}
-                {/*    required*/}
-                {/*    multiple*/}
-                {/*    style={{...InputStyle}}*/}
-                {/*    options={JobCategoryList.map((i) => ({*/}
-                {/*      value: i.id,*/}
-                {/*      label: `${i.name[0]?.toUpperCase()}${i.name.slice(1)}`,*/}
-                {/*      name: i?.name,*/}
-                {/*    }))}*/}
-                {/*/>*/}
-
                 <div style={{...InputStyle}}>
-                  <RHFDropdown
-                      options={JobCategoryList.map((i) => ({
+                  <RHFAutocomplete
+                      options={JobCategoryList?.map((i) => ({
                         value: i.id,
                         label: `${i.name[0].toUpperCase()}${i.name.slice(1)}`,
                         name: i?.name,
                       }))}
-                      style={{...InputStyle}}
                       name="jobCategoryIds"
-                      multiple={true}
-                      placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"
                       label="Ngành nghề"
-                      required
+                      required={true}
+                      placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"
+                      AutocompleteProps={{
+                        multiple: true,
+                        limitTags: 2,
+                        sx: {
+                          "&.MuiAutocomplete-root .MuiAutocomplete-inputRoot": {
+                            padding: '4.5px 14px !important',
+                            fontSize: "14px",
+                            lineHeight: '20px',
+                            color: "#1E5EF3",
+                            fontWeight: 500,
+                            borderRadius: '6px'
+                          },
+                          ".MuiFormHelperText-root": {
+                            marginTop: 1,
+                            marginLeft: 0,
+                          },
+                        },
+                        isOptionEqualToValue: (option, value) => option.value === value.value,
+                        renderTags: (value, getTagProps) => value.map(({label, id}, index) => (
+                            <ChipDS
+                                {...getTagProps({index})}
+                                key={`${id}-${index}`}
+                                size="medium"
+                                label={label}
+                            />
+                        )),
+                      }}
                   />
                 </div>
 
@@ -320,48 +294,47 @@ export default function RegisterForm({}) {
                       required
                   />
                 </div>
-                {/*<RHFBasicSelect*/}
-                {/*  name="organizationSize"*/}
-                {/*  label="Quy mô nhân sự"*/}
-                {/*  placeholder="Bắt buộc"*/}
-                {/*  style={{ ...InputStyle }}*/}
-                {/*  required*/}
-                {/*  options={LIST_ORGANIZATION_SIZE.map((i) => ({*/}
-                {/*    value: i.value,*/}
-                {/*    label: i.name,*/}
-                {/*  }))}*/}
-                {/*/>*/}
               </Stack>
               <Divider sx={{backgroundColor: STYLE_CONSTANT.COLOR_DIVIDER}}/>
               <Stack direction="row" justifyContent="space-between" sx={{mb: 2.5, mt: 2.5}}>
                 <Stack>
-                  <RHFBasicSelect
-                      name="organizationProvinceId"
-                      label="Tỉnh/Thành phố"
-                      placeholder="Bắt buộc"
-                      required
-                      style={{...InputStyle}}
-                      options={ProviceList?.map((i) => ({
-                        value: i?.id,
-                        label: i?.name,
-                        slug: i?.slug,
-                      }))}
-                  />
+                  <div style={{...InputStyle}}>
+                    <RHFDropdown
+                        options={
+                          ProviceList.map((i) => ({
+                            value: i.id,
+                            label: i.name,
+                            name: i.name,
+                          }))
+                        }
+                        style={{...InputStyle}}
+                        name="organizationProvinceId"
+                        multiple={false}
+                        placeholder="Bắt buộc"
+                        label="Tỉnh/Thành phố"
+                        required
+                    />
+                  </div>
                 </Stack>
                 <Stack>
-                  <RHFBasicSelect
-                      name="organizationDistrictId"
-                      label="Quận/Huyện"
-                      placeholder="Bắt buộc"
-                      required
-                      disabled={!watchProvinceId}
-                      style={{...InputStyle}}
-                      options={DistrictList?.map((i) => ({
-                        value: i?.id,
-                        label: i?.name,
-                        slug: i?.slug,
-                      }))}
-                  />
+                  <div style={{...InputStyle}}>
+                    <RHFDropdown
+                        options={
+                          DistrictList.map((i) => ({
+                            value: i.id,
+                            label: i.name,
+                            name: i.name,
+                          }))
+                        }
+                        style={{...InputStyle}}
+                        name="organizationDistrictId"
+                        multiple={false}
+                        disabled={!watchProvinceId}
+                        placeholder="Bắt buộc"
+                        label="Quận/Huyện"
+                        required
+                    />
+                  </div>
                 </Stack>
               </Stack>
 
@@ -376,7 +349,7 @@ export default function RegisterForm({}) {
               </Stack>
               <Stack direction="row" justifyContent="start" alignItems="center" sx={{mt: 2.5}}>
                 <Stack sx={{mr: 0.5}}>
-                  <RHFCheckbox style={{margin: 0, padding: 0}} name="acceptTerms" />
+                  <RHFCheckbox style={{margin: 0, padding: 0}} name="acceptTerms"/>
                 </Stack>
                 <Stack>
                   <Typography
@@ -435,3 +408,5 @@ export default function RegisterForm({}) {
       </Box>
   );
 }
+
+export default React.memo(RegisterForm);

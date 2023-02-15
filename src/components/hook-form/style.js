@@ -47,6 +47,7 @@ const InputLabelStyle = {
 };
 const InputLabelErrorStyle = {
   color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
+  marginLeft: 0,
 };
 
 export {

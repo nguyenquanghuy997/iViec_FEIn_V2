@@ -63,13 +63,18 @@ export default function LoginForm() {
   } = methods;
 
   const onSubmit = async (data) => {
+    console.log(errors)
     try {
       await login(data.email, data.password, data.userLoginType, data.remember);
-      enqueueSnackbar("Đăng nhập thành công!");
+      enqueueSnackbar("Đăng nhập thành công!")
     } catch (error) {
       const message =errorMessages[`${error.code}`] ||'Lỗi hệ thống'
-      setError("afterSubmit", { ...error, message });
-
+      const { code } = error;
+      if(code === "AUE_01") {
+        setError('email', { type: "custom", message: "Email đăng nhập không tồn tại" }, { shouldFocus: true })
+      } else if(code === "IDE_06") {
+        setError('password', { type: "custom", message: "Mật khẩu không chính xác" })
+      } else  setError("afterSubmit", { ...error, message });
     }
   };
 
