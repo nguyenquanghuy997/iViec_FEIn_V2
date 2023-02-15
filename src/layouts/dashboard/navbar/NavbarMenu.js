@@ -5,7 +5,7 @@ import { Stack } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 // components
-import { NavSectionHorizontal } from '@/components/nav-section'
+import { NavVertical } from '@/components/nav-section'
 
 import { headerMenuConfig } from './NavConfig'
 
@@ -18,7 +18,7 @@ const NavbarMenu = () => {
     return (
         <RootStyle>
             <Stack sx={{ px: 0 }}>
-                <NavSectionHorizontal navConfig={headerMenuConfig} />
+                <NavVertical navConfig={headerMenuConfig} />
             </Stack>
         </RootStyle>
     )

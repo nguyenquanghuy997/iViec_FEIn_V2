@@ -103,9 +103,10 @@ function AuthProvider({ children }) {
     var data = JSON.stringify({
       "userName": email,
       "password": password,
+      "userLoginType":1
     });
     const response = await _postApi(API_LOGIN, data);
-
+    
     //     var myHeaders = new Headers();
     // myHeaders.append("accept", "application/json");
     // myHeaders.append("Content-Type", "application/json-patch+json");
@@ -127,7 +128,7 @@ function AuthProvider({ children }) {
     //   .then(result => console.log(result))
     //   .catch(error => console.log('error', error));
 
-
+    console.log('response.token',response.token)
     var config = {
       method: "get",
       url: DOMAIN_SERVER_API + API_USER_INFO,

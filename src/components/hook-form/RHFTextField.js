@@ -4,19 +4,23 @@ import { InputLabel, Stack, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 // form
 import { Controller, useFormContext } from "react-hook-form";
-
-const InputLabelStyle = {
-  fontSize: STYLE_CONSTANT.FONT_SM,
-  color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
-  fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
-  marginBottom: 1,
-};
-
-const InputLabelErrorStyle = {
-  color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
-};
+import { InputLabelStyle, InputLabelErrorStyle,} from './style';
 
 const sxDefault = {
+  input: {
+    "&:-webkit-autofill": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+    "&:-webkit-autofill:hover": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+    "&:-webkit-autofill:focus": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+    "&:-webkit-autofill:active": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+  },
   ".MuiInputBase-root": {
     height: "44px",
     fontSize: STYLE_CONSTANT.FONT_SM,
@@ -73,7 +77,7 @@ export default function RHFTextField({ name, ...props }) {
             required={false}
             hiddenLabel={!hasLabel}
             label={hasLabel ? null : label}
-            sx={sx ? sx : sxDefault}
+            sx={sx ? { ...sxDefault, ...sx } : sxDefault}
             placeholder={placeholder}
           />
         </Stack>

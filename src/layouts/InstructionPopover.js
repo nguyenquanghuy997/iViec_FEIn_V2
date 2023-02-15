@@ -134,7 +134,7 @@ export default function NotificationsPopover() {
           cursor: "pointer",
           display: "flex",
           padding: "8px 12px",
-          position: "absolute",
+          position: "fixed",
           alignItems: "center",
           justifyContent: "center",
           color: "#ffffff",

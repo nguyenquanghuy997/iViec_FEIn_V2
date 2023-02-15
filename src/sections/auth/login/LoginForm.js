@@ -46,8 +46,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: "quy.vu.0101@gmail.com",
-    password: "Abcd@2021",
+    email: "ngocthang1493@gmail.com",
+    password: "123456789",
     remember: true,
   };
 
@@ -64,7 +64,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password, data.remember);
+      await login(data.email, data.password, data.userLoginType, data.remember);
       enqueueSnackbar("Đăng nhập thành công!");
     } catch (error) {
       const message =errorMessages[`${error.code}`] ||'Lỗi hệ thống'

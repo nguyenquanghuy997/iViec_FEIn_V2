@@ -7,5 +7,5 @@ const errorMessages = {
     IDE_18:'Tài khoản đã tồn tại',
 }
   
-  export default errorMessages
+export default errorMessages
   
