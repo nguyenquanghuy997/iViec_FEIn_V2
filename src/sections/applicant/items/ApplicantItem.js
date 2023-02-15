@@ -3,7 +3,7 @@ import { View } from "@/components/FlexStyled";
 import NextLink from 'next/link'
 import { Table, Tag, Dropdown, Menu, Checkbox} from "antd";
 import ReactDragListView from "react-drag-listview";
-import { useGetListApplicantsQuery } from "@/sections/applicant";
+import { useGetListApplicantsQuery,useGetListColumnApplicantsQuery } from "@/sections/applicant";
 import { fDate } from "@/utils/formatTime";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
@@ -12,26 +12,18 @@ import TextMaxLine from '@/components/TextMaxLine'
 // import { calculateColumnsWidth } from "./DynamicColumnsHelper";
 
 export const ApplicantItem = () => {
-  // const [
-  //   fetchData,
-  //   { isLoading, data: Data},
-  // ] = useGetListApplicantsQuery();
-  // const { data: Data} = useGetListApplicantsQuery();
   const
     {
       data: Data,
       isLoading,
-      // isFetching,
-      // isError,
-      // error,
     }
       = useGetListApplicantsQuery();
-  // const refreshData = () => {
-  //   fetchData(refRequest.current).unwrap();
-  // };
+      const
+      {
+        data: ColumnData,
 
-  // const initialColumns =[];
-
+      }
+        = useGetListColumnApplicantsQuery();
   const [columns, setColumns] = useState([
     {
       title: 'STT',
@@ -78,7 +70,7 @@ export const ApplicantItem = () => {
         {text}
       </Tag>
     },
-    { dataIndex: "fullName", title: "Kinh nghiệm làm việc", width: "200px" },
+    { dataIndex: "experience", title: "Kinh nghiệm làm việc", width: "200px" },
     { dataIndex: "fullName", title: "Ngành nghề", width: "200px" },
     { dataIndex: "yearOfExperience", title: "KN", width: "60px" },
     {
@@ -88,9 +80,9 @@ export const ApplicantItem = () => {
       render: (_, { applicantSkills }) => (
         <>
           {applicantSkills.map((item) => {
-            let color = item.length > 5 ? 'geekblue' : 'green';
+            // let color = item.length > 5 ? 'geekblue' : 'green';
             return (
-              <Tag color={color} key={item}>
+              <Tag  key={item}>
                 {item.name.toUpperCase()}
               </Tag>
             );
@@ -111,7 +103,7 @@ export const ApplicantItem = () => {
     { dataIndex: "weight", title: "Cân nặng", width: "120px" },
     { dataIndex: "fullName", title: "Nơi làm việc mong muốn", width: "200px" },
     { dataIndex: "expectedSalaryTo", title: "Mức lương mong muốn", width: "120px" },
-    { dataIndex: "provinceName", title: "Nơi ở hiện tại", width: "160px" },
+    { dataIndex: "livingAddress", title: "Nơi ở hiện tại", width: "160px" },
     { dataIndex: "homeTower", title: "Quê quán", width: "160px" },
   ]);
 
@@ -134,25 +126,12 @@ export const ApplicantItem = () => {
   const [tableHeight, setTableHeight] = useState(600);
   const ref = useRef < HTMLDivElement > (null);
   useLayoutEffect(() => {
-    // const node = ref.current;
-    // const { top } = node.getBoundingClientRect();
-
-    // normally TABLE_HEADER_HEIGHT would be 55.
     setTableHeight(window.innerHeight - 400);
   }, [ref]);
 
   const rowKey = "id";
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const start = () => {
-  //   setLoading(true);
-  //   // ajax request after empty completing
-  //   setTimeout(() => {
-  //     setSelectedRowKeys([]);
-  //     setLoading(false);
-  //   }, 1000);
-  // };
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -193,40 +172,59 @@ export const ApplicantItem = () => {
     setColumns(filtered)
 
   }
-  const menu = (
-    <Menu>
-      <Menu.ItemGroup title="Columns" >
-        <Menu.Item key="1" ><Checkbox id="dateOfBirth" onChange={onChange} defaultChecked>Ngày sinh</Checkbox></Menu.Item>
-        <Menu.Item key="2"><Checkbox id="email" onChange={onChange} defaultChecked>Email</Checkbox></Menu.Item>
-
-        <Menu.Item key="3"><Checkbox id="fullName" onChange={onChange} defaultChecked>Tin tuyển dụng</Checkbox></Menu.Item>
-        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Bước tuyển dụng</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Ngày ứng tuyển</Checkbox></Menu.Item>
-        <Menu.Item key="3"><Checkbox id="fullName" onChange={onChange} defaultChecked>Đơn vị</Checkbox></Menu.Item>
-        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Nguồn</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Cán bộ tuyển dụng</Checkbox></Menu.Item>
-        <Menu.Item key="3"><Checkbox id="fullName" onChange={onChange} defaultChecked>Mức lương mong muốn</Checkbox></Menu.Item>
-        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Cán bộ tạo ứng viên</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="academicLevel" onChange={onChange} defaultChecked>Học vấn</Checkbox></Menu.Item>
-        <Menu.Item key="4"><Checkbox id="fullName" onChange={onChange} defaultChecked>Kinh nghiệm làm việc</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Ngành nghề</Checkbox></Menu.Item>
-        <Menu.Item key="3"><Checkbox id="yearOfExperience" onChange={onChange} defaultChecked>Số năm kinh nghiệm</Checkbox></Menu.Item>
-        <Menu.Item key="4"><Checkbox id="applicantSkills" onChange={onChange} defaultChecked>Kỹ năng</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="identityNumber" onChange={onChange} defaultChecked>Số CCCD/CMND</Checkbox></Menu.Item>
-        <Menu.Item key="3"><Checkbox id="sex" onChange={onChange} defaultChecked>Giới tính</Checkbox></Menu.Item>
-        <Menu.Item key="4"><Checkbox id="maritalStatus" onChange={onChange} defaultChecked>Tình trạng hôn nhân</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="height" onChange={onChange} defaultChecked>Chiều cao</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="weight" onChange={onChange} defaultChecked>Cân nặng</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="fullName" onChange={onChange} defaultChecked>Nơi làm việc mong muố</Checkbox></Menu.Item>
-        <Menu.Item key="3"><Checkbox id="expectedSalaryTo" onChange={onChange} defaultChecked>Mức lương mong muốn</Checkbox></Menu.Item>
-        <Menu.Item key="4"><Checkbox id="provinceName" onChange={onChange} defaultChecked>Nơi ở hiện tại</Checkbox></Menu.Item>
-        <Menu.Item key="5"><Checkbox id="homeTower" onChange={onChange} defaultChecked>Quê quán</Checkbox></Menu.Item>
-
-
-      </Menu.ItemGroup>
-    </Menu>
-  );
-
+// let items=[]
+// ColumnData&&Object.keys(ColumnData).map((key,index) => items.push({"key":index+1, "label":key,"defaultChecked":ColumnData[key]}))
+const menuItemText = {
+  name:'Họ và tên',
+  phoneNumber: "Số điện thoại",
+  dateOfBirth: 'Ngày sinh',
+  email: "Email",
+  recruitment: "Tin tuyển dụng",
+  recruitmentPipelineState: "Bước tuyển dụng",
+  createdTime: "Ngày ứng tuyển",
+  organization: "Tổ chức",
+  jobSource: "Nguồn",
+  council: "Hội đồng",
+  creator: "Cán bộ tạo ứng viên",
+  education: "Học vấn",
+  applicantWorkingExperiences: "Kinh nghiệm làm việc",
+  jobCategory: "Ngành nghề",
+  yearOfExperience: "Số năm kinh nghiệm",
+  applicantSkills: "Kỹ năng",
+  identityNumber: "Số CCCD/CMND",
+  sex: "Giới tính",
+  maritalStatus: "Tình trạng hôn nhâ",
+  height: "Chiều cao",
+  weight: "Cân nặng",
+  expectedWorkingAddress:"Nơi làm việc mong muốn",
+  expectedSalary: "Mức lương mong muốn",
+  livingAddress: "Nơi ở hiện tại",
+  homeTower: "Quê quán",
+}
+const menu = (
+  
+  <Menu>
+    {ColumnData&&Object.keys(ColumnData).map((key,index) => {
+      if(key=='id'){
+        return
+      }
+      if(key=='name'||key=='id'||key=='phoneNumber'){
+      return(
+        <Menu.Item key={index+1} >
+           <Checkbox id={key} onChange={onChange} defaultChecked={ColumnData[key]} disabled >{menuItemText[key]}</Checkbox>
+         </Menu.Item>
+       
+     ); 
+    }else{
+    return(
+       <Menu.Item key={index+1} >
+          <Checkbox id={key} onChange={onChange} defaultChecked={ColumnData[key]}>{menuItemText[key]}</Checkbox>
+        </Menu.Item>
+      
+    ); 
+    }})}
+  </Menu>
+);
   return (
     <View pv={20} ph={24}>
 
