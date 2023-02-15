@@ -17,12 +17,12 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
-  
   endpoints: (builder) => ({
     getListApplicants: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: API_GET_ALL_APPLICANTS,
         method: 'GET',
+        params
       }),
     }),
     getListColumnApplicants: builder.query({
@@ -37,10 +37,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
       }),
     }),
-    
-
-
-
     getAllApplicant: builder.mutation({
       query: (data) => ({
         url: API_GET_ALL_SEARCH,
@@ -87,6 +83,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetListApplicantsQuery,
+  useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsQuery,
   useGetAllApplicantMutation,

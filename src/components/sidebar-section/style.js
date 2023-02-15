@@ -1,6 +1,7 @@
 // @mui
 // config
 import { ICON, NAVBAR } from "@/config";
+import { SIDEBAR_CONSTANTS } from "@/layouts/setting/SideBarConfig";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -8,41 +9,42 @@ export const ListItemStyle = styled(ListItemButton, {
   shouldForwardProp: (prop) =>
     prop !== "activeRoot" && prop !== "activeSub" && prop !== "subItem",
 })(({ activeRoot, activeSub, subItem, theme }) => ({
-  // ...theme.typography.body2,
-  // position: 'relative',
-  // height: NAVBAR.DASHBOARD_ITEM_ROOT_HEIGHT,
-  // textTransform: 'capitalize',
-  // paddingLeft: theme.spacing(2),
-  // paddingRight: theme.spacing(1.5),
-  // marginBottom: theme.spacing(0.5),
-  // color: theme.palette.text.secondary,
-  // borderRadius: theme.shape.borderRadius,
   ...theme.typography.body2,
-  margin: theme.spacing(0, 0.5),
-  padding: theme.spacing(1, 2),
-  borderRadius: theme.spacing(0.75),
-  color: NAVBAR.DASHBOARD_MENU_ITEM_COLOR,
-  fontWeight: NAVBAR.MENU_ITEM_WEIGHT_SEMIBOLD,
+  position: "relative",
+  // margin: theme.spacing(0, 0.5),
+  padding: theme.spacing(1, 2.5),
+  borderRadius: theme.spacing(0.5),
+  color: SIDEBAR_CONSTANTS.MENU_ITEM_COLOR,
+  fontWeight: SIDEBAR_CONSTANTS.MENU_ITEM_WEIGHT,
+  height: '44px',
   textTransform: "none",
-  height: NAVBAR.DASHBOARD_ITEM_HORIZONTAL_MENU_HEIGHT,
   "&:hover": {
-    color: NAVBAR.DASHBOARD_MENU_ITEM_ACTIVE_COLOR,
-    backgroundColor: NAVBAR.DASHBOARD_MENU_ITEM_BG_COLOR,
+    color: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_COLOR,
+    backgroundColor: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_BG_COLOR,
+    fontWeight: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_WEIGHT,
   },
   // activeRoot
   ...(activeRoot && {
-    // ...theme.typography.subtitle2,
-    // color: theme.palette.primary.main,
-    // backgroundColor: alpha(
-    //   theme.palette.primary.main,
-    //   theme.palette.action.selectedOpacity
-    // ),
     ...theme.typography.subtitle2,
-    color: NAVBAR.DASHBOARD_MENU_ITEM_ACTIVE_COLOR,
-    backgroundColor: NAVBAR.DASHBOARD_MENU_ITEM_BG_COLOR,
+    color: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_COLOR,
+    backgroundColor: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_BG_COLOR,
+    fontWeight: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_WEIGHT,
+    padding: theme.spacing(1, 4),
+    "&:after": {
+      content: '""',
+      position: "absolute",
+      border: '2px solid #2196F3',
+      display: "block",
+      width: 0,
+      height: '24px',
+      zIndex: 1,
+      top: "50%",
+      transform: 'translateY(-50%)',
+      left: theme.spacing(1.5),
+    },
     "&:hover": {
-      color: NAVBAR.DASHBOARD_MENU_ITEM_ACTIVE_COLOR,
-      backgroundColor: NAVBAR.DASHBOARD_MENU_ITEM_BG_COLOR,
+      color: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_COLOR,
+      backgroundColor: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_BG_COLOR,
     },
   }),
   // activeSub

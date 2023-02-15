@@ -64,7 +64,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password, data.remember);
+      await login(data.email, data.password, data.userLoginType, data.remember);
       enqueueSnackbar("Đăng nhập thành công!");
     } catch (error) {
       const message =errorMessages[`${error.code}`] ||'Lỗi hệ thống'
