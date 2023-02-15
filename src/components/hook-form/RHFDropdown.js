@@ -25,16 +25,12 @@ function RHFDropdown({name, ...props}) {
       [searchText]
   );
 
-  console.log(displayedOptions)
-  console.log(options)
-
   return (
       <Controller
           name={name}
           control={control}
           render={({field, fieldState: {error}}) => (
               <Stack direction="column">
-                {JSON.stringify(field.value)}
                 {hasLabel && (
                     <InputLabel
                         htmlFor={htmlFor || name}
