@@ -30,7 +30,7 @@ export default function RHFAutocomplete({name, options = [], required, label, pl
         <TextField
           {...field}
           fullWidth
-          placeholder={(field.value?.length === 0 || !field.value) && placeholder}
+          placeholder={(field.value?.length === 0 || !field.value) ? placeholder : null}
           error={!!error}
           helperText={error?.message}
           {...other}

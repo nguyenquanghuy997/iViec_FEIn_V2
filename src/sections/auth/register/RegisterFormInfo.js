@@ -43,38 +43,17 @@ function RegisterForm() {
   };
 
   const RegisterSchema = Yup.object().shape({
-    userName: Yup.string()
-        .email("Email không đúng định dạng")
-        .required("Email không được bỏ trống"),
-    password: Yup.string()
-        .min(6, "Mật khẩu cần tối thiểu 6 ký tự")
-        .required("Mật khẩu không được bỏ trống"),
-    rePassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng")
-        .required("Mật khẩu xác nhận không được bỏ trống"),
-    organizationName: Yup.string().required(
-        "Tên doanh nghiệp không được bỏ trống"
-    ).max(50, "Tên doanh nghiệp tối đa 50 ký tự"),
-    organizationPhoneNumber: Yup.string()
-        .required("Số điện thoại không được bỏ trống")
-        .matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
-    jobCategoryIds: Yup.array()
-        .min(1, "Ngành nghề không được bỏ trống")
-        .max(3, "Chọn tối đa 3 ngành nghê"),
-    organizationSize: Yup.string().required(
-        "Quy mô nhân sự không được bỏ trống"
-    ),
-    organizationProvinceId: Yup.string().required(
-        "Tỉnh/Thành phố không được bỏ trống"
-    ),
-    organizationDistrictId: Yup.string().required(
-        "Quận/Huyện không được bỏ trống"
-    ),
+    userName: Yup.string().email("Email không đúng định dạng").required("Email không được bỏ trống"),
+    password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
+    rePassword: Yup.string().oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng").required("Mật khẩu xác nhận không được bỏ trống"),
+    organizationName: Yup.string().required("Tên doanh nghiệp không được bỏ trống").max(50, "Tên doanh nghiệp tối đa 50 ký tự"),
+    organizationPhoneNumber: Yup.string().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
+    jobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghê"),
+    organizationSize: Yup.string().required("Quy mô nhân sự không được bỏ trống"),
+    organizationProvinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống"),
+    organizationDistrictId: Yup.string().required("Quận/Huyện không được bỏ trống"),
     organizationAddress: Yup.string().max(255, "Địa chỉ cụ thể doanh nghiệp tối đa 255 ký tự"),
-    acceptTerms: Yup.bool().oneOf(
-        [true],
-        "Vui lòng đồng ý với chính sách bảo mật"
-    ),
+    acceptTerms: Yup.bool().oneOf([true], "Vui lòng đồng ý với chính sách bảo mật"),
   });
 
   const methods = useForm({
@@ -106,18 +85,21 @@ function RegisterForm() {
         password: data.password, // organization password
         organizationName: data.organizationName, // organization name
         organizationPhoneNumber: data.organizationPhoneNumber, // organization phone number
-        jobCategoryIds: data.jobCategoryIds, // organization name
+        jobCategoryIds: data.jobCategoryIds?.map(item => item?.value), // organization name
         organizationSize: parseInt(data.organizationSize), // organization size
         organizationProvinceId: data.organizationProvinceId, // organization province
         organizationDistrictId: data.organizationDistrictId, // organization district
         organizationAddress: data.organizationAddress, // organization address
       };
-      console.log(data)
       await postRegister(body).unwrap();
-      router.push(`/auth/register/success?username=${body.userName}`);
+      await router.push(`/auth/register/success?username=${body.userName}`);
     } catch (error) {
+      console.log(error)
+      const { status } = error;
       const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
-      setError("afterSubmit", {...error, message});
+      if(status === "AUE_06") {
+        setError('userName', { type: "custom", message: "Email đã được đăng ký" }, { shouldFocus: true })
+      } else setError("afterSubmit", {...error, message});
     }
   };
 
