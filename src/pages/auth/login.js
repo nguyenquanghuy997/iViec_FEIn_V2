@@ -31,7 +31,7 @@ export default function Login() {
               </Typography>
             </Stack>
             <LoginForm />
-            <Stack sx={{ mt: "214px" }}>
+            <Stack sx={{ mt: "186px" }}>
               <Typography
                 variant="body2"
                 align="center"
