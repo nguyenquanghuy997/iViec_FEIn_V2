@@ -42,7 +42,7 @@ export default function Login() {
                   fontWeight: STYLE_CONSTANT.FONT_NORMAL,
                 }}
               >
-                Bạn chưa có tài khoản nhà tuyển dụng??
+                Bạn chưa có tài khoản nhà tuyển dụng?
               </Typography>
               <Typography
                 variant="body2"
