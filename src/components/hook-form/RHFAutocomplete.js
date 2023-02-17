@@ -1,10 +1,8 @@
 // @mui
-import {Autocomplete, Chip, InputLabel, TextField} from "@mui/material";
+import { Autocomplete, Chip, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 // form
-import {Controller, useFormContext} from "react-hook-form";
-import {InputLabelErrorStyle, InputLabelStyle} from "@/components/hook-form/style";
-import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
 RHFAutocomplete.propTypes = {
   name: PropTypes.string,
@@ -12,7 +10,12 @@ RHFAutocomplete.propTypes = {
   AutocompleteProps: PropTypes.object,
 };
 
-export default function RHFAutocomplete({name, options = [], required, label, placeholder, AutocompleteProps, ...other}) {
+export default function RHFAutocomplete({
+  name,
+  options = [],
+  AutocompleteProps,
+  ...other
+}) {
   const { control } = useFormContext();
   const props = {
     onChange: (field) => (event, newValue) => field.onChange(newValue),
@@ -30,7 +33,6 @@ export default function RHFAutocomplete({name, options = [], required, label, pl
         <TextField
           {...field}
           fullWidth
-          placeholder={(field.value?.length === 0 || !field.value) ? placeholder : null}
           error={!!error}
           helperText={error?.message}
           {...other}
@@ -47,20 +49,14 @@ export default function RHFAutocomplete({name, options = [], required, label, pl
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-          <>
-            {label && <InputLabel required={required} sx={error ? {...InputLabelStyle, ...InputLabelErrorStyle} : {...InputLabelStyle}}>
-              {label}
-            </InputLabel>}
-            <Autocomplete
-                fullWidth
-                onChange={onChange(field)}
-                options={options}
-                renderTags={renderTags}
-                renderInput={renderInput(field, error)}
-                {...rest}
-            />
-          </>
-
+        <Autocomplete
+          fullWidth
+          onChange={onChange(field)}
+          options={options}
+          renderTags={renderTags}
+          renderInput={renderInput(field, error)}
+          {...rest}
+        />
       )}
     />
   );

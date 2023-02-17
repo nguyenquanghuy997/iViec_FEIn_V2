@@ -1,6 +1,5 @@
 import { DOMAIN_SERVER_API } from "@/config";
 import { API_LOGIN, API_USER_INFO } from "@/routes/api";
-import { useLazyGetCurrentUserQuery } from "@/sections/auth/authSlice";
 // utils
 import { _postApi } from "@/utils/axios";
 import { setRefreshToken, setRememberMe, setSession } from "@/utils/jwt";
@@ -58,21 +57,38 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [getCurrentUser, { data: user }] = useLazyGetCurrentUserQuery();
-
+  // const [cookies, setCookie, removeCookie] = useCookies([
+  //   "access_token",
+  //   "refresh_token",
+  // ]);
   useEffect(() => {
     const initialize = async () => {
       try {
-        const accessToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : "";
+        const accessToken =
+          typeof window !== "undefined"
+            ? localStorage.getItem("accessToken")
+            : "";
+
         if (accessToken) {
+          // const user = await getUserInfo(accessToken);
+          var data 
+          var config = {
+            method: "get",
+            url: DOMAIN_SERVER_API + API_USER_INFO,
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
+            data: data,
+          };
+
+          const user = await axios(config);
           setSession(accessToken);
+
           dispatch({
             type: "INITIALIZE",
             payload: {
               isAuthenticated: true,
-              user: user,
+              user,
             },
           });
         } else {
@@ -80,7 +96,7 @@ function AuthProvider({ children }) {
             type: "INITIALIZE",
             payload: {
               isAuthenticated: false,
-              user: user,
+              user: null,
             },
           });
         }
@@ -103,32 +119,31 @@ function AuthProvider({ children }) {
     var data = JSON.stringify({
       "userName": email,
       "password": password,
-      "userLoginType":1
     });
     const response = await _postApi(API_LOGIN, data);
-    
-    //     var myHeaders = new Headers();
-    // myHeaders.append("accept", "application/json");
-    // myHeaders.append("Content-Type", "application/json-patch+json");
 
-    // var raw = JSON.stringify({
-    //   "userName": "quy.vu.0101@gmail.com",
-    //   "password": "Abcd@2021"
-    // });
+//     var myHeaders = new Headers();
+// myHeaders.append("accept", "application/json");
+// myHeaders.append("Content-Type", "application/json-patch+json");
 
-    // var requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: raw,
-    //   redirect: 'follow'
-    // };
+// var raw = JSON.stringify({
+//   "userName": "quy.vu.0101@gmail.com",
+//   "password": "Abcd@2021"
+// });
 
-    // fetch("http://103.176.149.158:5001/api/identity/Identity/Login", requestOptions)
-    //   .then(response => response.text())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
+// var requestOptions = {
+//   method: 'POST',
+//   headers: myHeaders,
+//   body: raw,
+//   redirect: 'follow'
+// };
 
-    console.log('response.token',response.token)
+// fetch("http://103.176.149.158:5001/api/identity/Identity/Login", requestOptions)
+//   .then(response => response.text())
+//   .then(result => console.log(result))
+//   .catch(error => console.log('error', error));
+
+
     var config = {
       method: "get",
       url: DOMAIN_SERVER_API + API_USER_INFO,

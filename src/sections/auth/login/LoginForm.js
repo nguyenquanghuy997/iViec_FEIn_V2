@@ -46,8 +46,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: "ngocthang1493@gmail.com",
-    password: "123456789",
+    email: "quy.vu.0101@gmail.com",
+    password: "Abcd@2021",
     remember: true,
   };
 
@@ -63,18 +63,13 @@ export default function LoginForm() {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log(errors)
     try {
-      await login(data.email, data.password, data.userLoginType, data.remember);
-      enqueueSnackbar("Đăng nhập thành công!")
+      await login(data.email, data.password, data.remember);
+      enqueueSnackbar("Đăng nhập thành công!");
     } catch (error) {
       const message =errorMessages[`${error.code}`] ||'Lỗi hệ thống'
-      const { code } = error;
-      if(code === "AUE_01") {
-        setError('email', { type: "custom", message: "Email đăng nhập không tồn tại" }, { shouldFocus: true })
-      } else if(code === "IDE_06") {
-        setError('password', { type: "custom", message: "Mật khẩu không chính xác" })
-      } else  setError("afterSubmit", { ...error, message });
+      setError("afterSubmit", { ...error, message });
+
     }
   };
 

@@ -1,32 +1,19 @@
-import { Avatar, Badge } from '@mui/material'
+import { View } from "../FlexStyled";
+import { Avatar } from '@mui/material'
 import PropTypes from "prop-types"
 export default function AvatarDS(props) {
-    const { src, sx } = props;
+    const { linkAvatar } = props;
 
     return (
-        <Badge
-        variant="dot"
-        color="success"
-        sx={{
-            marginRight:"8px",
-          "& .MuiBadge-dot": {
-            width: "6px",
-            minWidth: "6px",
-            height: "6px",
-            top: 3,
-            right: 3,
-          },
-        }}
-      >
-        <Avatar
-          sx={{ ... sx }}
-          src={src}
-        />
-      </Badge>
+        <View>
+            <Avatar
+                src={linkAvatar}
+                sx={{ width: 48, height: 48 }}
+            />
+        </View>
     );
 }
 
 AvatarDS.prototype = {
-    src: PropTypes.element,
-    sx: PropTypes.any,
+    linkAvatar: PropTypes.any,
 };
