@@ -1,22 +1,26 @@
-// @mui
+import { memo } from 'react';
 import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
 import { InputLabel, Stack, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 // form
 import { Controller, useFormContext } from "react-hook-form";
-
-const InputLabelStyle = {
-  fontSize: STYLE_CONSTANT.FONT_SM,
-  color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
-  fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
-  marginBottom: 1,
-};
-
-const InputLabelErrorStyle = {
-  color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
-};
+import { InputLabelStyle, InputLabelErrorStyle,} from './style';
 
 const sxDefault = {
+  input: {
+    "&:-webkit-autofill": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+    "&:-webkit-autofill:hover": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+    "&:-webkit-autofill:focus": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+    "&:-webkit-autofill:active": {
+      WebkitBoxShadow: "0 0 0 30px white inset !important",
+    },
+  },
   ".MuiInputBase-root": {
     height: "44px",
     fontSize: STYLE_CONSTANT.FONT_SM,
@@ -41,7 +45,7 @@ const sxDefault = {
   },
 };
 
-export default function RHFTextField({ name, ...props }) {
+function RHFTextField({ name, ...props }) {
   const { control } = useFormContext();
   const { htmlFor, required, label, placeholder, hasLabel = true, sx } = props;
   return (
@@ -73,7 +77,7 @@ export default function RHFTextField({ name, ...props }) {
             required={false}
             hiddenLabel={!hasLabel}
             label={hasLabel ? null : label}
-            sx={sx ? sx : sxDefault}
+            sx={sx ? { ...sxDefault, ...sx } : sxDefault}
             placeholder={placeholder}
           />
         </Stack>
@@ -99,3 +103,5 @@ RHFTextField.defaultProps = {
   placeholder: "",
   sx: sxDefault,
 };
+
+export default memo(RHFTextField) ;

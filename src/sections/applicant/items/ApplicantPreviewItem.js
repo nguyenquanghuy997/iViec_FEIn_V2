@@ -1,32 +1,71 @@
+import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
 import {
-  Avatar,
-  Badge,
+  AvatarDS,
+  ButtonDS,
+  SelectAutoCompleteDS,
+} from "@/components/DesignSystem";
+import Iconify from "@/components/Iconify";
+import {
   Box,
   Card,
   CardContent,
+  Divider,
   Grid,
-  styled,
+  Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
-import SvgIcon from "@/components/SvgIcon";
+import React, { useState } from "react";
+import { RejectApplicantModal } from "../modals";
 
-// const JobDesTitleStyled = styled(Grid)(
-//   ({ theme, ownerState: { smDown } = {} }) => ({
-//     display: 'flex',
-//     flexDirection: smDown ? 'column' : 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: theme.spacing(1),
-//   })
-// )
-const avatarStyles = styled({
-  height: 56,
-  width: 64,
-  radius: 8,
-});
 function ApplicantPreviewItem({}) {
+  const allOptions = [
+    { id: 5141, name: "Tuyển nhân viên kinh doanh phần mềm tại Hà Nội" },
+    { id: 214, name: "Tiêu đề tin tuyển dụng 2" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 3" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 4" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 5" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 6" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 7" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 8" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 9" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 10" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 11" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 12" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 13" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 14" },
+    { id: 3155, name: "Tiêu đề tin tuyển dụng 15" },
+  ];
+  const pipelines = [
+    { id: 5141, name: "Ứng tuyển", isActive: 0, stageType: 1, type: null },
+    { id: 214, name: "Thi tuyển1", isActive: 0, stageType: 2, type: null },
+    { id: 213, name: "Thi tuyển2", isActive: 0, stageType: 2, type: null },
+    { id: 3155, name: "Phỏng vấn1", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Phỏng vấn2", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Phỏng vấn3", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Kết quả - Đạt", isActive: 1, stageType: 4, type: 1 },
+    //{ id: 3155, name: "Kết quả - Cân nhắc", isActive:1, stageType:4, type:2 },
+    // { id: 3155, name: "Kết quả - Loại", isActive:1, stageType:4, type:3 },
+    { id: 3155, name: "Mời nhận việc", isActive: 0, stageType: 4, type: 4 },
+  ];
+  const pipeline1s = [
+    { id: 5141, name: "Ứng tuyển", isActive: 0, stageType: 1, type: null },
+    { id: 3155, name: "Phỏng vấn3", isActive: 0, stageType: 3, type: null },
+    { id: 3155, name: "Kết quả - Đạt", isActive: 1, stageType: 4, type: 1 },
+    { id: 3155, name: "Kết quả - Cân nhắc", isActive:1, stageType:4, type:2 },
+     { id: 3155, name: "Kết quả - Loại", isActive:1, stageType:4, type:3 },
+    { id: 3155, name: "Mời nhận việc", isActive: 0, stageType: 4, type: 4 },
+  ];
+  const [selectedOption, setSelectedOption] = useState(allOptions[0].name);
+  const [pipe, setPipe] = useState(pipelines);
+  const [showRejectApplicant, setRejectApplicant] = useState(false);
+
+  const onChangeRecruiment = (e) => {
+    setSelectedOption(e.target.value);
+    setPipe(pipeline1s)
+  };
+  
   return (
     <Card
       sx={{
@@ -51,46 +90,152 @@ function ApplicantPreviewItem({}) {
             display="flex"
             alignItems="center"
             justifyContent="space-between"
+            marginBottom={"32px"}
           >
-            <Grid display="flex">
-              <Badge
-                badgeContent=""
-                variant="dot"
-                color="success"
-              >
-                <Avatar
-                  variant={"rounded"}
-                  classes={avatarStyles}
-                  src={
-                    "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
-                  }
-                />
-              </Badge>
-
-              <Box pl={2}>
-                <Typography>
-                  Đinh Tiến Thành 
-                  <SvgIcon>
-              {
-                '<svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.54325 11.8334L11.7272 4.64948L10.7256 3.6479L3.54167 10.8318V11.8334H4.54325ZM5.13046 13.2501H2.125V10.2446L10.2248 2.14481C10.3576 2.01202 10.5378 1.93742 10.7256 1.93742C10.9134 1.93742 11.0935 2.01202 11.2264 2.14481L13.2302 4.14869C13.363 4.28152 13.4376 4.46166 13.4376 4.64948C13.4376 4.83731 13.363 5.01744 13.2302 5.15027L5.13046 13.2501ZM2.125 14.6667H14.875V16.0834H2.125V14.6667Z" fill="#09121F"/></svg>'
-              }
-            </SvgIcon>
-                </Typography>
-                <Typography>Most Awaited - Figma Launches Plugin</Typography>
-              </Box>
-            </Grid>
-            <Grid>
-              <Avatar
-                variant={"rounded"}
-                classes={avatarStyles}
+            <Grid
+              display="flex"
+              alignItems="center"
+              sx={{
+                "& .MuiBadge-dot": {
+                  width: "6px",
+                  minWidth: "6px",
+                  height: "6px",
+                  top: 3,
+                  right: 3,
+                },
+              }}
+            >
+              <AvatarDS
+                sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
                 src={
                   "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
                 }
-              />
-              <Box>
-                <Typography>Design</Typography>
-                <Typography>Most Awaited - Figma Launches Plugin</Typography>
+              ></AvatarDS>
+              <Box pl={1}>
+                <Typography
+                  display="flex"
+                  fontSize="20px"
+                  fontWeight="600"
+                  alignItems="center"
+                >
+                  Đinh Tiến Thành
+                  <Iconify
+                    icon={"ri:edit-2-fill"}
+                    width={20}
+                    height={20}
+                    color="#8A94A5"
+                    ml={1}
+                  />
+                </Typography>
+                <Stack
+                  direction="row"
+                  divider={<Divider orientation="vertical" flexItem />}
+                  spacing={2}
+                  color="#172B4D"
+                >
+                  <Typography fontSize="14px">0123456789</Typography>
+                  <Typography fontSize="14px">ThanhDT58@fpt.com.vn</Typography>
+                </Stack>
               </Box>
+            </Grid>
+            <Grid display="flex">
+              <ButtonDS
+                tittle={"Thêm vào tin khác"}
+                type="submit"
+                sx={{
+                  color: "#455570",
+                  backgroundColor: "#F3F4F6",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#E7E9ED",
+                  },
+                  marginRight: "12px",
+                  fontSize: "14px",
+                  padding: "6px 12px",
+                }}
+                icon={
+                  <Iconify
+                    icon={"icon-park-outline:share-three"}
+                    width={20}
+                    height={20}
+                    color="#455570"
+                    mr={1}
+                  />
+                }
+              />
+              <ButtonDS
+                tittle={"Đặt lịch phỏng vấn"}
+                type="submit"
+                sx={{
+                  color: "#fdfdfd",
+                  backgroundColor: "#1976D2",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#1565C0",
+                  },
+                  marginRight: "12px",
+                  fontSize: "14px",
+                  padding: "6px 12px",
+                  textTransform: "none",
+                }}
+                icon={
+                  <Iconify
+                    icon={"mdi:calendar-check"}
+                    width={20}
+                    height={20}
+                    color="#fdfdfd"
+                    mr={1}
+                  />
+                }
+              />
+              <ButtonDS
+                tittle={"Đánh giá"}
+                type="submit"
+                isDisabled="true"
+                mr={2}
+                sx={{
+                  color: "#8A94A5",
+                  backgroundColor: "#1976D2",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#01B6A7",
+                  },
+                  marginRight: "12px",
+                  textTransform: "none",
+                }}
+                icon={
+                  <Iconify
+                    icon={"ph:user-focus-fill"}
+                    width={20}
+                    height={20}
+                    color="#8A94A5"
+                    mr={1}
+                  />
+                }
+              />
+              <ButtonDS
+                tittle={"Gửi offer"}
+                type="submit"
+                isDisabled="true"
+                sx={{
+                  color: "#8A94A5",
+                  backgroundColor: "#1976D2",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#01B6A7",
+                  },
+                  textTransform: "none",
+                }}
+                icon={
+                  <Iconify
+                    icon={"ri:pen-nib-fill"}
+                    width={20}
+                    height={20}
+                    color="#8A94A5"
+                    mr={1}
+                  />
+                }
+              />
             </Grid>
           </Grid>
           <Grid
@@ -98,12 +243,110 @@ function ApplicantPreviewItem({}) {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Grid gap={3}>
-              <Box direction="row">
-                <Box>
-                  <Typography>Pipeline</Typography>
-                </Box>
-              </Box>
+            <Grid>
+              <SelectAutoCompleteDS
+                width="35%"
+                selectedOption={selectedOption}
+                setSelectedOption={setSelectedOption}
+                onChange={onChangeRecruiment}
+                data={allOptions}
+                sx={{
+                  background: "#F3F4F6",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#F3F4F6",
+                    borderRadius: "6px",
+                  },
+                  "&:hover, &.Mui-focused": {
+                    background: "#E7E9ED",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
+                    {
+                      borderColor: "#E7E9ED",
+                    },
+                }}
+              />
+            </Grid>
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="flex-end"
+              marginTop="28px"
+            >
+              <Grid md={10} container>
+                <Grid sx={{ width: "80%" }}>
+                  <PipelineApplicant steps={pipe} />
+                </Grid>
+                <Grid sx={{ display: "flex" }}>
+                  <ButtonDS
+                    tittle={"Chuyển bước"}
+                    type="submit"
+                    sx={{
+                      color: "#455570",
+                      backgroundColor: "#F3F4F6",
+                      boxShadow: "none",
+                      ":hover": {
+                        backgroundColor: "#E7E9ED",
+                      },
+                      textTransform: "none",
+                    }}
+                    icon={
+                      <Iconify
+                        icon={"ci:transfer"}
+                        width={16}
+                        height={16}
+                        color="#455570"
+                        mr={1}
+                      />
+                    }
+                  />
+                  <ButtonDS
+                    type="submit"
+                    sx={{
+                      padding: "8px",
+                      minWidth: "unset",
+                      backgroundColor: "#fff",
+                      boxShadow: "none",
+                      ":hover": {
+                        backgroundColor: "#EFF3F7",
+                      },
+                      textTransform: "none",
+                      marginLeft: "12px",
+                    }}
+                    onClick={() => setRejectApplicant(true)}
+                    icon={
+                      <Iconify
+                        icon={"ic:outline-remove-circle"}
+                        width={20}
+                        height={20}
+                        color="#D32F2F"
+                      />
+                    }
+                  />
+                </Grid>
+              </Grid>
+              <Grid color="#455570" fontSize="13px">
+                <div>{"Phụ trách"}</div>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    marginTop: "8px",
+                  }}
+                >
+                  <AvatarDS
+                    sx={{
+                      height: "20px",
+                      width: "20px",
+                      borderRadius: "100px",
+                    }}
+                    src={
+                      "https://www.elle.vn/wp-content/uploads/2017/07/25/hinh-anh-dep-1.jpg"
+                    }
+                  ></AvatarDS>
+                  <Typography fontSize="14px" fontWeight="600" color="#172B4D">
+                    {"Phạm Xuân Chung"}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
@@ -116,6 +359,13 @@ function ApplicantPreviewItem({}) {
           </Grid>
         </Grid>
       </CardContent>
+
+      <RejectApplicantModal
+        applicantId= {"5141"}
+        recruimentId= {"123"}
+        show={showRejectApplicant}
+        setShow={setRejectApplicant}
+      />
     </Card>
   );
 }

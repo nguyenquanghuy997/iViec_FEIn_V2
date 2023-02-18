@@ -1,4 +1,3 @@
-import ResetPasswordSuccess from "../../sections/auth/reset-password/ResetPasswordSuccess";
 import IconForgotPassword from "@/assets/icon_forgot_password";
 import { LogoHeader } from "@/components/BaseComponents";
 import {
@@ -11,7 +10,7 @@ import Page from "@/components/Page";
 import GuestGuard from "@/guards/GuestGuard";
 import Layout from "@/layouts";
 import { PATH_AUTH } from "@/routes/paths";
-import { ResetPasswordForm } from "@/sections/auth/reset-password";
+import { ResetPasswordForm,ResetPasswordSuccess } from "@/sections/auth/reset-password";
 import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
 import { Box, IconButton, Stack } from "@mui/material";
 import { useRouter } from "next/router";
