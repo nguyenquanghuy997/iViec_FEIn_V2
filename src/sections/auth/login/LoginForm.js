@@ -46,8 +46,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: "ngocthang1493@gmail.com",
-    password: "123456789",
+    email: "",
+    password: "",
     remember: true,
   };
 
