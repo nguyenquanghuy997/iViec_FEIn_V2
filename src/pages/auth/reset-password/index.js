@@ -1,88 +1,71 @@
-// next
-import ResetPasswordSuccess from "@/sections/reset-password/ResetPasswordSuccess";
-// component
+import IconForgotPassword from "@/assets/icon_forgot_password";
 import { LogoHeader } from "@/components/BaseComponents";
 import {
   CardInfoBody,
+  CardInfoIcon,
   CardInfoLabel,
 } from "@/components/BaseComponents/CardInfo";
+import Iconify from "@/components/Iconify";
 import Page from "@/components/Page";
-// guards
 import GuestGuard from "@/guards/GuestGuard";
-// routes
-import { PATH_PAGE } from "@/routes/paths";
-import { useLazyConfirmEmailQuery } from "@/sections/auth/authSlice";
-import NewPasswordForm from "@/sections/auth/new-password/NewPasswordForm";
+import Layout from "@/layouts";
+import { PATH_AUTH } from "@/routes/paths";
+import { ResetPasswordForm,ResetPasswordSuccess } from "@/sections/auth/reset-password";
 import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
-// import UserActiveFailure from "@/sections/user-activate/UserActiveFailure";
-// @mui
-import { Box, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const ResetPasswordPage = () => {
-  const [statusActiveUser, setStatusActiveUser] = useState(false);
+ResetPassword.getLayout = function getLayout(data, page) {
+  return (
+    <Layout variant="logoOnly" {...data}>
+      {page}
+    </Layout>
+  );
+};
+
+export default function ResetPassword() {
+  const [statusResetPass, setStatusResetPass] = useState(false); // false: failure, true: success
   const router = useRouter();
-  const { USER_NAME ,OTPCode} = router.query;
-  const [confirmEmail] = useLazyConfirmEmailQuery();
-  // let str = router.asPath;
-  // const OTPCode = str.substring(str.indexOf('OTPCode') + 7);
-  // console.log('OTPCode1',str)
-  // console.log('OTPCode',OTPCode)
-  useEffect(() => {
-    if (!USER_NAME && !OTPCode) {
-      router.push(PATH_PAGE.page404);
-    }
-  }, [USER_NAME, OTPCode]);
 
-  useEffect(() => {
-    async function fetchConfirmEmail() {
-      if (USER_NAME && OTPCode) {
-        try {
-          console.log('USER_NAME',USER_NAME)
-          console.log('USER_NAME',OTPCode)
-          await confirmEmail({ email: USER_NAME, token: encodeURI(OTPCode) }).unwrap();
-          setStatusActiveUser(true);
-        } catch (e) {
-          setStatusActiveUser(false);
-        }
-      }
-    }
-    fetchConfirmEmail();
-  }, [ USER_NAME, OTPCode]);
+  const handleGoToPageByUrl = (url = "") => {
+    if (!url) return;
+    router.push(url);
+  };
 
   return (
     <GuestGuard>
-      <Page
-        title={
-            "Đặt lại mật khẩu"
-        }
-      >
+      <Page title="Quên mật khẩu">
         <LogoHeader />
         <Box sx={{ ...BoxWrapperStyle }}>
-          {
+          {statusResetPass ? (
+            <ResetPasswordSuccess />
+          ) : (
             <Box sx={{ ...BoxInnerStyle, minHeight: "784px" }}>
+              {/* Back button */}
+              <Stack sx={{ position: "absolute", top: 8, left: 8 }}>
+                <IconButton
+                  edge="end"
+                  onClick={() => handleGoToPageByUrl(PATH_AUTH.login)}
+                >
+                  <Iconify icon="material-symbols:arrow-back" />
+                </IconButton>
+              </Stack>
               <Stack justifyContent="center" alignItems="center">
+                {/* Image */}
+                <CardInfoIcon sx={{ mb: 5 }}>
+                  <IconForgotPassword />
+                </CardInfoIcon>
+                {/* Content */}
                 <CardInfoBody>
-                  <CardInfoLabel
-                    label="Thiết lập mật khẩu mới"
-                    sx={{ textAlign: "left", mb: 5 }}
-                  />
-                  <NewPasswordForm userName={USER_NAME} otpCode={OTPCode} />
+                  <CardInfoLabel label="Quên mật khẩu" />
+                  <ResetPasswordForm setStatusResetPass={setStatusResetPass} />
                 </CardInfoBody>
               </Stack>
             </Box>
-          }
-          {statusActiveUser && (
-            <ResetPasswordSuccess USER_NAME={USER_NAME} />
           )}
-          {/* { statusActiveUser && (
-            <UserActiveFailure />
-          )} */}
         </Box>
       </Page>
     </GuestGuard>
   );
-};
-
-export default ResetPasswordPage;
+}

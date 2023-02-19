@@ -4,11 +4,8 @@ import { useRouter } from 'next/router'
 
 // @mui
 import { Container, Grid } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
-
 
 // components
-import HeaderBreadcrumbs from '@/components/HeaderBreadcrumbs'
 import LoadingScreen from '@/components/LoadingScreen'
 import Page from '@/components/Page'
 // config
@@ -30,6 +27,7 @@ import {
 // utils
 import { getRolesByPage } from '@/utils/role'
 import ApplicantPreviewItem from '@/sections/applicant/items/ApplicantPreviewItem'
+import { NavGoBack } from '@/components/DesignSystem'
 
 Applicant.getLayout = function getLayout({ roles = [] }, page) {
   return <Layout roles={roles}>{page}</Layout>
@@ -55,8 +53,6 @@ function Applicant() {
   const { data: job, isLoading } = jobDetail
   const dispatch = useDispatch()
   const smDown = useResponsive('down', 'sm')
-  const theme = useTheme()
-
   useEffect(() => {
     dispatch(getJobDetail({ jobId }))
     dispatch(getAssignUser({ jobId }))
@@ -82,21 +78,7 @@ function Applicant() {
         maxWidth={themeStretch ? false : 'xl'}
         sx={{ ...(smDown && { padding: 0 }) }}
       >
-        <HeaderBreadcrumbs
-          heading=''
-          links={[
-            {
-              name: "Danh sách ứng viên",
-              href: PATH_DASHBOARD.dashboard,
-            },
-            {
-              name: translate('Chi tiết ứng viên'),
-            },
-          ]}
-          sx={{
-            px: theme.spacing(2),
-          }}
-        />
+        <NavGoBack link={PATH_DASHBOARD.dashboard} name={"Trở về danh sách ứng viên"}></NavGoBack>
 
         <Grid>
           <Grid item xs={12} md={5}>
