@@ -49,6 +49,7 @@ const usePlaceholderStyles = makeStyles(() => ({
 export default function SelectAutoCompleteDS(props) {
   const { width, sx, selectedOption, setSelectedOption, data, allowClear, onChange } =
     props;
+    console.log('dataaaa', data)
   const classes = usePlaceholderStyles();
   const Placeholder = ({ children }) => {
     return <div className={classes.placeholder}>{children}</div>;

@@ -5,7 +5,6 @@ import TextMaxLine from "@/components/TextMaxLine";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useLazyGetListApplicantsQuery } from "@/sections/applicant";
 import { useGetListColumnApplicantsQuery } from "@/sections/applicant";
 import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
 import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
@@ -14,19 +13,154 @@ import { columns as columnsTest } from "@/sections/applicant/others/columns";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Table, Tag, Dropdown, Menu, Checkbox } from "antd";
-import NextLink from "next/link";
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import ReactDragListView from "react-drag-listview";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import Link from "next/link";
 
 const defaultValues = {
   search: "",
 };
 
 export const ApplicantItem = () => {
-  const [getListApplicants, { data: Data, isLoading }] =
-    useLazyGetListApplicantsQuery();
+  // const [getListApplicants, { data: Data, isLoading }] =
+  //   useLazyGetListApplicantsQuery();
+  const Data ={
+    "items": [
+      {
+        "applicantId": "01000000-ac12-0242-1ed6-08db10889f94",
+        "recruitmentPipelineStateId": "01000000-ac12-0242-3692-08db10880413",
+        "pipelineStateResultType": null,
+        "applicationUserId": null,
+        "jobSourceId": "01000000-ac12-0242-8dcb-08db10858500",
+        "fullName": "Thủy bon test",
+        "slug": "thuy-bon-test-82Ew03vZQD",
+        "portraitImage": "./img.jpg",
+        "dateOfBirth": "2000-02-17T01:41:29.081Z",
+        "email": "thuybontest@gmail.com",
+        "phoneNumber": "096912545",
+        "identityNumber": "122357481",
+        "weight": 50,
+        "height": 170,
+        "provinceId": "01000000-ac12-0242-8844-08db101162b8",
+        "provinceName": "Vĩnh Long",
+        "districtId": "01000000-ac12-0242-ca7f-08db101162b8",
+        "districtName": " Vũng Liêm",
+        "villageId": null,
+        "villageName": null,
+        "curriculumVitae": "Test",
+        "experience": "Éo có",
+        "homeTower": "Hà Nội",
+        "livingAddress": "Hà Nội",
+        "education": "Đại học chém nhau",
+        "expectedSalaryFrom": null,
+        "expectedSalaryTo": null,
+        "maritalStatus": 0,
+        "yearOfExperience": 0,
+        "sex": 0,
+        "applicantSkills": [
+          {
+            "name": "Kỹ năng chém nhau",
+            "slug": "ky-nang-chem-nhau-xnbRQdMgan",
+            "description": null,
+            "id": "01000000-ac12-0242-ec23-08db108553e0"
+          }
+        ],
+        "jobCategories": [
+          {
+            "name": null,
+            "id": "01000000-ac12-0242-4ce9-08db108561b2"
+          }
+        ],
+        "academicLevel": {
+          "name": "Giáo sư",
+          "description": null,
+          "slug": "giao-su-JnLxmrOXMn",
+          "id": "01000000-ac12-0242-b03e-08db1085439d"
+        },
+        "rawApplicantSkills": "Chém nhau!",
+        "createdTime": "2023-02-17T01:45:18.194206Z",
+        "recruitmentId": null,
+        "recruitmentName": "Tin Tuyển dụng Test",
+        "organizationId": "01000000-ac12-0242-5f75-08db10869b39",
+        "organizationName": "Thủy bon cty test",
+        "creatorId": null,
+        "creatorName": " ",
+        "ownerId": null,
+        "ownerName": " ",
+        "isAvailable": false,
+        "id": "01000000-ac12-0242-b7ee-08db10889f8c"
+      },
+      {
+        "applicantId": "01000000-ac12-0242-1ed6-08db10889f94",
+        "recruitmentPipelineStateId": "01000000-ac12-0242-10ae-08db108fc65c",
+        "pipelineStateResultType": 1,
+        "applicationUserId": null,
+        "jobSourceId": "01000000-ac12-0242-8dcb-08db10858500",
+        "fullName": "Thủy bon test",
+        "slug": "thuy-bon-test-82Ew03vZQD",
+        "portraitImage": "./img.jpg",
+        "dateOfBirth": "2000-02-17T01:41:29.081Z",
+        "email": "thuybontest@gmail.com",
+        "phoneNumber": "096912545",
+        "identityNumber": "122357481",
+        "weight": 50,
+        "height": 170,
+        "provinceId": "01000000-ac12-0242-8844-08db101162b8",
+        "provinceName": "Vĩnh Long",
+        "districtId": "01000000-ac12-0242-ca7f-08db101162b8",
+        "districtName": " Vũng Liêm",
+        "villageId": null,
+        "villageName": null,
+        "curriculumVitae": "Test",
+        "experience": "Éo có",
+        "homeTower": "Hà Nội",
+        "livingAddress": "Hà Nội",
+        "education": "Đại học chém nhau",
+        "expectedSalaryFrom": null,
+        "expectedSalaryTo": null,
+        "maritalStatus": 0,
+        "yearOfExperience": 0,
+        "sex": 0,
+        "applicantSkills": [
+          {
+            "name": "Kỹ năng chém nhau",
+            "slug": "ky-nang-chem-nhau-xnbRQdMgan",
+            "description": null,
+            "id": "01000000-ac12-0242-ec23-08db108553e0"
+          }
+        ],
+        "jobCategories": [
+          {
+            "name": null,
+            "id": "01000000-ac12-0242-4ce9-08db108561b2"
+          }
+        ],
+        "academicLevel": {
+          "name": "Giáo sư",
+          "description": null,
+          "slug": "giao-su-JnLxmrOXMn",
+          "id": "01000000-ac12-0242-b03e-08db1085439d"
+        },
+        "rawApplicantSkills": "Chém nhau!",
+        "createdTime": "2023-02-17T01:45:18.194206Z",
+        "recruitmentId": null,
+        "recruitmentName": "Thủy đăng tin",
+        "organizationId": "01000000-ac12-0242-5f75-08db10869b39",
+        "organizationName": "Thủy bon cty test",
+        "creatorId": null,
+        "creatorName": " ",
+        "ownerId": null,
+        "ownerName": " ",
+        "isAvailable": false,
+        "id": "8f519d5e-6de5-46ee-ae5e-f42c56a22a84"
+      }
+    ],
+    "totalRecord": 2,
+    "currentPageIndex": 1,
+    "totalPage": 1
+  }
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   const [columns, setColumns] = useState([
     {
@@ -43,14 +177,21 @@ export const ApplicantItem = () => {
       fixed: "left",
       width: "200px",
       render: (text, record) => (
-        <NextLink href={`applicant/${record.id}`} passHref>
+        // <Link href={`applicant/${record.id} && `} passHref>
+        //   <TextMaxLine
+        //     line={1}
+        //     sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+        //   >
+        //     {text}
+        //   </TextMaxLine>
+        // </Link>
+        <Link passHref href={{ pathname: `applicant/${record.applicantId}`, query: { or: `${record.organizationId}`} }}>
           <TextMaxLine
-            line={1}
-            sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
-          >
-            {text}
-          </TextMaxLine>
-        </NextLink>
+        line={1}
+        sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+      >
+        {text}
+      </TextMaxLine></Link>
       ),
     },
     {
@@ -256,7 +397,7 @@ export const ApplicantItem = () => {
   const searchValue = useDebounce(watch("search"), 1000);
 
   useEffect(() => {
-    getListApplicants({ SearchKey: searchValue });
+    // getListApplicants({ SearchKey: searchValue });
   }, [searchValue]);
 
   // open filter form
@@ -312,7 +453,7 @@ export const ApplicantItem = () => {
             rowKey={rowKey}
             scroll={{ x: 3000, y: tableHeight }}
             size="large"
-            loading={isLoading}
+            // loading={isLoading}
             //to set pageSize == height tableHeight/40
             pagination={{
               defaultPageSize: Math.floor(tableHeight / 40),
