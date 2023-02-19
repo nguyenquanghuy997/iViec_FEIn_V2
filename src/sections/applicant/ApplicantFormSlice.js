@@ -1,16 +1,11 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
+  API_GET_APPLICANTS_BY_ID,
   API_GET_COLUMN_APPLICANTS,
+  API_GET_RECRUITMENTS_BY_APPLICANT,
   API_UPDATE_COLUMN_APPLICANTS,
-  API_ADD_REVIEW_FORM,
-  API_DELETE_REVIEW_FORM,
-  API_GET_ALL_REVIEW_FORM_OWNER,
-  API_GET_ALL_SEARCH,
-  API_SET_DEFAULT_REVIEW_FORM,
-  API_UPDATE_REVIEW_FORM,
 } from "@/routes/api";
-import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["Applicant"],
@@ -37,45 +32,17 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
       }),
     }),
-    getAllApplicant: builder.mutation({
-      query: (data) => ({
-        url: API_GET_ALL_SEARCH,
-        method: "POST",
-        data: qs.stringify(data),
+    getApplicantById: builder.query({
+      query: ({ applicantId }) => ({
+        url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
+        method: 'GET',
       }),
     }),
-    getAllApplicantFormOwner: builder.query({
-      query: () => ({
-        url: API_GET_ALL_REVIEW_FORM_OWNER,
-        method: "GET",
-      }),
-    }),
-    setDefaultApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_SET_DEFAULT_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
-      }),
-    }),
-    addApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_ADD_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
-      }),
-    }),
-    updateApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_UPDATE_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
-      }),
-    }),
-    deleteApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_DELETE_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
+    getRecruitmentsByApplicant: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENTS_BY_APPLICANT,
+        method: 'GET',
+        params
       }),
     }),
   }),
@@ -86,10 +53,16 @@ export const {
   useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsQuery,
-  useGetAllApplicantMutation,
-  useGetAllApplicantFormOwnerQuery,
-  useSetDefaultApplicantFormMutation,
-  useAddApplicantFormMutation,
-  useUpdateApplicantFormMutation,
-  useDeleteApplicantFormMutation,
+  useGetApplicantByIdQuery,
+  useGetRecruitmentsByApplicantQuery
 } = ApplicantFormSlice;
+
+// export const getJobDetail = createAsyncThunk(
+//   'jobDetail/getJobDetail',
+//   async ({ jobId }) => {
+//     const url = `${API_LIST_JOBS}/${jobId}`
+//     const response = await _getApi(url)
+
+//     return response?.data?.success ? response.data : []
+//   }
+// )
