@@ -8,9 +8,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import PropTypes from "prop-types";
 import React, { useState, useMemo } from "react";
-import { boolean } from "yup";
 
 const containsText = (text, searchText) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
@@ -47,9 +45,7 @@ const usePlaceholderStyles = makeStyles(() => ({
 }));
 
 export default function SelectAutoCompleteDS(props) {
-  const { width, sx, selectedOption, setSelectedOption, data, allowClear, onChange } =
-    props;
-    console.log('dataaaa', data)
+  const { width, sx, selectedOption, setSelectedOption, data, allowClear, onChange } = props;
   const classes = usePlaceholderStyles();
   const Placeholder = ({ children }) => {
     return <div className={classes.placeholder}>{children}</div>;
@@ -60,9 +56,8 @@ export default function SelectAutoCompleteDS(props) {
   const [searchText, setSearchText] = useState("");
   const displayedOptions = useMemo(
     () => data.filter((option) => containsText(option.name, searchText)),
-    [searchText]
+    [searchText,data ]
   );
-
   return (
     <FormControl
       sx={{
@@ -95,7 +90,7 @@ export default function SelectAutoCompleteDS(props) {
           ...sx,
         }}
         renderValue={
-          selectedOption !== ""
+          selectedOption !== "" && selectedOption !== undefined
             ? () => selectedOption
             : () => <Placeholder>Chọn value</Placeholder>
         }
@@ -159,7 +154,7 @@ export default function SelectAutoCompleteDS(props) {
         {displayedOptions.map((option, i) => (
           <MenuItem
             key={i}
-            value={option.name}
+            value={option}
             sx={{
               "&.Mui-selected": {
                 // backgroundColor: "#000 !important"
@@ -168,17 +163,9 @@ export default function SelectAutoCompleteDS(props) {
           >
             {option.name}
           </MenuItem>
-        ))}
+        ))
+      }
       </Select>
     </FormControl>
   );
 }
-SelectAutoCompleteDS.prototype = {
-  width: PropTypes.any,
-  sx: PropTypes.object,
-  selectedOption: PropTypes.any,
-  setSelectedOption: PropTypes.any,
-  onChange: PropTypes.any,
-  data: PropTypes.object,
-  allowClear: boolean,
-};

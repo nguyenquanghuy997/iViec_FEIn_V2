@@ -1,4 +1,4 @@
-import { RejectApplicantModal } from "../modals";
+// import { RejectApplicantModal } from "../modals";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
@@ -9,6 +9,9 @@ import {
   SelectAutoCompleteDS,
 } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
+import useResponsive from "@/hooks/useResponsive";
+import useSettings from "@/hooks/useSettings";
+import { PATH_DASHBOARD } from "@/routes/paths";
 import {
   Box,
   Card,
@@ -17,16 +20,17 @@ import {
   Grid,
   Stack,
   Typography,
-  Container
+  Container,
 } from "@mui/material";
-// import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
-import useResponsive from "@/hooks/useResponsive";
 import { styled } from "@mui/styles";
-import useSettings from "@/hooks/useSettings";
-import { PATH_DASHBOARD } from "@/routes/paths";
+import React, { useState, useEffect } from "react";
+import { useGetRecruitmentsByApplicantQuery } from "../ApplicantFormSlice";
 
-function ApplicantPreviewItem({ data, allOptions}) {
+function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
+  const {data: {items: options = []} = {}} = useGetRecruitmentsByApplicantQuery({
+    ApplicantId,
+    OrganizationId
+  });
   const HearderApplicant = () => {
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
@@ -129,7 +133,7 @@ function ApplicantPreviewItem({ data, allOptions}) {
           <ButtonDS
             tittle={"Đánh giá"}
             type="submit"
-            isDisabled="true"
+            isDisabled={true}
             mr={2}
             sx={{
               color: "#8A94A5",
@@ -154,7 +158,7 @@ function ApplicantPreviewItem({ data, allOptions}) {
           <ButtonDS
             tittle={"Gửi offer"}
             type="submit"
-            isDisabled="true"
+            isDisabled={true}
             sx={{
               color: "#8A94A5",
               backgroundColor: "#1976D2",
@@ -235,14 +239,17 @@ function ApplicantPreviewItem({ data, allOptions}) {
     { id: 3155, name: "Kết quả - Loại", isActive: 1, stageType: 4, type: 3 },
     { id: 3155, name: "Mời nhận việc", isActive: 0, stageType: 4, type: 4 },
   ];
-  console.log('allOptions', allOptions)
-  const [selectedOption, setSelectedOption] = useState(allOptions[0].name);
 
   const [pipe, setPipe] = useState(pipelines);
-  const [showRejectApplicant, setRejectApplicant] = useState(false);
-
+  // const [showRejectApplicant, setRejectApplicant] = useState(false);
+  const [selectedOption, setSelectedOption] = useState();
+  useEffect(()=>{
+    if(options[0]?.name)
+    setSelectedOption(options[0]?.name)
+  }, [options[0]?.name])
   const onChangeRecruiment = (e) => {
-    setSelectedOption(e.target.value);
+    debugger
+    setSelectedOption(e.target.value.name);
     setPipe(pipeline1s);
   };
 
@@ -276,40 +283,38 @@ function ApplicantPreviewItem({ data, allOptions}) {
             >
               <CardContent>
                 <Grid
+                  item
                   xs={12}
                   md={7}
                   padding="32px 24px"
                   borderBottom="1px solid #D0D4DB"
                 >
-                  <HearderApplicant/>
-                  <Grid
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    marginTop={"32px"}
-                  >
+                  <HearderApplicant />
+                  <Grid marginTop={"32px"}>
                     <Grid>
-                      <SelectAutoCompleteDS
+                      {options ? (
+                        <SelectAutoCompleteDS
                         width="35%"
-                        selectedOption={selectedOption}
-                        setSelectedOption={setSelectedOption}
-                        onChange={onChangeRecruiment}
-                        data={allOptions}
-                        sx={{
-                          background: "#F3F4F6",
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#F3F4F6",
-                            borderRadius: "6px",
-                          },
-                          "&:hover, &.Mui-focused": {
-                            background: "#E7E9ED",
-                          },
-                          "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
-                            {
-                              borderColor: "#E7E9ED",
+                          selectedOption={selectedOption}
+                          setSelectedOption={setSelectedOption}
+                          onChange={onChangeRecruiment}
+                          data={options}
+                          sx={{
+                            background: "#F3F4F6",
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#F3F4F6",
+                              borderRadius: "6px",
                             },
-                        }}
-                      />
+                            "&:hover, &.Mui-focused": {
+                              background: "#E7E9ED",
+                            },
+                            "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
+                              {
+                                borderColor: "#E7E9ED",
+                              },
+                          }}
+                        />
+                      ) : null}
                     </Grid>
                     <Grid
                       container
@@ -317,7 +322,7 @@ function ApplicantPreviewItem({ data, allOptions}) {
                       alignItems="flex-end"
                       marginTop="28px"
                     >
-                      <Grid md={10} container>
+                      <Grid item md={10} container>
                         <Grid sx={{ width: "80%" }}>
                           <PipelineApplicant steps={pipe} />
                         </Grid>
@@ -357,7 +362,7 @@ function ApplicantPreviewItem({ data, allOptions}) {
                               textTransform: "none",
                               marginLeft: "12px",
                             }}
-                            onClick={() => setRejectApplicant(true)}
+                            // onClick={() => setRejectApplicant(true)}
                             icon={
                               <Iconify
                                 icon={"ic:outline-remove-circle"}
@@ -400,21 +405,21 @@ function ApplicantPreviewItem({ data, allOptions}) {
                   </Grid>
                 </Grid>
                 <Grid container>
-                  <Grid xs={12} md={7} borderRight="1px solid #D0D4DB">
+                  <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
                     <ApplicantPreviewCV />
                   </Grid>
-                  <Grid xs={5} md={5}>
+                  <Grid item xs={5} md={5}>
                     <ApplicantPreviewLog />
                   </Grid>
                 </Grid>
               </CardContent>
 
-              <RejectApplicantModal
+              {/* <RejectApplicantModal
                 applicantId={"5141"}
                 recruimentId={"123"}
                 show={showRejectApplicant}
                 setShow={setRejectApplicant}
-              />
+              /> */}
             </Card>
           </Grid>
         </Grid>

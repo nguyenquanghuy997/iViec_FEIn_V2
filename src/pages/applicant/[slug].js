@@ -2,7 +2,7 @@ import Page from "@/components/Page";
 import { PAGES } from "@/config";
 import useLocales from "@/hooks/useLocales";
 import Layout from "@/layouts";
-import { useGetApplicantByIdQuery, useGetRecruitmentsByApplicantQuery } from "@/sections/applicant";
+import { useGetApplicantByIdQuery } from "@/sections/applicant";
 import ApplicantPreviewItem from "@/sections/applicant/items/ApplicantPreviewItem";
 import { getRolesByPage } from "@/utils/role";
 import { useRouter } from "next/router";
@@ -28,13 +28,10 @@ function Applicant() {
   const { data: data } = useGetApplicantByIdQuery({
     applicantId,
   });
-  const { data: allOptions } = useGetRecruitmentsByApplicantQuery({
-    ApplicantId: applicantId,
-    OrganizationId: organizationId
-  });
+
   return (
     <Page title={translate("Chi tiết ứng viên")}>
-      <ApplicantPreviewItem data={data} allOptions={allOptions?.items}/>
+      <ApplicantPreviewItem data={data} ApplicantId={applicantId} OrganizationId={organizationId}/>
     </Page>
   );
 }
