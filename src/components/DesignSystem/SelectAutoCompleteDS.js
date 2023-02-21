@@ -72,10 +72,9 @@ export default function SelectAutoCompleteDS(props) {
         MenuProps={{ autoFocus: false, classes: { paper: classes.paper } }}
         labelId="search-select-label"
         id="search-select"
-        value={selectedOption}
+        value={selectedOption ? selectedOption :""}
         onChange={onChange}
         onClose={() => setSearchText("")}
-        displayEmpty
         sx={{
           "& .MuiSelect-iconOutlined": {
             display: selectedOption && allowClear == true ? "none" : "",

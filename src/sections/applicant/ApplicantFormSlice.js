@@ -2,8 +2,10 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
   API_GET_APPLICANTS_BY_ID,
+  API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
   API_GET_COLUMN_APPLICANTS,
   API_GET_RECRUITMENTS_BY_APPLICANT,
+  API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
   API_UPDATE_COLUMN_APPLICANTS,
 } from "@/routes/api";
 
@@ -45,6 +47,20 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         params
       }),
     }),
+    getRecruitmentPipelineStatesByRecruitment: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
+        method: 'GET',
+        params
+      }),
+    }),
+    GetApplicantCurrentStateWithRecruitmentStates: builder.mutation({
+      query: (params) => ({
+        url: API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
+        method: 'GET',
+        params
+      }),
+    }),
   }),
 });
 
@@ -54,7 +70,9 @@ export const {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsQuery,
   useGetApplicantByIdQuery,
-  useGetRecruitmentsByApplicantQuery
+  useGetRecruitmentsByApplicantQuery,
+  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useGetApplicantCurrentStateWithRecruitmentStatesMutation
 } = ApplicantFormSlice;
 
 // export const getJobDetail = createAsyncThunk(

@@ -28,7 +28,6 @@ function Applicant() {
   const { data: data } = useGetApplicantByIdQuery({
     applicantId,
   });
-
   return (
     <Page title={translate("Chi tiết ứng viên")}>
       <ApplicantPreviewItem data={data} ApplicantId={applicantId} OrganizationId={organizationId}/>

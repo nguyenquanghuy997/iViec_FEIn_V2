@@ -9,7 +9,6 @@ import {
 import {
   ApplicantAddModal,
   ApplicantDraggableItem,
-  ApplicantPreviewItem,
   useAddApplicantFormMutation,
   useUpdateApplicantFormMutation,
 } from "@/sections/applicant";
@@ -111,8 +110,8 @@ export const ApplicantFormModal = ({ data, show, setShow, onRefreshData }) => {
     );
   };
 
-  const renderPreviewItem = (item, index) => {
-    return <ApplicantPreviewItem data={item} index={index} />;
+  const renderPreviewItem = () => {
+    return ""
   };
 
   // useEffect(() => {

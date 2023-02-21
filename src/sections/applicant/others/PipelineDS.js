@@ -76,9 +76,33 @@ ColorlibStepIcon.propTypes = {
 };
 
 export const PipelineApplicant = (props) => {
-  const {steps} = props;
-const activeStep = steps.findIndex((i) => i.isActive);
-
+  const { steps } = props;
+  const activeStep = steps?.recruitmentPipelineStates.findIndex(
+    (i) => i.id == steps.currentApplicantPipelineState
+  );
+  console.log(steps)
+  const renderName = (item) => {
+    switch (item) {
+      case 0:
+        return "Ứng tuyển";
+      case 1:
+        return "Thi tuyển";
+      case 2:
+        return "Phỏng Vấn";
+      case 3:
+        debugger
+        case (steps.pipelineStateResultType == 1):
+        return "Kết quả - Đạt";
+        case (steps.pipelineStateResultType == 2):
+        return "Kết quả - Cân nhắc";
+        case (steps.pipelineStateResultType == 3):
+        return "Kết quả - Loại";
+        case (steps.pipelineStateResultType == null):
+        return "Kết quả";
+      case 4:
+        return "Mời nhận việc";
+    }
+  };
   return (
     <Stack sx={{ width: "100%" }}>
       <Stepper
@@ -111,12 +135,12 @@ const activeStep = steps.findIndex((i) => i.isActive);
           },
         }}
       >
-        {steps.map((label, index) => {
+        {steps?.recruitmentPipelineStates.map((label, index) => {
           if (activeStep > index) {
             return (
               <Step key={index}>
                 <StepLabel StepIconComponent={ColorlibStepIcon}>
-                  {label.name}
+                  {renderName(label?.pipelineStateType)}
                 </StepLabel>
               </Step>
             );
@@ -127,11 +151,11 @@ const activeStep = steps.findIndex((i) => i.isActive);
                 sx={{
                   "& .MuiSvgIcon-root.Mui-active": {
                     color:
-                      label.type === 1
+                    steps.pipelineStateResultType === 1
                         ? "#388E3C !important"
-                        : label.type === 2
+                        : steps.pipelineStateResultType === 2
                         ? "#FF9800 !important"
-                        : label.type === 3
+                        : steps.pipelineStateResultType === 3
                         ? "#D32F2F !important"
                         : "#1976D2 !important",
                     borderRadius: "50%",
@@ -141,7 +165,7 @@ const activeStep = steps.findIndex((i) => i.isActive);
                   },
                 }}
               >
-                <StepLabel>{label.name}</StepLabel>
+                <StepLabel>{renderName(label?.pipelineStateType)}</StepLabel>
               </Step>
             );
           }
@@ -149,7 +173,4 @@ const activeStep = steps.findIndex((i) => i.isActive);
       </Stepper>
     </Stack>
   );
-};
-PipelineApplicant.prototype = {
-  steps: PropTypes.object,
 };

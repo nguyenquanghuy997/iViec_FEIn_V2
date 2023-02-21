@@ -1,4 +1,8 @@
 // import { RejectApplicantModal } from "../modals";
+import {
+  useGetApplicantCurrentStateWithRecruitmentStatesMutation,
+  useGetRecruitmentsByApplicantQuery,
+} from "../ApplicantFormSlice";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
@@ -24,13 +28,14 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/styles";
 import React, { useState, useEffect } from "react";
-import { useGetRecruitmentsByApplicantQuery } from "../ApplicantFormSlice";
 
 function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
-  const {data: {items: options = []} = {}} = useGetRecruitmentsByApplicantQuery({
-    ApplicantId,
-    OrganizationId
-  });
+  const { data: { items: options = [] } = {}, isFetching } =
+    useGetRecruitmentsByApplicantQuery({
+      ApplicantId,
+      OrganizationId,
+    });
+
   const HearderApplicant = () => {
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
@@ -213,44 +218,30 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const smDown = useResponsive("down", "sm");
   const { themeStretch } = useSettings();
 
-  const pipelines = [
-    { id: 5141, name: "Ứng tuyển", isActive: 0, stageType: 1, type: null },
-    { id: 214, name: "Thi tuyển1", isActive: 0, stageType: 2, type: null },
-    { id: 213, name: "Thi tuyển2", isActive: 0, stageType: 2, type: null },
-    { id: 3155, name: "Phỏng vấn1", isActive: 0, stageType: 3, type: null },
-    { id: 3155, name: "Phỏng vấn2", isActive: 0, stageType: 3, type: null },
-    { id: 3155, name: "Phỏng vấn3", isActive: 0, stageType: 3, type: null },
-    { id: 3155, name: "Kết quả - Đạt", isActive: 1, stageType: 4, type: 1 },
-    //{ id: 3155, name: "Kết quả - Cân nhắc", isActive:1, stageType:4, type:2 },
-    // { id: 3155, name: "Kết quả - Loại", isActive:1, stageType:4, type:3 },
-    { id: 3155, name: "Mời nhận việc", isActive: 0, stageType: 4, type: 4 },
-  ];
-  const pipeline1s = [
-    { id: 5141, name: "Ứng tuyển", isActive: 0, stageType: 1, type: null },
-    { id: 3155, name: "Phỏng vấn3", isActive: 0, stageType: 3, type: null },
-    { id: 3155, name: "Kết quả - Đạt", isActive: 1, stageType: 4, type: 1 },
-    {
-      id: 3155,
-      name: "Kết quả - Cân nhắc",
-      isActive: 1,
-      stageType: 4,
-      type: 2,
-    },
-    { id: 3155, name: "Kết quả - Loại", isActive: 1, stageType: 4, type: 3 },
-    { id: 3155, name: "Mời nhận việc", isActive: 0, stageType: 4, type: 4 },
-  ];
-
-  const [pipe, setPipe] = useState(pipelines);
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
+
+  const [fetchPipe, { data: pipelines = [], isSuccess }] =
+    useGetApplicantCurrentStateWithRecruitmentStatesMutation();
   const [selectedOption, setSelectedOption] = useState();
-  useEffect(()=>{
-    if(options[0]?.name)
-    setSelectedOption(options[0]?.name)
-  }, [options[0]?.name])
+  const [ownerName, setOwnerName] = useState();
+  useEffect(() => {
+    if (!isFetching){
+      setSelectedOption(options[0]?.name);
+      setOwnerName(options[0]?.ownerName?.trim());
+      fetchPipe({
+        ApplicantId,
+        RecruitmentId: options[0]?.id,
+      }).unwrap();
+    } 
+  }, [isFetching]);
+
   const onChangeRecruiment = (e) => {
-    debugger
     setSelectedOption(e.target.value.name);
-    setPipe(pipeline1s);
+    setOwnerName(e.target.value.ownerName?.trim());
+    fetchPipe({
+      ApplicantId,
+      RecruitmentId: e.target.value.id,
+    }).unwrap();
   };
 
   return (
@@ -294,7 +285,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                     <Grid>
                       {options ? (
                         <SelectAutoCompleteDS
-                        width="35%"
+                          width="35%"
                           selectedOption={selectedOption}
                           setSelectedOption={setSelectedOption}
                           onChange={onChangeRecruiment}
@@ -324,7 +315,9 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                     >
                       <Grid item md={10} container>
                         <Grid sx={{ width: "80%" }}>
-                          <PipelineApplicant steps={pipe} />
+                          {isSuccess ? (
+                            <PipelineApplicant steps={pipelines} />
+                          ) : null}
                         </Grid>
                         <Grid sx={{ display: "flex" }}>
                           <ButtonDS
@@ -382,22 +375,23 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                             marginTop: "8px",
                           }}
                         >
-                          <AvatarDS
-                            sx={{
-                              height: "20px",
-                              width: "20px",
-                              borderRadius: "100px",
-                            }}
-                            src={
-                              "https://www.elle.vn/wp-content/uploads/2017/07/25/hinh-anh-dep-1.jpg"
-                            }
-                          ></AvatarDS>
+                          {isSuccess ? (
+                            <AvatarDS
+                              sx={{
+                                height: "20px",
+                                width: "20px",
+                                borderRadius: "100px",
+                                fontSize:'12px'
+                              }}
+                              name={ownerName}
+                            ></AvatarDS>
+                          ) : null}
                           <Typography
                             fontSize="14px"
                             fontWeight="600"
                             color="#172B4D"
                           >
-                            {"Phạm Xuân Chung"}
+                            {ownerName}
                           </Typography>
                         </Grid>
                       </Grid>
