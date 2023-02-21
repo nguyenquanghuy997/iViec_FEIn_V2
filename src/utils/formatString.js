@@ -10,30 +10,30 @@ export const LIST_BRANCH_SIZE = [
 ];
 
 export const LIST_ORGANIZATION_SIZE = [
-  { id: "LessThanTen", value: "0", name: "Dưới 10 nhân sự" },
-  { id: "BetweenTenAndFortyNine", value: "1", name: "10-49 nhân sự" },
-  { id: "BetweenFiftyAndNinetyNine", value: "2", name: "50-99 nhân sự" },
+  { id: "LessThanTen", value: 0, name: "Dưới 10" },
+  { id: "BetweenTenAndFortyNine", value: 1, name: "10-49" },
+  { id: "BetweenFiftyAndNinetyNine", value: 2, name: "50-99" },
   {
     id: "BetweenOneHundredAndFourHundredNinetyNine",
-    value: "3",
-    name: "100-499 nhân sự",
+    value: 3,
+    name: "100-499",
   },
   {
     id: "BetweenFiveHundredAndNineHundredNinetyNine",
-    value: "4",
-    name: "500-999 nhân sự",
+    value: 4,
+    name: "500-999",
   },
   {
     id: "BetweenOneThousandAndFourThousandNineHundredNinetyNine",
-    value: "5",
-    name: "1000-4999 nhân sự",
+    value: 5,
+    name: "1000-4999",
   },
   {
     id: "BetweenFiveThousandAndNineThousandNineHundredNinetyNine",
-    value: "6",
-    name: "5000-9999 nhân sự",
+    value: 6,
+    name: "5000-9999",
   },
-  { id: "LargeTenThousand", value: 7, name: "Trên 10000 nhân sự" },
+  { id: "LargeTenThousand", value: 7, name: "Trên 10000" },
 ];
 
 export function joinArrStr(arr, key) {

@@ -46,8 +46,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: "ngocthang1493@gmail.com",
-    password: "123456789",
+    email: "",
+    password: "",
     remember: true,
   };
 
@@ -160,7 +160,7 @@ export default function LoginForm() {
         width="440px"
         size="large"
         tittle="Đăng nhập"
-        loading={isSubmitting}
+        isSubmitting={isSubmitting}
         type="submit"
       />
     </FormProvider>

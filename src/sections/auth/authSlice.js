@@ -3,32 +3,24 @@ import {
   API_CONFIRM_EMAIL,
   API_FORGET_PASSWORD,
   API_CHANGE_PASSWORD_WITH_TOKEN,
+  API_GET_DISTRICT,
+  API_GET_PROVINCE,
   API_REGISTER,
-  API_USER_INFO,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["Auth"],
 });
 
-
 export const authSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
-    // get current user login
-    getCurrentUser: builder.query({
-      query: () => ({
-        url: API_USER_INFO,
-        method: "GET",
-      }),
-      providesTags: ["CurrentUser"]
-    }),
     forgotPassword: builder.mutation({
       query: (data) => ({
         url: API_FORGET_PASSWORD,
         method: "POST",
         data,
       }),
-      providesTags: ["ForgotPassword"]
+      invalidatesTags: ["ForgotPassword"],
     }),
     // REGISTER ORGANIZATION
     register: builder.mutation({
@@ -37,7 +29,7 @@ export const authSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data,
       }),
-      providesTags: ["Register"],
+      invalidatesTags: ["Register"],
     }),
     // CONFIRM EMAIL
     confirmEmail: builder.query({
@@ -46,7 +38,7 @@ export const authSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params: { Email: data.email, Token: data.token },
       }),
-      providesTags: ["ConfirmEmail"],
+      invalidatesTags: ["ConfirmEmail"],
     }),
     // CHANGE PASSWORD WITH TOKEN
     changePasswordWithToken: builder.mutation({
@@ -55,16 +47,35 @@ export const authSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data,
       }),
-      providesTags: ["ChangePasswordWithToken"],
+      invalidatesTags: ["ChangePasswordWithToken"],
+    }),
+    // get province & district
+    getProvince: builder.query({
+      query: () => ({
+        url: `${API_GET_PROVINCE}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["Provinces"],
+    }),
+    getDistrictByProvinceId: builder.query({
+      query: (provinceId) => ({
+        url: `${API_GET_DISTRICT}`,
+        method: "GET",
+        params: { ProvinceId: provinceId },
+      }),
+      invalidatesTags: ["Districts"],
     }),
   }),
-  overrideExisting: true,
 });
 
 export const {
   useForgotPasswordMutation,
   useRegisterMutation,
+  useConfirmEmailQuery,
   useLazyConfirmEmailQuery,
+  useGetProvinceQuery,
+  useLazyGetProvinceQuery,
+  useGetDistrictByProvinceIdQuery,
+  useLazyGetDistrictByProvinceIdQuery,
   useChangePasswordWithTokenMutation,
-  useLazyGetCurrentUserQuery
 } = authSlice;

@@ -1,8 +1,6 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
-  API_GET_COLUMN_APPLICANTS,
-  API_UPDATE_COLUMN_APPLICANTS,
   API_ADD_REVIEW_FORM,
   API_DELETE_REVIEW_FORM,
   API_GET_ALL_REVIEW_FORM_OWNER,
@@ -17,24 +15,12 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
+  
   endpoints: (builder) => ({
     getListApplicants: builder.query({
-      query: (params) => ({
+      query: () => ({
         url: API_GET_ALL_APPLICANTS,
         method: 'GET',
-        params
-      }),
-    }),
-    getListColumnApplicants: builder.query({
-      query: () => ({
-        url: API_GET_COLUMN_APPLICANTS,
-        method: 'GET',
-      }),
-    }),
-    updateListColumnApplicants: builder.query({
-      query: () => ({
-        url: API_UPDATE_COLUMN_APPLICANTS,
-        method: 'PATCH',
       }),
     }),
     getAllApplicant: builder.mutation({
@@ -83,9 +69,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetListApplicantsQuery,
-  useLazyGetListApplicantsQuery,
-  useGetListColumnApplicantsQuery,
-  useUpdateListColumnApplicantsQuery,
   useGetAllApplicantMutation,
   useGetAllApplicantFormOwnerQuery,
   useSetDefaultApplicantFormMutation,

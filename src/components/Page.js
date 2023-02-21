@@ -9,16 +9,16 @@ import { Box } from '@mui/material'
 import PropTypes from 'prop-types'
 
 const Page = forwardRef(({ children, title = '', meta, ...other }, ref) => (
-    <>
-      <Head>
-        <title>{`${title}`}</title>
-        {meta}
-      </Head>
+  <>
+    <Head>
+      <title>{`${title}`}</title>
+      {meta}
+    </Head>
 
-      <Box ref={ref} {...other}>
-        {children}
-      </Box>
-    </>
+    <Box ref={ref} {...other}>
+      {children}
+    </Box>
+  </>
 ))
 
 Page.propTypes = {

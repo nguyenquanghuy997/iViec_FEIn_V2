@@ -1,6 +1,6 @@
 //
 import CollapseButton from "./CollapseButton";
-import { headerMenuConfig as navConfig } from "./NavConfig";
+import navConfig from "./NavConfig";
 // components
 import Logo from "@/components/Logo";
 import Scrollbar from "@/components/Scrollbar";

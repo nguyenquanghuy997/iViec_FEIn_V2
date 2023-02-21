@@ -80,7 +80,7 @@ export default function NotificationsPopover() {
   return (
     <>
       <IconButtonAnimate
-        color={openState ? "inherit" : "inherit"}
+        color={openState ? "primary" : "default"}
         onClick={pressOpen}
         sx={{ width: 40, height: 40 }}
       >
