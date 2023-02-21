@@ -4,28 +4,44 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { enUS, viVN } from "@mui/material/locale";
 
 // export const DOMAIN_SERVER_API = process?.env?.NEXT_PUBLIC_HOST_API_KEY || "";
-export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api";
+export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/";
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.dashboard;
 
 export const DASHBOARD_TABLE_HEIGHT = 500;
 
+export const DASHBOARD_CONTENT_WIDTH = 1420;
+
 // LAYOUT
 export const HEADER = {
   MOBILE_HEIGHT: 64,
   MAIN_DESKTOP_HEIGHT: 88,
-  DASHBOARD_DESKTOP_HEIGHT: 92,
+  DASHBOARD_DESKTOP_HEIGHT: 64,
   DASHBOARD_DESKTOP_OFFSET_HEIGHT: 92 - 32,
 };
 
 export const NAVBAR = {
+  // TEXT
+  MENU_ITEM_WEIGHT_SEMIBOLD: 700,
+  // width
   BASE_WIDTH: 260,
   DASHBOARD_WIDTH: 220,
   DASHBOARD_COLLAPSE_WIDTH: 88,
-  //
+  // height
   DASHBOARD_ITEM_ROOT_HEIGHT: 48,
   DASHBOARD_ITEM_SUB_HEIGHT: 40,
   DASHBOARD_ITEM_HORIZONTAL_HEIGHT: 32,
+  DASHBOARD_ITEM_HORIZONTAL_MENU_HEIGHT: 36,
+  // color
+  DASHBOARD_MENU_ITEM_COLOR: '#B9BFC9',
+  DASHBOARD_MENU_ITEM_ACTIVE_COLOR: '#FDFDFD',
+  DASHBOARD_MENU_ITEM_BG_COLOR: '#5C6A82',
+  // DASHBOARD_: '',
+  // DASHBOARD_: '',
+  // DASHBOARD_: '',
+  // DASHBOARD_: '',
+  // DASHBOARD_: '',
+  // DASHBOARD_: '',
 };
 
 export const ICON = {
@@ -51,7 +67,7 @@ export const defaultSettings = {
   themeMode: "light",
   themeDirection: "ltr",
   themeContrast: "default",
-  themeLayout: "horizontal",
+  themeLayout: "vertical",
   themeColorPresets: "yellow",
   themeStretch: false,
 };
