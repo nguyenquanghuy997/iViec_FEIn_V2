@@ -1,8 +1,8 @@
-import TickIcon from "../../../public/assets/icons/company/TickIcon";
-import CropImageAva from "./CropImageAva";
-import CropImageBG from "./CropImageBG";
-import ImageUpload from "./ImageUpload";
-import DrawerEdit from "./edit/DrawerEdit";
+// import TickIcon from "../../../public/assets/icons/company/TickIcon";
+// import CropImageAva from "./CropImageAva";
+// import CropImageBG from "./CropImageBG";
+// import ImageUpload from "./ImageUpload";
+// import DrawerEdit from "./edit/DrawerEdit";
 import { useGetCompanyInfoQuery } from "@/sections/companyinfor/companyInforSlice";
 import { Box, Typography } from "@mui/material";
 import { Grid, Divider } from "@mui/material";
@@ -68,7 +68,7 @@ export default function CompanyInfor() {
     const obj = [];
     let i = 0;
     while (i < 6 - itemData.length) {
-      obj.push(<ImageUpload size={100} />);
+      // obj.push(<ImageUpload size={100} />);
       i++;
     }
 
@@ -145,7 +145,7 @@ export default function CompanyInfor() {
 
   return (
     <>
-      <CropImageBG/>
+      {/* <CropImageBG/> */}
       <div
         style={{
           display: "flex",
@@ -163,7 +163,7 @@ export default function CompanyInfor() {
             mb: "28px",
           }}
         >
-          <CropImageAva />
+          {/* <CropImageAva /> */}
           <Box
             sx={{
               display: "flex",
@@ -184,11 +184,11 @@ export default function CompanyInfor() {
               {/* {Data.BranchName} */}
               DỊCH VỤ VẬN CHUYỂN HÀNG ĐẦU VIỆT NAM J&T
               <span style={{ marginLeft: "0.6em" }}>
-                <TickIcon />
+                {/* <TickIcon /> */}
               </span>
             </Typography>
 
-            <DrawerEdit />
+            {/* <DrawerEdit /> */}
           </Box>
         </Box>
 
