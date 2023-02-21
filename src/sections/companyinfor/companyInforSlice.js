@@ -1,7 +1,7 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_JOB_CATEGORIES,
-  API_USER_INFO,
+  API_GET_COMPANY_INFOR,
   API_GET_PROVINCE,
   API_GET_DISTRICT,
 } from "@/routes/api";
@@ -20,9 +20,9 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
     //   }),
     //   providesTags: ["branch_by_user"],
     // }),
-    getBranchByUser: builder.query({
+    getCompanyInfo: builder.query({
       query: () => ({
-        url: `${API_USER_INFO}`,
+        url: `${API_GET_COMPANY_INFOR}`,
         method: "GET",
       }),
     }),
@@ -52,7 +52,7 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
 
 export const {
   // Thông tin công ty
-  useGetBranchByUserQuery,
+  useGetCompanyInfoQuery,
   useGetJobCategoriesQuery,
   useLazyGetJobCategoriesQuery,
   useGetProvinceQuery,
