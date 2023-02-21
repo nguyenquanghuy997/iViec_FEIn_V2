@@ -1,3 +1,4 @@
+import { ButtonDS } from "@/components/DesignSystem";
 import Content from "@/components/BaseComponents/Content";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -5,8 +6,7 @@ import TextMaxLine from "@/components/TextMaxLine";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useLazyGetListApplicantsQuery } from "@/sections/applicant";
-import { useGetListColumnApplicantsQuery } from "@/sections/applicant";
+import { useGetListColumnApplicantsQuery,useLazyGetListApplicantsQuery,useUpdateListColumnApplicantsMutation } from "@/sections/applicant";
 import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
 import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
 // import { calculateColumnsWidth } from "./DynamicColumnsHelper";
@@ -157,6 +157,17 @@ export const ApplicantItem = () => {
   const handleVisibleChange = (flag) => {
     setVisibleMenuSettings(flag);
   };
+
+  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+  const handleVisibleChangeSumbit = async () => {
+    var body = {
+      "recruitment": false,
+    };
+    var data ={ "id" :"01000000-ac12-0242-981f-08db10c9413d", body: body}
+
+    await UpdateListColumnApplicants(data)
+    setVisibleMenuSettings(false);
+  };
   const onChange = (e) => {
     var checkedColumnsNew = checkedColumns;
     if (e.target.checked) {
@@ -175,8 +186,6 @@ export const ApplicantItem = () => {
     setCheckedColumns(checkedColumnsNew);
     setColumns(filtered);
   };
-  // let items=[]
-  // ColumnData&&Object.keys(ColumnData).map((key,index) => items.push({"key":index+1, "label":key,"defaultChecked":ColumnData[key]}))
   const menuItemText = {
     name: "Họ và tên",
     phoneNumber: "Số điện thoại",
@@ -205,6 +214,7 @@ export const ApplicantItem = () => {
     homeTower: "Quê quán",
   };
   const menu = (
+    <>
     <Menu>
       {ColumnData &&
         Object.keys(ColumnData).map((key, index) => {
@@ -239,6 +249,11 @@ export const ApplicantItem = () => {
           }
         })}
     </Menu>
+    <ButtonDS
+                        tittle="Áp dụng"
+                        onClick={handleVisibleChangeSumbit}
+                    />
+    </>
   );
 
   // form search
@@ -293,6 +308,7 @@ export const ApplicantItem = () => {
                 title=""
               />
             </ListItemStyle>
+            
           </Dropdown>
 
           <View>

@@ -19,7 +19,7 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
 
   const methods = useForm({
     resolver: yupResolver(ResetPasswordSchema),
-    defaultValues: { email: "" },
+    defaultValues: { email: ""},
   });
 
   const {
@@ -33,6 +33,7 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       var body = JSON.stringify({
         userName: data.email,
+        userLoginType:1
       });
       await forgotPassword(body).unwrap();
       setStatusResetPass(true);

@@ -4,7 +4,8 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { enUS, viVN } from "@mui/material/locale";
 
 // export const DOMAIN_SERVER_API = process?.env?.NEXT_PUBLIC_HOST_API_KEY || "";
-export const DOMAIN_SERVER_API = "https://api.iviec.vn/api";
+// export const DOMAIN_SERVER_API = "https://api.iviec.vn/api";
+export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api";
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.dashboard;
 

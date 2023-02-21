@@ -9,6 +9,7 @@ import {
   API_GET_ALL_SEARCH,
   API_SET_DEFAULT_REVIEW_FORM,
   API_UPDATE_REVIEW_FORM,
+  
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -30,12 +31,16 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         url: API_GET_COLUMN_APPLICANTS,
         method: 'GET',
       }),
+      providesTags: ["GetColumnApplicants"],
     }),
-    updateListColumnApplicants: builder.query({
-      query: () => ({
-        url: API_UPDATE_COLUMN_APPLICANTS,
+    updateListColumnApplicants: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_COLUMN_APPLICANTS}/${data.id}`,
         method: 'PATCH',
+        data: data.body
       }),
+      providesTags: ["UpdateColumnApplicants"],
+      invalidatesTags: ["GetColumnApplicants"],
     }),
     getAllApplicant: builder.mutation({
       query: (data) => ({
@@ -85,7 +90,8 @@ export const {
   useGetListApplicantsQuery,
   useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
-  useUpdateListColumnApplicantsQuery,
+  useUpdateListColumnApplicantsMutation,
+  
   useGetAllApplicantMutation,
   useGetAllApplicantFormOwnerQuery,
   useSetDefaultApplicantFormMutation,
