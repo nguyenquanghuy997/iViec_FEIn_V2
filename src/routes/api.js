@@ -75,7 +75,11 @@ export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePassword
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new lấy danh sách ứng viên
 export const API_GET_FILTER_ALL_APPLICANTS = "/applicant/ApplicantRecruitment/FilterApplicantRecruitmentPipelineStage"; // new lấy danh sách ứng viên
 export const API_GET_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/GetApplicantRecruitmentVisible"; //new lấy danh sách cột
-export const API_UPDATE_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/UpdateApplicantRecruitmentVisible/"; //new sửa danh sách cột
+export const API_UPDATE_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/UpdateApplicantRecruitmentVisible"; //new sửa danh sách cột
+export const API_GET_APPLICANTS_BY_ID = "/applicant/Applicant/GetApplicant"; //lấy thông tin ứng viên theo id
+export const API_GET_RECRUITMENTS_BY_APPLICANT = "/recruitment/Recruitment/GetRecruitmentsByApplicant"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
+export const API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT = "/recruitment/Recruitment/GetRecruitmentPipelineStatesByRecruitment"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
+export const API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES = "/applicant/ApplicantRecruitment/GetApplicantCurrentStateWithRecruitmentStates"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
 
 export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantSkills";
 
@@ -123,6 +127,8 @@ export const API_GET_BRANCH_BY_ID = "api/Branch/GetBranch";
 export const API_GET_BRANCH_BY_USER = "api/Branch/GetByUserId";
 export const API_UPDATE_BRANCH = "api/Branch/UpdateBranch";
 
+// Thông tin công ty
+export const API_GET_COMPANY_INFOR = 'api/organization/Organization/GetOrganization';
 // Thông báo
 export const API_GET_LIST_NOTIFICATION = "api/UserNotifications/GetPaging";
 export const API_MASK_READ_NOTIFICATION = "api/UserNotifications/MaskAsRead?id=";

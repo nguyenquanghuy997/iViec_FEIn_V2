@@ -192,7 +192,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
-              <IconButton size="small" onClick={handleCloseModal}>
+              <IconButton size="small" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
             </ApplicantModalHeadStyle>

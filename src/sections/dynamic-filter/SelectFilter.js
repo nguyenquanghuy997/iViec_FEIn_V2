@@ -29,8 +29,8 @@ const MenuProps = {
 
 const SelectFilter = React.forwardRef((props, ref) => {
   const {control} = useFormContext();
+  const {name, isRequired, title, placeholder, options, disabled, multiple = false} = props;
   const {remove} = useFieldArray({control, name});
-  const {isRequired, title, placeholder, options, disabled, multiple = false} = props;
   const classes = useStyles();
 
   const [searchText, setSearchText] = useState("");

@@ -35,8 +35,8 @@ export default function LoginForm() {
     });
 
     const defaultValues = {
-        email: "ngocthang1493@gmail.com",
-        password: "123456789",
+        email: "thuybon1@gmail.com",
+        password: "000000",
         remember: true,
     };
 

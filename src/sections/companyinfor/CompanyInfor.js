@@ -1,178 +1,228 @@
-import Image from "@/components/Image";
-import SvgIcon from "@/components/SvgIcon";
-import { useGetBranchByUserQuery } from "@/sections/companyinfor/companyInforSlice";
-import {
-  formatBranchSize,
-  joinArrStr,
-} from "@/utils/formatString";
-import NextLink from "next/link";
+// import TickIcon from "../../../public/assets/icons/company/TickIcon";
+// import CropImageAva from "./CropImageAva";
+// import CropImageBG from "./CropImageBG";
+// import ImageUpload from "./ImageUpload";
+// import DrawerEdit from "./edit/DrawerEdit";
+import { useGetCompanyInfoQuery } from "@/sections/companyinfor/companyInforSlice";
+import { Box, Typography } from "@mui/material";
+import { Grid, Divider } from "@mui/material";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import Paper from "@mui/material/Paper";
 
 export default function CompanyInfor() {
-  // api
   // const { data: { DataList: [Data = {}] = [] } = {} } =
   //   useGetBranchByUserQuery();
-  const { data: Data} = useGetBranchByUserQuery();
+  const { data: Data } = useGetCompanyInfoQuery();
+  console.log('company',Data)
+  const itemData = [
+    {
+      img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+      title: "Breakfast",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+      title: "Burger",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+      title: "Camera",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+      title: "Coffee",
+    },
+  ];
 
-  const renderRow = (child1, child2) => {
+  const renderText = (title, content) => {
     return (
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        {child1}
-        {child2}
-      </div>
-    );
-  };
-
-  const renderItem = (title, value, main) => {
-    return (
-      <div style={{ flex: main ? undefined : 1 }}>
+      <div>
         <span
           style={{
-            display: "flex",
-            fontSize: 15,
-            lineHeight: 24 / 15,
-            marginTop: 36,
-            marginBottom: 8,
-            color: "#7D8386",
+            display: "inline-flex",
+            fontSize: 14,
+            fontWeight: 400,
+            margin: "0 16px 24px 0",
+            color: "#5C6A82",
+            width: "160px",
           }}
         >
           {title}
         </span>
 
-        {String(value).startsWith("<") ? (
-          <p dangerouslySetInnerHTML={{ __html: value }} />
-        ) : (
-          <span
-            style={{
-              display: "flex",
-              fontSize: 16,
-              lineHeight: 24 / 16,
-              color: "#181819",
-            }}
-          >
-            {value}
-          </span>
-        )}
+        <span
+          style={{
+            display: "inline-flex",
+            fontSize: 14,
+            fontWeight: 500,
+            color: "#172B4D",
+          }}
+        >
+          {content}
+        </span>
       </div>
     );
   };
 
-  const renderButton = () => {
+  const EmptyImage = () => {
+    const obj = [];
+    let i = 0;
+    while (i < 6 - itemData.length) {
+      // obj.push(<ImageUpload size={100} />);
+      i++;
+    }
+
+    return <>{obj}</>;
+  };
+
+  const renderDoubleText = (text, content) => {
     return (
-      <NextLink passHref href="companyinfor/edit">
-        <a
-          href="#"
-          style={{
-            paddingTop: 10,
-            paddingBottom: 10,
-            paddingLeft: 24,
-            paddingRight: 24,
-            borderRadius: 4,
-            marginTop: 36,
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "row",
-            background: "#01B6A7",
-            textDecoration: "none",
-            alignSelf: "flex-end",
+      <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+        <Paper
+          sx={{
+            my: 1,
           }}
         >
-          <SvgIcon>
-            {`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.41632 14.5818H14.7305" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.71241 2.12975C9.32657 1.34725 10.3191 1.38809 11.1024 2.00225L12.2607 2.91059C13.0441 3.52475 13.3216 4.47725 12.7074 5.26142L5.79991 14.0739C5.56907 14.3689 5.21657 14.5431 4.84157 14.5473L2.17741 14.5814L1.57407 11.9856C1.48907 11.6214 1.57407 11.2381 1.80491 10.9423L8.71241 2.12975Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.41882 3.78009L11.4138 6.91176" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
-          </SvgIcon>
+          <Grid container wrap="nowrap" spacing={2}>
+            <Grid item>
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  fontWeight: 400,
+                  color: "#5C6A82",
+                  width: "160px",
+                }}
+              >
+                {text}
+              </Typography>
+            </Grid>
+            <Grid item xs>
+              {content.map((item) => (
+                <>
+                  <Typography
+                    sx={{ fontSize: 14, fontWeight: 400, color: "#172B4D" }}
+                  >
+                    {item}
+                  </Typography>
+                  <br />
+                </>
+              ))}
 
-          <span
-            style={{
-              fontSize: 15,
-              fontWeight: "600",
-              lineHeight: 20 / 15,
-              marginLeft: 8,
-              color: "#fff",
-            }}
-          >
-            {"Chỉnh sửa thông tin doanh nghiệp"}
-          </span>
-        </a>
-      </NextLink>
+              <ImageList
+                sx={{
+                  maxWidth: "710px",
+                  width: "100%",
+                  mb: 3,
+                  overflow: "unset!important",
+                }}
+                cols={6}
+                rowHeight={100}
+              >
+                {itemData.map((item) => (
+                  <ImageListItem
+                    key={item.title}
+                    sx={{
+                      marginRight: "15px",
+                    }}
+                  >
+                    <img
+                      src={item.img}
+                      srcSet={`${item.img}?w=
+                                164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                      style={{ borderRadius: "4px" }}
+                    />
+                  </ImageListItem>
+                ))}
+
+                {itemData.length < 5 ? <EmptyImage /> : ""}
+              </ImageList>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Box>
     );
   };
 
   return (
     <>
-
-      <Image
-        disabledEffect
-        visibleByDefault
-        src={
-          // formatRemoteUrl(Data.CoverPhoto || "/public/img/coverDefault.png")
-          ""
-        }
-        sx={{ height: 283, width: "100%" }}
-      />
-
+      {/* <CropImageBG/> */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          paddingLeft: 24,
-          paddingRight: 24,
-          marginTop: -24,
+          paddingLeft: 40,
+          paddingRight: 40,
+          marginTop: "-6%",
         }}
       >
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
             flexDirection: "row",
             alignItems: "flex-end",
+            mb: "28px",
           }}
         >
-          <Image
-            disabledEffect
-            visibleByDefault
-            src={
-              // formatRemoteUrl(Data.Logo || "/public/img/logoDefault.png")
-            ""
-            }
+          {/* <CropImageAva /> */}
+          <Box
             sx={{
-              width: 120,
-              height: 120,
-              borderRadius: 120,
-              border: "3px solid #fff",
-            }}
-          />
-
-          <span
-            style={{
-              flex: 1,
-              fontSize: 21,
-              lineHeight: 28 / 21,
-              marginLeft: 16,
-              marginBottom: 16,
-              fontWeight: "600",
-              color: "#393B3E",
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
             }}
           >
-            {/* {Data.BranchName} */}
-          </span>
-        </div>
+            <Typography
+              sx={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "#393B3E",
+                ml: 2,
+                mr: 1,
+                mt: "43px",
+              }}
+            >
+              {/* {Data.BranchName} */}
+              DỊCH VỤ VẬN CHUYỂN HÀNG ĐẦU VIỆT NAM J&T
+              <span style={{ marginLeft: "0.6em" }}>
+                {/* <TickIcon /> */}
+              </span>
+            </Typography>
 
-        {renderItem(
-          "Địa chỉ công ty",
-          joinArrStr([Data?.BranchAddress, Data?.ProvinceName], ", "),
-          true
+            {/* <DrawerEdit /> */}
+          </Box>
+        </Box>
+
+        {renderText("Số điện thoại :", Data?.phoneNumber || ["0858383316"])}
+        {renderText("Email :", Data?.phoneNumber || ["Example@gmail.com"])}
+        {renderText(
+          "Ngành nghề :",
+          Data?.phoneNumber || ["Công nghệ thông tin"]
+        )}
+        {renderText("Quy mô :", Data?.phoneNumber || ["2000 - 3000 nhân sự"])}
+        {renderText(
+          "Địa chỉ :",
+          Data?.phoneNumber || ["Số 10 Phạm Văn Bạch, Cầu Giấy, Hà Nội"]
+        )}
+        <Divider />
+
+        {renderDoubleText(
+          "Môi trường làm việc  :",
+          Data?.phoneNumber || [
+            "HO Miền Bắc: Số 6 Quang Trung, phường Trần Hưng Đạo, Quận Hoàn Kiếm, Thành Phố Hà Nội.",
+            "HO Miền Nam: Số 23 Lê Duẩn, Phường Bến Nghé, Quận 1, Thành Phố Hồ Chí Minh.",
+          ]
         )}
 
-        {renderRow(
-          renderItem("Email", Data?.email),
-          renderItem("Số điện thoại", Data?.phoneNumber || "")
+        <Divider />
+        {renderDoubleText(
+          "Giới thiệu công ty :",
+          Data?.phoneNumber || [
+            "Techcombank mang sứ mệnh dẫn dắt hành trình số hóa của ngành tài chính, tạo động lực cho mỗi cá nhân, doanh nghiệp và tổ chức phát triển bền vững và bứt phá thành công.",
+            "Được thành lập vào tháng 9 năm 1993 và có trụ sở chính tại Hà Nội, Techcombank là một trong những ngân hàng thương mại cổ phần lớn nhất tại Việt Nam và là một trong những tổ chức ngân hàng hàng đầu tại Châu Á. Chúng tôi có hơn 12.000 nhân viên và 9.6 triệu khách hàng bán lẻ và khách hàng doanh nghiệp tại Việt Nam. Mạng lưới rộng khắp của chúng tôi gồm 309 chi nhánh và phòng giao dịch trên 45 tỉnh thành. Techcombank là ngân hàng thương mại tư nhân đầu tiên tại Việt Nam gia nhập “câu lạc bộ tỷ đô” năm 2021, với lợi nhuận trước thuế (LNTT) đạt 23,2 nghìn tỷ đồng, tăng 47,1% so với 2020. Đây là năm thứ năm liên tiếp Techcombank ghi nhận lợi nhuận tăng trưởng hai chữ số. Ngân hàng cũng ghi nhận tốc độ tăng trưởng kép lợi nhuận trong giai đoạn 2016-2021 với mức kỷ lục 50%/năm.",
+            "Kể từ năm 1993, Techcombank đã phát triển trở thành một ngân hàng đạt nhiều giải thưởng với tầm nhìn ‘Change Banking, Change Lives’. Từ nhiều năm nay, chúng tôi đã đứng ở vị trí tiên phong trong việc số hóa thị trường tài chính của Việt Nam. Điều khác biệt giữa Techcombank với các đối thủ cạnh tranh chính là Nhân tài. Nhân tài là một trong 3 trụ cột cơ bản mà chúng tôi hướng đến đầu tư trong 5 năm tới, cùng với Dữ liệu và Kỹ thuật số. Để hỗ trợ Nhân tài, chúng tôi đang ‘Paving New Paths’ bằng cách xác định Định vị Giá trị Cán bộ Nhân viên (EVP) là một tập hợp các thuộc tính duy nhất là giá trị mà nhân viên của chúng tôi có được để đổi lại các kỹ năng, năng lực và kinh nghiệm mà họ mang lại cho tổ chức .",
+            "Bằng cách không ngừng truyền cảm hứng cho mỗi tài năng của chúng tôi để ‘Dare to Be a Greater You’, chúng tôi đặt mục tiêu trở thành ngân hàng số 1 Việt Nam với vốn hóa 20 tỷ USD.",
+          ]
         )}
-
-        {renderRow(
-          renderItem("Ngành nghề", Data?.JobCategoryName),
-          renderItem("Quy mô nhân sự", formatBranchSize(Data?.BranchSize))
-        )}
-
-        {renderItem("Giới thiệu", Data?.Description, true)}
-        {renderButton()}
       </div>
     </>
   );

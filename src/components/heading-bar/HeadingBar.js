@@ -7,7 +7,7 @@ const HeadingBarStyle = styled("div")(({ theme }) => ({
   boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
   backgroundColor: "#FDFDFD",
   padding: theme.spacing(3, 0),
-  position: 'fixed',
+  // position: 'fixed',
   zIndex: 100
 }));
 
