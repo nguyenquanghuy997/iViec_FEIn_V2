@@ -1,0 +1,9 @@
+include:
+  - project: 'system-devops/cicd/cicd-template'
+    file: '.gitlab-ci-template.yml'
+
+variables:
+  PORT: 3000
+  APP_TIER: next-fe
+  INGRESS: 'inside-dev.iviec.vn'
+  TLS: 'inside-dev.iviec.vn,iviec-tls'

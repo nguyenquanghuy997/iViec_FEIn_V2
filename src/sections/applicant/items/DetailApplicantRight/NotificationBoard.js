@@ -1,3 +1,4 @@
+import CloseIcon from "../../../../../public/assets/icons/candidate/CloseIcon";
 import ExpanLess from "../../../../../public/assets/icons/candidate/ExpanLess";
 import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
 import ModalReload from "./ModalReload";
@@ -6,9 +7,9 @@ import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Collapse from "@mui/material/Collapse";
 import Dialog from "@mui/material/Dialog";
-import CloseIcon from '../../../../../public/assets/icons/candidate/CloseIcon'
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -16,7 +17,6 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import { Container } from "@mui/system";
 import React from "react";
@@ -38,14 +38,13 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
       padding: theme.spacing(2),
-      
     },
     "& .MuiDialogActions-root": {
       padding: theme.spacing(1),
     },
-    '& .MuiPaper-rounded':{
-      borderRadius:'6px!important'
-    }
+    "& .MuiPaper-rounded": {
+      borderRadius: "6px!important",
+    },
   }));
 
   const renderText = (title, reason) => {
@@ -179,12 +178,14 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
             }
           />
         ) : (
-          <ListItemText
-            primary={renderBoxStatus(
-              action,
-              " đã chuyển ứng viên Đinh Tiến Thành từ bước Ứng tuyển sang bước "
-            )}
-            secondary={
+          <div>
+            <div>
+              {renderBoxStatus(
+                action,
+                " đã chuyển ứng viên Đinh Tiến Thành từ bước Ứng tuyển sang bước "
+              )}
+            </div>
+            <div>
               <React.Fragment>
                 <Typography
                   sx={{
@@ -202,8 +203,8 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
                   ? renderText("Lý do loại:", "kHÔNG THÍCH")
                   : ""}
               </React.Fragment>
-            }
-          />
+            </div>
+          </div>
         )}
         {open ? <ExpanMore style={{ color: "red" }} /> : <ExpanLess />}
       </ListItemButton>
@@ -266,7 +267,7 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
                 {ACTION_CONTENT[action]?.option}
               </BootstrapDialogTitle>
               <Divider />
-              <DialogContent >
+              <DialogContent>
                 <Typography gutterBottom>
                   Cras mattis consectetur purus sit amet fermentum. Cras justo
                   odio, dapibus ac facilisis in, egestas eget quam. Morbi leo

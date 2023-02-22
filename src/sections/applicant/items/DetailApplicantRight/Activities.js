@@ -51,7 +51,6 @@ export const Activities = () => {
             <NeutralSwitch
               checked={checked}
               onChange={handleChange}
-              defaultChecked
             />
           }
           label="Hiển thị hoạt động"

@@ -5,7 +5,6 @@ import TextMaxLine from "@/components/TextMaxLine";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useLazyGetListApplicantsQuery } from "@/sections/applicant";
 import { useGetListColumnApplicantsQuery } from "@/sections/applicant";
 import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
 import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
@@ -14,19 +13,314 @@ import { columns as columnsTest } from "@/sections/applicant/others/columns";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Table, Tag, Dropdown, Menu, Checkbox } from "antd";
-import NextLink from "next/link";
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import ReactDragListView from "react-drag-listview";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import Link from "next/link";
 
 const defaultValues = {
   search: "",
 };
 
 export const ApplicantItem = () => {
-  const [getListApplicants, { data: Data, isLoading }] =
-    useLazyGetListApplicantsQuery();
+  // const [getListApplicants, { data: Data, isLoading }] =
+  //   useLazyGetListApplicantsQuery();
+  const Data ={
+    "items": [
+        {
+            "applicantId": "01000000-ac12-0242-0a9a-08db14828f27",
+            "recruitmentPipelineStateId": "01000000-ac12-0242-1c19-08db12ec3b47",
+            "recruitmentPipelineState": 0,
+            "pipelineStateResultType": null,
+            "applicationUserId": null,
+            "jobSourceId": "e5149f0b-640c-4df2-abd4-57554ab896ec",
+            "jobSourceName": "Facebook",
+            "fullName": "Nguyễn Ngọc Thắng",
+            "slug": "nguyen-ngoc-thang-",
+            "portraitImage": "string",
+            "dateOfBirth": "1997-02-19T04:13:32.609Z",
+            "email": "nt@gmail.com",
+            "phoneNumber": "0386193342",
+            "identityNumber": null,
+            "weight": null,
+            "height": null,
+            "homeTower": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8589-08db14828f2a"
+            },
+            "livingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8aae-08db14828f2a"
+            },
+            "expectedWorkingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8d04-08db14828f2a"
+            },
+            "experience": "Không làm sao có",
+            "education": "Đại học đường đời",
+            "expectedSalaryFrom": null,
+            "expectedSalaryTo": null,
+            "maritalStatus": null,
+            "yearOfExperience": 1,
+            "sex": 1,
+            "applicantSkills": [],
+            "jobCategories": [
+                {
+                    "name": null,
+                    "id": "23900294-5af3-4c96-b0da-b5887e011363"
+                }
+            ],
+            "academicLevel": null,
+            "rawApplicantSkills": null,
+            "createdTime": "2023-02-22T03:11:58.320734Z",
+            "recruitmentId": null,
+            "recruitmentName": "Tin tuyển dụng Tốt nhất",
+            "organizationId": "01000000-ac12-0242-b3cd-08db10c50f70",
+            "organizationName": "Ban công nghệ tập đoàn FPT",
+            "creatorId": null,
+            "creatorName": "Thủy Nguyễn Thị Thanh Thủy",
+            "ownerId": null,
+            "ownerName": " ",
+            "isAvailable": true,
+            "id": "01000000-ac12-0242-4fc1-08db14860143"
+        },
+        {
+            "applicantId": "01000000-ac12-0242-0a9a-08db14828f27",
+            "recruitmentPipelineStateId": "01000000-ac12-0242-e7b6-08db12ec4d6d",
+            "recruitmentPipelineState": 0,
+            "pipelineStateResultType": 1,
+            "applicationUserId": null,
+            "jobSourceId": "e5149f0b-640c-4df2-abd4-57554ab896ec",
+            "jobSourceName": "Facebook",
+            "fullName": "Nguyễn Ngọc Thắng",
+            "slug": "nguyen-ngoc-thang-",
+            "portraitImage": "string",
+            "dateOfBirth": "1997-02-19T04:13:32.609Z",
+            "email": "nt@gmail.com",
+            "phoneNumber": "0386193342",
+            "identityNumber": null,
+            "weight": null,
+            "height": null,
+            "homeTower": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8589-08db14828f2a"
+            },
+            "livingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8aae-08db14828f2a"
+            },
+            "expectedWorkingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8d04-08db14828f2a"
+            },
+            "experience": "Không làm sao có",
+            "education": "Đại học đường đời",
+            "expectedSalaryFrom": null,
+            "expectedSalaryTo": null,
+            "maritalStatus": null,
+            "yearOfExperience": 1,
+            "sex": 1,
+            "applicantSkills": [],
+            "jobCategories": [
+                {
+                    "name": null,
+                    "id": "23900294-5af3-4c96-b0da-b5887e011363"
+                }
+            ],
+            "academicLevel": null,
+            "rawApplicantSkills": null,
+            "createdTime": "2023-02-22T03:11:58.320734Z",
+            "recruitmentId": null,
+            "recruitmentName": "Tin tuyển dụng phổ biến",
+            "organizationId": "01000000-ac12-0242-b3cd-08db10c50f70",
+            "organizationName": "Ban công nghệ tập đoàn FPT",
+            "creatorId": null,
+            "creatorName": "Thủy Nguyễn Thị Thanh Thủy",
+            "ownerId": null,
+            "ownerName": "Nguyễn Thị Phương ",
+            "isAvailable": true,
+            "id": "01000000-ac12-0242-e741-08db14854a7c"
+        },
+        {
+            "applicantId": "01000000-ac12-0242-0a9a-08db14828f27",
+            "recruitmentPipelineStateId": "01000000-ac12-0242-0454-08db10c9a5dc",
+            "recruitmentPipelineState": 0,
+            "pipelineStateResultType": 2,
+            "applicationUserId": null,
+            "jobSourceId": "e5149f0b-640c-4df2-abd4-57554ab896ec",
+            "jobSourceName": "Facebook",
+            "fullName": "Nguyễn Ngọc Thắng",
+            "slug": "nguyen-ngoc-thang-",
+            "portraitImage": "string",
+            "dateOfBirth": "1997-02-19T04:13:32.609Z",
+            "email": "nt@gmail.com",
+            "phoneNumber": "0386193342",
+            "identityNumber": null,
+            "weight": null,
+            "height": null,
+            "homeTower": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8589-08db14828f2a"
+            },
+            "livingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8aae-08db14828f2a"
+            },
+            "expectedWorkingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8d04-08db14828f2a"
+            },
+            "experience": "Không làm sao có",
+            "education": "Đại học đường đời",
+            "expectedSalaryFrom": null,
+            "expectedSalaryTo": null,
+            "maritalStatus": null,
+            "yearOfExperience": 1,
+            "sex": 1,
+            "applicantSkills": [],
+            "jobCategories": [
+                {
+                    "name": null,
+                    "id": "23900294-5af3-4c96-b0da-b5887e011363"
+                }
+            ],
+            "academicLevel": null,
+            "rawApplicantSkills": null,
+            "createdTime": "2023-02-22T03:11:58.320734Z",
+            "recruitmentId": null,
+            "recruitmentName": "Tin tuyển dụng làm người thương",
+            "organizationId": "01000000-ac12-0242-b3cd-08db10c50f70",
+            "organizationName": "Ban công nghệ tập đoàn FPT",
+            "creatorId": null,
+            "creatorName": "Thủy Nguyễn Thị Thanh Thủy",
+            "ownerId": null,
+            "ownerName": " ",
+            "isAvailable": true,
+            "id": "01000000-ac12-0242-36ee-08db14864fa5"
+        },
+        {
+            "applicantId": "01000000-ac12-0242-0a9a-08db14828f27",
+            "recruitmentPipelineStateId": "01000000-ac12-0242-6730-08db12ec2c25",
+            "recruitmentPipelineState": 0,
+            "pipelineStateResultType": null,
+            "applicationUserId": null,
+            "jobSourceId": "e5149f0b-640c-4df2-abd4-57554ab896ec",
+            "jobSourceName": "Facebook",
+            "fullName": "Nguyễn Ngọc Thắng",
+            "slug": "nguyen-ngoc-thang-",
+            "portraitImage": "string",
+            "dateOfBirth": "1997-02-19T04:13:32.609Z",
+            "email": "nt@gmail.com",
+            "phoneNumber": "0386193342",
+            "identityNumber": null,
+            "weight": null,
+            "height": null,
+            "homeTower": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8589-08db14828f2a"
+            },
+            "livingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8aae-08db14828f2a"
+            },
+            "expectedWorkingAddress": {
+                "provinceId": "01000000-ac12-0242-daf3-08db10c3ab39",
+                "provinceName": "Hải Phòng",
+                "districtId": "01000000-ac12-0242-4391-08db10c3ab3a",
+                "districtName": "Thuỷ Nguyên",
+                "villageId": null,
+                "villageName": null,
+                "id": "01000000-ac12-0242-8d04-08db14828f2a"
+            },
+            "experience": "Không làm sao có",
+            "education": "Đại học đường đời",
+            "expectedSalaryFrom": null,
+            "expectedSalaryTo": null,
+            "maritalStatus": null,
+            "yearOfExperience": 1,
+            "sex": 1,
+            "applicantSkills": [],
+            "jobCategories": [
+                {
+                    "name": null,
+                    "id": "23900294-5af3-4c96-b0da-b5887e011363"
+                }
+            ],
+            "academicLevel": null,
+            "rawApplicantSkills": null,
+            "createdTime": "2023-02-22T03:11:58.320734Z",
+            "recruitmentId": null,
+            "recruitmentName": "Tin tuyển dụng Parttime",
+            "organizationId": "01000000-ac12-0242-b3cd-08db10c50f70",
+            "organizationName": "Ban công nghệ tập đoàn FPT",
+            "creatorId": null,
+            "creatorName": "Thủy Nguyễn Thị Thanh Thủy",
+            "ownerId": null,
+            "ownerName": "Thủy Nguyễn Thị Thanh Thủy",
+            "isAvailable": true,
+            "id": "01000000-ac12-0242-6ffb-08db14828f21"
+        }
+    ],
+    "totalRecord": 4,
+    "currentPageIndex": 1,
+    "totalPage": 1
+}
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   const [columns, setColumns] = useState([
     {
@@ -43,14 +337,21 @@ export const ApplicantItem = () => {
       fixed: "left",
       width: "200px",
       render: (text, record) => (
-        <NextLink href={`applicant/${record.id}`} passHref>
+        // <Link href={`applicant/${record.id} && `} passHref>
+        //   <TextMaxLine
+        //     line={1}
+        //     sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+        //   >
+        //     {text}
+        //   </TextMaxLine>
+        // </Link>
+        <Link passHref href={{ pathname: `applicant/${record.applicantId}`, query: { or: `${record.organizationId}`} }}>
           <TextMaxLine
-            line={1}
-            sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
-          >
-            {text}
-          </TextMaxLine>
-        </NextLink>
+        line={1}
+        sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+      >
+        {text}
+      </TextMaxLine></Link>
       ),
     },
     {
@@ -66,7 +367,7 @@ export const ApplicantItem = () => {
       width: "120px",
     },
     { dataIndex: "email", title: "Email", width: "240px" },
-    { dataIndex: "fullName", title: "Tin tuyển dụng", width: "200px" },
+    { dataIndex: "recruitmentName", title: "Tin tuyển dụng", width: "200px" },
     { dataIndex: "fullName", title: "Bước tuyển dụng", width: "200px" },
     { dataIndex: "fullName", title: "Ngày ứng tuyển", width: "200px" },
     { dataIndex: "fullName", title: "Đơn vị", width: "200px" },
@@ -256,7 +557,7 @@ export const ApplicantItem = () => {
   const searchValue = useDebounce(watch("search"), 1000);
 
   useEffect(() => {
-    getListApplicants({ SearchKey: searchValue });
+    // getListApplicants({ SearchKey: searchValue });
   }, [searchValue]);
 
   // open filter form
@@ -312,7 +613,7 @@ export const ApplicantItem = () => {
             rowKey={rowKey}
             scroll={{ x: 3000, y: tableHeight }}
             size="large"
-            loading={isLoading}
+            // loading={isLoading}
             //to set pageSize == height tableHeight/40
             pagination={{
               defaultPageSize: Math.floor(tableHeight / 40),
