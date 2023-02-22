@@ -20,7 +20,6 @@ export const authSlice = apiWithTag.injectEndpoints({
         url: API_USER_INFO,
         method: "GET",
       }),
-      providesTags: ["CurrentUser"]
     }),
     forgotPassword: builder.mutation({
       query: (data) => ({
@@ -28,7 +27,6 @@ export const authSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data,
       }),
-      providesTags: ["ForgotPassword"]
     }),
     // REGISTER ORGANIZATION
     register: builder.mutation({
@@ -37,7 +35,6 @@ export const authSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data,
       }),
-      providesTags: ["Register"],
     }),
     // CONFIRM EMAIL
     confirmEmail: builder.query({
@@ -46,7 +43,6 @@ export const authSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params: { Email: data.email, Token: data.token },
       }),
-      providesTags: ["ConfirmEmail"],
     }),
     // CHANGE PASSWORD WITH TOKEN
     changePasswordWithToken: builder.mutation({
@@ -55,7 +51,6 @@ export const authSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data,
       }),
-      providesTags: ["ChangePasswordWithToken"],
     }),
   }),
   overrideExisting: true,

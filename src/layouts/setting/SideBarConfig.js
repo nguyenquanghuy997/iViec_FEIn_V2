@@ -36,28 +36,41 @@ export const sidebarConfig = [
     items: [
       {
         title: "Quy trình tuyển dụng",
-        path: "/applicant",
+        path: "/settings/recruitment-process",
         roles: ROLES[PAGES.Applicant],
       },
       {
         title: "Quy trình phê duyệt",
-        path: "/jobs",
+        path: "/settings/approval-process",
         roles: ROLES[PAGES.Applicant],
       },
       {
         title: "Vị trí công việc",
-        path: "/interview",
+        path: "/settings/job-position",
         roles: ROLES[PAGES.Applicant],
       },
       {
         title: "Kết nối",
-        path: "/board",
+        path: "/settings/connect",
         roles: ROLES[PAGES.Applicant],
       },
       {
-        title: "Đề thi tuyển",
-        path: "/stores",
+        title: "Quản lý đề thi",
+        path: "/settings/exam",
         roles: ROLES[PAGES.Applicant],
+        children: [
+          {
+            title: "Kho đề thi doanh nghiệp",
+            path: "/settings/exam/organization",
+            roles: ROLES[PAGES.Applicant],
+          },
+          {
+            title: "Kho đề thi iVIEC",
+            path: "/settings/exam/iviec",
+            icon: ICONS.notification,
+            roles: ROLES[PAGES.Applicant],
+          },
+        ],
       },
     ],
   },

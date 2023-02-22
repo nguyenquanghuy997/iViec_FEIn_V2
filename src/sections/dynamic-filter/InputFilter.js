@@ -1,59 +1,48 @@
 import React from "react";
 import {TextField} from "@mui/material";
 import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
+import {styled} from "@mui/material/styles";
 
-const sxDefault = {
-    input: {
-        "&:-webkit-autofill": {
-            WebkitBoxShadow: "0 0 0 30px white inset !important",
-        },
-        "&:-webkit-autofill:hover": {
-            WebkitBoxShadow: "0 0 0 30px white inset !important",
-        },
-        "&:-webkit-autofill:focus": {
-            WebkitBoxShadow: "0 0 0 30px white inset !important",
-        },
-        "&:-webkit-autofill:active": {
-            WebkitBoxShadow: "0 0 0 30px white inset !important",
-        },
-    },
-    ".MuiInputBase-root": {
+const TextFieldStyle = styled(TextField)(({theme}) => ({
+    "&.input-filter .MuiInputBase-root": {
         height: "44px",
         fontSize: STYLE_CONSTANT.FONT_SM,
-        borderRadius: 0.75,
+        borderRadius: theme.spacing(0.75),
         width: STYLE_CONSTANT.WIDTH_FULL,
+        '&.Mui-focused': {
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
+            borderColor: '#D0D4DB',
+        },
     },
-    ".MuiInputBase-root.Mui-error": {
+    "&.MuiInput-root.Mui-error": {
+        border: '1px solid red',
         height: "44px",
-        fontSize: STYLE_CONSTANT.FONT_SM,
-        borderRadius: 0.75,
-        width: STYLE_CONSTANT.WIDTH_FULL,
     },
-    ".MuiInputBase-input": {
-        height: "44px",
-        py: "0 !important",
+    "&.input-filter .MuiInputBase-root .MuiOutlinedInput-notchedOutline": {
+        border: '1px solid #D0D4DB',
     },
-    ".MuiFormHelperText-root": {
-        marginTop: 1,
+    "&.input-filter .MuiInputBase-root.Mui-error .MuiOutlinedInput-notchedOutline": {
+        border: '1px solid red',
+    },
+    "& .MuiFormHelperText-root": {
+        marginTop: theme.spacing(1),
         marginLeft: 0,
         fontSize: STYLE_CONSTANT.FONT_XS,
         color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
     },
-};
+}));
 
 const InputFilter = ({name, placeholder, type, ...props}) => {
-    const {label, hasLabel = true, sx} = props;
     return (
-        <TextField
+        <TextFieldStyle
             fullWidth
             id={name}
             name={name}
             {...props}
             type={type}
-            required={false}
-            label={hasLabel ? null : label}
-            sx={sx ? {...sxDefault, ...sx} : sxDefault}
             placeholder={placeholder}
+            className='input-filter'
         />
     );
 };
