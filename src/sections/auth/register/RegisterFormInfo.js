@@ -24,7 +24,7 @@ import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import {PaperAutocompleteStyle, useStyles} from "@/sections/auth/style";
+import {PaperAutocompleteStyle} from "@/sections/auth/style";
 
 const InputStyle = {width: 440, minHeight: 44};
 
@@ -33,7 +33,7 @@ const CustomPaper = (props) => {
 };
 
 function RegisterForm() {
-    const classes = useStyles();
+    // const classes = useStyles();
     const defaultValues = {
         userName: "",
         password: "",

@@ -1,12 +1,7 @@
 import React, {useState} from 'react'
 import {BoxItemStyle, BoxWrapperStyle} from "@/sections/connect/style";
 import {CompanyLogo} from "@/sections/connect/ConnectIcon";
-import {Divider, Stack, Switch, Box} from "@mui/material";
-import ConnectCard from "@/sections/connect/ConnectCard";
-
-const accounts = [
-
-]
+import {Box, Stack, Switch} from "@mui/material";
 
 const ConnectItem = ({borderColor, isChecked = false, children}) => {
 
