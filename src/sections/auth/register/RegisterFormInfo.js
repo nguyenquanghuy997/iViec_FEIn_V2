@@ -79,6 +79,7 @@ function RegisterForm() {
   const watchProvinceId = watch("organizationProvinceId");
 
   const onSubmit = async (data) => {
+    debugger
     try {
       const body = {
         userName: data.userName, // organization username (Email đăng nhập)
