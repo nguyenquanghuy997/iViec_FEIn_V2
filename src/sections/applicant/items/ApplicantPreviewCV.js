@@ -7,8 +7,8 @@ import { Grid, Box } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import React, { useState } from "react";
 
-export const ApplicantPreviewCV = () => {
-  const [value, setValue] = useState("1");
+export const ApplicantPreviewCV = ({data}) => {
+  const [value, setValue] = useState("2");
   const handleChange = (event, newValue) => {
     console.log(event)
     setValue(newValue);
@@ -22,11 +22,15 @@ export const ApplicantPreviewCV = () => {
               onChange={handleChange}
               aria-label="lab API tabs example"
               sx={{
+                "& .MuiTab-root":{
+                  minHeight: '36px',
+                  textTransform: 'unset',
+                  padding: "8px 12px",
+                },
                 "& .Mui-selected": {
                   color: "white !important",
                   backgroundColor: "#455570",
                   borderRadius: "6px",
-                  padding: "0 12px",
                 },
                 "& .MuiTabs-indicator": {
                   display: "none",
@@ -38,7 +42,7 @@ export const ApplicantPreviewCV = () => {
                 value="1"
                 sx={{
                   "&:not(:last-of-type)": {
-                    marginRight: "28px",
+                    marginRight: "16px",
                   },
                   '& button':{
                     fontSize:'14px'
@@ -50,7 +54,7 @@ export const ApplicantPreviewCV = () => {
           </Box>
           <TabPanel value="1"><ApplicantCV /></TabPanel>
           <TabPanel value="2">
-            <ApplicantInfo />
+            <ApplicantInfo data={data} />
           </TabPanel>
         </TabContext>
       </Box>

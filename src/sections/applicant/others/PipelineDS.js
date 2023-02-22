@@ -12,8 +12,8 @@ import * as React from "react";
 const ColorlibConnector = styled(StepConnector)(({}) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
-    left: "calc(-50% + 25px)",
-    right: "calc(50% + 25px)",
+    left: "calc(-50% + 30px)",
+    right: "calc(50% + 30px)",
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
@@ -80,7 +80,6 @@ export const PipelineApplicant = (props) => {
   const activeStep = steps?.recruitmentPipelineStates.findIndex(
     (i) => i.id == steps.currentApplicantPipelineState
   );
-  console.log(steps)
   const renderName = (item) => {
     switch (item) {
       case 0:
@@ -90,19 +89,21 @@ export const PipelineApplicant = (props) => {
       case 2:
         return "Phỏng Vấn";
       case 3:
-        debugger
-        case (steps.pipelineStateResultType == 1):
-        return "Kết quả - Đạt";
-        case (steps.pipelineStateResultType == 2):
-        return "Kết quả - Cân nhắc";
-        case (steps.pipelineStateResultType == 3):
-        return "Kết quả - Loại";
-        case (steps.pipelineStateResultType == null):
-        return "Kết quả";
+        switch (steps.pipelineStateResultType) {
+          case 0:
+            return "Kết quả - Đạt";
+          case 1:
+            return "Kết quả - Cân nhắc";
+          case 2:
+            return "Kết quả - Loại";
+          default:
+            return "Kết quả";
+        }
       case 4:
         return "Mời nhận việc";
     }
   };
+
   return (
     <Stack sx={{ width: "100%" }}>
       <Stepper
@@ -115,7 +116,7 @@ export const PipelineApplicant = (props) => {
             border: "1.5px solid #8A94A5",
             width: 31,
             height: 31,
-            marginTop: "6px",
+            marginTop: "7px",
           },
           ".MuiSvgIcon-root:not(.Mui-completed)": {
             color: "#F3F4F6",
@@ -125,9 +126,11 @@ export const PipelineApplicant = (props) => {
             fontWeight: 600,
             fontSize: "12px",
           },
-          ".MuiStepIcon-text": {
-            fill: "#8A94A5",
-            fontWeight: 600,
+          ".MuiStepLabel-label": {
+            color: "#8A94A5",
+          },
+          ".MuiStepLabel-label.Mui-completed": {
+            color: "#455570",
           },
           ".Mui-active .MuiStepIcon-text": {
             fill: "white",
@@ -151,17 +154,27 @@ export const PipelineApplicant = (props) => {
                 sx={{
                   "& .MuiSvgIcon-root.Mui-active": {
                     color:
-                    steps.pipelineStateResultType === 1
+                      steps.pipelineStateResultType === 0
                         ? "#388E3C !important"
-                        : steps.pipelineStateResultType === 2
+                        : steps.pipelineStateResultType === 1
                         ? "#FF9800 !important"
-                        : steps.pipelineStateResultType === 3
+                        : steps.pipelineStateResultType === 2
                         ? "#D32F2F !important"
                         : "#1976D2 !important",
                     borderRadius: "50%",
                     width: 32,
                     height: 32,
                     marginTop: "6px",
+                  },
+                  ".MuiStepLabel-label.Mui-active": {
+                    color:
+                      steps.pipelineStateResultType === 0
+                        ? "#2E7D32"
+                        : steps.pipelineStateResultType === 1
+                        ? "#FF9800"
+                        : steps.pipelineStateResultType === 2
+                        ? "#D32F2F"
+                        : "#1976D2",
                   },
                 }}
               >

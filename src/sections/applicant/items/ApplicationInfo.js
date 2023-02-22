@@ -2,17 +2,83 @@ import { Grid, Divider, Chip } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 
-export const ApplicantInfo = () => {
-  const renderText = (title, value, secondary, label) => {
+export const ApplicantInfo = ({ data }) => {
+  console.log('data',data)
+  const datas = {
+    applicationUserId: null,
+    jobSourceId: "e5149f0b-640c-4df2-abd4-57554ab896ec",
+    fullName: "Nguyễn Ngọc Thắng",
+    slug: "nguyen-ngoc-thang-",
+    portraitImage: "string",
+    dateOfBirth: "1997-02-19T04:13:32.609Z",
+    email: "nt@gmail.com",
+    phoneNumber: "0386193342",
+    identityNumber: null,
+    weight: null,
+    height: null,
+    homeTower: {
+      provinceId: "01000000-ac12-0242-daf3-08db10c3ab39",
+      provinceName: "Hải Phòng",
+      districtId: "01000000-ac12-0242-4391-08db10c3ab3a",
+      districtName: "Thuỷ Nguyên",
+      villageId: null,
+      villageName: null,
+      id: "01000000-ac12-0242-8589-08db14828f2a",
+    },
+    livingAddress: {
+      provinceId: "01000000-ac12-0242-daf3-08db10c3ab39",
+      provinceName: "Hải Phòng",
+      districtId: "01000000-ac12-0242-4391-08db10c3ab3a",
+      districtName: "Thuỷ Nguyên",
+      villageId: null,
+      villageName: null,
+      id: "01000000-ac12-0242-8aae-08db14828f2a",
+    },
+    expectedWorkingAddress: {
+      provinceId: "01000000-ac12-0242-daf3-08db10c3ab39",
+      provinceName: "Hải Phòng",
+      districtId: "01000000-ac12-0242-4391-08db10c3ab3a",
+      districtName: "Thuỷ Nguyên",
+      villageId: null,
+      villageName: null,
+      id: "01000000-ac12-0242-8d04-08db14828f2a",
+    },
+    curriculumVitae: null,
+    experience: "Không làm sao có",
+    education: "Đại học đường đời",
+    expectedSalaryFrom: null,
+    expectedSalaryTo: null,
+    maritalStatus: null,
+    yearOfExperience: 1,
+    sex: 1,
+    applicantSkills: [],
+    jobCategories: [
+      {
+        name: 'thuybon',
+        id: "23900294-5af3-4c96-b0da-b5887e011363",
+      },
+      {
+        name: 'thuybon bon',
+        id: "23900294-5af3-4c96-b0da-b5887e011363",
+      },
+    ],
+    academicLevel: null,
+    rawApplicantSkills: null,
+    createdTime: "2023-02-22T03:11:58.320734Z",
+    isAvailable: true,
+    id: "01000000-ac12-0242-0a9a-08db14828f27",
+  };
+  const renderText = (title, value, label) => {
     return (
       <div>
         <span
           style={{
             display: "inline-flex",
             fontSize: 13,
-            margin: "12px 0 12px 0",
+            margin: "12px 0",
             color: "#5C6A82",
             width: "160px",
+            fontWeight: 600,
           }}
         >
           {title}
@@ -21,18 +87,17 @@ export const ApplicantInfo = () => {
         <span
           style={{
             display: "inline-flex",
-            fontSize: 13,
-            fontWeight: 500,
-            color: "#172B4D",
           }}
         >
           <ListItemText
             primary={value}
-            secondary={secondary}
             sx={{
               mb: 1,
               "& .MuiTypography-root": {
                 fontSize: "13px",
+                fontSize: 13,
+                fontWeight: 800,
+                color: "#172B4D",
               },
             }}
           />
@@ -58,7 +123,7 @@ export const ApplicantInfo = () => {
           "&:before": {
             width: 0,
           },
-          margin: "12px 0 12px 0",
+          margin: "12px 0",
           "&:after": {},
           fontWeight: "600",
           fontSize: "14px",
@@ -75,59 +140,78 @@ export const ApplicantInfo = () => {
   };
 
   return (
-    <Grid item sx={{ padding: "12px 0 0 0" }}>
+    <Grid item>
       <DividerInfo text="THÔNG TIN CƠ BẢN" />
-      {renderText("Họ và tên:", "Đinh Tiến Thành")}
-      {renderText("Ngành nghề:", "Công nghệ thông tin")}
-      {renderText("Nguồn:", "-")}
-      {renderText("Ngày sinh:", "17/02/1996")}
-      {renderText("Giới tính", "Đinh Tiến Thành")}
-      {renderText("Tình trạng hôn nhân:", "Đinh Tiến Thành")}
-      {renderText("Chiều cao:", "Đinh Tiến Thành")}
-      {renderText("Cân nặng:", "Đinh Tiến Thành")}
-      {renderText(
-        "Nơi ở hiện tại:",
-        "Số 10 Phạm Văn Bạch, Dịch Vọng, Cầu Giấy, Hà Nội"
-      )}
-      {renderText("Quê quán:", "Quất Lâm, Đồ Sơn, Hải Phòng")}
-      {renderText("Số CMND/CCCD:", "Đinh Tiến Thành")}
-      <DividerInfo text="THÔNG TIN LIÊN HỆ" />
-      {renderText("Số điện thoại:", "0123 456 789")}
-      {renderText("Email:", "thanhdt58@fpt.com.vn")}
-      <DividerInfo text="KINH NGHIỆM LÀM VIỆC" />
-      {renderText("Số năm kinh nghiệm:", "6 năm")}
-      {renderText("Kỹ năng:", "ReactJS")}
+      {renderText("Họ và tên:", datas?.fullName)}
+      <div>
+        <span
+          style={{
+            display: "inline-flex",
+            fontSize: 13,
+            margin: "12px 0",
+            color: "#5C6A82",
+            width: "160px",
+            fontWeight: 600,
+          }}
+        >
+          {"Ngành nghề"}
+        </span>
 
-      {renderText(
-        "2019-2020:",
-        "Công ty FPT Infomation System",
-        "Senior UX/UI Designer"
-      )}
+        <span
+          style={{
+            display: "inline-flex",
+          }}
+        >
+          {datas?.jobCategories.map((p) => {
+            <ListItemText
+              primary={p?.name}
+              sx={{
+                mb: 1,
+                "& .MuiTypography-root": {
+                  fontSize: "13px",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  color: "#172B4D",
+                },
+              }}
+            />;
+          })}
+        </span>
+      </div>
+      {renderText("Ngành nghề:")}
+      {renderText("Nguồn:", datas?.fullName)}
+      {renderText("Ngày sinh:", datas?.fullName)}
+      {renderText("Giới tính", datas?.fullName)}
+      {renderText("Tình trạng hôn nhân:", datas?.fullName)}
+      {renderText("Chiều cao:", datas?.fullName)}
+      {renderText("Cân nặng:", datas?.fullName)}
+      {renderText("Nơi ở hiện tại:", datas?.fullName)}
+      {renderText("Quê quán:", datas?.fullName)}
+      {renderText("Số CMND/CCCD:", datas?.fullName)}
+      <DividerInfo text="THÔNG TIN LIÊN HỆ" />
+      {renderText("Số điện thoại:", datas?.fullName)}
+      {renderText("Email:", datas?.fullName)}
+      <DividerInfo text="KINH NGHIỆM LÀM VIỆC" />
+      {renderText("Số năm kinh nghiệm:", datas?.fullName)}
+      {renderText("Kỹ năng:", datas?.fullName)}
+
+      {renderText("2019-2020:", datas?.fullName, datas?.fullName)}
 
       {renderText(
         "2020-2023:",
-        "Công ty FPT Telecom",
-        "Senior UX/UI Designer",
-        "Đang làm việc"
+        datas?.fullName,
       )}
 
       <DividerInfo text="HỌC VẤN" />
-      {renderText(
-        "2014 - 2019:",
-        "Đại học Bách Khoa Hà Nội",
-        "Toán Tin ứng dụng . Kỹ sư"
-      )}
+      {renderText("2014 - 2019:", datas?.fullName, datas?.fullName)}
       {renderText(
         "2019 - 2023:",
-        "Trung tâm công nghệ thông tin FPT",
-        "Tin ứng dụng . Thực tập sinh",
-        "Đang học"
+        datas?.fullName,
       )}
 
       <DividerInfo text="KỲ VỌNG Ở CÔNG VIỆC MỚI" />
       {renderText("Mức lương mong muốn:", "30.000.000 - 40.000.000 VNĐ")}
       {renderText("Nơi làm mong muốn:", "Cầu Giấy")}
-
     </Grid>
   );
 };

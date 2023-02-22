@@ -400,7 +400,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV />
+                    <ApplicantPreviewCV data={data} />
                   </Grid>
                   <Grid item xs={5} md={5}>
                     <ApplicantPreviewLog />

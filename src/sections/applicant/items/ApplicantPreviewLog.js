@@ -21,11 +21,15 @@ export const ApplicantPreviewLog = () => {
               onChange={handleChange}
               aria-label="lab API tabs example"
               sx={{
+                "& .MuiTab-root":{
+                  minHeight: '36px',
+                  textTransform: 'unset',
+                  padding: "8px 12px",
+                },
                 "& .Mui-selected": {
                   color: "white !important",
                   backgroundColor: "#455570",
                   borderRadius: "6px",
-                  padding: "0 12px",
                 },
                 "& .MuiTabs-indicator": {
                   display: "none",
@@ -37,12 +41,12 @@ export const ApplicantPreviewLog = () => {
                 value="1"
                 sx={{
                   "&:not(:last-of-type)": {
-                    marginRight: "28px",
+                    marginRight: "16px",
                   },
                 }}
               />
               <Tab label="Thi tuyển và phỏng vấn" value="2" />
-              <Tab label="Đánh giá và offer" value="3" />
+              <Tab label="Đánh giá và Offer" value="3" />
             </TabList>
           </Box>
           <TabPanel value="1">
