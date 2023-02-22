@@ -1,40 +1,61 @@
-import SvgIcon from "@/components/SvgIcon";
+import ImageUpload from "../ImageUpload";
+import Image from "@/components/Image";
 import {
   FormProvider,
   RHFBasicSelect,
-  RHFTextField,
 } from "@/components/hook-form";
 import {
-  useGetBranchByIdMutation,
-  useGetBranchByUserQuery,
+  // useGetBranchByIdMutation,
+  // useGetBranchByUserQuery,
   useGetJobCategoriesQuery,
-  useLazyGetProvinceQuery,
-  useUpdateBranchMutation,
+  // useLazyGetProvinceQuery,
+  // useUpdateBranchMutation,
 } from "@/sections/companyinfor/companyInforSlice";
-import { formatRemoteUrl, LIST_BRANCH_SIZE } from "@/utils/formatString";
+import { LIST_BRANCH_SIZE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { Alert } from "@mui/material";
-import dynamic from "next/dynamic";
-import * as qs from "qs";
-import { useEffect, useRef, useState } from "react";
+import { Alert, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Divider,
+} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import InputLabel from "@mui/material/InputLabel";
+import { Input } from "antd";
+import { React } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-const Editor = dynamic(() => import("./editor"), {
-  ssr: false,
-});
+const FormCompanyInfor = ({ defaultValues, onFinish }) => {
+  const { TextArea } = Input;
+  const { data: { items: JobCategoryList = [] } = {} } =
+    useGetJobCategoriesQuery();
 
-const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
-  const refAvatar = useRef(null);
-  const refBackground = useRef(null);
+  // const [introduce, setIntroduce] = useState(null);
+  // const [environment, setEnvironment] = useState(null);
 
-  // state
-  const [avatar, setAvatar] = useState(null);
-  const [background, setBackground] = useState(null);
-  const [introduce, setIntroduce] = useState(null);
-  const [environment, setEnvironment] = useState(null);
-
+  const itemData = [
+    {
+      img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+      title: "Breakfast",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+      title: "Burger",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+      title: "Camera",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+      title: "Coffee",
+    },
+  ];
   // form
   const ProfileSchema = Yup.object().shape({
     name: Yup.string(),
@@ -49,112 +70,56 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
     introduce: Yup.string().required("Chưa nhập Giới thiệu"),
     environment: Yup.string().nullable(),
   });
+
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(ProfileSchema),
   });
+
   const {
-    setValue,
-    setError,
+    // setValue,
+    // setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
 
-  // api
-  const { data: { DataList: [{ ID } = {}] = [] } = {} } =
-    useGetBranchByUserQuery();
-
-  const [fetchData, { data: { Data } = {} }] = useGetBranchByIdMutation();
-  const [updateData] = useUpdateBranchMutation();
-
-  // const [fetchProvice, { data: { DataList: ProviceList = [] } = {} }] =
-  //   useGetProviceMutation();
-
-  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
-    useLazyGetProvinceQuery();
-
-  const { data: { items: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
-  console.log("opbject", { ProviceList, JobCategoryList });
-  const onSelectAvatar = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setAvatar(URL.createObjectURL(file));
+  const EmptyImage = () => {
+    const obj = [];
+    let i = 0;
+    while (i < 6 - itemData.length) {
+      obj.push(<ImageUpload size={80} />);
+      i++;
     }
+    return <>{obj}</>;
   };
 
-  const onSelectBackground = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setBackground(URL.createObjectURL(file));
-    }
+  const InputRow = ({ label, name }) => {
+    return (
+      <Grid item xs={6}>
+        <FormControl variant="standard">
+          <InputLabel
+            shrink
+            htmlFor="bootstrap-input"
+            sx={{
+              fontSize: 18,
+              fontWeight: 500,
+              color: "#5C6A82",
+              position: "relative",
+            }}
+          >
+            {label}
+          </InputLabel>
+          <TextField name={name} margin="none" required={true} />
+        </FormControl>
+      </Grid>
+    );
   };
 
-  const onSubmit = async (d) => {
-    try {
-      const res = await updateData(
-        qs.stringify({
-          ID,
-          BranchName: Data.BranchName,
-          Logo: refAvatar.current,
-          CoverPhoto: refBackground.current,
-          Description: d.introduce,
-          DescriptionEN: d.environment,
-          ProvinceId: d.city,
-          BranchAddress: d.address,
-          BranchEmail: d.email,
-          BranchPhone: d.phone,
-          JobCategoryId: d.type,
-          BranchSize: d.size,
-        })
-      ).unwrap();
-
-      if (!res.Succeeded) throw res;
-
-      enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!");
-      onFinish();
-    } catch (err) {
-      const message =
-        err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
-      setError("afterSubmit", { ...err, message });
-    }
-  };
-
-  useEffect(() => {
-    fetchProvice().unwrap();
-  }, []);
-
-  useEffect(() => {
-    if (!ID) return;
-    fetchData({ ID }).unwrap();
-  }, [ID]);
-
-  useEffect(() => {
-    if (!Data) return;
-
-    // ref set
-    refAvatar.current = Data.Logo;
-    refBackground.current = Data.CoverPhoto;
-
-    // state set
-    setAvatar(formatRemoteUrl(Data.Logo));
-    setBackground(formatRemoteUrl(Data.CoverPhoto));
-    setIntroduce(Data.Description);
-    setEnvironment(Data.DescriptionEN);
-
-    // method set
-    setValue("name", Data.BranchName);
-    setValue("city", Data.ProvinceId);
-    setValue("address", Data.BranchAddress);
-    setValue("email", Data.BranchEmail);
-    setValue("phone", Data.BranchPhone);
-    setValue("type", Data.JobCategoryId);
-    setValue("size", Data.BranchSize);
-    setValue("introduce", Data.Description);
-    setValue("environment", Data.DescriptionEN);
-  }, [JSON.stringify(Data)]);
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider
+      methods={methods}
+      // onSubmit={handleSubmit(onSubmit)}
+    >
       {!!errors.afterSubmit && (
         <Alert severity="error">{errors.afterSubmit?.message}</Alert>
       )}
@@ -162,298 +127,269 @@ const FormCompanyInfor = ({ defaultValues, onFinish, enqueueSnackbar }) => {
       <div
         style={{
           flex: 1,
-          padding: 24,
+          paddingLeft: "24px",
+          paddingRight: "24px",
           borderRadius: 8,
           paddingBottom: 30,
           overflow: "hidden",
           background: "#fff",
-          border: "1px solid #EBECF4",
         }}
       >
-        {/* img des */}
-        <span
-          style={{
-            color: "#393B3E",
-            display: "block",
-            fontStyle: "italic",
-            marginBottom: 24,
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            mb: "28px",
+            mt: 2,
           }}
         >
-          {
-            "Ảnh đại diện và Ảnh cover sẽ được hiển thị tại trang tuyển dụng để tăng sự uy tín cho công ty."
-          }
-        </span>
-
-        {/* img */}
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div
-            style={{
-              width: 120,
-              height: 120,
-              overflow: "hidden",
+          <Image
+            disabledEffect
+            visibleByDefault
+            src={
+              // formatRemoteUrl(Data.Logo || "/public/img/logoDefault.png")
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT99Ztd5x_8FTDUhAX0W1DYWXRUf4bvbFF61k7fTmo8awUu8stJIi9L6BzB13EHoxEt0bU&usqp=CAU"
+            }
+            sx={{
+              width: 60,
+              height: 60,
               borderRadius: 120,
-              display: "flex",
-              border: "1px dashed #C9D9E0",
-              position: "relative",
+              border: "3px solid #fff",
+            }}
+          />
+          <Box
+            sx={{
+              pl: 2,
+              width: "90%",
             }}
           >
-            {avatar ? (
-              <img src={avatar} style={{ flex: 1, objectFit: "cover" }} />
-            ) : (
-              <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <SvgIcon>
-                  {`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.6 9.60001V12.3496C13.6 12.5138 13.5677 12.6764 13.5048 12.8281C13.442 12.9798 13.3499 13.1177 13.2338 13.2338C13.1177 13.3499 12.9798 13.442 12.8281 13.5048C12.6764 13.5677 12.5138 13.6 12.3496 13.6H3.64962C3.31814 13.5998 3.0003 13.468 2.76598 13.2335C2.53165 12.999 2.40002 12.6811 2.40002 12.3496V9.60001" stroke="#929292" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/><path d="M8 9.6V4" stroke="#929292" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/><path d="M4.77515 4.79439L7.99995 2.3752L11.1871 4.7752" stroke="#929292" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
-                </SvgIcon>
-
-                <span style={{ marginTop: 4, color: "#929292" }}>
-                  {"Ảnh đại diện"}
-                </span>
-              </div>
-            )}
-            <div
-              style={{
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                display: "flex",
-                position: "absolute",
+            <Typography
+              sx={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "#393B3E",
+                mr: 1,
               }}
             >
-              <label for="avatar" style={{ flex: 1, cursor: "pointer" }} />
-              <input
-                type="file"
-                id="avatar"
-                accept="image/*"
-                style={{ display: "none", userSelect: "none" }}
-                onChange={onSelectAvatar}
-              />
-            </div>
-          </div>
+              {/* {Data.BranchName} */}
+              DỊCH VỤ VẬN CHUYỂN HÀNG ĐẦU VIỆT NAM J&T
+            </Typography>
+            <Typography sx={{ color: "#455570", fontSize: 12 }}>
+              Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email
+              Support@iviec.com.vn
+            </Typography>
+          </Box>
+        </Box>
 
-          <div
-            style={{
-              flex: 1,
-              marginLeft: 20,
-              height: 220,
-              overflow: "hidden",
-              borderRadius: 8,
-              display: "flex",
-              border: "1px dashed #C9D9E0",
-              position: "relative",
-            }}
-          >
-            {background ? (
-              <img src={background} style={{ flex: 1, objectFit: "cover" }} />
-            ) : (
-              <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <SvgIcon>
-                  {`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.6 9.60001V12.3496C13.6 12.5138 13.5677 12.6764 13.5048 12.8281C13.442 12.9798 13.3499 13.1177 13.2338 13.2338C13.1177 13.3499 12.9798 13.442 12.8281 13.5048C12.6764 13.5677 12.5138 13.6 12.3496 13.6H3.64962C3.31814 13.5998 3.0003 13.468 2.76598 13.2335C2.53165 12.999 2.40002 12.6811 2.40002 12.3496V9.60001" stroke="#929292" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/><path d="M8 9.6V4" stroke="#929292" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/><path d="M4.77515 4.79439L7.99995 2.3752L11.1871 4.7752" stroke="#929292" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
-                </SvgIcon>
-
-                <span style={{ marginTop: 4, color: "#929292" }}>
-                  {"Ảnh cover"}
-                </span>
-              </div>
-            )}
-            <div
-              style={{
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                display: "flex",
-                position: "absolute",
-              }}
-            >
-              <label
-                for="background"
-                style={{ flex: 1, cursor: "pointer", userSelect: "none" }}
-              />
-              <input
-                type="file"
-                id="background"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={onSelectBackground}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            height: 1,
-            marginTop: 24,
-            marginLeft: -24,
-            marginRight: -24,
-            background: "#EBECF4",
+        <Box
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { mb: 2, width: "27.2ch" },
           }}
-        />
+          noValidate
+          autoComplete="off"
+        >
+          <form onSubmit={handleSubmit} noValidate>
+            <Grid container alignItems="flex-start" spacing={3}>
+              <InputRow label="Số điện thoại" name="phone" />
+              <InputRow label="Email" name="email" />
+            </Grid>
+          </form>
+        </Box>
 
-        <RHFTextField
-          disabled
-          name={"name"}
-          label={"Tên công ty"}
-          style={{ marginTop: 28 }}
-        />
-
-        <div style={{ display: "flex", flexDirection: "row", marginTop: 32 }}>
-          <RHFBasicSelect
-            name={"city"}
-            label={"Địa chỉ công ty"}
-            placeholder={"Chọn Tỉnh/Thành"}
-            style={{ marginRight: 10 }}
-            options={ProviceList.map((i) => ({
-              value: i.id,
-              label: i.name,
-            }))}
-          />
-
-          <RHFTextField
-            name={"address"}
-            placeholder={"Nhập địa chỉ chi tiết"}
-            style={{ marginLeft: 10 }}
-          />
-        </div>
-        <div style={{ display: "flex", flexDirection: "row", marginTop: 32 }}>
-          <RHFTextField
-            name={"email"}
-            label={"Email"}
-            placeholder={"Nhập email công ty"}
-            style={{ marginRight: 10 }}
-          />
-
-          <RHFTextField
-            name={"phone"}
-            label={"Số điện thoại"}
-            placeholder={"Nhập số điện thoại công ty"}
-            style={{ marginLeft: 10 }}
-          />
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "row", marginTop: 32 }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
           <RHFBasicSelect
             name={"type"}
             label={"Ngành nghề"}
             placeholder={"Chọn ngành nghề"}
-            style={{ marginRight: 
-              20 }}
             options={JobCategoryList.map((i) => ({
               value: i.id,
               label: i.name,
             }))}
-       
+            sx={{ width: "27.2ch", mr: 3 }}
           />
-
           <RHFBasicSelect
             name={"size"}
             label={"Quy mô nhân sự"}
             placeholder={"Chọn quy mô nhân sự"}
-            style={{ marginRight: 
-              20 }}
+            style={{ marginRight: 20 }}
             options={LIST_BRANCH_SIZE.map((i) => ({
               value: i.id,
               label: i.name,
             }))}
-          />
-        </div>
-
-        <div style={{ marginTop: 32 }}>
-          <span
-            style={{
-              color: "#393B3E",
-              display: "block",
-              marginBottom: 8,
-              fontWeight: "600",
-            }}
-          >
-            {"Giới thiệu công ty"}
-          </span>
-
-          <Editor
-            data={introduce}
-            onChange={(_, e) => {
-              const text = e.getData();
-              setValue("introduce", text);
-            }}
-          />
-
-          <RHFTextField
-            name={"introduce"}
-            variant={"standard"}
-            inputProps={{ style: { display: "none" } }}
-          />
-        </div>
-
-        <div style={{ marginTop: 32 }}>
-          <span
-            style={{
-              color: "#393B3E",
-              display: "block",
-              marginBottom: 8,
-              fontWeight: "600",
-            }}
-          >
-            {"Môi trường làm việc"}
-          </span>
-
-          <Editor
-            data={environment}
-            onChange={(_, e) => {
-              const text = e.getData();
-              setValue("environment", text);
-            }}
-          />
-
-          <RHFTextField
-            name={"environment"}
-            variant={"standard"}
-            inputProps={{ style: { display: "none" } }}
+            sx={{ width: "27.2ch" }}
           />
         </div>
 
         <div
           style={{
-            height: 1,
+            display: "flex",
+            flexDirection: "row",
             marginTop: 24,
-            marginLeft: -24,
-            marginRight: -24,
-            background: "#EBECF4",
+            marginBottom: 20,
           }}
-        />
-
-        <div style={{ display: "flex", flexDirection: "row", marginTop: 12 }}>
-          <LoadingButton
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            {"Lưu"}
-          </LoadingButton>
-          <div style={{ width: 8 }} />
-
-          <LoadingButton size="large" variant="text" onClick={onFinish}>
-            {"Hủy"}
-          </LoadingButton>
+        >
+          <RHFBasicSelect
+            name={"type"}
+            label={"Tỉnh/Thành phố"}
+            placeholder={"Chọn ngành nghề"}
+            options={JobCategoryList.map((i) => ({
+              value: i.id,
+              label: i.name,
+            }))}
+            sx={{ width: "27.2ch", mr: 3 }}
+          />
+          <RHFBasicSelect
+            name={"size"}
+            label={"Quận/Huyện"}
+            placeholder={"Chọn quy mô nhân sự"}
+            style={{ marginRight: 20 }}
+            options={LIST_BRANCH_SIZE.map((i) => ({
+              value: i.id,
+              label: i.name,
+            }))}
+            sx={{ width: "27.2ch" }}
+          />
         </div>
+        <Divider />
+
+        <div style={{ marginTop: 24 }}>
+          <span
+            style={{
+              color: "#5C6A82",
+              fontSize: 14,
+              display: "block",
+              fontWeight: "500",
+            }}
+          >
+            {"Môi trường làm việc"}
+          </span>
+          <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+            <div>
+              <FormControl sx={{ my: 1 }} variant="outlined">
+                <TextArea
+                  showCount
+                  maxLength={150}
+                  style={{ height: 180, resize: "none", marginBottom: "20px" }}
+                  onChange={() => {}}
+                />
+
+                <ImageList
+                  sx={{
+                    maxWidth: "610px",
+                    width: "100%",
+                    overflow: "unset!important",
+                  }}
+                  cols={6}
+                  rowHeight={80}
+                >
+                  {itemData.map((item) => (
+                    <ImageListItem
+                      key={item.title}
+                      sx={{
+                        marginRight: "10px",
+                      }}
+                    >
+                      <img
+                        src={item.img}
+                        srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                        style={{ borderRadius: "4px" }}
+                      />
+                    </ImageListItem>
+                  ))}
+                  {itemData.length < 5 ? <EmptyImage /> : ""}
+                </ImageList>
+              </FormControl>
+            </div>
+          </Box>
+        </div>
+        <Divider sx={{ pt: 3 }} />
+
+        <div style={{ marginTop: 24, paddingBottom: 50 }}>
+          <span
+            style={{
+              color: "#5C6A82",
+              fontSize: 14,
+              display: "block",
+              fontWeight: "500",
+            }}
+          >
+            {"Giới thiệu"}
+          </span>
+          <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+            <div>
+              <FormControl sx={{ my: 1 }} variant="outlined">
+                <TextArea
+                  showCount
+                  maxLength={150}
+                  style={{ 
+                    height: 180, resize: "none", marginBottom: "20px", 
+                  }}
+                  onChange={() => {}}
+                />
+                
+                <ImageList
+                  sx={{
+                    maxWidth: "615px",
+                    width: "100%",
+                    overflow: "unset!important",
+                  }}
+                  cols={6}
+                  rowHeight={80}
+                >
+                  {itemData.map((item) => (
+                    <ImageListItem
+                      key={item.title}
+                      sx={{
+                        marginRight: "10px",
+                      }}
+                    >
+                      <img
+                        src={item.img}
+                        srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                        style={{ borderRadius: "4px" }}
+                      />
+                    </ImageListItem>
+                  ))}
+
+                  {itemData.length < 5 ? <EmptyImage /> : ""}
+                </ImageList>
+              </FormControl>
+            </div>
+          </Box>
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginTop: 12,
+          position: "fixed",
+          bottom: 0,
+          background: "#FDFDFD",
+          width: "100%",
+          padding: "16px 24px",
+          border: "1px solid #EFF3F6",
+        }}
+      >
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+          sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
+        >
+          {"Lưu"}
+        </LoadingButton>
+        <div style={{ width: 8 }} />
+
+        <LoadingButton
+          variant="text"
+          onClick={onFinish}
+          sx={{ color: "#455570" }}
+        >
+          {"Hủy"}
+        </LoadingButton>
       </div>
     </FormProvider>
   );

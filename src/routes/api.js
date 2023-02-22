@@ -139,6 +139,8 @@ export const API_GET_BRANCH_BY_ID = "api/Branch/GetBranch";
 export const API_GET_BRANCH_BY_USER = "api/Branch/GetByUserId";
 export const API_UPDATE_BRANCH = "api/Branch/UpdateBranch";
 
+// Thông tin công ty
+export const API_GET_COMPANY_INFOR = 'api/organization/Organization/GetOrganization';
 // Thông báo
 export const API_GET_LIST_NOTIFICATION = "api/UserNotifications/GetPaging";
 export const API_MASK_READ_NOTIFICATION =

@@ -104,7 +104,7 @@ export const sidebarConfig = [
       },
       {
         title: "Người dùng và Cơ cấu tổ chức",
-        path: "/settings/jobtype",
+        path: "/settings/organization",
         roles: ROLES[PAGES.Applicant],
       },
       {
