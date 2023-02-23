@@ -25,11 +25,7 @@ export const Activities = () => {
     apply: getIcon("ic_apply"),
   };
 
-  const [checked, setChecked] = React.useState(true);
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
+  const [checked ] = React.useState(true);
 
   const NeutralSwitch = styled(Switch)(({ theme }) => ({
     "& .MuiSwitch-switchBase.Mui-checked": {
@@ -44,13 +40,12 @@ export const Activities = () => {
   }));
 
   return (
-    <Grid item sx={{ padding: "24px 0 0 0" }}>
+    <Grid item sx={{ padding: "12px 0 0 0" }}>
       <FormGroup>
         <FormControlLabel
           control={
             <NeutralSwitch
               checked={checked}
-              onChange={handleChange}
             />
           }
           label="Hiển thị hoạt động"
