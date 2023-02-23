@@ -100,10 +100,10 @@ export const ApplicantInfo = ({ data }) => {
             width: "calc(100% - 160px)",
           }}
         >
-          {data?.jobCategories.length > 0
+          {data?.jobCategories?.length > 0
             ? data?.jobCategories.map((p, index) => {
                 return (
-                  <>
+                  <div key={index}>
                     <ListItemText
                       primary={p?.name}
                       sx={{
@@ -119,14 +119,14 @@ export const ApplicantInfo = ({ data }) => {
                     ) : (
                       ""
                     )}
-                  </>
+                  </div>
                 );
               })
             : "-"}
         </span>
       </div>
       {renderText("Nguồn:", data?.jobSourceName)}
-      {renderText("Ngày sinh:", fDate(data?.dateOfBirth))}
+      {renderText("Ngày sinh:", data?.dateOfBirth ? fDate(data?.dateOfBirth):'')}
       {renderText("Giới tính", Sex(data?.sex))}
       {renderText("Tình trạng hôn nhân:", MaritalStatus(data?.maritalStatus))}
       {renderText("Chiều cao:", `${data?.height + "  cm"}`)}
@@ -169,7 +169,7 @@ export const ApplicantInfo = ({ data }) => {
           {data?.applicantSkills?.length > 0
             ? data?.applicantSkills.map((p, index) => {
                 return (
-                  <>
+                  <div key={index}>
                     <ListItemText
                       primary={p?.name}
                       sx={{
@@ -185,16 +185,16 @@ export const ApplicantInfo = ({ data }) => {
                     ) : (
                       ""
                     )}
-                  </>
+                  </div>
                 );
               })
             : "-"}
         </span>
       </div>
       {data?.applicantsWorkingExperiences?.length > 0 &&
-        data?.applicantsWorkingExperiences.map((p) => {
+        data?.applicantsWorkingExperiences.map((p, index) => {
           return (
-            <div>
+            <div key={index}>
               <span
                 style={{
                   display: "inline-flex",
