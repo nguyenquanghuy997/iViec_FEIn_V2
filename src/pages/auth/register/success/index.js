@@ -64,7 +64,7 @@ const SuccessRegister = () => {
               </CardInfoIcon>
               {/* Content */}
               <CardInfoBody>
-                <CardInfoLabel label="Đăng ký" />
+                <CardInfoLabel label="Đăng ký thành công" />
                 <CardSubInfoLabel sx={{ mt: 1.5 }}>
                   Vui lòng truy cập email
                   {router.query.username ? (

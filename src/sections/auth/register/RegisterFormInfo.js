@@ -146,7 +146,7 @@ function RegisterForm() {
                                 <RHFTextField
                                     name="userName"
                                     title="Email đăng nhập"
-                                    placeholder="Email đăng nhập (bắt buộc)"
+                                    placeholder="Bắt buộc"
                                     isRequired
                                     style={{...InputStyle}}
                                     InputProps={{

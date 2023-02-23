@@ -16,13 +16,19 @@ import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterMod
 import {fDate} from "@/utils/formatTime";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Checkbox, Dropdown, Menu, Table, Tag} from "antd";
-import NextLink from "next/link";
+import Link from "next/link";
 import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import ReactDragListView from "react-drag-listview";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {useRouter} from "next/router";
-
+import {
+    Address,
+    MaritalStatus,
+    Sex,
+    YearOfExperience,
+    PipelineStateType,
+  } from "@/utils/enum";
 const defaultValues = {
     searchKey: "",
 };
@@ -48,14 +54,14 @@ export const ApplicantItem = () => {
             fixed: "left",
             width: "200px",
             render: (text, record) => (
-                <NextLink href={`applicant/${record.id}`} passHref>
-                    <TextMaxLine
-                        line={1}
-                        sx={{width: 160, fontWeight: "normal", fontSize: 14}}
-                    >
-                        {text}
-                    </TextMaxLine>
-                </NextLink>
+            <Link passHref href={{ pathname: `applicant/${record.applicantId}`, query: { or: `${record.organizationId}`} }}>
+                           <TextMaxLine
+                         line={1}
+                         sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+                       >
+                         {text}
+                       </TextMaxLine>
+                       </Link>
             ),
         },
         {
@@ -72,7 +78,7 @@ export const ApplicantItem = () => {
         },
         {dataIndex: "email", title: "Email", width: "240px"},
         {
-            dataIndex: "fullName", title: "Tin tuyển dụng", width: "200px",
+            dataIndex: "recruitmentName", title: "Tin tuyển dụng", width: "200px",
             name: "recruitmentIds",
             type: "select",
             multiple: true,
@@ -80,18 +86,20 @@ export const ApplicantItem = () => {
             label: "Tin tuyển dụng",
         },
         {
-            dataIndex: "fullName", title: "Bước tuyển dụng", width: "200px",
+            dataIndex: "recruitmentPipelineState", title: "Bước tuyển dụng", width: "200px",
             name: 'recruitmentPipelineStates',
             label: "Bước tuyển dụng",
             placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
             type: "select",
             multiple: true,
+            render: (item) => PipelineStateType(item,1),
         },
         {
-            dataIndex: "fullName", title: "Ngày ứng tuyển", width: "200px",
+            dataIndex: "createdTime", title: "Ngày ứng tuyển", width: "200px",
             type: "date",
             label: "Ngày ứng tuyển",
             name: "createdTime",
+            render: (date) => fDate(date),
             items: [
                 {
                     name: "createdTimeFrom",
@@ -110,7 +118,7 @@ export const ApplicantItem = () => {
             ]
         },
         {
-            dataIndex: "fullName", title: "Đơn vị", width: "200px",
+            dataIndex: "organizationName", title: "Đơn vị", width: "200px",
             name: "organizationIds",
             type: "tree",
             isTree: true,
@@ -119,7 +127,7 @@ export const ApplicantItem = () => {
             label: "Đơn vị",
         },
         {
-            dataIndex: "fullName", title: "Nguồn", width: "200px",
+            dataIndex: "jobSourceName", title: "Nguồn", width: "200px",
             name: "jobSourceIds",
             label: "Nguồn",
             placeholder: "Chọn 1 hoặc nhiều nguồn",
@@ -127,7 +135,7 @@ export const ApplicantItem = () => {
             multiple: true,
         },
         {
-            dataIndex: "fullName", title: "Cán bộ tuyển dụng", width: "200px",
+            dataIndex: "ownerName", title: "Cán bộ tuyển dụng", width: "200px",
             name: "ownerIds",
             label: "Cán bộ tuyển dụng",
             placeholder: "Chọn 1 hoặc nhiều cán bộ",
@@ -135,7 +143,7 @@ export const ApplicantItem = () => {
             multiple: true,
         },
         {
-            dataIndex: "fullName", title: "Cán bộ tạo ứng viên", width: "200px",
+            dataIndex: "creatorName", title: "Cán bộ tạo ứng viên", width: "200px",
             name: "creatorIds",
             label: "Người tạo ứng viên",
             placeholder: "Chọn 1 hoặc nhiều người",
@@ -175,6 +183,7 @@ export const ApplicantItem = () => {
             multiple: false,
             placeholder: "Chọn số năm kinh nghiệm",
             label: "Số năm kinh nghiệm",
+            render: (item) => YearOfExperience(item),
         },
         {
             title: "Kỹ năng",
@@ -199,7 +208,7 @@ export const ApplicantItem = () => {
         {
             dataIndex: "sex",
             title: "Giới tính",
-            render: (sex) => (sex == 0 ? "Nam" : "Nữ"),
+            render: (item) => Sex(item),
             width: "80px",
             name: "sexs",
             type: "radio",
@@ -210,6 +219,7 @@ export const ApplicantItem = () => {
             name: "maritalStatuses",
             type: "select",
             label: "Tình trạng hôn nhân",
+            render: (item) => MaritalStatus(item),
         },
         {
             dataIndex: "height", title: "Chiều cao", width: "120px",
@@ -256,12 +266,13 @@ export const ApplicantItem = () => {
             ]
         },
         {
-            dataIndex: "fullName", title: "Nơi làm việc mong muốn", width: "200px",
+            dataIndex: "expectedWorkingAddress", title: "Nơi làm việc mong muốn", width: "200px",
             name: "expectWorkingAddressProvinceIds",
             label: "Nơi làm việc mong muốn",
             placeholder: "Chọn 1 hoặc nhiều Tỉnh/Thành phố",
             type: "select",
             multiple: true,
+            render: (item) => Address(item),
         },
         {
             dataIndex: "expectedSalaryTo",
