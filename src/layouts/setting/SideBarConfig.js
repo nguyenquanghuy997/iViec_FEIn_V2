@@ -3,7 +3,7 @@ import { PAGES } from "@/config";
 import { getListRoles } from "@/utils/role";
 
 const getIconByIconify = (icon) => (
-  <Iconify icon={icon} width="100%" height="100%" />
+    <Iconify icon={icon} width="100%" height="100%" />
 );
 
 const ICONS = {

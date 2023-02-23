@@ -1,156 +1,248 @@
+import {memo, useEffect, useState} from "react";
 import Scrollbar from "@/components/Scrollbar";
-import {Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import PropTypes from "prop-types";
-import {memo, useState} from "react";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
-import {fNumber} from "@/utils/formatNumber";
+import {useLazyGetRecruitmentByOrganizationQuery} from "@/sections/recruitment/RecruitmentSlice";
+import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
+import {convertFlatDataToTree} from "@/utils/function";
+import * as Yup from "yup";
+import {isArray, isEmpty} from 'lodash';
+import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {FormProvider} from "@/components/hook-form";
+import {
+  useGetAllJobSourcesQuery,
+  useGetSkillsQuery,
+  useLazyGetAllUserFromOrganizationQuery
+} from "@/sections/applicant";
+import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
+import {
+  useGetJobCategoriesQuery,
+  useLazyGetDistrictByProvinceIdQuery,
+  useLazyGetProvinceQuery
+} from "@/sections/companyinfor/companyInforSlice";
+import {useRouter} from "next/router";
+import {
+  ApplicantModalFooterStyle,
+  ApplicantModalHeadStyle,
+  ButtonCancelStyle,
+  HelperTextTypography
+} from "@/sections/applicant/style";
 
 ApplicantFilterModal.propTypes = {
-    isOpen: PropTypes.bool, onClose: PropTypes.func, onSubmit: PropTypes.func,
+  columns: PropTypes.array, isOpen: PropTypes.bool, onClose: PropTypes.func, onSubmit: PropTypes.func,
 };
 
-function ApplicantFilterModal({ columns, isOpen, onClose }) {
-    const [,setIsScrolled] = useState(false);
-    // input state
-    const [stateFilter, setStateFilter] = useState({
-        experience: "",
-        education: "",
-        startSalary: "",
-        endSalary: "",
-        startHeight: "",
-        endHeight: "",
-        startWeight: "",
-        endWeight: "",
-        gender: "1",
+function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
+
+  const router = useRouter();
+  const { query } = router;
+  const defaultValues = {
+    organizationIds: [],                                                        // đơn vị                   select mul
+    recruitmentIds: [],                                                         // tin tuyển dụng           select mul
+    createdTimeFrom: null,                                                      // ngày ứng tuyển           date from - to
+    createdTimeTo: null,
+    recruitmentPipelineStates: [],                                              // bước tuyển dụng          select mul
+    jobSourceIds: [],                                                           // nguồn                    select mul
+    ownerIds: [],                                                               // cán bộ tuyển dụng        select mul
+    creatorIds: [],                                                             // người tạo ứng viên       select mul
+    councilIds: [],                                                             // hội đồng tuyển dụng      select mul
+    jobCategoryIds: [],                                                         // ngành nghề               select mul
+    yearsOfExperience: "",                                                    // số năm kinh nghiệm       slect
+    applicantSkillIds: [],                                                      // kỹ năng                  select mul
+    experience: "",                                                           // kinh nghiệm làm việc     text
+    educations: "",                                                           // học vấn                  text
+    expectWorkingAddressProvinceIds: [],                                        // nơi làm viêc mong muốn    select mul
+    expectSalaryFrom: "",                                                     // mức lương mong muốn      number from - to
+    expectSalaryTo: "",
+    sexs: "",                                                                 // giới tính                radio
+    maritalStatuses: "",                                                      // tình trạng hôn nhân      select
+    heightFrom: "",                                                           // chiều cao                number from - to
+    heightTo: "",
+    weightFrom: "",                                                           // cân nặng                 number from - to
+    weightTo: "",
+    livingAddressProvinceIds: "",                                               // nơi ở hiện tại           selct province - district
+    homeTowerProvinceIds: "",                                                   // quê quán                 select province - district
+    livingAddressDistrictIds: "",                                               // nơi ở hiện tại           selct province - district
+    homeTowerDistrictIds: "",                                                   // quê quán                 select province - district
+  };
+
+  const [, setIsScrolled] = useState(false);
+
+  // yup & handle form
+  const ApplicantFormSchema = Yup.object().shape({
+    // createdTimeTo: Yup.date().transform(value => (!value ? new Date().toISOString() : value)).min(
+    //     Yup.ref('createdTimeFrom'),
+    //     "Thời gian kết thúc phải lớn hơn thời gian bắt đầu"
+    // ),
+    heightTo: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('heightFrom'), 'Chiều cao cần lớn hơn hoặc bằng chiều cao bắt đầu'),
+    weightTo: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('weightFrom'), 'Cân nặng cần lớn hơn hoặc bằng cân nặng bắt đầu'),
+    expectSalaryTo: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('expectSalaryFrom'), 'Mức lương cần lớn hơn hoặc bằng mức lương bắt đầu'),
+  });
+
+  const methods = useForm({
+    mode: 'all',
+    resolver: yupResolver(ApplicantFormSchema),
+    // defaultValues: useMemo(() => defaultValues, [query]),
+    defaultValues,
+  });
+
+  const {
+    watch,
+    handleSubmit,
+    setValue,
+    formState: {isSubmitting},
+  } = methods;
+
+  useEffect(() => {
+    for (let item in query) {
+      if (query[item]) {
+        if (isArray(defaultValues[item]))
+          setValue(item, isArray(query[item]) ? query[item] : [query[item]])
+        else setValue(item, query[item])
+      } else setValue(item, defaultValues[item])
+    }
+  }, [query])
+
+  const handleCloseModal = async () => {
+    onClose();
+    await router.push({
+      pathname: router.pathname,
+      query: {}
+    }, undefined, { shallow: true })
+    Object.entries(query).forEach(([key, value]) => {
+      console.log(key, value)
     })
-    // select state
-    const [selectFilter, setSelectFilter] = useState({
-        units: [],
-        newsRecruitment: [],
-        steps: [],
-        sources: [],
-        hrs: [],
-        createdBy: [],
-        group: [],
-        career: [],
-        experienceNumber: null,
-        skills: [],
-        workAddress: [],
-        married: null,
-        currentAddressProvince: null,
-        currentAddressDistrict: null,
-        hometownProvince: null,
-        hometownDistrict: null,
-    })
+  }
 
-    const [valuesDate, setValuesDate] = useState({});
+  const handleScroll = (e) => {
+    setIsScrolled(e.target.scrollTop > 10);
+  };
 
-    const onChangeDate = (key) => (date) => {
-        setValuesDate((prev) => ({ ...prev, [key]: date }))
+  // options select
+  // recruitment
+  const [getRecruitmentByOrganization, {data: {items: ListRecruitmentByOrganization} = []}] = useLazyGetRecruitmentByOrganizationQuery();
+  // organization
+  const {data: {items: ListOrganization} = []} = useGetOrganizationsDataWithChildQuery();
+  // job sources
+  const {data: {items: ListJobSources} = []} = useGetAllJobSourcesQuery();  // nguồn job
+  // owner, creator, council
+  const [getAllUserFromOrganization, {data: {items: ListUserFromOrganization} = []}] = useLazyGetAllUserFromOrganizationQuery();
+  // job category
+  const {data: {items: ListJobCategory = []} = {}} = useGetJobCategoriesQuery();
+  // skills
+  const {data: {items: ListSkills = []} = {}} = useGetSkillsQuery();
+  // province
+  const [fetchProvice, {data: {items: ListProvince = []} = {}}] = useLazyGetProvinceQuery();
+  // district
+  const [getDistrictLiving, {data: {items: ListDistrictLiving = []} = {}}] = useLazyGetDistrictByProvinceIdQuery();
+  const [getDistrictHomeTower, {data: {items: ListDistrictHomeTower = []} = {}}] = useLazyGetDistrictByProvinceIdQuery();
+
+  const watchProvinceId = watch("livingAddressProvinceIds");
+  const watchProvinceHomeTownId = watch("homeTowerProvinceIds");
+  const watchOrganizationIds = watch("organizationIds");
+
+  useEffect(() => {
+    if (watchProvinceId && !isEmpty(watchProvinceId)) {
+      getDistrictLiving(watchProvinceId).unwrap();
+      methods.resetField('livingAddressDistrictIds')
     }
+  }, [watchProvinceId]);
 
-    const handleChangeSelectFilter = (e) => {
-        const { target: { value, name } } = e;
-        setSelectFilter({
-            ...selectFilter,
-            [name]: value
-        });
+  useEffect(() => {
+    if (watchProvinceHomeTownId && !isEmpty(watchProvinceHomeTownId)) {
+      getDistrictHomeTower(watchProvinceHomeTownId).unwrap();
+      methods.resetField('homeTowerDistrictIds')
     }
+  }, [watchProvinceHomeTownId]);
 
-    const handleDeleteSelect = (item, name) => {
-        const newSelected = selectFilter[name].filter((selectValue) => {
-            return item?.id !== selectValue?.id;
-        })
-        setSelectFilter({
-            ...selectFilter,
-            [name]: newSelected
-        });
+  useEffect(() => {
+    if (watchOrganizationIds && !isEmpty(watchOrganizationIds)) {
+      getRecruitmentByOrganization({Id: watchOrganizationIds[watchOrganizationIds.length - 1]}).unwrap();
+      getAllUserFromOrganization({Id: watchOrganizationIds[watchOrganizationIds.length - 1]}).unwrap();
+    } else {
+      getRecruitmentByOrganization().unwrap();
+      getAllUserFromOrganization().unwrap();
     }
+  }, [watchOrganizationIds])
 
-    const handleChange = (e) => {
-        const { name, value } = e?.target;
-        setStateFilter({
-            ...stateFilter,
-            [name]: name === 'startSalary' || name === 'endSalary' ? fNumber(value) : value
-        })
-    }
+  useEffect(() => {
+    fetchProvice().unwrap();
+  }, [])
 
-    const handleScroll = (e) => {
-        setIsScrolled(e.target.scrollTop > 10);
-    };
-
-    const handleSubmitFilter = () => {
-        console.log(valuesDate)
-        console.log(stateFilter)
-        console.log(selectFilter)
-    }
-
-    return (
-        <Drawer
-            open={isOpen}
-            anchor="right"
-            variant="persistent"
-            PaperProps={{ sx: {width: {xs: 1, sm: 560, md: 384, boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'}}, onScroll: handleScroll,}}
-        >
-            <Stack flexDirection='row' sx={{px: 2, py: 2, alignItems: 'center', justifyContent: 'space-between'}}>
-                <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
-                    Bộ lọc
-                </Typography>
-                <IconButton size="small" onClick={onClose}>
-                    <Iconify icon="ic:baseline-close"/>
-                </IconButton>
-            </Stack>
-            <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
-                <Divider/>
-                <Stack sx={{py: 2}}>
-                    <Typography variant="body2"
-                                sx={{px: 2, fontSize: '13px', fontWeight: 400, fontStyle: 'italic', color: "#8A94A5"}}>
-                        Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu
-                    </Typography>
-                    <Stack sx={{pb: 3, px: 2}}>
-                        <DynamicFilterForm
-                            columns={columns}
-                            valuesDate={valuesDate}
-                            onChangeDate={onChangeDate}
-
-                            handleChange={handleChange}
-                            stateFilter={stateFilter}
-
-                            selectFilter={selectFilter}
-                            onChangeSelectFilter={handleChangeSelectFilter}
-                            onDeleteSelect={handleDeleteSelect}
-                        />
-                    </Stack>
-                </Stack>
-            </Scrollbar>
+  return (
+      <Drawer
+          open={isOpen}
+          onClose={onClose}
+          anchor="right"
+          hideBackdrop
+          PaperProps={{
+            sx: {
+              width: {xs: 1, sm: 560, md: 384},
+              boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+            }, onScroll: handleScroll
+          }}
+      >
+        <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <ApplicantModalHeadStyle>
+              <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
+                Bộ lọc
+              </Typography>
+              <IconButton size="small" onClick={onClose}>
+                <Iconify icon="ic:baseline-close"/>
+              </IconButton>
+            </ApplicantModalHeadStyle>
             <Divider/>
-            <Stack flexDirection='row' sx={{ px: 2, py: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-                <Stack flexDirection="row">
-                    <ButtonDS
-                        tittle="Áp dụng"
-                        onClick={handleSubmitFilter}
-                    />
-                    <ButtonDS
-                        tittle="Hủy"
-                        onClick={onClose}
-                        sx={{
-                            marginLeft: 1,
-                            backgroundColor: "white",
-                            boxShadow: 'none',
-                            color: "#455570",
-                            "&:hover": {
-                                backgroundColor: "white",
-                                boxShadow: 'none',
-                                color: "#455570",
-                            }
-                        }}
-                    />
-                </Stack>
-            </Stack>
-        </Drawer>
-    );
+            <Box sx={{py: 2, mt: 8}}>
+              <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
+              <Stack sx={{pb: 3, px: 2}}>
+                <DynamicFilterForm
+                    columns={columns}
+                    options={{
+                      organizationIds: convertFlatDataToTree(ListOrganization?.map((item) => ({...item, title: item.name, key: item.id,  value: item.id}))),
+                      jobSourceIds: ListJobSources && [...ListJobSources, {id: "", name: "", value: ""}],
+                      recruitmentIds: ListRecruitmentByOrganization && [...ListRecruitmentByOrganization, {id: "", name: "", value: ""}],
+                      recruitmentPipelineStates: LIST_STEP_RECRUITMENT,
+                      ownerIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: ""}],
+                      creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: ""}],
+                      councilIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: ""}],
+                      jobCategoryIds: ListJobCategory && [...ListJobCategory, {id: "", value: "", name: ""}],
+                      yearsOfExperience: LIST_EXPERIENCE_NUMBER,
+                      applicantSkillIds: ListSkills && [...ListSkills, {id: "", value: "", name: ""}],
+                      expectWorkingAddressProvinceIds: ListProvince && [...ListProvince, {id: "", value: "", name: ""}],
+                      sexs: LIST_GENDER,
+                      maritalStatuses: LIST_MARITAL_STATUSES,
+                      livingAddressProvinceIds: ListProvince && [...ListProvince, {id: "", value: "", name: ""}],
+                      homeTowerProvinceIds: ListProvince && [...ListProvince, {id: "", value: "", name: ""}],
+                      livingAddressDistrictIds: ListDistrictLiving && [...ListDistrictLiving, {id: "", value: "", name: ""}],
+                      homeTowerDistrictIds: ListDistrictHomeTower && [...ListDistrictHomeTower, {id: "", value: "", name: ""}]
+                    }}
+                />
+
+              </Stack>
+            </Box>
+
+            <Divider/>
+            <ApplicantModalFooterStyle>
+              <Stack flexDirection="row">
+                <ButtonDS
+                    type="submit"
+                    loading={isSubmitting}
+                    variant="contained"
+                    tittle="Áp dụng"
+                    onClick={handleSubmit(onSubmit)}
+                />
+                <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
+              </Stack>
+            </ApplicantModalFooterStyle>
+          </FormProvider>
+        </Scrollbar>
+      </Drawer>
+  );
 }
 
 export default memo(ApplicantFilterModal);
