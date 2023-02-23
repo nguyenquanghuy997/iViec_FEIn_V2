@@ -3,7 +3,7 @@ import {
   MaritalStatus,
   Sex,
   YearOfExperience,
-} from "@/components/enum";
+} from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
 import { fDate, fYear } from "@/utils/formatTime";
 import { Grid, Divider, Chip, Typography } from "@mui/material";
