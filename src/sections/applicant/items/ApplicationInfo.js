@@ -4,98 +4,13 @@ import {
   Sex,
   YearOfExperience,
 } from "@/components/enum";
+import { fCurrency } from "@/utils/formatNumber";
 import { fDate, fYear } from "@/utils/formatTime";
 import { Grid, Divider, Chip, Typography } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 
 export const ApplicantInfo = ({ data }) => {
-  console.log("data", data);
-  const datas = {
-    applicationUserId: null,
-    jobSourceId: "e5149f0b-640c-4df2-abd4-57554ab896ec",
-    fullName: "Nguyễn Ngọc Thắng",
-    slug: "nguyen-ngoc-thang-",
-    portraitImage: "string",
-    dateOfBirth: "1997-02-19T04:13:32.609Z",
-    email: "nt@gmail.com",
-    phoneNumber: "0386193342",
-    identityNumber: "6984454545154",
-    weight: 66,
-    height: 160,
-    homeTower: {
-      provinceId: "01000000-ac12-0242-daf3-08db10c3ab39",
-      provinceName: "Hải Phòng",
-      districtId: "01000000-ac12-0242-4391-08db10c3ab3a",
-      districtName: "Thuỷ Nguyên",
-      villageId: null,
-      villageName: null,
-      id: "01000000-ac12-0242-8589-08db14828f2a",
-    },
-    livingAddress: {
-      provinceId: "01000000-ac12-0242-daf3-08db10c3ab39",
-      provinceName: "Hải Phòng",
-      districtId: "01000000-ac12-0242-4391-08db10c3ab3a",
-      districtName: "Thuỷ Nguyên",
-      villageId: null,
-      villageName: null,
-      id: "01000000-ac12-0242-8aae-08db14828f2a",
-    },
-    expectedWorkingAddress: {
-      provinceId: "01000000-ac12-0242-daf3-08db10c3ab39",
-      provinceName: "Hải Phòng",
-      districtId: "01000000-ac12-0242-4391-08db10c3ab3a",
-      districtName: "Thuỷ Nguyên",
-      villageId: null,
-      villageName: null,
-      id: "01000000-ac12-0242-8d04-08db14828f2a",
-    },
-    curriculumVitae: null,
-    experience: "Không làm sao có",
-    education: "Đại học đường đời",
-    expectedSalaryFrom: 8600000,
-    expectedSalaryTo: 15000000,
-    maritalStatus: 1,
-    yearOfExperience: 1,
-    sex: 1,
-    applicantSkills: [
-      {
-        name: "Skill chém nhau",
-        slug: "skill-chem-nhau-R2BWBexlk9",
-        description: null,
-        id: "01000000-ac12-0242-031c-08db119482c1",
-      },
-    ],
-    applicantsWorkingExperiences: [
-      {
-        startTime: "2020-02-22T10:29:19.416Z",
-        endTime: "2021-02-22T10:29:19.416Z",
-        organizationName: "Thủy bon bon",
-        position: "Giám đốc",
-        experience:
-          "Phân tích nghiệp vụ và thiết kế giao diện Website, App mobile cho các dự án của công ty",
-      },
-      {
-        startTime: "2021-02-22T10:29:19.416Z",
-        endTime: "2023-02-22T10:29:19.416Z",
-        organizationName: "Công ty FPT Head Office",
-        position: "Giám đốc",
-        experience:
-          "Phân tích nghiệp vụ và thiết kế giao diện Website, App mobile cho các dự án của công ty. Phân tích nghiệp vụ và thiết kế giao diện Website, App mobile cho các dự án của công ty",
-      },
-    ],
-    jobCategories: [
-      {
-        name: "123",
-        id: "23900294-5af3-4c96-b0da-b5887e011363",
-      },
-    ],
-    academicLevel: null,
-    rawApplicantSkills: null,
-    createdTime: "2023-02-22T03:11:58.320734Z",
-    isAvailable: true,
-    id: "01000000-ac12-0242-0a9a-08db14828f27",
-  };
   const renderText = (title, value) => {
     return (
       <div>
@@ -160,7 +75,7 @@ export const ApplicantInfo = ({ data }) => {
   return (
     <Grid item>
       <DividerInfo text="THÔNG TIN CƠ BẢN" />
-      {renderText("Họ và tên:", datas?.fullName)}
+      {renderText("Họ và tên:", data?.fullName)}
       <div>
         <span
           style={{
@@ -185,8 +100,8 @@ export const ApplicantInfo = ({ data }) => {
             width: "calc(100% - 160px)",
           }}
         >
-          {datas?.jobCategories.length > 0
-            ? datas?.jobCategories.map((p, index) => {
+          {data?.jobCategories.length > 0
+            ? data?.jobCategories.map((p, index) => {
                 return (
                   <>
                     <ListItemText
@@ -199,7 +114,7 @@ export const ApplicantInfo = ({ data }) => {
                         },
                       }}
                     />
-                    {datas?.jobCategories.length - 1 > index ? (
+                    {data?.jobCategories.length - 1 > index ? (
                       <span style={{ marginRight: 5 }}>,</span>
                     ) : (
                       ""
@@ -210,22 +125,22 @@ export const ApplicantInfo = ({ data }) => {
             : "-"}
         </span>
       </div>
-      {renderText("Nguồn:", datas?.jobSourceName)}
-      {renderText("Ngày sinh:", fDate(datas?.dateOfBirth))}
-      {renderText("Giới tính", Sex(datas?.sex))}
-      {renderText("Tình trạng hôn nhân:", MaritalStatus(datas?.maritalStatus))}
-      {renderText("Chiều cao:", datas?.height)}
-      {renderText("Cân nặng:", datas?.weight)}
-      {renderText("Nơi ở hiện tại:", Address(datas?.livingAddress))}
-      {renderText("Quê quán:", Address(datas?.homeTower))}
-      {renderText("Số CMND/CCCD:", datas?.identityNumber)}
+      {renderText("Nguồn:", data?.jobSourceName)}
+      {renderText("Ngày sinh:", fDate(data?.dateOfBirth))}
+      {renderText("Giới tính", Sex(data?.sex))}
+      {renderText("Tình trạng hôn nhân:", MaritalStatus(data?.maritalStatus))}
+      {renderText("Chiều cao:", `${data?.height + "  cm"}`)}
+      {renderText("Cân nặng:", `${data?.weight + "  kg"}`)}
+      {renderText("Nơi ở hiện tại:", Address(data?.livingAddress))}
+      {renderText("Quê quán:", Address(data?.homeTower))}
+      {renderText("Số CMND/CCCD:", data?.identityNumber)}
       <DividerInfo text="THÔNG TIN LIÊN HỆ" />
-      {renderText("Số điện thoại:", datas?.phoneNumber)}
-      {renderText("Email:", datas?.email)}
+      {renderText("Số điện thoại:", data?.phoneNumber)}
+      {renderText("Email:", data?.email)}
       <DividerInfo text="KINH NGHIỆM LÀM VIỆC" />
       {renderText(
         "Số năm kinh nghiệm:",
-        YearOfExperience(datas?.yearOfExperience)
+        YearOfExperience(data?.yearOfExperience)
       )}
       <div>
         <span
@@ -251,8 +166,8 @@ export const ApplicantInfo = ({ data }) => {
             width: "calc(100% - 160px)",
           }}
         >
-          {datas?.applicantSkills.length > 0
-            ? datas?.applicantSkills.map((p, index) => {
+          {data?.applicantSkills?.length > 0
+            ? data?.applicantSkills.map((p, index) => {
                 return (
                   <>
                     <ListItemText
@@ -265,7 +180,7 @@ export const ApplicantInfo = ({ data }) => {
                         },
                       }}
                     />
-                    {datas?.applicantSkills.length - 1 > index ? (
+                    {data?.applicantSkills.length - 1 > index ? (
                       <span style={{ marginRight: 5 }}>,</span>
                     ) : (
                       ""
@@ -276,8 +191,8 @@ export const ApplicantInfo = ({ data }) => {
             : "-"}
         </span>
       </div>
-      {datas?.applicantsWorkingExperiences.length > 0 &&
-        datas?.applicantsWorkingExperiences.map((p) => {
+      {data?.applicantsWorkingExperiences?.length > 0 &&
+        data?.applicantsWorkingExperiences.map((p) => {
           return (
             <div>
               <span
@@ -348,12 +263,20 @@ export const ApplicantInfo = ({ data }) => {
         })}
 
       <DividerInfo text="HỌC VẤN" />
-      {renderText("2014 - 2019", datas?.fullName)}
-      {renderText("2019 - 2023", datas?.fullName)}
+      {renderText("2014 - 2019", data?.fullName)}
+      {renderText("2019 - 2023", data?.fullName)}
 
       <DividerInfo text="KỲ VỌNG Ở CÔNG VIỆC MỚI" />
-      {renderText("Mức lương mong muốn:", "30.000.000 - 40.000.000 VNĐ")}
-      {renderText("Nơi làm mong muốn:", Address(datas?.expectedWorkingAddress))}
+      {renderText(
+        "Mức lương mong muốn:",
+        `${
+          fCurrency(data?.expectedSalaryFrom) +
+          "  -  " +
+          fCurrency(data?.expectedSalaryTo) +
+          " VNĐ"
+        }`
+      )}
+      {renderText("Nơi làm mong muốn:", Address(data?.expectedWorkingAddress))}
     </Grid>
   );
 };

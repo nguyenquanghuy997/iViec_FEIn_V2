@@ -48,7 +48,7 @@ export const MaritalStatus = (item) => {
 };
 //Địa chỉ
 export const Address = (item) =>
-  `${item?.villageName ? item?.villageName + "," : ""}  ${
+  `${item?.address ? item?.address + "," : ""} ${item?.villageName ? item?.villageName + "," : ""}  ${
     item?.districtName ? item?.districtName + "," : ""
   } ${item?.provinceName ? item?.provinceName : ""}`;
 //Đơn vị tiền tệ
