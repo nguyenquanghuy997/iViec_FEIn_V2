@@ -312,6 +312,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                       justifyContent="space-between"
                       alignItems="flex-end"
                       marginTop="28px"
+                      minHeight="76px"
                     >
                       <Grid item md={10} container>
                         <Grid sx={{ width: "80%" }}>

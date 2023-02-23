@@ -1,12 +1,12 @@
 import EmptyIcon from "../../../../assets/EmptyIcon";
 import NotificationBoard from "./NotificationBoard";
 import SvgIconStyle from "@/components/SvgIconStyle";
-import { Box, Grid, Switch } from "@mui/material";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
+import { Box, Grid } from "@mui/material";
+import { FormProvider } from "@/components/hook-form";
 import List from "@mui/material/List";
-import { alpha, styled } from "@mui/material/styles";
 import React from "react";
+import { SwitchDS } from "@/components/DesignSystem";
+import { useForm } from "react-hook-form";
 
 export const Activities = () => {
   const getIcon = (name) => (
@@ -25,36 +25,20 @@ export const Activities = () => {
     apply: getIcon("ic_apply"),
   };
 
-  const [checked ] = React.useState(true);
-
-  const NeutralSwitch = styled(Switch)(({ theme }) => ({
-    "& .MuiSwitch-switchBase.Mui-checked": {
-      color: "#455570",
-      "&:hover": {
-        backgroundColor: alpha("#455570", theme.palette.action.hoverOpacity),
-      },
-    },
-    "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-      backgroundColor: "#455570",
-    },
-  }));
-
+  const methods = useForm({
+    defaultValues: { isActive: !false },
+  });
+  const isActive = methods.watch("isActive");
   return (
     <Grid item sx={{ padding: "12px 0 0 0" }}>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <NeutralSwitch
-              checked={checked}
-            />
-          }
-          label="Hiển thị hoạt động"
-        />
-      </FormGroup>
-      {checked ? (
+       <FormProvider methods={methods}>
+        <SwitchDS name={"isActive"} label={"Hiển thị hoạt động"}/>
+      </FormProvider>
+
+      {isActive ? (
         <Box>
           <List
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", pt:'16px' }}
             component="nav"
             aria-labelledby="nested-list-subheader"
           >

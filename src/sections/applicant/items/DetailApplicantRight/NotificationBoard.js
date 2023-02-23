@@ -122,6 +122,8 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
   return (
     <Container
       sx={{
+        paddingLeft:'0 !important',
+        paddingRight:'0 !important',
         marginBottom: "40px",
         "& .MuiListItemText-root+ svg": {
           width: "1em",
@@ -133,7 +135,7 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
         alignItems="flex-start"
         onClick={handleClick}
         sx={{
-          pt: 2,
+          padding: '12px 20px',
           backgroundColor: !open ? "white" : "#F2F4F5",
           fontSize: "0.9rem!important",
           "&:hover": {
