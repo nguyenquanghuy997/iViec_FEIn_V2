@@ -1,118 +1,115 @@
-import React, {useMemo, useState} from "react";
-import {FormControl, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
+import React, {memo, useMemo, useState} from "react";
+import {FormHelperText, InputAdornment, MenuItem, Stack, Typography} from "@mui/material";
+import {Controller, useFieldArray, useFormContext} from "react-hook-form";
 import Iconify from "@/components/Iconify";
-import ChipDS from "@/components/DesignSystem/ChipDS";
+import {containsText} from "@/utils/function";
 import {
+  LabelStyle,
   MenuItemStyle,
   SearchInputStyle,
+  SelectFieldStyle,
   SelectStyle,
+  TextFieldStyle,
+  useStyles,
 } from '@/components/hook-form/style';
-import {containsText} from "@/utils/function";
+import ChipDS from "@/components/DesignSystem/ChipDS";
 
+const Placeholder = (placeholder) => {
+  return <Typography variant="body2" sx={{color: '#8A94A5', fontSize: 14, fontWeight: 400}}>{placeholder}</Typography>
+}
 
-const SelectFilter = ({options, value, data, name, multiple, placeholder, onChange, onDeleteSelect, ...props}) => {
-  const [searchText, setSearchText] = useState("");
-  const displayedOptions = useMemo(
-      () => data?.filter((option) => containsText(option.name, searchText)),
-      [searchText]
-  );
-
-  return (
-      <FormControl fullWidth>
-        {!multiple && <InputLabel sx={{ fontSize: '14px',
-          "&.MuiInputLabel-root[data-shrink='false']": {
-              transform: 'translate(14px, 12px) scale(1)'
-          }
-        }}>{placeholder}</InputLabel>}
-        {multiple ? <>
-          <Select
-              value={value}
-              defaultValue={value}
-              name={name}
-              multiple={multiple}
-              onChange={onChange}
-              displayEmpty
-              onClose={() => setSearchText("")}
-              renderValue={() => <>{placeholder}</>}
-              {...props}
-              sx={{...SelectStyle}}
-          >
-              {options?.length > 3 && (
-                  <TextField
-                      placeholder="Tìm kiếm..."
-                      fullWidth
-                      sx={{...SearchInputStyle}}
-                      InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                              <Iconify icon={"ri:search-2-line"} width={16} height={16} color="#5c6a82" />
-                            </InputAdornment>
-                        )
-                      }}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key !== "Escape") {
-                          e.stopPropagation();
-                        }
-                      }}
-                  />
-              )}
-            {displayedOptions?.map((option, i) => (
-                <MenuItem sx={{...MenuItemStyle}} key={i} value={option}>
-                  {option.name}
-                </MenuItem>
-            ))}
-          </Select>
-          <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-            {value?.map((item, index) => {
-              return <ChipDS key={index} sx={{
-                padding: '5px 8px',
-                color: '#455570',
-                fontSize: 12,
-                fontWeight: 500,
-                mt: 2.5,
-              }} onDelete={() => onDeleteSelect(item, name)} label={item?.name} size="small" variant="filled"/>
-            })}
-          </Stack>
-        </> : <Select
-            value={value || ""}
-            name={name}
-            onChange={onChange}
-            displayEmpty
-            onClose={() => setSearchText("")}
-            placeholder={placeholder}
-            label={placeholder}
-            {...props}
-            sx={{...SelectStyle}}
-        >
-            {options?.length > 3 && (
-                <TextField
-                    placeholder="Tìm kiếm..."
-                    fullWidth
-                    sx={{...SearchInputStyle}}
-                    InputProps={{
-                      startAdornment: (
-                          <InputAdornment position="start">
-                            <Iconify icon={"ri:search-2-line"} width={16} height={16} color="#5c6a82" />
-                          </InputAdornment>
-                      )
-                    }}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key !== "Escape") {
-                        e.stopPropagation();
-                      }
-                    }}
-                />
-            )}
-          {displayedOptions?.map((option, i) => (
-              <MenuItem sx={{...MenuItemStyle}} key={i} value={option.id}>
-                {option.name}
-              </MenuItem>
-          ))}
-        </Select>}
-      </FormControl>
-  );
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: 330,
+    },
+  },
 };
 
-export default SelectFilter;
+
+const SelectFilter = React.forwardRef((props, ref) => {
+  const {control} = useFormContext();
+  const {name, isRequired, title, placeholder, options, disabled, multiple = false} = props;
+  const {remove} = useFieldArray({control, name});
+  const classes = useStyles();
+
+  const [searchText, setSearchText] = useState("");
+  const displayedOptions = useMemo(
+      () => options?.filter((option) => containsText(option.name, searchText)),
+      [searchText]
+  );
+  return (
+      <Controller
+          name={name}
+          control={control}
+          render={({field, fieldState: {error}}) => (
+              <Stack direction="column">
+                {title && (<LabelStyle required={isRequired}>{title}</LabelStyle>)}
+                <SelectFieldStyle
+                    ref={ref}
+                    {...field}
+                    value={multiple ? field?.value || [] : field?.value || ""}
+                    defaultValue={""}
+                    displayEmpty
+                    disabled={disabled}
+                    error={!!error}
+                    {...props}
+                    onClose={() => setSearchText("")}
+                    renderValue={(!field?.value || multiple) ? () => Placeholder(placeholder) : () => options?.find(option => option?.value === field.value)?.name}
+                    sx={{...SelectStyle}}
+                    MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
+                >
+                  {options?.length > 3 && (
+                      <TextFieldStyle
+                          ref={ref}
+                          placeholder="Tìm kiếm..."
+                          fullWidth
+                          InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                  <Iconify icon={"ri:search-2-line"} width={16} height={16} color="#5c6a82"/>
+                                </InputAdornment>
+                            )
+                          }}
+                          sx={{...SearchInputStyle}}
+                          onChange={(e) => setSearchText(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key !== "Escape") {
+                              e.stopPropagation();
+                            }
+                          }}
+                      />
+                  )}
+                  {searchText ? displayedOptions?.map((option) => (
+                      option.value && <MenuItem sx={{...MenuItemStyle}} key={option?.value} value={option?.value}>
+                        {option?.label}
+                      </MenuItem>
+                  )) : options?.map((option) => (
+                      option.value && <MenuItem sx={{...MenuItemStyle}} key={option?.value} value={option?.value}>
+                        {option?.label}
+                      </MenuItem>
+                  ))}
+                </SelectFieldStyle>
+                {multiple && (
+                    <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
+                      {options?.filter(option => field?.value?.includes(option?.value))?.map((item, index) => {
+                        return <ChipDS key={index} sx={{
+                          padding: '5px 8px',
+                          color: '#455570',
+                          fontSize: 12,
+                          fontWeight: 500,
+                          mt: 2.5,
+                          ml: 0.5,
+                        }} label={item?.name} size="small" variant="filled" onDelete={() => remove(index)}
+                        />
+                      })}
+                    </Stack>
+                )}
+                <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
+              </Stack>
+          )}
+      />
+  );
+});
+
+export default memo(SelectFilter);

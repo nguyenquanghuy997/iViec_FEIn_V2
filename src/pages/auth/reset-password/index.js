@@ -41,7 +41,7 @@ export default function ResetPassword() {
           {statusResetPass ? (
             <ResetPasswordSuccess />
           ) : (
-            <Box sx={{ ...BoxInnerStyle, minHeight: "784px" }}>
+            <Box sx={{ ...BoxInnerStyle, minHeight: "700px" }}>
               {/* Back button */}
               <Stack sx={{ position: "absolute", top: 8, left: 8 }}>
                 <IconButton
