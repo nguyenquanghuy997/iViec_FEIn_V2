@@ -1,8 +1,10 @@
-import CloseIcon from "../../../public/assets/icons/company/CloseIcon";
-import ResizeIcon from "../../../public/assets/icons/company/ResizeIcon";
-import SmallIcon from "../../../public/assets/icons/company/SmallIcon";
-import UploadIcon from "../../../public/assets/icons/company/UploadIcon";
+import CloseIcon from "../../assets/CloseIcon";
+import ResizeIcon from "../../assets/ResizeIcon";
+import SmallIcon from "../../assets/SmallIcon";
+import UploadIcon from "../../assets/UploadIcon";
+import { useUpdateCompanyInfoMutation } from "./companyInforSlice";
 import { cropImage } from "./cropUtils";
+import { DOMAIN_SERVER_API } from "@/config";
 import {
   Button,
   Dialog,
@@ -15,21 +17,35 @@ import {
 import React, { useState } from "react";
 import Cropper from "react-easy-crop";
 import ImageUploading from "react-images-uploading";
+import {Controller, useFormContext} from "react-hook-form";
 
-export default function CropImageAva() {
-  const [image, setImage] = useState([]);
+export default function CropImageAva({ data, handleSubmit }) {
+  const [image, setImage] = useState("");
   const [croppedImage, setCroppedImage] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [uploadImage] = useUpdateCompanyInfoMutation();
+  const onSubmitImage = async () => {
+    const formData = new FormData();
+    try {
+      formData.append("avatar", croppedImage);
+      console.log("formData", formData);
+      await uploadImage({ formData }).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const ImageUploadingButton = ({ value, onChange, ...props }) => {
     return (
       <ImageUploading value={value} onChange={onChange}>
         {({ onImageUpload, onImageUpdate }) => (
-          <Button
-            color="primary"
+          <img
+            src={
+              `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${data}` || value
+            }
             onClick={value ? onImageUpload : () => onImageUpdate(0)}
             {...props}
-            sx={{
+            style={{
               cursor: "pointer",
               width: 120,
               height: 120,
@@ -37,9 +53,7 @@ export default function CropImageAva() {
               border: "3px solid #fff",
               maxWidth: 120,
             }}
-          >
-            Upload
-          </Button>
+          />
         )}
       </ImageUploading>
     );
@@ -101,26 +115,34 @@ export default function CropImageAva() {
               >
                 Tải lên
               </Button>
-
-              <div
-                style={{
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  display: "flex",
-                  position: "absolute",
-                }}
-              >
-                <label for="avatar" style={{ flex: 1, cursor: "pointer" }} />
-                <input
-                  type="file"
-                  id="avatar"
-                  accept="image/*"
-                  style={{ display: "none", userSelect: "none" }}
-                  onChange={uploadImage}
-                />
-              </div>
+              <Controller
+                name='avatar'
+                control={control}
+                render={( ) => (
+                  <div
+                    style={{
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: "flex",
+                      position: "absolute",
+                    }}
+                  >
+                    <label
+                      for="avatar"
+                      style={{ flex: 1, cursor: "pointer" }}
+                    />
+                    <input
+                      type="file"
+                      id="avatar"
+                      accept="image/*"
+                      style={{ display: "none", userSelect: "none" }}
+                      onChange={uploadImage}
+                    />
+                  </div>
+                )}
+              />
             </Box>
             <Button
               onClick={() => setDialogOpen(false)}
@@ -149,7 +171,7 @@ export default function CropImageAva() {
               image={image}
               crop={crop}
               zoom={zoom}
-              aspect={2/2}
+              aspect={2 / 2}
               onCropChange={setCrop}
               onCropComplete={(_, croppedAreaPixels) => {
                 setCroppedAreaPixels(croppedAreaPixels);
@@ -207,11 +229,12 @@ export default function CropImageAva() {
                 >
                   Hủy
                 </Button>
+
                 <Button
                   variant="contained"
-                  onClick={() =>
-                    onComplete(cropImage(image, croppedAreaPixels))
-                  }
+                  onClick={() => {
+                    onComplete(cropImage(image, croppedAreaPixels));
+                  }}
                   sx={{
                     backgroundColor: "#1976D2",
                   }}
@@ -225,7 +248,7 @@ export default function CropImageAva() {
       </Dialog>
     );
   };
-
+  const { control } = useFormContext();
   return (
     <div className="cropImage">
       {croppedImage ? (
@@ -241,10 +264,10 @@ export default function CropImageAva() {
       )}
       <ImageCropper
         open={dialogOpen}
-        image={image.length > 0 && image[0].dataURL || image}
+        image={(image.length > 0 && image[0].dataURL) || image}
         onComplete={(imagePromisse) => {
           imagePromisse.then((image) => {
-            setCroppedImage(image);
+            handleSubmit(onSubmitImage(setCroppedImage(image)));
             setDialogOpen(false);
           });
         }}

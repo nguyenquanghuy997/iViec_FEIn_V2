@@ -4,6 +4,9 @@ import {
   API_GET_COMPANY_INFOR,
   API_GET_PROVINCE,
   API_GET_DISTRICT,
+  API_GET_COMPANY_INFOR_BY_IDS,
+  API_UPDATE_COMPANY_INFOR,
+  API_GET_IMAGE,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -15,7 +18,7 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
     // Thông tin công ty
     // getBranchByUser: builder.query({
     //   query: () => ({
-    //     url: API_USER_INFO,
+    //     url: API_GET_COMPANY_INFOR_BY_IDS,
     //     method: "GET",
     //   }),
     //   providesTags: ["branch_by_user"],
@@ -23,6 +26,13 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
     getCompanyInfo: builder.query({
       query: () => ({
         url: `${API_GET_COMPANY_INFOR}`,
+        method: "GET",
+      }),
+      providesTags: ["CompanyInfor"],
+    }),
+    getCompanyInfoIdS: builder.query({
+      query: ({ Id }) => ({
+        url: `${API_GET_COMPANY_INFOR_BY_IDS}/${Id}`,
         method: "GET",
       }),
     }),
@@ -47,16 +57,42 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["Districts"],
     }),
+    updateCompanyInfo: builder.mutation({
+      query: (rest) => ({
+        url: API_UPDATE_COMPANY_INFOR,
+        method: "PATCH",
+        data: rest,
+        headers:{"Content-Type": "multipart/form-data"}
+      }),
+      
+      prepareHeaders: (headers) => {
+        headers.set("Content-Type", "multipart/form-data")
+          return headers
+      },
+      invalidatesTags: ["CompanyInfor"],
+    }),
+
+    getImage: builder.query({
+      query: (item) => ({
+        url: `${API_GET_IMAGE}`,
+        method: "GET",
+        params: { imagePath: item },
+      }),
+    }),
   }),
 });
 
 export const {
   // Thông tin công ty
   useGetCompanyInfoQuery,
+  useGetCompanyInfoIdSQuery,
   useGetJobCategoriesQuery,
   useLazyGetJobCategoriesQuery,
   useGetProvinceQuery,
   useLazyGetProvinceQuery,
   useGetDistrictByProvinceIdQuery,
   useLazyGetDistrictByProvinceIdQuery,
+  useUpdateCompanyInfoMutation,
+  useUploadImageMutation,
+  useGetImageQuery,
 } = companyInforSlice;

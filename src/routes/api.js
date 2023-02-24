@@ -136,7 +136,10 @@ export const API_GET_BRANCH_BY_USER = "api/Branch/GetByUserId";
 export const API_UPDATE_BRANCH = "api/Branch/UpdateBranch";
 
 // Thông tin công ty
-export const API_GET_COMPANY_INFOR = 'api/organization/Organization/GetOrganization';
+export const API_GET_COMPANY_INFOR = 'organization/Organization/GetOrganization';
+export const API_GET_COMPANY_INFOR_BY_IDS = 'organization/Organization/GetOrganizationIds'
+export const API_UPDATE_COMPANY_INFOR = 'organization/Organization/UpdateOrganization'
+export const API_GET_IMAGE ='Image/GetImage'
 // Thông báo
 export const API_GET_LIST_NOTIFICATION = "api/UserNotifications/GetPaging";
 export const API_MASK_READ_NOTIFICATION =
