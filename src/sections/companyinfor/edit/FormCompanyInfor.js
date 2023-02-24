@@ -1,4 +1,5 @@
 import ChipDS from "@/components/DesignSystem/ChipDS";
+// import ImageUpload from "../ImageUpload";
 import Image from "@/components/Image";
 import {
   FormProvider,
@@ -113,6 +114,14 @@ const FormCompanyInfor = ({ data }) => {
     }
   };
   console.log("hih", avatar);
+
+  // const EmptyImage = () => {
+  //   const obj = [];
+  //   let i = 0;
+  //   while (i < 6 - itemData.length) {
+  //     obj.push(<FileUpload />);
+  //     i++;
+  //   }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

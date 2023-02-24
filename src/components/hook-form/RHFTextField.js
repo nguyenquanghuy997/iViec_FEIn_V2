@@ -1,107 +1,46 @@
-import { memo } from 'react';
-import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
-import { InputLabel, Stack, TextField } from "@mui/material";
-import PropTypes from "prop-types";
+// @mui
+import PropTypes from 'prop-types'
 // form
-import { Controller, useFormContext } from "react-hook-form";
-import { InputLabelStyle, InputLabelErrorStyle,} from './style';
-
-const sxDefault = {
-  input: {
-    "&:-webkit-autofill": {
-      WebkitBoxShadow: "0 0 0 30px white inset !important",
-    },
-    "&:-webkit-autofill:hover": {
-      WebkitBoxShadow: "0 0 0 30px white inset !important",
-    },
-    "&:-webkit-autofill:focus": {
-      WebkitBoxShadow: "0 0 0 30px white inset !important",
-    },
-    "&:-webkit-autofill:active": {
-      WebkitBoxShadow: "0 0 0 30px white inset !important",
-    },
-  },
-  ".MuiInputBase-root": {
-    height: "44px",
-    fontSize: STYLE_CONSTANT.FONT_SM,
-    borderRadius: 0.75,
-    width: STYLE_CONSTANT.WIDTH_FULL,
-  },
-  ".MuiInputBase-root.Mui-error": {
-    height: "44px",
-    fontSize: STYLE_CONSTANT.FONT_SM,
-    borderRadius: 0.75,
-    width: STYLE_CONSTANT.WIDTH_FULL,
-  },
-  ".MuiInputBase-input": {
-    height: "44px",
-    py: "0 !important",
-  },
-  ".MuiFormHelperText-root": {
-    marginTop: 1,
-    marginLeft: 0,
-    fontSize: STYLE_CONSTANT.FONT_XS,
-    color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
-  },
-};
-
-function RHFTextField({ name, ...props }) {
-  const { control } = useFormContext();
-  const { htmlFor, required, label, placeholder, hasLabel = true, sx } = props;
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <Stack>
-          {hasLabel && (
-            <InputLabel
-              htmlFor={htmlFor || name}
-              required={required}
-              sx={
-                error
-                  ? { ...InputLabelStyle, ...InputLabelErrorStyle }
-                  : { ...InputLabelStyle }
-              }
-            >
-              {label}
-            </InputLabel>
-          )}
-          <TextField
-            fullWidth
-            {...field}
-            id={name}
-            error={!!error}
-            {...props}
-            helperText={error?.message}
-            required={false}
-            hiddenLabel={!hasLabel}
-            label={hasLabel ? null : label}
-            sx={sx ? { ...sxDefault, ...sx } : sxDefault}
-            placeholder={placeholder}
-          />
-        </Stack>
-      )}
-    />
-  );
-}
+import {Controller, useFormContext} from 'react-hook-form'
+import {LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
 
 RHFTextField.propTypes = {
-  name: PropTypes.string,
-  htmlFor: PropTypes.string,
-  required: PropTypes.bool,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  sx: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-};
+    name: PropTypes.string,
+    variant: PropTypes.string,
+    title: PropTypes.string,
+    isRequired: PropTypes.bool,
+}
 
 RHFTextField.defaultProps = {
-  name: "",
-  htmlFor: "",
-  required: false,
-  label: "",
-  placeholder: "",
-  sx: sxDefault,
-};
+    variant: 'standard',
+    title: "",
+    isRequired: false,
+}
 
-export default memo(RHFTextField) ;
+export default function RHFTextField({ name, title, isRequired, variant, ...other }) {
+    const { control } = useFormContext()
+
+    return (
+        <Controller
+            name={name}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+                <>
+                    {title && (
+                        <LabelStyle required={isRequired}>
+                            {title}
+                        </LabelStyle>
+                    )}
+                    <TextFieldStyle
+                        {...field}
+                        error={!!error}
+                        helperText={error?.message}
+                        variant={variant}
+                        {...other}
+                        InputProps={{ ...other.InputProps, disableUnderline: true }}
+                    />
+                </>
+            )}
+        />
+    )
+}

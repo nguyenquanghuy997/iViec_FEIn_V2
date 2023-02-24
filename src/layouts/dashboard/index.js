@@ -1,4 +1,4 @@
-import InstructionPopover from "../InstructionPopover";
+// import InstructionPopover from "../InstructionPopover";
 import DashboardAppBar from "./header/AppBar";
 import NavbarVertical from "./navbar/NavbarVertical";
 import {HEADER, NAVBAR} from "@/config";
@@ -81,7 +81,7 @@ export default function DashboardLayout({ roles, children }) {
               <RoleBasedGuard roles={roles}>{children}</RoleBasedGuard>
             )}
           </MainStyle>
-          <InstructionPopover />
+          {/*<InstructionPopover />*/}
         </WrapperStyle>
       </>
     );
@@ -106,7 +106,7 @@ export default function DashboardLayout({ roles, children }) {
             <RoleBasedGuard roles={roles}>{children}</RoleBasedGuard>
           )}
         </MainStyle>
-        <InstructionPopover />
+        {/*<InstructionPopover />*/}
       </WrapperStyle>
     </Box>
   );

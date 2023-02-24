@@ -1,19 +1,20 @@
-import { apiSlice } from "@/redux/api/apiSlice";
+import {apiSlice} from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
+  API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
+  API_GET_APPLICANT_SKILLS,
+  API_GET_APPLICANTS_BY_ID,
   API_GET_COLUMN_APPLICANTS,
+  API_GET_FILTER_ALL_APPLICANTS,
+  API_GET_LIST_JOB_SOURCE,
+  API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
+  API_GET_RECRUITMENTS_BY_APPLICANT,
+  API_GET_USER_FROM_ORGANIZATION,
   API_UPDATE_COLUMN_APPLICANTS,
-  API_ADD_REVIEW_FORM,
-  API_DELETE_REVIEW_FORM,
-  API_GET_ALL_REVIEW_FORM_OWNER,
-  API_GET_ALL_SEARCH,
-  API_SET_DEFAULT_REVIEW_FORM,
-  API_UPDATE_REVIEW_FORM,
 } from "@/routes/api";
-import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Applicant"],
+  addTagTypes: ["Applicant", "FilterApplicant"],
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
@@ -30,52 +31,75 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         url: API_GET_COLUMN_APPLICANTS,
         method: 'GET',
       }),
+      providesTags: ["GetColumnApplicants"],
     }),
-    updateListColumnApplicants: builder.query({
-      query: () => ({
-        url: API_UPDATE_COLUMN_APPLICANTS,
-        method: 'PATCH',
-      }),
-    }),
-    getAllApplicant: builder.mutation({
+    updateListColumnApplicants: builder.mutation({
       query: (data) => ({
-        url: API_GET_ALL_SEARCH,
-        method: "POST",
-        data: qs.stringify(data),
+        url: `${API_UPDATE_COLUMN_APPLICANTS}/${data.id}`,
+        method: 'PATCH',
+        data: data.body
+      }),
+      providesTags: ["UpdateColumnApplicants"],
+      invalidatesTags: ["GetColumnApplicants"],
+    }),
+    getApplicantById: builder.query({
+      query: ({ applicantId }) => ({
+        url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
+        method: 'GET',
       }),
     }),
-    getAllApplicantFormOwner: builder.query({
+    getRecruitmentsByApplicant: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENTS_BY_APPLICANT,
+        method: 'GET',
+        params
+      }),
+    }),
+    getRecruitmentPipelineStatesByRecruitment: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
+        method: 'GET',
+        params
+      }),
+    }),
+    GetApplicantCurrentStateWithRecruitmentStates: builder.mutation({
+      query: (params) => ({
+        url: API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
+        method: 'GET',
+        params
+      }),
+    }),
+
+    // new
+    // get all applicant with filter
+    getAllFilterApplicant: builder.mutation({
+      query: (data) => ({
+        url: API_GET_FILTER_ALL_APPLICANTS,
+        method: "POST",
+        data,
+      }),
+      invalidatesTags: ['FilterApplicant']
+    }),
+    // get all skills
+    getSkills: builder.query({
       query: () => ({
-        url: API_GET_ALL_REVIEW_FORM_OWNER,
+        url: API_GET_APPLICANT_SKILLS,
         method: "GET",
       }),
     }),
-    setDefaultApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_SET_DEFAULT_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
+    // get all job source
+    getAllJobSources: builder.query({
+      query: () => ({
+        url: API_GET_LIST_JOB_SOURCE,
+        method: "GET",
       }),
     }),
-    addApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_ADD_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
-      }),
-    }),
-    updateApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_UPDATE_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
-      }),
-    }),
-    deleteApplicantForm: builder.mutation({
-      query: (data) => ({
-        url: API_DELETE_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
+    // get all user from organization
+    getAllUserFromOrganization: builder.query({
+      query: (params) => ({
+        url: API_GET_USER_FROM_ORGANIZATION,
+        method: "GET",
+        params
       }),
     }),
   }),
@@ -85,11 +109,37 @@ export const {
   useGetListApplicantsQuery,
   useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
+  useUpdateListColumnApplicantsMutation,
   useUpdateListColumnApplicantsQuery,
+
   useGetAllApplicantMutation,
   useGetAllApplicantFormOwnerQuery,
   useSetDefaultApplicantFormMutation,
   useAddApplicantFormMutation,
   useUpdateApplicantFormMutation,
   useDeleteApplicantFormMutation,
+  useGetAllFilterApplicantMutation,
+  // skills
+  useGetSkillsQuery,
+  // job sources
+  useGetAllJobSourcesQuery,
+  useLazyGetAllJobSourcesQuery,
+  // user from organization
+  useGetAllUserFromOrganizationQuery,
+  useLazyGetAllUserFromOrganizationQuery,
+
+  useGetApplicantByIdQuery,
+  useGetRecruitmentsByApplicantQuery,
+  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useGetApplicantCurrentStateWithRecruitmentStatesMutation
 } = ApplicantFormSlice;
+
+// export const getJobDetail = createAsyncThunk(
+//   'jobDetail/getJobDetail',
+//   async ({ jobId }) => {
+//     const url = `${API_LIST_JOBS}/${jobId}`
+//     const response = await _getApi(url)
+
+//     return response?.data?.success ? response.data : []
+//   }
+// )

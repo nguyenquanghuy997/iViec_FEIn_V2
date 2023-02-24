@@ -93,13 +93,13 @@ export default function ModalReload() {
           "& h2": {
             paddingTop: "60px",
           },
-          "& h2 >:first-child": {
-            margin: "0 auto",
-            width: "50px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-          },
+          // "& h2 >:first-child": {
+          //   margin: "0 auto",
+          //   width: "50px",
+          //   height: "50px",
+          //   display: "flex",
+          //   justifyContent: "center",
+          // },
           "& .MuiDialogActions-root": {
             padding: "16px 24px!important",
           },

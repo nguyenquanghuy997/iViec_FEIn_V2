@@ -18,8 +18,9 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
   });
 
   const methods = useForm({
+    mode: "all",
     resolver: yupResolver(ResetPasswordSchema),
-    defaultValues: { email: "" },
+    defaultValues: { email: ""},
   });
 
   const {
@@ -33,13 +34,19 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       var body = JSON.stringify({
         userName: data.email,
+        userLoginType:1
       });
       await forgotPassword(body).unwrap();
       setStatusResetPass(true);
-      router.push(`?username=${data.email}`);
+      await  router.push(`?username=${data.email}`);
     } catch (error) {
       const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
-      setError("afterSubmit", { ...error, message });
+      const {status} = error;
+      if (status === "AUE_01") {
+        setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"}, {shouldFocus: true})
+      } else if (status === "IDE_12") {
+        setError('email', {type: "custom", message: "Email chưa được xác thực"}, {shouldFocus: true})
+      } else setError("afterSubmit", { ...error, message });
     }
   };
 
@@ -52,9 +59,10 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
         <Stack sx={{ mb: 5 }}>
           <RHFTextField
             name="email"
-            label="Email đăng nhập"
+            title="Email đăng nhập"
             placeholder="Nhập Email muốn khôi phục mật khẩu"
-            required
+            isRequired
+            sx={{width: 440, minHeight: 44}}
           />
         </Stack>
         <Stack>
