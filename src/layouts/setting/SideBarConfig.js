@@ -3,7 +3,7 @@ import { PAGES } from "@/config";
 import { getListRoles } from "@/utils/role";
 
 const getIconByIconify = (icon) => (
-  <Iconify icon={icon} width="100%" height="100%" />
+    <Iconify icon={icon} width="100%" height="100%" />
 );
 
 const ICONS = {
@@ -32,69 +32,6 @@ export const SIDEBAR_CONSTANTS = {
 
 export const sidebarConfig = [
   {
-    subheader: "Thiết lập tuyển dụng",
-    items: [
-      {
-        title: "Quy trình tuyển dụng",
-        path: "/applicant",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Quy trình phê duyệt",
-        path: "/jobs",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Vị trí công việc",
-        path: "/interview",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Kết nối",
-        path: "/board",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Đề thi tuyển",
-        path: "/stores",
-        roles: ROLES[PAGES.Applicant],
-      },
-    ],
-  },
-  {
-    subheader: "Thiết lập mẫu",
-    items: [
-      {
-        title: "Mẫu đánh giá",
-        path: "/applicant",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Mẫu thư mời nhận việc",
-        path: "/jobs",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Mẫu email tự động",
-        path: "/interview",
-        roles: ROLES[PAGES.Applicant],
-        children: [
-          {
-            title: "Mẫu email 1",
-            path: "/interview",
-            roles: ROLES[PAGES.Applicant],
-          },
-          {
-            title: "Mẫu email 2",
-            path: "/interview",
-            icon: ICONS.notification,
-            roles: ROLES[PAGES.Applicant],
-          },
-        ],
-      },
-    ],
-  },
-  {
     subheader: "Công ty",
     items: [
       {
@@ -109,9 +46,110 @@ export const sidebarConfig = [
       },
       {
         title: "Vai trò",
-        path: "/settings/pipeline",
+        path: "/settings/jobs",
         roles: ROLES[PAGES.Applicant],
       },
     ],
   },
+  {
+    subheader: "Thiết lập tuyển dụng",
+    items: [
+      {
+        title: "Quy trình tuyển dụng",
+        path: "/settings/pipeline",
+        roles: ROLES[PAGES.Applicant],
+      },
+      {
+        title: "Quy trình phê duyệt",
+        path: "/settings/approve",
+        roles: ROLES[PAGES.Applicant],
+      },
+      {
+        title: "Vị trí công việc",
+        path: "/settings/jobtype",
+        roles: ROLES[PAGES.Applicant],
+      },
+      // {
+      //   title: "Kết nối",
+      //   path: "/board",
+      //   roles: ROLES[PAGES.Applicant],
+      // },
+      {
+        title: "Quản lý đề thi",
+        path: "/settings",
+        roles: ROLES[PAGES.Applicant],
+        children: [
+          {
+            title: "Kho đề thi doanh nghiệp",
+            path: "/settings/exam/exambusiness",
+            roles: ROLES[PAGES.Applicant],
+          },
+          {
+            title: "Kho đề thi iVIEC",
+            path: "/settings/exam/iviecexam",
+            icon: ICONS.notification,
+            roles: ROLES[PAGES.Applicant],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    subheader: "Thiết lập mẫu",
+    items: [
+      {
+        title: "Mẫu đánh giá",
+        path: "/settings/evaluationform",
+        roles: ROLES[PAGES.Applicant],
+      },
+      {
+        title: "Mẫu thư mời nhận việc",
+        path: "/settings/offerform",
+        roles: ROLES[PAGES.Applicant],
+      },
+      // {
+      //   title: "Mẫu email tự động",
+      //   path: "/interview",
+      //   roles: ROLES[PAGES.Applicant],
+      //   children: [
+      //     {
+      //       title: "Email thông báo tài khoản",
+      //       path: "/interview",
+      //       roles: ROLES[PAGES.Applicant],
+      //     },
+      //     {
+      //       title: "Email lịch thi tuyển",
+      //       path: "/interview",
+      //       icon: ICONS.notification,
+      //       roles: ROLES[PAGES.Applicant],
+      //     },
+      //     {
+      //       title: "Email lịch phỏng vấn trực tuyến",
+      //       path: "/interview",
+      //       icon: ICONS.notification,
+      //       roles: ROLES[PAGES.Applicant],
+      //     },
+      //     {
+      //       title: "Email lịch phỏng vấn trực tiếp",
+      //       path: "/interview",
+      //       icon: ICONS.notification,
+      //       roles: ROLES[PAGES.Applicant],
+      //     },
+      //     {
+      //       title: "Email thông báo Kết quả - Đạt",
+      //       path: "/interview",
+      //       icon: ICONS.notification,
+      //       roles: ROLES[PAGES.Applicant],
+      //     },
+      //     {
+      //       title: "Email thông báo Kết quả - Loại",
+      //       path: "/interview",
+      //       icon: ICONS.notification,
+      //       roles: ROLES[PAGES.Applicant],
+      //     },
+      //   ],
+      // },
+    ],
+  },
+
 ];

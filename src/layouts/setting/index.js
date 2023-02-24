@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 const RootStyle = styled("div")(({ theme }) => ({
   minWidth: SIDEBAR_CONSTANTS.SIDEBAR_WIDTH,
-  padding: theme.spacing(0),
+  padding: theme.spacing(2, 0, 2, 2),
 }));
 
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -34,7 +34,7 @@ const BoxWrapper = styled(Box)(({ theme }) => ({
 
 const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
   marginLeft: isDesktop ? theme.spacing(4.5) : theme.spacing(0),
-  backgroundColor: "#FDFDFD",
+  padding: theme.spacing(2, 0, 0, 2),
   [theme.breakpoints.up("xl")]: {
     width: '100%'
   },

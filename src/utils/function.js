@@ -34,7 +34,24 @@ const convertViToEn = (str, removeSpecial = true) => {
   return str;
 }
 
+const convertFlatDataToTree = (flatData, parentKey = 'parentOrganizationId') => {
+  const hashTable = Object.create(null);
+  flatData?.forEach((aData) => {
+    hashTable[aData.id] = { ...aData, children: [] };
+  });
+  const dataTree = [];
+  flatData?.forEach((aData) => {
+    if (aData[parentKey]) {
+      hashTable[aData[parentKey]]?.children.push(hashTable[aData.id]);
+    } else {
+      dataTree.push(hashTable[aData.id]);
+    }
+  });
+  return dataTree;
+};
+
 export {
   containsText,
-  convertViToEn
+  convertViToEn,
+  convertFlatDataToTree
 }
