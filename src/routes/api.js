@@ -73,7 +73,7 @@ export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePassword
 
 //Ứng viên
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new lấy danh sách ứng viên
-export const API_GET_FILTER_ALL_APPLICANTS = "/applicant/ApplicantRecruitment/FilterApplicantRecruitmentPipelineStage"; // new lấy danh sách ứng viên
+export const API_GET_FILTER_ALL_APPLICANTS = "/applicant/ApplicantRecruitment/FilterApplicantRecruitments"; // new lấy danh sách ứng viên
 export const API_GET_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/GetApplicantRecruitmentVisible"; //new lấy danh sách cột
 export const API_UPDATE_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/UpdateApplicantRecruitmentVisible"; //new sửa danh sách cột
 export const API_GET_APPLICANTS_BY_ID = "/applicant/Applicant/GetApplicant"; //lấy thông tin ứng viên theo id
