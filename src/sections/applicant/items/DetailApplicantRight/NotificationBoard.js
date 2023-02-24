@@ -122,9 +122,9 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
   return (
     <Container
       sx={{
-        paddingLeft:'0 !important',
-        paddingRight:'0 !important',
-        marginBottom: "40px",
+        paddingLeft: "0 !important",
+        paddingRight: "0 !important",
+        marginBottom: "12px",
         "& .MuiListItemText-root+ svg": {
           width: "1em",
           transform: "translateY(2.5em)",
@@ -135,7 +135,7 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
         alignItems="flex-start"
         onClick={handleClick}
         sx={{
-          padding: '12px 20px',
+          padding: "12px 20px",
           backgroundColor: !open ? "white" : "#F2F4F5",
           fontSize: "0.9rem!important",
           "&:hover": {
@@ -180,113 +180,120 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
             }
           />
         ) : (
-          <div>
-            <div>
-              {renderBoxStatus(
-                action,
-                " đã chuyển ứng viên Đinh Tiến Thành từ bước Ứng tuyển sang bước "
-              )}
-            </div>
-            <div>
-              <React.Fragment>
-                <Typography
-                  sx={{
-                    display: "block",
-                    fontSize: "12px",
-                    marginTop: "4px",
-                  }}
-                  component="span"
-                  variant="body2"
-                  color="#5C6A82"
-                >
-                  15:00 17/02/2023
-                </Typography>
-                {action === "fail"
-                  ? renderText("Lý do loại:", "kHÔNG THÍCH")
-                  : ""}
-              </React.Fragment>
-            </div>
-          </div>
-        )}
-        {open ? <ExpanMore style={{ color: "red" }} /> : <ExpanLess />}
-      </ListItemButton>
-      <Collapse
-        in={open}
-        timeout="auto"
-        unmountOnExit
-        sx={{
-          pl: 13,
-          backgroundColor: "#F2F4F5",
-          pb: 2,
-          "& .MuiButtonBase-root:hover": {
-            backgroundColor: "#F2F4F5",
-          },
-        }}
-      >
-        <List component="div" disablePadding>
-          <ListItemText sx={{ fontSize: "13px" }}>
-            Đánh giá: <span style={{ marginLeft: "16px" }}>Đạt</span>
-          </ListItemText>
-        </List>
-        <List>
-          <ListItemText sx={{ fontSize: "13px" }}>
-            Điểm TB: <span style={{ marginLeft: "16px" }}> 10</span>
-          </ListItemText>
-        </List>
-        <List>
-          <ListItemText sx={{ fontSize: "13px" }}>
-            Kết luận:
-            <span style={{ marginLeft: "16px" }}>
-              {" "}
-              Ứng viên khá sáng giá, tuyển thẳng luôn không cần phỏng vấn lần 2.
-            </span>
-          </ListItemText>
-        </List>
-        {ACTION_CONTENT[action]?.option ? (
-          <ListItemButton
-            sx={{
-              "& .MuiButtonBase-root:hover": {
-                backgroundColor: "#F2F4F5",
-              },
-            }}
-          >
-            <Button
-              variant="outlined"
-              sx={{ width: "100%" }}
-              onClick={handleOpenModal}
-            >
-              {ACTION_CONTENT[action]?.option}
-            </Button>
-            <BootstrapDialog
-              onClose={handleCloseModal}
-              aria-labelledby="customized-dialog-title"
-              open={openModal}
-            >
-              <BootstrapDialogTitle
-                id="customized-dialog-title"
-                onClose={handleCloseModal}
+          <>
+            <div style={{paddingRight:"14px"}}>
+              <div>
+                {renderBoxStatus(
+                  action,
+                  " đã chuyển ứng viên Đinh Tiến Thành từ bước Ứng tuyển sang bước "
+                )}
+              </div>
+              <div>
+                <React.Fragment>
+                  <Typography
+                    sx={{
+                      display: "block",
+                      fontSize: "12px",
+                      marginTop: "4px",
+                    }}
+                    component="span"
+                    variant="body2"
+                    color="#5C6A82"
+                  >
+                    15:00 17/02/2023
+                  </Typography>
+                  {action === "fail"
+                    ? renderText("Lý do loại:", "kHÔNG THÍCH")
+                    : ""}
+                </React.Fragment>
+              </div>
+
+              <Collapse
+                in={open}
+                timeout="auto"
+                unmountOnExit
+                sx={{
+                  backgroundColor: "#F2F4F5",
+                  pb: 2,
+                  "& .MuiButtonBase-root:hover": {
+                    backgroundColor: "#F2F4F5",
+                  },
+                }}
               >
-                {ACTION_CONTENT[action]?.option}
-              </BootstrapDialogTitle>
-              <Divider />
-              <DialogContent>
-                <Typography gutterBottom>
-                  Cras mattis consectetur purus sit amet fermentum. Cras justo
-                  odio, dapibus ac facilisis in, egestas eget quam. Morbi leo
-                  risus, porta ac consectetur ac, vestibulum at eros.
-                </Typography>
-              </DialogContent>
-              {/* <DialogActions>
+                <List component="div" disablePadding>
+                  <ListItemText sx={{ fontSize: "13px" }}>
+                    Đánh giá: <span style={{ marginLeft: "16px" }}>Đạt</span>
+                  </ListItemText>
+                </List>
+                <List>
+                  <ListItemText sx={{ fontSize: "13px" }}>
+                    Điểm TB: <span style={{ marginLeft: "16px" }}> 10</span>
+                  </ListItemText>
+                </List>
+                <List>
+                  <ListItemText sx={{ fontSize: "13px" }}>
+                    Kết luận:
+                    <span style={{ marginLeft: "16px" }}>
+                      {" "}
+                      Ứng viên khá sáng giá, tuyển thẳng luôn không cần phỏng
+                      vấn lần 2.
+                    </span>
+                  </ListItemText>
+                </List>
+                {ACTION_CONTENT[action]?.option ? (
+                  <ListItemButton
+                    sx={{
+                      "& .MuiButtonBase-root:hover": {
+                        backgroundColor: "#F2F4F5",
+                      },
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      sx={{ width: "100%" }}
+                      onClick={handleOpenModal}
+                    >
+                      {ACTION_CONTENT[action]?.option}
+                    </Button>
+                    <BootstrapDialog
+                      onClose={handleCloseModal}
+                      aria-labelledby="customized-dialog-title"
+                      open={openModal}
+                    >
+                      <BootstrapDialogTitle
+                        id="customized-dialog-title"
+                        onClose={handleCloseModal}
+                      >
+                        {ACTION_CONTENT[action]?.option}
+                      </BootstrapDialogTitle>
+                      <Divider />
+                      <DialogContent>
+                        <Typography gutterBottom>
+                          Cras mattis consectetur purus sit amet fermentum. Cras
+                          justo odio, dapibus ac facilisis in, egestas eget
+                          quam. Morbi leo risus, porta ac consectetur ac,
+                          vestibulum at eros.
+                        </Typography>
+                      </DialogContent>
+                      {/* <DialogActions>
           <Button autoFocus onClick={handleCloseModal}>
             Save changes
           </Button>
         </DialogActions> */}
-            </BootstrapDialog>
-          </ListItemButton>
-        ) : (
-          ""
+                    </BootstrapDialog>
+                  </ListItemButton>
+                ) : (
+                  ""
+                )}
+              </Collapse>
+            </div>
+            <div style={{margin:'auto'}}>
+            {open ? <ExpanMore /> : <ExpanLess />}
+
+            </div>
+          </>
         )}
-      </Collapse>
+      </ListItemButton>
     </Container>
   );
 };

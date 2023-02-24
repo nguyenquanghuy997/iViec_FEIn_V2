@@ -18,12 +18,19 @@ export const ACTION = {
 };
 
 export const ACTION_CONTENT = {
-  fail: {text:'Loại', color: "#D32F2F" },
-  success: { text:'Kết quả- Đạt',color: "#388E3C" },
-  consider: { text:'Kết quả- cân nhắc',color: "#F77A0C" },
-  interview: { text:'Phỏng vấn trực tiếp',color: "#172B4D",option:'Xem bộ câu hỏi' },
+  evaluateFail: {text:'Loại', color: "#D32F2F" },
+  evaluateSuccess: { text:'Đạt',color: "#388E3C" },
+  evaluateSonsider: { text:'Cân nhắc',color: "#F77A0C" },
+  resultFail: {text:'Kết quả - Loại', color: "#D32F2F" },
+  resultSuccess: { text:'Kết quả - Đạt',color: "#388E3C" },
+  resultSonsider: { text:'Kết quả - Cân nhắc',color: "#F77A0C" },
+  resultSonsider: { text:'Kết quả - Cân nhắc',color: "#F77A0C" },
+  interviewExam: { text:'Phỏng vấn máy',color: "#172B4D",option:'Xem bộ câu hỏi' },
+  interview: { text:'Phỏng vấn người',color: "#172B4D",option:'Xem bộ câu hỏi' },
   apply: { text:'Ứng tuyển',color: "#172B4D" },
+  ownerApply: { text:'Ứng tuyển',color: "#172B4D" },
   competition :{ text :'Thi tuyển',color :"#172B4D", option:'Xem đề thi'},
+  ownerCompetition :{ text :'Thi tuyển',color :"#172B4D", option:'Xem đề thi'},
   invitation : {text:'Mời nhận việc', color:'#A2AAB7', option:'Xem thư mời nhận việc'}
 
 };

@@ -1,11 +1,11 @@
 import EmptyIcon from "../../../../assets/EmptyIcon";
 import NotificationBoard from "./NotificationBoard";
+import { SwitchDS } from "@/components/DesignSystem";
 import SvgIconStyle from "@/components/SvgIconStyle";
-import { Box, Grid } from "@mui/material";
 import { FormProvider } from "@/components/hook-form";
+import { Box, Grid } from "@mui/material";
 import List from "@mui/material/List";
 import React from "react";
-import { SwitchDS } from "@/components/DesignSystem";
 import { useForm } from "react-hook-form";
 
 export const Activities = () => {
@@ -23,6 +23,7 @@ export const Activities = () => {
     interview: getIcon("ic_interview"),
     aiInterview: getIcon("ic_ai"),
     apply: getIcon("ic_apply"),
+    ownerApply: getIcon("icon_owner_apply"),
   };
 
   const methods = useForm({
@@ -31,17 +32,41 @@ export const Activities = () => {
   const isActive = methods.watch("isActive");
   return (
     <Grid item sx={{ padding: "12px 0 0 0" }}>
-       <FormProvider methods={methods}>
-        <SwitchDS name={"isActive"} label={"Hiển thị hoạt động"}/>
+      <FormProvider methods={methods}>
+        <SwitchDS name={"isActive"} label={"Hiển thị hoạt động"} />
       </FormProvider>
 
       {isActive ? (
         <Box>
           <List
-            sx={{ width: "100%", pt:'16px' }}
+            sx={{ width: "100%", pt: "16px" }}
             component="nav"
             aria-labelledby="nested-list-subheader"
           >
+            <NotificationBoard
+              icon={ICONS.apply}
+              candidate="Ứng viên Đinh Tiến Thành"
+              action="apply"
+            />
+            <NotificationBoard
+              icon={ICONS.ownerApply}
+              candidate="Phạm Xuân Chung đã thêm ứng viên Đinh Tiến Thành vào bước Ứng tuyển."
+              action="ownerApply"
+            />
+            <NotificationBoard
+              icon={ICONS.success}
+              competition="Ứng viên Đinh Tiến Thành đã tự động chuyển sang bước Thi tuyển"
+              action="competition"
+            />
+            <NotificationBoard
+              icon={ICONS.fail}
+              competition="Phạm Xuân Chung đã chuyển ứng viên Đinh Tiến Thành từ bước Ứng tuyển sang bước Thi Tuyển"
+              action="competition"
+            />
+
+
+{/* 
+
             <NotificationBoard
               icon={ICONS.success}
               manager="Phạm Xuân Chung"
@@ -77,6 +102,7 @@ export const Activities = () => {
               candidate="Ứng viên Đinh Tiến Thành"
               action="apply"
             />
+
             <NotificationBoard
               icon={ICONS.apply}
               candidate="Ứng viên Đinh Tiến Thành"
@@ -86,12 +112,7 @@ export const Activities = () => {
               icon={ICONS.apply}
               candidate="Ứng viên Đinh Tiến Thành"
               action="apply"
-            />
-            <NotificationBoard
-              icon={ICONS.apply}
-              candidate="Ứng viên Đinh Tiến Thành"
-              action="apply"
-            />
+            /> */}
           </List>
         </Box>
       ) : (

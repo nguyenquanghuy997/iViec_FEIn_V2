@@ -17,14 +17,12 @@ function stringToColor(string) {
     color += `00${value.toString(16)}`.slice(-2);
   }
   /* eslint-enable no-bitwise */
-console.log('color', color)
   return color;
 }
 
 export default function AvatarDS(props) {
     const { src, sx, name } = props;
     function stringAvatar(name) {
-      console.log('name',name)
       if(name){
         return {
           sx: {
