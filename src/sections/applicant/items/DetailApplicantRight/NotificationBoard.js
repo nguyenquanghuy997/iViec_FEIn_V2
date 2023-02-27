@@ -4,7 +4,6 @@ import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
 import ModalReload from "./ModalReload";
 import { ACTION_CONTENT } from "./config";
 import { Button } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import Collapse from "@mui/material/Collapse";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -21,8 +20,9 @@ import { styled } from "@mui/material/styles";
 import { Container } from "@mui/system";
 import React from "react";
 import { useState } from "react";
+import { AvatarDS} from "@/components/DesignSystem";
 
-const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
+const NotificationBoard = ({ icon, avatarSrc,avatarName, action, manager, candidate, title }) => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => {
@@ -135,7 +135,7 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
         alignItems="flex-start"
         onClick={handleClick}
         sx={{
-          padding: "12px 20px",
+          padding: "20px 12px",
           backgroundColor: !open ? "white" : "#F2F4F5",
           fontSize: "0.9rem!important",
           "&:hover": {
@@ -153,12 +153,23 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
         </ListItemIcon>
 
         <ListItemAvatar sx={{ marginTop: "3px !important" }}>
-          <Avatar
+          {/* <Avatar
             alt="Remy Sharp"
             src={avatarSrc}
             sx={{ width: "28px", height: "28px" }}
-          />
+          /> */}
+          <AvatarDS
+                              sx={{
+                                height: "28px",
+                                width: "28px",
+                                borderRadius: "100px",
+                                fontSize: "12px",
+                              }}
+                              name={avatarName}
+                              src={avatarSrc}
+                            ></AvatarDS>
         </ListItemAvatar>
+
         {candidate ? (
           <ListItemText
             primary={renderBoxStatus(action, " đã ứng tuyển.")}
@@ -183,10 +194,7 @@ const NotificationBoard = ({ icon, avatarSrc, action, manager, candidate }) => {
           <>
             <div style={{paddingRight:"14px"}}>
               <div>
-                {renderBoxStatus(
-                  action,
-                  " đã chuyển ứng viên Đinh Tiến Thành từ bước Ứng tuyển sang bước "
-                )}
+                {title}
               </div>
               <div>
                 <React.Fragment>

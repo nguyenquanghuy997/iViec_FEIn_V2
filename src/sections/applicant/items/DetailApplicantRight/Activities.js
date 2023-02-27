@@ -8,7 +8,7 @@ import List from "@mui/material/List";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-export const Activities = () => {
+export const Activities = ({ dataLog, dataApplicant }) => {
   const getIcon = (name) => (
     <SvgIconStyle
       src={`/assets/icons/candidate/${name}.svg`}
@@ -25,11 +25,13 @@ export const Activities = () => {
     apply: getIcon("ic_apply"),
     ownerApply: getIcon("icon_owner_apply"),
   };
-
+  console.log("dataApplicant", dataApplicant);
   const methods = useForm({
     defaultValues: { isActive: !false },
   });
   const isActive = methods.watch("isActive");
+
+  console.log(dataLog);
   return (
     <Grid item sx={{ padding: "12px 0 0 0" }}>
       <FormProvider methods={methods}>
@@ -43,6 +45,56 @@ export const Activities = () => {
             component="nav"
             aria-labelledby="nested-list-subheader"
           >
+            {dataLog?.events &&
+              dataLog?.events.map((p, index) => {
+                var stagePrevious = "";
+                var stageResultPrevious = "";
+                if (index < dataLog?.events?.length) {
+                  stagePrevious =
+                    dataLog?.events[index + 1]?.recruitmentPipelineStateType;
+                  stageResultPrevious =
+                    dataLog?.events[index + 1]?.pipelineStateResultType;
+                }
+                console.log("stagePrevious", stagePrevious);
+                console.log("stageResultPrevious", stageResultPrevious);
+                return (
+                  <div key={index}>
+                    {p.eventType.includes("AddApplicantToRecruitmentEvent") && (
+                      <NotificationBoard
+                        icon={ICONS.apply}
+                        title={
+                          <div>
+                            <p>
+                              <span style={{ fontWeight: 600 }}>
+                                {p?.creatorName}
+                              </span>
+                              {" đã thêm "}
+                              <span style={{ fontWeight: 600 }}>
+                                {dataApplicant?.fullName}
+                              </span>
+                              {" vào tin tuyển dụng "}
+                              <span style={{ fontWeight: 600 }}>
+                                {"Tin tuyển dụng phổ biến"}
+                              </span>
+                            </p>
+                          </div>
+                        }
+                        action="add"
+                        avatarName={p?.creatorName}
+                        // stagePrevious={stagePrevious}
+                        // stageResultPrevious={stageResultPrevious}
+                        // creatorName={p?.creatorName}
+                        // applicantName={dataApplicant?.fullName}
+                        // recruitmentName={"Tin tuyển dụng phổ biến"}
+                      />
+                    )}
+                    {p.eventType.includes(
+                      "UpdateApplicantRecruitmentEvent"
+                    ) && <div>update</div>}
+                  </div>
+                );
+              })}
+            {/* 
             <NotificationBoard
               icon={ICONS.apply}
               candidate="Ứng viên Đinh Tiến Thành"
@@ -57,17 +109,9 @@ export const Activities = () => {
               icon={ICONS.success}
               competition="Ứng viên Đinh Tiến Thành đã tự động chuyển sang bước Thi tuyển"
               action="competition"
-            />
-            <NotificationBoard
-              icon={ICONS.fail}
-              competition="Phạm Xuân Chung đã chuyển ứng viên Đinh Tiến Thành từ bước Ứng tuyển sang bước Thi Tuyển"
-              action="competition"
-            />
+            /> */}
 
-
-{/* 
-
-            <NotificationBoard
+            {/* <NotificationBoard
               icon={ICONS.success}
               manager="Phạm Xuân Chung"
               action="success"
@@ -76,13 +120,13 @@ export const Activities = () => {
               icon={ICONS.fail}
               manager="Phạm Xuân Chung"
               action="fail"
-            />
-            <NotificationBoard
+            /> */}
+            {/* <NotificationBoard
               icon={ICONS.consider}
               manager="Phạm Xuân Chung"
               action="consider"
-            />
-            <NotificationBoard
+            /> */}
+            {/* <NotificationBoard
               icon={ICONS.interview}
               manager="Phạm Xuân Chung"
               action="interview"
@@ -96,22 +140,6 @@ export const Activities = () => {
               icon={ICONS.aiInterview}
               manager="Phạm Xuân Chung"
               action="interview"
-            />
-            <NotificationBoard
-              icon={ICONS.apply}
-              candidate="Ứng viên Đinh Tiến Thành"
-              action="apply"
-            />
-
-            <NotificationBoard
-              icon={ICONS.apply}
-              candidate="Ứng viên Đinh Tiến Thành"
-              action="apply"
-            />
-            <NotificationBoard
-              icon={ICONS.apply}
-              candidate="Ứng viên Đinh Tiến Thành"
-              action="apply"
             /> */}
           </List>
         </Box>

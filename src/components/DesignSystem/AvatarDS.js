@@ -21,7 +21,7 @@ function stringToColor(string) {
 }
 
 export default function AvatarDS(props) {
-    const { src, sx, name } = props;
+    const { src, sx, name, variant } = props;
     function stringAvatar(name) {
       if(name){
         return {
@@ -37,7 +37,7 @@ export default function AvatarDS(props) {
     }
     return (
         <Badge
-        variant="dot"
+         variant={variant}
         color="success"
         sx={{
             marginRight:"8px",
@@ -62,4 +62,5 @@ AvatarDS.prototype = {
   src: PropTypes.element,
   sx: PropTypes.any,
   name: PropTypes.any,
+  variant: PropTypes.any,
 };
