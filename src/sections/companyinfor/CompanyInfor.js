@@ -175,6 +175,7 @@ export default function CompanyInfor() {
           paddingLeft: 40,
           paddingRight: 40,
           marginTop: "-6%",
+          background: 'white'
         }}
       >
         <Box
@@ -182,7 +183,7 @@ export default function CompanyInfor() {
             display: "flex",
             flexDirection: "row",
             alignItems: "flex-end",
-            mb: "28px",
+            mb: "28px", 
           }}
         >
           <CropImageAva data={Data?.avatar} handleSubmit={handleSubmit} />

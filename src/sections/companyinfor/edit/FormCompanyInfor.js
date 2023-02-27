@@ -1,5 +1,4 @@
 import ChipDS from "@/components/DesignSystem/ChipDS";
-// import ImageUpload from "../ImageUpload";
 import Image from "@/components/Image";
 import {
   FormProvider,
@@ -27,10 +26,9 @@ import { React, useEffect } from "react";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { useSnackbar } from 'notistack'
 
 const InputStyle = { width: 265, minHeight: 40 };
-const { enqueueSnackbar } = useSnackbar()
+// const { enqueueSnackbar } = useSnackbar()
 
 const FormCompanyInfor = ({ data }) => {
   const defaultValues = { ...data };
@@ -105,7 +103,7 @@ const FormCompanyInfor = ({ data }) => {
 
       if (!res.Succeeded) throw res;
 
-      enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!");
+      // enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!");
       // onFinish();
     } catch (err) {
       const message =
@@ -418,7 +416,6 @@ const FormCompanyInfor = ({ data }) => {
 
         <LoadingButton
           variant="text"
-          // onClick={onFinish}
           sx={{ color: "#455570" }}
         >
           {"Hủy"}
