@@ -77,14 +77,6 @@ Figma https://www.figma.com/files/team/1143803997256806376/iVIEC-Design-Hub?fuid
 API Document https://sapi.iviec.vn/swagger/ui/index
 Task 
 
+git remote set-url origin git@gitlab.com:ngocthang1493/iviec_inside.git
 
-// build code
-
-ssh -i iviec-dev.pem root@103.176.149.147
-
-pm2 start yarn --name "nextjs" --interpreter bash -- start
-
-git pull
-yarn install
-yarn build
-pm2 restart nextjs
+git remote set-url origin git@git.iviec.vn:iviec/inside-frontend.git
