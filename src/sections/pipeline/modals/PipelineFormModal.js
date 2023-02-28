@@ -10,8 +10,8 @@ import {
   PipelineAddModal,
   PipelineDraggableItem,
   PipelinePreviewItem,
-  useAddReviewFormMutation,
-  useUpdateReviewFormMutation,
+  useAddPipelineMutation,
+  useUpdatePipelineMutation,
 } from "@/sections/pipeline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
@@ -38,8 +38,8 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   const [editItemIndex, setEditItemIndex] = useState(-1);
 
   // api
-  const [addForm] = useAddReviewFormMutation();
-  const [updateForm] = useUpdateReviewFormMutation();
+  const [addForm] = useAddPipelineMutation();
+  const [updateForm] = useUpdatePipelineMutation();
 
   // form
   const Schema = Yup.object().shape({
@@ -115,41 +115,12 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     return <PipelinePreviewItem data={item} index={index} />;
   };
 
-  // useEffect(() => {
-  //   if (!show) {
-  //     reset();
-  //     setValue("name", "");
-  //     setValue("isDefault", false);
-  //     setValue("isActive", true);
-  //     setListForm([]);
-  //     setShowForm(false);
-  //     return;
-  //   }
-
-  //   if (!isEditMode) return;
-
-  //   setValue("name", data.ReviewName);
-  //   setValue("isDefault", !!data.IsDefault);
-  //   setValue("isActive", !!data.Status);
-  //   setListForm(
-  //     data.Criterias?.map?.((i) => ({
-  //       name: i.CriteriaName,
-  //       des: i.CriteriaNote,
-  //     })) || []
-  //   );
-  // }, [show]);
 
   useEffect(() => {
     setValue("list", listForm);
     listForm.length && handleSubmit(() => {})();
   }, [listForm]);
 
-  // useEffect(() => {
-  //   if (!showForm) {
-  //     setEditItemIndex(-1);
-  //     setEditItemData({});
-  //   }
-  // }, [showForm]);
 
   return (
     <>

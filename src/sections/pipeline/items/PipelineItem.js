@@ -13,7 +13,7 @@ import { Card } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { PipelineTable } from "./PipelineTable";
-import {useGetAllReviewFormMutation} from "@/sections/pipeline";
+import {useGetAllPipelineMutation} from "@/sections/pipeline";
 import { View } from "@/components/FlexStyled";
 
 
@@ -67,7 +67,7 @@ export const PipelineItem = () => {
   const [
     fetchData,
     { isLoading, data: { TotalRecords = 0, DataList = [] } = {} },
-  ] = useGetAllReviewFormMutation();
+  ] = useGetAllPipelineMutation();
 
   const refreshData = () => {
     fetchData(refRequest.current).unwrap();
@@ -115,10 +115,8 @@ export const PipelineItem = () => {
 
   return (
       <View pv={20} ph={24}>
-        {/* table option */}
         <FormProvider methods={methods}>
           <View flexRow atCenter mb={20}>
-            {/* status */}
             <View width={160}>
               <RHFBasicSelect
                 name="status"

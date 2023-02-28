@@ -6,10 +6,9 @@ import SettingLayout from "@/layouts/setting";
 import {
   PipelineFormModal,
   PipelineItem,
-  useGetAllReviewFormMutation,
 } from "@/sections/pipeline";
 import { getRolesByPage } from "@/utils/role";
-import { useRef, useState } from "react";
+import {  useState } from "react";
 import PageWrapper from "@/components/PageWrapper";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
@@ -29,18 +28,8 @@ export async function getStaticProps() {
 }
 
 export default function Setting() {
-  // ref
-  const refRequest = useRef({});
-
   // state
   const [showForm, setShowForm] = useState(false);
-
-  // api
-  const [fetchData] = useGetAllReviewFormMutation();
-
-  const refreshData = () => {
-    fetchData(refRequest.current).unwrap();
-  };
 
   return (
     <PageWrapper title={"Quy trình tuyển dụng"}>
@@ -93,7 +82,6 @@ export default function Setting() {
         <PipelineFormModal
             show={showForm}
             setShow={setShowForm}
-            onRefreshData={refreshData}
         />
       </Page>
     </PageWrapper>

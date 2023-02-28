@@ -153,11 +153,11 @@ export const API_ADD_JOBTYPE = "JobType/CreateNewJobType";
 export const API_UPDATE_JOBTYPE = "JobType/UpdateJobType";
 
 // Pipeline
-export const API_GET_ALL_PIPELINE = "api/Pipeline/PipelineSearchPaging";
-export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm";
-export const API_ADD_PIPELINE = "ReviewForm/InsertReviewForm";
-export const API_UPDATE_PIPELINE = "ReviewForm/UpdateReviewForm";
-export const API_DELETE_PIPELINE = "ReviewForm/DeleteReviewForm";
+export const API_GET_ALL_PIPELINE = "organization/OrganizationPipeline/GetOrganizationPipelines"; //new
+export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm"; // bật tắt trạng thái hoạt động
+export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
+export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
+export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
 
 // API Application page
 // recruitment tin tuyển dụng
