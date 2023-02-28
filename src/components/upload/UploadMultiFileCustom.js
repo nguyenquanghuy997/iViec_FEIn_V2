@@ -1,7 +1,7 @@
 // @mui
 //
 import BlockContent from "./BlockContent";
-import MultiFilePreview from "./MultiFilePreview";
+import MultiFilePreviewCustom from "./MultiFilePreviewCustom";
 import RejectionFiles from "./RejectionFiles";
 import { Box, Button, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -39,8 +39,10 @@ export default function UploadMultiFile({
   sx,
   ...other
 }) {
+  console.log("🚀 ~ file: UploadMultiFileCustom.js:42 ~ files:", files);
   const {
     getRootProps,
+    acceptedFiles,
     getInputProps,
     isDragActive,
     isDragReject,
@@ -48,11 +50,14 @@ export default function UploadMultiFile({
   } = useDropzone({
     ...other,
   });
-  console.log("🚀 ~ file: UploadMultiFile.js:51 ~ getRootProps:", getRootProps);
+  console.log(
+    "🚀 ~ file: UploadMultiFileCustom.js:53 ~ acceptedFiles:",
+    acceptedFiles
+  );
 
   return (
     <Box sx={{ width: "100%", ...sx }}>
-      <DropZoneStyle
+      {/* <DropZoneStyle
         {...getRootProps()}
         sx={{
           ...(isDragActive && { opacity: 0.72 }),
@@ -66,18 +71,20 @@ export default function UploadMultiFile({
         <input {...getInputProps()} />
 
         <BlockContent />
-      </DropZoneStyle>
-
-      {fileRejections.length > 0 && (
+      </DropZoneStyle> */}
+      <MultiFilePreviewCustom
+        files={acceptedFiles}
+        showPreview={showPreview}
+        onRemove={onRemove}
+        {...getRootProps()}
+      />
+      {/* {fileRejections.length > 0 && (
         <RejectionFiles fileRejections={fileRejections} />
       )}
 
-      <MultiFilePreview
-        files={files}
-        showPreview={showPreview}
-        onRemove={onRemove}
-      />
+   
 
+      {/* 
       {files?.length > 0 && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
           <Button color="inherit" size="small" onClick={onRemoveAll}>
@@ -89,7 +96,7 @@ export default function UploadMultiFile({
         </Stack>
       )}
 
-      {helperText && helperText}
+      {helperText && helperText} */}
     </Box>
   );
 }

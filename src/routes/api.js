@@ -45,7 +45,8 @@ export const API_ALL_SKILL = "/api/all/skill";
 export const API_ADMIN_SEARCH_CANDIDATE = "/api/admin/search/candidate";
 export const API_ADMIN_DETAIL_CANDIDATE = "/api/admin/candidate/detail";
 export const API_ADMIN_DOWNLOAD_CV_PDF = "/api/v1/download/pdf/private";
-export const API_ADMIN_PREVIEW_PDF_CANDIDATEJOB = "/api/v1/admin/preview/pdf/candidateJob";
+export const API_ADMIN_PREVIEW_PDF_CANDIDATEJOB =
+  "/api/v1/admin/preview/pdf/candidateJob";
 export const API_ADMIN_LIST_NEW_APPLICANTS = "/api/admin/applicants/candidate";
 export const API_ASSIGNMENT_JOB = "/api/assignment/job";
 export const API_ASSIGN_LIST_USER = "/api/assign/list/user";
@@ -65,28 +66,39 @@ export const API_LOGIN = "/identity/Identity/Login"; //new
 
 export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 //auth
-export const API_REGISTER = "/organization/Organization/CreateOrganizationWithUser";  // new
-export const API_CONFIRM_EMAIL = "/identity/Identity/ConfirmEmail";  // new
-export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword"; //new
-export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken"; //new
+export const API_REGISTER =
+  "/organization/Organization/CreateOrganizationWithUser"; // new
+export const API_CONFIRM_EMAIL = "/identity/Identity/ConfirmEmail"; // new
+export const API_FORGET_PASSWORD =
+  "/identity/Identity/ApplicationUserForgetPassword"; //new
+export const API_CHANGE_PASSWORD_WITH_TOKEN =
+  "/identity/Identity/ChangePasswordWithToken"; //new
 // Common
 
 //Ứng viên
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new lấy danh sách ứng viên
-export const API_GET_FILTER_ALL_APPLICANTS = "/applicant/ApplicantRecruitment/FilterApplicantRecruitments"; // new lấy danh sách ứng viên
-export const API_GET_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/GetApplicantRecruitmentVisible"; //new lấy danh sách cột
-export const API_UPDATE_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/UpdateApplicantRecruitmentVisible"; //new sửa danh sách cột
+export const API_GET_FILTER_ALL_APPLICANTS =
+  "/applicant/ApplicantRecruitment/FilterApplicantRecruitments"; // new lấy danh sách ứng viên
+export const API_GET_COLUMN_APPLICANTS =
+  "/aggregator/ApplicantRecruitmentVisible/GetApplicantRecruitmentVisible"; //new lấy danh sách cột
+export const API_UPDATE_COLUMN_APPLICANTS =
+  "/aggregator/ApplicantRecruitmentVisible/UpdateApplicantRecruitmentVisible"; //new sửa danh sách cột
 export const API_GET_APPLICANTS_BY_ID = "/applicant/Applicant/GetApplicant"; //lấy thông tin ứng viên theo id
-export const API_GET_RECRUITMENTS_BY_APPLICANT = "/recruitment/Recruitment/GetRecruitmentsByApplicant"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
-export const API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT = "/recruitment/Recruitment/GetRecruitmentPipelineStatesByRecruitment"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
-export const API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES = "/applicant/ApplicantRecruitment/GetApplicantCurrentStateWithRecruitmentStates"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
+export const API_GET_RECRUITMENTS_BY_APPLICANT =
+  "/recruitment/Recruitment/GetRecruitmentsByApplicant"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
+export const API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT =
+  "/recruitment/Recruitment/GetRecruitmentPipelineStatesByRecruitment"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
+export const API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES =
+  "/applicant/ApplicantRecruitment/GetApplicantCurrentStateWithRecruitmentStates"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
 
-export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantSkills";
+export const API_GET_APPLICANT_SKILLS =
+  "/applicant/ApplicantSkill/GetApplicantSkills";
 
 // Lấy danh sách phòng ban
 export const API_GET_ORGANIZATION = "/api/organization/GetOrganization";
 
-export const API_GET_ORGANIZATION_WITH_CHILD = "/organization/Organization/GetOrganizationsLessDataWithChild"; // lấy danh sách phòng ban để đổ dữ liệu dạng cây
+export const API_GET_ORGANIZATION_WITH_CHILD =
+  "/organization/Organization/GetOrganizationsLessDataWithChild"; // lấy danh sách phòng ban để đổ dữ liệu dạng cây
 
 // Lấy danh sách tỉnh / thành phố
 export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
@@ -94,33 +106,50 @@ export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
 export const API_GET_DISTRICT = "/masterData/District/GetDistricts";
 
 // Lấy danh sách job category
-export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories";
+export const API_GET_JOB_CATEGORIES =
+  "/masterData/JobCategory/GetJobCategories";
 
 // Báo cáo
 
 // Báo cáo kết quả tuyển dụng
-export const API_REPORT_RECRUITMENT_RESULT = "/api/Report/ReportRecruitmentResult";
-export const API_REPORT_RECRUITMENT_RESULT_RECRUITMENT = "/api/Report/ReportRecruitmentResultRecruitment";
-export const API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_DETAIL = "/api/Report/ReportRecruitmentResultRecruitmentDetail";
-export const API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_APPLICANT = "/api/Report/ReportRecruitmentResultRecruitmentApplicant";
+export const API_REPORT_RECRUITMENT_RESULT =
+  "/api/Report/ReportRecruitmentResult";
+export const API_REPORT_RECRUITMENT_RESULT_RECRUITMENT =
+  "/api/Report/ReportRecruitmentResultRecruitment";
+export const API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_DETAIL =
+  "/api/Report/ReportRecruitmentResultRecruitmentDetail";
+export const API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_APPLICANT =
+  "/api/Report/ReportRecruitmentResultRecruitmentApplicant";
 
 // Báo cáo tỷ lệ chuyển đổi ứng viên
-export const API_REPORT_CANDIDATES_CONVENTATION_RATE = "/api/Report/ReportCandidatesConventationRate";
-export const API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT = "/api/Report/ReportCandidatesConventationRateRecruitment";
-export const API_REPORT_CANDIDATES_CONVENTATION_RATE_DETAIL = "/api/Report/ReportCandidatesConventationRateRecruitmentDetail";
-export const API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT_APPLICANT = "/api/Report/ReportCandidatesConventationRateRecruitmentApplicant";
+export const API_REPORT_CANDIDATES_CONVENTATION_RATE =
+  "/api/Report/ReportCandidatesConventationRate";
+export const API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT =
+  "/api/Report/ReportCandidatesConventationRateRecruitment";
+export const API_REPORT_CANDIDATES_CONVENTATION_RATE_DETAIL =
+  "/api/Report/ReportCandidatesConventationRateRecruitmentDetail";
+export const API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT_APPLICANT =
+  "/api/Report/ReportCandidatesConventationRateRecruitmentApplicant";
 
 // Báo cáo ứng viên theo thời gian
-export const API_REPORT_CANDIDATES_OVERTIME = "/api/Report/ReportCandidatesOverTime";
-export const API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT = "/api/Report/ReportCandidatesOverTimeRecruitment";
-export const API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_DETAIL = "/api/Report/ReportCandidatesOverTimeRecruitmentDetail";
-export const API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_APPLICANT = "/api/Report/ReportCandidatesOverTimeRecruitmentApplicant";
+export const API_REPORT_CANDIDATES_OVERTIME =
+  "/api/Report/ReportCandidatesOverTime";
+export const API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT =
+  "/api/Report/ReportCandidatesOverTimeRecruitment";
+export const API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_DETAIL =
+  "/api/Report/ReportCandidatesOverTimeRecruitmentDetail";
+export const API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_APPLICANT =
+  "/api/Report/ReportCandidatesOverTimeRecruitmentApplicant";
 
 // Báo cáo theo dõi tin tuyển dụng
-export const API_REPORT_FOLLOW_RECRUITMENT = "/api/Report/ReportFollowRecruitment";
-export const API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT = "/api/Report/ReportFollowRecruitmentRecruitment";
-export const API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_DETAIL = "/api/Report/ReportFollowRecruitmentOrganizationDetail";
-export const API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_APPLICANT = "/api/Report/ReportFollowRecruitmentOrganization";
+export const API_REPORT_FOLLOW_RECRUITMENT =
+  "/api/Report/ReportFollowRecruitment";
+export const API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT =
+  "/api/Report/ReportFollowRecruitmentRecruitment";
+export const API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_DETAIL =
+  "/api/Report/ReportFollowRecruitmentOrganizationDetail";
+export const API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_APPLICANT =
+  "/api/Report/ReportFollowRecruitmentOrganization";
 
 // Công ty
 export const API_GET_BRANCH_BY_ID = "api/Branch/GetBranch";
@@ -128,17 +157,20 @@ export const API_GET_BRANCH_BY_USER = "api/Branch/GetByUserId";
 export const API_UPDATE_BRANCH = "api/Branch/UpdateBranch";
 
 // Thông tin công ty
-export const API_GET_COMPANY_INFOR = 'api/organization/Organization/GetOrganization';
+export const API_GET_COMPANY_INFOR =
+  "api/organization/Organization/GetOrganization";
 // Thông báo
 export const API_GET_LIST_NOTIFICATION = "api/UserNotifications/GetPaging";
-export const API_MASK_READ_NOTIFICATION = "api/UserNotifications/MaskAsRead?id=";
+export const API_MASK_READ_NOTIFICATION =
+  "api/UserNotifications/MaskAsRead?id=";
 
 // Đổi mật khẩu
 export const API_CHANGE_PASSWORD = "api/Users/ChangePassword";
 
 // Mẫu đánh giá
 export const API_GET_ALL_REVIEW_FORM = "ReviewForm/GetAllReviewForm";
-export const API_GET_ALL_REVIEW_FORM_OWNER = "api/Users/GetUsersCreatedReviewForm";
+export const API_GET_ALL_REVIEW_FORM_OWNER =
+  "api/Users/GetUsersCreatedReviewForm";
 export const API_SET_DEFAULT_REVIEW_FORM = "ReviewForm/SetDefaultReviewForm";
 export const API_ADD_REVIEW_FORM = "ReviewForm/InsertReviewForm";
 export const API_UPDATE_REVIEW_FORM = "ReviewForm/UpdateReviewForm";
@@ -161,11 +193,20 @@ export const API_DELETE_PIPELINE = "ReviewForm/DeleteReviewForm";
 
 // API Application page
 // recruitment tin tuyển dụng
-export const API_GET_LIST_RECRUITMENT = "/recruitment/Recruitment/GetRecruitments"; // get all recruitment
-export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/GetRecruitmentByOrganizationId" // new - get recruitment by organization
+export const API_GET_LIST_RECRUITMENT =
+  "/recruitment/Recruitment/GetRecruitments"; // get all recruitment
+export const API_GET_RECRUITMENT_BY_ORGANIZATION =
+  "/recruitment/Recruitment/GetRecruitmentByOrganizationId"; // new - get recruitment by organization
 
 // job source nguồn job
-export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
+export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources";
 
 // get user from organization
-export const API_GET_USER_FROM_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId";
+export const API_GET_USER_FROM_ORGANIZATION =
+  "/organization/Organization/GetApplicationUserByOrganizationId";
+
+// get question
+export const API_GET_QUESTION = "/applicant/Question/GetQuestion";
+export const API_GET_QUESTIONS = "/applicant/Question/GetQuestions";
+export const API_CREATE_QUESTION = "/applicant/Question/CreateQuestion";
+export const API_PATCH_QUESTIONS = "/applicant/Question/UpdateQuestions";

@@ -24,12 +24,12 @@ export default function MultiFilePreview({
   files,
   onRemove,
 }) {
-  const hasFile = files.length > 0
+  const hasFile = files?.length > 0
 
   return (
     <List disablePadding sx={{ ...(hasFile && { my: 3 }) }}>
       <AnimatePresence>
-        {files.map((file, index) => {
+        {files?.map((file, index) => {
           const { key, name, size, preview } = getFileData(file, index)
 
           if (showPreview) {

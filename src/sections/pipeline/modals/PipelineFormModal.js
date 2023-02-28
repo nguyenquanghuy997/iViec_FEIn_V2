@@ -3,6 +3,7 @@ import { Text, View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
 import {
   FormProvider,
+  RHFCheckbox,
   RHFSwitch,
   RHFTextField,
 } from "@/components/hook-form";
@@ -44,14 +45,14 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   // form
   const Schema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tên mẫu đánh giá"),
-    list: Yup.array().min(1, "Chưa thêm bước tuyển dụng"),
+    list: Yup.array().min(1, "Chưa thêm tiêu chí đánh giá"),
   });
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  console.log("defaultValues", defaultValues);
   const {
+    reset,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
@@ -106,7 +107,6 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
         onPressAdd={pressAdd}
         onPressEdit={() => onEditForm(item, index)}
         onPressDelete={() => onDeleteForm(index)}
-        isDefault={false}
       />
     );
   };
@@ -115,41 +115,41 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     return <PipelinePreviewItem data={item} index={index} />;
   };
 
-  // useEffect(() => {
-  //   if (!show) {
-  //     reset();
-  //     setValue("name", "");
-  //     setValue("isDefault", false);
-  //     setValue("isActive", true);
-  //     setListForm([]);
-  //     setShowForm(false);
-  //     return;
-  //   }
+  useEffect(() => {
+    if (!show) {
+      reset();
+      setValue("name", "");
+      setValue("isDefault", false);
+      setValue("isActive", true);
+      setListForm([]);
+      setShowForm(false);
+      return;
+    }
 
-  //   if (!isEditMode) return;
+    if (!isEditMode) return;
 
-  //   setValue("name", data.ReviewName);
-  //   setValue("isDefault", !!data.IsDefault);
-  //   setValue("isActive", !!data.Status);
-  //   setListForm(
-  //     data.Criterias?.map?.((i) => ({
-  //       name: i.CriteriaName,
-  //       des: i.CriteriaNote,
-  //     })) || []
-  //   );
-  // }, [show]);
+    setValue("name", data.ReviewName);
+    setValue("isDefault", !!data.IsDefault);
+    setValue("isActive", !!data.Status);
+    setListForm(
+      data.Criterias?.map?.((i) => ({
+        name: i.CriteriaName,
+        des: i.CriteriaNote,
+      })) || []
+    );
+  }, [show]);
 
   useEffect(() => {
     setValue("list", listForm);
     listForm.length && handleSubmit(() => {})();
   }, [listForm]);
 
-  // useEffect(() => {
-  //   if (!showForm) {
-  //     setEditItemIndex(-1);
-  //     setEditItemData({});
-  //   }
-  // }, [showForm]);
+  useEffect(() => {
+    if (!showForm) {
+      setEditItemIndex(-1);
+      setEditItemData({});
+    }
+  }, [showForm]);
 
   return (
     <>
@@ -182,7 +182,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
               {/* header */}
               <View flexRow pv={32} ph={24} bgColor={"#F1F5F8"}>
                 <Text flex1 fontSize={28} fontWeight={"600"}>
-                  {isEditMode ? "Sửa quy trình tuyển dụng" : "Thêm mới quy trình tuyển dụng"}
+                  {isEditMode ? "Sửa mẫu đánh giá" : "Thêm mới mẫu đánh giá"}
                 </Text>
 
                 <View
@@ -201,34 +201,30 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
               </View>
 
               {/* body */}
-
               <View flex1 style={{ overflow: "scroll" }}>
                 <View p={24} pb={16}>
                   <Text flexRow mb={8} fontWeight={"600"}>
-                    {"Tên quy trình tuyển dụng"}
+                    {"Tên mẫu đánh giá "}
                     <Text ml={4} color={"#E82E25"}>
                       {"*"}
                     </Text>
                   </Text>
 
-                  <RHFTextField name={"name"} placeholder={"Nhập tên quy trình tuyển dụng"} />
+                  <RHFTextField name={"name"} />
+                  <View height={24} />
+
+                  <RHFCheckbox
+                    name={"isDefault"}
+                    label={"Đặt làm mẫu đánh giá mặc định"}
+                  />
                   <View height={24} />
 
                   <Text italic>
-                    {"Nhấn vào các bước và kéo thả để thay đổi thứ tự trong quy trình tuyển dụng"}
+                    {"Nhấn vào các tiêu chí và kéo thả để thay đổi thứ tự"}
                   </Text>
                 </View>
 
                 <View p={24} bgColor={"#F8F8F9"}>
-                  <PipelineDraggableItem
-                    data={[
-                      {
-                        name: "Ứng tuyển",
-                        des: "Ứng viên ứng tuyển công việc",
-                      },
-                    ]}
-                    isDefault={true}
-                  />
                   <DraggableList
                     data={listForm}
                     setData={setListForm}
@@ -246,25 +242,6 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
                       {"Thêm tiêu chí đánh giá"}
                     </Text>
                   </View>
-
-                  <PipelineDraggableItem
-                    data={[
-                      {
-                        name: "Kết quả",
-                        des: "Kết luận thông qua quá trình tuyển dụng và đánh giá",
-                      },
-                    ]}
-                    isDefault={true}
-                  />
-                  <PipelineDraggableItem
-                    data={[
-                      {
-                        name: "Mời nhận việc",
-                        des: "Gửi offer và chờ ứng viên phản hồi",
-                      },
-                    ]}
-                    isDefault={true}
-                  />
                 </View>
                 <RHFTextField
                   name={"list"}
