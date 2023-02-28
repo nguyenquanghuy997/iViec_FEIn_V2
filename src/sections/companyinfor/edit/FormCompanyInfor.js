@@ -1,4 +1,4 @@
-import ImageUpload from "../ImageUpload";
+// import ImageUpload from "../ImageUpload";
 import Image from "@/components/Image";
 import {
   FormProvider,
@@ -87,7 +87,7 @@ const FormCompanyInfor = ({ defaultValues, onFinish }) => {
     const obj = [];
     let i = 0;
     while (i < 6 - itemData.length) {
-      obj.push(<ImageUpload size={80} />);
+      // obj.push(<ImageUpload size={80} />);
       i++;
     }
     return <>{obj}</>;
