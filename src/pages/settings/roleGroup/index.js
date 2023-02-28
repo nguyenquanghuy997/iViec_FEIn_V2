@@ -3,8 +3,8 @@ import Page from "@/components/Page";
 import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
 import {
-  JobTypeItem,
-} from "@/sections/jobtype";
+  PipelineItem,
+} from "@/sections/pipeline";
 import { getRolesByPage } from "@/utils/role";
 import PageWrapper from "@/components/PageWrapper";
 
@@ -27,9 +27,9 @@ export async function getStaticProps() {
 export default function Setting() {
 
   return (
-    <PageWrapper title={"Quy trình tuyển dụng"}>
+    <PageWrapper title={"Vai trò"}>
       <Page>
-        <JobTypeItem />
+        <PipelineItem />
       </Page>
     </PageWrapper>
   );

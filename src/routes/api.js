@@ -145,7 +145,7 @@ export const API_UPDATE_REVIEW_FORM = "ReviewForm/UpdateReviewForm";
 export const API_DELETE_REVIEW_FORM = "ReviewForm/DeleteReviewForm";
 
 // Vị trí công việc
-export const API_GET_PAGING_JOBTYPE = "JobType/GetAllSearch";
+export const API_GET_PAGING_JOBTYPE = "recruitment/JobPosition/GetJobPositions";//new
 export const API_UPDATE_STATUS_JOBTYPE = "JobType/UpdateJobTypeStatus";
 export const API_GET_PREVIEW_JOBTYPE = "JobType/GetJobTypeById";
 export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
