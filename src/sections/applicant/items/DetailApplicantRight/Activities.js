@@ -1,37 +1,19 @@
 import EmptyIcon from "../../../../assets/EmptyIcon";
 import NotificationBoard from "./NotificationBoard";
 import { SwitchDS } from "@/components/DesignSystem";
-import SvgIconStyle from "@/components/SvgIconStyle";
 import { FormProvider } from "@/components/hook-form";
+import { PipelineStateType, srcImage } from "@/utils/enum";
 import { Box, Grid } from "@mui/material";
 import List from "@mui/material/List";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { iconLogPipe } from "./config";
 
 export const Activities = ({ dataLog, dataApplicant }) => {
-  const getIcon = (name) => (
-    <SvgIconStyle
-      src={`/assets/icons/candidate/${name}.svg`}
-      sx={{ minWidth: "20px", height: "20px" }}
-    />
-  );
-
-  const ICONS = {
-    fail: getIcon("ic_delete"),
-    success: getIcon("ic_success"),
-    consider: getIcon("ic_consider"),
-    interview: getIcon("ic_interview"),
-    aiInterview: getIcon("ic_ai"),
-    apply: getIcon("ic_apply"),
-    ownerApply: getIcon("icon_owner_apply"),
-  };
-  console.log("dataApplicant", dataApplicant);
   const methods = useForm({
     defaultValues: { isActive: !false },
   });
   const isActive = methods.watch("isActive");
-
-  console.log(dataLog);
   return (
     <Grid item sx={{ padding: "12px 0 0 0" }}>
       <FormProvider methods={methods}>
@@ -55,20 +37,18 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                   stageResultPrevious =
                     dataLog?.events[index + 1]?.pipelineStateResultType;
                 }
-                console.log("stagePrevious", stagePrevious);
-                console.log("stageResultPrevious", stageResultPrevious);
                 return (
                   <div key={index}>
                     {p.eventType.includes("AddApplicantToRecruitmentEvent") && (
                       <NotificationBoard
-                        icon={ICONS.apply}
+                        icon={iconLogPipe('add',p.recruitmentPipelineStateType, p.pipelineStateResultType)}
                         title={
                           <div>
                             <p>
                               <span style={{ fontWeight: 600 }}>
                                 {p?.creatorName}
                               </span>
-                              {" đã thêm "}
+                              {" đã chuyển "}
                               <span style={{ fontWeight: 600 }}>
                                 {dataApplicant?.fullName}
                               </span>
@@ -81,16 +61,160 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                         }
                         action="add"
                         avatarName={p?.creatorName}
-                        // stagePrevious={stagePrevious}
-                        // stageResultPrevious={stageResultPrevious}
-                        // creatorName={p?.creatorName}
-                        // applicantName={dataApplicant?.fullName}
-                        // recruitmentName={"Tin tuyển dụng phổ biến"}
+                        isShow={false}
                       />
                     )}
-                    {p.eventType.includes(
-                      "UpdateApplicantRecruitmentEvent"
-                    ) && <div>update</div>}
+                    {p.eventType.includes("CreateApplicantRecruitmentEvent") &&
+                      (p.creatorId ? (
+                        <NotificationBoard
+                          icon={iconLogPipe('add',p.recruitmentPipelineStateType, p.pipelineStateResultType)}
+                          title={
+                            <div>
+                              <p>
+                                <span style={{ fontWeight: 600 }}>
+                                  {p?.creatorName}
+                                </span>
+                                {" đã thêm ứng viên "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataApplicant?.fullName}
+                                </span>
+                                {" vào bước "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {PipelineStateType(
+                                    p?.recruitmentPipelineStateType,
+                                    p?.pipelineStateResultType
+                                  )}
+                                </span>
+                              </p>
+                            </div>
+                          }
+                          action="add"
+                          avatarName={p?.creatorName}
+                          isShow={false}
+                        />
+                      ) : (
+                        <NotificationBoard
+                          icon={iconLogPipe('create',p.recruitmentPipelineStateType, p.pipelineStateResultType)}
+                          title={
+                            <div>
+                              <p>
+                                {"Ứng viên "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataApplicant?.fullName}
+                                </span>
+                                {" đã ứng tuyển."}
+                              </p>
+                            </div>
+                          }
+                          action="create"
+                          avatarSrc={srcImage(dataApplicant?.portraitImage)}
+                          isShow={false}
+                        />
+                      ))}
+                    {p.eventType.includes("UpdateApplicantRecruitmentEvent") &&
+                      (p?.recruitmentPipelineStateType == 3 &&
+                      p?.pipelineStateResultType == 2 &&
+                      p.updaterId ? (
+                        <NotificationBoard
+                          icon={iconLogPipe('result',p.recruitmentPipelineStateType, p.pipelineStateResultType)}
+                          title={
+                            <div>
+                              <p>
+                                <span style={{ fontWeight: 600 }}>
+                                  {p?.updaterName}
+                                </span>
+                                {" đã "}
+                                <span
+                                  style={{ fontWeight: 600, color: "#E53935" }}
+                                >
+                                  {" Loại "}
+                                </span>
+                                {" ứng viên "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataApplicant?.fullName}.
+                                </span>
+                              </p>
+                            </div>
+                          }
+                          action="add"
+                          avatarName={p?.updaterName}
+                          isShow={false}
+                        />
+                      ) : p.updaterId ? (
+                        <NotificationBoard
+                        icon={iconLogPipe('result',p.recruitmentPipelineStateType, p.pipelineStateResultType)}
+                          title={
+                            <div>
+                              <p>
+                                <span style={{ fontWeight: 600 }}>
+                                  {p?.updaterName}
+                                </span>
+                                {" đã chuyển ứng viên "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataApplicant?.fullName}
+                                </span>
+                                {" từ bước "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {PipelineStateType(
+                                    stagePrevious,
+                                    stageResultPrevious
+                                  )}
+                                </span>
+                                {" sang bước "}
+                                <span
+                                  style={{
+                                    fontWeight: 600,
+                                    color:
+                                      p?.recruitmentPipelineStateType == 3 &&
+                                      (p?.pipelineStateResultType == 0
+                                        ? "#388E3C"
+                                        : "#F77A0C"),
+                                  }}
+                                >
+                                  {PipelineStateType(
+                                    p?.recruitmentPipelineStateType,
+                                    p?.pipelineStateResultType
+                                  )}
+                                </span>
+                              </p>
+                            </div>
+                          }
+                          action="add"
+                          avatarName={p?.updaterName}
+                          isShow={false}
+                        />
+                      ) : (
+                        <NotificationBoard
+                          icon={iconLogPipe('result',p.recruitmentPipelineStateType, p.pipelineStateResultType)}
+                          title={
+                            <div>
+                              <p>
+                                {"Ứng viên "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {p?.updaterName}
+                                </span>
+                                {" đã tự động chuyển từ bước "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {PipelineStateType(
+                                    stagePrevious,
+                                    stageResultPrevious
+                                  )}
+                                </span>
+                                {" sang bước "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {PipelineStateType(
+                                    p?.recruitmentPipelineStateType,
+                                    p?.pipelineStateResultType
+                                  )}
+                                </span>
+                              </p>
+                            </div>
+                          }
+                          action="add"
+                          avatarName={p?.updaterName}
+                          isShow={false}
+                        />
+                      ))}
                   </div>
                 );
               })}

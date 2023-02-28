@@ -2,7 +2,7 @@ import CloseIcon from "../../../../../public/assets/icons/candidate/CloseIcon";
 import ExpanLess from "../../../../../public/assets/icons/candidate/ExpanLess";
 import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
 import ModalReload from "./ModalReload";
-import { ACTION_CONTENT } from "./config";
+import { AvatarDS } from "@/components/DesignSystem";
 import { Button } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import Dialog from "@mui/material/Dialog";
@@ -20,9 +20,16 @@ import { styled } from "@mui/material/styles";
 import { Container } from "@mui/system";
 import React from "react";
 import { useState } from "react";
-import { AvatarDS} from "@/components/DesignSystem";
 
-const NotificationBoard = ({ icon, avatarSrc,avatarName, action, manager, candidate, title }) => {
+const NotificationBoard = ({
+  icon,
+  avatarSrc,
+  avatarName,
+  action,
+  title,
+  isShow,
+  option,
+}) => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => {
@@ -100,25 +107,6 @@ const NotificationBoard = ({ icon, avatarSrc,avatarName, action, manager, candid
       </DialogTitle>
     );
   }
-
-  const renderBoxStatus = (action, text) => {
-    return (
-      <div>
-        <p>
-          <span style={{ fontWeight: 600 }}>{manager || candidate}</span>
-          {text}{" "}
-          {manager ? (
-            <span style={{ color: ACTION_CONTENT[action]?.color }}>
-              {ACTION_CONTENT[action]?.text}
-            </span>
-          ) : (
-            ""
-          )}
-        </p>
-      </div>
-    );
-  };
-
   return (
     <Container
       sx={{
@@ -137,6 +125,7 @@ const NotificationBoard = ({ icon, avatarSrc,avatarName, action, manager, candid
         sx={{
           padding: "20px 12px",
           backgroundColor: !open ? "white" : "#F2F4F5",
+          color: "#172B4D",
           fontSize: "0.9rem!important",
           "&:hover": {
             background: "#F2F4F5",
@@ -146,161 +135,169 @@ const NotificationBoard = ({ icon, avatarSrc,avatarName, action, manager, candid
           },
         }}
       >
-        <ListItemIcon
-          sx={{ margin: "7px 17px 0 0", color: ACTION_CONTENT[action].color }}
-        >
-          {icon}
-        </ListItemIcon>
+        <ListItemIcon sx={{ marginTop: "5px" }}>{icon}</ListItemIcon>
 
-        <ListItemAvatar sx={{ marginTop: "3px !important" }}>
-          {/* <Avatar
-            alt="Remy Sharp"
-            src={avatarSrc}
-            sx={{ width: "28px", height: "28px" }}
-          /> */}
+        <ListItemAvatar
+          sx={{ marginTop: "3px !important", marginRight: "8px" }}
+        >
           <AvatarDS
-                              sx={{
-                                height: "28px",
-                                width: "28px",
-                                borderRadius: "100px",
-                                fontSize: "12px",
-                              }}
-                              name={avatarName}
-                              src={avatarSrc}
-                            ></AvatarDS>
+            sx={{
+              height: "28px",
+              width: "28px",
+              borderRadius: "100px",
+              fontSize: "12px",
+              marginRight: 0,
+            }}
+            name={avatarName}
+            src={avatarSrc}
+          ></AvatarDS>
         </ListItemAvatar>
 
-        {candidate ? (
-          <ListItemText
-            primary={renderBoxStatus(action, " đã ứng tuyển.")}
-            secondary={
-              <React.Fragment>
-                <Typography
-                  sx={{
-                    display: "block",
-                    fontSize: "12px",
-                    marginTop: "4px",
-                  }}
-                  component="span"
-                  variant="body2"
-                  color="#5C6A82"
-                >
-                  15:00 17/02/2023
-                </Typography>
-              </React.Fragment>
-            }
-          />
-        ) : (
-          <>
-            <div style={{paddingRight:"14px"}}>
-              <div>
-                {title}
-              </div>
-              <div>
-                <React.Fragment>
-                  <Typography
-                    sx={{
-                      display: "block",
-                      fontSize: "12px",
-                      marginTop: "4px",
-                    }}
-                    component="span"
-                    variant="body2"
-                    color="#5C6A82"
-                  >
-                    15:00 17/02/2023
-                  </Typography>
-                  {action === "fail"
-                    ? renderText("Lý do loại:", "kHÔNG THÍCH")
-                    : ""}
-                </React.Fragment>
-              </div>
-
-              <Collapse
-                in={open}
-                timeout="auto"
-                unmountOnExit
+        <div style={{ paddingRight: "14px" }}>
+          <div>{title}</div>
+          <div>
+            <React.Fragment>
+              <Typography
                 sx={{
-                  backgroundColor: "#F2F4F5",
-                  pb: 2,
+                  display: "block",
+                  fontSize: "12px",
+                  marginTop: "4px",
+                }}
+                component="span"
+                variant="body2"
+                color="#5C6A82"
+              >
+                15:00 17/02/2023
+              </Typography>
+              {action === "fail"
+                ? renderText("Lý do loại:", "kHÔNG THÍCH")
+                : ""}
+            </React.Fragment>
+          </div>
+
+          <Collapse
+            in={open}
+            timeout="auto"
+            unmountOnExit
+            sx={{
+              backgroundColor: "#F2F4F5",
+              pb: 2,
+              "& .MuiButtonBase-root:hover": {
+                backgroundColor: "#F2F4F5",
+              },
+            }}
+          >
+            <List component="div" disablePadding>
+              <ListItemText sx={{ fontSize: "13px" }}>
+                Đánh giá: <span style={{ marginLeft: "16px" }}>Đạt</span>
+              </ListItemText>
+            </List>
+            <List>
+              <ListItemText sx={{ fontSize: "13px" }}>
+                Điểm TB: <span style={{ marginLeft: "16px" }}> 10</span>
+              </ListItemText>
+            </List>
+            <List>
+              <ListItemText sx={{ fontSize: "13px" }}>
+                Kết luận:
+                <span style={{ marginLeft: "16px" }}>
+                  {" "}
+                  Ứng viên khá sáng giá, tuyển thẳng luôn không cần phỏng vấn
+                  lần 2.
+                </span>
+              </ListItemText>
+            </List>
+            {option.includes("Xem chi tiết đánh giá") && (
+              <ListItemButton
+                sx={{
                   "& .MuiButtonBase-root:hover": {
                     backgroundColor: "#F2F4F5",
                   },
                 }}
               >
-                <List component="div" disablePadding>
-                  <ListItemText sx={{ fontSize: "13px" }}>
-                    Đánh giá: <span style={{ marginLeft: "16px" }}>Đạt</span>
-                  </ListItemText>
-                </List>
-                <List>
-                  <ListItemText sx={{ fontSize: "13px" }}>
-                    Điểm TB: <span style={{ marginLeft: "16px" }}> 10</span>
-                  </ListItemText>
-                </List>
-                <List>
-                  <ListItemText sx={{ fontSize: "13px" }}>
-                    Kết luận:
-                    <span style={{ marginLeft: "16px" }}>
-                      {" "}
-                      Ứng viên khá sáng giá, tuyển thẳng luôn không cần phỏng
-                      vấn lần 2.
-                    </span>
-                  </ListItemText>
-                </List>
-                {ACTION_CONTENT[action]?.option ? (
-                  <ListItemButton
-                    sx={{
-                      "& .MuiButtonBase-root:hover": {
-                        backgroundColor: "#F2F4F5",
-                      },
-                    }}
+                <Button
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                  onClick={handleOpenModal}
+                >
+                  {"Xem chi tiết đánh giá"}
+                </Button>
+                <BootstrapDialog
+                  onClose={handleCloseModal}
+                  aria-labelledby="customized-dialog-title"
+                  open={openModal}
+                >
+                  <BootstrapDialogTitle
+                    id="customized-dialog-title"
+                    onClose={handleCloseModal}
                   >
-                    <Button
-                      variant="outlined"
-                      sx={{ width: "100%" }}
-                      onClick={handleOpenModal}
-                    >
-                      {ACTION_CONTENT[action]?.option}
-                    </Button>
-                    <BootstrapDialog
-                      onClose={handleCloseModal}
-                      aria-labelledby="customized-dialog-title"
-                      open={openModal}
-                    >
-                      <BootstrapDialogTitle
-                        id="customized-dialog-title"
-                        onClose={handleCloseModal}
-                      >
-                        {ACTION_CONTENT[action]?.option}
-                      </BootstrapDialogTitle>
-                      <Divider />
-                      <DialogContent>
-                        <Typography gutterBottom>
-                          Cras mattis consectetur purus sit amet fermentum. Cras
-                          justo odio, dapibus ac facilisis in, egestas eget
-                          quam. Morbi leo risus, porta ac consectetur ac,
-                          vestibulum at eros.
-                        </Typography>
-                      </DialogContent>
-                      {/* <DialogActions>
+                    {"Xem chi tiết đánh giá"}
+                  </BootstrapDialogTitle>
+                  <Divider />
+                  <DialogContent>
+                    <Typography gutterBottom>
+                      Cras mattis consectetur purus sit amet fermentum. Cras
+                      justo odio, dapibus ac facilisis in, egestas eget quam.
+                      Morbi leo risus, porta ac consectetur ac, vestibulum at
+                      eros.
+                    </Typography>
+                  </DialogContent>
+                  {/* <DialogActions>
           <Button autoFocus onClick={handleCloseModal}>
             Save changes
           </Button>
         </DialogActions> */}
-                    </BootstrapDialog>
-                  </ListItemButton>
-                ) : (
-                  ""
-                )}
-              </Collapse>
-            </div>
-            <div style={{margin:'auto'}}>
-            {open ? <ExpanMore /> : <ExpanLess />}
-
-            </div>
-          </>
-        )}
+                </BootstrapDialog>
+              </ListItemButton>
+            )}
+            {option.includes("Tái khai thác ứng viên") && (
+              <ListItemButton
+                sx={{
+                  "& .MuiButtonBase-root:hover": {
+                    backgroundColor: "#F2F4F5",
+                  },
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                  onClick={handleOpenModal}
+                >
+                  {"Xem chi tiết đánh giá"}
+                </Button>
+                <BootstrapDialog
+                  onClose={handleCloseModal}
+                  aria-labelledby="customized-dialog-title"
+                  open={openModal}
+                >
+                  <BootstrapDialogTitle
+                    id="customized-dialog-title"
+                    onClose={handleCloseModal}
+                  >
+                    {"Xem chi tiết đánh giá"}
+                  </BootstrapDialogTitle>
+                  <Divider />
+                  <DialogContent>
+                    <Typography gutterBottom>
+                      Cras mattis consectetur purus sit amet fermentum. Cras
+                      justo odio, dapibus ac facilisis in, egestas eget quam.
+                      Morbi leo risus, porta ac consectetur ac, vestibulum at
+                      eros.
+                    </Typography>
+                  </DialogContent>
+                  {/* <DialogActions>
+          <Button autoFocus onClick={handleCloseModal}>
+            Save changes
+          </Button>
+        </DialogActions> */}
+                </BootstrapDialog>
+              </ListItemButton>
+            )}
+          </Collapse>
+        </div>
+        <div style={{ margin: "auto" }}>
+          {isShow && (open ? <ExpanMore /> : <ExpanLess />)}
+        </div>
       </ListItemButton>
     </Container>
   );
