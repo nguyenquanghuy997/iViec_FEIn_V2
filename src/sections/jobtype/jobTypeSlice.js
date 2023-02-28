@@ -16,10 +16,9 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 const evaluationFormSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getAllJobType: builder.mutation({
-      query: (data) => ({
+      query: () => ({
         url: API_GET_PAGING_JOBTYPE,
-        method: "POST",
-        data: qs.stringify(data),
+        method: "GET",
       }),
     }),
     updateStatusJobType: builder.mutation({
