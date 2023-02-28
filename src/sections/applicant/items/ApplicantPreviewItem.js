@@ -1,6 +1,7 @@
-// import { RejectApplicantModal } from "../modals";
+//import { RejectApplicantModal } from "../modals";
 import {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
+  useGetApplicantRecruitmentMutation,
   useGetRecruitmentsByApplicantQuery,
 } from "../ApplicantFormSlice";
 import { PipelineApplicant } from "../others";
@@ -219,20 +220,26 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { themeStretch } = useSettings();
 
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
-
   const [fetchPipe, { data: pipelines = [], isSuccess }] =
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
+  const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
+    useGetApplicantRecruitmentMutation();
   const [selectedOption, setSelectedOption] = useState();
   const [ownerName, setOwnerName] = useState();
   useEffect(() => {
-    if (!isFetching){
+    if (!isFetching) {
       setSelectedOption(options[0]?.name);
       setOwnerName(options[0]?.ownerName?.trim());
       fetchPipe({
         ApplicantId,
         RecruitmentId: options[0]?.id,
       }).unwrap();
-    } 
+      fetchData({
+        ApplicantId,
+        RecruitmentId: options[0]?.id,
+        IsWithdrawHistory: true,
+      }).unwrap();
+    }
   }, [isFetching]);
 
   const onChangeRecruiment = (e) => {
@@ -241,6 +248,11 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
     fetchPipe({
       ApplicantId,
       RecruitmentId: e.target.value.id,
+    }).unwrap();
+    fetchData({
+      ApplicantId,
+      RecruitmentId: options[0]?.id,
+      IsWithdrawHistory: true,
     }).unwrap();
   };
 
@@ -312,6 +324,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                       justifyContent="space-between"
                       alignItems="flex-end"
                       marginTop="28px"
+                      minHeight="76px"
                     >
                       <Grid item md={10} container>
                         <Grid sx={{ width: "80%" }}>
@@ -381,7 +394,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                                 height: "20px",
                                 width: "20px",
                                 borderRadius: "100px",
-                                fontSize:'12px'
+                                fontSize: "12px",
                               }}
                               name={ownerName}
                             ></AvatarDS>
@@ -403,7 +416,11 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                     <ApplicantPreviewCV data={data} />
                   </Grid>
                   <Grid item xs={5} md={5}>
-                    <ApplicantPreviewLog />
+                    {isSuccessLog && <ApplicantPreviewLog
+                      dataLog={logApplicant}
+                      dataApplicant={data}
+                    />}
+                    
                   </Grid>
                 </Grid>
               </CardContent>

@@ -6,10 +6,9 @@ import Tab from "@mui/material/Tab";
 import React, { useState } from "react";
 import { Activities } from "./DetailApplicantRight/Activities";
 
-export const ApplicantPreviewLog = () => {
+export const ApplicantPreviewLog = ({dataLog, dataApplicant}) => {
   const [value, setValue] = useState("1");
   const handleChange = (event, newValue) => {
-    console.log(event)
     setValue(newValue);
   };
   return (
@@ -22,6 +21,7 @@ export const ApplicantPreviewLog = () => {
               aria-label="lab API tabs example"
               sx={{
                 "& .MuiTab-root":{
+
                   minHeight: '36px',
                   textTransform: 'unset',
                   padding: "8px 12px",
@@ -50,7 +50,7 @@ export const ApplicantPreviewLog = () => {
             </TabList>
           </Box>
           <TabPanel value="1">
-            <Activities />
+            <Activities dataLog={dataLog} dataApplicant={dataApplicant}/>
           </TabPanel>
           <TabPanel value="2">
             "hi"

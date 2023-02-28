@@ -1,3 +1,5 @@
+import { DOMAIN_SERVER_API } from "@/config";
+
 //PipelineStateType
 export const PipelineStateType = (item, result) => {
   switch (item) {
@@ -80,4 +82,9 @@ export const YearOfExperience = (item) => {
     case 7:
       return "Trên 10 năm";
   }
+};
+
+//Link image
+export const srcImage = (image) => {
+  return DOMAIN_SERVER_API+"/Image/GetImage?imagePath="+image
 };
