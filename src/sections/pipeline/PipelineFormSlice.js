@@ -13,7 +13,8 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 
 const PipelineFormSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
-    getAllPipeline: builder.mutation({
+    
+    getAllFilterPipeline: builder.mutation({
       query: () => ({
         url: API_GET_ALL_PIPELINE,
         method: "GET",
@@ -45,7 +46,7 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetAllPipelineMutation,
+  useGetAllFilterPipelineMutation,
   useAddPipelineMutation,
   useUpdatePipelineMutation,
   useDeletePipelineMutation,

@@ -1,183 +1,230 @@
-import BasicTable from "@/components/BasicTable";
-import Pagination from "@/components/Pagination";
+import Content from "@/components/BaseComponents/Content";
+import {View} from "@/components/FlexStyled";
+import TextMaxLine from "@/components/TextMaxLine";
 import {
-  FormProvider,
-  RHFBasicSelect,
-  RHFSearchTextField,
-} from "@/components/hook-form";
-import { PAGES } from "@/config";
-import { useDebounce } from "@/hooks/useDebounce";
-import useTable from "@/hooks/useTable";
-import { getRolesByPage } from "@/utils/role";
-import { Card } from "@mui/material";
-import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { PipelineTable } from "./PipelineTable";
-import {useGetAllPipelineMutation} from "@/sections/pipeline";
-import { View } from "@/components/FlexStyled";
-
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
-
-const LIST_STATUS = [
-  { label: "Tất cả", value: "" },
-  { label: "Đang hoạt động", value: 1 },
-  { label: "Dừng hoạt động", value: 0 },
-];
-const LIST_STAGE = [
-  { label: "Tất cả", value: "" },
-  { label: "Thi tuyển", value: 2 },
-  { label: "Phỏng vấn", value: 3 },
-];
-
-const TABLE_HEAD = [
-  { id: "STT", label: "STT", align: "center" },
-  { id: "Name", label: "Tên quy trình" },
-  { id: "Stages", label: "Các bước trong quy trình"},
-  { id: "CountRecruitment", label: "Số tin đang áp dụng", align: "center" },
-  { id: "Status", label: "Trạng thái", align: "center" },
-  { id: "Id", label: "Hoạt động", align: "center" },
-];
-
+    useGetListColumnApplicantsQuery,
+    useUpdateListColumnApplicantsMutation
+} from "@/sections/applicant";
+import {
+    useGetAllFilterPipelineMutation
+} from "@/sections/pipeline";
+import PipelineHeader from "@/sections/pipeline/PipelineHeader";
+import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
+import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable"
+// import {fDate} from "@/utils/formatTime";
+import {yupResolver} from "@hookform/resolvers/yup";
+// import {Tag} from "antd";
+import Link from "next/link";
+import React, {useEffect, useState,useMemo} from "react";
+import {useForm} from "react-hook-form";
+import * as Yup from "yup";
+import {useRouter} from "next/router";
+// import {
+//     Address,
+//     MaritalStatus,
+//     Sex,
+//     YearOfExperience,
+//     PipelineStateType,
+//   } from "@/utils/enum";
 const defaultValues = {
-  status: LIST_STATUS[0].value,
-  stage: LIST_STAGE[0].value,
-  search: "",
+    searchKey: "",
 };
+
 export const PipelineItem = () => {
-  // ref
-  const refRequest = useRef({});
+    const router = useRouter();
+    const {query, isReady} = router;
+    // api get list
+    const [getAllFilterApplicant, {data: Data, isLoading}] = useGetAllFilterPipelineMutation();
+    // api get list Column
+    const {data: ColumnData} = useGetListColumnApplicantsQuery();
+     // api update list Column
+    const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
 
-  // form
-  const methods = useForm({ defaultValues });
-  const status = methods.watch("status");
-  const stage = methods.watch("stage");
-  const search = useDebounce(methods.watch("search"), 300);
-
-  // table
-  const { page, rowsPerPage, onChangePage, onChangeRowsPerPage } = useTable();
-
-  // api
-  const [
-    fetchData,
-    { isLoading, data: { TotalRecords = 0, DataList = [] } = {} },
-  ] = useGetAllPipelineMutation();
-
-  const refreshData = () => {
-    fetchData(refRequest.current).unwrap();
-  };
-
-  const getData = (p, s) => {
-    const body = {
-      PageSize: s,
-      PageIndex: p + 1,
-      GetfilterRules: [
+    const columns = [
         {
-          field: "a.Name",
-          op: "and_contains_in",
-          value: String(search).trim() || undefined,
+            title: "STT",
+            key: "index",
+            // eslint-disable-next-line
+            render: (item, record, index) => <>{index + 1}</>,
+            width: "60px",
+            fixed: "left",
         },
         {
-          field: "a.IsActive",
-          op: "and_in_int",
-          value: status >= 0 ? status : undefined,
+            dataIndex: "name",
+            title: "Quy trình tuyển dụng",
+            fixed: "left",
+            width: "200px",
+            render: (text, record) => (
+            <Link passHref href={{ pathname: `applicant/${record.applicantId}`, query: { or: `${record.organizationId}`} }}>
+                           <TextMaxLine
+                         line={1}
+                         sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+                       >
+                         {text}
+                       </TextMaxLine>
+                       </Link>
+            ),
         },
-        {
-          field: "b.StageTypeId",
-          op: "and_in_int",
-          value: stage >= 0 ? stage : undefined,
-        },
-      ],
+
+    ];
+
+
+    const menuItemText = {
+        name: "Họ và tên",
+        phoneNumber: "Số điện thoại",
+        dateOfBirth: "Ngày sinh",
+        email: "Email",
+        recruitment: "Tin tuyển dụng",
+        recruitmentPipelineState: "Bước tuyển dụng",
+        createdTime: "Ngày ứng tuyển",
+        organization: "Tổ chức",
+        jobSource: "Nguồn",
+        council: "Hội đồng",
+        creator: "Cán bộ tạo ứng viên",
+        education: "Học vấn",
+        applicantWorkingExperiences: "Kinh nghiệm làm việc",
+        jobCategory: "Ngành nghề",
+        yearOfExperience: "Số năm kinh nghiệm",
+        applicantSkills: "Kỹ năng",
+        identityNumber: "Số CCCD/CMND",
+        sex: "Giới tính",
+        maritalStatus: "Tình trạng hôn nhâ",
+        height: "Chiều cao",
+        weight: "Cân nặng",
+        expectedWorkingAddress: "Nơi làm việc mong muốn",
+        expectedSalary: "Mức lương mong muốn",
+        livingAddress: "Nơi ở hiện tại",
+        homeTower: "Quê quán",
     };
-    refRequest.current = body;
-    fetchData(body).unwrap();
-  };
 
-  const _onChangePage = (event, newPage) => {
-    onChangePage(event, newPage);
-    getData(newPage, rowsPerPage);
-  };
 
-  const _onChangeRowsPerPage = (event) => {
-    onChangeRowsPerPage(event);
-    getData(0, event.target.value);
-  };
+  
+    const handleUpdateListColumnApplicants = async () => {
+        var body = {
+            "recruitment": false,
+        };
+        var data = {"id": "01000000-ac12-0242-981f-08db10c9413d", body: body}
 
-  useEffect(() => {
-    _onChangePage(null, 0);
-  }, [status, stage, search]);
+        await UpdateListColumnApplicants(data)
+    };
+  
 
-  return (
-      <View pv={20} ph={24}>
-        <FormProvider methods={methods}>
-          <View flexRow atCenter mb={20}>
-            <View width={160}>
-              <RHFBasicSelect
-                name="status"
-                label="Trạng thái"
-                options={LIST_STATUS}
-                style={{ background: "#fff" }}
-              />
-            </View>
 
-            <View width={200} ml={10}>
-              <RHFBasicSelect
-                name="stage"
-                label="Bước tuyển dụng"
-                options={LIST_STAGE}
-                style={{ background: "#fff" }}
-              />
-            </View>
-            <View flex1 />
+    // form search
+    const Schema = Yup.object().shape({
+        search: Yup.string(),
+    });
+    const methods = useForm({
+        mode: "onChange",
+        defaultValues: useMemo(() => query.searchKey ? { ...defaultValues, searchKey: query.searchKey } : { ...defaultValues },[query.searchKey]),
+        // defaultValues: {...defaultValues, searchKey: query.searchKey},
+        resolver: yupResolver(Schema),
+    });
 
-            {/* search */}
-            <View width={550}>
-              <RHFSearchTextField
-                name="search"
-                label="Tìm kiếm mẫu đánh giá"
-                style={{ background: "#fff" }}
-              />
-            </View>
-          </View>
-        </FormProvider>
+    const {handleSubmit} = methods;
 
-        {/* table detail */}
-        <Card>
-          <View pv={20}>
-            <BasicTable
-              page={page}
-              rowsPerPage={
-                isLoading
-                  ? rowsPerPage
-                  : Math.min(rowsPerPage, DataList?.length)
-              }
-              columns={TABLE_HEAD}
-              isLoading={isLoading}
-              dataSource={DataList}
-              TableRowComp={(data, order) => (
-                <PipelineTable
-                  data={data}
-                  order={order}
-                  onRefreshData={refreshData}
-                />
-              )}
+    useEffect(() => {
+        if (!isReady) return;
+        const queryParams = {
+            searchKey: query.searchKey,
+            applicantSkillIds: query.applicantSkillIds && typeof query.applicantSkillIds === 'string' ? [query.applicantSkillIds] : query.applicantSkillIds && query.applicantSkillIds,
+            expectSalaryFrom: query.expectSalaryFrom ? Number(query.expectSalaryFrom) : null,
+            expectSalaryTo: query.expectSalaryTo ? Number(query.expectSalaryTo) : null,
+            yearsOfExperience: query.yearsOfExperience ? [Number(query.yearsOfExperience)] : null,
+            sexs: query.sexs ? [Number(query.sexs)] : null,
+            weightFrom: query.weightFrom ? Number(query.weightFrom) : null,
+            weightTo: query.weightTo ? Number(query.weightTo) : null,
+            heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
+            heightTo: query.heightTo ? Number(query.heightTo) : null,
+            maritalStatuses: query.maritalStatuses ? [Number(query.maritalStatuses)] : null,
+            // educations: query.educations ? [query.educations] : null,
+            homeTowerProvinceIds: query.homeTowerProvinceIds ? [query.homeTowerProvinceIds] : null,
+            homeTowerDistrictIds: query.homeTowerDistrictIds ? [query.homeTowerDistrictIds] : null,
+            livingAddressProvinceIds: query.livingAddressProvinceIds ? [query.livingAddressProvinceIds] : null,
+            livingAddressDistrictIds: query.livingAddressDistrictIds ? [query.livingAddressDistrictIds] : null,
+            expectWorkingAddressProvinceIds: query.expectWorkingAddressProvinceIds && typeof query.expectWorkingAddressProvinceIds === 'string' ? [query.expectWorkingAddressProvinceIds] : query.expectWorkingAddressProvinceIds && query.expectWorkingAddressProvinceIds,
+            organizationIds: query.organizationIds && typeof query.organizationIds === 'string' ? [query.organizationIds] : query.organizationIds && query.organizationIds,
+            recruitmentIds: query.recruitmentIds && typeof query.recruitmentIds === 'string' ? [query.recruitmentIds] : query.recruitmentIds && query.recruitmentIds,
+            ownerIds: query.ownerIds && typeof query.ownerIds === 'string' ? [query.ownerIds] : query.ownerIds && query.ownerIds,
+            councilIds: query.councilIds && typeof query.councilIds === 'string' ? [query.councilIds] : query.councilIds && query.councilIds,
+            creatorIds: query.creatorIds && typeof query.creatorIds === 'string' ? [query.creatorIds] : query.creatorIds && query.creatorIds,
+            createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
+            createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
+            recruitmentPipelineStates: query.recruitmentPipelineStates
+            && typeof query.recruitmentPipelineStates === 'string'
+                ? [Number(query.recruitmentPipelineStates)]
+                : query.recruitmentPipelineStates && query.recruitmentPipelineStates?.map(pipe => Number(pipe)),
+            jobCategoryIds: query.jobCategoryIds && typeof query.jobCategoryIds === 'string' ? [query.jobCategoryIds] : query.jobCategoryIds && query.jobCategoryIds,
+            jobSourceIds: query.jobSourceIds && typeof query.jobSourceIds === 'string' ? [query.jobSourceIds] : query.jobSourceIds && query.jobSourceIds,
+        };
+        if (query) {
+            getAllFilterApplicant(JSON.stringify(queryParams)).unwrap();
+        } else {
+            getAllFilterApplicant({}).unwrap();
+        }
+    }, [isReady, query]);
+
+    // open filter form
+    const [isOpen, setIsOpen] = useState(false);
+
+    // filter modal
+    const handleOpenFilterForm = () => {
+        setIsOpen(true);
+    };
+
+    const handleCloseFilterForm = () => {
+        setIsOpen(false);
+    };
+
+    const onSubmitSearch = async (data) => {
+        await router.push({
+            pathname: router.pathname,
+            query: {...query, searchKey: data.searchKey}
+        }, undefined, {shallow: true})
+    }
+
+    const onSubmit = async (data) => {
+        const body = {...data, searchKey: data.searchKey}
+        await router.push({
+            pathname: router.pathname,
+            query: {
+                ...body,
+                createdTimeFrom: data.createdTimeFrom ? new Date(data.createdTimeFrom).toISOString() : null,
+                createdTimeTo: data.createdTimeTo ? new Date(data.createdTimeTo).toISOString() : null,
+            }
+        }, undefined, {shallow: true})
+        handleCloseFilterForm();
+    };
+
+    return (
+        <View>
+
+            <Content>
+            <PipelineHeader
+                methods={methods}
+                isOpen={isOpen}
+                onSubmit={onSubmitSearch}
+                handleSubmit={handleSubmit}
+                onOpenFilterForm={handleOpenFilterForm}
+                onCloseFilterForm={handleCloseFilterForm}
             />
-
-            <Pagination
-              page={page}
-              rowsPerPage={rowsPerPage}
-              totalRecord={TotalRecords}
-              onChangePage={_onChangePage}
-              onChangeRowsPerPage={_onChangeRowsPerPage}
+            <DynamicColumnsTable
+                    columns={columns}
+                     source={Data?.items}
+                     loading={isLoading}
+                     ColumnData={ColumnData}
+                     menuItemText={menuItemText}
+                     UpdateListColumn={handleUpdateListColumnApplicants}
+                     settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
             />
-          </View>
-        </Card>
-      </View>
-  );
-}
+               
+            </Content>
+            {isOpen && <ApplicantFilterModal
+                columns={columns}
+                isOpen={isOpen}
+                onClose={handleCloseFilterForm}
+                onSubmit={onSubmit}
+            />}
+        </View>
+    );
+};

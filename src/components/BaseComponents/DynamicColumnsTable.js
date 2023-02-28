@@ -133,7 +133,7 @@ const onChange = (e) => {
                     <View>
                         <TextMaxLine
                             line={1}
-                            sx={{width: 160, fontWeight: "normal", fontSize: 14}}
+                            sx={{width:window.innerWidth, fontWeight: "normal", fontSize: 14}}
                         >
                             {settingName}
                         </TextMaxLine>

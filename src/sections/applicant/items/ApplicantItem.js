@@ -32,9 +32,12 @@ const defaultValues = {
 export const ApplicantItem = () => {
     const router = useRouter();
     const {query, isReady} = router;
-
+    // api get list
     const [getAllFilterApplicant, {data: Data, isLoading}] = useGetAllFilterApplicantMutation();
+    // api get list Column
     const {data: ColumnData} = useGetListColumnApplicantsQuery();
+     // api update list Column
+    const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
     const columns = [
         {
             title: "STT",
@@ -366,7 +369,7 @@ export const ApplicantItem = () => {
     };
 
 
-    const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+  
     const handleUpdateListColumnApplicants = async () => {
         var body = {
             "recruitment": false,
