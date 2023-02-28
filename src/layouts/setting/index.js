@@ -16,18 +16,18 @@ import { useEffect } from "react";
 
 const RootStyle = styled("div")(({ theme }) => ({
   minWidth: SIDEBAR_CONSTANTS.SIDEBAR_WIDTH,
-  padding: theme.spacing(2, 0, 2, 2),
+  paddingLeft: theme.spacing(3),
 }));
 
 const BoxWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   margin: "0 auto",
-  [theme.breakpoints.up("xl")]: {
-    padding: theme.spacing(4.5, 3, 0, 3),
+  [theme.breakpoints.up("lg")]: {
+    paddingTop: theme.spacing(4.5),
     width: DASHBOARD_CONTENT_WIDTH,
   },
   [theme.breakpoints.up("2k")]: {
-    padding: theme.spacing(4.5, 34, 0, 34),
+    paddingTop: theme.spacing(4.5),
     width: "100%",
   },
 }));
