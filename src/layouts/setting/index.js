@@ -37,7 +37,7 @@ const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
   [theme.breakpoints.up("lg")]: {
     width: `calc(100% - ${SIDEBAR_CONSTANTS.SIDEBAR_WIDTH}px - ${theme.spacing(
       4.5
-    )})`,
+    )} - ${theme.spacing(3)})`,
   },
   [theme.breakpoints.up("2k")]: {
     width: "100%",

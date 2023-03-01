@@ -225,7 +225,6 @@ export const JobTypeItem = () => {
           menuItemText={menuItemText}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
-        //   scroll={x:}
           filter={
             <JobTypeHeader
               methods={methods}
