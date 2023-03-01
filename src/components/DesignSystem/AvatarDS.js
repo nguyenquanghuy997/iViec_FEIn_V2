@@ -17,26 +17,27 @@ function stringToColor(string) {
     color += `00${value.toString(16)}`.slice(-2);
   }
   /* eslint-enable no-bitwise */
-
   return color;
 }
-function stringAvatar(name) {
-  if(name){
-    return {
-      sx: {
-        bgcolor: stringToColor(name),
 
-      },
-      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
-    };
-  }
-  
-}
 export default function AvatarDS(props) {
-    const { src, sx, name } = props;
+    const { src, sx, name, variant } = props;
+    function stringAvatar(name) {
+      if(name){
+        return {
+          sx: {
+            bgcolor: stringToColor(name),
+            color: '#fff',
+            ...sx
+          },
+          children: `${name?.split(' ')?.[1]?.[0] ? name.split(' ')?.[0]?.[0] + name?.split(' ')?.[1]?.[0] : name.split(' ')?.[0]?.[0]}`,
+        };
+      }
+      
+    }
     return (
         <Badge
-        variant="dot"
+         variant={variant}
         color="success"
         sx={{
             marginRight:"8px",
@@ -50,9 +51,9 @@ export default function AvatarDS(props) {
         }}
       >
         <Avatar
-        {...stringAvatar(name)}
           sx={{ ... sx }}
           src={src}
+          {...stringAvatar(name)}
         />
       </Badge>
     );
@@ -61,4 +62,5 @@ AvatarDS.prototype = {
   src: PropTypes.element,
   sx: PropTypes.any,
   name: PropTypes.any,
+  variant: PropTypes.any,
 };

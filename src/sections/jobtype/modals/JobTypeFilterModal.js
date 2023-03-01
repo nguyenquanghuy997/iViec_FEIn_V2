@@ -32,11 +32,11 @@ import {
   HelperTextTypography
 } from "@/sections/applicant/style";
 
-ApplicantFilterModal.propTypes = {
+JobTypeFilterModal.propTypes = {
   columns: PropTypes.array, isOpen: PropTypes.bool, onClose: PropTypes.func, onSubmit: PropTypes.func,
 };
 
-function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
+function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
 
   const router = useRouter();
   const { query } = router;
@@ -191,7 +191,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
             }, onScroll: handleScroll
           }}
       >
-        <Scrollbar sx={{zIndex: 99, "& label": {zIndex: 0}}}>
+        <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <ApplicantModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
@@ -250,5 +250,5 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
   );
 }
 
-export default memo(ApplicantFilterModal);
+export default memo(JobTypeFilterModal);
 

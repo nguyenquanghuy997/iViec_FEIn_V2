@@ -3,7 +3,7 @@ import { Button, Popover } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 // config
-import { NAVBAR } from '@/config'
+import { ICON, NAVBAR } from '@/config'
 
 export const ListItemStyle = styled(Button, {
   shouldForwardProp: (prop) =>
@@ -19,13 +19,12 @@ export const ListItemStyle = styled(Button, {
 
   return {
     ...theme.typography.body2,
-    margin: theme.spacing(0, 0.5),
-    padding: theme.spacing(1, 2),
     borderRadius: theme.spacing(0.75),
-    color: NAVBAR.DASHBOARD_MENU_ITEM_COLOR,
+    color: ICON.NAVBAR_ITEM_COLOR,
     fontWeight: NAVBAR.MENU_ITEM_WEIGHT_SEMIBOLD,
     textTransform: 'none',
-    height: NAVBAR.DASHBOARD_ITEM_HORIZONTAL_MENU_HEIGHT,
+    minWidth:'unset',
+    marginRight:'8px',
     '&:hover': {
       color: NAVBAR.DASHBOARD_MENU_ITEM_ACTIVE_COLOR,
       backgroundColor: NAVBAR.DASHBOARD_MENU_ITEM_BG_COLOR,

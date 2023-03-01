@@ -1,3 +1,5 @@
+import { DOMAIN_SERVER_API } from "@/config";
+
 //PipelineStateType
 export const PipelineStateType = (item, result) => {
   switch (item) {
@@ -46,6 +48,15 @@ export const MaritalStatus = (item) => {
       return "Khác";
   }
 };
+//Tình trạng hôn nhân
+export const Status = (item) => {
+  switch (item) {
+    case true:
+      return "Đang hoạt động";
+    case false:
+      return "Ngừng hoạt động";
+  }
+};
 //Địa chỉ
 export const Address = (item) =>
   `${item?.address ? item?.address + "," : ""} ${item?.villageName ? item?.villageName + "," : ""}  ${
@@ -80,4 +91,9 @@ export const YearOfExperience = (item) => {
     case 7:
       return "Trên 10 năm";
   }
+};
+
+//Link image
+export const srcImage = (image) => {
+  return DOMAIN_SERVER_API+"/Image/GetImage?imagePath="+image
 };
