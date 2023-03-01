@@ -16,6 +16,7 @@ import {useState} from "react";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import errorMessages from '@/utils/errorMessages'
+import {CHECK_EMAIL} from '@/utils/regex'
 // routes
 // import { PATH_AUTH } from '@/routes/paths'
 
@@ -30,6 +31,7 @@ export default function LoginForm() {
     const LoginSchema = Yup.object().shape({
         email: Yup.string()
             .email("Email không đúng định dạng")
+            .matches(CHECK_EMAIL, 'Email không đúng định dạng')
             .required("Email không được bỏ trống"),
         password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
     });
@@ -62,7 +64,7 @@ export default function LoginForm() {
             if (code === "AUE_01") {
                 setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"}, {shouldFocus: true})
             } else if (code === "IDE_12") {
-                setError('email', {type: "custom", message: "Email chưa được xác thực"}, {shouldFocus: true})
+                setError('email', {type: "custom", message: "Email chưa được kích hoạt"}, {shouldFocus: true})
             } else if (code === "IDE_06") {
                 setError('password', {type: "custom", message: "Mật khẩu không chính xác"})
             } else setError("afterSubmit", {...error, message});
