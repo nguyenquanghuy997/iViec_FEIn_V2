@@ -33,18 +33,21 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
     },
 }));
 
-const InputFilter = ({name, placeholder, type, ...props}) => {
+const InputFilter = React.forwardRef((props, ref) => {
+    const {name, placeholder, type, onSubmit, ...other} = props;
     return (
         <TextFieldStyle
+            inputRef={ref}
             fullWidth
             id={name}
             name={name}
-            {...props}
+            {...other}
+            onKeyPress={onSubmit}
             type={type}
             placeholder={placeholder}
             className='input-filter'
         />
     );
-};
+})
 
 export default InputFilter;

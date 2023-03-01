@@ -52,7 +52,11 @@ function RegisterForm() {
         userName: Yup.string().email("Email không đúng định dạng").required("Email không được bỏ trống"),
         password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
         rePassword: Yup.string().oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng").required("Mật khẩu xác nhận không được bỏ trống"),
-        organizationName: Yup.string().required("Tên doanh nghiệp không được bỏ trống").max(50, "Tên doanh nghiệp tối đa 50 ký tự"),
+        organizationName: Yup.string()
+            .required("Tên doanh nghiệp không được bỏ trống")
+            .transform(value => value.trim())
+            .min(1, "Tên doanh nghiệp không được bỏ trống")
+            .max(50, "Tên doanh nghiệp tối đa 50 ký tự"),
         organizationPhoneNumber: Yup.string().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
         jobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghê"),
         organizationSize: Yup.string().required("Quy mô nhân sự không được bỏ trống"),
@@ -87,15 +91,15 @@ function RegisterForm() {
     const onSubmit = async (data) => {
         try {
             const body = {
-                userName: data.userName, // organization username (Email đăng nhập)
-                password: data.password, // organization password
-                organizationName: data.organizationName, // organization name
-                organizationPhoneNumber: data.organizationPhoneNumber, // organization phone number
-                jobCategoryIds: data.jobCategoryIds?.map(item => item?.value), // organization name
-                organizationSize: parseInt(data.organizationSize), // organization size
-                organizationProvinceId: data.organizationProvinceId, // organization province
-                organizationDistrictId: data.organizationDistrictId, // organization district
-                organizationAddress: data.organizationAddress, // organization address
+                userName: data.userName.trim(),                                 // organization username (Email đăng nhập)
+                password: data.password,                                        // organization password
+                organizationName: data.organizationName.trim(),                 // organization name
+                organizationPhoneNumber: data.organizationPhoneNumber.trim(),   // organization phone number
+                jobCategoryIds: data.jobCategoryIds?.map(item => item?.value),  // organization name
+                organizationSize: parseInt(data.organizationSize),              // organization size
+                organizationProvinceId: data.organizationProvinceId,            // organization province
+                organizationDistrictId: data.organizationDistrictId,            // organization district
+                organizationAddress: data.organizationAddress.trim(),           // organization address
             };
             await postRegister(body).unwrap();
             await router.push(`/auth/register/success?username=${body.userName}`);
@@ -366,7 +370,7 @@ function RegisterForm() {
                                     }}
                                 >
                                     Tôi đồng ý với
-                                    <NextLink href={PATH_AUTH.register} passHref>
+                                    <NextLink href={PATH_AUTH.policy} passHref>
                                         <Link
                                             sx={{
                                                 padding: "0px 4px",

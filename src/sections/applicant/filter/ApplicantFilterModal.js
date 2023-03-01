@@ -178,11 +178,16 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
           open={isOpen}
           onClose={onClose}
           anchor="right"
-          hideBackdrop
+          variant="persistent"
           PaperProps={{
             sx: {
               width: {xs: 1, sm: 560, md: 384},
               boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+              zIndex: 999,
+              position: 'fixed',
+              height: 'calc(100% - 92px - 64px)',
+              top: '156px',
+              right: 0,
             }, onScroll: handleScroll
           }}
       >
@@ -197,7 +202,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
               </IconButton>
             </ApplicantModalHeadStyle>
             <Divider/>
-            <Box sx={{py: 2, mt: 8}}>
+            <Box sx={{py: 2, mt: 0}}>
               <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
               <Stack sx={{pb: 3, px: 2}}>
                 <DynamicFilterForm

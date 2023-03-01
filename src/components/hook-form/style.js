@@ -70,12 +70,25 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
     },
 }));
 
-const SelectFieldStyle = styled(Select)(({}) => ({
+const SelectFieldStyle = styled(Select)(({theme}) => ({
     "&.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
         border: '1px solid #D0D4DB',
     },
     "&.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
         border: '1px solid red',
+    },
+    "&.MuiInputBase-root": {
+        height: "44px",
+        fontSize: STYLE_CONSTANT.FONT_SM,
+        borderRadius: 6,
+        width: STYLE_CONSTANT.WIDTH_FULL,
+    },
+    "& .MuiSelect-select": {
+        borderRadius: 6,
+    },
+    ".MuiFormHelperText-root": {
+        marginTop: theme.spacing(1),
+        marginLeft: 0,
     },
 }));
 
@@ -152,22 +165,6 @@ const FormHelperTextStyle = styled(FormHelperText)(({theme}) => ({
     color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
 }));
 
-const SelectStyle = {
-    "&.MuiInputBase-root": {
-        height: "44px",
-        fontSize: STYLE_CONSTANT.FONT_SM,
-        borderRadius: 0.75,
-        width: STYLE_CONSTANT.WIDTH_FULL,
-    },
-    "& .MuiSelect-select": {
-        borderRadius: 0.75,
-    },
-    ".MuiFormHelperText-root": {
-        marginTop: 1,
-        marginLeft: 0,
-    },
-}
-
 const SearchInputStyle = {
     boxShadow: "inset 0px -1px 0px #E7E9ED",
     "& .MuiInputBase-root": {
@@ -192,7 +189,16 @@ const MenuItemStyle = {
     color: "#172B4D",
     padding: "10px 16px",
     fontSize: "14px",
-    fontWeight: 400
+    fontWeight: 400,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    "&.MuiMenuItem-root.empty-option": {
+        display: 'none',
+        opacity: 0,
+        height: 0,
+        visibility: 'hidden',
+    }
 }
 
 const InputLabelStyle = {
@@ -214,7 +220,6 @@ export {
     TextFieldStyle,
     SelectFieldStyle,
     AutocompleteFieldStyle,
-    SelectStyle,
     SearchInputStyle,
     MenuItemStyle,
     InputLabelStyle,
