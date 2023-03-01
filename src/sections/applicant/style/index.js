@@ -33,7 +33,7 @@ const HelperTextTypography = styled(Typography)(({theme}) => ({
 }));
 
 const ApplicantModalHeadStyle = styled(Box)(({theme}) => ({
-    position: "fixed",
+    position: "sticky",
     top: 0,
     right: 0,
     width: `384px`,

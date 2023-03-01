@@ -5,7 +5,7 @@ import {InputAdornment, Stack} from "@mui/material";
 import {ButtonFilterStyle} from "@/sections/applicant/style";
 
 const ApplicantHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit}) => {
-    return (<HeadingBar sx={{ mb: '28px' }}>
+    return (<HeadingBar sx={{ mb: '28px', position: 'fixed', top: 8 }}>
         <Stack flexDirection="row" alignItems="center">
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <RHFTextField

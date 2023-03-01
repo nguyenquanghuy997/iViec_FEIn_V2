@@ -18,6 +18,7 @@ export const PATH_AUTH = {
   resetPassword: path(ROOTS_AUTH, "/reset-password"),
   newPassword: path(ROOTS_AUTH, "/new-password"),
   userActivate: path(ROOTS_AUTH, "/user-activate"),
+  policy: path(ROOTS_AUTH, "/policy"),
 };
 
 export const PATH_DASHBOARD = {
@@ -64,10 +65,10 @@ export const PATH_DASHBOARD = {
   },
   report: {
     root: path(ROOTS_DASHBOARD, "report"),
-    root: path(ROOTS_DASHBOARD, "report/result"),
-    root: path(ROOTS_DASHBOARD, "report/conversion"),
-    root: path(ROOTS_DASHBOARD, "report/overtime"),
-    root: path(ROOTS_DASHBOARD, "report/tracking"),
+    // root: path(ROOTS_DASHBOARD, "report/result"),
+    // root: path(ROOTS_DASHBOARD, "report/conversion"),
+    // root: path(ROOTS_DASHBOARD, "report/overtime"),
+    // root: path(ROOTS_DASHBOARD, "report/tracking"),
   },
   blogs: {
     root: path(ROOTS_DASHBOARD, "blogs"),

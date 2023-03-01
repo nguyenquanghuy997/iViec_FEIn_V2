@@ -1,4 +1,3 @@
-import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
 import Page from "@/components/Page";
 import {PAGES} from "@/config";
 import SettingLayout from "@/layouts/setting";
@@ -18,7 +17,6 @@ export default function Setting() {
   return (
     <PageWrapper title={"Thông tin công ty"}>
         <Page>
-            <HeaderBreadcrumbs heading={"Thông tin công ty"} />
             <CompanyInfor />
         </Page>
     </PageWrapper>

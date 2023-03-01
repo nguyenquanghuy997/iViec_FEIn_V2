@@ -37,7 +37,8 @@ export const BoxItemStyle = styled(Box)(() => ({
 
 // Connect Card Style
 export const ConnectCardStyle = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(2),
   backgroundColor: "#F2F4F5",
 
 }));

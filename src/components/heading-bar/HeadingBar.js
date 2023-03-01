@@ -7,7 +7,8 @@ const HeadingBarStyle = styled("div")(({ theme }) => ({
   boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
   backgroundColor: "#FDFDFD",
   padding: theme.spacing(3, 0),
-  // position: 'fixed',
+  position: 'fixed',
+  top: theme.spacing(8),
   zIndex: 100
 }));
 
@@ -24,9 +25,9 @@ const HeadingBarInnerStyle = styled("div")(({ theme }) => ({
 }));
 
 
-const HeadingBar = ({ children }) => {
+const HeadingBar = ({ children, ...props }) => {
   return (
-    <HeadingBarStyle>
+    <HeadingBarStyle {...props}>
       <HeadingBarInnerStyle>{children}</HeadingBarInnerStyle>
     </HeadingBarStyle>
   );

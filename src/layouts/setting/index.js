@@ -35,8 +35,9 @@ const BoxWrapper = styled(Box)(({ theme }) => ({
 const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
   marginLeft: isDesktop ? theme.spacing(4.5) : theme.spacing(0),
   [theme.breakpoints.up("lg")]: {
-    width: DASHBOARD_CONTENT_WIDTH,
-    width: `calc(100% - ${SIDEBAR_CONSTANTS.SIDEBAR_WIDTH}px - ${theme.spacing(4.5)})`,
+    width: `calc(100% - ${SIDEBAR_CONSTANTS.SIDEBAR_WIDTH}px - ${theme.spacing(
+      4.5
+    )})`,
   },
   [theme.breakpoints.up("2k")]: {
     width: "100%",

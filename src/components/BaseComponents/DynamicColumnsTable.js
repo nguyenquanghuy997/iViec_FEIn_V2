@@ -18,7 +18,7 @@ const DynamicColumnsTable = (props) => {
     UpdateListColumn,
     settingName,
     filter,
-    scroll
+    scroll,
   } = props;
   const rowKey = "id";
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -143,7 +143,7 @@ const DynamicColumnsTable = (props) => {
           >
             {settingName}
           </TextMaxLine>
-        </View> 
+        </View>
       </View>
       <ReactDragListView.DragColumn {...dragProps}>
         {filter}
