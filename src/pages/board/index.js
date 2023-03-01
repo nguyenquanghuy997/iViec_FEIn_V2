@@ -5,7 +5,7 @@ import ConnectCard from "../../sections/connect/ConnectCard";
 // import { IconButtonAnimate } from "@/components/animate";
 // import { SkeletonKanbanColumn } from "@/components/skeleton";
 // config
-// import { HEADER, NAVBAR, PAGES } from "@/config";
+import {PAGES } from "@/config";
 // import useCollapseDrawer from "@/hooks/useCollapseDrawer";
 // // hooks
 // import useLocales from "@/hooks/useLocales";
@@ -31,7 +31,7 @@ import {
 } from "@/sections/kanban/kanbanSlice";
 // import cssStyles from "@/utils/cssStyles";
 // // utils
-// import { getRolesByPage } from "@/utils/role";
+import { getRolesByPage } from "@/utils/role";
 // // @mui
 import {
   Container,
@@ -46,13 +46,13 @@ Board.getLayout = function getLayout({ roles = [] }, page) {
   return <SettingLayout roles={roles} >{page}</SettingLayout>;
 };
 
-// export async function getStaticProps() {
-//   return {
-//     props: {
-//       roles: getRolesByPage(PAGES.Board),
-//     },
-//   };
-// }
+export async function getStaticProps() {
+  return {
+    props: {
+      roles: getRolesByPage(PAGES.Board),
+    },
+  };
+}
 
 // const SearchIconStyle = styled("div")(({ theme, ownerState }) => {
 //   const { isCollapse = false } = ownerState;
@@ -319,49 +319,22 @@ export default function Board() {
 
   const itemData = [
     {
-      img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-      title: "Breakfast",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-      title: "Burger",
+      img: "https://ogimgs.apkcombo.org/eyJsb2dvIjoiaHR0cHM6Ly9wbGF5LWxoLmdvb2dsZXVzZXJjb250ZW50LmNvbS9xYVR2WUhidC1GVy1vY3FEYnhMSXRHNlgzVE1aSl9zY19oVUNMLXptY0QwS3M1emdCSUJjT1E4c1pUOWoxQXZSVERRPXMyMDAiLCJ0aXRsZSI6ICJGUFQgaVZJRUMgQVBLIn0=/fpt-iviec-apk",
+      title: "IViec FPT",
     },
   ];
   const itemTest = [
     {
-      img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-      title: "Camera",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-      title: "Coffee",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-      title: "Hats",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
-      title: "Honey",
+      img: "https://blog.topcv.vn/wp-content/uploads/2014/10/TopCVlogo.png",
+      title: "TopCV",
     },
   ];
   const itemTestImage = [
     {
-      img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
-      title: "Basketball",
+      img: "https://1000logos.net/wp-content/uploads/2016/11/Facebook-Logo-Meaning.jpg",
+      title: "Facebook",
     },
-    {
-      img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
-      title: "Fern",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
-      title: "Mushrooms",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
-      title: "Tomato basil",
-    },
+    
   ];
 
   return (
@@ -449,11 +422,13 @@ export default function Board() {
         accounts={itemData}
         color={"#FB8906"}
         title="KẾT NỐI WEBSITE TUYỂN DỤNG NỘI BỘ"
+        type='inside'
       />
       <ConnectCard
         accounts={itemTest}
         color={"#43A047"}
         title="KẾT NỐI WEBSITE TUYỂN DỤNG BÊN NGOÀI"
+        type="outside"
       />
       <ConnectCard
         accounts={itemTestImage}

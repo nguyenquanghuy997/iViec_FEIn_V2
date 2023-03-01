@@ -13,6 +13,7 @@ import {
   CardContent,
   Divider,
   Tooltip,
+  Avatar,
 } from "@mui/material";
 import { FormControlLabel, Switch } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -34,11 +35,12 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const SwitchForm = ({ name, handleChange, ...other }) => {
+const SwitchForm = ({ name, handleChange, style, ...other }) => {
   const { control } = useFormContext();
 
   return (
     <FormControlLabel
+      sx={{ ...style }}
       control={
         <Controller
           name={name}
@@ -60,14 +62,14 @@ const SwitchForm = ({ name, handleChange, ...other }) => {
     />
   );
 };
-const ConnectCardItem = ({ account, color }) => {
+const ConnectCardItem = ({ account, color, type }) => {
   const [checked, setChecked] = useState(false);
   const methods = useForm({
     defaultValues: { isChecked: true },
   });
   const accounts = [
-    { id: 1, mail: "Dinhtienthanh1702tt@gmail.com" },
-    { id: 2, mail: "Dinfsatyuyert702tt@gmail.com" },
+    { id: 1, mail: "Hóng Biến Siêu Tốc" },
+    { id: 2, mail: "Ký sự đường phố" },
   ];
   // const { setError, handleSubmit, watch } = methods;
   // const disabled = watch("checked");
@@ -116,11 +118,15 @@ const ConnectCardItem = ({ account, color }) => {
           />
         </Box>
         <Divider />
-        <DetailCard
-          checked={checked}
-          accounts={accounts}
-          sx={{ display: "block" }}
-        />
+        {type === "outside" ? (
+          <DetailCard
+            checked={checked}
+            accounts={accounts}
+            sx={{ display: "block" }}
+          />
+        ) : (
+          <DetailSocial checked={checked} accounts={accounts} />
+        )}
       </Card>
     </FormProvider>
   );
@@ -172,14 +178,22 @@ const DetailCard = ({ checked, accounts }) => {
             {item.mail}
           </Typography>
           <FormProvider methods={methods}>
-            <Box style={{ display: "flex", justifyContent: "space-between" }}>
+            <Box
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                transform: "translateY(-14px)",
+              }}
+            >
               <CardActionArea onClick={handleOpen} sx={{ p: 0 }}>
                 <DeleteIcon />
               </CardActionArea>
               <ConnectDialog open={open} onClose={handleClose} />
               <SwitchForm
                 name={"active"}
-                handleChange={() => setIsActive(!isActive)}
+                handleChange={() => {
+                  setIsActive(!isActive);
+                }}
               />
             </Box>
           </FormProvider>
@@ -199,7 +213,7 @@ const DetailCard = ({ checked, accounts }) => {
             + Thêm tài khoản
           </Typography>
         </CardActionArea>
-        <ConnectForm open={openForm} handleClose={handleCloseForm} />
+        <ConnectForm open={openForm} onClose={handleCloseForm} />
       </CardContent>
     </Box>
   ) : (
@@ -207,7 +221,57 @@ const DetailCard = ({ checked, accounts }) => {
   );
 };
 
-const ConnectCard = ({ accounts, color, title }) => {
+const DetailSocial = ({ checked, accounts }) => {
+  const methods = useForm({
+    // defaultValues: { isActive: true },
+  });
+  return checked ? (
+    <Card sx={{ display: "block", boxShadow: "none", borderTop: "none" }}>
+      {accounts.map((item) => (
+        <>
+          <Divider />
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              borderRadius: 0,
+              py: 2,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
+              className="left"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src="https://i.pinimg.com/474x/ba/f0/e2/baf0e2a3bc09f1920d5df655a5f40828.jpg"
+                sx={{ mr: 2 }}
+              />
+              <Typography>{item.mail}</Typography>
+            </div>
+            <FormProvider methods={methods}>
+              <DeleteIcon />
+              <SwitchForm
+                name={"active"}
+                handleChange={() => {
+                  // setIsActive(!isActive);
+                }}
+                style={{
+                  marginRight: "10px",
+                }}
+              />
+            </FormProvider>
+          </Box>
+        </>
+      ))}
+    </Card>
+  ) : (
+    ""
+  );
+};
+const ConnectCard = ({ accounts, color, title, type }) => {
   return (
     <Box>
       <Typography
@@ -227,7 +291,12 @@ const ConnectCard = ({ accounts, color, title }) => {
 
       <ConnectCardStyle>
         {accounts?.map((account, id) => (
-          <ConnectCardItem account={account} color={color} key={id} />
+          <ConnectCardItem
+            account={account}
+            color={color}
+            key={id}
+            type={type}
+          />
         ))}
       </ConnectCardStyle>
     </Box>
