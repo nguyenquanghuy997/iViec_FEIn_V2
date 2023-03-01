@@ -25,10 +25,9 @@ export async function getStaticProps() {
 }
 
 export default function Setting() {
-
   return (
-    <PageWrapper title={"Quy trình tuyển dụng"}>
-      <Page>
+    <PageWrapper title={"Vị trí công việc"}>
+      <Page title={"Vị trí công việc"}>
         <JobTypeItem />
       </Page>
     </PageWrapper>

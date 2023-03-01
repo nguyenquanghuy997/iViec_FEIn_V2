@@ -46,12 +46,13 @@ export const ApplicantItem = () => {
             render: (item, record, index) => <>{index + 1}</>,
             width: "60px",
             fixed: "left",
+            align:'center'
         },
         {
             dataIndex: "fullName",
             title: "Họ và tên",
             fixed: "left",
-            width: "200px",
+            width: "220px",
             render: (text, record) => (
             <Link passHref href={{ pathname: `applicant/${record.applicantId}`, query: { or: `${record.organizationId}`} }}>
                            <TextMaxLine
@@ -75,9 +76,9 @@ export const ApplicantItem = () => {
             render: (date) => fDate(date),
             width: "120px",
         },
-        {dataIndex: "email", title: "Email", width: "240px"},
+        {dataIndex: "email", title: "Email", width: "214px"},
         {
-            dataIndex: "recruitmentName", title: "Tin tuyển dụng", width: "200px",
+            dataIndex: "recruitmentName", title: "Tin tuyển dụng", width: "300px",
             name: "recruitmentIds",
             type: "select",
             multiple: true,
@@ -134,7 +135,7 @@ export const ApplicantItem = () => {
             multiple: true,
         },
         {
-            dataIndex: "ownerName", title: "Cán bộ tuyển dụng", width: "200px",
+            dataIndex: "ownerName", title: "Cán bộ tuyển dụng", width: "220px",
             name: "ownerIds",
             label: "Cán bộ tuyển dụng",
             placeholder: "Chọn 1 hoặc nhiều cán bộ",
@@ -176,7 +177,7 @@ export const ApplicantItem = () => {
             multiple: true,
         },
         {
-            dataIndex: "yearOfExperience", title: "KN", width: "60px",
+            dataIndex: "yearOfExperience", title: "Số năm kinh nghiệm", width: "220px",
             name: "yearsOfExperience",
             type: "select",
             multiple: false,
@@ -225,6 +226,7 @@ export const ApplicantItem = () => {
             name: "height",
             label: "Chiều cao",
             type: 'number',
+            align:'center',
             items: [
                 {
                     name: "heightFrom",
@@ -247,6 +249,7 @@ export const ApplicantItem = () => {
             name: "weight",
             label: "Cân nặng",
             type: 'number',
+            align:'center',
             items: [
                 {
                     name: "weightFrom",
@@ -265,7 +268,7 @@ export const ApplicantItem = () => {
             ]
         },
         {
-            dataIndex: "expectedWorkingAddress", title: "Nơi làm việc mong muốn", width: "200px",
+            dataIndex: "expectedWorkingAddress", title: "Nơi làm việc mong muốn", width: "220px",
             name: "expectWorkingAddressProvinceIds",
             label: "Nơi làm việc mong muốn",
             placeholder: "Chọn 1 hoặc nhiều Tỉnh/Thành phố",
@@ -276,7 +279,7 @@ export const ApplicantItem = () => {
         {
             dataIndex: "expectedSalaryTo",
             title: "Mức lương mong muốn",
-            width: "120px",
+            width: "240px",
             name: "expectSalary",
             placeholder: "",
             label: "Mức lương mong muốn",
@@ -298,10 +301,11 @@ export const ApplicantItem = () => {
             ]
         },
         {
-            dataIndex: "livingAddress", title: "Nơi ở hiện tại", width: "160px",
+            dataIndex: "livingAddress", title: "Nơi ở hiện tại", width: "220px",
             name: "livingAddresses",
             type: "select",
             label: "Nơi ở hiện tại",
+            render: (item) => Address(item),
             items: [
                 {
                     name: "livingAddressProvinceIds",
@@ -318,10 +322,11 @@ export const ApplicantItem = () => {
             ]
         },
         {
-            dataIndex: "homeTower", title: "Quê quán", width: "160px",
+            dataIndex: "homeTower", title: "Quê quán", width: "220px",
             name: "homeTowers",
             type: "select",
             label: "Quê quán",
+            render: (item) => Address(item),
             items: [
                 {
                     name: "homeTowerProvinceIds",
@@ -486,8 +491,8 @@ export const ApplicantItem = () => {
                      menuItemText={menuItemText}
                      UpdateListColumn={handleUpdateListColumnApplicants}
                      settingName={"DANH SÁCH ỨNG VIÊN"}
+                     scroll={{x:6500}}
             />
-               
             </Content>
             {isOpen && <ApplicantFilterModal
                 columns={columns}

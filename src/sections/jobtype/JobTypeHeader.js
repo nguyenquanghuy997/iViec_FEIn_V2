@@ -11,7 +11,7 @@ import {
   } from "@/sections/jobtype";
 const JobTypeHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit}) => {
     const [showForm, setShowForm] = useState(false);
-    return (<HeadingBar sx={{ mb: '28px' }}>
+    return (<HeadingBar>
         <Stack flexDirection="row" alignItems="center">
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <RHFTextField

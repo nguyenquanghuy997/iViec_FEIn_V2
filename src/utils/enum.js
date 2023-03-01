@@ -48,6 +48,15 @@ export const MaritalStatus = (item) => {
       return "Khác";
   }
 };
+//Tình trạng hôn nhân
+export const Status = (item) => {
+  switch (item) {
+    case true:
+      return "Đang hoạt động";
+    case false:
+      return "Ngừng hoạt động";
+  }
+};
 //Địa chỉ
 export const Address = (item) =>
   `${item?.address ? item?.address + "," : ""} ${item?.villageName ? item?.villageName + "," : ""}  ${
