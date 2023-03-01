@@ -22,7 +22,7 @@ const WrapperStyle = styled("div")(({ theme }) => ({
 const MainStyle = styled("main", { shouldForwardProp: (prop) => prop !== "collapseClick"})(({ collapseClick, theme }) => ({
   position: 'relative',
   paddingBottom: 24,
-  marginTop: HEADER.MOBILE_HEIGHT,
+  paddingTop: HEADER.MOBILE_HEIGHT,
   [theme.breakpoints.up("xl")]: {
     width: "100%",
     transition: theme.transitions.create("margin-left", {
