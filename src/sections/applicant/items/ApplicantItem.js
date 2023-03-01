@@ -1,10 +1,7 @@
-import {ButtonDS} from "@/components/DesignSystem";
 import Content from "@/components/BaseComponents/Content";
 import {View} from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
-import NavItemContent from "@/components/nav-section/horizontal/NavItem";
-import {ListItemStyle} from "@/components/nav-section/horizontal/style";
 import {
     useGetAllFilterApplicantMutation,
     useGetListColumnApplicantsQuery,
@@ -12,17 +9,22 @@ import {
 } from "@/sections/applicant";
 import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
 import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
-// import { calculateColumnsWidth } from "./DynamicColumnsHelper";
+import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable"
 import {fDate} from "@/utils/formatTime";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Checkbox, Dropdown, Menu, Table, Tag} from "antd";
-import NextLink from "next/link";
-import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import ReactDragListView from "react-drag-listview";
+import {Tag} from "antd";
+import Link from "next/link";
+import React, {useEffect, useState,useMemo} from "react";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {useRouter} from "next/router";
-
+import {
+    Address,
+    MaritalStatus,
+    Sex,
+    YearOfExperience,
+    PipelineStateType,
+  } from "@/utils/enum";
 const defaultValues = {
     searchKey: "",
 };
@@ -30,10 +32,13 @@ const defaultValues = {
 export const ApplicantItem = () => {
     const router = useRouter();
     const {query, isReady} = router;
-
+    // api get list
     const [getAllFilterApplicant, {data: Data, isLoading}] = useGetAllFilterApplicantMutation();
+    // api get list Column
     const {data: ColumnData} = useGetListColumnApplicantsQuery();
-    const [columns, setColumns] = useState([
+     // api update list Column
+    const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+    const columns = [
         {
             title: "STT",
             key: "index",
@@ -48,14 +53,14 @@ export const ApplicantItem = () => {
             fixed: "left",
             width: "200px",
             render: (text, record) => (
-                <NextLink href={`applicant/${record.id}`} passHref>
-                    <TextMaxLine
-                        line={1}
-                        sx={{width: 160, fontWeight: "normal", fontSize: 14}}
-                    >
-                        {text}
-                    </TextMaxLine>
-                </NextLink>
+            <Link passHref href={{ pathname: `applicant/${record.applicantId}`, query: { or: `${record.organizationId}`} }}>
+                           <TextMaxLine
+                         line={1}
+                         sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+                       >
+                         {text}
+                       </TextMaxLine>
+                       </Link>
             ),
         },
         {
@@ -72,7 +77,7 @@ export const ApplicantItem = () => {
         },
         {dataIndex: "email", title: "Email", width: "240px"},
         {
-            dataIndex: "fullName", title: "Tin tuyển dụng", width: "200px",
+            dataIndex: "recruitmentName", title: "Tin tuyển dụng", width: "200px",
             name: "recruitmentIds",
             type: "select",
             multiple: true,
@@ -80,18 +85,20 @@ export const ApplicantItem = () => {
             label: "Tin tuyển dụng",
         },
         {
-            dataIndex: "fullName", title: "Bước tuyển dụng", width: "200px",
+            dataIndex: "recruitmentPipelineState", title: "Bước tuyển dụng", width: "200px",
             name: 'recruitmentPipelineStates',
             label: "Bước tuyển dụng",
             placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
             type: "select",
             multiple: true,
+            render: (item) => PipelineStateType(item,1),
         },
         {
-            dataIndex: "fullName", title: "Ngày ứng tuyển", width: "200px",
+            dataIndex: "createdTime", title: "Ngày ứng tuyển", width: "200px",
             type: "date",
             label: "Ngày ứng tuyển",
             name: "createdTime",
+            render: (date) => fDate(date),
             items: [
                 {
                     name: "createdTimeFrom",
@@ -110,7 +117,7 @@ export const ApplicantItem = () => {
             ]
         },
         {
-            dataIndex: "fullName", title: "Đơn vị", width: "200px",
+            dataIndex: "organizationName", title: "Đơn vị", width: "200px",
             name: "organizationIds",
             type: "tree",
             isTree: true,
@@ -119,7 +126,7 @@ export const ApplicantItem = () => {
             label: "Đơn vị",
         },
         {
-            dataIndex: "fullName", title: "Nguồn", width: "200px",
+            dataIndex: "jobSourceName", title: "Nguồn", width: "200px",
             name: "jobSourceIds",
             label: "Nguồn",
             placeholder: "Chọn 1 hoặc nhiều nguồn",
@@ -127,7 +134,7 @@ export const ApplicantItem = () => {
             multiple: true,
         },
         {
-            dataIndex: "fullName", title: "Cán bộ tuyển dụng", width: "200px",
+            dataIndex: "ownerName", title: "Cán bộ tuyển dụng", width: "200px",
             name: "ownerIds",
             label: "Cán bộ tuyển dụng",
             placeholder: "Chọn 1 hoặc nhiều cán bộ",
@@ -135,7 +142,7 @@ export const ApplicantItem = () => {
             multiple: true,
         },
         {
-            dataIndex: "fullName", title: "Cán bộ tạo ứng viên", width: "200px",
+            dataIndex: "creatorName", title: "Cán bộ tạo ứng viên", width: "200px",
             name: "creatorIds",
             label: "Người tạo ứng viên",
             placeholder: "Chọn 1 hoặc nhiều người",
@@ -175,6 +182,7 @@ export const ApplicantItem = () => {
             multiple: false,
             placeholder: "Chọn số năm kinh nghiệm",
             label: "Số năm kinh nghiệm",
+            render: (item) => YearOfExperience(item),
         },
         {
             title: "Kỹ năng",
@@ -199,7 +207,7 @@ export const ApplicantItem = () => {
         {
             dataIndex: "sex",
             title: "Giới tính",
-            render: (sex) => (sex == 0 ? "Nam" : "Nữ"),
+            render: (item) => Sex(item),
             width: "80px",
             name: "sexs",
             type: "radio",
@@ -210,6 +218,7 @@ export const ApplicantItem = () => {
             name: "maritalStatuses",
             type: "select",
             label: "Tình trạng hôn nhân",
+            render: (item) => MaritalStatus(item),
         },
         {
             dataIndex: "height", title: "Chiều cao", width: "120px",
@@ -256,12 +265,13 @@ export const ApplicantItem = () => {
             ]
         },
         {
-            dataIndex: "fullName", title: "Nơi làm việc mong muốn", width: "200px",
+            dataIndex: "expectedWorkingAddress", title: "Nơi làm việc mong muốn", width: "200px",
             name: "expectWorkingAddressProvinceIds",
             label: "Nơi làm việc mong muốn",
             placeholder: "Chọn 1 hoặc nhiều Tỉnh/Thành phố",
             type: "select",
             multiple: true,
+            render: (item) => Address(item),
         },
         {
             dataIndex: "expectedSalaryTo",
@@ -327,77 +337,9 @@ export const ApplicantItem = () => {
                 }
             ]
         },
-    ]);
+    ];
 
-    const dragProps = {
-        onDragEnd(fromIndex, toIndex) {
-            if (fromIndex > 3) {
-                console.log(`dragged from ${fromIndex} to ${toIndex}`);
-                const newColumns = [...columns];
-                const item = newColumns.splice(fromIndex, 1)[0];
-                newColumns.splice(toIndex, 0, item);
-                setColumns(newColumns);
-            }
-        },
-        nodeSelector: "th",
-    };
-    const [tableHeight, setTableHeight] = useState(600);
-    const ref = useRef < HTMLDivElement > null;
-    useLayoutEffect(() => {
-        setTableHeight(window.innerHeight - 400);
-    }, [ref]);
 
-    const rowKey = "id";
-
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-    const onSelectChange = (newSelectedRowKeys) => {
-        console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-
-    const [initialColumns, setInitialColumns] = useState([]);
-    const [checkedColumns, setCheckedColumns] = useState([]);
-    const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
-    useEffect(() => {
-        setInitialColumns(columns);
-    }, []);
-    const handleVisibleChange = (flag) => {
-        setVisibleMenuSettings(flag);
-    };
-
-    const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
-    const handleVisibleChangeSumbit = async () => {
-        var body = {
-            "recruitment": false,
-        };
-        var data = {"id": "01000000-ac12-0242-981f-08db10c9413d", body: body}
-
-        await UpdateListColumnApplicants(data)
-        setVisibleMenuSettings(false);
-    };
-    const onChange = (e) => {
-        var checkedColumnsNew = checkedColumns;
-        if (e.target.checked) {
-            checkedColumnsNew = checkedColumns.filter((id) => {
-                return id !== e.target.id;
-            });
-        } else if (!e.target.checked) {
-            checkedColumnsNew.push(e.target.id);
-        }
-
-        var filtered = initialColumns;
-        for (var i = 0; i < checkedColumnsNew.length; i++)
-            filtered = filtered.filter((el) => {
-                return el.dataIndex !== checkedColumns[i];
-            });
-        setCheckedColumns(checkedColumnsNew);
-        setColumns(filtered);
-    };
     const menuItemText = {
         name: "Họ và tên",
         phoneNumber: "Số điện thoại",
@@ -425,48 +367,19 @@ export const ApplicantItem = () => {
         livingAddress: "Nơi ở hiện tại",
         homeTower: "Quê quán",
     };
-    const menu = (
-        <>
-            <Menu>
-                {ColumnData &&
-                    Object.keys(ColumnData).map((key, index) => {
-                        if (key == "id") {
-                            return;
-                        }
-                        if (key == "name" || key == "id" || key == "phoneNumber") {
-                            return (
-                                <Menu.Item key={index + 1}>
-                                    <Checkbox
-                                        id={key}
-                                        onChange={onChange}
-                                        defaultChecked={ColumnData[key]}
-                                        disabled
-                                    >
-                                        {menuItemText[key]}
-                                    </Checkbox>
-                                </Menu.Item>
-                            );
-                        } else {
-                            return (
-                                <Menu.Item key={index + 1}>
-                                    <Checkbox
-                                        id={key}
-                                        onChange={onChange}
-                                        defaultChecked={ColumnData[key]}
-                                    >
-                                        {menuItemText[key]}
-                                    </Checkbox>
-                                </Menu.Item>
-                            );
-                        }
-                    })}
-            </Menu>
-            <ButtonDS
-                tittle="Áp dụng"
-                onClick={handleVisibleChangeSumbit}
-            />
-        </>
-    );
+
+
+  
+    const handleUpdateListColumnApplicants = async () => {
+        var body = {
+            "recruitment": false,
+        };
+        var data = {"id": "01000000-ac12-0242-981f-08db10c9413d", body: body}
+
+        await UpdateListColumnApplicants(data)
+    };
+  
+
 
     // form search
     const Schema = Yup.object().shape({
@@ -565,47 +478,17 @@ export const ApplicantItem = () => {
                 onCloseFilterForm={handleCloseFilterForm}
             />
             <Content>
-                <View flexRow atCenter mb={24} mt={96}>
-                    <Dropdown
-                        overlay={menu}
-                        onVisibleChange={handleVisibleChange}
-                        visible={visibleMenuSettings}
-                    >
-                        <ListItemStyle>
-                            <NavItemContent
-                                icon={<Iconify icon="material-symbols:settings"/>}
-                                title=""
-                            />
-                        </ListItemStyle>
-
-                    </Dropdown>
-
-                    <View>
-                        <TextMaxLine
-                            line={1}
-                            sx={{width: 160, fontWeight: "normal", fontSize: 14}}
-                        >
-                            {"DANH SÁCH ỨNG VIÊN"}
-                        </TextMaxLine>
-                    </View>
-                </View>
-                <ReactDragListView.DragColumn {...dragProps}>
-                    <Table
-                        rowSelection={rowSelection}
-                        columns={columns}
-                        dataSource={Data?.items}
-                        rowKey={rowKey}
-                        scroll={{x: 3000, y: tableHeight}}
-                        size="large"
-                        loading={isLoading}
-                        //to set pageSize == height tableHeight/40
-                        pagination={{
-                            defaultPageSize: Math.floor(tableHeight / 40),
-                            showSizeChanger: true,
-                            pageSizeOptions: ["10", "20", "30"],
-                        }}
-                    />
-                </ReactDragListView.DragColumn>
+            <View mt={96}>
+                <DynamicColumnsTable
+                    columns={columns}
+                    source={Data?.items}
+                    loading={isLoading}
+                    ColumnData={ColumnData}
+                    menuItemText={menuItemText}
+                    UpdateListColumn={handleUpdateListColumnApplicants}
+                    settingName={"DANH SÁCH ỨNG VIÊN"}
+                />
+            </View>
             </Content>
             {isOpen && <ApplicantFilterModal
                 columns={columns}

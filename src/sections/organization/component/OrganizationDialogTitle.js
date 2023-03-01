@@ -1,5 +1,5 @@
 import React from 'react'
-import Iconify from "@/components/Iconify";;
+import Iconify from "@/components/Iconify";
 import {DialogTitle, IconButton} from "@mui/material";
 
 const OrganizationDialogTitle = (props) => {

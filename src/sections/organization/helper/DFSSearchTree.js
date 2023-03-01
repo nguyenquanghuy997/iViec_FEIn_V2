@@ -1,4 +1,4 @@
-import {convertViToEn, removeEmpty} from '@/utils/function';
+import {convertViToEn} from '@/utils/function';
 
 // const dfsSearchTree = (node, term, foundIDS) => {
 //   // Implement your search functionality
