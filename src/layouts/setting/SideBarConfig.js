@@ -69,11 +69,11 @@ export const sidebarConfig = [
         path: "/settings/jobtype",
         roles: ROLES[PAGES.Applicant],
       },
-      // {
-      //   title: "Kết nối",
-      //   path: "/board",
-      //   roles: ROLES[PAGES.Applicant],
-      // },
+      {
+        title: "Kết nối",
+        path: "/board",
+        roles: ROLES[PAGES.Applicant],
+      },
       {
         title: "Quản lý đề thi",
         path: "/settings",
