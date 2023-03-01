@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 // import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 
+
 const ConnectForm = (props) => {
   const { onClose, open } = props;
 
@@ -41,8 +42,8 @@ const ConnectForm = (props) => {
   });
 
   const defaultValues = {
-    email: "thuybon1@gmail.com",
-    password: "000000",
+    email: "",
+    password: "",
     remember: true,
   };
 
