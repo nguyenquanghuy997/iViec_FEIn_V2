@@ -6,7 +6,7 @@ export const API_ADMIN_USER_LIST = "/api/admin/user/list";
 export const API_ADMIN_ALL_NOTIFY = "/api/v1/admin/all-notification";
 export const API_UPLOAD_AVATAR_PROFILE = "/api/upload/avatar";
 export const API_PROFILE = "/api/profile";
-export const API_LIST_JOBS = "/api/admin/jobs";
+// export const API_LIST_JOBS = "/api/admin/jobs";
 export const API_LIST_JOBS_PROFILE = "/api/job/user/profile";
 export const API_ADMIN_READ_ALL_NOTIFY = "/api/read/all/notification";
 export const API_LIST_CARD = "/api/v1/cards";
@@ -82,7 +82,8 @@ export const API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT = "/recruitment/
 export const API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES = "/applicant/ApplicantRecruitment/GetApplicantCurrentStateWithRecruitmentStates"; //lấy list tin tuyển dụng theo ứng viên và đơn vị
 
 export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantSkills";
-
+//Tin tuyển dụng
+export const API_LIST_JOBS = "/api/recruitment/Recruitment/GetRecruitments"; //new  danh sách tin
 // Lấy danh sách phòng ban
 export const API_GET_ORGANIZATION = "/api/organization/GetOrganization";
 
