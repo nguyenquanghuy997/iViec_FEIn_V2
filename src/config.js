@@ -80,6 +80,7 @@ export const defaultPagination = PAGINATION[0]; // 10
 
 // DATETIME FORMAT
 export const DATE_FORMAT = "dd/MM/yyyy";
+export const YEAR_FORMAT = "yyyy";
 export const DATE_YEAR_MONTH_DAY_FORMAT = "yyyy-MM-dd";
 export const DATETIME_FORMAT = "dd/MM/yyyy HH:mm";
 export const AMPM_DATETIME_FORMAT = "hh:mma dd/MM/yyyy";

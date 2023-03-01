@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import {Avatar, Box, InputAdornment, Stack, Typography} from "@mui/material";
+import React, {useState} from 'react';
+import {Avatar, Box, Stack, Typography} from "@mui/material";
 import OrganizationTree from "@/sections/organization/component/OrganizationTree";
 import Iconify from "@/components/Iconify";
 import OrganizationEmptyChildren from "@/sections/organization/component/OrganizationEmptyChildren";
@@ -7,13 +7,11 @@ import OrganizationForm from "@/sections/organization/component/OrganizationForm
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
 import {DOMAIN_SERVER_API} from "@/config";
 import {convertFlatDataToTree} from "@/utils/function";
-import InputFilter from "@/sections/dynamic-filter/InputFilter";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
 import OrganizationBottomNav from "@/sections/organization/component/OrganizationBottomNav";
 import {ButtonInviteListStyle, ButtonInviteStyle} from "@/sections/organization/style";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
-import {searchTree} from "@/sections/organization/helper/DFSSearchTree";
 
 const OrganizationContent = () => {
   // selected

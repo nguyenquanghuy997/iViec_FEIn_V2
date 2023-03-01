@@ -16,7 +16,6 @@ export const DraggableList = (props) => {
     const items = Array.from(data);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
     setData?.(items);
   }
 

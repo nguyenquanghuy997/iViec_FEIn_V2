@@ -10,10 +10,14 @@ import {
 } from 'date-fns'
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
 
-import { DATE_FORMAT, TIMEZONE } from '@/config'
+import { DATE_FORMAT, TIMEZONE, YEAR_FORMAT } from '@/config'
 
 export function fDate(date, dateFormat = DATE_FORMAT) {
   return format(new Date(date), dateFormat)
+}
+
+export function fYear(date, yearFormat = YEAR_FORMAT) {
+  return format(new Date(date), yearFormat)
 }
 
 export function fUtcToDateTime(date, timeZone = TIMEZONE) {

@@ -27,7 +27,7 @@ export async function getStaticProps() {
 export default function Setting() {
 
   return (
-    <PageWrapper title={"Quy trình tuyển dụng"}>
+    <PageWrapper title={"Vai trò"}>
       <Page>
         <PipelineItem />
       </Page>
