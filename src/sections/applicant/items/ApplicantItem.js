@@ -408,7 +408,7 @@ export const ApplicantItem = () => {
             heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
             heightTo: query.heightTo ? Number(query.heightTo) : null,
             maritalStatuses: query.maritalStatuses ? [Number(query.maritalStatuses)] : null,
-            // educations: query.educations ? [query.educations] : null,
+            education: query.education ? query.education : null,
             homeTowerProvinceIds: query.homeTowerProvinceIds ? [query.homeTowerProvinceIds] : null,
             homeTowerDistrictIds: query.homeTowerDistrictIds ? [query.homeTowerDistrictIds] : null,
             livingAddressProvinceIds: query.livingAddressProvinceIds ? [query.livingAddressProvinceIds] : null,
@@ -429,7 +429,7 @@ export const ApplicantItem = () => {
             jobSourceIds: query.jobSourceIds && typeof query.jobSourceIds === 'string' ? [query.jobSourceIds] : query.jobSourceIds && query.jobSourceIds,
         };
         if (query) {
-            getAllFilterApplicant(JSON.stringify(queryParams)).unwrap();
+            getAllFilterApplicant(JSON.stringify(Object.entries(queryParams).reduce((a,[k,v]) => (v == null ? a : (a[k]=v, a)), {}))).unwrap();
         } else {
             getAllFilterApplicant({}).unwrap();
         }
@@ -478,16 +478,17 @@ export const ApplicantItem = () => {
                 onCloseFilterForm={handleCloseFilterForm}
             />
             <Content>
-            <DynamicColumnsTable
+            <View mt={96}>
+                <DynamicColumnsTable
                     columns={columns}
-                     source={Data?.items}
-                     loading={isLoading}
-                     ColumnData={ColumnData}
-                     menuItemText={menuItemText}
-                     UpdateListColumn={handleUpdateListColumnApplicants}
-                     settingName={"DANH SÁCH ỨNG VIÊN"}
-            />
-               
+                    source={Data?.items}
+                    loading={isLoading}
+                    ColumnData={ColumnData}
+                    menuItemText={menuItemText}
+                    UpdateListColumn={handleUpdateListColumnApplicants}
+                    settingName={"DANH SÁCH ỨNG VIÊN"}
+                />
+            </View>
             </Content>
             {isOpen && <ApplicantFilterModal
                 columns={columns}

@@ -41,6 +41,7 @@ export default function LoginForm() {
     };
 
     const methods = useForm({
+        mode: 'onChange',
         resolver: yupResolver(LoginSchema),
         defaultValues,
     });
@@ -52,7 +53,6 @@ export default function LoginForm() {
     } = methods;
 
     const onSubmit = async (data) => {
-        console.log(errors)
         try {
             await login(data.email, data.password, data.userLoginType, data.remember);
             enqueueSnackbar("Đăng nhập thành công!")

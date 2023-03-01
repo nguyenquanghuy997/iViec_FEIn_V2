@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const containsText = (text, searchText) => {
   return convertViToEn(text).toLowerCase().indexOf(convertViToEn(searchText).toLowerCase()) > -1;
 };
@@ -31,9 +33,14 @@ const convertViToEn = (str, removeSpecial = true) => {
     str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
   }
   return str;
-  return str;
 }
 
+export const removeEmpty = (obj, key) => {
+  return _.transform(obj, (r, v, k) => {
+    if (k === key && _.isEmpty(v)) return;
+    r[k] = _.isObject(v) ? removeEmpty(v, key) : v;
+  });
+}
 const convertFlatDataToTree = (flatData, parentKey = 'parentOrganizationId') => {
   const hashTable = Object.create(null);
   flatData?.forEach((aData) => {
@@ -47,7 +54,7 @@ const convertFlatDataToTree = (flatData, parentKey = 'parentOrganizationId') => 
       dataTree.push(hashTable[aData.id]);
     }
   });
-  return dataTree;
+  return removeEmpty(dataTree, 'children');
 };
 
 export {
