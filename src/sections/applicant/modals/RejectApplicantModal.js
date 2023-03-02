@@ -36,7 +36,7 @@ export const RejectApplicantModal = ({
     const pressSave = async () => {
     const body = {
       applicantId: applicantId,
-      recruimentId: recruimentId,
+      recruitmentId: recruimentId,
       recruitmentPipelineStateId: recruitmentPipelineStateId,
       pipelineStateResultType: 2,
       note: "Ứng viên chưa đạt tiêu chí đánh giá"

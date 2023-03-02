@@ -73,7 +73,7 @@ export default function ModalReload() {
         sx={{ width: "100%", mt: 2 }}
       >
         <ReloadIcon />
-        <Typography ml={1}>Tải khai thác</Typography>
+        <Typography ml={1}>Tái khai thác</Typography>
       </Button>
       <BootstrapDialog
         onClose={handleClose}
@@ -118,7 +118,7 @@ export default function ModalReload() {
               marginTop: "17px",
             }}
           >
-            Tải khai thác ứng viên
+            Tái khai thác ứng viên
           </p>
         </BootstrapDialogTitle>
         <Divider />
@@ -177,7 +177,7 @@ export default function ModalReload() {
         <DialogActions>
           <Button onClick={handleClose} sx={{color:'#455570'}}>Hủy</Button>
           <Button variant="contained" onClick={handleClose} sx={{backgroundColor:'#1976D2'}}>
-            Tải khai thác
+            Tái khai thác
           </Button>
         </DialogActions>
       </BootstrapDialog>
