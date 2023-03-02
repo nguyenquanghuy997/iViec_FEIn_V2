@@ -12,6 +12,7 @@ import {
   API_GET_USER_FROM_ORGANIZATION,
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
+  API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -81,7 +82,13 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         return response;
       },
     }),
-
+    updateApplicantRecruitmentToNextState: builder.mutation({
+      query: (data) => ({
+        url: API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
+        method: "PATCH",
+        data: data,
+      }),
+    }),
     //api lồng
     // getRecruitmentsByApplicant: builder.query({
     //   async queryFn(params, _queryApi, fetchWithBQ) {
@@ -162,6 +169,7 @@ export const {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
+  useUpdateApplicantRecruitmentToNextStateMutation
 } = ApplicantFormSlice;
 
 // export const getJobDetail = createAsyncThunk(

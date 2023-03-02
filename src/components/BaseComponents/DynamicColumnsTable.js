@@ -7,6 +7,7 @@ import { ListItemStyle } from "@/components/nav-section/horizontal/style";
 import { Checkbox, Dropdown, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import ReactDragListView from "react-drag-listview";
+import { makeStyles } from "@mui/styles";
 
 const DynamicColumnsTable = (props) => {
   const {
@@ -50,6 +51,7 @@ const DynamicColumnsTable = (props) => {
   useEffect(() => {
     setInitialColumns(columns);
   }, []);
+  
   const menu = (
     <>
       <Menu>
@@ -117,13 +119,37 @@ const DynamicColumnsTable = (props) => {
     setCheckedColumns(checkedColumnsNew);
     setColumnsTable(filtered);
   };
+  const useStyles = makeStyles(() => ({
+    table: {
+      '& .ant-table':{
+        minHeight: '500px',
+        borderRadius:'8px'
+      },
+      '& .ant-table-thead >tr>th':{
+        background: '#FDFDFD',
+        height: '72px',
+        borderBottom: '2px solid #CCD4DC'
+      },
+      '& .ant-pagination':{
+        padding: '0 16px'
+      }
+    },
+    setting:{
+      background: '#FDFDFD',
+boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+borderRadius: '4px'
+    }
+  }));
+
+  const classes = useStyles();
   return (
     <View>
-      <View flexRow atCenter mb={24}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }} mb={16}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Dropdown
-          overlay={menu}
-          onVisibleChange={handleVisibleChange}
-          visible={visibleMenuSettings}
+          menu={menu}
+          onOpenChange={handleVisibleChange}
+          open={visibleMenuSettings}
         >
           <ListItemStyle>
             <NavItemContent
@@ -137,24 +163,45 @@ const DynamicColumnsTable = (props) => {
           <TextMaxLine
             line={1}
             sx={{
-              fontWeight: "normal",
               fontSize: 14,
+              color: "#172B4D",
+              fontWeight: 600,
             }}
           >
             {settingName}
           </TextMaxLine>
         </View>
+        <View ml={8}>
+          <TextMaxLine
+            line={1}
+            sx={{
+              fontSize: 10,
+              color: "#172B4D",
+              background: "#F2F4F5",
+              border: "1px solid #172B4D",
+              borderRadius: "100px",
+              textAlign: "center",
+              padding: "2px 8px",
+            }}
+          >
+            {source?.totalRecord || 0}
+          </TextMaxLine>
+        </View>
+        </View>
+        
       </View>
+      <div className={classes.setting}>
       <ReactDragListView.DragColumn {...dragProps}>
         {filter}
         <Table
           rowSelection={rowSelection}
           columns={columnsTable}
-          dataSource={source}
+          dataSource={source?.items}
           rowKey={rowKey}
           scroll={scroll}
           size="large"
           loading={loading}
+          className={classes.table}
           pagination={{
             defaultPageSize: 10,
             showSizeChanger: true,
@@ -162,6 +209,7 @@ const DynamicColumnsTable = (props) => {
           }}
         />
       </ReactDragListView.DragColumn>
+      </div>
     </View>
   );
 };

@@ -20,6 +20,7 @@ export default function ButtonDS(props) {
         sx={{
           borderRadius: "6px",
           backgroundColor: "#1976D2",
+          fontWeight: 600,
           "&:disabled":{
             backgroundColor:"#D0D4DB",
             color:"#8A94A5"

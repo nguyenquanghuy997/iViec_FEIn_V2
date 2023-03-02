@@ -593,7 +593,7 @@ export const ApplicantItem = () => {
         <View mt={96}>
           <DynamicColumnsTable
             columns={columns}
-            source={Data?.items}
+            source={Data}
             loading={isLoading}
             ColumnData={ColumnData}
             menuItemText={menuItemText}

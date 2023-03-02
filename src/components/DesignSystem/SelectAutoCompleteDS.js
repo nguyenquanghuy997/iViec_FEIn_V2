@@ -72,7 +72,7 @@ export default function SelectAutoCompleteDS(props) {
         MenuProps={{ autoFocus: false, classes: { paper: classes.paper } }}
         labelId="search-select-label"
         id="search-select"
-        value={selectedOption ? selectedOption :""}
+        value={selectedOption?.name ? selectedOption?.name :""}
         onChange={onChange}
         onClose={() => setSearchText("")}
         sx={{
@@ -90,7 +90,7 @@ export default function SelectAutoCompleteDS(props) {
         }}
         renderValue={
           selectedOption !== "" && selectedOption !== undefined
-            ? () => selectedOption
+            ? () => selectedOption?.name
             : () => <Placeholder>Chọn value</Placeholder>
         }
         endAdornment={

@@ -8,21 +8,18 @@ import Scrollbar from "@/components/Scrollbar";
 import {useForm} from "react-hook-form";
 import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import {
-  useGetDistrictByProvinceIdQuery,
-  useGetProvinceQuery
-} from "@/sections/companyinfor/companyInforSlice";
+import {useGetDistrictByProvinceIdQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {convertViToEn} from "@/utils/function";
 import {isEmpty, pick} from 'lodash';
 import {
-  useCreateChildOrganizationMutation, useGetOrganizationByIdQuery, useUpdateOrganizationMutation,
+  useCreateChildOrganizationMutation,
+  useGetOrganizationByIdQuery,
+  useUpdateOrganizationMutation,
 } from "@/sections/organization/OrganizationSlice";
 import {useSnackbar} from "notistack";
-import {_uploadApi} from "@/utils/axios";
 import {API_UPDATE_ORGANIZATION} from "@/routes/api";
-import {updateOrganization} from "@/sections/organization/services/organizationServices";
 
 const InputStyle = {
   minHeight: 44,
