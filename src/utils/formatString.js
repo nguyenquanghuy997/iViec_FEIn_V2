@@ -37,10 +37,10 @@ export const LIST_ORGANIZATION_SIZE = [
 ];
 
 export const LIST_MARITAL_STATUSES = [
-  {id: "", value: "", name: ""},
   {id: "0", value: "0", name: "Độc thân"},
   {id: "1", value: "1", name: "Kết hôn"},
   {id: "2", value: "2", name: "Khác"},
+  {id: "", value: "", name: ""},
 ]
 
 export const LIST_GENDER = [
@@ -50,17 +50,16 @@ export const LIST_GENDER = [
 ]
 
 export const LIST_EXPERIENCE_NUMBER = [
-  { id: "", value: "", name: "" },
   { id: "0", value: "0", name: "0 - 1 năm" },
   { id: "1", value: "1", name: "1 - 2 năm" },
   { id: "2", value: "2", name: "2 - 3 năm" },
   { id: "3", value: "3", name: "3 - 5 năm" },
   { id: "4", value: "4", name: "5 - 10 năm" },
   { id: "5", value: "5", name: "10 năm trở lên" },
+  { id: "", value: "", name: "" },
 ]
 
 export const LIST_STEP_RECRUITMENT = [
-  { id: "", value: "", name: "" },
   { id: "0", value: "0", name: "Ứng tuyển" },
   { id: "1", value: "1", name: "Thi tuyển" },
   { id: "2", value: "2", name: "Phỏng vấn máy" },
@@ -69,6 +68,7 @@ export const LIST_STEP_RECRUITMENT = [
   { id: "5", value: "5", name: "Kết quả - Cân nhắc" },
   { id: "6", value: "6", name: "Kết quả - Loại" },
   { id: "7", value: "7", name: "Mời nhận việc" },
+  { id: "", value: "", name: "" },
 ]
 
 export function joinArrStr(arr, key) {
