@@ -46,7 +46,7 @@ export const sidebarConfig = [
       },
       {
         title: "Kết nối",
-        path: "/board",
+        path: "/settings/connect",
         roles: ROLES[PAGES.Applicant],
       },
       {
