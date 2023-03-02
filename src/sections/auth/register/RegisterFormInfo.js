@@ -25,6 +25,7 @@ import * as Yup from "yup";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import ChipDS from "@/components/DesignSystem/ChipDS";
 import {PaperAutocompleteStyle} from "@/sections/auth/style";
+import {CHECK_EMAIL} from '@/utils/regex'
 
 const InputStyle = {width: 440, minHeight: 44};
 
@@ -49,7 +50,7 @@ function RegisterForm() {
     };
 
     const RegisterSchema = Yup.object().shape({
-        userName: Yup.string().email("Email không đúng định dạng").required("Email không được bỏ trống"),
+        userName: Yup.string().email("Email không đúng định dạng").matches(CHECK_EMAIL, 'Email không đúng định dạng').required("Email không được bỏ trống"),
         password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
         rePassword: Yup.string().oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng").required("Mật khẩu xác nhận không được bỏ trống"),
         organizationName: Yup.string()
@@ -62,7 +63,7 @@ function RegisterForm() {
         organizationSize: Yup.string().required("Quy mô nhân sự không được bỏ trống"),
         organizationProvinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống"),
         organizationDistrictId: Yup.string().required("Quận/Huyện không được bỏ trống"),
-        organizationAddress: Yup.string().max(255, "Địa chỉ cụ thể doanh nghiệp tối đa 255 ký tự"),
+        organizationAddress: Yup.string().max(255, "Địa chỉ chi tiết doanh nghiệp tối đa 255 ký tự"),
         acceptTerms: Yup.bool().oneOf([true], "Vui lòng đồng ý với chính sách bảo mật"),
     });
 
@@ -108,7 +109,7 @@ function RegisterForm() {
             const {status} = error;
             const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
             if (status === "AUE_06") {
-                setError('userName', {type: "custom", message: "Email đã được đăng ký"}, {shouldFocus: true})
+                setError('userName', {type: "custom", message: "Tài khoản chưa được kích hoạt"}, {shouldFocus: true})
             } else setError("afterSubmit", {...error, message});
         }
     };

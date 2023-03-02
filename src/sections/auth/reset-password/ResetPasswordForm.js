@@ -7,6 +7,7 @@ import { Stack, Alert } from "@mui/material";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {CHECK_EMAIL} from '@/utils/regex'
 
 export default function ResetPasswordForm({ setStatusResetPass }) {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
   const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string()
       .email("Email không đúng định dạng")
+      .matches(CHECK_EMAIL, 'Email không đúng định dạng')
       .required("Email không được bỏ trống"),
   });
 

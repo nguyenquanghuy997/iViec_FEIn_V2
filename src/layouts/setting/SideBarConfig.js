@@ -14,7 +14,7 @@ const ROLES = getListRoles();
 
 export const SIDEBAR_CONSTANTS = {
   // WIDTH
-  SIDEBAR_WIDTH: 316,
+  SIDEBAR_WIDTH: 310,
   // TEXT
   MENU_TITLE_SIZE: 13,
   MENU_ITEM_SIZE: 14,
@@ -32,26 +32,6 @@ export const SIDEBAR_CONSTANTS = {
 
 export const sidebarConfig = [
   {
-    subheader: "Công ty",
-    items: [
-      {
-        title: "Thông tin công ty",
-        path: "/settings/companyinfor",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Người dùng và Cơ cấu tổ chức",
-        path: "/settings/organization",
-        roles: ROLES[PAGES.Applicant],
-      },
-      {
-        title: "Vai trò",
-        path: "/settings/roleGroup",
-        roles: ROLES[PAGES.Applicant],
-      },
-    ],
-  },
-  {
     subheader: "Thiết lập tuyển dụng",
     items: [
       {
@@ -64,18 +44,11 @@ export const sidebarConfig = [
         path: "/settings/jobtype",
         roles: ROLES[PAGES.Applicant],
       },
-            {
-        title: "Kết nối",
-        path: "/board",
-        roles: ROLES[PAGES.Applicant],
-      },
       {
-        title: "Quy trình phê duyệt",
-        path: "/settings/approve",
+        title: "Kết nối",
+        path: "/settings/connect",
         roles: ROLES[PAGES.Applicant],
       },
-
-
       {
         title: "Quản lý đề thi",
         path: "/settings/exam",
@@ -153,5 +126,24 @@ export const sidebarConfig = [
       },
     ],
   },
-
+  {
+    subheader: "Công ty",
+    items: [
+      {
+        title: "Thông tin công ty",
+        path: "/settings/companyinfor",
+        roles: ROLES[PAGES.Applicant],
+      },
+      {
+        title: "Người dùng và Cơ cấu tổ chức",
+        path: "/settings/organization",
+        roles: ROLES[PAGES.Applicant],
+      },
+      {
+        title: "Vai trò",
+        path: "/settings/roleGroup",
+        roles: ROLES[PAGES.Applicant],
+      },
+    ],
+  },
 ];

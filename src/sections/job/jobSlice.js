@@ -1,5 +1,3 @@
-import qs from 'query-string'
-
 import { apiSlice } from '@/redux/api/apiSlice'
 import {
   API_ADD_SKILL,
@@ -18,12 +16,12 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 
 export const jobSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
-    getListJobs: builder.query({
-      query: (queries = {}) => ({
-        url: `${API_LIST_JOBS}?${qs.stringify(queries)}`,
-        method: 'GET',
+    getListJobs: builder.mutation({
+      query: (data) => ({
+        url: API_LIST_JOBS,
+        method: "POST",
+        data,
       }),
-      providesTags: ['Job'],
     }),
     getListLocation: builder.query({
       query: () => ({
@@ -77,7 +75,7 @@ export const jobSlice = apiWithTag.injectEndpoints({
 })
 
 export const {
-  useGetListJobsQuery,
+  useGetListJobsMutation,
   useGetListLocationQuery,
   useGetListClientQuery,
   useGetListTagsQuery,

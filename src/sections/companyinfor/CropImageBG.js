@@ -1,7 +1,7 @@
-import CloseIcon from "../../../public/assets/icons/company/CloseIcon";
-import ResizeIcon from "../../../public/assets/icons/company/ResizeIcon";
-import SmallIcon from "../../../public/assets/icons/company/SmallIcon";
-import UploadIcon from "../../../public/assets/icons/company/UploadIcon";
+import CloseIcon from "../../assets/CloseIcon";
+import ResizeIcon from "../../assets/ResizeIcon";
+import SmallIcon from "../../assets/SmallIcon";
+import UploadIcon from "../../assets/UploadIcon";
 import { cropImage } from "./cropUtils";
 import {
   Button,
@@ -15,8 +15,9 @@ import {
 import React, { useState } from "react";
 import Cropper from "react-easy-crop";
 import ImageUploading from "react-images-uploading";
+import {DOMAIN_SERVER_API} from '@/config'
 
-export default function CropImageBG() {
+export default function CropImageBG({data}) {
   const [image, setImage] = useState([]);
   const [croppedImage, setCroppedImage] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -205,18 +206,17 @@ export default function CropImageBG() {
     return (
       <ImageUploading value={value} onChange={onChange}>
         {({ onImageUpload, onImageUpdate }) => (
-          <Button
+          <img
             color="primary"
+            src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${data}`}
             onClick={value ? onImageUpload : () => onImageUpdate(0)}
             {...props}
-            sx={{
+            style={{
               cursor: "pointer",
               height: 250,
               width: "100%",
             }}
-          >
-            Upload
-          </Button>
+         />
         )}
       </ImageUploading>
     );

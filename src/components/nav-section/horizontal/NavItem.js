@@ -161,9 +161,8 @@ export default function NavItemContent({ icon, title, children, subItem }) {
         <Box
           component='span'
           sx={{
-            mr: 1,
-            width: ICON.NAVBAR_ITEM_HORIZONTAL,
-            height: ICON.NAVBAR_ITEM_HORIZONTAL,
+            width: 16,
+            height: 16,
             '& svg': { width: '100%', height: '100%' },
           }}
         >
