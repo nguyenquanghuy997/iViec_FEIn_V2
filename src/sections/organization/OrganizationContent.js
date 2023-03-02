@@ -5,7 +5,6 @@ import OrganizationTree from "@/sections/organization/component/OrganizationTree
 import Iconify from "@/components/Iconify";
 import OrganizationEmptyChildren from "@/sections/organization/component/OrganizationEmptyChildren";
 import OrganizationForm from "@/sections/organization/component/OrganizationForm";
-import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
 import {DOMAIN_SERVER_API} from "@/config";
 import {convertFlatDataToTree, convertViToEn} from "@/utils/function";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
@@ -15,13 +14,9 @@ import {ButtonInviteListStyle, ButtonInviteStyle} from "@/sections/organization/
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
 import InputFilter from "@/sections/dynamic-filter/InputFilter";
 import {filterBy} from "@/sections/organization/helper/DFSSearchTree";
-import {updateOrganization} from "@/sections/organization/services/organizationServices";
-import {useSnackbar} from "notistack";
+import {useGetListOrganizationWithChildQuery} from "@/sections/organization/override/OverrideOrganizationSlice";
 
 const OrganizationContent = () => {
-
-  const {enqueueSnackbar} = useSnackbar();
-
   // selected
   const [selected, setSelected] = React.useState([]);
   // modal
@@ -60,7 +55,8 @@ const OrganizationContent = () => {
     setParentNode(node);
   }
 
-  const {data: {items: ListOrganization} = [], isLoading,} = useGetOrganizationsDataWithChildQuery();
+  // const {data: {items: ListOrganization} = [], isLoading,} = useGetOrganizationsDataWithChildQuery();
+  const {data: {items: ListOrganization} = [], isLoading,} = useGetListOrganizationWithChildQuery();
 
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -91,18 +87,6 @@ const OrganizationContent = () => {
     const { value } = event.target;
     setSelected([]);
     setValueSearch(value);
-  }
-
-  const handleUpdateOrganization = async (url, data) => {
-    try {
-      const res = await updateOrganization(url, data);
-      console.log(res)
-      if(res.status === 200) {
-        enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
-      }
-    } catch (err) {
-      console.log(err)
-    }
   }
 
   if (isLoading) return <div>Loading...</div>
@@ -171,13 +155,12 @@ const OrganizationContent = () => {
                   setSelected={setSelected}
               /> : <OrganizationEmptyChildren onOpenForm={handleOpenForm}/>}
         </Box>
-        <OrganizationForm isOpen={isOpen} onClose={handleCloseForm} parentNode={parentNode} actionType={actionType} onUpdateOrganization={handleUpdateOrganization} />
+        <OrganizationForm isOpen={isOpen} onClose={handleCloseForm} parentNode={parentNode} actionType={actionType} />
         <OrganizationPreview isOpen={isOpenPreview} onClose={handleClosePreview} nodes={parentNode} />
         <OrganizationConfirmModal showDelete={showDelete} setShowDelete={setShowDelete} node={parentNode} />
         <OrganizationBottomNav
             open={selected?.length > 0}
             onClose={toggleDrawer(false)}
-            onOpen={toggleDrawer(true)}
             setShowDelete={setShowDelete}
             selecedLength={selected?.length || 0}
         />

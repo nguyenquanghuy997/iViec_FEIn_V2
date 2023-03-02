@@ -11,7 +11,7 @@ import {
 import {AlertIcon} from "@/sections/organization/component/Icon";
 import {styled} from "@mui/styles";
 import OrganizationDialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
-import {useDeleteOrganizationMutation} from "@/sections/organization/OrganizationSlice";
+import {useDeleteOrganizationMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {useSnackbar} from "notistack";
 const DialogStyle = styled(Dialog)(({theme}) => ({
   "& .dialog-delete": {

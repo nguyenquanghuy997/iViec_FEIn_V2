@@ -11,10 +11,12 @@ import clientReducer from '@/sections/client/clientSlice'
 import jobDetailReducer from '@/sections/jobdetail/jobDetailSlice'
 import kanbanReducer from '@/sections/kanban/kanbanSlice'
 import uploadAvatarReducer from '@/sections/user/account/uploadAvatarSlice'
+import {organizationServiceApi} from "@/sections/organization/override/OverrideOrganizationSlice";
 
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
+    [organizationServiceApi.reducerPath]: organizationServiceApi.reducer,
     avatar: uploadAvatarReducer,
     kanban: kanbanReducer,
     client: clientReducer,
@@ -27,7 +29,7 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
       immutableCheck: false,
-    }).concat(apiSlice.middleware),
+    }).concat(apiSlice.middleware).concat(organizationServiceApi.middleware),
 })
 
 const { dispatch } = store

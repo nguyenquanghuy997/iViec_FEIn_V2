@@ -14,14 +14,13 @@ const ActiveSwitch = styled(Switch)(({}) => ({
   },
 }));
 
-const OrganizationBottomNav = ({ selecedLength, open, onClose, onOpen, setShowDelete, ...props }) => {
+const OrganizationBottomNav = ({ selecedLength, open, onClose, setShowDelete, ...props }) => {
   return (
       <Drawer
           anchor={'bottom'}
           open={open}
           variant="persistent"
           onClose={onClose}
-          onOpen={onOpen}
           {...props}
       >
         <Content>

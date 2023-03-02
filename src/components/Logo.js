@@ -9,7 +9,7 @@ import { Box } from '@mui/material'
 // import { useTheme } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 
-const Logo = forwardRef(({ disabledLink = false }) => {
+const Logo = forwardRef(({ disabledLink = false }, ref) => {
   // const theme = useTheme()
 
   // const PRIMARY_LIGHT = theme.palette.primary.light
@@ -72,7 +72,7 @@ const Logo = forwardRef(({ disabledLink = false }) => {
     return <>{logo}</>
   }
 
-  return <NextLink href='/'>{logo}</NextLink>
+  return <NextLink href='/' ref={ref}>{logo}</NextLink>
 })
 
 Logo.propTypes = {
