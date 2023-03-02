@@ -4,23 +4,36 @@ import {
   API_DELETE_JOBTYPE,
   API_GET_PAGING_JOBTYPE,
   API_GET_PREVIEW_JOBTYPE,
+  API_GET_USER_FROM_ORGANIZATION,
   API_UPDATE_JOBTYPE,
   API_UPDATE_STATUS_JOBTYPE,
 } from "@/routes/api";
 import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CompanyInfor"],
+  addTagTypes: ["JobPosition", "Filter"],
 });
 
 const evaluationFormSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
-    getAllJobType: builder.mutation({
-      query: () => ({
+    //Danh sách vị trí
+    getAllJobType: builder.query({
+      query: (params) => ({
         url: API_GET_PAGING_JOBTYPE,
         method: "GET",
+        params,
       }),
     }),
+
+    // filter người tạo
+    getAllUserFromOrganization: builder.query({
+      query: (params) => ({
+        url: API_GET_USER_FROM_ORGANIZATION,
+        method: "GET",
+        params,
+      }),
+    }),
+
     updateStatusJobType: builder.mutation({
       query: (data) => ({
         url: API_UPDATE_STATUS_JOBTYPE,
@@ -60,7 +73,8 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetAllJobTypeMutation,
+  useGetAllJobTypeQuery,
+  useLazyGetAllUserFromOrganizationQuery,
   useUpdateStatusJobTypeMutation,
   useGetPreviewJobTypeMutation,
   useDeleteJobTypeMutation,

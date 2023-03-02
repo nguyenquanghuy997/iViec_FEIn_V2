@@ -7,7 +7,7 @@ import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import { useGetAllJobTypeMutation } from "@/sections/jobtype";
+import { useGetAllJobTypeQuery } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -26,8 +26,8 @@ export const JobTypeItem = () => {
   const router = useRouter();
   const { query, isReady } = router;
   // api get list
-  const [getAllFilter, { data: Data, isLoading }] =
-    useGetAllJobTypeMutation();
+
+  const [getAllFilter, {data: Data = {},isLoading }] = useGetAllJobTypeQuery();
   // api get list Column
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
@@ -152,6 +152,7 @@ export const JobTypeItem = () => {
   const { handleSubmit } = methods;
 
   useEffect(() => {
+    debugger
     if (!isReady) return;
     const queryParams = {
       searchKey: query.searchKey,
@@ -164,9 +165,9 @@ export const JobTypeItem = () => {
           : query.creatorIds && query.creatorIds,
     };
     if (query) {
-      getAllFilter(JSON.stringify(queryParams)).unwrap();
+      getAllFilter(queryParams).unwrap();
     } else {
-      getAllFilter({}).unwrap();
+      getAllFilter().unwrap();
     }
   }, [isReady, query]);
 
@@ -183,6 +184,7 @@ export const JobTypeItem = () => {
   };
 
   const onSubmitSearch = async (data) => {
+    debugger
     await router.push(
       {
         pathname: router.pathname,
