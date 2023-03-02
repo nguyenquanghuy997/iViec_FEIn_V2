@@ -7,7 +7,6 @@ import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
 import { useGetAllJobTypeMutation } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
@@ -17,6 +16,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import JobTypeFilterModal from "../modals/JobTypeFilterModal";
 
 const defaultValues = {
   searchKey: "",
@@ -219,12 +219,13 @@ export const JobTypeItem = () => {
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
           columns={columns}
-          source={Data?.items}
+          source={Data}
           loading={isLoading}
           ColumnData={ColumnData}
           menuItemText={menuItemText}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
+          isSetting={true}
           filter={
             <JobTypeHeader
               methods={methods}
@@ -238,7 +239,7 @@ export const JobTypeItem = () => {
         />
       </Content>
       {isOpen && (
-        <ApplicantFilterModal
+        <JobTypeFilterModal
           columns={columns}
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
