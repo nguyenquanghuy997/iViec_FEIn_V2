@@ -207,7 +207,7 @@ const NotificationBoard = ({
                 </span>
               </ListItemText>
             </List>
-            {option.includes("Xem chi tiết đánh giá") && (
+            {option?.includes("Xem chi tiết đánh giá") && (
               <ListItemButton
                 sx={{
                   "& .MuiButtonBase-root:hover": {
@@ -250,7 +250,7 @@ const NotificationBoard = ({
                 </BootstrapDialog>
               </ListItemButton>
             )}
-            {option.includes("Tái khai thác ứng viên") && (
+            {option?.includes("Tái khai thác ứng viên") && (
               <ListItemButton
                 sx={{
                   "& .MuiButtonBase-root:hover": {
