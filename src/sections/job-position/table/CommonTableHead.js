@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Box, Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from "@mui/material";
 import { visuallyHidden } from '@mui/utils';
 import {styled} from "@mui/styles";
+import {CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate} from "@/assets/CheckboxIcon";
 
 const TableHeadStyle = styled(TableHead)(({ theme, ownerState }) => ({
     position: 'relative',
@@ -14,6 +15,7 @@ const TableHeadStyle = styled(TableHead)(({ theme, ownerState }) => ({
 const TableCellStyle = styled(TableCell)(({ theme, minWidth, }) => ({
     padding: theme.spacing(2, 1),
     backgroundColor: '#FDFDFD',
+    color: '#172B4D',
     minWidth: `${minWidth}px`
 }))
 
@@ -32,12 +34,15 @@ const CommonTableHead = ({ isCheckbox, columns, tableHeadStyle = {}, ...props })
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
                         inputProps={{ 'aria-label': 'select all desserts' }}
+                        icon={<CheckboxIconDefault />}
+                        checkedIcon={<CheckboxIconChecked />}
+                        indeterminateIcon={<CheckboxIconIndeterminate />}
                     />
                 </TableCellStyle> }
                 {columns?.map((headCell) => (
                     <TableCellStyle
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : headCell.align ? headCell.align : 'left'}
+                        align={headCell.align ? headCell.align : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                         minWidth={headCell?.minWidth}

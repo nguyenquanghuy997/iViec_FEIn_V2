@@ -4,8 +4,8 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { enUS, viVN } from "@mui/material/locale";
 
 // export const DOMAIN_SERVER_API = process?.env?.NEXT_PUBLIC_HOST_API_KEY || "";
-// export const DOMAIN_SERVER_API = "https://api.iviec.vn/api";
-export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api"
+//export const DOMAIN_SERVER_API = "https://api.iviec.vn/api";
+export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api";
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.dashboard;
 
@@ -48,6 +48,8 @@ export const NAVBAR = {
 export const ICON = {
   NAVBAR_ITEM: 22,
   NAVBAR_ITEM_HORIZONTAL: 20,
+  NAVBAR_ITEM_COLOR: '#455570',
+
 };
 
 // SETTINGS
@@ -119,6 +121,7 @@ export const PAGES = {
   Report4: "Report4",
 
   // Account: 'Account',
+  Organization: "Organization",
 };
 
 // ROLE AND PERMISSION
@@ -161,6 +164,8 @@ export const ROLE_BY_PAGES = [
       PAGES.Report2,
       PAGES.Report3,
       PAGES.Report4,
+
+      PAGES.Organization,
     ],
     roles: [ROLE.ADMIN],
   },

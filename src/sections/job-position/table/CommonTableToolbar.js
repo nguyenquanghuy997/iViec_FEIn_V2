@@ -21,7 +21,7 @@ const CommonTableToolbar = ({methods, onOpenFilterForm}) => {
                     <RHFTextField
                         name="search"
                         placeholder="Tìm kiếm tên vị trí công việc..."
-                        sx={{width: '300px', height: '36px'}}
+                        sx={{width: '300px', height: '36px', backgroundColor: '#F2F4F5'}}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position='start' sx={{ml: 1.5}}>

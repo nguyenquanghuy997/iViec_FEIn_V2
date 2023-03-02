@@ -12,14 +12,14 @@ export const ListItemStyle = styled(ListItemButton, {
   ...theme.typography.body2,
   position: "relative",
   // margin: theme.spacing(0, 0.5),
-  padding: theme.spacing(1, 2.5),
+  padding: theme.spacing(1.5,2,1.5, 2.25),
+  marginBottom: theme.spacing(0.5),
   borderRadius: theme.spacing(0.5),
   color: SIDEBAR_CONSTANTS.MENU_ITEM_COLOR,
   fontWeight: SIDEBAR_CONSTANTS.MENU_ITEM_WEIGHT,
   height: '44px',
   textTransform: "none",
   "&:hover": {
-    color: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_COLOR,
     backgroundColor: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_BG_COLOR,
     fontWeight: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_WEIGHT,
   },
@@ -29,7 +29,7 @@ export const ListItemStyle = styled(ListItemButton, {
     color: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_COLOR,
     backgroundColor: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_BG_COLOR,
     fontWeight: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_WEIGHT,
-    padding: theme.spacing(1, 4),
+    padding: theme.spacing(1.5,2,1.5, 4.5),
     "&:after": {
       content: '""',
       position: "absolute",
@@ -40,7 +40,8 @@ export const ListItemStyle = styled(ListItemButton, {
       zIndex: 1,
       top: "50%",
       transform: 'translateY(-50%)',
-      left: theme.spacing(1.5),
+      left: theme.spacing(0),
+      borderRadius: 1
     },
     "&:hover": {
       color: SIDEBAR_CONSTANTS.MENU_ITEM_ACTIVE_COLOR,

@@ -1,6 +1,7 @@
-// import { RejectApplicantModal } from "../modals";
+//import { RejectApplicantModal } from "../modals";
 import {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
+  useGetApplicantRecruitmentMutation,
   useGetRecruitmentsByApplicantQuery,
 } from "../ApplicantFormSlice";
 import { PipelineApplicant } from "../others";
@@ -28,7 +29,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/styles";
 import React, { useState, useEffect } from "react";
-
+import { HEADER } from "@/config";
+import { RejectApplicantModal } from "../modals";
 function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
@@ -188,6 +190,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
     );
   };
   const HeadingFixed = styled("div")(({}) => ({
+    top: HEADER.DASHBOARD_DESKTOP_HEIGHT,
     width: "100%",
     boxShadow:
       "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
@@ -219,31 +222,43 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { themeStretch } = useSettings();
 
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
-
   const [fetchPipe, { data: pipelines = [], isSuccess }] =
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
+  const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
+    useGetApplicantRecruitmentMutation();
   const [selectedOption, setSelectedOption] = useState();
+  const [rejectApplicant, setRejectApplicant] = useState(false);
   const [ownerName, setOwnerName] = useState();
   useEffect(() => {
-    if (!isFetching){
-      setSelectedOption(options[0]?.name);
+    if (!isFetching) {
+      setSelectedOption(options[0]);
       setOwnerName(options[0]?.ownerName?.trim());
       fetchPipe({
         ApplicantId,
         RecruitmentId: options[0]?.id,
       }).unwrap();
-    } 
+      fetchData({
+        ApplicantId,
+        RecruitmentId: options[0]?.id,
+        IsWithdrawHistory: true,
+      }).unwrap();
+    }
   }, [isFetching]);
 
   const onChangeRecruiment = (e) => {
-    setSelectedOption(e.target.value.name);
+    setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
     fetchPipe({
       ApplicantId,
       RecruitmentId: e.target.value.id,
     }).unwrap();
+    fetchData({
+      ApplicantId,
+      RecruitmentId: e.target.value.id,
+      IsWithdrawHistory: true,
+    }).unwrap();
   };
-
+console.log('selectedOption',selectedOption)
   return (
     <div>
       <HeadingFixed>
@@ -312,6 +327,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                       justifyContent="space-between"
                       alignItems="flex-end"
                       marginTop="28px"
+                      minHeight="76px"
                     >
                       <Grid item md={10} container>
                         <Grid sx={{ width: "80%" }}>
@@ -355,7 +371,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                               textTransform: "none",
                               marginLeft: "12px",
                             }}
-                            // onClick={() => setRejectApplicant(true)}
+                             onClick={() => setRejectApplicant(true)}
                             icon={
                               <Iconify
                                 icon={"ic:outline-remove-circle"}
@@ -381,7 +397,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                                 height: "20px",
                                 width: "20px",
                                 borderRadius: "100px",
-                                fontSize:'12px'
+                                fontSize: "12px",
                               }}
                               name={ownerName}
                             ></AvatarDS>
@@ -403,17 +419,22 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                     <ApplicantPreviewCV data={data} />
                   </Grid>
                   <Grid item xs={5} md={5}>
-                    <ApplicantPreviewLog />
+                    {isSuccessLog && <ApplicantPreviewLog
+                      dataLog={logApplicant}
+                      dataApplicant={data}
+                    />}
+                    
                   </Grid>
                 </Grid>
               </CardContent>
 
-              {/* <RejectApplicantModal
-                applicantId={"5141"}
-                recruimentId={"123"}
-                show={showRejectApplicant}
+              <RejectApplicantModal
+                applicantId={data?.id}
+                recruimentId={selectedOption?.id}
+                stage={pipelines}
+                show={rejectApplicant}
                 setShow={setRejectApplicant}
-              /> */}
+              />
             </Card>
           </Grid>
         </Grid>

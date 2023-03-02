@@ -9,7 +9,7 @@ const HeadingBarStyle = styled("div")(({ theme }) => ({
   padding: theme.spacing(3, 0),
   position: 'fixed',
   top: theme.spacing(8),
-  zIndex: 100
+  zIndex: 1000
 }));
 
 const HeadingBarInnerStyle = styled("div")(({ theme }) => ({

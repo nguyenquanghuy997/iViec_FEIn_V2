@@ -10,13 +10,14 @@ const TableFooterStyle = styled(TableFooter)(({theme}) => ({
 const TableFooterInnerStyle = styled(Box)(({}) => ({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginLeft: 16
 }))
 
 const TableFooterTypographyStyle = styled(Typography)(({theme}) => ({
     color: '#455570',
-    fontSize: '12px',
-    fontWeight: 600,
+    fontSize: '12px !important',
+    fontWeight: '600 !important',
     marginLeft: theme.spacing(2)
 }))
 

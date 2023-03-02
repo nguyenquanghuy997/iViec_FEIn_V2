@@ -11,8 +11,6 @@ export const ListSubheaderStyle = styled((props) => (
   <ListSubheader disableSticky disableGutters {...props} />
 ))(({ theme }) => ({
   ...theme.typography.overline,
-  paddingLeft: theme.spacing(0),
-  paddingBottom: theme.spacing(1.5),
   // text
   textTransform: "uppercase",
   fontSize: SIDEBAR_CONSTANTS.MENU_TITLE_SIZE,
@@ -21,6 +19,8 @@ export const ListSubheaderStyle = styled((props) => (
   transition: theme.transitions.create("opacity", {
     duration: theme.transitions.duration.shorter,
   }),
+  lineHeight: '20px',
+  marginBottom: '12px'
 }));
 
 SideBar.propTypes = {

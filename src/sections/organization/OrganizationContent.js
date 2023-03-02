@@ -1,26 +1,34 @@
-import React, {useState} from 'react';
-import {Avatar, Box, Stack, Typography} from "@mui/material";
+import React, {useMemo, useState} from 'react';
+import {Avatar, Box, InputAdornment, Stack, Typography} from "@mui/material";
+import _ from 'lodash';
 import OrganizationTree from "@/sections/organization/component/OrganizationTree";
 import Iconify from "@/components/Iconify";
 import OrganizationEmptyChildren from "@/sections/organization/component/OrganizationEmptyChildren";
 import OrganizationForm from "@/sections/organization/component/OrganizationForm";
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
 import {DOMAIN_SERVER_API} from "@/config";
-import {convertFlatDataToTree} from "@/utils/function";
+import {convertFlatDataToTree, convertViToEn} from "@/utils/function";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
 import OrganizationBottomNav from "@/sections/organization/component/OrganizationBottomNav";
 import {ButtonInviteListStyle, ButtonInviteStyle} from "@/sections/organization/style";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
+import InputFilter from "@/sections/dynamic-filter/InputFilter";
+import {filterBy} from "@/sections/organization/helper/DFSSearchTree";
+import {updateOrganization} from "@/sections/organization/services/organizationServices";
+import {useSnackbar} from "notistack";
 
 const OrganizationContent = () => {
+
+  const {enqueueSnackbar} = useSnackbar();
+
   // selected
   const [selected, setSelected] = React.useState([]);
   // modal
   const [, setIsOpenBottomNav] = React.useState(false);
 
   // state
-  const [title, setTitle] = useState('')
+  const [actionType, setActionType] = useState(0)    // 0 add, 1 update
   const [isOpen, setIsOpen] = useState(false)
   const [parentNode, setParentNode] = useState(null);
   // state open modal
@@ -58,6 +66,45 @@ const OrganizationContent = () => {
     setIsOpenBottomNav(newOpen);
   };
 
+  const [valueSearch, setValueSearch] = useState('');
+
+  const treeData = useMemo(() => {
+    const loopFilterTree = (tree = [], query = '') => {
+      return tree.filter(node => {
+        const isLeaf = !node.children || !node.children.length;
+        let valueNameToEng = convertViToEn(node?.name)?.toLowerCase();
+        let valueCodeToEng = convertViToEn(node?.code)?.toLowerCase();
+        let valueQueryToEng = convertViToEn(query)?.toLowerCase();
+        let isMatching = valueNameToEng?.indexOf(valueQueryToEng) > -1 || valueCodeToEng?.indexOf(valueQueryToEng) > -1;
+
+        if (isMatching) return true;
+        if (isLeaf) return false;
+
+        const subtree = filterBy(node.children, query);
+        return Boolean(subtree.length);
+      })
+    }
+    return loopFilterTree(convertFlatDataToTree(ListOrganization)?.[0]?.children, valueSearch);
+  }, [ListOrganization, valueSearch])
+
+  const onChangeSearch = (event) => {
+    const { value } = event.target;
+    setSelected([]);
+    setValueSearch(value);
+  }
+
+  const handleUpdateOrganization = async (url, data) => {
+    try {
+      const res = await updateOrganization(url, data);
+      console.log(res)
+      if(res.status === 200) {
+        enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   if (isLoading) return <div>Loading...</div>
 
   return (
@@ -91,23 +138,42 @@ const OrganizationContent = () => {
             >Mời người dùng</ButtonInviteStyle>
           </Stack>
         </Stack>
-        <Box mt={3}>
+        <Box>
+          <InputFilter
+              name="search"
+              placeholder="Tìm kiếm theo tên đơn vị hoặc mã đơn vị"
+              sx={{width: '100%', height: '44px', backgroundColor: '#F2F4F5', marginBottom: 3}}
+              // ref={searchInputRef}
+              onChange={onChangeSearch}
+              value={valueSearch}
+              InputProps={{
+                startAdornment: (
+                    <InputAdornment position='start' sx={{ml: 1.5}}>
+                      <Iconify icon={'eva:search-fill'} sx={{color: 'text.disabled', width: 20, height: 20}}/>
+                    </InputAdornment>
+                ),
+              }}
+          />
+        </Box>
+        <Box>
           {ListOrganization?.length > 0 ?
               <OrganizationTree
                   data={convertFlatDataToTree(ListOrganization)}
+                  treeData={treeData}
+                  dataRoot={_.pick(convertFlatDataToTree(ListOrganization)[0], ['id', 'name'])}
                   onOpenForm={handleOpenForm}
                   onGetParentNode={handleGetParentNode}
                   // preview modal
                   onOpenPreview={handleOpenPreview}
                   setShowDelete={setShowDelete}
-                  setTitle={setTitle}
+                  setActionType={setActionType}
                   selected={selected}
                   setSelected={setSelected}
               /> : <OrganizationEmptyChildren onOpenForm={handleOpenForm}/>}
         </Box>
-        <OrganizationForm isOpen={isOpen} onClose={handleCloseForm} parentNode={parentNode} title={title} />
+        <OrganizationForm isOpen={isOpen} onClose={handleCloseForm} parentNode={parentNode} actionType={actionType} onUpdateOrganization={handleUpdateOrganization} />
         <OrganizationPreview isOpen={isOpenPreview} onClose={handleClosePreview} nodes={parentNode} />
-        <OrganizationConfirmModal showDelete={showDelete} setShowDelete={setShowDelete} />
+        <OrganizationConfirmModal showDelete={showDelete} setShowDelete={setShowDelete} node={parentNode} />
         <OrganizationBottomNav
             open={selected?.length > 0}
             onClose={toggleDrawer(false)}
