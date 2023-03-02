@@ -23,7 +23,7 @@ import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {useRouter} from "next/router";
 import {
-    Address,
+    // Address,
     MaritalStatus,
     Sex,
     YearOfExperience,
@@ -52,7 +52,7 @@ const ListJobTable = () => {
         },
         {
             dataIndex: "fullName",
-            title: "Họ và tên",
+            title: "Tin tuyển dụng",
             fixed: "left",
             width: "200px",
             render: (text, record) => (
@@ -68,7 +68,7 @@ const ListJobTable = () => {
         },
         {
             dataIndex: "phoneNumber",
-            title: "Số điện thoại",
+            title: "Vị trí công việc",
             fixed: "left",
             width: "120px",
         },
@@ -78,9 +78,9 @@ const ListJobTable = () => {
             render: (date) => fDate(date),
             width: "120px",
         },
-        {dataIndex: "email", title: "Email", width: "240px"},
+        {dataIndex: "email", title: "Đơn vị", width: "240px"},
         {
-            dataIndex: "recruitmentName", title: "Tin tuyển dụng", width: "200px",
+            dataIndex: "recruitmentName", title: "Ngày bắt đầu", width: "200px",
             name: "recruitmentIds",
             type: "select",
             multiple: true,
@@ -88,7 +88,7 @@ const ListJobTable = () => {
             label: "Tin tuyển dụng",
         },
         {
-            dataIndex: "recruitmentPipelineState", title: "Bước tuyển dụng", width: "200px",
+            dataIndex: "recruitmentPipelineState", title: "Ngày hết hạn", width: "200px",
             name: 'recruitmentPipelineStates',
             label: "Bước tuyển dụng",
             placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
@@ -97,7 +97,7 @@ const ListJobTable = () => {
             render: (item) => PipelineStateType(item,1),
         },
         {
-            dataIndex: "createdTime", title: "Ngày ứng tuyển", width: "200px",
+            dataIndex: "createdTime", title: "Ngày tạo tin", width: "200px",
             type: "date",
             label: "Ngày ứng tuyển",
             name: "createdTime",
@@ -120,7 +120,7 @@ const ListJobTable = () => {
             ]
         },
         {
-            dataIndex: "organizationName", title: "Đơn vị", width: "200px",
+            dataIndex: "organizationName", title: "Trạng thái", width: "200px",
             name: "organizationIds",
             type: "tree",
             isTree: true,
@@ -129,7 +129,7 @@ const ListJobTable = () => {
             label: "Đơn vị",
         },
         {
-            dataIndex: "jobSourceName", title: "Nguồn", width: "200px",
+            dataIndex: "jobSourceName", title: "SL ứng tuyển", width: "200px",
             name: "jobSourceIds",
             label: "Nguồn",
             placeholder: "Chọn 1 hoặc nhiều nguồn",
@@ -137,7 +137,7 @@ const ListJobTable = () => {
             multiple: true,
         },
         {
-            dataIndex: "ownerName", title: "Cán bộ tuyển dụng", width: "200px",
+            dataIndex: "ownerName", title: "SL Đạt", width: "200px",
             name: "ownerIds",
             label: "Cán bộ tuyển dụng",
             placeholder: "Chọn 1 hoặc nhiều cán bộ",
@@ -145,7 +145,7 @@ const ListJobTable = () => {
             multiple: true,
         },
         {
-            dataIndex: "creatorName", title: "Cán bộ tạo ứng viên", width: "200px",
+            dataIndex: "creatorName", title: "Cán bộ phụ trách", width: "200px",
             name: "creatorIds",
             label: "Người tạo ứng viên",
             placeholder: "Chọn 1 hoặc nhiều người",
@@ -153,7 +153,7 @@ const ListJobTable = () => {
             multiple: true,
         },
         {
-            title: "Học vấn",
+            title: "Đồng phụ trách",
             dataIndex: ["academicLevel", "name"], // antd v4
             key: "name",
             width: "120px",
@@ -164,14 +164,14 @@ const ListJobTable = () => {
             label: "Học vấn"
         },
         {
-            dataIndex: "experience", title: "Kinh nghiệm làm việc", width: "200px",
+            dataIndex: "experience", title: "Khu vực đăng tin", width: "200px",
             name: "experience",
             type: "text",
             placeholder: "Tìm kiếm...",
             label: "Kinh nghiệm làm việc"
         },
         {
-            dataIndex: "fullName", title: "Ngành nghề", width: "200px",
+            dataIndex: "fullName", title: "Hình thức làm việc", width: "200px",
             name: "jobCategoryIds",
             label: "Ngành nghề",
             placeholder: "Chọn 1 hoặc nhiều ngành nghề",
@@ -179,7 +179,7 @@ const ListJobTable = () => {
             multiple: true,
         },
         {
-            dataIndex: "yearOfExperience", title: "KN", width: "60px",
+            dataIndex: "yearOfExperience", title: "Mức lương", width: "60px",
             name: "yearsOfExperience",
             type: "select",
             multiple: false,
@@ -188,7 +188,7 @@ const ListJobTable = () => {
             render: (item) => YearOfExperience(item),
         },
         {
-            title: "Kỹ năng",
+            title: "Chức danh",
             key: "applicantSkills",
             dataIndex: "applicantSkills",
             render: (_, {applicantSkills}) => (
@@ -206,7 +206,7 @@ const ListJobTable = () => {
             type: "select",
             multiple: true,
         },
-        {dataIndex: "identityNumber", title: "CCCD/CMND", width: "200px"},
+        {dataIndex: "identityNumber", title: "Số năm kinh nghiệm", width: "200px"},
         {
             dataIndex: "sex",
             title: "Giới tính",
@@ -217,128 +217,11 @@ const ListJobTable = () => {
             label: "Giới tính",
         },
         {
-            dataIndex: "maritalStatus", title: "TTHN", width: "120px",
+            dataIndex: "maritalStatus", title: "Ngôn ngữ", width: "120px",
             name: "maritalStatuses",
             type: "select",
             label: "Tình trạng hôn nhân",
             render: (item) => MaritalStatus(item),
-        },
-        {
-            dataIndex: "height", title: "Chiều cao", width: "120px",
-            name: "height",
-            label: "Chiều cao",
-            type: 'number',
-            items: [
-                {
-                    name: "heightFrom",
-                    type: 'number',
-                    placeholder: "Nhập chiều cao",
-                    startIcon: <span>Từ</span>,
-                    endIcon: <span>Cm</span>
-                },
-                {
-                    name: "heightTo",
-                    type: 'number',
-                    placeholder: "Nhập chiều cao",
-                    startIcon: <span>Đến</span>,
-                    endIcon: <span>Cm</span>
-                }
-            ]
-        },
-        {
-            dataIndex: "weight", title: "Cân nặng", width: "120px",
-            name: "weight",
-            label: "Cân nặng",
-            type: 'number',
-            items: [
-                {
-                    name: "weightFrom",
-                    type: 'number',
-                    placeholder: "Nhập cân nặng",
-                    startIcon: <span>Từ</span>,
-                    endIcon: <span>Kg</span>
-                },
-                {
-                    name: "weightTo",
-                    type: 'number',
-                    placeholder: "Nhập cân nặng",
-                    startIcon: <span>Đến</span>,
-                    endIcon: <span>Kg</span>
-                }
-            ]
-        },
-        {
-            dataIndex: "expectedWorkingAddress", title: "Nơi làm việc mong muốn", width: "200px",
-            name: "expectWorkingAddressProvinceIds",
-            label: "Nơi làm việc mong muốn",
-            placeholder: "Chọn 1 hoặc nhiều Tỉnh/Thành phố",
-            type: "select",
-            multiple: true,
-            render: (item) => Address(item),
-        },
-        {
-            dataIndex: "expectedSalaryTo",
-            title: "Mức lương mong muốn",
-            width: "120px",
-            name: "expectSalary",
-            placeholder: "",
-            label: "Mức lương mong muốn",
-            items: [
-                {
-                    name: "expectSalaryFrom",
-                    type: 'number',
-                    placeholder: "Nhập số tiền",
-                    startIcon: <span>Từ</span>,
-                    endIcon: <span>VNĐ</span>
-                },
-                {
-                    name: "expectSalaryTo",
-                    type: 'number',
-                    placeholder: "Nhập số tiền",
-                    startIcon: <span>Đến</span>,
-                    endIcon: <span>VNĐ</span>
-                }
-            ]
-        },
-        {
-            dataIndex: "livingAddress", title: "Nơi ở hiện tại", width: "160px",
-            name: "livingAddresses",
-            type: "select",
-            label: "Nơi ở hiện tại",
-            items: [
-                {
-                    name: "livingAddressProvinceIds",
-                    type: 'select',
-                    placeholder: "Chọn Tỉnh/Thành phố",
-                    label: "Tỉnh/Thành phố",
-                },
-                {
-                    name: "livingAddressDistrictIds",
-                    type: 'select',
-                    placeholder: "Chọn Quận/Huyện",
-                    label: "Quận/Huyện",
-                }
-            ]
-        },
-        {
-            dataIndex: "homeTower", title: "Quê quán", width: "160px",
-            name: "homeTowers",
-            type: "select",
-            label: "Quê quán",
-            items: [
-                {
-                    name: "homeTowerProvinceIds",
-                    type: 'select',
-                    placeholder: "Chọn Tỉnh/Thành phố",
-                    label: "Chọn Tỉnh/Thành phố",
-                },
-                {
-                    name: "homeTowerDistrictIds",
-                    type: 'select',
-                    placeholder: "Chọn Quận/Huyện",
-                    label: "Chọn Quận/Huyện",
-                }
-            ]
         },
     ];
 
