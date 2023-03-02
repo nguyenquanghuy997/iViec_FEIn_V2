@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Box, Button, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import Scrollbar from "@/components/Scrollbar";
 import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {useLazyGetOrganizationBySlugQuery} from "@/sections/organization/OrganizationSlice";
+import {useGetOrganizationByIdQuery} from "@/sections/organization/OrganizationSlice";
 
 const renderInfoOrganization = (key, value) => {
   return (
@@ -18,13 +18,9 @@ const renderInfoOrganization = (key, value) => {
 
 const OrganizationPreview = ({isOpen, onClose, nodes}) => {
 
-  const [getOrganizationBySlug, { data: organization }] = useLazyGetOrganizationBySlugQuery()
-
-  useEffect(() => {
-    if (nodes?.slug) {
-      getOrganizationBySlug({ Slug: nodes?.slug })
-    }
-  }, [nodes?.slug])
+  const { data: organization } = useGetOrganizationByIdQuery({
+    OrganizationId: nodes?.id
+  }, { skip: !nodes?.id });
 
   const [, setIsScrolled] = useState(false);
 
@@ -63,8 +59,8 @@ const OrganizationPreview = ({isOpen, onClose, nodes}) => {
               {renderInfoOrganization('Email', organization?.email)}
               {renderInfoOrganization('Số điện thoại', organization?.phoneNumber)}
               {renderInfoOrganization('Địa chỉ',`${organization?.address}, ${organization?.districtName}, ${organization?.provinceName}`)}
-              {renderInfoOrganization('Trực thuộc', '')}
-              {renderInfoOrganization('Đơn vị trực thuộc', '')}
+              {renderInfoOrganization('Trực thuộc', organization?.parentOrganizationName)}
+              {renderInfoOrganization('Đơn vị trực thuộc', organization?.subsidiaryNames?.map((sub, index, arr) => index < arr.length -1 ? `${sub}, ` : `${sub}`))}
 
               <Button
                   variant="contained"

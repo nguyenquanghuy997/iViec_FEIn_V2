@@ -8,18 +8,18 @@ import Scrollbar from "@/components/Scrollbar";
 import {useForm} from "react-hook-form";
 import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import {
-  useGetDistrictByProvinceIdQuery,
-  useGetProvinceQuery
-} from "@/sections/companyinfor/companyInforSlice";
+import {useGetDistrictByProvinceIdQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {convertViToEn} from "@/utils/function";
-import {isEmpty} from 'lodash';
+import {isEmpty, pick} from 'lodash';
 import {
-  useCreateChildOrganizationMutation, useGetOrganizationBySlugQuery,
+  useCreateChildOrganizationMutation,
+  useGetOrganizationByIdQuery,
+  useUpdateOrganizationMutation,
 } from "@/sections/organization/OrganizationSlice";
 import {useSnackbar} from "notistack";
+import {API_UPDATE_ORGANIZATION} from "@/routes/api";
 
 const InputStyle = {
   minHeight: 44,
@@ -34,15 +34,16 @@ const SelectStyle = {
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
+const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
 
-  const { data: organization } = useGetOrganizationBySlugQuery({
-    Slug: parentNode?.slug
-  }, { skip: !parentNode?.slug });
+  const { data: organization } = useGetOrganizationByIdQuery({
+    OrganizationId: parentNode?.id
+  }, { skip: !parentNode?.id || actionType === 0 });
 
   const {enqueueSnackbar} = useSnackbar();
 
   const [createChildOrganization] = useCreateChildOrganizationMutation();
+  const [updateOrganization] = useUpdateOrganizationMutation();
 
   const [, setIsScrolled] = useState(false);
 
@@ -63,10 +64,10 @@ const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
   };
 
   const OrganizationFormSchema = Yup.object().shape({
-    name: Yup.string().required("Tên đơn vị không được bỏ trống").max(50, "Tên đơn vị tối đa 50 ký tự"),
-    code: Yup.string().required("Mã đơn vị không được bỏ trống").max(20, "Mã đơn vị tối đa 20 ký tự"),
-    email: Yup.string().required("Email không được bỏ trống").matches(regexEmail, "Email không đúng định dạng"),
-    phoneNumber: Yup.string().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
+    name: Yup.string().nullable().required("Tên đơn vị không được bỏ trống").max(50, "Tên đơn vị tối đa 50 ký tự"),
+    code: Yup.string().nullable().required("Mã đơn vị không được bỏ trống").max(20, "Mã đơn vị tối đa 20 ký tự"),
+    email: Yup.string().nullable().required("Email không được bỏ trống").matches(regexEmail, "Email không đúng định dạng"),
+    phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
     provinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống"),
     districtId: Yup.string().required("Quận/Huyện không được bỏ trống"),
     address: Yup.string().max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
@@ -79,12 +80,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
     defaultValues,
   });
 
-  const {
-    watch,
-    reset,
-    handleSubmit,
-    formState: {isSubmitting},
-  } = methods;
+  const { watch, reset, handleSubmit, formState: {isSubmitting} } = methods;
 
   const watchProvinceId = watch("provinceId");
 
@@ -92,18 +88,49 @@ const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
   const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: !watchProvinceId });
 
   useEffect(()=>{
-    if (organization) reset(organization)
-  }, [organization])
+    if (organization && actionType === 1) reset(organization)
+  }, [organization, actionType])
 
   const onSubmit = async (data) => {
     const body = {...data};
-    body.parentOrganizationId = parentNode?.id ? parentNode.id : null;
-    try {
-      await createChildOrganization(body).unwrap();
-      body.id ? enqueueSnackbar("Cập nhật đơn vị thành công!") : enqueueSnackbar("Thêm đơn vị thành công!");
-      onClose();
-    } catch (err) {
-      console.log(err)
+    if (actionType === 0) {
+      try {
+        body.parentOrganizationId = parentNode?.id ? parentNode.id : null;
+        await createChildOrganization(body).unwrap();
+        enqueueSnackbar("Thêm đơn vị thành công!", {
+          autoHideDuration: 1000
+        });
+        onClose();
+      } catch (err) {
+        console.log(err)
+        enqueueSnackbar("Thêm đơn vị không thành công!", {
+          autoHideDuration: 1000,
+          variant: 'error',
+        });
+      }
+    } else {
+      try {
+        const dataSubmit = pick(body, ['id', 'name', 'code', 'email', 'phoneNumber', 'provinceId', 'districtId', 'address']);
+        await updateOrganization(API_UPDATE_ORGANIZATION, {
+          OrganizationId: organization?.id,
+          Name: dataSubmit.name,
+          Code: dataSubmit.code,
+          PhoneNumber: dataSubmit.phoneNumber,
+          Email: dataSubmit.email,
+          ProvinceId: dataSubmit.provinceId,
+          DistrictId: dataSubmit.districtId,
+          Address: dataSubmit.address,
+        })
+        // await updateOrganization().unwrap();
+        enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
+        onClose();
+      } catch (err) {
+        console.log(err)
+        enqueueSnackbar("Chỉnh sửa đơn vị không thành công!", {
+          autoHideDuration: 1000,
+          variant: 'error',
+        });
+      }
     }
   }
 
@@ -125,7 +152,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
               <OrganizationFromHeadStyle className="organization-form-head">
                 <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
-                  {title}
+                  {actionType === 0 ? 'Thêm mới đơn vị' : 'Chỉnh sửa đơn vị'}
                 </Typography>
                 <IconButton size="small" onClick={onClose}><Iconify icon="ic:baseline-close"/></IconButton>
               </OrganizationFromHeadStyle>
@@ -133,13 +160,13 @@ const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
               {/* content form */}
 
               <Box sx={{py: 2, px: 2, mt: 8}}>
-                {!isEmpty(organization) && !parentNode?.isRoot && <RHFTextField
+                {!isEmpty(parentNode) && <RHFTextField
                     name="parentOrganizationId"
                     title="Trực thuộc"
                     placeholder="Nhập tên đơn vị Trực thuộc"
                     isRequired
                     style={{...InputStyle, backgroundColor: '#EFF3F6'}}
-                    value={organization?.name}
+                    value={actionType === 0 ? parentNode?.name : organization?.parentOrganizationName}
                     disabled
                 />}
                 <RHFTextField
@@ -178,7 +205,8 @@ const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
                   <div style={{...SelectStyle}}>
                     <RHFDropdown
                         options={
-                          ProvinceList?.map((i) => ({
+                          [...ProvinceList, { id: '', value: "", name: "" }]?.map((i) => ({
+                            ...i,
                             value: i.id,
                             label: i.name,
                             name: i.name,
@@ -194,7 +222,8 @@ const OrganizationForm = ({isOpen, onClose, parentNode, title}) => {
                   <div style={{...SelectStyle}}>
                     <RHFDropdown
                         options={
-                          DistrictList?.map((i) => ({
+                          [...DistrictList, { id: '', value: "", name: "" }]?.map((i) => ({
+                            ...i,
                             value: i.id,
                             label: i.name,
                             name: i.name,
