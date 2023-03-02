@@ -191,7 +191,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
             }, onScroll: handleScroll
           }}
       >
-        <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
+        <Scrollbar sx={{zIndex: 99, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <ApplicantModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>

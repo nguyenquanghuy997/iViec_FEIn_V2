@@ -16,30 +16,31 @@ import { useEffect } from "react";
 
 const RootStyle = styled("div")(({ theme }) => ({
   minWidth: SIDEBAR_CONSTANTS.SIDEBAR_WIDTH,
-  padding: theme.spacing(2, 0, 2, 2),
+  paddingLeft: theme.spacing(3),
 }));
 
 const BoxWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   margin: "0 auto",
-  [theme.breakpoints.up("xl")]: {
-    padding: theme.spacing(4.5, 3, 0, 3),
+  [theme.breakpoints.up("lg")]: {
+    paddingTop: theme.spacing(4.5),
     width: DASHBOARD_CONTENT_WIDTH,
   },
   [theme.breakpoints.up("2k")]: {
-    padding: theme.spacing(4.5, 34, 0, 34),
+    paddingTop: theme.spacing(4.5),
     width: "100%",
   },
 }));
 
 const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
   marginLeft: isDesktop ? theme.spacing(4.5) : theme.spacing(0),
-  padding: theme.spacing(2, 0, 0, 2),
-  [theme.breakpoints.up("xl")]: {
-    width: '100%'
+  [theme.breakpoints.up("lg")]: {
+    width: `calc(100% - ${SIDEBAR_CONSTANTS.SIDEBAR_WIDTH}px - ${theme.spacing(
+      4.5
+    )} - ${theme.spacing(3)})`,
   },
   [theme.breakpoints.up("2k")]: {
-    width: '100%'
+    width: "100%",
   },
 }));
 

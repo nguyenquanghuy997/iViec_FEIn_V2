@@ -48,6 +48,8 @@ export const NAVBAR = {
 export const ICON = {
   NAVBAR_ITEM: 22,
   NAVBAR_ITEM_HORIZONTAL: 20,
+  NAVBAR_ITEM_COLOR: '#455570',
+
 };
 
 // SETTINGS

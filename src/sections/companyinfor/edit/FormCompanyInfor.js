@@ -1,125 +1,128 @@
-// import ImageUpload from "../ImageUpload";
+import ChipDS from "@/components/DesignSystem/ChipDS";
 import Image from "@/components/Image";
 import {
   FormProvider,
-  RHFBasicSelect,
+  RHFAutocomplete,
+  RHFTextField,
 } from "@/components/hook-form";
+import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import RHFListImage from "@/components/hook-form/RHFListImage";
+import { DOMAIN_SERVER_API } from "@/config";
 import {
-  // useGetBranchByIdMutation,
-  // useGetBranchByUserQuery,
+  useUpdateCompanyInfoMutation,
   useGetJobCategoriesQuery,
-  // useLazyGetProvinceQuery,
-  // useUpdateBranchMutation,
+  useLazyGetProvinceQuery,
+  useLazyGetDistrictByProvinceIdQuery,
+  useGetImageQuery,
 } from "@/sections/companyinfor/companyInforSlice";
-import { LIST_BRANCH_SIZE } from "@/utils/formatString";
+import { LIST_ORGANIZATION_SIZE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { Alert, Grid } from "@mui/material";
-import {
-  Box,
-  Typography,
-  TextField,
-  Divider,
-} from "@mui/material";
-import FormControl from "@mui/material/FormControl";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import InputLabel from "@mui/material/InputLabel";
+import { Alert, Stack } from "@mui/material";
+import { Box, Typography, Divider, InputLabel } from "@mui/material";
 import { Input } from "antd";
-import { React } from "react";
+import qs from "query-string";
+import { React, useEffect } from "react";
+import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-const FormCompanyInfor = ({ defaultValues, onFinish }) => {
-  const { TextArea } = Input;
-  const { data: { items: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
+const InputStyle = { width: 265, minHeight: 40 };
+// const { enqueueSnackbar } = useSnackbar()
 
-  // const [introduce, setIntroduce] = useState(null);
-  // const [environment, setEnvironment] = useState(null);
-
-  const itemData = [
-    {
-      img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-      title: "Breakfast",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-      title: "Burger",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-      title: "Camera",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-      title: "Coffee",
-    },
-  ];
-  // form
+const FormCompanyInfor = ({ data }) => {
+  const defaultValues = { ...data };
   const ProfileSchema = Yup.object().shape({
     name: Yup.string(),
-    city: Yup.number().required("Chưa chọn Tỉnh / Thành phố"),
+    provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
+    districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
     address: Yup.string().required("Chưa nhập Địa chỉ"),
     email: Yup.string()
       .email("Email không đúng định dạng")
       .required("Chưa nhập Email"),
-    phone: Yup.string().required("Chưa nhập Số điện thoại"),
-    type: Yup.number().required("Chưa chọn Nghành nghề"),
-    size: Yup.string().required("Chưa chọn Quy mô nhân sự"),
-    introduce: Yup.string().required("Chưa nhập Giới thiệu"),
-    environment: Yup.string().nullable(),
+    phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
+    jobCategories: Yup.array().min(1, "Ngành nghề không được bỏ trống"),
+    organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
+    workingEnvironment: Yup.string().required("Chưa nhập Giới thiệu"),
   });
 
+  const { TextArea } = Input;
+  const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
+  const { data: { items: JobCategoryList = [] } = {} } =
+    useGetJobCategoriesQuery();
+  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
+    useLazyGetProvinceQuery();
+  const [getDistrictByProvinceId, { data: { items: DistrictList = [] } = {} }] =
+    useLazyGetDistrictByProvinceIdQuery();
+  const { data: avatar } = useGetImageQuery(data?.avatar);
+
   const methods = useForm({
-    defaultValues,
+    mode: "all",
     resolver: yupResolver(ProfileSchema),
+    defaultValues,
   });
 
   const {
     // setValue,
-    // setError,
+    setError,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = methods;
+  const watchProvinceId = watch("provinceId");
 
-  const EmptyImage = () => {
-    const obj = [];
-    let i = 0;
-    while (i < 6 - itemData.length) {
-      // obj.push(<ImageUpload size={80} />);
-      i++;
+  useEffect(() => {
+    fetchProvice().unwrap();
+  }, []);
+
+  useEffect(() => {
+    if (watchProvinceId) {
+      getDistrictByProvinceId(watchProvinceId).unwrap();
+      methods.resetField("organizationDistrictId");
     }
-    return <>{obj}</>;
-  };
+  }, [watchProvinceId]);
 
-  const InputRow = ({ label, name }) => {
-    return (
-      <Grid item xs={6}>
-        <FormControl variant="standard">
-          <InputLabel
-            shrink
-            htmlFor="bootstrap-input"
-            sx={{
-              fontSize: 18,
-              fontWeight: 500,
-              color: "#5C6A82",
-              position: "relative",
-            }}
-          >
-            {label}
-          </InputLabel>
-          <TextField name={name} margin="none" required={true} />
-        </FormControl>
-      </Grid>
-    );
+  const onSubmit = async (d) => {
+    try {
+      const res = await updateCompanyInfo(
+        qs.stringify({
+          name: data.name,
+          avatar: data.avatar,
+          workingEnvironment: d.workingEnvironment,
+          workingEnvironmentImages: d.workingEnvironmentImages,
+          organizationImages: d.organizationImages,
+          provinceId: d.provinceId,
+          districtId: d.districtId,
+          address: d.address,
+          email: d.email,
+          phoneNumber: d.phoneNumber,
+          jobCategories: d.jobCategories,
+          organizationSize: d.organizationSize,
+        })
+      ).unwrap();
+
+      if (!res.Succeeded) throw res;
+
+      // enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!");
+      // onFinish();
+    } catch (err) {
+      const message =
+        err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
+      setError("afterSubmit", { ...err, message });
+    }
   };
+  console.log("hih", avatar);
+
+  // const EmptyImage = () => {
+  //   const obj = [];
+  //   let i = 0;
+  //   while (i < 6 - itemData.length) {
+  //     obj.push(<FileUpload />);
+  //     i++;
+  //   }
 
   return (
-    <FormProvider
-      methods={methods}
-      // onSubmit={handleSubmit(onSubmit)}
-    >
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {!!errors.afterSubmit && (
         <Alert severity="error">{errors.afterSubmit?.message}</Alert>
       )}
@@ -147,10 +150,7 @@ const FormCompanyInfor = ({ defaultValues, onFinish }) => {
           <Image
             disabledEffect
             visibleByDefault
-            src={
-              // formatRemoteUrl(Data.Logo || "/public/img/logoDefault.png")
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT99Ztd5x_8FTDUhAX0W1DYWXRUf4bvbFF61k7fTmo8awUu8stJIi9L6BzB13EHoxEt0bU&usqp=CAU"
-            }
+            src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${data.avatar}`}
             sx={{
               width: 60,
               height: 60,
@@ -158,6 +158,7 @@ const FormCompanyInfor = ({ defaultValues, onFinish }) => {
               border: "3px solid #fff",
             }}
           />
+
           <Box
             sx={{
               pl: 2,
@@ -172,8 +173,7 @@ const FormCompanyInfor = ({ defaultValues, onFinish }) => {
                 mr: 1,
               }}
             >
-              {/* {Data.BranchName} */}
-              DỊCH VỤ VẬN CHUYỂN HÀNG ĐẦU VIỆT NAM J&T
+              {data?.name}
             </Typography>
             <Typography sx={{ color: "#455570", fontSize: 12 }}>
               Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email
@@ -181,184 +181,215 @@ const FormCompanyInfor = ({ defaultValues, onFinish }) => {
             </Typography>
           </Box>
         </Box>
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 2.5 }}>
+          <Stack>
+            <RHFTextField
+              name="phoneNumber"
+              label="Số điện thoại"
+              placeholder="Nhập SĐT doanh nghiệp"
+              required
+              style={{ ...InputStyle }}
+            />
+          </Stack>
+          <Stack>
+            <RHFTextField
+              name="email"
+              label="Email"
+              placeholder="Nhập Email doanh nghiệp"
+              required
+              style={{ ...InputStyle }}
+            />
+          </Stack>
+        </Stack>
 
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { mb: 2, width: "27.2ch" },
-          }}
-          noValidate
-          autoComplete="off"
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 2.5 }}>
+          <div style={{ ...InputStyle }}>
+            <RHFAutocomplete
+              options={JobCategoryList?.map((i) => ({
+                value: i.id,
+                label: `${i.name[0].toUpperCase()}${i.name.slice(1)}`,
+                name: i?.name,
+              }))}
+              name="jobCategories"
+              label="Ngành nghề"
+              required={true}
+              placeholder="Chọn ngành nghề"
+              AutocompleteProps={{
+                multiple: true,
+                limitTags: 2,
+                sx: {
+                  "&.MuiAutocomplete-root .MuiAutocomplete-inputRoot": {
+                    padding: "4.5px 14px 4.5px 8px!important",
+                    fontSize: "14px",
+                    lineHeight: "20px",
+                    color: "#1E5EF3",
+                    fontWeight: 500,
+                    borderRadius: "6px",
+                  },
+                  ".MuiFormHelperText-root": {
+                    marginTop: 1,
+                    marginLeft: 0,
+                  },
+                },
+                isOptionEqualToValue: (option, value) =>
+                  option.value === value.value,
+                renderTags: (value, getTagProps) =>
+                  value.map(({ label, id }, index) => (
+                    <ChipDS
+                      {...getTagProps({ index })}
+                      key={`${id}-${index}`}
+                      size="medium"
+                      label={label}
+                    />
+                  )),
+              }}
+            />
+          </div>
+
+          <div style={{ ...InputStyle }}>
+            <RHFDropdown
+              options={LIST_ORGANIZATION_SIZE.map((i) => ({
+                value: i.value,
+                label: i.name,
+                name: i.name,
+              }))}
+              style={{ ...InputStyle }}
+              name="organizationSize"
+              multiple={false}
+              placeholder="Chọn quy mô nhân sự"
+              label="Quy mô nhân sự"
+              required
+            />
+          </div>
+        </Stack>
+
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          sx={{ mb: 2.5, mt: 2.5 }}
         >
-          <form onSubmit={handleSubmit} noValidate>
-            <Grid container alignItems="flex-start" spacing={3}>
-              <InputRow label="Số điện thoại" name="phone" />
-              <InputRow label="Email" name="email" />
-            </Grid>
-          </form>
-        </Box>
+          <Stack>
+            <div style={{ ...InputStyle }}>
+              <RHFDropdown
+                options={ProviceList.map((i) => ({
+                  value: i.id,
+                  label: i.name,
+                  name: i.name,
+                }))}
+                name="provinceId"
+                multiple={false}
+                placeholder="Chọn Tỉnh/Thành phố"
+                label="Tỉnh/Thành phố"
+                required
+              />
+            </div>
+          </Stack>
+          <Stack>
+            <div style={{ ...InputStyle }}>
+              <RHFDropdown
+                options={DistrictList.map((i) => ({
+                  value: i.id,
+                  label: i.name,
+                  name: i.name,
+                }))}
+                style={{ ...InputStyle }}
+                name="districtId"
+                multiple={false}
+                disabled={!watchProvinceId}
+                placeholder="Chọn Quận/Huyện"
+                label="Quận/Huyện"
+                required
+              />
+            </div>
+          </Stack>
+        </Stack>
 
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <RHFBasicSelect
-            name={"type"}
-            label={"Ngành nghề"}
-            placeholder={"Chọn ngành nghề"}
-            options={JobCategoryList.map((i) => ({
-              value: i.id,
-              label: i.name,
-            }))}
-            sx={{ width: "27.2ch", mr: 3 }}
-          />
-          <RHFBasicSelect
-            name={"size"}
-            label={"Quy mô nhân sự"}
-            placeholder={"Chọn quy mô nhân sự"}
-            style={{ marginRight: 20 }}
-            options={LIST_BRANCH_SIZE.map((i) => ({
-              value: i.id,
-              label: i.name,
-            }))}
-            sx={{ width: "27.2ch" }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 24,
-            marginBottom: 20,
-          }}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          width={"100%"}
+          sx={{ mb: 2.5 }}
         >
-          <RHFBasicSelect
-            name={"type"}
-            label={"Tỉnh/Thành phố"}
-            placeholder={"Chọn ngành nghề"}
-            options={JobCategoryList.map((i) => ({
-              value: i.id,
-              label: i.name,
-            }))}
-            sx={{ width: "27.2ch", mr: 3 }}
-          />
-          <RHFBasicSelect
-            name={"size"}
-            label={"Quận/Huyện"}
-            placeholder={"Chọn quy mô nhân sự"}
-            style={{ marginRight: 20 }}
-            options={LIST_BRANCH_SIZE.map((i) => ({
-              value: i.id,
-              label: i.name,
-            }))}
-            sx={{ width: "27.2ch" }}
-          />
-        </div>
+          <Stack sx={{ width: "100%" }}>
+            <RHFTextField
+              name="address"
+              placeholder="Số nhà, tên đường, xã/phường..."
+              label="Địa chỉ chi tiết"
+            />
+          </Stack>
+        </Stack>
         <Divider />
 
-        <div style={{ marginTop: 24 }}>
-          <span
-            style={{
-              color: "#5C6A82",
-              fontSize: 14,
-              display: "block",
-              fontWeight: "500",
-            }}
-          >
-            {"Môi trường làm việc"}
-          </span>
-          <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-            <div>
-              <FormControl sx={{ my: 1 }} variant="outlined">
-                <TextArea
-                  showCount
-                  maxLength={150}
-                  style={{ height: 180, resize: "none", marginBottom: "20px" }}
-                  onChange={() => {}}
-                />
+        <Controller
+          name="workingEnvironment"
+          render={({ field}) => (
+            <Stack>
+              <InputLabel
+                required={true}
+                sx={{
+                  color: "#5C6A82",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  mt: 2,
+                  mb: 1,
+                }}
+              >
+                Môi trường làm việc
+              </InputLabel>
 
-                <ImageList
-                  sx={{
-                    maxWidth: "610px",
-                    width: "100%",
-                    overflow: "unset!important",
-                  }}
-                  cols={6}
-                  rowHeight={80}
-                >
-                  {itemData.map((item) => (
-                    <ImageListItem
-                      key={item.title}
-                      sx={{
-                        marginRight: "10px",
-                      }}
-                    >
-                      <img
-                        src={item.img}
-                        srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                        style={{ borderRadius: "4px" }}
-                      />
-                    </ImageListItem>
-                  ))}
-                  {itemData.length < 5 ? <EmptyImage /> : ""}
-                </ImageList>
-              </FormControl>
-            </div>
-          </Box>
-        </div>
+              <TextArea
+                showCount
+                value={field?.value}
+                maxLength={150}
+                style={{
+                  height: 180,
+                  width: "556px",
+                  resize: "none",
+                  marginBottom: "20px",
+                }}
+                onChange={() => {}}
+              />
+            </Stack>
+          )}
+        />
+
+        <RHFListImage name="workingEnvironmentImages" />
+
+        <Divider sx={{ mt: 2 }} />
+
+        <Controller
+          name="text"
+          render={() => (
+            <Stack>
+              <InputLabel
+                required={true}
+                sx={{
+                  color: "#5C6A82",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  mt: 2,
+                  mb: 1,
+                }}
+              >
+                Giới thiệu
+              </InputLabel>
+
+              <TextArea
+                showCount
+                maxLength={150}
+                style={{
+                  height: 180,
+                  width: "556px",
+                  resize: "none",
+                  marginBottom: "20px",
+                }}
+                onChange={() => {}}
+              />
+            </Stack>
+          )}
+        />
+        <RHFListImage name="organizationImages" />
         <Divider sx={{ pt: 3 }} />
-
-        <div style={{ marginTop: 24, paddingBottom: 50 }}>
-          <span
-            style={{
-              color: "#5C6A82",
-              fontSize: 14,
-              display: "block",
-              fontWeight: "500",
-            }}
-          >
-            {"Giới thiệu"}
-          </span>
-          <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-            <div>
-              <FormControl sx={{ my: 1 }} variant="outlined">
-                <TextArea
-                  showCount
-                  maxLength={150}
-                  style={{ 
-                    height: 180, resize: "none", marginBottom: "20px", 
-                  }}
-                  onChange={() => {}}
-                />
-                
-                <ImageList
-                  sx={{
-                    maxWidth: "615px",
-                    width: "100%",
-                    overflow: "unset!important",
-                  }}
-                  cols={6}
-                  rowHeight={80}
-                >
-                  {itemData.map((item) => (
-                    <ImageListItem
-                      key={item.title}
-                      sx={{
-                        marginRight: "10px",
-                      }}
-                    >
-                      <img
-                        src={item.img}
-                        srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                        style={{ borderRadius: "4px" }}
-                      />
-                    </ImageListItem>
-                  ))}
-
-                  {itemData.length < 5 ? <EmptyImage /> : ""}
-                </ImageList>
-              </FormControl>
-            </div>
-          </Box>
-        </div>
       </div>
       <div
         style={{
@@ -385,7 +416,6 @@ const FormCompanyInfor = ({ defaultValues, onFinish }) => {
 
         <LoadingButton
           variant="text"
-          onClick={onFinish}
           sx={{ color: "#455570" }}
         >
           {"Hủy"}
