@@ -101,4 +101,9 @@ export const PATH_DASHBOARD = {
   report4: {
     root: path(ROOTS_DASHBOARD, "report4"),
   },
+  // organization
+  organization: {
+    root: path(ROOTS_DASHBOARD, "settings/organization"),
+    view: (id) => path(ROOTS_DASHBOARD, `settings/organization/${id}`),
+  },
 };

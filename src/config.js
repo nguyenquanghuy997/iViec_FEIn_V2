@@ -121,6 +121,7 @@ export const PAGES = {
   Report4: "Report4",
 
   // Account: 'Account',
+  Organization: "Organization",
 };
 
 // ROLE AND PERMISSION
@@ -163,6 +164,8 @@ export const ROLE_BY_PAGES = [
       PAGES.Report2,
       PAGES.Report3,
       PAGES.Report4,
+
+      PAGES.Organization,
     ],
     roles: [ROLE.ADMIN],
   },

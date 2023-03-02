@@ -94,9 +94,11 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       },
       "& .tree-item-label-actions": {
         display: 'none',
+        alignItems: 'center',
       },
       "& .tree-item-label-actions.tree-item-label-actions-checked": {
         display: 'flex',
+        alignItems: 'center',
       },
       "&:hover .tree-item-label-actions": {
         transition: 'all ease 0.5s',

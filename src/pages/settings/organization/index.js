@@ -1,10 +1,8 @@
 import Page from "@/components/Page";
-import {PAGES} from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {getRolesByPage} from "@/utils/role";
 import OrganizationContent from "@/sections/organization/OrganizationContent";
 
-Organization.getLayout = function getLayout({roles = []}, page) {
+Organization.getLayout = function getLayout({roles = ['Admin']}, page) {
   return (
       <SettingLayout roles={roles}>
         {page}
@@ -18,12 +16,4 @@ export default function Organization() {
         <OrganizationContent />
       </Page>
   );
-}
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
 }
