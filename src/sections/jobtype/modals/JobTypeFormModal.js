@@ -1,6 +1,6 @@
 import { Text, View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
-import { FormProvider, RHFSwitch, RHFTextField } from "@/components/hook-form";
+import { FormProvider, RHFTextField } from "@/components/hook-form";
 import {
   useAddJobTypeMutation,
   useGetPreviewJobTypeMutation,
@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { SwitchDS } from "@/components/DesignSystem";
 
 const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
   ssr: false,
@@ -26,8 +27,7 @@ const defaultValues = {
   benefit: "",
   isActive: true,
 };
-
-export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
+export const JobTypeFormModal = ({ data, show, setShow }) => {
   const isEditMode = !!data?.JobTypeId;
 
   const [des, setDes] = useState(null);
@@ -74,7 +74,7 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
     };
     pressHide();
     isEditMode ? await updateForm(body).unwrap() : await addForm(body).unwrap();
-    onRefreshData();
+    // onRefreshData();
   });
 
   // render
@@ -129,39 +129,38 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
   }, [isEditMode, preview.JobTypeId]);
 
   return (
-    <>
-      <FormProvider methods={methods}>
-        <Modal
-          open={show}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
-          onBackdropClick={pressHide}
-        >
-          <View width={"40vw"} bgColor={"#fff"}>
-            {/* header */}
-            <View flexRow pv={32} ph={24} bgColor={"#F1F5F8"}>
-              <Text flex1 fontSize={28} fontWeight={"600"}>
-                {isEditMode
-                  ? "Chỉnh sửa vị trí công việc"
-                  : "Thêm mới vị trí công việc"}
-              </Text>
+    <FormProvider methods={methods}>
+      <Modal
+        open={show}
+        onClose={pressHide}
+        sx={{ display: "flex", justifyContent: "flex-end" }}
+      >
+        <div style={{ width: "40vw", background: "#fff" }}>
+          {/* header */}
+          <View flexRow pv={32} ph={24} bgColor={"#F1F5F8"}>
+            <Text flex1 fontSize={28} fontWeight={"600"}>
+              {isEditMode
+                ? "Chỉnh sửa vị trí công việc"
+                : "Thêm mới vị trí công việc"}
+            </Text>
 
-              <View
-                contentCenter
-                size={40}
-                borderRadius={4}
-                bgColor={"#fff"}
-                onPress={pressHide}
-              >
-                <SvgIcon>
-                  {
-                    '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.33325 1.33334L5.99991 6.00001M5.99991 6.00001L10.6666 10.6667M5.99991 6.00001L10.6666 1.33334M5.99991 6.00001L1.33325 10.6667" stroke="#393B3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-                  }
-                </SvgIcon>
-              </View>
+            <View
+              contentCenter
+              size={40}
+              borderRadius={4}
+              bgColor={"#fff"}
+              onPress={pressHide}
+            >
+              <SvgIcon>
+                {
+                  '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.33325 1.33334L5.99991 6.00001M5.99991 6.00001L10.6666 10.6667M5.99991 6.00001L10.6666 1.33334M5.99991 6.00001L1.33325 10.6667" stroke="#393B3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+                }
+              </SvgIcon>
             </View>
+          </View>
 
-            {/* body */}
-            {isLoading ? (
+          {/* body */}
+          {isLoading ? (
               <View flex1 contentCenter>
                 <CircularProgress />
               </View>
@@ -239,9 +238,8 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
                 </View>
               </View>
             )}
-
-            {/* footer */}
-            <View
+          {/* footer */}
+          <View
               flexRow
               pv={12}
               ph={16}
@@ -264,12 +262,12 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
               <View flex1 />
 
               {isLoading ? null : (
-                <RHFSwitch name={"isActive"} label={"Đang hoạt động"} />
+                
+                <SwitchDS name={"isActive"} label={"Đang hoạt động"} />
               )}
             </View>
-          </View>
-        </Modal>
-      </FormProvider>
-    </>
+        </div>
+      </Modal>
+    </FormProvider>
   );
 };

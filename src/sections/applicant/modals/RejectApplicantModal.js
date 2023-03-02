@@ -5,17 +5,49 @@ import { FormProvider } from "@/components/hook-form";
 import { Grid, Modal, Typography } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { useUpdateApplicantRecruitmentToNextStateMutation } from "../ApplicantFormSlice";
 
 export const RejectApplicantModal = ({
   applicantId,
   recruimentId,
+  stage,
   show,
   setShow,
 }) => {
-  const form = useForm({
-    applicantId: applicantId,
-    recruimentId: recruimentId,
-  });
+  const recruitmentPipelineStateId = stage?.recruitmentPipelineStates?.filter(
+    (i) => i.pipelineStateType == 3
+  )[0]?.id;
+
+    // form
+    const Schema = Yup.object().shape({
+      note: Yup.string().required("Chưa nhập lý do loại ứng viên"),
+    });
+    const methods = useForm({
+      
+      resolver: yupResolver(Schema),
+    });
+    const {
+      handleSubmit,
+      formState: { isSubmitting },
+    } = methods;
+    const [addForm] = useUpdateApplicantRecruitmentToNextStateMutation();
+    const pressSave = async () => {
+    const body = {
+      applicantId: applicantId,
+      recruimentId: recruimentId,
+      recruitmentPipelineStateId: recruitmentPipelineStateId,
+      pipelineStateResultType: 2,
+      note: "Ứng viên chưa đạt tiêu chí đánh giá"
+    };
+    await addForm(body).unwrap();
+    location.reload()
+    // pressHide();
+    // isEditMode ? await updateForm(body).unwrap() : await addForm(body).unwrap();
+    // onRefreshData();
+  };
+
   // const [text, setText] = React.useState('');
   return (
     <Modal
@@ -23,7 +55,7 @@ export const RejectApplicantModal = ({
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       onBackdropClick={() => setShow(false)}
     >
-      <FormProvider methods={form}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(pressSave)}>
         <View width={600} borderRadius={8} bgColor={"#fff"}>
           <View pt={8} pb={36} ph={24}>
             <ButtonDS
@@ -74,6 +106,7 @@ export const RejectApplicantModal = ({
               isRequired={true}
               maxLength={150}
               placeholder="Nhập lý do..."
+              name='note'
             />
           </View>
           <Grid
@@ -113,7 +146,8 @@ export const RejectApplicantModal = ({
                 fontSize: "14px",
                 padding: "6px 12px",
               }}
-              onClick={() => setShow(false)}
+              loading={isSubmitting}
+              onClick={(e)=>pressSave(e)}
             />
           </Grid>
         </View>
