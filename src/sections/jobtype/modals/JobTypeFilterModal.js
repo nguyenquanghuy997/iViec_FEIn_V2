@@ -60,6 +60,7 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
       } else setValue(item, defaultValues[item])
     }
   }, [query])
+  console.log(query)
 
   const handleCloseModal = async () => {
     onClose();
@@ -128,7 +129,7 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
                 <DynamicFilterForm
                     columns={columns}
                     options={{
-                      creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: ""}],
+                      creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.email}`, item: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: "", item: ""}],
                       isActive: LIST_STATUS,
                     }}
                 />

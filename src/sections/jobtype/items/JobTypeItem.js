@@ -7,7 +7,7 @@ import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import { useGetAllJobTypeQuery } from "@/sections/jobtype";
+import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -27,7 +27,7 @@ export const JobTypeItem = () => {
   const { query, isReady } = router;
   // api get list
 
-  const [getAllFilter, {data: Data = {},isLoading }] = useGetAllJobTypeQuery();
+  const [getAllFilter, {data: Data = [],isLoading }] = useLazyGetAllJobTypeQuery();
   // api get list Column
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
@@ -152,16 +152,15 @@ export const JobTypeItem = () => {
   const { handleSubmit } = methods;
 
   useEffect(() => {
-    debugger
     if (!isReady) return;
     const queryParams = {
       searchKey: query.searchKey,
-      isActive: query.isActive ? [Number(query.isActive)] : null,
+      isActive: query.isActive ? query.isActive : null,
       createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
       createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
       creatorIds:
         query.creatorIds && typeof query.creatorIds === "string"
-          ? [query.creatorIds]
+          ? query.creatorIds
           : query.creatorIds && query.creatorIds,
     };
     if (query) {
@@ -184,7 +183,6 @@ export const JobTypeItem = () => {
   };
 
   const onSubmitSearch = async (data) => {
-    debugger
     await router.push(
       {
         pathname: router.pathname,

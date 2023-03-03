@@ -36,9 +36,10 @@ export const LIST_ORGANIZATION_SIZE = [
   {id: "LargeTenThousand", value: 7, name: "Trên 10000 nhân sự"},
 ];
 export const LIST_STATUS = [
-  {id: "", value: "", name: "Tất cả"},
-  {id: "0", value: "0", name: "Đang hoạt động"},
-  {id: "1", value: "1", name: "Ngừng hoạt động"},
+  {id: "0", value: "0", name: "Tất cả"},
+  {id: "true", value: "1", name: "Đang hoạt động"},
+  {id: "false", value: "2", name: "Ngừng hoạt động"},
+  {id: "", value: "", name: ""},
 ]
 export const LIST_MARITAL_STATUSES = [
   {id: "0", value: "0", name: "Độc thân"},
