@@ -18,7 +18,7 @@ export default function RHFSwitch({ name, ...other }) {
           name={name}
           control={control}
           render={({ field }) => {
-            <Switch {...field} checked={field.value} />;
+            return <Switch {...field} checked={field.value} />;
           }}
         />
       }

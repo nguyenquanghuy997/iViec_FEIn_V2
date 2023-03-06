@@ -1,7 +1,10 @@
 import {
-  API_CREATE_CHILD_ORGANIZATION, API_DELETE_ORGANIZATION,
+  API_CREATE_CHILD_ORGANIZATION, API_DELETE_MULTIPLE_ORGANIZATION,
+  API_DELETE_ORGANIZATION,
+  API_GET_ALL_ADMIN_ORGANIZATION,
+  API_GET_ALL_USER_BY_ORGANIZATION,
   API_GET_ORGANIZATION_DETAIL_BY_ID,
-  API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_ORGANIZATION_WITH_CHILD, API_SET_ACTIVE_ORGANIZATION,
   API_UPDATE_ORGANIZATION
 } from "@/routes/api";
 import {createApi} from '@reduxjs/toolkit/query/react'
@@ -35,18 +38,33 @@ const axiosBaseQuery = () => async ({url, method, data, params, headers}) => {
 export const organizationServiceApi = createApi({
   reducerPath: 'organizationServiceApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['GetOrganization'],
+  tagTypes: ['Organization', 'OrganizationById'],
   endpoints: (build) => ({
     getListOrganizationWithChild: build.query({
       query: () => ({
         url: API_GET_ORGANIZATION_WITH_CHILD,
         method: 'GET',
       }),
-      providesTags: ['GetOrganization']
+      providesTags: ['Organization']
     }),
     getOrganizationById: build.query({
       query: (params) => ({
         url: API_GET_ORGANIZATION_DETAIL_BY_ID,
+        method: 'GET',
+        params
+      }),
+      providesTags: ['OrganizationById']
+    }),
+    getAllApplicantUserOrganizationById: build.query({
+      query: (params) => ({
+        url: API_GET_ALL_USER_BY_ORGANIZATION,
+        method: 'GET',
+        params
+      }),
+    }),
+    getAllAdminByOrganizationId: build.query({
+      query: (params) => ({
+        url: API_GET_ALL_ADMIN_ORGANIZATION,
         method: 'GET',
         params
       }),
@@ -57,7 +75,7 @@ export const organizationServiceApi = createApi({
         method: 'POST',
         data: data
       }),
-      invalidatesTags: ['GetOrganization']
+      invalidatesTags: ['Organization']
     }),
     updateOrganization: build.mutation({
       query: (data) => ({
@@ -68,15 +86,32 @@ export const organizationServiceApi = createApi({
           "Content-Type": "multipart/form-data"
         }
       }),
-      invalidatesTags: ['GetOrganization']
+      invalidatesTags: ['Organization', 'OrganizationById']
     }),
     deleteOrganization: build.mutation({
       query: (data) => ({
         url: `${API_DELETE_ORGANIZATION}/${data.id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['GetOrganization']
+      invalidatesTags: ['Organization', 'OrganizationById']
     }),
+    deleteMultipleOrganization: build.mutation({
+      query: (data) => ({
+        url: API_DELETE_MULTIPLE_ORGANIZATION,
+        method: 'DELETE',
+        data
+      }),
+      invalidatesTags: ['Organization', 'OrganizationById']
+    }),
+    setActiveOrganization: build.mutation({
+      query: (data) => ({
+        url: API_SET_ACTIVE_ORGANIZATION,
+        method: 'PATCH',
+        data
+      }),
+      invalidatesTags: ['Organization', 'OrganizationById']
+    }),
+
   }),
 })
 
@@ -85,4 +120,9 @@ export const {
   useCreateChildOrganizationMutation,
   useDeleteOrganizationMutation,
   useGetOrganizationByIdQuery,
-  useUpdateOrganizationMutation} = organizationServiceApi;
+  useUpdateOrganizationMutation,
+  useGetAllApplicantUserOrganizationByIdQuery,
+  useGetAllAdminByOrganizationIdQuery,
+  useDeleteMultipleOrganizationMutation,
+  useSetActiveOrganizationMutation,
+} = organizationServiceApi;
