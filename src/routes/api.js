@@ -94,9 +94,13 @@ export const API_CREATE_CHILD_ORGANIZATION = "/organization/Organization/CreateC
 export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganization"; // cập nhật thông tin đơn vị
 export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganizationById"; // xóa đơn vị
 
+
+
+//Role
+export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
 export const API_GET_LIST_ROLE_GROUP = "/identity/RoleGroup/GetRoleGroups"; // lấy danh sách role
-
+export const API_ADD_ROLE_GROUP = "/identity/RoleGroup/CreateRoleGroup"
 
 // Lấy danh sách tỉnh / thành phố
 export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
