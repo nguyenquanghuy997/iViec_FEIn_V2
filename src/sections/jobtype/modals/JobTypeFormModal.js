@@ -1,5 +1,6 @@
-import { Text, View } from "@/components/FlexStyled";
-import SvgIcon from "@/components/SvgIcon";
+import { ButtonDS, SwitchDS } from "@/components/DesignSystem";
+import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import {
   useAddJobTypeMutation,
@@ -8,12 +9,13 @@ import {
 } from "@/sections/jobtype";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { CircularProgress, Modal } from "@mui/material";
+import { CircularProgress, Divider, Modal } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { SwitchDS } from "@/components/DesignSystem";
+import { ViewModel } from "@/utils/cssStyles";
+
 
 const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
   ssr: false,
@@ -80,10 +82,10 @@ export const JobTypeFormModal = ({ data, show, setShow }) => {
   // render
   const renderTitle = (title, required) => {
     return (
-      <Text flexRow mb={8} fontWeight={"600"}>
+      <Text flexrow="true" mb={8} fontweight={"600"}>
         {title}
         {required && (
-          <Text ml={4} color={"#E82E25"}>
+          <Text ml={4} mb={0} color={"#E82E25"}>
             {"*"}
           </Text>
         )}
@@ -135,138 +137,174 @@ export const JobTypeFormModal = ({ data, show, setShow }) => {
         onClose={pressHide}
         sx={{ display: "flex", justifyContent: "flex-end" }}
       >
-        <div style={{ width: "40vw", background: "#fff" }}>
+        <ViewModel>
           {/* header */}
-          <View flexRow pv={32} ph={24} bgColor={"#F1F5F8"}>
-            <Text flex1 fontSize={28} fontWeight={"600"}>
+          <View
+            flexrow="true"
+            atcenter="center"
+            pv={12}
+            ph={24}
+            bgcolor={"#FDFDFD"}
+          >
+            <Text flex="true" fontsize={16} fontweight={"600"}>
               {isEditMode
                 ? "Chỉnh sửa vị trí công việc"
                 : "Thêm mới vị trí công việc"}
             </Text>
-
-            <View
-              contentCenter
-              size={40}
-              borderRadius={4}
-              bgColor={"#fff"}
-              onPress={pressHide}
-            >
-              <SvgIcon>
-                {
-                  '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.33325 1.33334L5.99991 6.00001M5.99991 6.00001L10.6666 10.6667M5.99991 6.00001L10.6666 1.33334M5.99991 6.00001L1.33325 10.6667" stroke="#393B3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-                }
-              </SvgIcon>
-            </View>
+            <ButtonDS
+              type="submit"
+              sx={{
+                backgroundColor: "#fff",
+                boxShadow: "none",
+                ":hover": {
+                  backgroundColor: "#EFF3F7",
+                },
+                textTransform: "none",
+                padding: "12px",
+                minWidth: "unset",
+              }}
+              onClick={pressHide}
+              icon={
+                <Iconify
+                  icon={"mi:close"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
+                />
+              }
+            />
           </View>
-
+          <Divider />
           {/* body */}
           {isLoading ? (
-              <View flex1 contentCenter>
-                <CircularProgress />
+            <View flex="true" contentcenter="true">
+              <CircularProgress />
+            </View>
+          ) : (
+            <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
+              {/* code & name */}
+              <View>
+                {renderTitle("Tên vị trí công việc", true)}
+
+                <RHFTextField name={"name"} />
               </View>
-            ) : (
-              <View flex1 p={24} pb={28} style={{ overflow: "scroll" }}>
-                {/* code & name */}
-                <View flexRow>
-                  <View width={150}>
-                    {renderTitle("Mã vị trí", true)}
 
-                    <RHFTextField name={"code"} />
-                  </View>
+              {/* dept */}
 
-                  <View flex1 ml={20}>
-                    {renderTitle("Tên vị trí công việc", true)}
+              {/* des */}
+              <View mt={28}>
+                {renderTitle("Mô tả công việc")}
 
-                    <RHFTextField name={"name"} />
-                  </View>
-                </View>
+                <Editor
+                  data={des}
+                  onChange={(_, e) => {
+                    const text = e.getData();
+                    setValue("des", text);
+                  }}
+                  config={{
+                    toolbar: {
+                      items: [
+                          'heading',
+                          '|',
+                          'bold',
+                          '|',
+                          'italic',
+                          '|',
+                          'underline',
+                          '|',
+                          "link",
+                          '|',
+                          'strikethrough',
+                          '|',
+                          'subscript',
+                          '|',
+                          'superscript',
+                          '|',
+                          'bulletedList',
+                          '|',
+                          'numberedList',
+                          '|',
+                          'todoList',
+                          '|',
+                          'alignment',
+                          '|',
+                          'outdent',
+                          '|',
+                          'indent',
+                      ]
+                  }
+                  }}
+                />
 
-                {/* dept */}
-
-                {/* des */}
-                <View mt={28}>
-                  {renderTitle("Mô tả công việc")}
-
-                  <Editor
-                    data={des}
-                    onChange={(_, e) => {
-                      const text = e.getData();
-                      setValue("des", text);
-                    }}
-                  />
-                  <RHFTextField
-                    name={"des"}
-                    variant={"standard"}
-                    inputProps={{ style: { display: "none" } }}
-                  />
-                </View>
-
-                {/* require */}
-                <View mt={28}>
-                  {renderTitle("Yêu cầu công việc")}
-
-                  <Editor
-                    data={require}
-                    onChange={(_, e) => {
-                      const text = e.getData();
-                      setValue("require", text);
-                    }}
-                  />
-                  <RHFTextField
-                    name={"require"}
-                    variant={"standard"}
-                    inputProps={{ style: { display: "none" } }}
-                  />
-                </View>
-
-                {/* benefit */}
-                <View mt={28}>
-                  {renderTitle("Quyền lợi")}
-
-                  <Editor
-                    data={benefit}
-                    onChange={(_, e) => {
-                      const text = e.getData();
-                      setValue("benefit", text);
-                    }}
-                  />
-                  <RHFTextField
-                    name={"benefit"}
-                    variant={"standard"}
-                    inputProps={{ style: { display: "none" } }}
-                  />
-                </View>
               </View>
-            )}
+
+              {/* require */}
+              <View mt={28}>
+                {renderTitle("Yêu cầu công việc")}
+
+                <Editor
+                  data={require}
+                  onChange={(_, e) => {
+                    const text = e.getData();
+                    setValue("require", text);
+                  }}
+                  config={{
+                    toolbar: [
+                      "heading",
+                      "|",
+                      "bold",
+                      "italic",
+                      "link",
+                      "bulletedList",
+                      "numberedList",
+                      "blockQuote",
+                    ],
+                  }}
+                />
+              </View>
+
+              {/* benefit */}
+              <View mt={28}>
+                {renderTitle("Quyền lợi")}
+
+                <Editor
+                  data={benefit}
+                  onChange={(_, e) => {
+                    const text = e.getData();
+                    setValue("benefit", text);
+                  }}
+                />
+              </View>
+            </View>
+          )}
           {/* footer */}
           <View
-              flexRow
-              pv={12}
-              ph={16}
-              boxShadow={"inset 0px 1px 0px #EBECF4"}
+            flexrow="true"
+            pv={12}
+            ph={16}
+            boxshadow={"inset 0px 1px 0px #EBECF4"}
+          >
+            <LoadingButton
+              size="large"
+              variant="contained"
+              loading={isSubmitting}
+              onClick={pressSave}
             >
-              <LoadingButton
-                size="large"
-                variant="contained"
-                loading={isSubmitting}
-                onClick={pressSave}
-              >
-                {isEditMode ? "Sửa" : "Thêm"}
-              </LoadingButton>
-              <View width={8} />
+              {isEditMode ? "Sửa" : "Thêm"}
+            </LoadingButton>
+            <View width={8} />
 
-              <LoadingButton size="large" variant="text" onClick={pressHide}>
-                {"Hủy"}
-              </LoadingButton>
-              <View width={8} />
-              <View flex1 />
+            <LoadingButton size="large" variant="text" onClick={pressHide}>
+              {"Hủy"}
+            </LoadingButton>
+            <View width={8} />
+            <View flex="true" />
 
-              {isLoading ? null : (
-                
-                <SwitchDS name={"isActive"} label={"Đang hoạt động"} />
-              )}
-            </View>
-        </div>
+            {isLoading ? null : (
+              <SwitchDS name={"isActive"} label={"Đang hoạt động"} />
+            )}
+          </View>
+        </ViewModel>
       </Modal>
     </FormProvider>
   );
