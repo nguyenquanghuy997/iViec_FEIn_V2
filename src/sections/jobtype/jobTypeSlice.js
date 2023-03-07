@@ -2,9 +2,9 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_ADD_JOBTYPE,
   API_DELETE_JOBTYPE,
+  API_GET_APPLICANT_USERS_ON_JOBTYPE,
   API_GET_PAGING_JOBTYPE,
   API_GET_PREVIEW_JOBTYPE,
-  API_GET_USER_FROM_ORGANIZATION,
   API_UPDATE_JOBTYPE,
   API_UPDATE_STATUS_JOBTYPE,
 } from "@/routes/api";
@@ -25,9 +25,9 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
     }),
 
     // filter người tạo
-    getAllUserFromOrganization: builder.query({
+    getApplicantUsersOnJobtype: builder.query({
       query: (params) => ({
-        url: API_GET_USER_FROM_ORGANIZATION,
+        url: API_GET_APPLICANT_USERS_ON_JOBTYPE,
         method: "GET",
         params,
       }),
@@ -73,7 +73,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useLazyGetAllJobTypeQuery,
-  useLazyGetAllUserFromOrganizationQuery,
+  useLazyGetApplicantUsersOnJobtypeQuery,
   useUpdateStatusJobTypeMutation,
   useGetPreviewJobTypeMutation,
   useDeleteJobTypeMutation,

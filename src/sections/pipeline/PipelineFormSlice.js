@@ -12,15 +12,25 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const PipelineFormSlice = apiWithTag.injectEndpoints({
-  endpoints: (builder) => ({
-    
-    getAllFilterPipeline: builder.mutation({
-      query: () => ({
+  endpoints: (builder) => ({  
+    //Danh sách vị trí
+    getAllPipeline: builder.query({
+      query: (params) => ({
         url: API_GET_ALL_PIPELINE,
         method: "GET",
-       
+        params
       }),
     }),
+
+    // filter người tạo
+    // getApplicantUsersOnJobtype: builder.query({
+    //   query: (params) => ({
+    //     url: API_GET_APPLICANT_USERS_ON_JOBTYPE,
+    //     method: "GET",
+    //     params,
+    //   }),
+    // }),
+
     addPipeline: builder.mutation({
       query: (data) => ({
         url: API_ADD_PIPELINE,
@@ -46,7 +56,7 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetAllFilterPipelineMutation,
+  useLazyGetAllPipelineQuery,
   useAddPipelineMutation,
   useUpdatePipelineMutation,
   useDeletePipelineMutation,

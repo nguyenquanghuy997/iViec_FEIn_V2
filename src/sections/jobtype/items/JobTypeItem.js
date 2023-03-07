@@ -56,7 +56,7 @@ export const JobTypeItem = () => {
       type: "select",
       label: "Trạng thái",
       render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#E53935" }}>
+        <span style={{ color: item ? "#388E3C" : "#455570" }}>
           {Status(item)}
         </span>
       ),

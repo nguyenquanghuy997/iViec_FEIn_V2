@@ -1,13 +1,13 @@
+import { useUpdateApplicantRecruitmentToNextStateMutation } from "../ApplicantFormSlice";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider } from "@/components/hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Grid, Modal, Typography } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useUpdateApplicantRecruitmentToNextStateMutation } from "../ApplicantFormSlice";
 
 export const RejectApplicantModal = ({
   applicantId,
@@ -20,29 +20,28 @@ export const RejectApplicantModal = ({
     (i) => i.pipelineStateType == 3
   )[0]?.id;
 
-    // form
-    const Schema = Yup.object().shape({
-      note: Yup.string().required("Chưa nhập lý do loại ứng viên"),
-    });
-    const methods = useForm({
-      
-      resolver: yupResolver(Schema),
-    });
-    const {
-      handleSubmit,
-      formState: { isSubmitting },
-    } = methods;
-    const [addForm] = useUpdateApplicantRecruitmentToNextStateMutation();
-    const pressSave = async () => {
+  // form
+  const Schema = Yup.object().shape({
+    note: Yup.string().required("Chưa nhập lý do loại ứng viên"),
+  });
+  const methods = useForm({
+    resolver: yupResolver(Schema),
+  });
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+  const [addForm] = useUpdateApplicantRecruitmentToNextStateMutation();
+  const pressSave = async () => {
     const body = {
       applicantId: applicantId,
       recruitmentId: recruimentId,
       recruitmentPipelineStateId: recruitmentPipelineStateId,
       pipelineStateResultType: 2,
-      note: "Ứng viên chưa đạt tiêu chí đánh giá"
+      note: "Ứng viên chưa đạt tiêu chí đánh giá",
     };
     await addForm(body).unwrap();
-    location.reload()
+    location.reload();
     // pressHide();
     // isEditMode ? await updateForm(body).unwrap() : await addForm(body).unwrap();
     // onRefreshData();
@@ -101,12 +100,14 @@ export const RejectApplicantModal = ({
               {`Sau khi bị loại ứng viên sẽ được chuyển sang bước `}
               <strong>{`Kết quả - Loại.`}</strong>
             </Typography>
+            <Typography fontWeight={"600"} color="#5C6A82" mt="24px" mb="8px">
+              {"Lý do loại ứng viên"}{" "}
+              <span style={{ color: "#E53935" }}>*</span>
+            </Typography>
             <TextAreaDS
-              tittle="Lý do loại ứng viên"
-              isRequired={true}
               maxLength={150}
               placeholder="Nhập lý do..."
-              name='note'
+              name="note"
             />
           </View>
           <Grid
@@ -147,7 +148,7 @@ export const RejectApplicantModal = ({
                 padding: "6px 12px",
               }}
               loading={isSubmitting}
-              onClick={(e)=>pressSave(e)}
+              onClick={(e) => pressSave(e)}
             />
           </Grid>
         </View>

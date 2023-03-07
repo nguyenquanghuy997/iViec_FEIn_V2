@@ -10,13 +10,13 @@ import {
 } from "@/sections/jobtype";
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
 import { CircularProgress, Divider, Modal } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
 
 const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
   ssr: false,
@@ -322,19 +322,15 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
             ph={16}
             boxshadow={"inset 0px 1px 0px #EBECF4"}
           >
-            <LoadingButton
-              size="large"
-              variant="contained"
+            <ButtonDS
+              type="submit"
               loading={isSubmitting}
+              variant="contained"
+              tittle={isEditMode ? "Sửa" : "Thêm"}
               onClick={pressSave}
-            >
-              {isEditMode ? "Sửa" : "Thêm"}
-            </LoadingButton>
+            />
             <View width={8} />
-
-            <LoadingButton size="large" variant="text" onClick={pressHide}>
-              {"Hủy"}
-            </LoadingButton>
+             <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
             <View width={8} />
             <View flex="true" />
 
