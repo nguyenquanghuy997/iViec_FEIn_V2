@@ -213,7 +213,9 @@ export const JobTypeItem = () => {
     );
     handleCloseFilterForm();
   };
-
+  const refreshData = () => {
+    getAllFilter().unwrap();
+  };
   return (
     <View>
       <Content sx={{ padding: "0 !important" }}>
@@ -234,6 +236,7 @@ export const JobTypeItem = () => {
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}
               onCloseFilterForm={handleCloseFilterForm}
+              onRefreshData={refreshData}
             />
           }
         />
@@ -244,6 +247,7 @@ export const JobTypeItem = () => {
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
+          onRefreshData={refreshData}
         />
       )}
     </View>

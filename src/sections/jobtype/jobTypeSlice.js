@@ -58,14 +58,14 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
       query: (data) => ({
         url: API_ADD_JOBTYPE,
         method: "POST",
-        data: qs.stringify(data),
+        data: data,
       }),
     }),
     updateJobType: builder.mutation({
       query: (data) => ({
         url: API_UPDATE_JOBTYPE,
         method: "POST",
-        data: qs.stringify(data),
+        data: data,
       }),
     }),
   }),

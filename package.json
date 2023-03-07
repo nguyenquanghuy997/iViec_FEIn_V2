@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.2.32",
+    "@ckeditor/ckeditor5-basic-styles": "^36.0.1",
     "@ckeditor/ckeditor5-build-classic": "^35.3.2",
     "@ckeditor/ckeditor5-react": "^5.0.2",
     "@date-io/date-fns": "^2.14.0",
