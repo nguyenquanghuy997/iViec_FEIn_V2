@@ -71,6 +71,12 @@ export const LIST_STEP_RECRUITMENT = [
   { id: "", value: "", name: "" },
 ]
 
+export const LIST_STATUS = [
+  { id: "0", value: "0", name: "Dừng hoạt động" },
+  { id: "1", value: "1", name: "Đang hoạt động" },
+  { id: "", value: "", name: "" },
+]
+
 export function joinArrStr(arr, key) {
   return Array.isArray(arr) ? arr.filter((item) => !!item).join(key) : "";
 }

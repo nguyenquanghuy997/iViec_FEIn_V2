@@ -1,18 +1,11 @@
 import React from 'react';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  Divider,
-  Typography
-} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, Divider, Typography} from "@mui/material";
 import {AlertIcon} from "@/sections/organization/component/Icon";
 import {styled} from "@mui/styles";
 import OrganizationDialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
-import {useDeleteOrganizationMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
+import {useDeleteMultipleOrganizationMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {useSnackbar} from "notistack";
+
 const DialogStyle = styled(Dialog)(({theme}) => ({
   "& .dialog-delete": {
     boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
@@ -82,17 +75,18 @@ const ButtonDeleteStyle = styled(Button)(({}) => ({
   }
 }));
 
-const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
+const OrganizationConfirmMultipleModal = ({setSelected, showMultipleDelete, setShowMultipleDelete, organizationIds}) => {
   const {enqueueSnackbar} = useSnackbar();
-  const [deleteOrganization] = useDeleteOrganizationMutation();
+  const [deleteMultipleOrganization] = useDeleteMultipleOrganizationMutation();
 
   const onClose = () => {
-    setShowDelete(false);
+    setShowMultipleDelete(false);
+    setSelected([])
   }
 
   const handleDeleteOrganization = async () => {
     try {
-      await deleteOrganization({ id: node?.id }).unwrap();
+      await deleteMultipleOrganization({organizationIds}).unwrap();
       enqueueSnackbar("Xóa đơn vị thành công!");
       onClose();
     } catch (err) {
@@ -101,21 +95,21 @@ const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
   }
   return (
       <DialogStyle
-          open={showDelete}
-          onClose={() => setShowDelete(false)}
+          open={showMultipleDelete}
+          onClose={() => setShowMultipleDelete(false)}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           className="dialog-delete"
       >
-        <OrganizationDialogTitle onClose={onClose} />
-        <DialogContent sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 3}}>
+        <OrganizationDialogTitle onClose={onClose}/>
+        <DialogContent
+            sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 3}}>
           <AlertIcon/>
           <TitleAlertStyle className="title-delete">
             Xác nhận xóa đơn vị
           </TitleAlertStyle>
           <DialogContentTextStyle id="alert-dialog-description" className="subtite-delete">
-            Xóa đơn vị đồng nghĩa xóa hết các đơn vị và người dùng trực thuộc. Bạn có chắc chắn muốn xóa đơn vị <span
-              className="subtitle-delete-name">{node?.name}</span>?
+            Xóa đơn vị đồng nghĩa xóa hết các đơn vị và người dùng trực thuộc. Bạn có chắc chắn muốn xóa {organizationIds?.length} đơn vị ?
           </DialogContentTextStyle>
           <Divider/>
         </DialogContent>
@@ -129,4 +123,4 @@ const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
   )
 }
 
-export default React.memo(OrganizationConfirmModal);
+export default React.memo(OrganizationConfirmMultipleModal);

@@ -10,9 +10,8 @@ import {
 } from "@mui/material";
 import {AlertIcon} from "@/sections/organization/component/Icon";
 import {styled} from "@mui/styles";
-import OrganizationDialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
-import {useDeleteOrganizationMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
-import {useSnackbar} from "notistack";
+import DialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
+
 const DialogStyle = styled(Dialog)(({theme}) => ({
   "& .dialog-delete": {
     boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
@@ -42,7 +41,7 @@ const TitleAlertStyle = styled(Typography)(({theme}) => ({
 }))
 
 const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
-  "&.subtite-delete": {
+  "&.subtitle-delete": {
     textAlign: 'center',
     width: '100%',
     fontSize: '14px',
@@ -50,7 +49,8 @@ const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
     display: 'block',
     marginTop: theme.spacing(2),
     "& .subtitle-delete-name": {
-      fontWeight: 600
+      fontWeight: 600,
+      marginLeft: theme.spacing(0.5)
     }
   }
 }))
@@ -82,46 +82,31 @@ const ButtonDeleteStyle = styled(Button)(({}) => ({
   }
 }));
 
-const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
-  const {enqueueSnackbar} = useSnackbar();
-  const [deleteOrganization] = useDeleteOrganizationMutation();
+const ConfirmModal = ({confirmDelete, onCloseConfirmDelete, onSubmit, item, title, subtitle}) => {
 
-  const onClose = () => {
-    setShowDelete(false);
-  }
-
-  const handleDeleteOrganization = async () => {
-    try {
-      await deleteOrganization({ id: node?.id }).unwrap();
-      enqueueSnackbar("Xóa đơn vị thành công!");
-      onClose();
-    } catch (err) {
-      console.log(err)
-    }
-  }
   return (
       <DialogStyle
-          open={showDelete}
-          onClose={() => setShowDelete(false)}
+          open={confirmDelete}
+          onClose={onCloseConfirmDelete}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           className="dialog-delete"
       >
-        <OrganizationDialogTitle onClose={onClose} />
+        <DialogTitle onClose={onCloseConfirmDelete} />
         <DialogContent sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 3}}>
           <AlertIcon/>
           <TitleAlertStyle className="title-delete">
-            Xác nhận xóa đơn vị
+            {title}
           </TitleAlertStyle>
-          <DialogContentTextStyle id="alert-dialog-description" className="subtite-delete">
-            Xóa đơn vị đồng nghĩa xóa hết các đơn vị và người dùng trực thuộc. Bạn có chắc chắn muốn xóa đơn vị <span
-              className="subtitle-delete-name">{node?.name}</span>?
+          <DialogContentTextStyle id="alert-dialog-description" className="subtitle-delete">
+            {subtitle}
+            <span className="subtitle-delete-name">{item?.title}</span>?
           </DialogContentTextStyle>
           <Divider/>
         </DialogContent>
         <DialogActions sx={{borderTop: '1px solid #E7E9ED'}}>
-          <ButtonCancelStyle className="button-cancel" onClick={onClose}>Hủy</ButtonCancelStyle>
-          <ButtonDeleteStyle className="button-delete" onClick={handleDeleteOrganization}>
+          <ButtonCancelStyle className="button-cancel" onClick={onCloseConfirmDelete}>Hủy</ButtonCancelStyle>
+          <ButtonDeleteStyle className="button-delete" onClick={() => onSubmit(item)}>
             Xóa
           </ButtonDeleteStyle>
         </DialogActions>
@@ -129,4 +114,4 @@ const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
   )
 }
 
-export default React.memo(OrganizationConfirmModal);
+export default React.memo(ConfirmModal);
