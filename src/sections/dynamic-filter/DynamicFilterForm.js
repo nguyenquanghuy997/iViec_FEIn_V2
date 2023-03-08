@@ -252,7 +252,7 @@ const DynamicFilterForm = (props) => {
                         options={options[column.name]?.map((i) => ({
                           value: i.id,
                           label: i.name,
-                          name: i.name,
+                          name: i.item || i.name,
                         }))}
                         name={column.name}
                         multiple={column.multiple}

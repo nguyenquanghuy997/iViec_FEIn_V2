@@ -137,6 +137,46 @@ const DynamicColumnsTable = (props) => {
       "& .ant-pagination": {
         padding: "0 16px",
       },
+      "& .ant-pagination .ant-pagination-total-text": {
+        position: "absolute",
+        left: 16,
+        color: "#455570",
+        fontWeight: 600,
+        fontSize: 12,
+      },
+
+      "& .ant-pagination .ant-pagination-item a": {
+        color: "#8A94A5",
+        fontWeight: 600,
+        fontSize: 12,
+      },
+      "& .ant-pagination .ant-pagination-item-active ": {
+        background: "#EFF3F7",
+        borderRadius: 6,
+        border: "none",
+      },
+      "& .ant-pagination .ant-pagination-item-active a": {
+        color: "#455570",
+        fontWeight: 700,
+      },
+      "& .ant-pagination .ant-select-selection-item": {
+        color: "#455570",
+        fontWeight: 600,
+        fontSize: 12,
+      },
+      "& .ant-select .ant-select-arrow": {
+        marginTop: "-5px",
+        fontSize: 10,
+        color: "#455570",
+      },
+      "& .ant-pagination .ant-pagination-next button": {
+        color: "#455570",
+      },
+      "& .ant-pagination .ant-pagination-item a:hover, .ant-pagination .ant-pagination-next:hover .ant-pagination-item-link": {
+        backgroundColor: "#EFF3F7",
+        color: "#455570",
+        fontWeight: 700,
+      },
     },
     setting: {
       background: "#FDFDFD",
@@ -220,6 +260,9 @@ const DynamicColumnsTable = (props) => {
               defaultPageSize: 10,
               showSizeChanger: true,
               pageSizeOptions: ["10", "20", "30"],
+              locale: { items_per_page: "bản ghi trên trang" },
+              showTotal: (total, range) =>
+                `${range[1]} / ${total} kết quả phù hợp`,
             }}
           />
         </ReactDragListView.DragColumn>

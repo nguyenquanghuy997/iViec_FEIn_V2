@@ -1,7 +1,5 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
-  API_GET_ROLE,
-  API_GET_LIST_ROLE_GROUP,
   API_GET_ALL_PIPELINE,
   API_ADD_ROLE_GROUP,
   API_UPDATE_PIPELINE,
@@ -14,27 +12,26 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const PipelineFormSlice = apiWithTag.injectEndpoints({
-  endpoints: (builder) => ({
-    getRoleList: builder.query({
-      query: () => ({
-        url: API_GET_ROLE,
+  endpoints: (builder) => ({  
+    //Danh sách vị trí
+    getAllPipeline: builder.query({
+      query: (params) => ({
+        url: API_GET_ALL_PIPELINE,
         method: "GET",
+        params
       }),
     }),
 
-    getRoleGroupList: builder.query({
-      query: () => ({
-        url: API_GET_LIST_ROLE_GROUP,
-        method: "GET",
-      }),
-    }),
-    getAllFilterPipeline: builder.mutation({
-      query: () => ({
-        url: API_GET_ALL_PIPELINE,
-        method: "GET",
-      }),
-    }),
-    addRoleGroup: builder.mutation({
+    // filter người tạo
+    // getApplicantUsersOnJobtype: builder.query({
+    //   query: (params) => ({
+    //     url: API_GET_APPLICANT_USERS_ON_JOBTYPE,
+    //     method: "GET",
+    //     params,
+    //   }),
+    // }),
+
+    addPipeline: builder.mutation({
       query: (data) => ({
         url: API_ADD_ROLE_GROUP,
         method: "POST",
@@ -59,10 +56,8 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetRoleListQuery,
-  useGetRoleGroupListQuery,
-  useGetAllFilterPipelineMutation,
-  useAddRoleGroupMutation,
+  useLazyGetAllPipelineQuery,
+  useAddPipelineMutation,
   useUpdatePipelineMutation,
   useDeletePipelineMutation,
 } = PipelineFormSlice;

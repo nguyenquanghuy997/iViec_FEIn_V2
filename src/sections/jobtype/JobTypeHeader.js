@@ -12,6 +12,7 @@ const JobTypeHeader = ({
   onOpenFilterForm,
   onSubmit,
   handleSubmit,
+  onRefreshData
 }) => {
   const [showForm, setShowForm] = useState(false);
   return (
@@ -74,7 +75,7 @@ const JobTypeHeader = ({
           }
         />
       </Stack>
-      <JobTypeFormModal show={showForm} setShow={setShowForm}/>
+      <JobTypeFormModal show={showForm} setShow={setShowForm} onRefreshData={onRefreshData}/>
     </>
   );
 };

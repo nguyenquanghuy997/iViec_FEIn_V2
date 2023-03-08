@@ -170,11 +170,12 @@ export const API_GET_PAGING_JOBTYPE = "recruitment/JobPosition/GetJobPositions";
 export const API_UPDATE_STATUS_JOBTYPE = "JobType/UpdateJobTypeStatus";
 export const API_GET_PREVIEW_JOBTYPE = "JobType/GetJobTypeById";
 export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
-export const API_ADD_JOBTYPE = "JobType/CreateNewJobType";
-export const API_UPDATE_JOBTYPE = "JobType/UpdateJobType";
+export const API_ADD_JOBTYPE = "/recruitment/JobPosition/CreateJobPosition";
+export const API_UPDATE_JOBTYPE = "/recruitment/JobPosition/UpdateJobPosition";
+export const API_GET_APPLICANT_USERS_ON_JOBTYPE = "/recruitment/JobPosition/GetApplicationUsersOnJobPosition";
 
 // Pipeline
-export const API_GET_ALL_PIPELINE = "organization/OrganizationPipeline/GetOrganizationPipelines"; //new
+export const API_GET_ALL_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipelines"; //new
 export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm"; // bật tắt trạng thái hoạt động
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
