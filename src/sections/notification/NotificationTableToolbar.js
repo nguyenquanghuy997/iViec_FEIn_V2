@@ -59,8 +59,8 @@ export default function NotificationTableToolbar() {
         options={NOTIFICATION_TYPE}
         hasBlankOption
       />
-      <RHFDatePicker name='timeStart' label='Time start Card' />
-      <RHFDatePicker name='timeEnd' label='Time end Card' />
+      <RHFDatePicker name='timeStart' label='Time start CardEmailFormItem' />
+      <RHFDatePicker name='timeEnd' label='Time end CardEmailFormItem' />
     </Box>
   )
 }

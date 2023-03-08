@@ -1,5 +1,4 @@
 import React from "react";
-import {CollapseIcon, ExpandIcon} from "@/assets/ArrowIcon";
 import {CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate,} from "@/assets/CheckboxIcon";
 import {ButtonTreeStyle, CheckboxStyle, TreeItemStyle, TreeViewStyle} from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
@@ -8,7 +7,7 @@ import {DeleteIcon, EditIcon, ForwardIcon, PreviewIcon} from "@/assets/ActionIco
 import {PATH_DASHBOARD} from "@/routes/paths";
 import NextLink from "next/link";
 
-export default function OrganizationTree({ selected, setSelected, treeData,  data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType}) {
+export default function OrganizationTree({ selected, setSelected, treeData, dataRoot, data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType}) {
 
     const selectedSet = React.useMemo(() => new Set(selected), [selected]);
 
@@ -117,7 +116,7 @@ export default function OrganizationTree({ selected, setSelected, treeData,  dat
                 <TreeItemStyle
                     key={nodes.id}
                     nodeId={nodes.id}
-                    className={`tree-item ${nodes.isRoot ? 'tree-item-root-node' : ''}`}
+                    className={`tree-item ${nodes.isRoot ? 'tree-item-root-node' : !nodes.children ? 'tree-item-no-children' : '' }`}
                     label={
                         <div className={`tree-item-label ${nodes.isRoot ? 'tree-item-root-label' : ''}`}>
                             <div className="tree-item-label-text">
@@ -174,12 +173,16 @@ export default function OrganizationTree({ selected, setSelected, treeData,  dat
                             </div>
                         </div>
                     }
-                    icon={!nodes.children}
+                    collapseIcon={nodes.children && <Iconify icon="material-symbols:arrow-drop-down" sx={{ height: 24, width: 24 }} />}
+                    expandIcon={nodes.children &&  <Iconify icon="material-symbols:arrow-right" sx={{ height: 24, width: 24 }} />}
                 >
                     {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
                     {Array.isArray(nodes.children) && nodes.children.length > 0 &&
                         <ButtonTreeStyle
-                            onClick={() => handleOpenFormWithCurrentNode(nodes)}
+                            onClick={() => {
+                                handleOpenFormWithCurrentNode(nodes);
+                                setActionType(0)
+                            }}
                             className="tree-add-button"
                             startIcon={<Iconify icon="material-symbols:add" sx={{ height: 20, width: 20 }} />}>
                             Thêm đơn vị
@@ -251,15 +254,17 @@ export default function OrganizationTree({ selected, setSelected, treeData,  dat
             {/*/>*/}
             <TreeViewStyle
                 aria-label="controlled"
-                defaultCollapseIcon={<CollapseIcon/>}
-                defaultExpanded={[]}
-                defaultExpandIcon={<ExpandIcon/>}
+                defaultCollapseIcon={null}
+                defaultExpandIcon={null}
                 onNodeToggle={handleToggle}
                 expanded={expanded}
             >
                 {treeData?.map(item => renderTree({ ...item, isRoot: true }))}
                 <ButtonTreeStyle
-                    onClick={onOpenForm}
+                    onClick={() => {
+                        handleOpenFormWithCurrentNode(dataRoot);
+                        setActionType(0)
+                    }}
                     className="tree-add-button tree-add-button-root-node"
                     startIcon={<Iconify icon="material-symbols:add" sx={{ height: 20, width: 20 }} />}
                 >

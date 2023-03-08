@@ -84,41 +84,41 @@ export const sidebarConfig = [
       },
       {
         title: "Mẫu email tự động",
-        path: "/interview",
+        path: "/settings/emailform",
         roles: ROLES[PAGES.Applicant],
         children: [
           {
             title: "Email thông báo tài khoản",
-            path: "/interview",
+            path: "/settings/emailform/account",
             roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email lịch thi tuyển",
-            path: "/interview",
+            path: "/settings/emailform/schedule-exam",
             icon: ICONS.notification,
             roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email lịch phỏng vấn trực tuyến",
-            path: "/interview",
+            path: "/settings/emailform/schedule-online",
             icon: ICONS.notification,
             roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email lịch phỏng vấn trực tiếp",
-            path: "/interview",
+            path: "/settings/emailform/schedule-live",
             icon: ICONS.notification,
             roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email thông báo Kết quả - Đạt",
-            path: "/interview",
+            path: "/settings/emailform/approve",
             icon: ICONS.notification,
             roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email thông báo Kết quả - Loại",
-            path: "/interview",
+            path: "/settings/emailform/reject",
             icon: ICONS.notification,
             roles: ROLES[PAGES.Applicant],
           },

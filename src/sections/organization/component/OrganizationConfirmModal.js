@@ -11,7 +11,7 @@ import {
 import {AlertIcon} from "@/sections/organization/component/Icon";
 import {styled} from "@mui/styles";
 import OrganizationDialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
-import {useDeleteOrganizationMutation} from "@/sections/organization/OrganizationSlice";
+import {useDeleteOrganizationMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {useSnackbar} from "notistack";
 const DialogStyle = styled(Dialog)(({theme}) => ({
   "& .dialog-delete": {
@@ -62,7 +62,7 @@ const ButtonCancelStyle = styled(Button)(({}) => ({
     color: '#455570',
     backgroundColor: 'transparent',
     borderRadius: 6,
-    ":hover": {
+    "&:hover": {
       color: '#455570',
       backgroundColor: 'transparent',
     }
@@ -75,7 +75,7 @@ const ButtonDeleteStyle = styled(Button)(({}) => ({
     color: '#FDFDFD',
     backgroundColor: '#D32F2F',
     borderRadius: 6,
-    ":hover": {
+    "&:hover": {
       color: '#FDFDFD',
       backgroundColor: '#D32F2F',
     }
@@ -121,7 +121,7 @@ const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
         </DialogContent>
         <DialogActions sx={{borderTop: '1px solid #E7E9ED'}}>
           <ButtonCancelStyle className="button-cancel" onClick={onClose}>Hủy</ButtonCancelStyle>
-          <ButtonDeleteStyle className="button-delete" onClick={handleDeleteOrganization} autoFocus>
+          <ButtonDeleteStyle className="button-delete" onClick={handleDeleteOrganization}>
             Xóa
           </ButtonDeleteStyle>
         </DialogActions>
@@ -129,4 +129,4 @@ const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
   )
 }
 
-export default OrganizationConfirmModal;
+export default React.memo(OrganizationConfirmModal);

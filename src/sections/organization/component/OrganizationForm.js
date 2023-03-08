@@ -13,13 +13,9 @@ import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {convertViToEn} from "@/utils/function";
 import {isEmpty, pick} from 'lodash';
-import {
-  useCreateChildOrganizationMutation,
-  useGetOrganizationByIdQuery,
-  useUpdateOrganizationMutation,
-} from "@/sections/organization/OrganizationSlice";
 import {useSnackbar} from "notistack";
-import {API_UPDATE_ORGANIZATION} from "@/routes/api";
+import {LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
+import {useUpdateOrganizationMutation, useCreateChildOrganizationMutation, useGetOrganizationByIdQuery} from "@/sections/organization/override/OverrideOrganizationSlice";
 
 const InputStyle = {
   minHeight: 44,
@@ -31,8 +27,6 @@ const SelectStyle = {
   minHeight: 44,
   width: 264,
 }
-
-const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
 
@@ -66,7 +60,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
   const OrganizationFormSchema = Yup.object().shape({
     name: Yup.string().nullable().required("Tên đơn vị không được bỏ trống").max(50, "Tên đơn vị tối đa 50 ký tự"),
     code: Yup.string().nullable().required("Mã đơn vị không được bỏ trống").max(20, "Mã đơn vị tối đa 20 ký tự"),
-    email: Yup.string().nullable().required("Email không được bỏ trống").matches(regexEmail, "Email không đúng định dạng"),
+    email: Yup.string().nullable().email('Email không đúng định dạng').required("Email không được bỏ trống"),
     phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
     provinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống"),
     districtId: Yup.string().required("Quận/Huyện không được bỏ trống"),
@@ -80,7 +74,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
     defaultValues,
   });
 
-  const { watch, reset, handleSubmit, formState: {isSubmitting} } = methods;
+  const { watch, handleSubmit, formState: {isSubmitting} } = methods;
 
   const watchProvinceId = watch("provinceId");
 
@@ -88,7 +82,14 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
   const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: !watchProvinceId });
 
   useEffect(()=>{
-    if (organization && actionType === 1) reset(organization)
+    if (organization && actionType === 1) {
+      // methods.reset(organization);
+      for(let i in defaultValues) {
+        methods.setValue(i, organization[i]);
+      }
+    } else {
+      methods.reset(defaultValues)
+    }
   }, [organization, actionType])
 
   const onSubmit = async (data) => {
@@ -111,7 +112,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
     } else {
       try {
         const dataSubmit = pick(body, ['id', 'name', 'code', 'email', 'phoneNumber', 'provinceId', 'districtId', 'address']);
-        await updateOrganization(API_UPDATE_ORGANIZATION, {
+        await updateOrganization({
           OrganizationId: organization?.id,
           Name: dataSubmit.name,
           Code: dataSubmit.code,
@@ -120,8 +121,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
           ProvinceId: dataSubmit.provinceId,
           DistrictId: dataSubmit.districtId,
           Address: dataSubmit.address,
-        })
-        // await updateOrganization().unwrap();
+        }).unwrap();
         enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
         onClose();
       } catch (err) {
@@ -160,15 +160,20 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
               {/* content form */}
 
               <Box sx={{py: 2, px: 2, mt: 8}}>
-                {!isEmpty(parentNode) && <RHFTextField
-                    name="parentOrganizationId"
-                    title="Trực thuộc"
-                    placeholder="Nhập tên đơn vị Trực thuộc"
-                    isRequired
-                    style={{...InputStyle, backgroundColor: '#EFF3F6'}}
-                    value={actionType === 0 ? parentNode?.name : organization?.parentOrganizationName}
-                    disabled
-                />}
+                {!isEmpty(parentNode) && <>
+                  <LabelStyle required={true}>
+                    Trực thuộc
+                  </LabelStyle>
+                  <TextFieldStyle
+                      name="parentOrganizationId"
+                      placeholder="Nhập tên đơn vị Trực thuộc"
+                      style={{...InputStyle, backgroundColor: '#EFF3F6'}}
+                      value={actionType === 0 ? parentNode?.name : organization?.parentOrganizationName}
+                      disabled
+                      variant="standard"
+                      InputProps={{ disableUnderline: true}}
+                  />
+                </>}
                 <RHFTextField
                     name="name"
                     title="Tên đơn vị"

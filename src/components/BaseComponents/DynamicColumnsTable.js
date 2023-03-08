@@ -4,6 +4,7 @@ import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
+import BottomNavPipeline from "@/sections/pipeline/BottomNavPipeline";
 import { makeStyles } from "@mui/styles";
 import { Checkbox, Dropdown, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
@@ -20,6 +21,7 @@ const DynamicColumnsTable = (props) => {
     settingName,
     filter,
     scroll,
+    style,
   } = props;
   const rowKey = "id";
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -48,6 +50,8 @@ const DynamicColumnsTable = (props) => {
   const [initialColumns, setInitialColumns] = useState([]);
   const [checkedColumns, setCheckedColumns] = useState([]);
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
+  const [ isOpenBottomNav, setIsOpenBottomNav] = useState(false)
+  console.log(isOpenBottomNav)
   useEffect(() => {
     setInitialColumns(columns);
   }, []);
@@ -183,6 +187,9 @@ const DynamicColumnsTable = (props) => {
   }));
 
   const classes = useStyles();
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+  };
   return (
     <View>
       <View
@@ -193,7 +200,7 @@ const DynamicColumnsTable = (props) => {
         }}
         mb={16}
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center", ...style }}>
           <Dropdown
             menu={menu}
             onOpenChange={handleVisibleChange}
@@ -260,6 +267,12 @@ const DynamicColumnsTable = (props) => {
           />
         </ReactDragListView.DragColumn>
       </div>
+      <BottomNavPipeline
+        open={selectedRowKeys?.length > 0}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+        selecedLength={selectedRowKeys?.length || 0}
+      />
     </View>
   );
 };

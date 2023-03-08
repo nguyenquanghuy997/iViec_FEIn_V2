@@ -1,9 +1,9 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_PIPELINE,
-  API_ADD_PIPELINE,
+  API_ADD_ROLE_GROUP,
   API_UPDATE_PIPELINE,
-  API_DELETE_PIPELINE
+  API_DELETE_PIPELINE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -33,9 +33,9 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 
     addPipeline: builder.mutation({
       query: (data) => ({
-        url: API_ADD_PIPELINE,
+        url: API_ADD_ROLE_GROUP,
         method: "POST",
-        data: qs.stringify(data),
+        data: data,
       }),
     }),
     updatePipeline: builder.mutation({
