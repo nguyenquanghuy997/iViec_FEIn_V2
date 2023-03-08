@@ -258,7 +258,6 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
       IsWithdrawHistory: true,
     }).unwrap();
   };
-console.log('selectedOption',selectedOption)
   return (
     <div>
       <HeadingFixed>
@@ -305,8 +304,12 @@ console.log('selectedOption',selectedOption)
                           setSelectedOption={setSelectedOption}
                           onChange={onChangeRecruiment}
                           data={options}
+                          placeholder="Chọn tin tuyển dụng"
                           sx={{
                             background: "#F3F4F6",
+                            "&.MuiOutlinedInput-root":{
+                              minHeight:'36px'
+                            },
                             "& .MuiOutlinedInput-notchedOutline": {
                               borderColor: "#F3F4F6",
                               borderRadius: "6px",

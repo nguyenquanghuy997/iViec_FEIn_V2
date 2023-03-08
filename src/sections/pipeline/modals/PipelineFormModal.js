@@ -250,7 +250,7 @@ const onDeleteForm = (index) => {
                 <RHFTextField
                   name={"name"}
                   placeholder="Nhập tên quy trình tuyển dụng"
-                  maxLength={50}
+                  maxLength={150}
                 />
               </View>
               <View mb={24}>
@@ -281,7 +281,7 @@ const onDeleteForm = (index) => {
                      renderItem={renderDraggableItem}
                   />
 
-                  <View mv={16} contentcenter="true" onPress={pressAdd}>
+                  <View mv={16} contentcenter="true" onclick={pressAdd}>
                     <SvgIcon>
                       {
                         '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 20C4.47967 19.9939 0.00606237 15.5203 0 10V9.8C0.109931 4.30453 4.63459 -0.072041 10.1307 0.000882959C15.6268 0.0738069 20.0337 4.56889 19.9978 10.0653C19.9619 15.5618 15.4966 19.9989 10 20ZM5 9V11H9V15H11V11H15V9H11V5H9V9H5Z" fill="#01B6A7"/></svg>'

@@ -45,7 +45,17 @@ const usePlaceholderStyles = makeStyles(() => ({
 }));
 
 export default function SelectAutoCompleteDS(props) {
-  const { width, sx, selectedOption, setSelectedOption, data, allowClear, onChange } = props;
+  const {
+    width,
+    sx,
+    selectedOption,
+    setSelectedOption,
+    data,
+    allowClear,
+    onChange,
+    placeholder
+  } = props;
+
   const classes = usePlaceholderStyles();
   const Placeholder = ({ children }) => {
     return <div className={classes.placeholder}>{children}</div>;
@@ -56,7 +66,7 @@ export default function SelectAutoCompleteDS(props) {
   const [searchText, setSearchText] = useState("");
   const displayedOptions = useMemo(
     () => data.filter((option) => containsText(option.name, searchText)),
-    [searchText,data ]
+    [searchText, data]
   );
   return (
     <FormControl
@@ -72,10 +82,25 @@ export default function SelectAutoCompleteDS(props) {
         MenuProps={{ autoFocus: false, classes: { paper: classes.paper } }}
         labelId="search-select-label"
         id="search-select"
-        value={selectedOption?.name ? selectedOption?.name :""}
+        value={selectedOption?.name ? selectedOption?.name : ""}
+        displayEmpty
         onChange={onChange}
-        onClose={() => setSearchText("")}
+        renderValue={
+          selectedOption !== "" && selectedOption !== undefined
+            ? () => selectedOption?.name
+            : () => <Placeholder>{placeholder}</Placeholder>
+        }
         sx={{
+          "&.MuiOutlinedInput-root":{
+            fontSize:'14px',
+            minHeight:'44px'
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            border: "1px solid #D0D4DB !important",
+          },
+          "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":{
+            borderColor:'#D0D4DB'
+          },
           "& .MuiSelect-iconOutlined": {
             display: selectedOption && allowClear == true ? "none" : "",
             color: "#455570",
@@ -88,11 +113,7 @@ export default function SelectAutoCompleteDS(props) {
           },
           ...sx,
         }}
-        renderValue={
-          selectedOption !== "" && selectedOption !== undefined
-            ? () => selectedOption?.name
-            : () => <Placeholder>Chọn value</Placeholder>
-        }
+        onClose={() => setSearchText("")}
         endAdornment={
           allowClear == true ? (
             <IconButton
@@ -162,8 +183,7 @@ export default function SelectAutoCompleteDS(props) {
           >
             {option.name}
           </MenuItem>
-        ))
-      }
+        ))}
       </Select>
     </FormControl>
   );

@@ -9,7 +9,7 @@ export default function TextAreaDS(props) {
   const InputTextArea = styled(TextArea)`
     .ant-input {
       padding: 12px 16px 12px 12px;
-      font-weight: 500;
+      font-weight: 400;
       font-size: 14px;
       color: #172b4d;
     }

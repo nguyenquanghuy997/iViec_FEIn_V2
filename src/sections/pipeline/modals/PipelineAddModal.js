@@ -1,9 +1,17 @@
+import {
+  ButtonDS,
+  SelectAutoCompleteDS,
+  TextAreaDS,
+} from "@/components/DesignSystem";
 import { Text, View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
+import { FormProvider } from "@/components/hook-form";
+import { Label } from "@/components/hook-form/style";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Modal } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -20,7 +28,6 @@ export const PipelineAddModal = ({
   onDelete,
 }) => {
   const isEdit = !!editData.name;
-
   // form
   const ProfileSchema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tiêu chí đánh giá"),
@@ -37,7 +44,7 @@ export const PipelineAddModal = ({
   };
 
   const pressSave = handleSubmit((d) => {
-    debugger
+    debugger;
     onSubmit?.(d);
     pressHide();
   });
@@ -47,8 +54,22 @@ export const PipelineAddModal = ({
     pressHide();
   };
 
-
-
+  // render
+  const renderTitle = (title, required) => {
+    return <Label required={required}>{title}</Label>;
+  };
+  const [selectedStatge, setSelectedStatge] = useState("");
+  const [selectedExam, setSelectedExam] = useState("");
+  const LIST_PIPELINE_STAGE = [
+    { id: "1", value: "1", name: "Thi tuyển" },
+    { id: "3", value: "3", name: "Phỏng vấn" },
+  ];
+  const onChangeStage = (e) => {
+    setSelectedStatge(e.target.value);
+  };
+  const onChangeExam = (e) => {
+    setSelectedExam(e.target.value);
+  };
   return (
     <Modal
       open={show}
@@ -60,7 +81,7 @@ export const PipelineAddModal = ({
           <View p={24}>
             <View flexRow atCenter mb={24}>
               <Text flex1 fontSize={22} fontWeight={"700"}>
-                {isEdit ? "Sửa tiêu chí" : "Thêm tiêu chí"}
+                {isEdit ? "Sửa bước tuyển dụng" : "Thêm bước tuyển dụng"}
               </Text>
 
               <View onPress={pressHide}>
@@ -71,28 +92,34 @@ export const PipelineAddModal = ({
                 </SvgIcon>
               </View>
             </View>
-
-            <Text flexRow mb={10} fontWeight={"600"}>
-              {"Tiêu chí đánh giá "}
-              <Text ml={4} color={"#E82E25"}>
-                {"*"}
-              </Text>
-            </Text>
-
-            <RHFTextField name={"name"} placeholder={"Nhập tên tiêu chí"} />
-
-            <Text flexRow mt={24} mb={10} fontWeight={"600"}>
-              {"Mô tả tiêu chí đánh giá"}
-            </Text>
-
-            <RHFTextField
-              multiline
-              rows={3}
-              name={"des"}
-              placeholder={
-                "Nhập gợi ý ngắn gọn giúp hội đồng tuyển dụng dễ dàng dựa theo để đánh giá ứng viên"
-              }
-            />
+            <View mb={24}>
+              {renderTitle("Loại bước", true)}
+              <SelectAutoCompleteDS
+                selectedOption={selectedStatge}
+                setSelectedOption={setSelectedStatge}
+                onChange={onChangeStage}
+                data={LIST_PIPELINE_STAGE}
+                placeholder="Chọn loại bước"
+              />
+            </View>
+            <View mb={24}>
+              {renderTitle("Đề thi", true)}
+              <SelectAutoCompleteDS
+                selectedOption={selectedExam}
+                setSelectedOption={setSelectedExam}
+                onChange={onChangeExam}
+                data={LIST_PIPELINE_STAGE}
+                placeholder="Chọn đề thi"
+              />
+            </View>
+            <View mb={24}>
+              {renderTitle("Mô tả", true)}
+              <TextAreaDS
+                maxLength={255}
+                placeholder="Nhập nội dung mô tả"
+                name={"des"}
+              />
+            </View>
           </View>
 
           <View
@@ -116,15 +143,14 @@ export const PipelineAddModal = ({
                 <View flex1 />
               </>
             )}
+            <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
 
-            <LoadingButton size="large" variant="text" onClick={pressHide}>
-              {"Hủy"}
-            </LoadingButton>
-            <View width={8} />
-
-            <LoadingButton size="large" variant="contained" onClick={pressSave}>
-              {"Lưu"}
-            </LoadingButton>
+            <ButtonDS
+              type="submit"
+              variant="contained"
+              tittle={isEdit ? "Sửa" : "Thêm"}
+              onClick={pressSave}
+            />
           </View>
         </View>
       </FormProvider>
