@@ -1,19 +1,12 @@
-import InforIcon from "../../assets/InforIcon";
-import DeleteIcon from "@/assets/DeleteIcon";
+import InForIcon from "../../assets/InforIcon";
 import {FormProvider} from "@/components/hook-form";
-import ConnectDialog from "@/sections/connect/ConnectDialog";
 import {ConnectCardStyle} from "@/sections/connect/style";
-import {
-    Box, Typography, Card, CardMedia, CardActionArea, CardContent, Divider, Tooltip, Avatar, Grid
-} from "@mui/material";
-import {FormControlLabel, Switch} from "@mui/material";
+import {Box, Card, Divider, FormControlLabel, Grid, Switch, Tooltip, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import {alpha, styled} from "@mui/material/styles";
 import PropTypes from "prop-types";
 import React, {useState} from "react";
-import {useForm} from "react-hook-form";
-import {Controller, useFormContext} from "react-hook-form";
-import ConnectForm from "@/sections/connect/ConnectForm";
+import {Controller, useForm, useFormContext} from "react-hook-form";
 
 const GreenSwitch = styled(Switch)(({theme}) => ({
     "& .MuiSwitch-switchBase.Mui-checked": {
@@ -34,7 +27,6 @@ const SwitchForm = ({name, handleChange, style, ...other}) => {
             name={name}
             control={control}
             render={({field}) => {
-                console.log(field);
                 return (<GreenSwitch
                     {...field}
                     checked={field.value}
@@ -46,14 +38,11 @@ const SwitchForm = ({name, handleChange, style, ...other}) => {
         {...other}
     />);
 };
-const ApproveProcessCardItem = ({account, color, type}) => {
+const ApproveProcessCardItem = ({approveProcess, color}) => {
     const [checked, setChecked] = useState(false);
     const methods = useForm({
         defaultValues: {isChecked: true},
     });
-    const accounts = [{id: 1, mail: "Hóng Biến Siêu Tốc"}, {id: 2, mail: "Ký sự đường phố"},];
-    // const { setError, handleSubmit, watch } = methods;
-    // const disabled = watch("checked");
 
     return (<FormProvider methods={methods}>
         <Card
@@ -66,163 +55,72 @@ const ApproveProcessCardItem = ({account, color, type}) => {
                     display: "flex", alignItems: "center", justifyContent: "space-between",
                 }}
             >
-                <Box sx={{display: "flex", alignItems: "center"}}>
-                    <CardMedia
-                        component="img"
-                        sx={{width: 80, height: 40, justifyContent: "center"}}
-                        image={account?.img}
-                        alt="Live from space album cover"
-                    />
-                    <Box sx={{display: "flex", flexDirection: "column"}}>
-                        <CardContent
-                            sx={{
-                                flex: "1 0 auto", "& .MuiTypography-root": {display: "contents"},
-                            }}
-                        >
-                            <Typography component="div" sx={{mt: 3}}>
-                                {account?.title}
+                <Box sx={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    marginY: "16px",
+                    padding: "16px",
+                    borderRadius: "6px",
+                    backgroundColor: "#F2F4F5"
+                }} x>
+                    <Grid container direction="row" justifyContent="space-between">
+                        <Grid item>
+                            <Typography>
+                                {approveProcess?.title}
                             </Typography>
-                        </CardContent>
-                    </Box>
+                            <Grid container>
+                                <Typography variant="textSize13" color="#5C6A82" mr={1}>
+                                    Ngày tạo:
+                                </Typography>
+                                <Typography variant="textSize13500" color="#455570">
+                                    {approveProcess?.createdTime}
+                                </Typography>
+                                <Divider orientation="vertical" variant="middle" flexItem
+                                         sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
+                                <Typography variant="textSize13" color="#5C6A82" mr={1}>
+                                    Người tạo:
+                                </Typography>
+                                <Typography variant="textSize13500" color="#455570">
+                                    {approveProcess?.creator}
+                                </Typography>
+                                <Divider orientation="vertical" variant="middle" flexItem
+                                         sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
+                                <Typography variant="textSize13" color="#5C6A82" mr={1}>
+                                    Đang áp dụng:
+                                </Typography>
+                                <Typography variant="textSize13500" color="#455570">
+                                    {approveProcess?.countApply}
+                                </Typography>
+                                <Divider orientation="vertical" variant="middle" flexItem
+                                         sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
+                                <Typography variant="textSize13" color="#5C6A82" mr={1}>
+                                    Cấp phê duyệt:
+                                </Typography>
+                                <Typography variant="textSize13500" color="#455570">
+                                    {approveProcess?.approveLevel}
+                                </Typography>
+                            </Grid>
+                            <Grid mt={2}>
+                                <SwitchForm
+                                    name={"hhel"}
+                                    handleChange={() => setChecked(!checked)}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid item>
+                            {checked ? (<Typography variant="caption" color="#388E3C" fontWeight={500}>
+                                Đang sử dụng
+                            </Typography>) : ("")}
+                        </Grid>
+                    </Grid>
                 </Box>
-                <SwitchForm
-                    name={"checked"}
-                    handleChange={() => setChecked(!checked)}
-                />
             </Box>
-            <Divider/>
-            {type === "outside" ? (<DetailCard
-                checked={checked}
-                accounts={accounts}
-                sx={{display: "block"}}
-            />) : (<DetailSocial checked={checked} accounts={accounts}/>)}
         </Card>
     </FormProvider>);
 };
 
-const DetailCard = ({checked, accounts}) => {
-    const [isActive, setIsActive] = useState(false);
-
-    const methods = useForm({
-        defaultValues: {isActive: true},
-    });
-    // const { setError, handleSubmit, watch } = methods;
-    // const disabled = watch("active");
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
-    const [openForm, setOpenForm] = useState(false);
-    const handleOpenForm = () => setOpenForm(true);
-    const handleCloseForm = () => setOpenForm(false);
-    return checked ? (<Box sx={{display: "flex"}}>
-        {accounts.map((item, id) => (<CardContent
-            sx={{
-                height: 125,
-                width: 250,
-                display: "block",
-                background: "#F2F4F5",
-                my: 2,
-                mr: 2,
-                borderRadius: "6px",
-            }}
-            key={id}
-        >
-            <Typography
-                gutterBottom
-                variant="body2"
-                color="text.secondary"
-                sx={{display: "flex", justifyContent: "space-between"}}
-            >
-                <span>Tài khoản {item.id}</span>
-                {isActive ? (<span style={{color: "#388E3C"}}> Đang kết nối</span>) : ("")}
-            </Typography>
-            <Typography component="div" fontSize={"14px"} sx={{mb: 3}}>
-                {item.mail}
-            </Typography>
-            <FormProvider methods={methods}>
-                <Box
-                    style={{
-                        display: "flex", justifyContent: "space-between", transform: "translateY(-14px)",
-                    }}
-                >
-                    <CardActionArea onClick={handleOpen} sx={{p: 0}}>
-                        <DeleteIcon/>
-                    </CardActionArea>
-                    <ConnectDialog open={open} onClose={handleClose} type="account"/>
-                    <SwitchForm
-                        name={item.mail}
-                        handleChange={() => setIsActive(!isActive)}
-                    />
-                </Box>
-            </FormProvider>
-        </CardContent>))}
-
-        <CardContent
-            sx={{
-                border: "2px dashed grey", borderRadius: "6px", my: 2, display: "flex",
-            }}
-        >
-            <CardActionArea>
-                <Typography sx={{color: "#455570"}} onClick={handleOpenForm}>
-                    + Thêm tài khoản
-                </Typography>
-            </CardActionArea>
-            <ConnectForm open={openForm} onClose={handleCloseForm}/>
-        </CardContent>
-    </Box>) : ("");
-};
-
-const DetailSocial = ({checked, accounts}) => {
-    const methods = useForm({
-        // defaultValues: { isActive: true },
-    });
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-    return checked ? (<Card sx={{display: "block", boxShadow: "none", borderTop: "none"}}>
-        {accounts.map((item) => (<>
-            <Divider/>
-            <Box
-                sx={{
-                    width: "100%", display: "flex", borderRadius: 0, py: 2, justifyContent: "space-between",
-                }}
-            >
-                <div
-                    className="left"
-                    style={{display: "flex", justifyContent: "center"}}
-                >
-                    <Avatar
-                        alt="Remy Sharp"
-                        src="https://i.pinimg.com/474x/ba/f0/e2/baf0e2a3bc09f1920d5df655a5f40828.jpg"
-                        sx={{mr: 2}}
-                    />
-                    <Typography>{item.mail}</Typography>
-                </div>
-                <FormProvider methods={methods}>
-              <span onClick={handleOpen}>
-                <DeleteIcon/>
-              </span>
-                    <ConnectDialog
-                        open={open}
-                        onClose={handleClose}
-                        type="unconnect"
-                    />
-                    <SwitchForm
-                        name={"active"}
-                        // handleChange={() =>
-                        //   setIsActive(!isActive)
-                        // }
-                        style={{
-                            marginLeft: "10px",
-                        }}
-                    />
-                </FormProvider>
-            </Box>
-        </>))}
-    </Card>) : ("");
-};
-const ApproveProcessCard = ({accounts, color, title, type}) => {
+const ApproveProcessCard = ({approveProcesses, color, title}) => {
     return (<Box>
         <Grid container
               direction="row"
@@ -236,19 +134,17 @@ const ApproveProcessCard = ({accounts, color, title, type}) => {
             >
                 {title}
             </Typography>
-
             <Tooltip title="Delete">
                 <IconButton>
-                    <InforIcon/>
+                    <InForIcon/>
                 </IconButton>
             </Tooltip>
         </Grid>
         <ConnectCardStyle>
-            {accounts?.map((account, id) => (<ApproveProcessCardItem
-                account={account}
+            {approveProcesses?.map((approveProcess, id) => (<ApproveProcessCardItem
+                approveProcess={approveProcess}
                 color={color}
                 key={id}
-                type={type}
             />))}
         </ConnectCardStyle>
     </Box>);
