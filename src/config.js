@@ -97,6 +97,7 @@ export const PAGES = {
   Notification: "Notification",
   Candidates: "Candidates",
   Applicant: "Applicant",
+  ApproveProcess: "ApproveProcess",
   Interview: "Interview",
   Board: "Board",
   Calculator: "Calculator",
