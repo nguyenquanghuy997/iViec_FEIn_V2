@@ -98,9 +98,13 @@ export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrgani
 export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin"; // lấy danh sách admin
 export const API_GET_ALL_USER_BY_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId"; // lấy danh sách người dùng theo đơn vị
 
+
+
+//Role
+export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
 export const API_GET_LIST_ROLE_GROUP = "/identity/RoleGroup/GetRoleGroups"; // lấy danh sách role
-
+export const API_ADD_ROLE_GROUP = "/identity/RoleGroup/CreateRoleGroup"
 
 // Lấy danh sách tỉnh / thành phố
 export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";

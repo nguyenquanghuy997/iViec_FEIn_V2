@@ -4,10 +4,11 @@ import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
+import BottomNavPipeline from "@/sections/pipeline/BottomNavPipeline";
+import { makeStyles } from "@mui/styles";
 import { Checkbox, Dropdown, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import ReactDragListView from "react-drag-listview";
-import { makeStyles } from "@mui/styles";
 
 const DynamicColumnsTable = (props) => {
   const {
@@ -20,6 +21,7 @@ const DynamicColumnsTable = (props) => {
     settingName,
     filter,
     scroll,
+    style,
   } = props;
   const rowKey = "id";
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -48,10 +50,12 @@ const DynamicColumnsTable = (props) => {
   const [initialColumns, setInitialColumns] = useState([]);
   const [checkedColumns, setCheckedColumns] = useState([]);
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
+  const [ isOpenBottomNav, setIsOpenBottomNav] = useState(false)
+  console.log(isOpenBottomNav)
   useEffect(() => {
     setInitialColumns(columns);
   }, []);
-  
+
   const menu = (
     <>
       <Menu>
@@ -121,95 +125,111 @@ const DynamicColumnsTable = (props) => {
   };
   const useStyles = makeStyles(() => ({
     table: {
-      '& .ant-table':{
-        minHeight: '500px',
-        borderRadius:'8px'
+      "& .ant-table": {
+        minHeight: "500px",
+        borderRadius: "8px",
       },
-      '& .ant-table-thead >tr>th':{
-        background: '#FDFDFD',
-        height: '72px',
-        borderBottom: '2px solid #CCD4DC'
+      "& .ant-table-thead >tr>th": {
+        background: "#FDFDFD",
+        height: "72px",
+        borderBottom: "2px solid #CCD4DC",
       },
-      '& .ant-pagination':{
-        padding: '0 16px'
-      }
+      "& .ant-pagination": {
+        padding: "0 16px",
+      },
     },
-    setting:{
-      background: '#FDFDFD',
-boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-borderRadius: '4px'
-    }
+    setting: {
+      background: "#FDFDFD",
+      boxShadow:
+        "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+      borderRadius: "4px",
+    },
   }));
 
   const classes = useStyles();
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+  };
   return (
     <View>
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }} mb={16}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Dropdown
-          menu={menu}
-          onOpenChange={handleVisibleChange}
-          open={visibleMenuSettings}
-        >
-          <ListItemStyle>
-            <NavItemContent
-              icon={<Iconify icon="material-symbols:settings" />}
-              title=""
-            />
-          </ListItemStyle>
-        </Dropdown>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+        mb={16}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", ...style }}>
+          <Dropdown
+            menu={menu}
+            onOpenChange={handleVisibleChange}
+            open={visibleMenuSettings}
+          >
+            <ListItemStyle>
+              <NavItemContent
+                icon={<Iconify icon="material-symbols:settings" />}
+                title=""
+              />
+            </ListItemStyle>
+          </Dropdown>
 
-        <View>
-          <TextMaxLine
-            line={1}
-            sx={{
-              fontSize: 14,
-              color: "#172B4D",
-              fontWeight: 600,
-            }}
-          >
-            {settingName}
-          </TextMaxLine>
+          <View>
+            <TextMaxLine
+              line={1}
+              sx={{
+                fontSize: 14,
+                color: "#172B4D",
+                fontWeight: 600,
+              }}
+            >
+              {settingName}
+            </TextMaxLine>
+          </View>
+          <View ml={8}>
+            <TextMaxLine
+              line={1}
+              sx={{
+                fontSize: 10,
+                color: "#172B4D",
+                background: "#F2F4F5",
+                border: "1px solid #172B4D",
+                borderRadius: "100px",
+                textAlign: "center",
+                padding: "2px 8px",
+              }}
+            >
+              {source?.totalRecord || 0}
+            </TextMaxLine>
+          </View>
         </View>
-        <View ml={8}>
-          <TextMaxLine
-            line={1}
-            sx={{
-              fontSize: 10,
-              color: "#172B4D",
-              background: "#F2F4F5",
-              border: "1px solid #172B4D",
-              borderRadius: "100px",
-              textAlign: "center",
-              padding: "2px 8px",
-            }}
-          >
-            {source?.totalRecord || 0}
-          </TextMaxLine>
-        </View>
-        </View>
-        
       </View>
       <div className={classes.setting}>
-      <ReactDragListView.DragColumn {...dragProps}>
-        {filter}
-        <Table
-          rowSelection={rowSelection}
-          columns={columnsTable}
-          dataSource={source?.items}
-          rowKey={rowKey}
-          scroll={scroll}
-          size="large"
-          loading={loading}
-          className={classes.table}
-          pagination={{
-            defaultPageSize: 10,
-            showSizeChanger: true,
-            pageSizeOptions: ["10", "20", "30"],
-          }}
-        />
-      </ReactDragListView.DragColumn>
+        <ReactDragListView.DragColumn {...dragProps}>
+          {filter}
+          <Table
+            rowSelection={rowSelection}
+            columns={columnsTable}
+            dataSource={source?.items}
+            rowKey={rowKey}
+            scroll={scroll}
+            size="large"
+            loading={loading}
+            className={classes.table}
+            pagination={{
+              defaultPageSize: 10,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "20", "30"],
+            }}
+          />
+        </ReactDragListView.DragColumn>
       </div>
+      <BottomNavPipeline
+        open={selectedRowKeys?.length > 0}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+        selecedLength={selectedRowKeys?.length || 0}
+      />
     </View>
   );
 };
