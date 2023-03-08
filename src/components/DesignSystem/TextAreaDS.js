@@ -42,9 +42,6 @@ export default function TextAreaDS(props) {
         style={{
           height: 120,
           resize: "none",
-          "& :where(.css-dev-only-do-not-override-diro6f).ant-input:hover": {
-            backgroundColor: "#000",
-          },
         }}
         onChange={(e) => e.target.value}
         placeholder={placeholder}
