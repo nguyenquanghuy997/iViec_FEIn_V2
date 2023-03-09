@@ -23,6 +23,7 @@ import * as Yup from "yup";
 import { PipelineDraggableItem } from "../items";
 import { DraggableList } from "@/components/DraggableList";
 import SvgIcon from "@/components/SvgIcon";
+import { PipelineAddModal } from "./PipelineAddModal";
 
 
 const defaultValues = {
@@ -57,6 +58,33 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+    // state
+    const [listForm, setListForm] = useState([]);
+
+    const [showForm, setShowForm] = useState(false);
+    const [editItemData, setEditItemData] = useState({});
+    const [editItemIndex, setEditItemIndex] = useState(-1);
+  const pressAdd = () => {
+    setShowForm(true);
+  };
+
+const onAddForm = (data) => {
+  if (editItemIndex < 0) setListForm((l) => [...l, data]);
+  else
+    setListForm((l) =>
+      [...l].map((item, index) => (index === editItemIndex ? data : item))
+    );
+};
+
+const onEditForm = (item, index) => {
+  setEditItemIndex(index);
+  setEditItemData(item);
+  pressAdd();
+};
+
+const onDeleteForm = (index) => {
+  setListForm((l) => [...l].filter((_item, _index) => index !== _index));
+};
 
   // action
   const pressHide = () => {
@@ -121,6 +149,17 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
+  const renderDraggableItem = (item, index) => {
+    return (
+      <PipelineDraggableItem
+        data={item}
+        onPressAdd={pressAdd}
+        onPressEdit={() => onEditForm(item, index)}
+        onPressDelete={() => onDeleteForm(index)}
+        isDefault={false}
+      />
+    );
+  };
 
   // effect
   useEffect(() => {
@@ -150,12 +189,6 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
 
   }, [isEditMode, preview.id]);
   const isActivated = methods.watch("isActivated");
-   // state
-   const [listForm, setListForm] = useState([]);
-
-  //  const [showForm, setShowForm] = useState(false);
-  //  const [editItemData, setEditItemData] = useState({});
-  //  const [editItemIndex, setEditItemIndex] = useState(-1);
 
   return (
     <FormProvider methods={methods}>
@@ -217,7 +250,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
                 <RHFTextField
                   name={"name"}
                   placeholder="Nhập tên quy trình tuyển dụng"
-                  maxLength={50}
+                  maxLength={150}
                 />
               </View>
               <View mb={24}>
@@ -231,13 +264,13 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
               </View>
               <Divider />
               {/* dept */}
-
-              <View p={24} bgColor={"#F8F8F9"}>
+              <View pv={24}>
+              {renderTitle("Bước tuyển dụng")}
                   <PipelineDraggableItem
                     data={[
                       {
                         name: "Ứng tuyển",
-                        des: "Ứng viên ứng tuyển công việc",
+                        des: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
                       },
                     ]}
                     isDefault={true}
@@ -245,10 +278,10 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
                   <DraggableList
                     data={listForm}
                     setData={setListForm}
-                    // renderItem={renderDraggableItem}
+                     renderItem={renderDraggableItem}
                   />
 
-                  <View mv={16} contentCenter >
+                  <View mv={16} contentcenter="true" onclick={pressAdd}>
                     <SvgIcon>
                       {
                         '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 20C4.47967 19.9939 0.00606237 15.5203 0 10V9.8C0.109931 4.30453 4.63459 -0.072041 10.1307 0.000882959C15.6268 0.0738069 20.0337 4.56889 19.9978 10.0653C19.9619 15.5618 15.4966 19.9989 10 20ZM5 9V11H9V15H11V11H15V9H11V5H9V9H5Z" fill="#01B6A7"/></svg>'
@@ -264,7 +297,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
                     data={[
                       {
                         name: "Kết quả",
-                        des: "Kết luận thông qua quá trình tuyển dụng và đánh giá",
+                        des: "Tổng kết các đánh giá về ứng viên",
                       },
                     ]}
                     isDefault={true}
@@ -273,7 +306,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
                     data={[
                       {
                         name: "Mời nhận việc",
-                        des: "Gửi offer và chờ ứng viên phản hồi",
+                        des: "Gửi thư mời nhận việc cho ứng viên",
                       },
                     ]}
                     isDefault={true}
@@ -309,6 +342,14 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
           </View>
         </ViewModel>
       </Modal>
+      {/* modal */}
+      <PipelineAddModal
+        show={showForm}
+        editData={editItemData}
+        setShow={setShowForm}
+        onSubmit={onAddForm}
+        onDelete={() => onDeleteForm(editItemIndex)}
+      />
     </FormProvider>
   );
 };

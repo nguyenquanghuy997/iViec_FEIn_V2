@@ -1,7 +1,7 @@
-import { Text, View } from "@/components/FlexStyled";
+import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import Iconify from "@/components/Iconify";
 import MenuPopover from "@/components/MenuPopover";
 import SvgIcon from "@/components/SvgIcon";
-import SvgIconStyle from "@/components/SvgIconStyle";
 import { useState } from "react";
 
 export const PipelineDraggableItem = ({
@@ -38,14 +38,15 @@ export const PipelineDraggableItem = ({
   if (isDefault == false) {
     return (
       <View
-        flexRow
-        atCenter
+        flexrow="true"
+        atcenter="true"
         p={12}
         mv={16}
-        borderWidth={1}
-        borderRadius={6}
-        bgColor={"#fff"}
-        borderColor={"#C9D9E0"}
+        borderwidth={1}
+        borderradius={6}
+        bgcolor={"#fff"}
+        
+        bordercolor={"#C9D9E0"}
       >
         <View>
           <SvgIcon>
@@ -55,7 +56,7 @@ export const PipelineDraggableItem = ({
           </SvgIcon>
         </View>
 
-        <View flex1 mh={12}>
+        <View flex="true" mh={12}>
           <Text fontSize={15} fontWeight={"600"}>
             {data.name}
           </Text>
@@ -79,20 +80,20 @@ export const PipelineDraggableItem = ({
           sx={{
             p: 0,
             width: undefined,
-            borderRadius: 0,
-            boxShadow: "none",
+            borderradius: 0,
+            boxshadow: "none",
             background: "transparent",
           }}
         >
           <View
             hidden
-            contentCenter
+            contentcenter="true"
             pv={16}
             width={56}
-            borderWidth={1}
-            borderRadius={8}
-            bgColor={"#fff"}
-            borderColor={"#01B6A7"}
+            borderwidth={1}
+            borderradius={8}
+            bgcolor={"#fff"}
+            bordercolor={"#01B6A7"}
           >
             <View onPress={pressAdd}>
               <SvgIcon>
@@ -124,37 +125,33 @@ export const PipelineDraggableItem = ({
   } else {
     return (
       <View
-        flexRow
-        atCenter
-        p={12}
+        flexrow="true"
+        atcenter="true"
+        p={16}
         mb={16}
-        borderWidth={1}
-        borderRadius={6}
-        bgColor={"#EFEFEF"}
-        borderColor={"#C9D9E0"}
+        borderwidth={1}
+        borderradius={6}
+        bgcolor={"#FDFDFD"}
+        bordercolor={"#CCD4DC"}
       >
+        <View>
+          <Iconify
+              icon={"mingcute:lock-line"}
+              width={16}
+              height={16}
+              color="#455570"
+            />
+        </View>
         <View
-          flex1
-          mh={12}
-          borderColor={"#06A77D"}
+          flex="true"
           pl={12}
-          style={{ borderLeftWidth: "2px" }}
         >
-          <Text fontSize={15} fontWeight={"600"}>
+          <Text fontsize={15} fontweight={"600"}>
             {data[0].name}
           </Text>
           {!!data[0].des && <Text>{data[0].des}</Text>}
         </View>
-        <View>
-          <SvgIconStyle
-            src={`/assets/icons/ic_lock.svg`}
-            sx={{
-              bgcolor: "#696A6B",
-              width: 15,
-              height: 15,
-            }}
-          />
-        </View>
+        
       </View>
     );
   }

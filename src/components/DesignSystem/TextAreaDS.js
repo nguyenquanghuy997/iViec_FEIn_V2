@@ -9,7 +9,7 @@ export default function TextAreaDS(props) {
   const InputTextArea = styled(TextArea)`
     .ant-input {
       padding: 12px 16px 12px 12px;
-      font-weight: 500;
+      font-weight: 400;
       font-size: 14px;
       color: #172b4d;
     }
@@ -42,9 +42,6 @@ export default function TextAreaDS(props) {
         style={{
           height: 120,
           resize: "none",
-          "& :where(.css-dev-only-do-not-override-diro6f).ant-input:hover": {
-            backgroundColor: "#000",
-          },
         }}
         onChange={(e) => e.target.value}
         placeholder={placeholder}
