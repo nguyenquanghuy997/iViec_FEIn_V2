@@ -33,12 +33,13 @@ export const PipelineItem = () => {
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
-
+  const [page, setPage] = useState(1);
+  const [paginationSize, setPaginationSize] = useState(10);
   const columns = [
     {
       title: "STT",
       key: "index",
-      render: (item, record, index) => <>{index + 1}</>,
+      render: (item, record, index) => (page - 1) * paginationSize + index + 1,
       width: "60px",
       fixed: "left",
     },
@@ -245,6 +246,9 @@ export const PipelineItem = () => {
           settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
           scroll={{ x: 1618 }}
           isSetting={true}
+          nodata="Hiện chưa có quy trình tuyển dụng nào"
+          setPaginationSize={setPaginationSize}
+          setPage={setPage}
           filter={
             <PipelineHeader
               methods={methods}

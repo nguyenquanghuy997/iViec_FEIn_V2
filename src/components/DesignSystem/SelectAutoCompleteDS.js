@@ -93,7 +93,8 @@ export default function SelectAutoCompleteDS(props) {
         sx={{
           "&.MuiOutlinedInput-root":{
             fontSize:'14px',
-            minHeight:'44px'
+            minHeight:'44px',
+            color:'#172b4d'
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             border: "1px solid #D0D4DB !important",
