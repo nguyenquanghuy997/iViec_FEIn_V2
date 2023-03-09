@@ -236,7 +236,6 @@ const DetailSocial = ({ checked, accounts }) => {
               display: "flex",
               borderRadius: 0,
               py: 2,
-              display: "flex",
               justifyContent: "space-between",
             }}
           >
