@@ -17,12 +17,6 @@ const FilterModalPipeline = ({ open, onClose, onOpen }) => {
   const defaultValues = {};
   const ProfileSchema = Yup.object().shape({
     name: Yup.string(),
-    provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
-    districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
-    address: Yup.string().required("Chưa nhập Địa chỉ"),
-    email: Yup.string()
-      .email("Email không đúng định dạng")
-      .required("Chưa nhập Email"),
     phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
     jobCategories: Yup.array().min(1, "Ngành nghề không được bỏ trống"),
     organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
@@ -42,9 +36,15 @@ const FilterModalPipeline = ({ open, onClose, onOpen }) => {
     // watch,
     formState: { errors, isSubmitting },
   } = methods;
+
+  const option = [
+    { name: "thành", id: 1 },
+    { name: "quân", id: 2 },
+    { name: "tuyết", id: 3 },
+  ];
   const list = () => (
     <Box
-      sx={{ width: 600 }}
+      sx={{ width: 500 }}
       role="presentation"
       // onKeyDown={toggleDrawer(false)}
     >
@@ -81,7 +81,7 @@ const FilterModalPipeline = ({ open, onClose, onOpen }) => {
           <Stack sx={{ pb: 2 }}>
             <Typography
               sx={{
-                pt: 3.5,
+                pt: 1.5,
                 pb: 2,
                 color: "#455570",
                 fontSize: 14,
@@ -91,11 +91,11 @@ const FilterModalPipeline = ({ open, onClose, onOpen }) => {
               Trạng thái
             </Typography>
             <RHFDropdown
-              //   options={LIST_ORGANIZATION_SIZE.map((i) => ({
-              //     value: i.value,
-              //     label: i.name,
-              //     name: i.name,
-              //   }))}
+              options={option.map((i) => ({
+                value: i.name,
+                label: i.name,
+                name: i.name,
+              }))}
               style={{ ...InputStyle }}
               name="status"
               multiple={false}
@@ -126,7 +126,7 @@ const FilterModalPipeline = ({ open, onClose, onOpen }) => {
           <Stack sx={{ pb: 2 }}>
             <Typography
               sx={{
-                pt: 3.5,
+                pt: 3,
                 pb: 2,
                 color: "#455570",
                 fontSize: 14,
@@ -136,14 +136,14 @@ const FilterModalPipeline = ({ open, onClose, onOpen }) => {
               Người tạo
             </Typography>
             <RHFDropdown
-              //   options={LIST_ORGANIZATION_SIZE.map((i) => ({
-              //     value: i.value,
-              //     label: i.name,
-              //     name: i.name,
-              //   }))}
+            //  options={option.map((i) => ({
+            //   value: i.name,
+            //   label: i.name,
+            //   name: i.name,
+            // }))}
               style={{ ...InputStyle }}
               name="status"
-              multiple={false}
+              multiple={true}
               placeholder="Chọn 1 hoặc nhiều người"
             />
           </Stack>
@@ -165,12 +165,18 @@ const FilterModalPipeline = ({ open, onClose, onOpen }) => {
             variant="contained"
             loading={isSubmitting}
             // onClick={pressSave}
+            sx={{ background: "#1976D2" }}
           >
             Áp dụng
           </LoadingButton>
           <View width={8} />
 
-          <LoadingButton size="large" variant="text">
+          <LoadingButton
+            size="large"
+            variant="text"
+            sx={{ color: "#455570" }}
+            onClick={onClose}
+          >
             Bỏ lọc
           </LoadingButton>
           <View width={8} />

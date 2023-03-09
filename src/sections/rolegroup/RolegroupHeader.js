@@ -1,10 +1,10 @@
-import PipelineDrawer from "./PipeLineDrawer";
+import PipelineDrawer from "./modals/RoleDrawer";
+import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import SvgIcon from "@/components/SvgIcon";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { InputAdornment, Stack, Button } from "@mui/material";
-import { Container } from "@mui/system";
 import { useState } from "react";
 
 const PipelineHeader = ({
@@ -18,44 +18,44 @@ const PipelineHeader = ({
   const handleClose = () => setOpen(false);
 
   return (
-    <Container
-      sx={{
-        background: "white",
-        p: 2,
-        transform: "translateY(43px)",
-      }}
-    >
-      <Stack flexDirection="row">
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <RHFTextField
-            name="searchKey"
-            placeholder="Tìm kiếm quy trình tuyển dụng"
-            sx={{ minWidth: "510px" }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start" sx={{ ml: 1.5 }}>
-                  <Iconify
-                    icon={"eva:search-fill"}
-                    sx={{ color: "text.disabled", width: 20, height: 20 }}
-                  />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </FormProvider>
-
-        <ButtonFilterStyle
-          onClick={onOpenFilterForm}
-          startIcon={
-            <Iconify
-              sx={{ height: "18px", width: "18px" }}
-              icon="material-symbols:filter-alt-outline"
+    <>
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        padding="16px 16px 4px 16px"
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <RHFTextField
+              name="searchKey"
+              placeholder="Tìm kiếm quy trình tuyển dụng"
+              sx={{ minWidth: "510px" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                    <Iconify
+                      icon={"eva:search-fill"}
+                      sx={{ color: "text.disabled", width: 20, height: 20 }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
             />
-          }
-        >
-          Bộ lọc
-        </ButtonFilterStyle>
+          </FormProvider>
 
+          <ButtonFilterStyle
+            onClick={onOpenFilterForm}
+            startIcon={
+              <Iconify
+                sx={{ height: "18px", width: "18px" }}
+                icon="material-symbols:filter-alt-outline"
+              />
+            }
+          >
+            Bộ lọc
+          </ButtonFilterStyle>
+        </View>
         <Button
           style={{
             padding: "8px 12px 8px 14px",
@@ -92,7 +92,7 @@ const PipelineHeader = ({
 
       <PipelineDrawer open={open} onClose={handleClose} onOpen={handleOpen} />
       {/* <PipelineFormModal show={showForm} setShow={setShowForm} /> */}
-    </Container>
+    </>
   );
 };
 

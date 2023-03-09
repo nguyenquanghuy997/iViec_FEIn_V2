@@ -21,7 +21,6 @@ const DynamicColumnsTable = (props) => {
     settingName,
     filter,
     scroll,
-    style,
   } = props;
   const rowKey = "id";
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -160,7 +159,7 @@ const DynamicColumnsTable = (props) => {
         }}
         mb={16}
       >
-        <View style={{ flexDirection: "row", alignItems: "center", ...style }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Dropdown
             menu={menu}
             onOpenChange={handleVisibleChange}

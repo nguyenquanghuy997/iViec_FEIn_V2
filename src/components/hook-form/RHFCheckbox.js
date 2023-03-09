@@ -8,20 +8,18 @@ RHFCheckbox.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-export function RHFCheckbox({ name, value, label, style, ...other }) {
+export function RHFCheckbox({ name, labelPlacement, label, style, ...other }) {
   const { control } = useFormContext();
+
   return (
     <FormControlLabel
-      // value={item}
-      labelPlacement={value}
+      labelPlacement={labelPlacement}
       label={label}
       control={
         <Controller
           name={name}
           control={control}
-          render={({ field }) => (
-            <Checkbox {...field} style={other.style} checked={field.value} />
-          )}
+          render={({ field }) => <Checkbox {...field} style={other.style} />}
         />
       }
       {...other}

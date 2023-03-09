@@ -17,7 +17,7 @@ import {ACTION_CONTENT} from './config'
 // import { Controller, useFormContext } from "react-hook-form";
 
 const ConnectDialog = (props) => {
-  const { onClose, open,type } = props;
+  const { onClose, open,type,onDelete } = props;
   return (
     <Dialog
       onClose={onClose}
@@ -58,7 +58,7 @@ const ConnectDialog = (props) => {
           Hủy
         </Button>
         <Button
-          onClick={onClose}
+          onClick={onDelete}
           autoFocus
           sx={{ color: "white", background: ACTION_CONTENT[type].color,  }}
         >

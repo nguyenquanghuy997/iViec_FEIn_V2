@@ -1,5 +1,5 @@
-import CloseIcon from "../../assets/CloseIcon";
-import PipelineForm from "./PipelineForm";
+import CloseIcon from "../../../assets/CloseIcon";
+import RolegroupForm from '../RolegroupForm'
 import { Box, Button, Typography } from "@mui/material";
 import { Divider } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
@@ -36,7 +36,7 @@ export default function DrawerEdit({ open, onClose, onOpen }) {
         </Button>
       </List>
       <Divider />
-      <PipelineForm onClose={onClose} />
+      <RolegroupForm onClose={onClose} />
       <List sx={{ p: 0 }}></List>
     </Box>
   );
