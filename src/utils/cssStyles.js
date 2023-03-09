@@ -1,4 +1,5 @@
 import { alpha } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 function getDirection(value = 'bottom') {
   return {
@@ -50,3 +51,10 @@ export default function cssStyles(theme) {
     },
   }
 }
+
+export const ViewModel = styled('div')(({  }) => ({
+  width: "42vw", 
+  background: "#fff", 
+  display: 'flex', 
+  flexDirection:'column'
+}))

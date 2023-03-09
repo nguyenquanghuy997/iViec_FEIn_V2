@@ -164,7 +164,12 @@ const FormHelperTextStyle = styled(FormHelperText)(({theme}) => ({
     fontSize: STYLE_CONSTANT.FONT_XS,
     color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
 }));
-
+const Label = styled(InputLabel)(({theme}) => ({
+    fontSize: STYLE_CONSTANT.FONT_SM,
+    color: STYLE_CONSTANT.COLOR_TEXT_BLACK,
+    fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+    marginBottom: theme.spacing(1),
+}));
 const SearchInputStyle = {
     boxShadow: "inset 0px -1px 0px #E7E9ED",
     "& .MuiInputBase-root": {
@@ -216,6 +221,7 @@ export {
     useStyles,
     InputStyle,
     LabelStyle,
+    Label,
     FormHelperTextStyle,
     TextFieldStyle,
     SelectFieldStyle,

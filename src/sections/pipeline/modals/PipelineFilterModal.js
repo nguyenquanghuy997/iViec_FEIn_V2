@@ -1,6 +1,6 @@
 import {memo, useEffect, useState} from "react";
 import Scrollbar from "@/components/Scrollbar";
-import {Box, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
@@ -17,15 +17,14 @@ import {
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
-import { useLazyGetApplicantUsersOnJobtypeQuery } from "../jobTypeSlice";
+import { useLazyGetAllUserFromOrganizationQuery } from "@/sections/applicant";
 
 
-
-JobTypeFilterModal.propTypes = {
+PipelineFilterModal.propTypes = {
   columns: PropTypes.array, isOpen: PropTypes.bool, onClose: PropTypes.func, onSubmit: PropTypes.func,
 };
 
-function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
+function PipelineFilterModal({columns, isOpen, onClose, onSubmit}) {
 
   const router = useRouter();
   const { query } = router;
@@ -81,7 +80,7 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
 
   // options select
   // owner, creator, council
-  const [getAllUserFromOrganization, {data: {items: ListUserFromOrganization} = []}] = useLazyGetApplicantUsersOnJobtypeQuery();
+  const [getAllUserFromOrganization, {data: {items: ListUserFromOrganization} = []}] = useLazyGetAllUserFromOrganizationQuery();
 
   const watchOrganizationIds = watch("organizationIds");
 
@@ -124,6 +123,7 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
             </ApplicantModalHeadStyle>
+            <Divider/>
             <Box sx={{py: 2, mt: 0}}>
               <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
               <Stack sx={{pb: 3, px: 2}}>
@@ -136,6 +136,8 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
                 />
               </Stack>
             </Box>
+
+            <Divider/>
             <ApplicantModalFooterStyle>
               <Stack flexDirection="row">
                 <ButtonDS
@@ -154,5 +156,5 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
   );
 }
 
-export default memo(JobTypeFilterModal);
+export default memo(PipelineFilterModal);
 

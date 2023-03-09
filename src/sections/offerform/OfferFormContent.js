@@ -83,10 +83,10 @@ const OfferFormContent = () => {
 
   // bottom nav modal
   const [, setIsOpenBottomNav] = React.useState(false);
-  const [showDelete, setShowDelete] = useState(false);
-  const [showMultipleDelete, setShowMultipleDelete] = useState(false);
-  const [actionType, setActionType] = useState(0)    // 0 add, 1 update
-  const [actionTypeActive, setActionTypeActive] = useState(0)    // 1 active 0 inactive
+  const [, setShowDelete] = useState(false);
+  const [, setShowMultipleDelete] = useState(false);
+  const [, setActionType] = useState(0)    // 0 add, 1 update
+  const [, setActionTypeActive] = useState(0)    // 1 active 0 inactive
 
   const [isOpenFilter, setIsOpenFilter] = useState(false)
   const handleOpenFilterForm = () => {

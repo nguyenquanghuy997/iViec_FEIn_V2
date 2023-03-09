@@ -1,9 +1,9 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_PIPELINE,
-  API_ADD_PIPELINE,
+  API_ADD_ROLE_GROUP,
   API_UPDATE_PIPELINE,
-  API_DELETE_PIPELINE
+  API_DELETE_PIPELINE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -12,20 +12,30 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const PipelineFormSlice = apiWithTag.injectEndpoints({
-  endpoints: (builder) => ({
-    
-    getAllFilterPipeline: builder.mutation({
-      query: () => ({
+  endpoints: (builder) => ({  
+    //Danh sách vị trí
+    getAllPipeline: builder.query({
+      query: (params) => ({
         url: API_GET_ALL_PIPELINE,
         method: "GET",
-       
+        params
       }),
     }),
+
+    // filter người tạo
+    // getApplicantUsersOnJobtype: builder.query({
+    //   query: (params) => ({
+    //     url: API_GET_APPLICANT_USERS_ON_JOBTYPE,
+    //     method: "GET",
+    //     params,
+    //   }),
+    // }),
+
     addPipeline: builder.mutation({
       query: (data) => ({
-        url: API_ADD_PIPELINE,
+        url: API_ADD_ROLE_GROUP,
         method: "POST",
-        data: qs.stringify(data),
+        data: data,
       }),
     }),
     updatePipeline: builder.mutation({
@@ -46,7 +56,7 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetAllFilterPipelineMutation,
+  useLazyGetAllPipelineQuery,
   useAddPipelineMutation,
   useUpdatePipelineMutation,
   useDeletePipelineMutation,

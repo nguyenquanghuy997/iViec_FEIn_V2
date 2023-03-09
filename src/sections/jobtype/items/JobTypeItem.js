@@ -7,7 +7,7 @@ import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import { useGetAllJobTypeMutation } from "@/sections/jobtype";
+import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -26,8 +26,8 @@ export const JobTypeItem = () => {
   const router = useRouter();
   const { query, isReady } = router;
   // api get list
-  const [getAllFilter, { data: Data, isLoading }] =
-    useGetAllJobTypeMutation();
+
+  const [getAllFilter, {data: Data = [],isLoading }] = useLazyGetAllJobTypeQuery();
   // api get list Column
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
@@ -56,7 +56,7 @@ export const JobTypeItem = () => {
       type: "select",
       label: "Trạng thái",
       render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#E53935" }}>
+        <span style={{ color: item ? "#388E3C" : "#455570" }}>
           {Status(item)}
         </span>
       ),
@@ -155,18 +155,18 @@ export const JobTypeItem = () => {
     if (!isReady) return;
     const queryParams = {
       searchKey: query.searchKey,
-      isActive: query.isActive ? [Number(query.isActive)] : null,
+      isActive: query.isActive ? query.isActive : null,
       createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
       createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
       creatorIds:
         query.creatorIds && typeof query.creatorIds === "string"
-          ? [query.creatorIds]
+          ? query.creatorIds
           : query.creatorIds && query.creatorIds,
     };
     if (query) {
-      getAllFilter(JSON.stringify(queryParams)).unwrap();
+      getAllFilter(queryParams).unwrap();
     } else {
-      getAllFilter({}).unwrap();
+      getAllFilter().unwrap();
     }
   }, [isReady, query]);
 
@@ -213,7 +213,9 @@ export const JobTypeItem = () => {
     );
     handleCloseFilterForm();
   };
-
+  const refreshData = () => {
+    getAllFilter().unwrap();
+  };
   return (
     <View>
       <Content sx={{ padding: "0 !important" }}>
@@ -234,6 +236,7 @@ export const JobTypeItem = () => {
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}
               onCloseFilterForm={handleCloseFilterForm}
+              onRefreshData={refreshData}
             />
           }
         />
@@ -244,6 +247,7 @@ export const JobTypeItem = () => {
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
+          onRefreshData={refreshData}
         />
       )}
     </View>
