@@ -17,7 +17,6 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Typography } from "@mui/material";
 import moment from "moment";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -32,7 +31,7 @@ export const RoleContainer = () => {
   const { query, isReady } = router;
   const { data } = useGetRoleGroupListQuery();
   const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
-  console.log(Data)
+  console.log(Data);
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [open, setOpen] = useState(false);
@@ -40,9 +39,7 @@ export const RoleContainer = () => {
     {
       title: "STT",
       key: "index",
-      render: (
-        // item, record,
-         index) => <>{index + 1}</>,
+      render: (item, record, index) => <>{index + 1}</>,
       width: "60px",
       fixed: "left",
     },
@@ -148,16 +145,16 @@ export const RoleContainer = () => {
 
   useEffect(() => {
     if (!isReady) return;
-    const queryParams = {
-      searchKey: query.searchKey,
-      isActive: query.isActive ? query.isActive : null,
-      createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-      createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-      creatorIds:
-        query.creatorIds && typeof query.creatorIds === "string"
-          ? query.creatorIds
-          : query.creatorIds && query.creatorIds,
-    };
+    // const queryParams = {
+    //   searchKey: query.searchKey,
+    //   isActive: query.isActive ? query.isActive : null,
+    //   createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
+    //   createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
+    //   creatorIds:
+    //     query.creatorIds && typeof query.creatorIds === "string"
+    //       ? query.creatorIds
+    //       : query.creatorIds && query.creatorIds,
+    // };
     // if (query) {
     //   getAllFilter(queryParams).unwrap();
     // } else {

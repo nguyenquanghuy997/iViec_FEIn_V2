@@ -1,4 +1,4 @@
-import { useAddRoleGroupMutation } from "../pipeline/PipelineFormSlice";
+import { useAddRoleGroupMutation } from "../rolegroup/RoleGroupSlice";
 import PipelineTable from "./RolegroupTable";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
