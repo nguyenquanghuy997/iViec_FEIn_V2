@@ -31,12 +31,15 @@ import { styled } from "@mui/styles";
 import React, { useState, useEffect } from "react";
 import { HEADER } from "@/config";
 import { RejectApplicantModal } from "../modals";
+import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
       ApplicantId,
       OrganizationId,
     });
+
+  const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
 
   const HearderApplicant = () => {
     return (
@@ -164,8 +167,9 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
           />
           <ButtonDS
             tittle={"Gửi offer"}
-            type="submit"
+            type="button"
             isDisabled={true}
+            onClick={() => setIsOpenSendOffer(true)}
             sx={{
               color: "#8A94A5",
               backgroundColor: "#1976D2",
@@ -262,7 +266,7 @@ console.log('selectedOption',selectedOption)
   return (
     <div>
       <HeadingFixed>
-        <HearderApplicant />
+        <HearderApplicant setIsOpenSendOffer={setIsOpenSendOffer} />
       </HeadingFixed>
       <Container
         maxWidth={themeStretch ? false : "xl"}
@@ -438,6 +442,14 @@ console.log('selectedOption',selectedOption)
             </Card>
           </Grid>
         </Grid>
+        {
+          isOpenSendOffer && <ApplicantSendOfferModal
+              isOpen={isOpenSendOffer}
+              onClose={() => setIsOpenSendOffer(false)}
+              showUploadFile={true}
+              title="Tạo thư mời nhận việc"
+            />
+        }
       </Container>
     </div>
   );

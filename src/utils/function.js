@@ -1,4 +1,6 @@
 import _ from "lodash";
+import {ExcelIcon, PdfIcon, WordIcon} from "@/sections/offerform/component/editor/Icon";
+import React from "react";
 
 const containsText = (text, searchText) => {
   return convertViToEn(text).toLowerCase().indexOf(convertViToEn(searchText).toLowerCase()) > -1;
@@ -88,10 +90,57 @@ function stringAvatar(name) {
   };
 }
 
+const showIconByFileType = (fileType) => {
+  let icon = null;
+  switch (fileType) {
+    case ".doc":
+      icon = <WordIcon/>;
+      break;
+    case "doc":
+      icon = <WordIcon/>;
+      break;
+    case ".docx":
+      icon = <WordIcon/>;
+      break;
+    case "docx":
+      icon = <WordIcon/>;
+      break;
+    case ".pdf":
+      icon = <PdfIcon/>;
+      break;
+    case "pdf":
+      icon = <PdfIcon/>;
+      break;
+    case ".xlsx":
+      icon = <ExcelIcon/>;
+      break;
+    case "xlsx":
+      icon = <ExcelIcon/>;
+      break;
+    case ".xls":
+      icon = <ExcelIcon/>;
+      break;
+    case "xls":
+      icon = <ExcelIcon/>;
+      break;
+    default:
+      break;
+  }
+  return icon;
+}
+
+const calcFileSize = (fileSize) => {
+  let fileSizeStr = fileSize.toString();
+  if (fileSizeStr.length < 7) return `${(+fileSizeStr / 1024).toFixed(2)} KB`
+  return `${(Math.round(+fileSizeStr / 1024) / 1000).toFixed(2)} MB`
+}
+
 export {
   containsText,
   convertViToEn,
   convertFlatDataToTree,
   stringToColor,
-  stringAvatar
+  stringAvatar,
+  showIconByFileType,
+  calcFileSize
 }

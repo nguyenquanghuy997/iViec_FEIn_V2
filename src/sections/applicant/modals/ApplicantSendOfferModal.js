@@ -4,8 +4,8 @@ import {isEmpty} from "lodash";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
-import {FormProvider, RHFCheckbox, RHFSwitch, RHFTextField} from "@/components/hook-form";
-import {ButtonCancelStyle} from "@/sections/applicant/style";
+import {FormProvider, RHFAutocomplete, RHFCheckbox, RHFSwitch, RHFTextField} from "@/components/hook-form";
+import {ButtonCancelStyle, ButtonSaveStyle} from "@/sections/applicant/style";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import Scrollbar from "@/components/Scrollbar";
@@ -18,12 +18,19 @@ import CropImage from "@/sections/emailform/component/crop-image/CropImage";
 import PreviewEmail from "@/sections/emailform/component/PreviewEmail";
 import {styled} from "@mui/styles";
 import {DeleteIcon} from "@/assets/ActionIcon";
+import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import ChipDS from "@/components/DesignSystem/ChipDS";
 import {calcFileSize, showIconByFileType} from "@/utils/function";
 
 const InputStyle = {
   minHeight: 44,
   minWidth: 752,
   marginBottom: 24
+}
+
+const SelectStyle = {
+  minHeight: 44,
+  minWidth: 752,
 }
 
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
@@ -41,26 +48,26 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
 }));
 
 const renderFileUploadItem = (file, index, removeFileUpload) => {
-  if(!file) return;
+  if (!file) return;
   let fileType = file.name.slice(file.name.lastIndexOf('.'));
   return (
       <BoxItemFileStyle className="file-upload-item" key={index}>
         {showIconByFileType(fileType)}
-        <Stack sx={{ mx: 1 }}>
-          <Typography sx={{ color: '#455570', fontSize: 13, fontWeight: 600 }}>{file.name}</Typography>
-          <Typography sx={{ color: '#455570', fontSize: 12, fontWeight: 400 }}>{calcFileSize(file.size)}</Typography>
+        <Stack sx={{mx: 1}}>
+          <Typography sx={{color: '#455570', fontSize: 13, fontWeight: 600}}>{file.name}</Typography>
+          <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
         </Stack>
         <IconButton
             size='small'
-            sx={{ color: '#1976D2', mx: 0.5 }}
+            sx={{color: '#1976D2', mx: 0.5}}
             onClick={() => {
               removeFileUpload(index)
             }}
-        ><DeleteIcon /></IconButton>
+        ><DeleteIcon/></IconButton>
       </BoxItemFileStyle>
   )
 }
-const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
+const ApplicantSendOfferModal = ({isOpen, onClose, item, title, showUploadFile}) => {
   const theme = useTheme();
 
   const [isOpenPreview, setIsOpenPreview] = useState(false);
@@ -79,23 +86,26 @@ const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
         const primaryMainColor = theme.palette.primary.main;
         const defaultEmailEditorConfig = EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT(primaryMainColor);
         const {
-          title = '',
+          title = '', ccEmails = [], bccEmails = [],
           contentEmail = defaultEmailEditorConfig.contentEmail,
           contentSignature = defaultEmailEditorConfig.contentSignature,
-          isActive = true,
+          isActive = true
         } = item || {};
-        return {
-          title,
-          contentEmail,
-          contentSignature,
-          isActive,
-        }
+        return {title, ccEmails, bccEmails, contentEmail, contentSignature, isActive}
       },
       [item, theme]
   )
 
   const Schema = Yup.object().shape({
     title: Yup.string().required("Tên mẫu email không được bỏ trống"),
+    // ccEmails: Yup.array()
+    //     .transform(function(value, originalValue) {
+    //       if (this.isType(value) && value !== null) {
+    //         return value;
+    //       }
+    //       return originalValue ? originalValue.split(/[\s,]+/) : [];
+    //     })
+    //     .of(Yup.string().email(({ value }) => `Email ${value} không đúng định dạng.`)),
   });
 
   const methods = useForm({
@@ -146,12 +156,81 @@ const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
               </EmailFormHeadStyle>
               <Divider/>
               <Box sx={{py: 2, px: 3, my: 8, maxWidth: '800px'}}>
+                <div style={{...SelectStyle}}>
+                  <RHFDropdown
+                      options={[]}
+                      sx={{...InputStyle}}
+                      name="templateOffer"
+                      placeholder="Chọn mẫu thư mời nhận việc có sẵn"
+                      title="Chọn mẫu thư mời nhận việc có sẵn"
+                      isRequired
+                  />
+                </div>
                 <RHFTextField
-                    name="title"
-                    title="Tên mẫu email"
-                    placeholder="Nhập tên mẫu email"
+                    name="userName"
+                    title="Gửi tới"
+                    placeholder="Gửi tới"
+                    value="dinhtienthanh1702tt@gmail.com"
+                    disabled
                     isRequired
                     style={{...InputStyle}}
+                />
+
+                <RHFAutocomplete
+                    options={[]}
+                    name="ccEmails"
+                    title="CC"
+                    placeholder="CC"
+                    style={{...InputStyle}}
+                    AutocompleteProps={{
+                      multiple: true,
+                      freeSolo: true,
+                      renderTags: (value, getTagProps) => value.map((item, index) => (
+                          <ChipDS
+                              {...getTagProps({index})}
+                              key={`${index}`}
+                              size="small"
+                              label={item}
+                              variant="filled"
+                              className="input-chip"
+                              sx={{
+                                "&.input-chip": {}
+                              }}
+                          />
+                      )),
+                    }}
+                />
+
+                <RHFAutocomplete
+                    options={[]}
+                    name="bccEmails"
+                    title="BCC"
+                    placeholder="BCC"
+                    style={{...InputStyle}}
+                    AutocompleteProps={{
+                      multiple: true,
+                      freeSolo: true,
+                      renderTags: (value, getTagProps) => value.map((item, index) => (
+                          <ChipDS
+                              {...getTagProps({index})}
+                              key={`${index}`}
+                              size="small"
+                              label={item}
+                              variant="filled"
+                              className="input-chip"
+                              sx={{
+                                "&.input-chip": {}
+                              }}
+                          />
+                      )),
+                    }}
+                />
+                <RHFTextField
+                    name="title"
+                    title="Tiêu đề email"
+                    placeholder="Nhập tiêu đề email"
+                    isRequired
+                    sx={{...InputStyle}}
                 />
                 <Box sx={{marginTop: 0, marginBottom: 0}}>
                   <BoxFlex>
@@ -160,8 +239,12 @@ const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
                     </LabelStyle>
                   </BoxFlex>
                   <BoxFlex justifyContent="flex-start">
-                    {!isEmpty(fileList) && fileList.map((file, index) => renderFileUploadItem(file, index, removeFileUpload))}
+                    {
+                        !isEmpty(fileList) && fileList.map((file, index) => renderFileUploadItem(file, index, removeFileUpload))
+                    }
+
                   </BoxFlex>
+
                 </Box>
                 <RHFEmailEditor
                     style={{...InputStyle}}
@@ -194,7 +277,7 @@ const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
                         style={{...InputStyle}}
                         name="contentSignature"
                         placeholder="Nhập nội dung email..."
-                        sx={{ width: '596px', minHeight: '230px'}}
+                        sx={{width: '596px', minHeight: '230px'}}
                     />
                   </Box>
                 </BoxFlex>
@@ -207,8 +290,10 @@ const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
                       type="submit"
                       loading={isSubmitting}
                       variant="contained"
-                      tittle="Lưu"
+                      tittle="Gửi email"
+                      sx={{marginRight: 2}}
                   />
+                  <ButtonSaveStyle onClick={onClose}>Lưu và không gửi</ButtonSaveStyle>
                   <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
                 </Stack>
                 <Stack>
@@ -233,4 +318,4 @@ const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
   )
 }
 
-export default React.memo(OfferFormModal);
+export default React.memo(ApplicantSendOfferModal);

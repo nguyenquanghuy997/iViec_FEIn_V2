@@ -22,6 +22,18 @@ const ButtonCancelStyle = styled(Button)(({theme}) => ({
         color: "#455570",
     }
 }));
+const ButtonSaveStyle = styled(Button)(({theme}) => ({
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    backgroundColor: "#F3F4F6 !important",
+    boxShadow: 'none',
+    color: "#455570 !important",
+    "&:hover": {
+        backgroundColor: "#F3F4F6 !important",
+        boxShadow: 'none',
+        color: "#455570",
+    }
+}));
 
 
 const HelperTextTypography = styled(Typography)(({theme}) => ({
@@ -70,4 +82,5 @@ export {
     ApplicantModalHeadStyle,
     ApplicantModalFooterStyle,
     ButtonCancelStyle,
+    ButtonSaveStyle
 };

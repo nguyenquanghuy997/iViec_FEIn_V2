@@ -1,9 +1,10 @@
-import React from "react";
-import {Box} from '@mui/material'
+import React, {useState} from "react";
+import {Box, Button, Typography} from '@mui/material'
 import {styled} from '@mui/material/styles'
 import '@/utils/highlight'
 import {Editor} from "@tinymce/tinymce-react";
 import {API_KEY_EDITOR} from "@/config";
+import Iconify from "@/components/Iconify";
 
 const RootStyle = styled(Box)(({theme}) => ({
       overflow: 'hidden',
@@ -27,8 +28,12 @@ export default function EmailEditor({
       showPreview,
       onOpenPreview,
       showUploadFile,
+      handleFileChange,
       ...other
 }) {
+
+  const [loading, setLoading] = useState(true);
+
   return (
       <div>
         <RootStyle
@@ -40,7 +45,35 @@ export default function EmailEditor({
               ...sx,
             }}
         >
+          {showUploadFile && !loading && <Button
+              component="label"
+              sx={{
+                width: '128px',
+                height: '39px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'absolute',
+                right: '50px',
+                top: '0',
+                zIndex: '99 !important',
+                padding: '0 !important',
+                borderLeft: '1px solid #E7E9ED',
+                borderRadius: 0,
+                "&:hover": {
+                  backgroundColor: 'transparent'
+                }
+              }}
+          >
+            <Iconify icon='eva:attach-fill' sx={{width: 20, height: 20}}/>
+            <Typography component="span" sx={{color: '#455570', fontSize: 14, fontWeight: 600, ml: 0.5}}>Đình kèm file</Typography>
+            <input hidden accept=".doc,.docx,.pdf,.xlsx,.xls" multiple type="file" onChange={handleFileChange}/>
+          </Button>}
+
           <Editor
+              onInit={() => {
+                setLoading(false);
+              }}
               apiKey={API_KEY_EDITOR}
               onEditorChange={onChange}
               value={value}
@@ -62,7 +95,7 @@ export default function EmailEditor({
                       numlist bullist checklist | 
                       image | 
                       ${showPreview && 'previewContent'} |
-                      ${showUploadFile && 'insert insertFile'} |
+                      ${showUploadFile && 'insertFile'} |
                 `,
                 file_picker_types: 'image',
                 file_browser_callback_types: 'image',
