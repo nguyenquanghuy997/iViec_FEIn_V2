@@ -30,25 +30,27 @@ export const PipelineAddModal = ({
   const isEdit = !!editData.name;
   // form
   const ProfileSchema = Yup.object().shape({
-    name: Yup.string().required("Chưa nhập tiêu chí đánh giá"),
-    des: Yup.string(),
+    des: Yup.string().required("Chưa nhập tên quy trình tuyển dụng"),
   });
   const methodss = useForm({
     defaultValuess,
     resolver: yupResolver(ProfileSchema),
   });
-  const { handleSubmit } = methodss;
+
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methodss;
 
   const pressHide = () => {
     setShow(false);
   };
 
-  const pressSave = handleSubmit((d) => {
+  const pressSave = handleSubmit(async (d) => {
     debugger;
     onSubmit?.(d);
     pressHide();
   });
-
   const pressDelete = () => {
     onDelete?.();
     pressHide();
@@ -71,12 +73,12 @@ export const PipelineAddModal = ({
     setSelectedExam(e.target.value);
   };
   return (
-    <Modal
-      open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-      onBackdropClick={pressHide}
-    >
-      <FormProvider methods={methodss}>
+    <FormProvider methods={methodss}>
+      <Modal
+        open={show}
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+        onBackdropClick={pressHide}
+      >
         <View hidden width={668} borderRadius={8} bgColor={"#fff"}>
           <View p={24}>
             <View flexRow atCenter mb={24}>
@@ -114,7 +116,9 @@ export const PipelineAddModal = ({
             </View>
             <View mb={24}>
               {renderTitle("Mô tả", true)}
+
               <TextAreaDS
+                initialValue=""
                 maxLength={255}
                 placeholder="Nhập nội dung mô tả"
                 name={"des"}
@@ -143,17 +147,20 @@ export const PipelineAddModal = ({
                 <View flex1 />
               </>
             )}
-            <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
+            <ButtonCancelStyle sx={{ marginRight: "8px" }} onClick={pressHide}>
+              Hủy
+            </ButtonCancelStyle>
 
             <ButtonDS
               type="submit"
               variant="contained"
+              loading={isSubmitting}
               tittle={isEdit ? "Sửa" : "Thêm"}
               onClick={pressSave}
             />
           </View>
         </View>
-      </FormProvider>
-    </Modal>
+      </Modal>
+    </FormProvider>
   );
 };

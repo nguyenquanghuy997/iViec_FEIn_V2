@@ -21,6 +21,10 @@ const DynamicColumnsTable = (props) => {
     settingName,
     filter,
     scroll,
+    // style,
+    nodata,
+    // setPage,
+    // setPaginationSize
   } = props;
   const rowKey = "id";
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -189,6 +193,14 @@ const DynamicColumnsTable = (props) => {
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
   };
+  let locale = {
+    emptyText: (
+      <div style={{margin:'40px 0', minHeight:'250px'}}>
+        <img src={`/assets/icons/candidate/notfound.png`} style={{margin:'0 auto'}}/>
+        <p>{nodata}</p>
+      </div>
+    )
+  };
   return (
     <View>
       <View
@@ -247,6 +259,7 @@ const DynamicColumnsTable = (props) => {
         <ReactDragListView.DragColumn {...dragProps}>
           {filter}
           <Table
+            locale={locale}
             rowSelection={rowSelection}
             columns={columnsTable}
             dataSource={source?.items}
@@ -256,6 +269,7 @@ const DynamicColumnsTable = (props) => {
             loading={loading}
             className={classes.table}
             pagination={{
+              
               defaultPageSize: 10,
               showSizeChanger: true,
               pageSizeOptions: ["10", "20", "30"],

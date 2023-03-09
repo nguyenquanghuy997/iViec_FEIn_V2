@@ -1,10 +1,11 @@
-import { FormLabel, styled } from "@mui/material";
+import { FormHelperText, FormLabel, styled } from "@mui/material";
 import { Input } from "antd";
 import PropTypes from "prop-types";
 import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
 export default function TextAreaDS(props) {
-  const { placeholder, maxLength } = props;
+  const { name, placeholder, maxLength } = props;
   const { TextArea } = Input;
   const InputTextArea = styled(TextArea)`
     .ant-input {
@@ -33,24 +34,40 @@ export default function TextAreaDS(props) {
       border-radius: 30px;
     }
   `;
-
+  const { control } = useFormContext();
   return (
-    <FormLabel>
-      <InputTextArea
-        showCount
-        maxLength={maxLength}
-        style={{
-          height: 120,
-          resize: "none",
-        }}
-        onChange={(e) => e.target.value}
-        placeholder={placeholder}
-      />
-    </FormLabel>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState: { error } }) => (
+        <>
+          <FormLabel>
+            <InputTextArea
+              showCount
+              maxLength={maxLength}
+              style={{
+                height: 120,
+                resize: "none",
+              }}
+              value={field.value}
+              onChange={field.onChange}
+              placeholder={placeholder}
+            />
+          </FormLabel>
+
+          {error && (
+            <FormHelperText error sx={{ px: 2, textTransform: "capitalize" }}>
+              {error?.message}
+            </FormHelperText>
+          )}
+        </>
+      )}
+    />
   );
 }
 
 TextAreaDS.prototype = {
+  name: PropTypes.string,
   placeholder: PropTypes.any,
   maxLength: PropTypes.any,
 };
