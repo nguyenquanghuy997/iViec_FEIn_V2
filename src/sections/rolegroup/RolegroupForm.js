@@ -1,8 +1,6 @@
-import PipelineTable from "./PipelineTable";
-import {
-  FormProvider,
-  RHFTextField,
-} from "@/components/hook-form";
+import { useAddRoleGroupMutation } from "../rolegroup/RoleGroupSlice";
+import PipelineTable from "./RolegroupTable";
+import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -12,13 +10,12 @@ import {
   Switch,
   FormControlLabel,
   Box,
-  Alert
+  Alert,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { React, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { useAddRoleGroupMutation } from "./PipelineFormSlice";
 
 const InputStyle = { width: "100%", minHeight: 44 };
 const ActiveSwitch = styled(Switch)(({}) => ({
@@ -30,45 +27,42 @@ const ActiveSwitch = styled(Switch)(({}) => ({
   },
 }));
 
-const PipelineForm = ({onClose}) => {
-  const defaultValues = {};
-  const [ addRoleGroup ] = useAddRoleGroupMutation()
+const PipelineForm = ({ onClose }) => {
+  const [addRoleGroup] = useAddRoleGroupMutation();
   const RoleSchema = Yup.object().shape({
     name: Yup.string(),
     description: Yup.string(),
     // registerTime: Yup.date().transform(value => (!value ? new Date().toISOString() : value)).min(Yup.ref('createdTimeFrom')),
-    identityRoleIds: Yup.array().min(1)
-  });
-  const methods = useForm({
-    mode: "all",
-    resolver: yupResolver(RoleSchema),
-    defaultValues,
+    identityRoleIds: Yup.array().min(1),
   });
 
+  const methods = useForm({
+    resolver: yupResolver(RoleSchema),
+    defaultValues: {
+      identityRoleIds: ["a"],
+    },
+  });
   const {
-    // setValue,
-    // setError,
     handleSubmit,
-    // watch,
-    formState: { errors, isSubmitting },
+    control,
+    register,
+    formState: {errors, isSubmitting },
   } = methods;
 
   const onSubmit = (values) => {
-    addRoleGroup(values)
+    addRoleGroup(values);
+    onClose();
+    // console.log("hi", values)
   };
 
   useEffect(() => {
     if (isSubmitting) {
       // reset();
     }
-
   }, [isSubmitting]);
 
   return (
-    <FormProvider
-      methods={methods}
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {!!errors.afterSubmit && (
         <Alert severity="error">{errors.afterSubmit?.message}</Alert>
       )}
@@ -96,7 +90,7 @@ const PipelineForm = ({onClose}) => {
         <Typography sx={{ py: 2, fontSize: "16px", fontWeight: 600 }}>
           Thiết lập chức năng
         </Typography>
-        <PipelineTable />
+        <PipelineTable control={control} register={register} />
       </Box>
       <div
         style={{
@@ -121,7 +115,11 @@ const PipelineForm = ({onClose}) => {
         </LoadingButton>
         <div style={{ width: 8 }} />
 
-        <LoadingButton variant="text" sx={{ color: "#455570", mr:'290px' }} onClick={onClose}>
+        <LoadingButton
+          variant="text"
+          sx={{ color: "#455570", mr: "290px" }}
+          onClick={onClose}
+        >
           {"Hủy"}
         </LoadingButton>
         <FormControlLabel

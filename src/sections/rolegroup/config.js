@@ -20,7 +20,7 @@ export const TYPE = [
     name: CANDIDATE,
     actions: {
       ViewCandidate: { name: "Xem ứng viên" },
-      AddCandidate: { name: "Thêm ứng viên " },
+      AddCandidate: { name: "Thêm ứng viên" },
       EditCandidate: { name: "Sửa ứng viên" },
       RemoveCandidate: { name: "Xóa ứng viên" },
       ShareCandidate: { name: "Chia sẻ ứng viên" },

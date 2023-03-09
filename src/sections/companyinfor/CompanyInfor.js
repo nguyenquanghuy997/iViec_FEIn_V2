@@ -1,18 +1,13 @@
-import ImgIcon from "../../assets/ImgIcon";
 import TickIcon from "../../assets/TickIcon";
 import CropImageAva from "./CropImageAva";
 import CropImageBG from "./CropImageBG";
 import DrawerEdit from "./edit/DrawerEdit";
+import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
 import { useGetCompanyInfoQuery } from "@/sections/companyinfor/companyInforSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Typography, Grid, Divider } from "@mui/material";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
+import { Box, Typography, Divider } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import {
-  FormProvider,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 export default function CompanyInfor() {
@@ -38,7 +33,6 @@ export default function CompanyInfor() {
     // formState: { errors, isSubmitting },
   } = methods;
 
-
   const renderText = (title, content) => {
     return (
       <div>
@@ -47,7 +41,7 @@ export default function CompanyInfor() {
             display: "inline-flex",
             fontSize: 14,
             fontWeight: 400,
-            margin: "0 16px 24px 0",
+            margin: "24px 16px 0 0",
             color: "#5C6A82",
             width: "160px",
           }}
@@ -69,89 +63,32 @@ export default function CompanyInfor() {
     );
   };
 
-  const EmptyImage = (itemData) => {
-    const obj = [];
-    let i = 0;
-    while (i < 6 - (itemData?.length || 0)) {
-      obj.push(
-        <Box
-          sx={{
-            background: "#EFF3F6",
-            borderRadius: "4px",
-            height: 100,
-            width: 100,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ImgIcon />
-        </Box>
-      );
-      i++;
-    }
-
-    return <>{obj}</>;
-  };
-
-  const renderDoubleText = (text, content, itemData) => {
+  
+  const renderDoubleText = (text) => {
     return (
-      <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+      <Box sx={{ flexGrow: 1, overflow: "hidden", mt: 3.5 }}>
         <Paper
           sx={{
             my: 1,
           }}
         >
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item>
-              <Typography
-                sx={{
-                  fontSize: 14,
-                  fontWeight: 400,
-                  color: "#5C6A82",
-                  width: "160px",
-                }}
-              >
-                {text}
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography
-                sx={{ fontSize: 14, fontWeight: 400, color: "#172B4D" }}
-              >
-                {content}
-              </Typography>
-
-              <ImageList
-                sx={{
-                  maxWidth: "710px",
-                  width: "100%",
-                  my: 2,
-                  overflow: "unset!important",
-                }}
-                cols={6}
-                rowHeight={100}
-              >
-                {itemData?.map((item) => (
-                  <ImageListItem
-                    key={item.id}
-                    sx={{
-                      marginRight: "15px",
-                    }}
-                  >
-                    <img
-                      src={item.img}
-                      srcSet={`${item.img}?w=
-                                164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                      style={{ borderRadius: "4Datapx" }}
-                    />
-                  </ImageListItem>
-                ))}
-
-                {itemData?.length < 5 ? <EmptyImage itemData={itemData} /> : ""}
-              </ImageList>
-            </Grid>
-          </Grid>
+          <Typography
+            sx={{
+              fontSize: 16,
+              fontWeight: 600,
+              width: "160px",
+            }}
+          >
+            {text}
+          </Typography>
+          <Typography sx={{mt:1, fontSize:'14px'}}>
+            Đội ngũ lãnh đạo của Atlantic Group tin tưởng vào việc trao quyền
+            cho các nhóm thực hiện công việc có tác động mạnh mẽ nhất của họ,
+            bằng cách cam kết xây dựng một sản phẩm mà mọi người yêu thích và
+            một nền văn hóa nơi mọi người đều có thể phát triển. Tìm hiểu họ bên
+            dưới và tìm hiểu thêm trong Thư của những người sáng lập của... Xem
+            thêm
+          </Typography>
         </Paper>
       </Box>
     );
@@ -174,20 +111,20 @@ export default function CompanyInfor() {
           flexDirection: "column",
           paddingLeft: 40,
           paddingRight: 40,
-          marginTop: "-6%",
-          background: 'white'
+          marginTop: "-4%",
+          background: "white",
         }}
       >
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
-            alignItems: "flex-end",
-            mb: "28px", 
+            // flexDirection: "row",
+            // alignItems: "flex-end",
+            // mb: "28px",
           }}
         >
           <CropImageAva data={Data?.avatar} handleSubmit={handleSubmit} />
-          
+
           <Box
             sx={{
               display: "flex",
@@ -195,26 +132,40 @@ export default function CompanyInfor() {
               width: "100%",
             }}
           >
-            <Typography
-              sx={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: "#393B3E",
-                ml: 2,
-                mr: 1,
-                mt: "43px",
-              }}
-            >
-              {Data?.name}
-              <span style={{ marginLeft: "0.6em" }}>
-                <TickIcon />
-              </span>
-            </Typography>
+            <Box sx={{ mt: 5 }}>
+              <Typography
+                sx={{
+                  fontSize: 18,
+                  fontWeight: "700",
+                  color: "#393B3E",
+                  ml: 2,
+                  mr: 1,
+                  mt: "18px",
+                }}
+              >
+                {/* {Data?.name } */}
+                Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic
+                Group)
+                <span style={{ marginLeft: "0.6em" }}>
+                  <TickIcon />
+                </span>
+                <HeaderBreadcrumbs
+                  links={[
+                    {
+                      name: "CÔNG NGHỆ THÔNG TIN",
+                    },
+                    { name: "BẤT ĐỘNG SẢN" },
+                  ]}
+                />
+              </Typography>
+            </Box>
 
             <DrawerEdit dataForm={Data} />
           </Box>
         </Box>
-
+  
+        <Box sx={{ml: '135px', mb:3}}>
+        <Divider />
         {renderText("Số điện thoại :", Data?.phoneNumber || "")}
         {renderText("Email :", Data?.email || "")}
         {renderText(
@@ -226,20 +177,12 @@ export default function CompanyInfor() {
           "Địa chỉ :",
           `${Data?.address}, ${Data?.districtName}, ${Data?.provinceName}`
         )}
-        <Divider />
 
         {renderDoubleText(
-          "Môi trường làm việc  :",
-          Data?.workingEnvironment,
-          Data?.workingEnvironmentImages
-        )}
-
-        <Divider />
-        {renderDoubleText(
-          "Giới thiệu công ty :",
+          "Giới thiệu công ty ",
           Data?.text,
-          Data?.organizationImages
         )}
+        </Box>
       </div>
     </FormProvider>
   );

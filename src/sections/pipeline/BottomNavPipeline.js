@@ -73,8 +73,9 @@ const BottomNavPipeline = ({
             </IconButton>
             <ConnectDialog
               onClose={() => setOpenDialog(false)}
+              onDelete={()=> console.log('Tuyeyet')}
               open={openDialog}
-              type="fanpage"
+              type="role"
             />
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
