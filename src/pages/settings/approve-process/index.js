@@ -24,6 +24,15 @@ const itemData = [
         creator: "ThanhDT58",
         countApply: 15,
         approveLevel: 2,
+        isActive: true
+    },
+    {
+        createdTime: "17/02/2024",
+        title: "Quy trình phê duyệt tin tuyển dụng tháng 2/2024",
+        creator: "ThanhDT59",
+        countApply: 20,
+        approveLevel: 3,
+        isActive: false
     },
 ];
 
@@ -38,7 +47,7 @@ export default function ApproveProcess() {
                 title="QUY TRÌNH PHÊ DUYỆT TIN TUYỂN DỤNG NỘI BỘ"
             />
             <ApproveProcessCard
-                approveProcesses={itemData}
+                approveProcesses={null}
                 color={"#1E88E5"}
                 title="QUY TRÌNH PHÊ DUYỆT LỜI MỜI NGƯỜI DÙNG"
             />
