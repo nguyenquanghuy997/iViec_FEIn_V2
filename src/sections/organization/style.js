@@ -32,14 +32,11 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       '&.Mui-selected': {
         "&.Mui-expanded": {
           backgroundColor: '#F2F4F5 !important',
-          borderLeft: '1px solid #D0D4DB'
         },
         "&.Mui-focused": {
           backgroundColor: '#F2F4F5 !important',
-          borderLeft: '1px solid #D0D4DB'
         },
         "&:hover": {
-          borderLeft: '1px solid #D0D4DB',
           backgroundColor: '#F2F4F5 !important',
         }
       },
@@ -60,7 +57,7 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       "& .MuiTreeItem-iconContainer": {
         position: 'absolute',
         top: '50%',
-        left: theme.spacing(6),
+        left: theme.spacing(5),
         transform: 'translateY(-50%)'
       },
       "& .MuiFormControlLabel-label": {
@@ -90,7 +87,8 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       justifyContent: 'space-between',
       height: 48,
       "& .tree-item-label-text": {
-        minWidth: 200,
+        lineHeight: 3,
+        minWidth: '80%',
       },
       "& .tree-item-label-actions": {
         display: 'none',

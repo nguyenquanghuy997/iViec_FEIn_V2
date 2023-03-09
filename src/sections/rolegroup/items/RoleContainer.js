@@ -17,6 +17,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Typography } from "@mui/material";
 import moment from "moment";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +31,7 @@ export const RoleContainer = () => {
   const router = useRouter();
   const { query, isReady } = router;
   const { data } = useGetRoleGroupListQuery();
-  const [getAllFilterApplicant, { data: Data, isLoading }] = useGetAllFilterPipelineMutation();
+  const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
   console.log(Data)
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
@@ -109,31 +110,12 @@ export const RoleContainer = () => {
   ];
 
   const menuItemText = {
-    name: "Họ và tên",
-    phoneNumber: "Số điện thoại",
-    dateOfBirth: "Ngày sinh",
-    email: "Email",
-    recruitment: "Tin tuyển dụng",
-    recruitmentPipelineState: "Bước tuyển dụng",
-    createdTime: "Ngày ứng tuyển",
-    organization: "Tổ chức",
-    jobSource: "Nguồn",
-    council: "Hội đồng",
-    creator: "Cán bộ tạo ứng viên",
-    education: "Học vấn",
-    applicantWorkingExperiences: "Kinh nghiệm làm việc",
-    jobCategory: "Ngành nghề",
-    yearOfExperience: "Số năm kinh nghiệm",
-    applicantSkills: "Kỹ năng",
-    identityNumber: "Số CCCD/CMND",
-    sex: "Giới tính",
-    maritalStatus: "Tình trạng hôn nhâ",
-    height: "Chiều cao",
-    weight: "Cân nặng",
-    expectedWorkingAddress: "Nơi làm việc mong muốn",
-    expectedSalary: "Mức lương mong muốn",
-    livingAddress: "Nơi ở hiện tại",
-    homeTower: "Quê quán",
+    name: "Vị trí công việc",
+    organizationName: "Đơn vị",
+    numberOfRecruitmentApplied: "Số tin áp dụng",
+    isActivated: "Trạng thái",
+    createdTime: "Ngày tạo",
+    creatorName: "Người tạo",
   };
 
   const handleUpdateListColumnApplicants = async () => {
@@ -168,88 +150,19 @@ export const RoleContainer = () => {
     if (!isReady) return;
     const queryParams = {
       searchKey: query.searchKey,
-      applicantSkillIds:
-        query.applicantSkillIds && typeof query.applicantSkillIds === "string"
-          ? [query.applicantSkillIds]
-          : query.applicantSkillIds && query.applicantSkillIds,
-      expectSalaryFrom: query.expectSalaryFrom
-        ? Number(query.expectSalaryFrom)
-        : null,
-      expectSalaryTo: query.expectSalaryTo
-        ? Number(query.expectSalaryTo)
-        : null,
-      yearsOfExperience: query.yearsOfExperience
-        ? [Number(query.yearsOfExperience)]
-        : null,
-      sexs: query.sexs ? [Number(query.sexs)] : null,
-      weightFrom: query.weightFrom ? Number(query.weightFrom) : null,
-      weightTo: query.weightTo ? Number(query.weightTo) : null,
-      heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
-      heightTo: query.heightTo ? Number(query.heightTo) : null,
-      maritalStatuses: query.maritalStatuses
-        ? [Number(query.maritalStatuses)]
-        : null,
-      // educations: query.educations ? [query.educations] : null,
-      homeTowerProvinceIds: query.homeTowerProvinceIds
-        ? [query.homeTowerProvinceIds]
-        : null,
-      homeTowerDistrictIds: query.homeTowerDistrictIds
-        ? [query.homeTowerDistrictIds]
-        : null,
-      livingAddressProvinceIds: query.livingAddressProvinceIds
-        ? [query.livingAddressProvinceIds]
-        : null,
-      livingAddressDistrictIds: query.livingAddressDistrictIds
-        ? [query.livingAddressDistrictIds]
-        : null,
-      expectWorkingAddressProvinceIds:
-        query.expectWorkingAddressProvinceIds &&
-        typeof query.expectWorkingAddressProvinceIds === "string"
-          ? [query.expectWorkingAddressProvinceIds]
-          : query.expectWorkingAddressProvinceIds &&
-            query.expectWorkingAddressProvinceIds,
-      organizationIds:
-        query.organizationIds && typeof query.organizationIds === "string"
-          ? [query.organizationIds]
-          : query.organizationIds && query.organizationIds,
-      recruitmentIds:
-        query.recruitmentIds && typeof query.recruitmentIds === "string"
-          ? [query.recruitmentIds]
-          : query.recruitmentIds && query.recruitmentIds,
-      ownerIds:
-        query.ownerIds && typeof query.ownerIds === "string"
-          ? [query.ownerIds]
-          : query.ownerIds && query.ownerIds,
-      councilIds:
-        query.councilIds && typeof query.councilIds === "string"
-          ? [query.councilIds]
-          : query.councilIds && query.councilIds,
-      creatorIds:
-        query.creatorIds && typeof query.creatorIds === "string"
-          ? [query.creatorIds]
-          : query.creatorIds && query.creatorIds,
+      isActive: query.isActive ? query.isActive : null,
       createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
       createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-      recruitmentPipelineStates:
-        query.recruitmentPipelineStates &&
-        typeof query.recruitmentPipelineStates === "string"
-          ? [Number(query.recruitmentPipelineStates)]
-          : query.recruitmentPipelineStates &&
-            query.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
-      jobCategoryIds:
-        query.jobCategoryIds && typeof query.jobCategoryIds === "string"
-          ? [query.jobCategoryIds]
-          : query.jobCategoryIds && query.jobCategoryIds,
-      jobSourceIds:
-        query.jobSourceIds && typeof query.jobSourceIds === "string"
-          ? [query.jobSourceIds]
-          : query.jobSourceIds && query.jobSourceIds,
+      creatorIds:
+        query.creatorIds && typeof query.creatorIds === "string"
+          ? query.creatorIds
+          : query.creatorIds && query.creatorIds,
     };
-    if (query) {
-      getAllFilterApplicant(JSON.stringify(queryParams)).unwrap();
-    } else {
-      getAllFilterApplicant({}).unwrap();
-    }
+    // if (query) {
+    //   getAllFilter(queryParams).unwrap();
+    // } else {
+    //   getAllFilter().unwrap();
+    // }
   }, [isReady, query]);
 
   // open filter form

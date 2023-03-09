@@ -45,17 +45,8 @@ const OrganizationAPI = apiWithTag.injectEndpoints({
       query: (data) => ({
         url: API_UPDATE_ORGANIZATION,
         method: 'PATCH',
-        data: data,
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
+        data
       }),
-      // prepareHeaders: (headers) => {
-      //   if (!headers.has("Content-Type")) {
-      //     headers.set("Content-Type", "multipart/form-data");
-      //   }
-      //   return headers;
-      // },
       invalidatesTags: ['GetOrganization']
     }),
     deleteOrganization: builder.mutation({

@@ -62,11 +62,11 @@ export const clientSlice = createSlice({
   initialState: { shortLink: '' },
   reducers: {},
   // extra reducers set get column to state
-  extraReducers: {
+  extraReducers: () => ({
     [getShortLink.fulfilled]: (state, action) => {
       state.shortLink = action.payload
     },
-  },
+  }),
 })
 
 export default clientSlice.reducer

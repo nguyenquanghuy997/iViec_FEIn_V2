@@ -16,7 +16,7 @@ import {
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Applicant", "FilterApplicant"],
+  addTagTypes: ["Applicant", "FilterApplicant", "GetColumnApplicants"],
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({

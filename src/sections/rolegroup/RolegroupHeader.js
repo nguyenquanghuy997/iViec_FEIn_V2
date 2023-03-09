@@ -1,22 +1,19 @@
 import PipelineDrawer from "./modals/RoleDrawer";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import SvgIcon from "@/components/SvgIcon";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { InputAdornment, Stack, Button } from "@mui/material";
-import { useState } from "react";
+// import { useState } from "react";
+import SvgIcon from "./SvgIcon";
 
-const PipelineHeader = ({
+const RolegroupHeader = ({
   methods,
   onOpenFilterForm,
   onSubmit,
   handleSubmit,
 }) => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+  // const [showForm, setShowForm] = useState(false);
   return (
     <>
       <Stack
@@ -66,7 +63,7 @@ const PipelineHeader = ({
             background: "#1976D2",
             textDecoration: "none",
           }}
-          onClick={handleOpen}
+          // onClick={handleOpen}
         >
           <SvgIcon>
             {`
@@ -90,10 +87,13 @@ const PipelineHeader = ({
         </Button>
       </Stack>
 
-      <PipelineDrawer open={open} onClose={handleClose} onOpen={handleOpen} />
+      <PipelineDrawer open={open} 
+      // onClose={handleClose} 
+      // onOpen={handleOpen} 
+      />
       {/* <PipelineFormModal show={showForm} setShow={setShowForm} /> */}
     </>
   );
 };
 
-export default PipelineHeader;
+export default RolegroupHeader;

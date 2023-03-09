@@ -28,7 +28,7 @@ export default function Setting() {
 
   return (
     <PageWrapper title={"Quy trình tuyển dụng"}>
-      <Page>
+      <Page title={"Quy trình tuyển dụng"}>
         <PipelineItem />
       </Page>
     </PageWrapper>

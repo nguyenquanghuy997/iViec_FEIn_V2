@@ -86,13 +86,17 @@ export const API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE = "/applicant/Applic
 export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantSkills";
 //Tin tuyển dụng
 export const API_LIST_JOBS = "/api/recruitment/Recruitment/GetRecruitments"; //new  danh sách tin
-// Lấy danh sách phòng ban
+// Lấy danh sách đơn vị/tổ chức
 export const API_GET_ORGANIZATION = "/organization/Organization/GetOrganization";
 export const API_GET_ORGANIZATION_WITH_CHILD = "/organization/Organization/GetOrganizationsLessDataWithChild"; // lấy danh sách đơn vị để đổ dữ liệu dạng cây
 export const API_GET_ORGANIZATION_DETAIL_BY_ID = "/organization/Organization/GetOrganizationDetailById"; // lấy chi tiết thông tin đơn vị
 export const API_CREATE_CHILD_ORGANIZATION = "/organization/Organization/CreateChildOrganization"; // tạo đơn vị
 export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganization"; // cập nhật thông tin đơn vị
 export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganizationById"; // xóa đơn vị
+export const API_DELETE_MULTIPLE_ORGANIZATION = "/organization/Organization/RemoveOrganizations"; // xóa nhiều đơn vị
+export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrganizationsActive"; // xóa nhiều đơn vị
+export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin"; // lấy danh sách admin
+export const API_GET_ALL_USER_BY_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId"; // lấy danh sách người dùng theo đơn vị
 
 
 
@@ -167,11 +171,12 @@ export const API_GET_PAGING_JOBTYPE = "recruitment/JobPosition/GetJobPositions";
 export const API_UPDATE_STATUS_JOBTYPE = "JobType/UpdateJobTypeStatus";
 export const API_GET_PREVIEW_JOBTYPE = "JobType/GetJobTypeById";
 export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
-export const API_ADD_JOBTYPE = "JobType/CreateNewJobType";
-export const API_UPDATE_JOBTYPE = "JobType/UpdateJobType";
+export const API_ADD_JOBTYPE = "/recruitment/JobPosition/CreateJobPosition";
+export const API_UPDATE_JOBTYPE = "/recruitment/JobPosition/UpdateJobPosition";
+export const API_GET_APPLICANT_USERS_ON_JOBTYPE = "/recruitment/JobPosition/GetApplicationUsersOnJobPosition";
 
 // Pipeline
-export const API_GET_ALL_PIPELINE = "organization/OrganizationPipeline/GetOrganizationPipelines"; //new
+export const API_GET_ALL_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipelines"; //new
 export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm"; // bật tắt trạng thái hoạt động
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
