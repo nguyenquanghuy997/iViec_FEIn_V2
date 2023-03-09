@@ -1,6 +1,6 @@
-import React, {useMemo} from "react";
+import React, {useMemo, useRef, useState} from "react";
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
-import {FormProvider, RHFSwitch, RHFTextField} from "@/components/hook-form";
+import {FormProvider, RHFCheckbox, RHFSwitch, RHFTextField} from "@/components/hook-form";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
@@ -10,28 +10,39 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import {EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT} from "@/sections/emailform/config/EditorConfig";
 import {useTheme} from "@mui/material/styles";
-import {EmailFormFooterStyle, EmailFormHeadStyle} from "@/sections/emailform/style";
+import {BoxFlex, EmailFormFooterStyle, EmailFormHeadStyle} from "@/sections/emailform/style";
 import RHFEmailEditor from "@/sections/emailform/component/editor/RHFEmailEditor";
+import {LabelStyle} from "@/components/hook-form/style";
+import CropImage from "@/sections/emailform/component/crop-image/CropImage";
+import PreviewEmail from "@/sections/emailform/component/PreviewEmail";
 
 const InputStyle = {
   minHeight: 44,
   minWidth: 752,
   marginBottom: 24
 }
-const FormModal = ({isOpen, onClose, item, title}) => {
+const FormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
   const theme = useTheme();
+
+  const reactQuillContentRef = useRef(null);
+  const reactQuillSignatureRef = useRef(null);
+
+  const [isOpenPreview, setIsOpenPreview] = useState(false);
+
   const defaultValues = useMemo(
       () => {
         const primaryMainColor = theme.palette.primary.main;
         const defaultEmailEditorConfig = EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT(primaryMainColor);
         const {
-          name = '',
+          title = '',
           contentEmail = defaultEmailEditorConfig.contentEmail,
+          contentSignature = defaultEmailEditorConfig.contentSignature,
           isActive = true,
         } = item || {};
         return {
-          name,
+          title,
           contentEmail,
+          contentSignature,
           isActive,
         }
       },
@@ -51,6 +62,17 @@ const FormModal = ({isOpen, onClose, item, title}) => {
   const { watch, handleSubmit, formState: {isSubmitting} } = methods;
 
   const watchIsActive = watch('isActive');
+  const watchTitle = watch('title');
+  const watchContent = watch('contentEmail');
+  const watchSignature = watch('contentSignature');
+
+  const handleOpenPreviewEmail = () => {
+    setIsOpenPreview(true);
+  };
+
+  const handleClosePreviewEmail = () => {
+    setIsOpenPreview(false);
+  }
 
   const onSubmit = async (data) => {
     console.log(data)
@@ -80,15 +102,53 @@ const FormModal = ({isOpen, onClose, item, title}) => {
               <Divider/>
               {/* content form */}
 
-              <Box sx={{py: 2, px: 2, mt: 8, minWidth: '800px'}}>
+              <Box sx={{py: 2, px: 2, my: 8, minWidth: '800px'}}>
                 <RHFTextField
-                    name="name"
+                    name="title"
                     title="Tên mẫu email"
                     placeholder="Nhập tên mẫu email"
                     isRequired
                     style={{...InputStyle}}
                 />
-                <RHFEmailEditor title="Nội dung email" style={{...InputStyle}} initialValue={item?.content || ""} name="contentEmail" placeholder="Nhập nội dung email..." />
+                <RHFEmailEditor
+                    title="Nội dung email"
+                    style={{...InputStyle}}
+                    defaultValue={item?.content || "Default value"}
+                    name="contentEmail"
+                    placeholder="Nhập nội dung email..."
+                    showPreview
+                    showUploadFile={showUploadFile}
+                    onOpenPreview={handleOpenPreviewEmail}
+                    sx={{ width: '752px', minHeight: '370px' }}
+                    ref={reactQuillContentRef}
+                />
+
+                <Box sx={{ marginTop: 2, marginBottom: 2 }}>
+                  <BoxFlex>
+                    <LabelStyle>
+                      Chữ ký email
+                    </LabelStyle>
+                    <RHFCheckbox name='isDefault' label='Đặt làm chữ ký mặc định' />
+                  </BoxFlex>
+                </Box>
+
+              {/* Logo & Signature  */}
+               <BoxFlex alignItems="flex-start">
+                 <Stack>
+                   <CropImage data={'01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'} />
+                   <Typography sx={{ fontSize: 13, fontWeight: 400, color: '#5C6A82', mt: 2 }}>Logo công ty</Typography>
+                 </Stack>
+                 <Box>
+                   <RHFEmailEditor
+                       style={{...InputStyle}}
+                       defaultValue={item?.content || "Default value"}
+                       name="contentSignature"
+                       placeholder="Nhập nội dung email..."
+                       sx={{ width: '596px', minHeight: '230px' }}
+                       ref={reactQuillSignatureRef}
+                   />
+                 </Box>
+               </BoxFlex>
               </Box>
 
               {/* end content form */}
@@ -112,6 +172,14 @@ const FormModal = ({isOpen, onClose, item, title}) => {
             </FormProvider>
           </Scrollbar>
         </Drawer>
+        { isOpenPreview && <PreviewEmail
+          isOpen={isOpenPreview}
+          onClose={handleClosePreviewEmail}
+          title={watchTitle}
+          content={watchContent}
+          signature={watchSignature}
+          logo={'http://103.176.149.158:5001/api/Image/GetImage?imagePath=01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'}
+        /> }
       </>
   )
 }

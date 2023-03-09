@@ -15,6 +15,7 @@ const RootStyle = styled(Box)(({theme}) => ({
 const renderValue = (value) => {
   return '&nbsp;<span style="font-weight: 500; font-size: 13px; padding: 5px 8px; color: #1565C0; background-color: #E3F2FD">' + value + '</span>&nbsp;'
 }
+
 export default function EmailEditor({
       error,
       value,

@@ -1,11 +1,12 @@
 import {styled} from "@mui/styles";
 import {Accordion, Box, Button, Typography} from "@mui/material";
 
-const BoxFlex = styled(Box)(({theme, alignItems = 'center', justifyContent = 'space-between'}) => ({
+const BoxFlex = styled(Box)(({theme, alignItems = 'center', justifyContent = 'space-between', flexWrap = 'wrap'}) => ({
   padding: theme.spacing(0),
   display: 'flex',
   alignItems: alignItems,
   justifyContent: justifyContent,
+  flexWrap: flexWrap,
 }));
 
 const ButtonAddStyle = styled(Button)(({theme}) => ({
@@ -77,11 +78,15 @@ const CardEmailFormItemStyle = styled(Accordion)(({theme}) => ({
 const CardEmailFormItemTitleStyle = styled(Typography)(({theme}) => ({
   '&.card-email-item-title': {
     display: 'flex',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     color: '#455570',
     fontSize: 16,
     fontWeight: 600,
     marginBottom: theme.spacing(3),
+    "& .MuiCheckbox-root": {
+      padding: 0,
+      marginRight: theme.spacing(2)
+    },
     "& .card-email-item-subtitle": {
       color: '#455570',
       fontSize: 13,

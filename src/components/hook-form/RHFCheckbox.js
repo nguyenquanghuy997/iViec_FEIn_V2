@@ -1,8 +1,9 @@
 // @mui
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import {Checkbox, FormControlLabel, FormGroup} from "@mui/material";
 import PropTypes from "prop-types";
 // form
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from 'react-hook-form'
+import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 
 RHFCheckbox.propTypes = {
   name: PropTypes.string.isRequired,
@@ -19,9 +20,13 @@ export function RHFCheckbox({ name, value, label, style, ...other }) {
         <Controller
           name={name}
           control={control}
-          render={({ field }) => (
-            <Checkbox {...field} style={other.style} checked={field.value} />
-          )}
+          render={({ field }) => <Checkbox
+              icon={<CheckboxIconDefault />}
+              checkedIcon={<CheckboxIconChecked />}
+              {...field}
+              style={other.style}
+              checked={field.value}
+          />}
         />
       }
       {...other}

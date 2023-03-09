@@ -1,5 +1,5 @@
 import React from 'react'
-import {AccordionDetails, AccordionSummary, Box, IconButton, Typography} from "@mui/material";
+import {AccordionDetails, AccordionSummary, Box, Checkbox, IconButton, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
 import {
   BoxFlex,
@@ -10,8 +10,9 @@ import {
 import {AvatarDS} from "@/components/DesignSystem";
 import {ActionSwitchCheckedIcon, ActionSwitchUnCheckedIcon} from "@/sections/organization/component/Icon";
 import {EditIcon} from "@/assets/ActionIcon";
+import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 
-const CardEmailFormItem = ({expanded, onChangeExpand, index, item, onOpenConfirmDelete, onOpenActiveModal, onOpenFormModal}) => {
+const CardEmailFormItem = ({isCheckbox, expanded, checked, onChangeSelected, onChangeExpand, index, item, onOpenConfirmDelete, onOpenActiveModal, onOpenFormModal}) => {
   return (
       <CardEmailFormItemStyle
           className="card-email-item"
@@ -29,11 +30,17 @@ const CardEmailFormItem = ({expanded, onChangeExpand, index, item, onOpenConfirm
         >
           <BoxFlex>
             <CardEmailFormItemTitleStyle className="card-email-item-title">
+              { isCheckbox && <Checkbox
+                  value={item}
+                  checked={checked}
+                  onChange={onChangeSelected}
+                  icon={<CheckboxIconDefault />}
+                  checkedIcon={<CheckboxIconChecked />}
+              /> }
               {item.title}
               <Typography className="card-email-item-subtitle" component="span">{item.subtitle}</Typography>
             </CardEmailFormItemTitleStyle>
-            {item.isActive &&
-                <Typography sx={{color: '#388E3C', fontSize: 12, fontWeight: 500, mr: 7}}>Đang áp dụng</Typography>}
+            {item.isActive && <Typography sx={{color: '#388E3C', fontSize: 12, fontWeight: 500, mr: 7}}>Đang áp dụng</Typography>}
           </BoxFlex>
           <BoxFlex>
             <BoxFlex>

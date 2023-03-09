@@ -225,3 +225,5 @@ export const allLangs = [
 
 export const defaultLang = allLangs[0]; // English
 export const MAX_SIZE_FILEIMAGE = 5145728;
+
+export const API_KEY_EDITOR = "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189"

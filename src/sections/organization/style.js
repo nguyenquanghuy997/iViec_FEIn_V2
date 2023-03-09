@@ -26,15 +26,18 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       height: 48,
       marginBottom: theme.spacing(0.5),
       position: 'relative',
+      borderLeft: '1px solid transparent',
       "&:active, &:focus": {
-        backgroundColor: 'transparent !important'
+        backgroundColor: 'transparent !important',
       },
       '&.Mui-selected': {
         "&.Mui-expanded": {
           backgroundColor: '#F2F4F5 !important',
+          borderLeft: '1px solid #d0d4db',
         },
         "&.Mui-focused": {
           backgroundColor: '#F2F4F5 !important',
+          borderLeft: '1px solid #d0d4db',
         },
         "&:hover": {
           backgroundColor: '#F2F4F5 !important',
