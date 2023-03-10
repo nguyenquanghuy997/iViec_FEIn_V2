@@ -19,7 +19,7 @@ const RecruitmentHeader = ({
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
-        padding="16px 16px 4px 16px"
+        padding="0 24px"
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

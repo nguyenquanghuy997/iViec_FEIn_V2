@@ -1,24 +1,24 @@
 import { apiSlice } from '@/redux/api/apiSlice'
 import {
-  API_LIST_JOBS,
+  API_GET_LIST_RECRUITMENT,
 } from '@/routes/api'
+import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ['Job'],
+  addTagTypes: ['Recruitment'],
 })
 
 export const recruitmentSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
-    getListJobs: builder.mutation({
-      query: (data) => ({
-        url: API_LIST_JOBS,
+    getRecruitments: builder.query({
+      query: (params) => ({
+        url: `${API_GET_LIST_RECRUITMENT}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "POST",
-        data,
       }),
     }),
   }),
 })
 
 export const {
-  useGetListJobsMutation,
+  useLazyGetRecruitmentsQuery,
 } = recruitmentSlice

@@ -6,7 +6,7 @@ import {ButtonFilterStyle} from "@/sections/applicant/style";
 
 const ApplicantHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit}) => {
     return (<HeadingBar sx={{ mb: '28px', position: 'fixed', top: 8 }}>
-        <Stack flexDirection="row" alignItems="center">
+        <Stack flexDirection="row" alignItems="center" padding="0 24px">
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <RHFTextField
                     name="searchKey"
