@@ -103,6 +103,7 @@ export const PAGES = {
   Calculator: "Calculator",
   Recruiter: "External recruiter",
   Jobs: "Jobs",
+  Recruitment: "Recruitment",
   Clients: "Clients",
   Users: "Users",
   Task: "Task",
