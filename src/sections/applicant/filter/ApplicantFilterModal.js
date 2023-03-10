@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
-import {useLazyGetRecruitmentByOrganizationQuery} from "@/sections/recruitment/RecruitmentSlice";
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
 import {convertFlatDataToTree} from "@/utils/function";
 import * as Yup from "yup";
@@ -16,7 +15,8 @@ import {FormProvider} from "@/components/hook-form";
 import {
   useGetAllJobSourcesQuery,
   useGetSkillsQuery,
-  useLazyGetAllUserFromOrganizationQuery
+  useLazyGetAllUserFromOrganizationQuery,
+  useLazyGetRecruitmentByOrganizationQuery
 } from "@/sections/applicant";
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
 import {

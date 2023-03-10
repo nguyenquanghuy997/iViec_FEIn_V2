@@ -227,6 +227,7 @@ export const JobTypeItem = () => {
           menuItemText={menuItemText}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
+          nodata="Hiện chưa có vị trí công việc nào"
           isSetting={true}
           filter={
             <JobTypeHeader

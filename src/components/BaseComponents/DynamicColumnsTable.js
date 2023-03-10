@@ -53,7 +53,7 @@ const DynamicColumnsTable = (props) => {
   const [initialColumns, setInitialColumns] = useState([]);
   const [checkedColumns, setCheckedColumns] = useState([]);
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
-  const [ isOpenBottomNav, setIsOpenBottomNav] = useState(false)
+  const [isOpenBottomNav, setIsOpenBottomNav] = useState(false);
   console.log(isOpenBottomNav)
   useEffect(() => {
     setInitialColumns(columns);
@@ -135,7 +135,11 @@ const DynamicColumnsTable = (props) => {
       "& .ant-table-thead >tr>th": {
         background: "#FDFDFD",
         height: "72px",
+        padding: "13px 8px",
         borderBottom: "2px solid #CCD4DC",
+      },
+      "& .ant-table-tbody >tr >td": {
+        padding: "13px 8px",
       },
       "& .ant-pagination": {
         padding: "0 16px",
@@ -175,11 +179,12 @@ const DynamicColumnsTable = (props) => {
       "& .ant-pagination .ant-pagination-next button": {
         color: "#455570",
       },
-      "& .ant-pagination .ant-pagination-item a:hover, .ant-pagination .ant-pagination-next:hover .ant-pagination-item-link": {
-        backgroundColor: "#EFF3F7",
-        color: "#455570",
-        fontWeight: 700,
-      },
+      "& .ant-pagination .ant-pagination-item a:hover, .ant-pagination .ant-pagination-next:hover .ant-pagination-item-link":
+        {
+          backgroundColor: "#EFF3F7",
+          color: "#455570",
+          fontWeight: 700,
+        },
     },
     setting: {
       background: "#FDFDFD",
@@ -195,11 +200,14 @@ const DynamicColumnsTable = (props) => {
   };
   let locale = {
     emptyText: (
-      <div style={{margin:'40px 0', minHeight:'250px'}}>
-        <img src={`/assets/icons/candidate/notfound.png`} style={{margin:'0 auto'}}/>
+      <div style={{ margin: "40px 0", minHeight: "250px" }}>
+        <img
+          src={`/assets/icons/candidate/notfound.png`}
+          style={{ margin: "0 auto" }}
+        />
         <p>{nodata}</p>
       </div>
-    )
+    ),
   };
   return (
     <View>
@@ -269,7 +277,6 @@ const DynamicColumnsTable = (props) => {
             loading={loading}
             className={classes.table}
             pagination={{
-              
               defaultPageSize: 10,
               showSizeChanger: true,
               pageSizeOptions: ["10", "20", "30"],
