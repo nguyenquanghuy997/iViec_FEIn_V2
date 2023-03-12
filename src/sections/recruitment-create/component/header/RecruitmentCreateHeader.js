@@ -17,7 +17,7 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ..
             <BoxFlex>
                 <Stack flexDirection="row" alignItems="center">
                     <Box sx={{display: 'flex', alignItems: 'center'}}>
-                        <NextLink href={PATH_DASHBOARD.jobs.root} passHref>
+                        <NextLink href={PATH_DASHBOARD.recruitment.root} passHref>
                             <Link>
                                 <IconButton
                                     size='small'
