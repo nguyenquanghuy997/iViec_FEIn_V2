@@ -1,6 +1,7 @@
 import { apiSlice } from '@/redux/api/apiSlice'
 import {
   API_GET_LIST_RECRUITMENT,
+  API_GET_RECRUITMENT_BY_ORGANIZATION,
 } from '@/routes/api'
 import * as qs from "qs";
 
@@ -16,9 +17,31 @@ export const recruitmentSlice = apiWithTag.injectEndpoints({
         method: "POST",
       }),
     }),
+    getListRecruitments: builder.query({
+      query: (params) => ({
+        url: API_GET_LIST_RECRUITMENT,
+        method: 'GET',
+        params
+      }),
+    }),
+    getRecruitmentByOrganization: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_BY_ORGANIZATION,
+        method: 'GET',
+        params
+      }),
+    }),
+
   }),
 })
 
 export const {
+  useGetListJobsMutation,
+  // get list recruitment
+  useGetListRecruitmentsQuery,
+  useLazyGetListRecruitmentsQuery,
+  // get list recruitment by organization
+  useFetRecruitmentByOrganizationQuery,
+  useLazyGetRecruitmentByOrganizationQuery,
   useLazyGetRecruitmentsQuery,
 } = recruitmentSlice
