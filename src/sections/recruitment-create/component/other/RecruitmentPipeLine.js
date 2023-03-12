@@ -7,7 +7,7 @@ import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
 import React from "react";
 import {BoxFlex} from "@/sections/emailform/style";
-import RecruitmentPipelineCard from "@/sections/recruitment-create/component/pipeline/RecruitmentPipelineCard";
+import RecruitmentPipelineCard from "@/sections/recruitment-create/component/other/RecruitmentPipelineCard";
 
 const RecruitmentPipeLine = () => {
 
