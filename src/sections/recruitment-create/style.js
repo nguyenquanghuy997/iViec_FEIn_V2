@@ -31,6 +31,8 @@ const TabStyle = styled(Tab)(({theme}) => ({
   "&.tab-item": {
     textAlign: 'left',
     maxWidth: '100%',
+    backgroundColor: '#F2F4F5',
+    borderRadius: "6px",
     "&.MuiTab-root": {
       height: '76px',
       textTransform: 'unset',
@@ -40,7 +42,6 @@ const TabStyle = styled(Tab)(({theme}) => ({
     "&.Mui-selected": {
       color: "#FDFDFD",
       backgroundColor: "#1976D2",
-      borderRadius: "6px",
     },
     "& .MuiTabs-indicator": {
       display: "none",

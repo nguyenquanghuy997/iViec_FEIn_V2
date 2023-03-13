@@ -7,8 +7,8 @@ const RightNoteText = ({ title, texts, children, ...props }) => {
         <Typography sx={{ color: '#455570', fontSize: 14, fontWeight: 600, mb: 2 }}>
           {title}
         </Typography>
-        {texts.map(text => (
-            <Typography sx={{ color: '#5C6A82', fontSize: 14, fontWeight: 400, fontStyle: 'italic', mb: 2}}>
+        {texts.map((text, index) => (
+            <Typography key={index} sx={{ color: '#5C6A82', fontSize: 14, fontWeight: 400, fontStyle: 'italic', mb: 2}}>
               {text}
             </Typography>
         ))}
