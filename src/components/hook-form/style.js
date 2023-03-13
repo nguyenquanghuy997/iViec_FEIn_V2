@@ -68,6 +68,12 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
         fontSize: STYLE_CONSTANT.FONT_XS,
         color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
     },
+    "& .MuiInputAdornment-positionEnd": {
+        marginRight: theme.spacing(1.5)
+    },
+    "& .MuiInputAdornment-positionStart": {
+        marginLeft: theme.spacing(1.5)
+    }
 }));
 
 const SelectFieldStyle = styled(Select)(({theme}) => ({

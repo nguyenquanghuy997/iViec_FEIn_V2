@@ -205,7 +205,7 @@ const RecruitmentInformation = () => {
                                         fullWidth
                                         InputProps={{
                                             endAdornment: (
-                                                <InputAdornment position='end' sx={{mr: 1.5}}>
+                                                <InputAdornment position='end'>
                                                     VNĐ
                                                 </InputAdornment>
                                             ),
@@ -221,7 +221,7 @@ const RecruitmentInformation = () => {
                                         fullWidth
                                         InputProps={{
                                             endAdornment: (
-                                                <InputAdornment position='end' sx={{mr: 1.5}}>
+                                                <InputAdornment position='end'>
                                                     VNĐ
                                                 </InputAdornment>
                                             ),

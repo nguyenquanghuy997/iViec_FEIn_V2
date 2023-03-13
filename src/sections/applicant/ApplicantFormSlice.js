@@ -93,7 +93,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
     // new
     // get all applicant with filter
-    getAllFilterApplicant: builder.mutation({
+    getAllFilterApplicant: builder.query({
       query: (data) => ({
         url: API_GET_FILTER_ALL_APPLICANTS,
         method: "POST",
@@ -135,24 +135,19 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetListApplicantsQuery,
-  useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
-  useGetAllFilterApplicantMutation,
-  useLazyGetRecruitmentByOrganizationQuery,
+  useGetAllFilterApplicantQuery,
+  useGetRecruitmentByOrganizationQuery,
   // skills
   useGetSkillsQuery,
   // job sources
   useGetAllJobSourcesQuery,
-  useLazyGetAllJobSourcesQuery,
   // user from organization
   useGetAllUserFromOrganizationQuery,
   useLazyGetAllUserFromOrganizationQuery,
-
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useUpdateApplicantRecruitmentToNextStateMutation

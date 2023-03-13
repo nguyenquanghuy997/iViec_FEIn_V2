@@ -42,7 +42,7 @@ const renderOptions = (options, value, multiple = false) => {
     } else {
       return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
         {option.label}
-        {/*{value?.filter(item => item?.includes(option.value) !== -1)?.[i] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}*/}
+        {/*{value?.map(item => item?.includes(option.value) !== -1)?.[i] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}*/}
       </MenuItem>
     }
   })
@@ -54,7 +54,7 @@ const renderValue = (options = [], value = '', multiple, placeholder = '') => {
 
 const renderChipsSelect = (options, value, onDelete) => {
   return <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-    {options?.filter(option => value?.includes(option?.value))?.map((item, index) => {
+    {options?.filter(option => value?.map(String)?.includes(option?.value))?.map((item, index) => {
       return <ChipDS
           key={index}
           sx={{padding: '5px 8px', color: '#455570', fontSize: 12, fontWeight: 500, mt: 2.5, ml: 0.5,}}
