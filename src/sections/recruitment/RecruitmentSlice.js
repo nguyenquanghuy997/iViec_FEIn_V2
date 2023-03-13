@@ -3,7 +3,6 @@ import {
   API_GET_LIST_RECRUITMENT,
   API_GET_RECRUITMENT_BY_ORGANIZATION,
 } from '@/routes/api'
-import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ['Recruitment'],
@@ -12,9 +11,10 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 export const recruitmentSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getRecruitments: builder.query({
-      query: (params) => ({
-        url: `${API_GET_LIST_RECRUITMENT}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
+      query: (data) => ({
+        url: API_GET_LIST_RECRUITMENT,
         method: "POST",
+        data
       }),
     }),
     getListRecruitments: builder.query({
@@ -36,12 +36,11 @@ export const recruitmentSlice = apiWithTag.injectEndpoints({
 })
 
 export const {
-  useGetListJobsMutation,
+  useLazyGetRecruitmentsQuery,
   // get list recruitment
   useGetListRecruitmentsQuery,
   useLazyGetListRecruitmentsQuery,
   // get list recruitment by organization
   useFetRecruitmentByOrganizationQuery,
   useLazyGetRecruitmentByOrganizationQuery,
-  useLazyGetRecruitmentsQuery,
 } = recruitmentSlice

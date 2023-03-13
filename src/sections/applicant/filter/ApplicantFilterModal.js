@@ -241,7 +241,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
                     tittle="Áp dụng"
                     onClick={handleSubmit(onSubmit)}
                 />
-                <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
+                <ButtonCancelStyle onClick={handleCloseModal}>Bỏ lọc</ButtonCancelStyle>
               </Stack>
             </ApplicantModalFooterStyle>
           </FormProvider>
