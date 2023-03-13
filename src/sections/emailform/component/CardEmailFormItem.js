@@ -17,7 +17,6 @@ const CardEmailFormItem = ({isCheckbox, expanded, checked, onChangeSelected, onC
       <CardEmailFormItemStyle
           className="card-email-item"
           expanded={expanded}
-          // onChange={onChangeExpand}
       >
         <AccordionSummary
             expandIcon={
@@ -56,13 +55,13 @@ const CardEmailFormItem = ({isCheckbox, expanded, checked, onChangeSelected, onC
               </CardEmailFormItemContentStyle>
             </BoxFlex>
             <BoxFlex>
-              <Box sx={{cursor: 'pointer'}} onClick={() => onOpenActiveModal(item)}>
+              <Box sx={{cursor: 'pointer'}} onClick={onOpenActiveModal}>
                 {item.isActive ? <ActionSwitchCheckedIcon/> : <ActionSwitchUnCheckedIcon/>}
               </Box>
-              <IconButton size='small' sx={{color: '#5C6A82', ml: 2}} onClick={() => onOpenFormModal(item)}>
+              <IconButton size='small' sx={{color: '#5C6A82', ml: 2}} onClick={onOpenFormModal}>
                 <EditIcon/>
               </IconButton>
-              <IconButton size='small' sx={{color: '#5C6A82', ml: 2}} onClick={() => onOpenConfirmDelete(item)}>
+              <IconButton size='small' sx={{color: '#5C6A82', ml: 2}} onClick={onOpenConfirmDelete}>
                 <Iconify icon='ci:trash-full' sx={{width: 18, height: 18}}/>
               </IconButton>
             </BoxFlex>
