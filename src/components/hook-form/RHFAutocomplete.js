@@ -6,6 +6,7 @@ import {AutocompleteFieldStyle, LabelStyle, TextFieldStyle} from "@/components/h
 import React from "react";
 import ChipDS from "@/components/DesignSystem/ChipDS";
 import {PaperAutocompleteStyle} from "@/sections/auth/style";
+import {FormHelperText} from "@mui/material";
 
 RHFAutocomplete.propTypes = {
     name: PropTypes.string, options: PropTypes.array, AutocompleteProps: PropTypes.object,
@@ -57,6 +58,7 @@ export default function RHFAutocomplete({name, options = [], AutocompleteProps, 
                 PaperComponent={CustomPaper}
                 {...rest}
             />
+            <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
         </>)}
     />);
 }
