@@ -13,6 +13,7 @@ import {
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
   API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
+  API_GET_RECRUITMENT_BY_ORGANIZATION,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -89,22 +90,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         data: data,
       }),
     }),
-    //api lồng
-    // getRecruitmentsByApplicant: builder.query({
-    //   async queryFn(params, _queryApi, fetchWithBQ) {
-    //     // get a random user
-    //     const randomResult = await fetchWithBQ({
-    //       url: API_GET_RECRUITMENTS_BY_APPLICANT,
-    //       method: "GET",
-    //       params,
-    //     });
-    //     console.log("randomResult", randomResult);
-    //     // if (randomResult.error) return { error: randomResult.error }
-    //     // const user = randomResult.data
-    //     // const result = await fetchWithBQ(user/${user.id}/posts)
-    //     return randomResult;
-    //   },
-    // }),
 
     // new
     // get all applicant with filter
@@ -115,6 +100,14 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         data,
       }),
       invalidatesTags: ["FilterApplicant"],
+    }),
+    getRecruitmentByOrganization: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_BY_ORGANIZATION,
+        method: 'GET',
+        params
+      }),
+      providesTags: ['Recruitment']
     }),
     // get all skills
     getSkills: builder.query({
@@ -146,15 +139,8 @@ export const {
   useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
-  useUpdateListColumnApplicantsQuery,
-
-  useGetAllApplicantMutation,
-  useGetAllApplicantFormOwnerQuery,
-  useSetDefaultApplicantFormMutation,
-  useAddApplicantFormMutation,
-  useUpdateApplicantFormMutation,
-  useDeleteApplicantFormMutation,
   useGetAllFilterApplicantMutation,
+  useLazyGetRecruitmentByOrganizationQuery,
   // skills
   useGetSkillsQuery,
   // job sources

@@ -582,6 +582,7 @@ export const ApplicantItem = () => {
   return (
     <View>
       <ApplicantHeader
+          data={Data?.items}
         methods={methods}
         isOpen={isOpen}
         onSubmit={onSubmitSearch}

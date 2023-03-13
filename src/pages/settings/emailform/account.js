@@ -9,6 +9,8 @@ import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem"
 import ConfirmModal from '@/sections/emailform/component/ConfirmModal';
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import FormModal from "@/sections/emailform/component/FormModal";
+import {useDispatch, useSelector} from "@/redux/store";
+import {modalSlice} from "@/redux/common/modalSlice";
 
 Account.getLayout = function getLayout({roles = []}, page) {
   return (
@@ -65,11 +67,16 @@ const data = [
 function Account() {
 
   const [expands, setExpands] = useState(Array(data.length).fill(false));
-  // modal
-  const [item, setItem] = useState(null);
-  const [isOpenForm, setIsOpenForm] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [isOpenActive, setIsOpenActive] = useState(false);
+  // modal redux
+  const dispatch = useDispatch();
+  const toggleFormModal = useSelector((state) => state.modalReducer.openForm);
+  const toggleConfirm = useSelector((state) => state.modalReducer.openConfirm);
+  const toggleActive = useSelector((state) => state.modalReducer.openActive);
+  const item = useSelector((state) => state.modalReducer.data);
+  const handleOpenModal = (data) => dispatch(modalSlice.actions.openModal(data));
+  const handleOpenConfirm = (data) => dispatch(modalSlice.actions.confirmModal(data));
+  const handleOpenActive = (data) => dispatch(modalSlice.actions.activeModal(data));
+  const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
 
   // expand card item
   const handleChangeExpand = (index) => {
@@ -77,47 +84,13 @@ function Account() {
     setExpands(expandsNext);
   };
 
-  // handle delete
-  const handleOpenConfirm = (data) => {
-    setConfirmDelete(true);
-    setItem(data);
-  }
-
-  const handleCloseConfirm = () => {
-    setConfirmDelete(false);
-    setItem(null);
-  }
-
   const handleDelete = (data) => {
     console.log(data)
-  }
-
-  // handle active
-  const handleOpenActiveModal = (data) => {
-    setIsOpenActive(true);
-    setItem(data);
-  }
-
-  const handleCloseActiveModal = () => {
-    setIsOpenActive(false);
-    setItem(null);
   }
 
   const handleActive = (data) => {
     console.log(data)
   }
-
-  // handle form (add & update)
-  const handleOpenForm = (data) => {
-    setItem(data)
-    setIsOpenForm(true);
-  }
-
-  const handleCloseForm = () => {
-    setIsOpenForm(false);
-    setItem(null)
-  }
-
 
   return (
       <Page title="Mẫu email thông báo tài khoản">
@@ -126,7 +99,7 @@ function Account() {
               title="Email thông báo tài khoản"
               subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
               buttonTitle="Thêm mẫu email"
-              onOpenForm={handleOpenForm}
+              onOpenModal={() => handleOpenModal(null)}
           />
           {data.map((column, index) => {
             return <CardEmailFormItem
@@ -135,31 +108,31 @@ function Account() {
                 item={column}
                 expanded={expands[index]}
                 onChangeExpand={() => handleChangeExpand(index)}
-                onOpenConfirmDelete={handleOpenConfirm}
-                onOpenActiveModal={handleOpenActiveModal}
-                onOpenFormModal={handleOpenForm}
+                onOpenConfirmDelete={() => handleOpenConfirm(column)}
+                onOpenActiveModal={() => handleOpenActive(column)}
+                onOpenFormModal={() => handleOpenModal(column)}
             />
           })}
         </Box>
-        {confirmDelete && <ConfirmModal
-            confirmDelete={confirmDelete}
-            onCloseConfirmDelete={handleCloseConfirm}
+        {toggleConfirm && <ConfirmModal
+            confirmDelete={toggleConfirm}
+            onCloseConfirmDelete={handleCloseModal}
             onSubmit={handleDelete}
             title="Xác nhận xóa mẫu email"
             subtitle="Bạn có chắc chắn muốn xóa mẫu email"
             item={item}
         />}
-        {isOpenActive && <ActiveModal
-            isOpenActive={isOpenActive}
-            onCloseActiveModal={handleCloseActiveModal}
+        {toggleActive && <ActiveModal
+            isOpenActive={toggleActive}
+            onCloseActiveModal={handleCloseModal}
             onSubmit={handleActive}
             title={item.isActive ? "Tắt trạng thái áp dụng cho mẫu email" : "Bật trạng thái áp dụng cho mẫu email"}
             subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt trạng thái áp dụng cho mẫu email" : "Bạn có chắc chắn muốn bật trạng thái áp dụng cho mẫu email"}
             item={item}
         />}
-        {isOpenForm && <FormModal
-            isOpen={isOpenForm}
-            onClose={handleCloseForm}
+        {toggleFormModal && <FormModal
+            isOpen={toggleFormModal}
+            onClose={handleCloseModal}
             item={item}
             title={item?.id ? 'Chỉnh sửa mẫu email thông báo tài khoản' : 'Thêm mới mẫu email thông báo tài khoản'}
         />}
