@@ -2,7 +2,7 @@ import {View} from "@/components/FlexStyled";
 import {Box, Button, Grid, IconButton, Typography} from "@mui/material";
 import {MinusIcon} from "@/assets/ActionIcon";
 import React from "react";
-import {useFieldArray, useForm} from "react-hook-form";
+import {FormProvider, useFieldArray, useForm} from "react-hook-form";
 import Iconify from "@/components/Iconify";
 import {styled} from "@mui/styles";
 import {ApproveProcessFormLevelItem} from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
@@ -30,74 +30,92 @@ export const ApproveProcessFormLevel = () => {
     }));
 
     const defaultValue = {
-        roleGroupId: "",
-        personInChargeIds: [],
-        processLevelDetailType: 0
+        approvalProcessLevelDetails: [
+            {
+                roleGroupId: "",
+                personInChargeIds: [],
+                processLevelDetailType: ""
+            }
+        ]
     };
-
-    const {control} = useForm({
+    const methods = useForm({
             defaultValues: {
-                test: [{
-                    approvalProcessLevelDetails: [
-                        {
-                            roleGroupId: "",
-                            personInChargeIds: [],
-                            processLevelDetailType: 0
-                        }
-                    ]
-                }]
+                approve: [
+                    {
+                        approvalProcessLevelDetails: [
+                            {
+                                roleGroupId: "",
+                                personInChargeIds: [],
+                                processLevelDetailType: ""
+                            }
+                        ]
+                    },
+                    {
+                        approvalProcessLevelDetails: [
+                            {
+                                roleGroupId: "",
+                                personInChargeIds: [],
+                                processLevelDetailType: ""
+                            }
+                        ]
+                    }
+                ]
             }
         })
     ;
 
+    const {control} = methods;
+
     const {fields, append, remove} = useFieldArray({
         control,
-        name: "test"
+        name: "approve"
     });
 
     return <>
-        {fields.map((item, index) => {
-            return (<View
-                p={16}
-                mv={16}
-                borderRadius={6}
-                bgColor={"#F2F4F5"}>
-                <Grid container direction="row"
-                      justifyContent="center"
-                      alignItems="center"
-                      mb={2}>
-                    <Grid item xs>
-                        <Typography variant="subtitle1">
-                            Cấp {index + 1}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Typography variant="textSize13500">
-                            Đã chọn: 12
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={9} container direction="row" justifyContent="flex-end">
-                        <IconButton onClick={() => remove(index)}>
-                            <MinusIcon/>
-                        </IconButton>
-                    </Grid>
-                </Grid>
-                <Box className="box-content-wrapper" sx={{width: '100%'}}>
-                    <ApproveProcessFormLevelItem
-                        index={index}
-                        key={item.id}
-                    />
-                </Box>
-            </View>)
-        })}
-        <ButtonAddInviteStyle
-            variant="outlined"
-            className='button-add-invite'
-            onClick={() => {
-                append({...defaultValue})
-            }}
-            startIcon={<Iconify icon="material-symbols:add"/>}>
-            Thêm cấp phê duyệt
-        </ButtonAddInviteStyle>
+        <Box mt={2}>
+            <FormProvider {...methods}>
+                {fields.map((item, index) => {
+                    return (<View
+                        style={{padding: 16, marginBottom: 24, borderRadius: 6, backgroundColor: "#F2F4F5"}}
+                        key={item.id}>
+                        <Grid container direction="row"
+                              justifyContent="center"
+                              alignItems="center"
+                              mb={2}>
+                            <Grid item xs>
+                                <Typography variant="subtitle1">
+                                    Cấp {index + 1}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                <Typography variant="textSize13500">
+                                    Đã chọn: 12
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={9} container direction="row" justifyContent="flex-end">
+                                <IconButton onClick={() => remove(index)}>
+                                    <MinusIcon/>
+                                </IconButton>
+                            </Grid>
+                        </Grid>
+                        <Box className="box-content-wrapper" sx={{width: '100%'}}>
+                            <ApproveProcessFormLevelItem
+                                index={index}
+                                key={item.id}
+                            />
+                        </Box>
+                    </View>)
+                })}
+                <ButtonAddInviteStyle
+                    variant="outlined"
+                    className='button-add-invite'
+                    onClick={() => {
+                        append({...defaultValue})
+                    }}
+                    startIcon={<Iconify icon="material-symbols:add"/>}>
+                    Thêm cấp phê duyệt
+                </ButtonAddInviteStyle>
+            </FormProvider>
+        </Box>
     </>
 };
