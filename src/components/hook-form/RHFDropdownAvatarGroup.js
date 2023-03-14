@@ -25,7 +25,6 @@ const MenuProps = {
   MenuListProps: {
     disableListWrap: true,
   },
-  disableScrollLock: true
 };
 
 const InputProps = {
@@ -39,7 +38,7 @@ const InputProps = {
 const renderOptions = (options, value) => {
   return options?.map((option, i) => {
     return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
-      {option.label || option.name}
+      {option.label}
       {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{ width: 24, height: 24 }} /> }
     </MenuItem>
   })
@@ -49,7 +48,7 @@ const renderValue = (options = [], value = '', placeholder = '') => {
   return value ? options.find(option => option.value === value)?.name : Placeholder(placeholder);
 }
 
-function RHFDropdown({name, ...props}) {
+function RHFDropdownAvatarGroup({name, ...props}) {
   const {control} = useFormContext();
   const {isRequired, title, placeholder, options, disabled} = props;
   const classes = useStyles();
@@ -81,7 +80,6 @@ function RHFDropdown({name, ...props}) {
                     onClose={() => setSearchText("")}
                     renderValue={() => renderValue(options, field.value, placeholder)}
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
-                    onOpen={() => console.log('open')}
                 >
                   {options?.length > 3 && (
                       <TextFieldStyle
@@ -103,4 +101,4 @@ function RHFDropdown({name, ...props}) {
   );
 }
 
-export default memo(RHFDropdown);
+export default memo(RHFDropdownAvatarGroup);

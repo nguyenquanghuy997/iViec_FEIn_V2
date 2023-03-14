@@ -10,6 +10,7 @@ import Iconify from "@/components/Iconify";
 import {ButtonDraftStyle, JobTitleStyle} from "@/sections/recruitment-create/style";
 import {DraftIcon, PreviewIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
 import {BoxFlex} from "@/sections/emailform/style";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
 
 const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ...props}) => {
     return (
@@ -21,7 +22,7 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ..
                             <Link>
                                 <IconButton
                                     size='small'
-                                    sx={{color: '#172B4D', mr: 1}}>
+                                    sx={{color: style.COLOR_TEXT_BLACK, mr: 1}}>
                                     <Iconify icon="material-symbols:arrow-back"/>
                                 </IconButton>
                             </Link>

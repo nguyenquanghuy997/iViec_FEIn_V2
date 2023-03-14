@@ -8,11 +8,37 @@ import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RHFRecruitmentEditor from "@/sections/recruitment-create/component/form/RHRRecruitmentEditor";
 import DateFilter from "@/sections/dynamic-filter/DateFilter";
 import {LabelStyle} from "@/components/hook-form/style";
+import OrganizationTreeSelect from "@/sections/recruitment-create/component/form/TreeSelect";
+import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
+import {useGetJobCategoriesQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
+import {useGetAllJobTypeQuery} from "@/sections/jobtype";
+import {
+    LIST_CURRENCY_TYPE,
+    LIST_EXPERIENCE_NUMBER,
+    LIST_GENDER,
+    LIST_RECRUITMENT_WORKING_FORM
+} from "@/utils/formatString";
+import {useGetListLanguagesQuery} from "@/redux/slice/masterDataSlice";
+import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
+import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
+import {useState} from "react";
 
 const RecruitmentInformation = () => {
+
+    const [equipmentItem, setEquipmentItem] = useState("");
+    const [equipmentId, setEquipmentId] = useState("");
+
+    const {data: {items: ListOrganization} = []} = useGetOrganizationsDataWithChildQuery();
+    const {data: {items: JobCategoryList = []} = {}} = useGetJobCategoriesQuery();
+    const {data: {items: ListProvince = []} = {}} = useGetProvinceQuery();
+    const {data: {items: ListJobType = []} = {}} = useGetAllJobTypeQuery();
+    const {data: ListLanguage = []} = useGetListLanguagesQuery();
+    const {data: ListUserFromOrganization = []} = useGetAllUserFromOrganizationQuery({ Id: equipmentId });
+
     const methods = useForm({
         mode: 'all',
     });
+
     return (
         <BoxWrapperStyle className="wrapper">
             <FormProvider methods={methods}>
@@ -34,7 +60,11 @@ const RecruitmentInformation = () => {
                             {/* Khu vực đăng tin */}
                             <Box sx={{mb: 2}}>
                                 <RHFAutocomplete
-                                    options={[]}
+                                    options={ListProvince.map(i => ({
+                                        value: i.id,
+                                        label: i.name,
+                                        name: i.name,
+                                    }))}
                                     name="locations"
                                     title="Khu vực đăng tin"
                                     placeholder="Chọn tối đa 3 khu vực"
@@ -45,16 +75,25 @@ const RecruitmentInformation = () => {
                             {/* Đơn vị & Chức danh */}
                             <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                                 <div style={{flex: 1, marginRight: 8}}>
-                                    <RHFDropdown
-                                        name="organization"
-                                        title="Đơn vị"
+                                    <LabelStyle required={true}>Đơn vị</LabelStyle>
+                                    <OrganizationTreeSelect
                                         placeholder="Chọn 1 đơn vị"
-                                        isRequired
-                                        fullWidth
+                                        treeData={ListOrganization}
+                                        equipmentItem={equipmentItem}
+                                        setEquipmentItem={setEquipmentItem}
+                                        equipmentId={equipmentId}
+                                        setEquipmentId={setEquipmentId}
                                     />
                                 </div>
                                 <div style={{flex: 1, marginLeft: 8}}>
                                     <RHFDropdown
+                                        options={
+                                            ListJobType.map(item => ({
+                                                value: item.id,
+                                                label: item.name,
+                                                name: item.name
+                                            }))
+                                        }
                                         name="role"
                                         title="Chức danh"
                                         placeholder="Chọn 1 chức danh"
@@ -76,7 +115,11 @@ const RecruitmentInformation = () => {
                             {/* Ngành nghề */}
                             <Box sx={{mb: 2}}>
                                 <RHFAutocomplete
-                                    options={[]}
+                                    options={JobCategoryList?.map((i) => ({
+                                        value: i.id,
+                                        label: i.name,
+                                        name: i?.name,
+                                    }))}
                                     name="locations"
                                     title="Ngành nghề"
                                     placeholder="Chọn tối đa 3 ngành nghề"
@@ -87,7 +130,7 @@ const RecruitmentInformation = () => {
                             {/* Hình thức làm việc */}
                             <Box sx={{mb: 2}}>
                                 <RHFAutocomplete
-                                    options={[]}
+                                    options={LIST_RECRUITMENT_WORKING_FORM}
                                     name="locations"
                                     title="Hình thức làm việc"
                                     placeholder="Chọn 1 hoặc nhiều hình thức làm việc"
@@ -104,6 +147,7 @@ const RecruitmentInformation = () => {
                                         placeholder="Chọn số năm kinh nghiệm yêu cầu"
                                         isRequired
                                         fullWidth
+                                        options={LIST_EXPERIENCE_NUMBER}
                                     />
                                 </div>
                                 <div style={{flex: 1, marginLeft: 8}}>
@@ -113,6 +157,7 @@ const RecruitmentInformation = () => {
                                         placeholder="Nhập số lượng cần tuyển"
                                         isRequired
                                         fullWidth
+                                        type="number"
                                     />
                                 </div>
                             </Box>
@@ -120,18 +165,20 @@ const RecruitmentInformation = () => {
                             <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                                 <div style={{flex: 1, marginRight: 8}}>
                                     <RHFDropdown
-                                        name="role"
+                                        name="gender"
                                         title="Giới tính"
                                         placeholder="-- Không yêu cầu --"
                                         fullWidth
+                                        options={LIST_GENDER}
                                     />
                                 </div>
                                 <div style={{flex: 1, marginLeft: 8}}>
                                     <RHFDropdown
-                                        name="role"
+                                        name="language"
                                         title="Ngôn ngữ làm việc"
                                         placeholder="Tiếng Việt"
                                         fullWidth
+                                        options={ListLanguage}
                                     />
                                 </div>
                             </Box>
@@ -180,32 +227,34 @@ const RecruitmentInformation = () => {
                             <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                                 <div style={{flex: 1, marginRight: 8}}>
                                     <RHFDropdown
-                                        name="role"
+                                        name="displayType"
                                         title="Cách hiển thị"
                                         placeholder="Chọn 1 cách hiển thị"
                                         fullWidth
+                                        options={LIST_CURRENCY_TYPE}
                                     />
                                 </div>
                                 <div style={{flex: 1, marginLeft: 8}}>
                                     <RHFDropdown
-                                        name="role"
+                                        name="moneyType"
                                         title="Loại tiền tệ"
                                         placeholder="VNĐ"
                                         fullWidth
+                                        options={LIST_CURRENCY_TYPE}
                                     />
                                 </div>
                             </Box>
                             <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                                 <div style={{flex: 1, marginRight: 8}}>
-                                    <RHFTextField
-                                        name="title"
+                                    <InputNumberFormatFilter
+                                        name="salaryMin"
                                         title="Mức lương tối thiểu"
                                         placeholder="Nhập số tiền"
                                         isRequired
                                         fullWidth
                                         InputProps={{
                                             endAdornment: (
-                                                <InputAdornment position='end' sx={{mr: 1.5}}>
+                                                <InputAdornment position='end'>
                                                     VNĐ
                                                 </InputAdornment>
                                             ),
@@ -213,15 +262,15 @@ const RecruitmentInformation = () => {
                                     />
                                 </div>
                                 <div style={{flex: 1, marginLeft: 8}}>
-                                    <RHFTextField
-                                        name="title"
+                                    <InputNumberFormatFilter
+                                        name="salaryMax"
                                         title="Mức lương tối đa"
                                         placeholder="Nhập số tiền"
                                         isRequired
                                         fullWidth
                                         InputProps={{
                                             endAdornment: (
-                                                <InputAdornment position='end' sx={{mr: 1.5}}>
+                                                <InputAdornment position='end'>
                                                     VNĐ
                                                 </InputAdornment>
                                             ),
@@ -240,12 +289,12 @@ const RecruitmentInformation = () => {
                         <DividerCard title="MÔ TẢ CÔNG VIỆC"/>
                         <Box sx={{px: 4, py: 3}}>
                             <RHFAutocomplete
-                                options={[
-                                    {
-                                        label: 'Huong',
-                                        value: 'abc'
-                                    }
-                                ]}
+                                options={ListJobType.map(i => ({
+                                    id: i.id,
+                                    value: i.id,
+                                    name: i.name,
+                                    label: i.name,
+                                }))}
                                 name="bccEmails"
                                 title="Vị trí công việc có sẵn"
                                 placeholder="Chọn 1 vị trí công việc có sẵn hoặc nhập tên vị trí thêm mới"
@@ -284,7 +333,7 @@ const RecruitmentInformation = () => {
                         <Box sx={{px: 4, py: 3, pt: 2}}>
                             <RHFAutocomplete
                                 options={[]}
-                                name="bccEmails"
+                                name="keywords"
                                 title="Từ khóa"
                                 placeholder="Nhập từ khóa và bấm enter để thêm"
                                 fullWidth
@@ -314,8 +363,8 @@ const RecruitmentInformation = () => {
                             {/*Cán bộ tuyển dụng */}
                             <Box sx={{mb: 2, width: '50%'}}>
                                 <RHFDropdown
-                                    options={[]}
-                                    name="locations"
+                                    options={ListUserFromOrganization}
+                                    name="owner"
                                     title="Cán bộ tuyển dụng"
                                     placeholder="Chọn 1 cán bộ"
                                     fullWidth
@@ -324,8 +373,8 @@ const RecruitmentInformation = () => {
                             </Box>
                             <Box sx={{mb: 2}}>
                                 <RHFAutocomplete
-                                    options={[]}
-                                    name="locations"
+                                    options={ListUserFromOrganization}
+                                    name="coOwner"
                                     title="Đồng phụ trách"
                                     placeholder="Chọn 1 hoặc nhiều cán bộ"
                                     fullWidth
@@ -335,8 +384,8 @@ const RecruitmentInformation = () => {
                             </Box>
                             <Box sx={{mb: 2}}>
                                 <RHFAutocomplete
-                                    options={[]}
-                                    name="locations"
+                                    options={ListUserFromOrganization}
+                                    name="council"
                                     title="Thành viên hội đồng tuyển dụng"
                                     placeholder="Chọn 1 hoặc nhiều cán bộ"
                                     fullWidth

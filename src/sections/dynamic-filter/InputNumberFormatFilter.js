@@ -42,6 +42,7 @@ const InputNumberFormatFilter = ({ name, title, isRequired, variant= 'standard',
                 )}
                 <TextFieldStyle
                     {...field}
+                    fullWidth
                     sx={{mb: 2}}
                     placeholder={other.placeholder}
                     error={!!error}

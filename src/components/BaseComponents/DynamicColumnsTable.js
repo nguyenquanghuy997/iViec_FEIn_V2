@@ -277,7 +277,7 @@ const DynamicColumnsTable = (props) => {
             onRow={onRow}
             rowKey={(record) => record.id}
             rowClassName={(record) =>
-              selectedRowKeys.includes(record.id)
+              selectedRowKeys?.includes(record.id)
                 ? "ant-table-row-selected"
                 : ""
             }

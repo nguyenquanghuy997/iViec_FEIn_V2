@@ -60,17 +60,17 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
             backgroundColor: '#F2F4F5'
         }
     },
-    "&::-webkit-scrollbar": {
+    "& ::-webkit-scrollbar": {
         width: "4px",
         borderRadius: '6px'
     },
-    "&::-webkit-scrollbar-track": {
+    "& ::-webkit-scrollbar-track": {
         background: "#EFF3F6"
     },
-    "&::-webkit-scrollbar-thumb": {
+    "& ::-webkit-scrollbar-thumb": {
         background: "#B9BFC9"
     },
-    "&::-webkit-scrollbar-thumb:hover": {
+    "& ::-webkit-scrollbar-thumb:hover": {
         background: "#888"
     }
 }));

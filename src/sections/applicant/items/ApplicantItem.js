@@ -1,30 +1,24 @@
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
-import { View } from "@/components/FlexStyled";
+import {View} from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
 import {
-  useGetAllFilterApplicantMutation,
+  useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
 import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
 import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
-import {
-  Address,
-  MaritalStatus,
-  Sex,
-  YearOfExperience,
-  PipelineStateType,
-} from "@/utils/enum";
-import { fDate } from "@/utils/formatTime";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Tag } from "antd";
+import {Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience,} from "@/utils/enum";
+import {fDate} from "@/utils/formatTime";
+import {Tag} from "antd";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+import {useRouter} from "next/router";
+import {useForm} from "react-hook-form";
+import {useDispatch, useSelector} from "@/redux/store";
+import {filterSlice} from "@/redux/common/filterSlice";
+import {useEffect, useMemo, useState} from "react";
 
 const defaultValues = {
   searchKey: "",
@@ -32,10 +26,33 @@ const defaultValues = {
 
 export const ApplicantItem = () => {
   const router = useRouter();
-  const { query, isReady } = router;
+  const { query } = router;
+
+  const dispatch = useDispatch();
+  const toggleFormFilter = useSelector((state) => state.filterReducer.openForm);
+  const dataFilter = useSelector((state) => state.filterReducer.data);
+  const handleOpenFilterForm = () => dispatch(filterSlice.actions.openFilterModal());
+  const handleCloseFilterForm = () => dispatch(filterSlice.actions.closeModal());
+  const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setDataFilter(data));
+  const handleClearDataFilter = () => dispatch(filterSlice.actions.clearDataFilter());
+
+  useEffect(() => {
+    handleClearDataFilter();
+  }, [])
+
+  const methods = useForm({
+    mode: "onChange",
+    defaultValues,
+  });
+
+  const { handleSubmit } = methods;
+
+  console.log(dataFilter)
+
   // api get list
-  const [getAllFilterApplicant, { data: Data, isLoading }] =
-    useGetAllFilterApplicantMutation();
+  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(
+      JSON.stringify(Object.entries(dataFilter).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {}))
+  );
   // api get list Column
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
@@ -45,22 +62,7 @@ export const ApplicantItem = () => {
   const handleChangePagination = (pageIndex, pageSize) => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
-    if (query) {
-      queryParams = {...queryParams,pageSize: pageSize, pageIndex: pageIndex }
-      getAllFilterApplicant(
-        JSON.stringify(
-          Object.entries(queryParams).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
-        )
-      ).unwrap();
-    } else {
-      getAllFilterApplicant({
-        pageSize: paginationSize,
-        pageIndex: page,
-      }).unwrap();
-    }
+      dataFilter = {...dataFilter,pageSize: pageSize, pageIndex: pageIndex }
   };
   const columns = useMemo(() => {
     return [
@@ -446,136 +448,6 @@ export const ApplicantItem = () => {
     await UpdateListColumnApplicants(data);
   };
 
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues: useMemo(
-      () =>
-        query.searchKey
-          ? { ...defaultValues, searchKey: query.searchKey }
-          : { ...defaultValues },
-      [query.searchKey]
-    ),
-    // defaultValues: {...defaultValues, searchKey: query.searchKey},
-    resolver: yupResolver(Schema),
-  });
-
-  const { handleSubmit } = methods;
-  const queryParams = {
-    searchKey: query.searchKey,
-    applicantSkillIds:
-      query.applicantSkillIds && typeof query.applicantSkillIds === "string"
-        ? [query.applicantSkillIds]
-        : query.applicantSkillIds && query.applicantSkillIds,
-    expectSalaryFrom: query.expectSalaryFrom
-      ? Number(query.expectSalaryFrom)
-      : null,
-    expectSalaryTo: query.expectSalaryTo
-      ? Number(query.expectSalaryTo)
-      : null,
-    yearsOfExperience: query.yearsOfExperience
-      ? [Number(query.yearsOfExperience)]
-      : null,
-    sexs: query.sexs ? [Number(query.sexs)] : null,
-    weightFrom: query.weightFrom ? Number(query.weightFrom) : null,
-    weightTo: query.weightTo ? Number(query.weightTo) : null,
-    heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
-    heightTo: query.heightTo ? Number(query.heightTo) : null,
-    maritalStatuses: query.maritalStatuses
-      ? [Number(query.maritalStatuses)]
-      : null,
-    education: query.education ? query.education : null,
-    homeTowerProvinceIds: query.homeTowerProvinceIds
-      ? [query.homeTowerProvinceIds]
-      : null,
-    homeTowerDistrictIds: query.homeTowerDistrictIds
-      ? [query.homeTowerDistrictIds]
-      : null,
-    livingAddressProvinceIds: query.livingAddressProvinceIds
-      ? [query.livingAddressProvinceIds]
-      : null,
-    livingAddressDistrictIds: query.livingAddressDistrictIds
-      ? [query.livingAddressDistrictIds]
-      : null,
-    expectWorkingAddressProvinceIds:
-      query.expectWorkingAddressProvinceIds &&
-      typeof query.expectWorkingAddressProvinceIds === "string"
-        ? [query.expectWorkingAddressProvinceIds]
-        : query.expectWorkingAddressProvinceIds &&
-          query.expectWorkingAddressProvinceIds,
-    organizationIds:
-      query.organizationIds && typeof query.organizationIds === "string"
-        ? [query.organizationIds]
-        : query.organizationIds && query.organizationIds,
-    recruitmentIds:
-      query.recruitmentIds && typeof query.recruitmentIds === "string"
-        ? [query.recruitmentIds]
-        : query.recruitmentIds && query.recruitmentIds,
-    ownerIds:
-      query.ownerIds && typeof query.ownerIds === "string"
-        ? [query.ownerIds]
-        : query.ownerIds && query.ownerIds,
-    councilIds:
-      query.councilIds && typeof query.councilIds === "string"
-        ? [query.councilIds]
-        : query.councilIds && query.councilIds,
-    creatorIds:
-      query.creatorIds && typeof query.creatorIds === "string"
-        ? [query.creatorIds]
-        : query.creatorIds && query.creatorIds,
-    createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-    createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-    recruitmentPipelineStates:
-      query.recruitmentPipelineStates &&
-      typeof query.recruitmentPipelineStates === "string"
-        ? [Number(query.recruitmentPipelineStates)]
-        : query.recruitmentPipelineStates &&
-          query.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
-    jobCategoryIds:
-      query.jobCategoryIds && typeof query.jobCategoryIds === "string"
-        ? [query.jobCategoryIds]
-        : query.jobCategoryIds && query.jobCategoryIds,
-    jobSourceIds:
-      query.jobSourceIds && typeof query.jobSourceIds === "string"
-        ? [query.jobSourceIds]
-        : query.jobSourceIds && query.jobSourceIds,
-    pageSize: paginationSize,
-    pageIndex: page,
-  };
-  useEffect(() => {
-    if (!isReady) return;   
-    if (query) {
-      getAllFilterApplicant(
-        JSON.stringify(
-          Object.entries(queryParams).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
-        )
-      ).unwrap();
-    } else {
-      getAllFilterApplicant({
-        pageSize: paginationSize,
-        pageIndex: page,
-      }).unwrap();
-    }
-  }, [isReady, query]);
-
-  // open filter form
-  const [isOpen, setIsOpen] = useState(false);
-
-  // filter modal
-  const handleOpenFilterForm = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseFilterForm = () => {
-    setIsOpen(false);
-  };
-
   const onSubmitSearch = async (data) => {
     await router.push(
       {
@@ -588,36 +460,28 @@ export const ApplicantItem = () => {
   };
 
   const onSubmit = async (data) => {
-    const body = { ...data, searchKey: data.searchKey };
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...body,
-          createdTimeFrom: data.createdTimeFrom
-            ? new Date(data.createdTimeFrom).toISOString()
-            : null,
-          createdTimeTo: data.createdTimeTo
-            ? new Date(data.createdTimeTo).toISOString()
-            : null,
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
+    const body = {
+      ...data,
+      searchKey: data.searchKey,
+      recruitmentPipelineStates: data.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
+      yearsOfExperience: data.yearsOfExperience ? [Number(data.yearsOfExperience)] : null,
+      recruitmentIds: data.recruitmentIds || null,
+      educations: data.educations,
+    };
+    // const cleanBody = Object.entries(body).reduce((a, [k, v]) => ((v === null || v === undefined || !v || (Array.isArray(v) && v.length === 0)) ? a : ((a[k] = v), a)), {})
+    handleSetDataFilter(body);
     handleCloseFilterForm();
   };
 
   return (
     <View>
       <ApplicantHeader
-        data={Data?.items}
-        methods={methods}
-        isOpen={isOpen}
-        onSubmit={onSubmitSearch}
-        handleSubmit={handleSubmit}
-        onOpenFilterForm={handleOpenFilterForm}
-        onCloseFilterForm={handleCloseFilterForm}
+          data={Data?.items}
+          methods={methods}
+          onSubmit={onSubmitSearch}
+          handleSubmit={handleSubmit}
+          onOpenFilterForm={handleOpenFilterForm}
+          onCloseFilterForm={handleCloseFilterForm}
       />
       <Content>
         <View mt={96}>
@@ -637,10 +501,10 @@ export const ApplicantItem = () => {
           />
         </View>
       </Content>
-      {isOpen && (
+      {toggleFormFilter && (
         <ApplicantFilterModal
           columns={columns}
-          isOpen={isOpen}
+          isOpen={toggleFormFilter}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
         />

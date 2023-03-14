@@ -8,7 +8,7 @@ const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ['Recruitment'],
 })
 
-export const recruitmentSlice = apiWithTag.injectEndpoints({
+export const RecruitmentSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getRecruitments: builder.query({
       query: (data) => ({
@@ -30,4 +30,4 @@ export const recruitmentSlice = apiWithTag.injectEndpoints({
 export const {
   useLazyGetRecruitmentsQuery,
   useGetRecruitmentByIdQuery
-} = recruitmentSlice
+} = RecruitmentSlice

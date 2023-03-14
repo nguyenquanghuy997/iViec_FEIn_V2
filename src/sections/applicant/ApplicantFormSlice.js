@@ -17,7 +17,7 @@ import {
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Applicant", "FilterApplicant", "GetColumnApplicants"],
+  addTagTypes: ["GetColumnApplicants"],
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
@@ -93,21 +93,19 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
     // new
     // get all applicant with filter
-    getAllFilterApplicant: builder.mutation({
+    getAllFilterApplicant: builder.query({
       query: (data) => ({
         url: API_GET_FILTER_ALL_APPLICANTS,
         method: "POST",
         data,
       }),
-      invalidatesTags: ["FilterApplicant"],
     }),
-    getRecruitmentByOrganization: builder.query({
+    getRecruitmentByOrganizationId: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_BY_ORGANIZATION,
         method: 'GET',
         params
       }),
-      providesTags: ['Recruitment']
     }),
     // get all skills
     getSkills: builder.query({
@@ -130,29 +128,32 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params,
       }),
+      transformResponse: (response) => {
+        return response?.items.map(item => ({
+          ...item,
+          value: item.id,
+          name: `${item?.lastName} ${item?.firstName}`,
+          label: `${item?.lastName} ${item?.firstName}`,
+        }))
+      },
     }),
   }),
 });
 
 export const {
-  useGetListApplicantsQuery,
-  useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
-  useGetAllFilterApplicantMutation,
-  useLazyGetRecruitmentByOrganizationQuery,
+  useGetAllFilterApplicantQuery,
+  useLazyGetRecruitmentByOrganizationIdQuery,
   // skills
   useGetSkillsQuery,
   // job sources
   useGetAllJobSourcesQuery,
-  useLazyGetAllJobSourcesQuery,
   // user from organization
   useGetAllUserFromOrganizationQuery,
   useLazyGetAllUserFromOrganizationQuery,
-
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useUpdateApplicantRecruitmentToNextStateMutation
