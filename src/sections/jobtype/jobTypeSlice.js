@@ -72,6 +72,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
+  useGetAllJobTypeQuery,
   useLazyGetAllJobTypeQuery,
   useLazyGetApplicantUsersOnJobtypeQuery,
   useUpdateStatusJobTypeMutation,

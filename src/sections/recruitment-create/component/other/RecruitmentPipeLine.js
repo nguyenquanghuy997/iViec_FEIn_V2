@@ -8,8 +8,11 @@ import RightNoteText from "@/sections/recruitment-create/component/RightNoteText
 import {BoxFlex} from "@/sections/emailform/style";
 import RecruitmentPipelineCard from "@/sections/recruitment-create/component/other/RecruitmentPipelineCard";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {useGetAllPipelineQuery} from "@/sections/pipeline";
 
 const RecruitmentPipeLine = () => {
+
+  const { data: { items: ListPipeline = []} = {}} = useGetAllPipelineQuery();
 
   const methods = useForm({
     mode: 'all',
@@ -30,6 +33,12 @@ const RecruitmentPipeLine = () => {
                         placeholder="Chọn 1 quy trình tuyển dụng"
                         isRequired
                         fullWidth
+                        options={ListPipeline.map(item => ({
+                          id: item.id,
+                          value: item.id,
+                          name: item.name,
+                          label: item.name
+                        }))}
                     />
                   </div>
                 </Box>

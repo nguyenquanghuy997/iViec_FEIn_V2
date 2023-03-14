@@ -169,7 +169,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
   const {data: {items: ListProvince = []} = {}} = useGetProvinceQuery();
   const {data: {items: ListDistrictLiving = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: isEmpty(watchProvinceId) });
   const {data: {items: ListDistrictHomeTower = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceHomeTownId, { skip: isEmpty(watchProvinceHomeTownId) });
-  const {data: {items: ListUserFromOrganization} = []} = useGetAllUserFromOrganizationQuery({Id: watchOrganizationIds[watchOrganizationIds.length - 1]});
+  const {data: ListUserFromOrganization = []} = useGetAllUserFromOrganizationQuery({Id: watchOrganizationIds[watchOrganizationIds.length - 1]});
   const [getRecruitmentByOrganization] = useLazyGetRecruitmentByOrganizationIdQuery();
 
   useEffect(() => {
@@ -281,13 +281,13 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
                 <DynamicFilterForm
                     columns={columns}
                     options={{
-                      organizationIds: convertFlatDataToTree(ListOrganization?.map((item) => ({...item, title: item.name, key: item.id,  value: item.id}))),
+                      organizationIds: convertFlatDataToTree(ListOrganization?.map((item) => ({...item, title: item.name, key: item.id, value: item.id}))),
                       jobSourceIds: ListJobSources,
                       recruitmentIds: ListRecruitmentByOrganization,
                       recruitmentPipelineStates: LIST_STEP_RECRUITMENT,
-                      ownerIds: ListUserFromOrganization && ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})),
-                      creatorIds: ListUserFromOrganization && ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})),
-                      councilIds: ListUserFromOrganization && ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})),
+                      ownerIds: ListUserFromOrganization,
+                      creatorIds: ListUserFromOrganization,
+                      councilIds: ListUserFromOrganization,
                       jobCategoryIds: ListJobCategory,
                       yearsOfExperience: LIST_EXPERIENCE_NUMBER,
                       applicantSkillIds: ListSkills,
