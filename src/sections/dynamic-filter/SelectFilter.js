@@ -42,7 +42,7 @@ const renderOptions = (options, value, multiple = false) => {
     } else {
       return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
         {option.label}
-        {value?.filter(item => item?.includes(option.value) != -1)?.[i] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
+        {/*{value?.filter(item => item?.includes(option.value) !== -1)?.[i] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}*/}
       </MenuItem>
     }
   })

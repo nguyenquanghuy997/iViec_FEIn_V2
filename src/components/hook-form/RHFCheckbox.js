@@ -1,4 +1,8 @@
 // @mui
+import {
+  CheckboxIconChecked,
+  CheckboxIconDefault,
+} from "@/assets/CheckboxIcon";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import PropTypes from "prop-types";
 // form
@@ -19,7 +23,15 @@ export function RHFCheckbox({ name, labelPlacement, label, style, ...other }) {
         <Controller
           name={name}
           control={control}
-          render={({ field }) => <Checkbox {...field} style={other.style} />}
+          render={({ field }) => (
+            <Checkbox
+              icon={<CheckboxIconDefault />}
+              checkedIcon={<CheckboxIconChecked />}
+              {...field}
+              style={other.style}
+              checked={field.value}
+            />
+          )}
         />
       }
       {...other}

@@ -40,6 +40,11 @@ export const sidebarConfig = [
         roles: ROLES[PAGES.Applicant],
       },
       {
+        title: "Quy trình phê duyệt",
+        path: "/settings/approve-process",
+        roles: ROLES[PAGES.ApproveProcess],
+      },
+      {
         title: "Vị trí công việc",
         path: "/settings/jobtype",
         roles: ROLES[PAGES.Applicant],

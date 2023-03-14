@@ -97,11 +97,13 @@ export const PAGES = {
   Notification: "Notification",
   Candidates: "Candidates",
   Applicant: "Applicant",
+  ApproveProcess: "ApproveProcess",
   Interview: "Interview",
   Board: "Board",
   Calculator: "Calculator",
   Recruiter: "External recruiter",
   Jobs: "Jobs",
+  Recruitment: "Recruitment",
   Clients: "Clients",
   Users: "Users",
   Task: "Task",
@@ -225,3 +227,5 @@ export const allLangs = [
 
 export const defaultLang = allLangs[0]; // English
 export const MAX_SIZE_FILEIMAGE = 5145728;
+
+export const API_KEY_EDITOR = "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189"

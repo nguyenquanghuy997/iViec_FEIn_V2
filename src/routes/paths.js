@@ -106,4 +106,12 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, "settings/organization"),
     view: (id) => path(ROOTS_DASHBOARD, `settings/organization/${id}`),
   },
+  recruitment: {
+    root: path(ROOTS_DASHBOARD, "recruitment"),
+    create: path(ROOTS_DASHBOARD, "recruitment/create"),
+    view: (id) => path(ROOTS_DASHBOARD, `settings/organization/${id}`),
+  },
+  company: {
+    root: path(ROOTS_DASHBOARD, "settings/companyinfor"),
+  },
 };

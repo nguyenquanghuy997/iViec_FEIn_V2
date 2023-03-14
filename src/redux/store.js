@@ -12,6 +12,7 @@ import jobDetailReducer from '@/sections/jobdetail/jobDetailSlice'
 import kanbanReducer from '@/sections/kanban/kanbanSlice'
 import uploadAvatarReducer from '@/sections/user/account/uploadAvatarSlice'
 import {organizationServiceApi} from "@/sections/organization/override/OverrideOrganizationSlice";
+import {modalSlice} from "@/redux/common/modalSlice";
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     candidates: candidateReducer,
     jobs: jobDetailReducer,
     applicant: jobDetailReducer,
+    modalReducer: modalSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -2,9 +2,9 @@ import Page from "@/components/Page";
 import {PAGES} from "@/config";
 import SettingLayout from "@/layouts/setting";
 import {getRolesByPage} from "@/utils/role";
-import OrganizationContent from "@/sections/organization/OrganizationContent";
+import OfferFormContent from "@/sections/offerform/OfferFormContent";
 
-Organization.getLayout = function getLayout({roles = []}, page) {
+OfferForm.getLayout = function getLayout({roles = []}, page) {
   return (
       <SettingLayout roles={roles}>
         {page}
@@ -12,10 +12,10 @@ Organization.getLayout = function getLayout({roles = []}, page) {
   );
 };
 
-export default function Organization() {
+export default function OfferForm() {
   return (
-      <Page title="Quy trình phê duyệt">
-        <OrganizationContent />
+      <Page title="Mẫu thư mời nhận việc">
+        <OfferFormContent />
       </Page>
   );
 }

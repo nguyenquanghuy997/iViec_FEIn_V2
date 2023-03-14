@@ -18,6 +18,7 @@ const HeadingBarInnerStyle = styled("div")(({ theme }) => ({
   margin: '0 auto',
   [theme.breakpoints.up("xl")]: {
     maxWidth: DASHBOARD_CONTENT_WIDTH,
+    padding: theme.spacing(0, 3),
   },
   [theme.breakpoints.up("2k")]: {
     maxWidth: "100%",

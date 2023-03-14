@@ -35,11 +35,13 @@ export const RoleContainer = () => {
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [paginationSize, setPaginationSize] = useState(10);
   const columns = [
     {
       title: "STT",
       key: "index",
-      render: (item, record, index) => <>{index + 1}</>,
+      render: (item, record, index) => (page - 1) * paginationSize + index + 1,
       width: "60px",
       fixed: "left",
     },
@@ -218,6 +220,9 @@ export const RoleContainer = () => {
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VAI TRÒ"}
           isSetting={true}
+          nodata="Hiện chưa có quy trình tuyển dụng nào"
+          setPaginationSize={setPaginationSize}
+          setPage={setPage}
           filter={
             <RolegroupHeader
               methods={methods}

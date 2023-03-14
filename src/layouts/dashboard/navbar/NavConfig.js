@@ -56,9 +56,9 @@ const sidebarConfig = [
       },
       {
         title: "Tin Tuyển Dụng",
-        path: "/jobs",
+        path: "/recruitment",
         icon: ICONS.job,
-        roles: ROLES[PAGES.Jobs],
+        roles: ROLES[PAGES.Recruitment],
       },
       {
         title: "Lịch",
@@ -120,7 +120,7 @@ const sidebarConfig = [
             title: "Tin tuyển dụng",
             path: "/report/tracking",
             icon: ICONS.job,
-            roles: ROLES[PAGES.Jobs],
+            roles: ROLES[PAGES.Recruitment],
           },
         ],
       },
@@ -215,9 +215,9 @@ export const headerMenuConfig = [
     items: [
       {
         title: "Tin tuyển dụng",
-        path: "/jobs",
+        path: "/recruitment",
         // icon: ICONS.job,
-        roles: ROLES[PAGES.Jobs],
+        roles: ROLES[PAGES.Recruitment],
       },
       {
         title: "Ứng viên",

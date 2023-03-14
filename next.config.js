@@ -3,7 +3,10 @@ const withTM = require('next-transpile-modules')([
   '@fullcalendar/common',
   '@fullcalendar/daygrid',
   '@fullcalendar/react',
-  '@amcharts/amcharts5'
+  '@amcharts/amcharts5',
+  '@mui/material',
+  '@mui/styles',
+  '@tinymce/tinymce-react'
 ]);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const withBundleAnalyzer = require('@next/bundle-analyzer')({

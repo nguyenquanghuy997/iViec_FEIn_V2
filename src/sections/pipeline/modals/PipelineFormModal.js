@@ -1,47 +1,44 @@
+import { PipelineDraggableItem } from "../items";
+import { PipelineAddModal } from "./PipelineAddModal";
 import {
   ButtonDS,
   SwitchStatusDS,
   TextAreaDS,
 } from "@/components/DesignSystem";
 import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import { DraggableList } from "@/components/DraggableList";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import {
   useAddJobTypeMutation,
-  useGetPreviewJobTypeMutation,
   useUpdateJobTypeMutation,
 } from "@/sections/jobtype";
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CircularProgress, Divider, Modal } from "@mui/material";
+import {
+  Divider,
+  FormHelperText,
+  Modal,
+} from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { PipelineDraggableItem } from "../items";
-import { DraggableList } from "@/components/DraggableList";
-import SvgIcon from "@/components/SvgIcon";
-
 
 const defaultValues = {
   name: "",
   description: "",
-  requirement: "",
-  benefit: "",
+  pipelineStates: [],
   isActivated: true,
 };
 export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   const isEditMode = !!data?.id;
 
-
   // api
   const [addForm] = useAddJobTypeMutation();
   const [updateForm] = useUpdateJobTypeMutation();
-  const [getPreview, { data: { Data: preview = {} } = {} }] =
-    useGetPreviewJobTypeMutation();
-  const isLoading = isEditMode && !preview.id;
 
   // form
   const Schema = Yup.object().shape({
@@ -52,11 +49,39 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     resolver: yupResolver(Schema),
   });
   const {
-    reset,
+    // reset,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  // state
+  const [listForm, setListForm] = useState([]);
+
+  const [showForm, setShowForm] = useState(false);
+  const [errorStage, setErrorStage] = useState("");
+  const [editItemData, setEditItemData] = useState({});
+  const [editItemIndex, setEditItemIndex] = useState(-1);
+  const pressAdd = () => {
+    setShowForm(true);
+  };
+
+  const onAddForm = (data) => {
+    if (editItemIndex < 0) setListForm((l) => [...l, data]);
+    else
+      setListForm((l) =>
+        [...l].map((item, index) => (index === editItemIndex ? data : item))
+      );
+  };
+
+  const onEditForm = (item, index) => {
+    setEditItemIndex(index);
+    setEditItemData(item);
+    pressAdd();
+  };
+
+  const onDeleteForm = (index) => {
+    setListForm((l) => [...l].filter((_item, _index) => index !== _index));
+  };
 
   // action
   const pressHide = () => {
@@ -64,54 +89,62 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   };
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
-    const body = {
-      id: isEditMode ? data.id : 0,
-      name: e.name,
-      description: e.description,
-      requirement: e.requirement,
-      benefit: e.benefit,
-      isActivated: e.isActivated ? 1 : 0,
-    };
-    if (isEditMode) {
-      try {
-        await updateForm(body).unwrap();
-        enqueueSnackbar("Thực hiện thành công!", {
-          autoHideDuration: 2000,
-        });
-        pressHide();
-        onRefreshData();
-      } catch (err) {
-        if (err.status === "JPE_05") {
-          enqueueSnackbar("Vị trí công việc đã tồn tại!", {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
-        } else {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
-        }
-      }
+    debugger;
+    if (e.pipelineStates == 0) {
+      setErrorStage("Chưa thêm bước tuyển dụng");
     } else {
-      try {
-        await addForm(body).unwrap();
-        enqueueSnackbar("Thực hiện thành công!", {
-          autoHideDuration: 1000,
-        });
-        pressHide();
-        onRefreshData();
-      } catch (err) {
-        if (err.status === "JPE_05") {
-          enqueueSnackbar("Vị trí công việc đã tồn tại!", {
-            autoHideDuration: 1000,
-            variant: "error",
+      const body = {
+        id: isEditMode ? data.id : 0,
+        name: e.name,
+        description: e.description,
+        pipelineStates: e.pipelineStates.map((i) => ({
+          state: i.stageTypeId,
+          examinationId: i.examinationId,
+          description: i.description,
+        })),
+        isActivated: e.isActivated ? 1 : 0,
+      };
+      if (isEditMode) {
+        try {
+          await updateForm(body).unwrap();
+          enqueueSnackbar("Thực hiện thành công!", {
+            autoHideDuration: 2000,
           });
-        } else {
-          enqueueSnackbar("Thực hiện thất bại!", {
+          pressHide();
+          onRefreshData();
+        } catch (err) {
+          if (err.status === "JPE_05") {
+            enqueueSnackbar("Vị trí công việc đã tồn tại!", {
+              autoHideDuration: 1000,
+              variant: "error",
+            });
+          } else {
+            enqueueSnackbar("Thực hiện thất bại!", {
+              autoHideDuration: 1000,
+              variant: "error",
+            });
+          }
+        }
+      } else {
+        try {
+          await addForm(body).unwrap();
+          enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 1000,
-            variant: "error",
           });
+          pressHide();
+          onRefreshData();
+        } catch (err) {
+          if (err.status === "JPE_05") {
+            enqueueSnackbar("Vị trí công việc đã tồn tại!", {
+              autoHideDuration: 1000,
+              variant: "error",
+            });
+          } else {
+            enqueueSnackbar("Thực hiện thất bại!", {
+              autoHideDuration: 1000,
+              variant: "error",
+            });
+          }
         }
       }
     }
@@ -121,42 +154,47 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
+  const renderDraggableItem = (item, index) => {
+    return (
+      <PipelineDraggableItem
+        data={item}
+        onPressAdd={pressAdd}
+        onPressEdit={() => onEditForm(item, index)}
+        onPressDelete={() => onDeleteForm(index)}
+        isDefault={false}
+      />
+    );
+  };
 
-  // effect
   useEffect(() => {
-    if (!show) {
-      reset();
-      setValue("name", "");
-      setValue("description", "");
-      setValue("requirement", "");
-      setValue("benefit", "");
-      setValue("isActivated", true);
-
-      return;
-    }
+    // if (!show) {
+    //   reset();
+    //   setValue("name", "");
+    //   setValue("isDefault", false);
+    //   setValue("isActive", true);
+    //   setListForm([]);
+    //   setShowForm(false);
+    //   return;
+    // }
 
     if (!isEditMode) return;
 
-    getPreview({ id: data.id }).unwrap();
-  }, [show]);
-
+    setValue("name", data.name);
+    setValue("description", data.description);
+    setValue("isActivated", !!data.isActivated);
+    setListForm(
+      data.pipelineStates?.map?.((i) => ({
+        state: i.stageTypeId,
+        examinationId: i.examinationId,
+        description: i.description,
+      })) || []
+    );
+  }, []);
   useEffect(() => {
-    if (!preview.id) return;
-    setValue("name", preview.name);
-    setValue("description", preview.description);
-    setValue("requirement", preview.requirement);
-    setValue("benefit", preview.benefit);
-    setValue("isActivated", !!preview.isActivated);
-
-  }, [isEditMode, preview.id]);
+    setValue("pipelineStates", listForm);
+    listForm.length && handleSubmit(() => {})();
+  }, [listForm]);
   const isActivated = methods.watch("isActivated");
-   // state
-   const [listForm, setListForm] = useState([]);
-
-  //  const [showForm, setShowForm] = useState(false);
-  //  const [editItemData, setEditItemData] = useState({});
-  //  const [editItemIndex, setEditItemIndex] = useState(-1);
-
   return (
     <FormProvider methods={methods}>
       <Modal
@@ -203,84 +241,95 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
           </View>
           <Divider />
           {/* body */}
-          {isLoading ? (
-            <View flex="true" contentcenter="true">
-              <CircularProgress />
+          <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
+            {/* code & name */}
+
+            <View mb={24}>
+              {renderTitle("Tên quy trình tuyển dụng", true)}
+
+              <RHFTextField
+                name={"name"}
+                placeholder="Nhập tên quy trình tuyển dụng"
+                maxLength={150}
+              />
             </View>
-          ) : (
-            <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
-              {/* code & name */}
+            <View mb={24}>
+              {renderTitle("Mô tả")}
 
-              <View mb={24}>
-                {renderTitle("Tên quy trình tuyển dụng", true)}
-
-                <RHFTextField
-                  name={"name"}
-                  placeholder="Nhập tên quy trình tuyển dụng"
-                  maxLength={50}
-                />
-              </View>
-              <View mb={24}>
-                {renderTitle("Mô tả", true)}
-
-                <TextAreaDS
-                  maxLength={255}
-                  placeholder="Nhập nội dung mô tả"
-                  name={"description"}
-                />
-              </View>
-              <Divider />
-              {/* dept */}
-
-              <View p={24} bgColor={"#F8F8F9"}>
-                  <PipelineDraggableItem
-                    data={[
-                      {
-                        name: "Ứng tuyển",
-                        des: "Ứng viên ứng tuyển công việc",
-                      },
-                    ]}
-                    isDefault={true}
-                  />
-                  <DraggableList
-                    data={listForm}
-                    setData={setListForm}
-                    // renderItem={renderDraggableItem}
-                  />
-
-                  <View mv={16} contentCenter >
-                    <SvgIcon>
-                      {
-                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 20C4.47967 19.9939 0.00606237 15.5203 0 10V9.8C0.109931 4.30453 4.63459 -0.072041 10.1307 0.000882959C15.6268 0.0738069 20.0337 4.56889 19.9978 10.0653C19.9619 15.5618 15.4966 19.9989 10 20ZM5 9V11H9V15H11V11H15V9H11V5H9V9H5Z" fill="#01B6A7"/></svg>'
-                      }
-                    </SvgIcon>
-
-                    <Text mt={6} color={"#00978A"} fontWeight={"600"}>
-                      {"Thêm tiêu chí đánh giá"}
-                    </Text>
-                  </View>
-
-                  <PipelineDraggableItem
-                    data={[
-                      {
-                        name: "Kết quả",
-                        des: "Kết luận thông qua quá trình tuyển dụng và đánh giá",
-                      },
-                    ]}
-                    isDefault={true}
-                  />
-                  <PipelineDraggableItem
-                    data={[
-                      {
-                        name: "Mời nhận việc",
-                        des: "Gửi offer và chờ ứng viên phản hồi",
-                      },
-                    ]}
-                    isDefault={true}
-                  />
-                </View>
+              <TextAreaDS
+                initialValue=""
+                maxLength={255}
+                placeholder="Nhập nội dung mô tả"
+                name={"description"}
+              />
             </View>
-          )}
+            <Divider />
+            {/* dept */}
+            <View pv={24}>
+              {renderTitle("Bước tuyển dụng", true)}
+              <FormHelperText error sx={{ mt: 0, mb:1}}>
+                {errorStage && errorStage}
+              </FormHelperText>
+              <PipelineDraggableItem
+                data={[
+                  {
+                    name: "Ứng tuyển",
+                    des: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+                  },
+                ]}
+                isDefault={true}
+              />
+              <DraggableList
+                data={listForm}
+                setData={setListForm}
+                renderItem={renderDraggableItem}
+              />
+
+              <ButtonDS
+                type="submit"
+                loading={isSubmitting}
+                variant="contained"
+                tittle={"Thêm bước tuyển dụng"}
+                onClick={pressAdd}
+                sx={{
+                  marginBottom: "16px",
+                  textTransform: "unset",
+                  boxShadow: "unset",
+                  backgroundColor: "#fff",
+                  color: "#1976D2",
+                  border: "1px solid #1976D2",
+                  "&:hover": { backgroundColor: "#EFF3F7" },
+                }}
+                icon={
+                  <Iconify
+                    icon={"material-symbols:add"}
+                    width={20}
+                    height={20}
+                    color="#1976D2"
+                    mr={1}
+                  />
+                }
+              />
+              <PipelineDraggableItem
+                data={[
+                  {
+                    name: "Kết quả",
+                    des: "Tổng kết các đánh giá về ứng viên",
+                  },
+                ]}
+                isDefault={true}
+              />
+              <PipelineDraggableItem
+                data={[
+                  {
+                    name: "Mời nhận việc",
+                    des: "Gửi thư mời nhận việc cho ứng viên",
+                  },
+                ]}
+                isDefault={true}
+              />
+            </View>
+          </View>
           {/* footer */}
           <View
             flexrow="true"
@@ -300,15 +349,21 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
             <View width={8} />
             <View flex="true" />
 
-            {isLoading ? null : (
-              <SwitchStatusDS
-                name={"isActivated"}
-                label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
-              />
-            )}
+            <SwitchStatusDS
+              name={"isActivated"}
+              label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+            />
           </View>
         </ViewModel>
       </Modal>
+      {/* modal */}
+      <PipelineAddModal
+        show={showForm}
+        editData={editItemData}
+        setShow={setShowForm}
+        onSubmit={onAddForm}
+        onDelete={() => onDeleteForm(editItemIndex)}
+      />
     </FormProvider>
   );
 };

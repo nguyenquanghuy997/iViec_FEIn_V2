@@ -1,22 +1,28 @@
-import {apiSlice} from "@/redux/api/apiSlice";
+import { apiSlice } from '@/redux/api/apiSlice'
 import {
   API_GET_LIST_RECRUITMENT,
-  API_GET_RECRUITMENT_BY_ORGANIZATION
-} from "@/routes/api";
+  API_GET_RECRUITMENT_BY_ORGANIZATION,
+} from '@/routes/api'
+import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Recruitment"],
-});
+  addTagTypes: ['Recruitment'],
+})
 
-const RecruitmentSlice = apiWithTag.injectEndpoints({
+export const recruitmentSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getRecruitments: builder.query({
+      query: (params) => ({
+        url: `${API_GET_LIST_RECRUITMENT}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
+        method: "POST",
+      }),
+    }),
+    getListRecruitments: builder.query({
       query: (params) => ({
         url: API_GET_LIST_RECRUITMENT,
         method: 'GET',
         params
       }),
-      providesTags: ['Recruitment']
     }),
     getRecruitmentByOrganization: builder.query({
       query: (params) => ({
@@ -24,16 +30,18 @@ const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'GET',
         params
       }),
-      providesTags: ['Recruitment']
     }),
-  })
-});
+
+  }),
+})
 
 export const {
+  useGetListJobsMutation,
   // get list recruitment
-  useGetRecruitmentsQuery,
-  useLazyGetRecruitmentsQuery,
+  useGetListRecruitmentsQuery,
+  useLazyGetListRecruitmentsQuery,
   // get list recruitment by organization
   useFetRecruitmentByOrganizationQuery,
-  useLazyGetRecruitmentByOrganizationQuery
-} = RecruitmentSlice;
+  useLazyGetRecruitmentByOrganizationQuery,
+  useLazyGetRecruitmentsQuery,
+} = recruitmentSlice

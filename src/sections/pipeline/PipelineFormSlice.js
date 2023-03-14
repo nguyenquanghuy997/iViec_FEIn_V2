@@ -3,7 +3,7 @@ import {
   API_GET_ALL_PIPELINE,
   API_ADD_ROLE_GROUP,
   API_UPDATE_PIPELINE,
-  API_REMOVE_ROLE_GROUP
+  API_DELETE_PIPELINE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -47,7 +47,7 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
     }),
     deletePipeline: builder.mutation({
       query: (data) => ({
-        url: API_REMOVE_ROLE_GROUP,
+        url: API_DELETE_PIPELINE,
         method: "POST",
         data: qs.stringify(data),
       }),
