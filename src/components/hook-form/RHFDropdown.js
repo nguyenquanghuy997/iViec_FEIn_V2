@@ -25,6 +25,7 @@ const MenuProps = {
   MenuListProps: {
     disableListWrap: true,
   },
+  // disableScrollLock: true
 };
 
 const InputProps = {
@@ -80,6 +81,7 @@ function RHFDropdown({name, ...props}) {
                     onClose={() => setSearchText("")}
                     renderValue={() => renderValue(options, field.value, placeholder)}
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
+                    onOpen={() => console.log('open')}
                 >
                   {options?.length > 3 && (
                       <TextFieldStyle

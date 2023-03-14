@@ -45,8 +45,8 @@ const RecruitmentChannel = () => {
   return (
       <BoxWrapperStyle className="wrapper">
         <FormProvider methods={methods}>
-          <Box className="box-item" sx={{backgroundColor: 'transparent', display: 'flex',}}>
-            <BoxInnerStyle style={{ minWidth: '844px', backgroundColor: 'transparent', boxShadow: 'none' }}>
+          <Box className="box-item" sx={{display: 'flex'}}>
+            <BoxInnerStyle style={{minWidth: '844px', backgroundColor: 'transparent', boxShadow: 'none'}}>
               {
                 dataChannels.map((item, index) => {
                   return (
@@ -70,7 +70,7 @@ const RecruitmentChannel = () => {
                   'Để thêm các kênh tuyển dụng khác, vui lòng truy cập mục Thiết lập kết nối để điều chỉnh',
                 ]}
             >
-              <Button variant="outlined" sx={{minWidht: '200px', marginLeft: 'auto', fontSize: 14, mb: 4}}>
+              <Button variant="outlined" sx={{padding: '12px 16px', marginLeft: 'auto'}}>
                 Thiết lập kết nối
               </Button>
             </RightNoteText>

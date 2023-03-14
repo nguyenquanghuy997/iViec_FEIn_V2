@@ -9,7 +9,7 @@ const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ['Recruitment'],
 })
 
-export const recruitmentSlice = apiWithTag.injectEndpoints({
+export const RecruitmentSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getRecruitments: builder.query({
       query: (params) => ({
@@ -24,14 +24,13 @@ export const recruitmentSlice = apiWithTag.injectEndpoints({
         params
       }),
     }),
-    getRecruitmentByOrganization: builder.query({
+    getRecruitmentByOrganizationId: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_BY_ORGANIZATION,
         method: 'GET',
         params
       }),
     }),
-
   }),
 })
 
@@ -41,7 +40,7 @@ export const {
   useGetListRecruitmentsQuery,
   useLazyGetListRecruitmentsQuery,
   // get list recruitment by organization
-  useFetRecruitmentByOrganizationQuery,
-  useLazyGetRecruitmentByOrganizationQuery,
+  useGetRecruitmentByOrganizationIdQuery,
+  useLazyGetRecruitmentByOrganizationIdQuery,
   useLazyGetRecruitmentsQuery,
-} = recruitmentSlice
+} = RecruitmentSlice;

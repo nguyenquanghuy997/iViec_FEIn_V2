@@ -17,7 +17,7 @@ import {
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Applicant", "FilterApplicant", "GetColumnApplicants"],
+  addTagTypes: ["GetColumnApplicants"],
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
@@ -93,13 +93,12 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
     // new
     // get all applicant with filter
-    getAllFilterApplicant: builder.mutation({
+    getAllFilterApplicant: builder.query({
       query: (data) => ({
         url: API_GET_FILTER_ALL_APPLICANTS,
         method: "POST",
         data,
       }),
-      invalidatesTags: ["FilterApplicant"],
     }),
     getRecruitmentByOrganization: builder.query({
       query: (params) => ({
@@ -107,7 +106,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: 'GET',
         params
       }),
-      providesTags: ['Recruitment']
     }),
     // get all skills
     getSkills: builder.query({
@@ -135,24 +133,19 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetListApplicantsQuery,
-  useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
-  useGetAllFilterApplicantMutation,
-  useLazyGetRecruitmentByOrganizationQuery,
+  useGetAllFilterApplicantQuery,
+  useGetRecruitmentByOrganizationQuery,
   // skills
   useGetSkillsQuery,
   // job sources
   useGetAllJobSourcesQuery,
-  useLazyGetAllJobSourcesQuery,
   // user from organization
   useGetAllUserFromOrganizationQuery,
   useLazyGetAllUserFromOrganizationQuery,
-
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useUpdateApplicantRecruitmentToNextStateMutation
