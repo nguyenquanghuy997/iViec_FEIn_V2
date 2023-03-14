@@ -22,8 +22,6 @@ import {
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
-import {useDispatch, useSelector} from "@/redux/store";
-import {filterSlice} from "@/redux/common/filterSlice";
 
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
 import {useGetAllJobSourcesQuery, useGetAllUserFromOrganizationQuery, useGetSkillsQuery} from "@/sections/applicant";
