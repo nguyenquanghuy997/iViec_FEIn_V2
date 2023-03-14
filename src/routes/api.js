@@ -185,6 +185,7 @@ export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrga
 // API Application page
 // recruitment tin tuyển dụng
 export const API_GET_LIST_RECRUITMENT = "/recruitment/Recruitment/GetRecruitments"; // get all recruitment
+export const API_GET_RECRUITMENT_BY_ID = "/recruitment/Recruitment/GetRecruitment"; // get all recruitment
 export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/GetRecruitmentByOrganizationId" // new - get recruitment by organization
 
 // job source nguồn job

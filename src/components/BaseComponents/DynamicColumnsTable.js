@@ -4,7 +4,6 @@ import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
-import BottomNavPipeline from "@/sections/pipeline/BottomNavPipeline";
 import { makeStyles } from "@mui/styles";
 import { Checkbox, Dropdown, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
@@ -26,16 +25,11 @@ const DynamicColumnsTable = (props) => {
     page,
     paginationSize,
     handleChangePagination,
-  } = props;
-  const rowKey = "id";
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
+    rowSelection,
+    onRow,
     selectedRowKeys,
-    onChange: onSelectChange,
-  };
+  } = props;
+
   const [columnsTable, setColumnsTable] = useState([]);
 
   const dragProps = {
@@ -53,18 +47,19 @@ const DynamicColumnsTable = (props) => {
 
   const [checkedColumns, setCheckedColumns] = useState([]);
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
-  const [isOpenBottomNav, setIsOpenBottomNav] = useState(false);
-  console.log(isOpenBottomNav)
+
   useEffect(() => {
-    setColumnsTable(columns.map(col => {
-      const renderFunc = col.render;
-      if (renderFunc) {
-        col.render = (text, record, index) => {
-          return renderFunc(text, record, index, page, paginationSize);
-        };
-      }
-      return col;
-    }));
+    setColumnsTable(
+      columns.map((col) => {
+        const renderFunc = col.render;
+        if (renderFunc) {
+          col.render = (text, record, index) => {
+            return renderFunc(text, record, index, page, paginationSize);
+          };
+        }
+        return col;
+      })
+    );
   }, [columns]);
 
   const menu = (
@@ -207,9 +202,6 @@ const DynamicColumnsTable = (props) => {
   }));
 
   const classes = useStyles();
-  const toggleDrawer = (newOpen) => () => {
-    setIsOpenBottomNav(newOpen);
-  };
 
   let locale = {
     emptyText: (
@@ -282,15 +274,21 @@ const DynamicColumnsTable = (props) => {
           <Table
             locale={locale}
             rowSelection={rowSelection}
+            onRow={onRow}
+            rowKey={(record) => record.id}
+            rowClassName={(record) =>
+              selectedRowKeys.includes(record.id)
+                ? "ant-table-row-selected"
+                : ""
+            }
             columns={[...columnsTable]}
             dataSource={source?.items}
-            rowKey={rowKey}
             scroll={scroll}
             size="large"
             loading={loading}
             className={classes.table}
             pagination={{
-              onChange:handleChangePagination,
+              onChange: handleChangePagination,
               total: `${source?.totalRecord}`,
               defaultPageSize: paginationSize,
               showSizeChanger: true,
@@ -302,12 +300,6 @@ const DynamicColumnsTable = (props) => {
           />
         </ReactDragListView.DragColumn>
       </div>
-      <BottomNavPipeline
-        open={selectedRowKeys?.length > 0}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-        selecedLength={selectedRowKeys?.length || 0}
-      />
     </View>
   );
 };

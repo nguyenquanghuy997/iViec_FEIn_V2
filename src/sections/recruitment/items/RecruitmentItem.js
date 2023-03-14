@@ -1,6 +1,8 @@
 // import RecruitmentFilterModal from "../modals/RecruitmentFilterModal";
 import { useLazyGetRecruitmentsQuery } from "../RecruitmentSlice";
+import RecruitmentConfirmMultipleModal from "../modals/RecruitmentConfirmMultipleModal";
 import RecruitmentFilterModal from "../modals/RecruitmentFilterModal";
+import RecruitmentBottomNav from "./RecruitmentBottomNav";
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import { AvatarDS } from "@/components/DesignSystem";
@@ -16,6 +18,7 @@ import {
 import { fCurrency } from "@/utils/formatNumber";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Tag } from "antd";
 import { get } from "lodash";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
@@ -43,7 +46,7 @@ export const RecruitmentItem = () => {
     return [
       {
         title: "STT",
-        key: "index",
+        key: "id",
         align: "center",
         render: (item, record, index, page, paginationSize) => (
           <>{(page - 1) * paginationSize + index + 1}</>
@@ -61,7 +64,7 @@ export const RecruitmentItem = () => {
         dataIndex: "jobPosition",
         title: "Vị trí công việc",
         width: "214px",
-
+        render: (item) => item?.name,
       },
       {
         dataIndex: "organizationName",
@@ -150,11 +153,11 @@ export const RecruitmentItem = () => {
         ],
       },
       {
-        dataIndex: "numberApply",
+        dataIndex: "numOfApplied",
         title: "SL ứng tuyển",
         width: "160px",
-        name: "numberApply",
-        label: "SL ứng tuyển",
+        name: "numOfApplied",
+        label: "Số lượng ứng tuyển",
         type: "number",
         align: "center",
         items: [
@@ -178,127 +181,94 @@ export const RecruitmentItem = () => {
         dataIndex: "numberPosition",
         title: "SL cần tuyển",
         width: "160px",
-        name: "numberPosition",
-        label: "SL cần tuyển",
-        type: "number",
         align: "center",
-        items: [
-          {
-            name: "numberPositionFrom",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Từ</span>,
-            endIcon: <span>Người</span>,
-          },
-          {
-            name: "numberPositionTo",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Đến</span>,
-            endIcon: <span>Người</span>,
-          },
-        ],
       },
       {
-        dataIndex: "numberApply",
+        dataIndex: "numOfPass",
         title: "SL đạt",
         width: "160px",
-        name: "numberApply",
-        label: "SL đạt",
-        type: "number",
         align: "center",
-        items: [
-          {
-            name: "numberApplyFrom",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Từ</span>,
-            endIcon: <span>Người</span>,
-          },
-          {
-            name: "numberApplyTo",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Đến</span>,
-            endIcon: <span>Người</span>,
-          },
-        ],
       },
       {
-        dataIndex: "numberView",
+        dataIndex: "numOfAcceptOffer",
         title: "SL nhận việc",
         width: "160px",
-        name: "numberView",
-        label: "SL nhận việc",
-        type: "number",
         align: "center",
-        items: [
-          {
-            name: "numberViewFrom",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Từ</span>,
-            endIcon: <span>Người</span>,
-          },
-          {
-            name: "numberViewTo",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Đến</span>,
-            endIcon: <span>Người</span>,
-          },
-        ],
       },
       {
-        dataIndex: "ownerName",
+        dataIndex: ["ownerName", "ownerEmail"],
         title: "Cán bộ phụ trách",
         width: "220px",
-        name: "ownerNameIds",
+        name: "ownerIds",
         label: "Cán bộ phụ trách",
         placeholder: "Chọn 1 hoặc nhiều người",
         // type: "select",
         multiple: true,
-        render: (item) => (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <AvatarDS
-              sx={{
-                height: "20px",
-                width: "20px",
-                borderRadius: "100px",
-                fontSize: "12px",
-              }}
-              name={item}
-            ></AvatarDS>
-            <span fontSize="14px" fontWeight="600" color="#172B4D">
-              {item}
-            </span>
-          </div>
+        render: (text, row) => (
+          <>
+            {get(row, "ownerEmail", "") && (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <AvatarDS
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                    borderRadius: "100px",
+                    fontSize: "10px",
+                  }}
+                  name={get(row, "ownerName", "")}
+                ></AvatarDS>
+                <span fontSize="14px" fontWeight="600" color="#172B4D">
+                  {get(row, "ownerEmail", "")}
+                </span>
+              </div>
+            )}
+          </>
         ),
       },
       {
-        dataIndex: "ownerName",
+        dataIndex: "coOwners",
         title: "Đồng phụ trách",
-        width: "220px",
-        name: "ownerNameIds",
+        width: "340px",
+        name: "coOwnerIds",
         label: "Đồng phụ trách",
         placeholder: "Chọn 1 hoặc nhiều người",
         // type: "select",
         multiple: true,
-        render: (item) => (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <AvatarDS
-              sx={{
-                height: "20px",
-                width: "20px",
-                borderRadius: "100px",
-                fontSize: "12px",
-              }}
-              name={item}
-            ></AvatarDS>
-            <span fontSize="14px" fontWeight="600" color="#172B4D">
-              {item}
-            </span>
-          </div>
+        render: (_, { coOwners }) => (
+          <>
+            {coOwners?.map((p, index) => {
+              if (index < 3) {
+                return (
+                  <Tag
+                    key={p}
+                    style={{
+                      background: "#EFF3F7",
+                      borderRadius: "4px",
+                      color: "#5C6A82",
+                      border: "none",
+                    }}
+                  >
+                    {p?.email}
+                  </Tag>
+                );
+              } else {
+                var indexplus = coOwners.length - 3;
+                return (
+                  <Tag
+                    key={p}
+                    style={{
+                      background: "#EFF3F7",
+                      borderRadius: "4px",
+                      color: "#5C6A82",
+                      border: "none",
+                    }}
+                  >
+                    +{indexplus}
+                  </Tag>
+                );
+              }
+            })}
+          </>
         ),
       },
       {
@@ -314,11 +284,9 @@ export const RecruitmentItem = () => {
           <>
             {recruitmentAddresses.map((item, index) => {
               if (index < recruitmentAddresses?.length - 1) {
-                return (
-                  <div key={item}>{item.provinceName?.toUpperCase()},</div>
-                );
+                return <span key={item}>{item.provinceName}, </span>;
               } else {
-                return <div key={item}>{item.provinceName?.toUpperCase()}</div>;
+                return <span key={item}>{item.provinceName}</span>;
               }
               // let color = item.length > 5 ? 'geekblue' : 'green';
             })}
@@ -588,13 +556,13 @@ export const RecruitmentItem = () => {
   };
 
   const onSubmit = async (data) => {
-    debugger
+    debugger;
     const body = { ...data, searchKey: data.searchKey };
 
     if (query) {
       queryParams = {
         ...queryParams,
-        ... body,
+        ...body,
         pageSize: page,
         pageIndex: paginationSize,
       };
@@ -610,7 +578,6 @@ export const RecruitmentItem = () => {
       getAllFilter({ pageSize: page, pageIndex: paginationSize }).unwrap();
     }
     await router.push(
-      
       {
         pathname: router.pathname,
         query: {
@@ -618,13 +585,13 @@ export const RecruitmentItem = () => {
           startDateFrom: data.startDateFrom
             ? new Date(data.startDateFrom).toISOString()
             : null,
-            startDateTo: data.startDateTo
+          startDateTo: data.startDateTo
             ? new Date(data.startDateTo).toISOString()
             : null,
-            endDateFrom: data.endDateFrom
+          endDateFrom: data.endDateFrom
             ? new Date(data.endDateFrom).toISOString()
             : null,
-            endDateTo: data.endDateTo
+          endDateTo: data.endDateTo
             ? new Date(data.endDateTo).toISOString()
             : null,
           createdTimeFrom: data.createdTimeFrom
@@ -641,7 +608,44 @@ export const RecruitmentItem = () => {
     handleCloseFilterForm();
   };
   const refreshData = () => {
-     getAllFilter().unwrap();
+    getAllFilter().unwrap();
+  };
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [showMultipleDelete, setShowMultipleDelete] = useState(false);
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const onTableRowClick = (record) => {
+    const selectedKey = record.id;
+    const selectedKeys = [...selectedRowKeys];
+
+    const index = selectedKeys.indexOf(selectedKey);
+
+    if (index === -1) {
+      selectedKeys.push(selectedKey);
+    } else {
+      selectedKeys.splice(index, 1);
+    }
+
+    setSelectedRowKeys(selectedKeys);
+  };
+
+  const onRow = (record) => {
+    return {
+      onClick: () => onTableRowClick(record),
+    };
+  };
+
+  const [, setIsOpenBottomNav] = useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+    setSelectedRowKeys([]);
   };
 
   return (
@@ -668,10 +672,20 @@ export const RecruitmentItem = () => {
             menuItemText={menuItemText}
             UpdateListColumn={handleUpdateListColumnApplicants}
             settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
+            rowSelection={rowSelection}
+            onRow={onRow}
             scroll={{ x: 3954 }}
             nodata="Hiện chưa có tin tuyển dụng nào"
+            selectedRowKeys={selectedRowKeys}
           />
         </View>
+        <RecruitmentBottomNav
+          open={selectedRowKeys?.length > 0}
+          onClose={toggleDrawer(false)}
+          setShowMultipleDelete={setShowMultipleDelete}
+          selectedList={selectedRowKeys || []}
+          onOpenForm={toggleDrawer(true)}
+        />
       </Content>
       {isOpen && (
         <RecruitmentFilterModal
@@ -680,6 +694,14 @@ export const RecruitmentItem = () => {
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
           onRefreshData={refreshData}
+        />
+      )}
+      {showMultipleDelete && (
+        <RecruitmentConfirmMultipleModal
+          showMultipleDelete={showMultipleDelete}
+          setShowMultipleDelete={setShowMultipleDelete}
+          organizationIds={selectedRowKeys}
+          setSelected={selectedRowKeys}
         />
       )}
     </View>
