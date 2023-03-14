@@ -4,7 +4,7 @@ import {Controller, useFormContext} from "react-hook-form";
 import styled from "@emotion/styled";
 import {TreeSelect} from "antd";
 
-const {SHOW_PARENT} = TreeSelect;
+const {SHOW_ALL} = TreeSelect;
 
 const TreeSelectStyle = styled(TreeSelect)`
   border-radius: 6px;
@@ -52,7 +52,7 @@ function TreeFilter({name, ...props}) {
               <Stack direction="column">
                 <TreeSelectStyle
                     {...field}
-                    showCheckedStrategy={SHOW_PARENT}
+                    showCheckedStrategy={SHOW_ALL}
                     multiple={multiple}
                     treeData={options}
                     showSearch

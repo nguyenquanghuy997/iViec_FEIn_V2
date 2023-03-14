@@ -356,7 +356,6 @@ export const RecruitmentItem = () => {
       type: "select",
       multiple: false,
       placeholder: "Chọn số năm kinh nghiệm",
-      label: "Số năm kinh nghiệm",
       render: (text, row) => (
        <>
        {get(row, 'minSalary', '') != 0 ?  `${fCurrency(get(row, 'minSalary', ''))} - ${fCurrency(get(row, 'maxSalary', ''))} ${Currency(get(row, 'currencyUnit', ''))}`:''}
@@ -582,6 +581,7 @@ export const RecruitmentItem = () => {
   return (
     <View>
       <RecruitmentHeader
+          data={Data?.items}
         methods={methods}
         isOpen={isOpen}
         onSubmit={onSubmitSearch}

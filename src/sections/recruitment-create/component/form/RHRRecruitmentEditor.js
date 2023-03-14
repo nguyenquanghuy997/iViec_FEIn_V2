@@ -1,9 +1,12 @@
-import {FormHelperText} from '@mui/material'
-import PropTypes from 'prop-types'
-import {Controller, useFormContext} from 'react-hook-form'
+import { memo } from "react";
+import dynamic from 'next/dynamic'
+import FormHelperText from '@mui/material/FormHelperText';
+import {Controller, useFormContext} from 'react-hook-form';
 import {LabelStyle} from "@/components/hook-form/style";
-import React from "react";
-import RecruitmentEditor from "@/sections/recruitment-create/component/form/RecruitmentEditor";
+const RecruitmentEditor = dynamic(() => import('@/sections/recruitment-create/component/form/RecruitmentEditor'), {
+    loading: () => <div>Loading...</div>,
+    ssr: false,
+})
 
 const RHFRecruitmentEditor = ({ name, title, isRequired = false, ...other }) => {
   const {control} = useFormContext()
@@ -36,8 +39,4 @@ const RHFRecruitmentEditor = ({ name, title, isRequired = false, ...other }) => 
   )
 }
 
-RHFRecruitmentEditor.propTypes = {
-  name: PropTypes.string,
-}
-
-export default RHFRecruitmentEditor;
+export default memo(RHFRecruitmentEditor);
