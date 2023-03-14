@@ -28,7 +28,7 @@ const RecruitmentCreateContent = () => {
   const [isOpenSubmitApprove, setIsOpenSubmitApprove] = useState(false);
   const [isOpenAlertBack, setIsOpenAlertBack] = useState(false);
 
-  const [value, setValue] = useState('2');
+  const [value, setValue] = useState('1');
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -46,8 +46,6 @@ const RecruitmentCreateContent = () => {
         <JobCreateHeader
             setIsOpenSubmitApprove={setIsOpenSubmitApprove}
             setIsOpenSaveDraft={setIsOpenSaveDraft}
-            onSubmitSaveDraft={handleSubmitSaveDraft}
-            onSubmitApprove={handleSubmitApprove}
             style={{padding: '18px 0', boxShadow: 'none', borderBottom: '1px solid #E7E9ED'}}
         />
         <TabContext value={value}>
@@ -76,6 +74,7 @@ const RecruitmentCreateContent = () => {
                 subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
                 icon={<DraftIcon height={45} width={50} />}
                 buttonTitle={"Lưu nháp"}
+                onSubmit={handleSubmitSaveDraft}
             />
         }
         {
@@ -86,6 +85,7 @@ const RecruitmentCreateContent = () => {
                 subtitle={"Bạn có chắc chắn muốn gửi phê duyệt tin tuyển dụng này?"}
                 icon={<SendIcon />}
                 buttonTitle={"Gửi phê duyệt"}
+                onSubmit={handleSubmitApprove}
             />
         }
         {

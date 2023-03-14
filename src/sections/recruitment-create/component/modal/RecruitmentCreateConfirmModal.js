@@ -75,7 +75,7 @@ const ButtonActiveStyle = styled(Button)(({}) => ({
   }
 }));
 
-const RecruitmentCreateConfirmModal = ({isOpen, onClose, icon, title, subtitle, buttonTitle}) => {
+const RecruitmentCreateConfirmModal = ({isOpen, onClose, icon, title, subtitle, buttonTitle, onSubmit}) => {
   return (
       <DialogStyle
           open={isOpen}
@@ -97,7 +97,7 @@ const RecruitmentCreateConfirmModal = ({isOpen, onClose, icon, title, subtitle, 
         </DialogContent>
         <DialogActions sx={{borderTop: '1px solid #E7E9ED'}}>
           <ButtonCancelStyle className="button-cancel" onClick={onClose}>Hủy</ButtonCancelStyle>
-          <ButtonActiveStyle className="button-active">
+          <ButtonActiveStyle className="button-active" onClick={onSubmit}>
             {buttonTitle}
           </ButtonActiveStyle>
         </DialogActions>
