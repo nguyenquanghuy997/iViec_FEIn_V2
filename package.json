@@ -81,7 +81,7 @@
     "qs": "^6.11.0",
     "query-string": "^7.1.1",
     "react": "^17.0.1",
-    "react-beautiful-dnd": "^13.1.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-cookie": "^4.1.1",
     "react-copy-to-clipboard": "^5.1.0",
     "react-date-range": "^1.4.0",

@@ -107,7 +107,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
 
   const onSubmit = (data) => console.log("data", data);
 
-  const {data: {items: ListRoleGroup} = []} = useGetRoleGroupQuery();
+  const {data: {items:   ListRoleGroup} = []} = useGetRoleGroupQuery();
 
   return (
       <DialogStyle

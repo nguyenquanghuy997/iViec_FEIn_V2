@@ -14,6 +14,7 @@ RHFDatePicker.propTypes = {
 export default function RHFDatePicker({
   name,
   label,
+  style,
   DatePickerProps,
   ...other
 }) {
@@ -42,6 +43,7 @@ export default function RHFDatePicker({
               {...params}
               fullWidth
               {...other}
+              sx={{...style}}
               // InputProps={{
               //   startAdornment: (
               //     <InputAdornment position="start">{startText}</InputAdornment>
