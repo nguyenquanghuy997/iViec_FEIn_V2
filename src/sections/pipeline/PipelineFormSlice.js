@@ -8,18 +8,22 @@ import {
 import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CompanyInfor"],
+  addTagTypes: ["Pipeline"],
 });
 
 const PipelineFormSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({  
     //Danh sách vị trí
     getAllPipeline: builder.query({
-      query: (params) => ({
-        url: API_GET_ALL_PIPELINE,
-        method: "GET",
-        params
-      }),
+      query: (params) => {
+        const defaultParams = { PageSize: 20 };
+        return {
+          url: API_GET_ALL_PIPELINE,
+          method: "GET",
+          params: {...defaultParams, ...params},
+        }
+      },
     }),
 
     // filter người tạo
@@ -56,6 +60,7 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
+  useGetAllPipelineQuery,
   useLazyGetAllPipelineQuery,
   useAddPipelineMutation,
   useUpdatePipelineMutation,

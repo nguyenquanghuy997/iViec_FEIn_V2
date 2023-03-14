@@ -47,6 +47,8 @@ export const ApplicantItem = () => {
 
   const { handleSubmit } = methods;
 
+  console.log(dataFilter)
+
   // api get list
   const { data: Data, isLoading } = useGetAllFilterApplicantQuery(
       JSON.stringify(Object.entries(dataFilter).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {}))
@@ -452,11 +454,13 @@ export const ApplicantItem = () => {
       ...data,
       searchKey: data.searchKey,
       recruitmentPipelineStates: data.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
-      // yearsOfExperience: data.yearsOfExperience ? [Number(data.yearsOfExperience)] : null,
+      yearsOfExperience: data.yearsOfExperience ? [Number(data.yearsOfExperience)] : null,
+      recruitmentIds: data.recruitmentIds || null,
+      educations: data.educations,
     };
-    const cleanBody = Object.entries(body).reduce((a, [k, v]) => ((v === null || v === undefined || !v || (Array.isArray(v) && v.length === 0)) ? a : ((a[k] = v), a)), {})
-    handleSetDataFilter(cleanBody)
-    // handleCloseFilterForm();
+    // const cleanBody = Object.entries(body).reduce((a, [k, v]) => ((v === null || v === undefined || !v || (Array.isArray(v) && v.length === 0)) ? a : ((a[k] = v), a)), {})
+    handleSetDataFilter(body);
+    handleCloseFilterForm();
   };
 
   return (

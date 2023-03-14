@@ -25,7 +25,7 @@ const MenuProps = {
   MenuListProps: {
     disableListWrap: true,
   },
-  // disableScrollLock: true
+  disableScrollLock: true
 };
 
 const InputProps = {
@@ -39,7 +39,7 @@ const InputProps = {
 const renderOptions = (options, value) => {
   return options?.map((option, i) => {
     return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
-      {option.label}
+      {option.label || option.name}
       {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{ width: 24, height: 24 }} /> }
     </MenuItem>
   })

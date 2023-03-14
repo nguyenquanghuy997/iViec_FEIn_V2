@@ -176,7 +176,7 @@ export const API_UPDATE_JOBTYPE = "/recruitment/JobPosition/UpdateJobPosition";
 export const API_GET_APPLICANT_USERS_ON_JOBTYPE = "/recruitment/JobPosition/GetApplicationUsersOnJobPosition";
 
 // Pipeline
-export const API_GET_ALL_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipelines"; //new
+export const API_GET_ALL_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipelineFilter"; //new
 export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm"; // bật tắt trạng thái hoạt động
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
@@ -192,3 +192,4 @@ export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
 
 // get user from organization
 export const API_GET_USER_FROM_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId";
+export const API_GET_LIST_LANGUAGE = "/masterData/Language/GetLanguages"

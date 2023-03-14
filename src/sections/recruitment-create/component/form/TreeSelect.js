@@ -6,11 +6,10 @@ import {Box, InputAdornment, Popover} from "@mui/material";
 import {convertFlatDataToTree} from "@/utils/function";
 import Iconify from "@/components/Iconify";
 import {DropdownIcon} from "@/sections/recruitment-create/component/icon/DropdownIcon";
-const OrganizationTreeSelect = ({treeData, placeholder}) => {
+const OrganizationTreeSelect = ({treeData, placeholder, equipmentItem, equipmentId, setEquipmentId, setEquipmentItem}) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [equipmentItem, setEquipmentItem] = useState("");
-  const [equipmentId, setEquipmentId] = useState("");
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
