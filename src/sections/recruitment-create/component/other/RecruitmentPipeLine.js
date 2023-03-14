@@ -5,9 +5,9 @@ import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-create/styl
 import DividerCard from "@/sections/recruitment-create/component/DividerCard";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
-import React from "react";
 import {BoxFlex} from "@/sections/emailform/style";
 import RecruitmentPipelineCard from "@/sections/recruitment-create/component/other/RecruitmentPipelineCard";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
 
 const RecruitmentPipeLine = () => {
 
@@ -18,7 +18,7 @@ const RecruitmentPipeLine = () => {
   return (
       <BoxWrapperStyle className="wrapper">
         <FormProvider methods={methods}>
-          <Box className="box-item" sx={{width: '100%', backgroundColor: 'transparent', display: 'flex',}}>
+          <Box className="box-item" sx={{width: style.WIDTH_FULL, backgroundColor: style.BG_TRANSPARENT, display: 'flex',}}>
             <BoxInnerStyle>
               <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
               <Box sx={{px: 4, py: 3}}>
@@ -35,7 +35,7 @@ const RecruitmentPipeLine = () => {
                 </Box>
                 <Divider sx={{ mb: 1.5 }} />
                 <BoxFlex>
-                  <Typography sx={{color: '#455570', fontSize: 16, fontWeight: 600}}>
+                  <Typography sx={{color: style.COLOR_TEXT_PRIMARY, fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD}}>
                     Bước tuyển dụng
                   </Typography>
                   <RHFCheckbox name='isDefault' label='Tự động chuyển bước'/>
@@ -62,18 +62,18 @@ const RecruitmentPipeLine = () => {
                   'Nếu chưa có quy trình tuyển dụng phù hợp, Hãy liên hệ Quản trị viên doanh nghiệp của bạn để thêm quy trình mới.',
                 ]}
             >
-              <Button variant="outlined" sx={{minWidht: '200px', marginLeft: 'auto', fontSize: 14, mb: 4}}>
+              <Button variant="outlined" sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}>
                 Thiết lập quy trình tuyển dụng
               </Button>
-              <Typography sx={{color: '#5C6A82', fontSize: 14, fontWeight: 600, mb: 2}}>
-                Tự động chuyển bước sẽ thực hiện như sau:
-              </Typography>
-              <Typography sx={{color: '#5C6A82', fontSize: 14, fontWeight: 400, fontStyle: 'italic', mb: 2}}>
-                - Ứng viên được chuyển sang bước tiếp theo ngay sau khi ứng tuyển, khi có kết quả thi Đạt, Phỏng vấn Đạt
-              </Typography>
-              <Typography sx={{color: '#5C6A82', fontSize: 14, fontWeight: 400, fontStyle: 'italic', mb: 2}}>
-                - Ứng viên được chuyển sang bước Kết quả - Loại ngay sau khi thi trượt, phỏng vấn trượt
-              </Typography>
+
+              <RightNoteText
+                  title="Tự động chuyển bước sẽ thực hiện như sau:"
+                  texts={[
+                    '- Ứng viên được chuyển sang bước tiếp theo ngay sau khi ứng tuyển, khi có kết quả thi Đạt, Phỏng vấn Đạt',
+                    '- Ứng viên được chuyển sang bước Kết quả - Loại ngay sau khi thi trượt, phỏng vấn trượt',
+                  ]}
+                  sx={{ mx: 0 }}
+              />
             </RightNoteText>
           </Box>
         </FormProvider>

@@ -15,7 +15,7 @@ const CustomPaper = (props) => {
     return <PaperAutocompleteStyle elevation={8} {...props} />;
 };
 
-export default function RHFAutocomplete({name, options = [], AutocompleteProps, ...other}) {
+export default function RHFAutocomplete({name, options = [], title = '', multiple = false, limitTags, isRequired = false, AutocompleteProps, ...other}) {
     const {control} = useFormContext();
     const props = {
         onChange: (field) => (event, newValue) => field.onChange(newValue),
@@ -36,15 +36,13 @@ export default function RHFAutocomplete({name, options = [], AutocompleteProps, 
         />), ...AutocompleteProps,
     };
 
-    const { multiple, limitTags } = other;
-
     const {onChange, renderTags, renderInput, ...rest} = props;
 
     return (<Controller
         name={name}
         control={control}
         render={({field, fieldState: {error}}) => (<>
-            {other.title && (<LabelStyle required={other.isRequired}>{other.title}</LabelStyle>)}
+            {title && (<LabelStyle required={isRequired}>{title}</LabelStyle>)}
             <AutocompleteFieldStyle
                 fullWidth
                 multiple={multiple}

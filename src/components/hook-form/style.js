@@ -68,6 +68,12 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
         fontSize: STYLE_CONSTANT.FONT_XS,
         color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
     },
+    "& .MuiInputAdornment-positionEnd": {
+        marginRight: theme.spacing(1.5)
+    },
+    "& .MuiInputAdornment-positionStart": {
+        marginLeft: theme.spacing(1.5)
+    }
 }));
 
 const SelectFieldStyle = styled(Select)(({theme}) => ({
@@ -154,7 +160,7 @@ const InputStyle = styled(Input)(({theme}) => ({
 
 const LabelStyle = styled(InputLabel)(({theme}) => ({
     fontSize: STYLE_CONSTANT.FONT_SM,
-    color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
+    color: STYLE_CONSTANT.COLOR_TEXT_BLACK,
     fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
     marginBottom: theme.spacing(1),
 }));
@@ -177,12 +183,11 @@ const SearchInputStyle = {
         borderRadius: 0,
     },
     "& .MuiInputBase-input": {
-        color: "#5C6A82",
+        color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
         padding: "10px 0",
         fontFamily: "Inter",
-        fontWeight: "500",
-        fontSize: "15px",
-        lineHeight: "20px",
+        fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+        fontSize: STYLE_CONSTANT.FONT_SM,
     },
     "& .MuiOutlinedInput-notchedOutline": {
         border: "none",
@@ -193,8 +198,8 @@ const SearchInputStyle = {
 const MenuItemStyle = {
     color: "#172B4D",
     padding: "10px 16px",
-    fontSize: "14px",
-    fontWeight: 400,
+    fontSize: STYLE_CONSTANT.FONT_SM,
+    fontWeight: STYLE_CONSTANT.FONT_NORMAL,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',

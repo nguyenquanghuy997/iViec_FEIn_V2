@@ -47,7 +47,6 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
         url: `${API_GET_PROVINCE}`,
         method: "GET",
       }),
-      invalidatesTags: ["Provinces"],
     }),
     getDistrictByProvinceId: builder.query({
       query: (provinceId) => ({
@@ -55,7 +54,6 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params: { ProvinceId: provinceId },
       }),
-      invalidatesTags: ["Districts"],
     }),
     updateCompanyInfo: builder.mutation({
       query: (rest) => ({
@@ -85,9 +83,7 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
 export const {
   // Thông tin công ty
   useGetCompanyInfoQuery,
-  useGetCompanyInfoIdSQuery,
   useGetJobCategoriesQuery,
-  useLazyGetJobCategoriesQuery,
   useGetProvinceQuery,
   useLazyGetProvinceQuery,
   useGetDistrictByProvinceIdQuery,
