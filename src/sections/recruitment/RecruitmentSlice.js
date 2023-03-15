@@ -1,5 +1,6 @@
 import { apiSlice } from '@/redux/api/apiSlice'
 import {
+  API_CREATE_RECRUITMENT,
   API_GET_LIST_RECRUITMENT,
   API_GET_RECRUITMENT_BY_ORGANIZATION,
 } from '@/routes/api'
@@ -31,6 +32,13 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         params
       }),
     }),
+    createRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_CREATE_RECRUITMENT,
+        method: 'POST',
+        data
+      }),
+    }),
   }),
 })
 
@@ -43,4 +51,5 @@ export const {
   useGetRecruitmentByOrganizationIdQuery,
   useLazyGetRecruitmentByOrganizationIdQuery,
   useLazyGetRecruitmentsQuery,
+  useCreateRecruitmentMutation,
 } = RecruitmentSlice;

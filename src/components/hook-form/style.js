@@ -69,10 +69,10 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
         color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
     },
     "& .MuiInputAdornment-positionEnd": {
-        marginRight: theme.spacing(1.5)
+        marginRight: 8
     },
     "& .MuiInputAdornment-positionStart": {
-        marginLeft: theme.spacing(1.5)
+        marginLeft: 8
     }
 }));
 
@@ -193,6 +193,9 @@ const SearchInputStyle = {
         border: "none",
         padding: 0,
     },
+    "& .MuiInputAdornment-positionStart": {
+        marginLeft: 0
+    }
 }
 
 const MenuItemStyle = {

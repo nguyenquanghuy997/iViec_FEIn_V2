@@ -1,6 +1,6 @@
-import {STYLE_CONSTANT} from "../register/constants";
 import {Paper} from "@mui/material";
 import {makeStyles, styled} from "@mui/styles";
+import { STYLE_CONSTANT as style } from '@/theme/palette'
 
 const useStyles = makeStyles(({}) => ({
     input: {
@@ -15,24 +15,26 @@ const useStyles = makeStyles(({}) => ({
 }));
 
 const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
-    border: '1px solid #D0D4DB',
-    borderTop: theme.spacing(0),
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-    borderBottomLeftRadius: '6px',
-    borderBottomRightRadius: '6px',
-    "& .MuiAutocomplete-paper": {
+    "&.MuiPaper-root.MuiAutocomplete-paper": {
         padding: 0,
         margin: 0,
+        width: '100%',
+        border: '1px solid #D0D4DB',
+        borderTop: theme.spacing(0),
+        borderRadius: '0 !important'
+    },
+    "& .MuiAutocomplete-listbox": {
+        padding: 0,
         width: '100%'
     },
     "& .MuiAutocomplete-option": {
-        padding: theme.spacing(1, 2),
-        borderRadius: 0,
+        padding: `${theme.spacing(1, 2.5)} !important`,
+        borderRadius: '0 !important',
         cursor: 'pointer',
-        margin: 0,
-        backgroundColor: 'transparent',
+        margin: "0 !important",
+        backgroundColor: 'transparent !important',
         borderBottom: '1px solid #E7E9ED',
+        fontSize: style.FONT_13,
         "&:last-child": {
             borderWidth: 0
         },
@@ -40,24 +42,7 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
             backgroundColor: '#F2F4F5 !important'
         },
         "&:hover": {
-            backgroundColor: '#F2F4F5'
-        }
-    },
-    "& ul": {
-        padding: 0,
-        width: '100%'
-    },
-    "& li": {
-        padding: theme.spacing(1, 2),
-        cursor: 'pointer',
-        margin: 0,
-        backgroundColor: 'transparent',
-        borderBottom: '1px solid #E7E9ED',
-        "&:last-child": {
-            borderWidth: 0
-        },
-        "&:hover": {
-            backgroundColor: '#F2F4F5'
+            backgroundColor: '#F2F4F5 !important'
         }
     },
     "& ::-webkit-scrollbar": {
@@ -88,7 +73,7 @@ const BoxWrapperStyle = {
 const BoxInnerStyle = {
     px: 7.5,
     py: 5,
-    backgroundColor: STYLE_CONSTANT.COLOR_BACKGROUND,
+    backgroundColor: style.BG_WHITE,
     width: "560px",
     mb: 4.5,
     borderRadius: 0.75,
@@ -99,18 +84,18 @@ const BoxInnerStyle = {
 // card label
 const CardLabelStyle = {
     textAlign: "center",
-    fontSize: STYLE_CONSTANT.FONT_XL,
-    fontWeight: STYLE_CONSTANT.FONT_BOLD,
+    fontSize: style.FONT_XL,
+    fontWeight: style.FONT_BOLD,
     mb: 1,
-    width: STYLE_CONSTANT.WIDTH_FULL,
-    color: STYLE_CONSTANT.COLOR_TEXT_PRIMARY,
+    width: style.WIDTH_FULL,
+    color: style.COLOR_TEXT_PRIMARY,
 };
 
 const CardSubInfoLabelStyle = {
     textAlign: "center",
     fontSize: 13,
-    fontWeight: STYLE_CONSTANT.FONT_NORMAL,
-    color: STYLE_CONSTANT.COLOR_TEXT_PRIMARY,
+    fontWeight: style.FONT_NORMAL,
+    color: style.COLOR_TEXT_PRIMARY,
 };
 
 export {

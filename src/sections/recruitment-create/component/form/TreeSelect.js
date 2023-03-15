@@ -2,11 +2,34 @@ import React, {useState} from "react";
 import {TreeItemStyle, TreeViewStyle} from "@/sections/organization/style";
 import {CollapseIcon, ExpandIcon} from "@/assets/ArrowIcon";
 import {SearchInputStyle, TextFieldStyle} from "@/components/hook-form/style";
-import {Box, InputAdornment, Popover} from "@mui/material";
+import {Box, FormHelperText, InputAdornment, Popover} from "@mui/material";
 import {convertFlatDataToTree} from "@/utils/function";
 import Iconify from "@/components/Iconify";
 import {DropdownIcon} from "@/sections/recruitment-create/component/icon/DropdownIcon";
-const OrganizationTreeSelect = ({treeData, placeholder, equipmentItem, equipmentId, setEquipmentId, setEquipmentItem}) => {
+import {Controller, useFormContext} from "react-hook-form";
+
+const PaperProps = {
+  sx: {
+    borderRadius: 0,
+    width: '378px',
+    "& ::-webkit-scrollbar": {
+      width: "4px",
+      borderRadius: '6px'
+    },
+    "& ::-webkit-scrollbar-track": {
+      background: "#EFF3F6"
+    },
+    "& ::-webkit-scrollbar-thumb": {
+      background: "#B9BFC9"
+    },
+    "& ::-webkit-scrollbar-thumb:hover": {
+      background: "#888"
+    }
+  }
+}
+
+const OrganizationTreeSelect = ({name, treeData, placeholder, equipmentItem, equipmentId, setEquipmentId, setEquipmentItem}) => {
+  const { control } = useFormContext();
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -40,98 +63,91 @@ const OrganizationTreeSelect = ({treeData, placeholder, equipmentItem, equipment
   };
 
   return (
-      <>
-        <TextFieldStyle
-            variant="standard"
-            hiddenLabel
-            name="equipmentItem"
-            id="equipmentItem"
-            placeholder={placeholder}
-            value={equipmentItem}
-            fullWidth
-            sx={{
-              input: {cursor: 'pointer'}
-            }}
-            inputProps={{readOnly: true}}
-            onClick={handleClick}
-            InputProps={{
-              disableUnderline: true,
-              endAdornment: (
-                  <InputAdornment position="end" sx={{mr: 1.5}}>
-                    <DropdownIcon />
-                  </InputAdornment>
-              )
+        <Controller
+            name={name}
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                  <>
+                    {/*{title && <LabelStyle required={isRequired}>{title}</LabelStyle>}*/}
+                    <TextFieldStyle
+                        {...field}
+                        variant="standard"
+                        hiddenLabel
+                        name="equipmentItem"
+                        id="equipmentItem"
+                        placeholder={placeholder}
+                        value={equipmentItem}
+                        fullWidth
+                        sx={{
+                          input: {cursor: 'pointer'}
+                        }}
+                        inputProps={{readOnly: true}}
+                        onClick={handleClick}
+                        InputProps={{
+                          disableUnderline: true,
+                          endAdornment: (
+                              <InputAdornment position="end" sx={{mr: 1.5}}>
+                                <DropdownIcon />
+                              </InputAdornment>
+                          )
+                        }}
+                    />
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        anchorPosition={{
+                          left: 0,
+                          top: 0
+                        }}
+                        PaperProps={PaperProps}
+                    >
+                      <Box>
+                        <TextFieldStyle
+                            placeholder="Tìm kiếm..."
+                            fullWidth
+                            autoFocus
+                            sx={{...SearchInputStyle}}
+                            onKeyDown={(e) => e.stopPropagation()}
+                            InputProps={{
+                              startAdornment: (
+                                  <InputAdornment position="start">
+                                    <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
+                                  </InputAdornment>
+                              )
+                            }}
+                        />
+                        <TreeViewStyle
+                            aria-label="multi-select"
+                            defaultSelected={equipmentId}
+                            selected={equipmentId}
+                            defaultCollapseIcon={null}
+                            defaultExpandIcon={null}
+                            defaultEndIcon={null}
+                            onNodeSelect={(e, id) => {
+                              setEquipmentId(id);
+                              setEquipmentItem(e.target.innerText);
+                            }}
+                            sx={{
+                              maxHeight: 400,
+                              overflowY: "auto",
+                            }}
+                        >
+                          {convertFlatDataToTree(treeData)[0]?.children.map((item) => renderTree(item))}
+                        </TreeViewStyle>
+                      </Box>
+                    </Popover>
+                    <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
+                  </>
+              );
             }}
         />
-        <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            anchorPosition={{
-              left: 0,
-              top: 0
-            }}
-            PaperProps={{
-              sx: {
-                borderRadius: 0,
-                width: '378px',
-                "& ::-webkit-scrollbar": {
-                  width: "4px",
-                  borderRadius: '6px'
-                },
-                "& ::-webkit-scrollbar-track": {
-                  background: "#EFF3F6"
-                },
-                "& ::-webkit-scrollbar-thumb": {
-                  background: "#B9BFC9"
-                },
-                "& ::-webkit-scrollbar-thumb:hover": {
-                  background: "#888"
-                }
-              }
-            }}
-        >
-          <Box>
-            <TextFieldStyle
-                placeholder="Tìm kiếm..."
-                fullWidth
-                autoFocus
-                sx={{...SearchInputStyle}}
-                onKeyDown={(e) => e.stopPropagation()}
-                InputProps={{
-                  startAdornment: (
-                      <InputAdornment position="start">
-                        <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
-                      </InputAdornment>
-                  )
-                }}
-            />
-            <TreeViewStyle
-                aria-label="multi-select"
-                defaultSelected={equipmentId}
-                selected={equipmentId}
-                defaultCollapseIcon={null}
-                defaultExpandIcon={null}
-                defaultEndIcon={null}
-                onNodeSelect={(e, id) => {
-                  setEquipmentId(id);
-                  setEquipmentItem(e.target.innerText);
-                }}
-                sx={{
-                  maxHeight: 400,
-                  overflowY: "auto",
-                }}
-            >
-              {convertFlatDataToTree(treeData)[0]?.children.map((item) => renderTree(item))}
-            </TreeViewStyle>
-          </Box>
-        </Popover>
-      </>
   )
 }
 

@@ -1,5 +1,4 @@
-import {useForm} from "react-hook-form";
-import {FormProvider, RHFCheckbox} from "@/components/hook-form";
+import {RHFCheckbox} from "@/components/hook-form";
 import {Box, Button, Divider, Typography} from "@mui/material";
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-create/style";
 import DividerCard from "@/sections/recruitment-create/component/DividerCard";
@@ -7,20 +6,15 @@ import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
 import {BoxFlex} from "@/sections/emailform/style";
 import RecruitmentPipelineCard from "@/sections/recruitment-create/component/other/RecruitmentPipelineCard";
-import { STYLE_CONSTANT as style } from "@/theme/palette";
-import {useGetAllPipelineQuery} from "@/sections/pipeline";
+import {STYLE_CONSTANT as style} from "@/theme/palette";
+import {useGetAllPipelineByOrganizationQuery} from "@/sections/pipeline";
 
 const RecruitmentPipeLine = () => {
 
-  const { data: { items: ListPipeline = []} = {}} = useGetAllPipelineQuery();
-
-  const methods = useForm({
-    mode: 'all',
-  });
+  const { data: { items: ListPipeline = []} = {}} = useGetAllPipelineByOrganizationQuery();
 
   return (
       <BoxWrapperStyle className="wrapper">
-        <FormProvider methods={methods}>
           <Box className="box-item" sx={{width: style.WIDTH_FULL, backgroundColor: style.BG_TRANSPARENT, display: 'flex',}}>
             <BoxInnerStyle>
               <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
@@ -28,7 +22,7 @@ const RecruitmentPipeLine = () => {
                 <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                   <div style={{flex: 1, marginRight: 8}}>
                     <RHFDropdown
-                        name="organization"
+                        name="organizationPipelineId"
                         title="Quy trình tuyển dụng có sẵn"
                         placeholder="Chọn 1 quy trình tuyển dụng"
                         isRequired
@@ -47,7 +41,7 @@ const RecruitmentPipeLine = () => {
                   <Typography sx={{color: style.COLOR_TEXT_PRIMARY, fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD}}>
                     Bước tuyển dụng
                   </Typography>
-                  <RHFCheckbox name='isDefault' label='Tự động chuyển bước'/>
+                  <RHFCheckbox name='isAutomaticStepChange' label='Tự động chuyển bước'/>
                 </BoxFlex>
 
                 <Box sx={{ mt: 1 }}>
@@ -85,7 +79,6 @@ const RecruitmentPipeLine = () => {
               />
             </RightNoteText>
           </Box>
-        </FormProvider>
       </BoxWrapperStyle>
   )
 }

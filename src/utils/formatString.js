@@ -39,12 +39,14 @@ export const LIST_GENDER = [
 ]
 
 export const LIST_EXPERIENCE_NUMBER = [
-  { id: "0", value: "0", name: "0 - 1 năm", label: "0 - 1 năm" },
-  { id: "1", value: "1", name: "1 - 2 năm", label: "1 - 2 năm" },
-  { id: "2", value: "2", name: "2 - 3 năm", label: "2 - 3 năm" },
-  { id: "3", value: "3", name: "3 - 5 năm", label: "3 - 5 năm" },
-  { id: "4", value: "4", name: "5 - 10 năm", label: "5 - 10 năm" },
-  { id: "5", value: "5", name: "10 năm trở lên", label: "10 năm trở lên" },
+  { id: "0", value: "0", name: "Chưa có kinh nghiệm", label: "Chưa có kinh nghiệm" },
+  { id: "0", value: "1", name: "Dưới 1 năm", label: "Dưới 1 năm" },
+  { id: "1", value: "2", name: "1 - 2 năm", label: "1 - 2 năm" },
+  { id: "2", value: "3", name: "2 - 3 năm", label: "2 - 3 năm" },
+  { id: "3", value: "4", name: "3 - 5 năm", label: "3 - 5 năm" },
+  { id: "3", value: "5", name: "5-7 năm", label: "5-7 năm" },
+  { id: "4", value: "6", name: "5 - 10 năm", label: "5 - 10 năm" },
+  { id: "5", value: "7", name: "10 năm trở lên", label: "10 năm trở lên" },
   { id: "", value: "", name: "", label: "" },
 ]
 
@@ -61,19 +63,25 @@ export const LIST_STEP_RECRUITMENT = [
 ]
 
 export const LIST_RECRUITMENT_WORKING_FORM = [
-  { id: "0", value: 0, name: "Toàn thời gian", label: "Toàn thời gian" },
-  { id: "1", value: 1, name: "Bán thời gian", label: "Bán thời gian" },
-  { id: "2", value: 2, name: "Làm việc từ xa", label: "Làm việc từ xa" },
-  { id: "3", value: 3, name: "Thời vụ", label: "Thời vụ" },
-  { id: "4", value: 4, name: "Linh động", label: "Linh động" },
-  { id: "5", value: 5, name: "Khác", label: "Khác" },
-  { id: "", value: "", name: "", label: "" },
+  { id: "0", value: "0", name: "Toàn thời gian", label: "Toàn thời gian" },
+  { id: "1", value: "1", name: "Bán thời gian", label: "Bán thời gian" },
+  { id: "2", value: "2", name: "Làm việc từ xa", label: "Làm việc từ xa" },
+  { id: "3", value: "3", name: "Thời vụ", label: "Thời vụ" },
+  { id: "4", value: "4", name: "Linh động", label: "Linh động" },
+  { id: "5", value: "5", name: "Khác", label: "Khác" },
 ]
 
 export const LIST_CURRENCY_TYPE = [
-  { id: "0", value: 0, name: "VNĐ", label: "VNĐ" },
-  { id: "1", value: 1, name: "USD", label: "USD" },
-  // { id: "", value: "", name: "", label: "" },
+  { id: "0", value: "0", name: "VNĐ", label: "VNĐ" },
+  { id: "1", value: "1", name: "USD", label: "USD" },
+  { id: "", value: "", name: "", label: "" },
+]
+
+export const LIST_RECRUITMENT_SALARY_DISPLAY_TYPE = [
+  { id: "0", value: "0", name: "Không lương", label: "Không lương" },
+  { id: "1", value: "1", name: "Lương thỏa thuận", label: "Lương thỏa thuận" },
+  { id: "2", value: "2", name: "Mức lương chi tiết", label: "Mức lương chi tiết" },
+  { id: "", value: "", name: "", label: "" },
 ]
 
 export function joinArrStr(arr, key) {
