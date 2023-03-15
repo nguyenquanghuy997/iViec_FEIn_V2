@@ -1,6 +1,5 @@
 // import RecruitmentFilterModal from "../modals/RecruitmentFilterModal";
 import { useLazyGetRecruitmentsQuery } from "../RecruitmentSlice";
-import RecruitmentConfirmMultipleModal from "../modals/RecruitmentConfirmMultipleModal";
 import RecruitmentFilterModal from "../modals/RecruitmentFilterModal";
 import RecruitmentBottomNav from "./RecruitmentBottomNav";
 import Content from "@/components/BaseComponents/Content";
@@ -12,12 +11,13 @@ import RecruitmentHeader from "@/sections/recruitment/RecruitmentHeader";
 import {
   YearOfExperience,
   RecruitmentWorkingForm,
-  RecruitmentProcessStatus,
   Currency,
+  DivProcessStatus,
 } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Tooltip } from "@mui/material";
 import { Tag } from "antd";
 import { get } from "lodash";
 import { useRouter } from "next/router";
@@ -72,10 +72,28 @@ export const RecruitmentItem = () => {
         width: "200px",
       },
       {
-        dataIndex: "processStatus",
+        dataIndex: ["processStatus", "rejectReason"],
         title: "Trạng thái",
         width: "180px",
-        render: (item) => RecruitmentProcessStatus(item),
+        render: (text, row) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+             { DivProcessStatus(get(row, "processStatus", ""))}
+            {get(row, "rejectReason", "") && (
+              <Tooltip title={get(row, "rejectReason", "")} placement="top" followCursor>
+                <div>
+                <Iconify
+                  icon={"mdi:question-mark-circle-outline"}
+                  width={20}
+                  height={20}
+                  color="#E53935"
+                  ml={1}
+                  style={{marginTop:'4px'}}
+                />
+                </div>
+              </Tooltip>
+            )}
+         </div>
+        ),
       },
       {
         dataIndex: "startDate",
@@ -612,7 +630,6 @@ export const RecruitmentItem = () => {
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [showMultipleDelete, setShowMultipleDelete] = useState(false);
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -682,7 +699,6 @@ export const RecruitmentItem = () => {
         <RecruitmentBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
-          setShowMultipleDelete={setShowMultipleDelete}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
         />
@@ -694,14 +710,6 @@ export const RecruitmentItem = () => {
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
           onRefreshData={refreshData}
-        />
-      )}
-      {showMultipleDelete && (
-        <RecruitmentConfirmMultipleModal
-          showMultipleDelete={showMultipleDelete}
-          setShowMultipleDelete={setShowMultipleDelete}
-          organizationIds={selectedRowKeys}
-          setSelected={selectedRowKeys}
         />
       )}
     </View>

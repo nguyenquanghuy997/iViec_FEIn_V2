@@ -23,6 +23,7 @@ export default function ButtonDS(props) {
                     borderRadius: "6px",
                     backgroundColor: "#1976D2",
                     fontWeight: 600,
+                    boxShadow:'unset',
                     "&:disabled": {
                         backgroundColor: "#D0D4DB",
                         color: "#8A94A5"

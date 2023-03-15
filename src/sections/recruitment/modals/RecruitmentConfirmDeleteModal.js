@@ -75,12 +75,12 @@ const ButtonDeleteStyle = styled(Button)(({}) => ({
   }
 }));
 
-const RecruitmentConfirmMultipleModal = ({setSelected, showConfirmMultiple, setShowConfirmMultiple, recruitmentIds}) => {
+const RecruitmentConfirmDeleteModal = ({setSelected, showConfirmDelete, setShowConfirmDelete, recruitmentIds}) => {
   const {enqueueSnackbar} = useSnackbar();
   // const [deleteMultipleRecruitment] = useDeleteMultipleRecruitmentMutation();
 
   const onClose = () => {
-    setShowConfirmMultiple(false);
+    setShowConfirmDelete(false);
     setSelected([])
   }
 
@@ -95,8 +95,8 @@ const RecruitmentConfirmMultipleModal = ({setSelected, showConfirmMultiple, setS
   }
   return (
       <DialogStyle
-          open={showConfirmMultiple}
-          onClose={() => setShowConfirmMultiple(false)}
+          open={showConfirmDelete}
+          onClose={() => setShowConfirmDelete(false)}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           className="dialog-delete"
@@ -123,4 +123,4 @@ const RecruitmentConfirmMultipleModal = ({setSelected, showConfirmMultiple, setS
   )
 }
 
-export default React.memo(RecruitmentConfirmMultipleModal);
+export default React.memo(RecruitmentConfirmDeleteModal);
