@@ -136,7 +136,8 @@ const ApproveProcessCardItem = ({approveProcess}) => {
                                     <DeleteIconGrey width={16} height={16}/>
                                 </IconButton>
                             </Tooltip>
-                            <ApproveProcessDialog open={open} onClose={handleClose} content={approveProcess.title} type='approveProcess'/>
+                            <ApproveProcessDialog open={open} onClose={handleClose} content={approveProcess.title}
+                                                  type='approveProcess'/>
                         </>}
                     </Grid>
                 </Grid>
@@ -150,7 +151,7 @@ const ApproveProcessCardItem = ({approveProcess}) => {
         ;
 };
 
-const ApproveProcessCard = ({approveProcesses, color, title}) => {
+const ApproveProcessCard = ({type, approveProcesses, color, title}) => {
     const methods = useForm({
         defaultValues: {isChecked: true},
     });
@@ -190,7 +191,8 @@ const ApproveProcessCard = ({approveProcesses, color, title}) => {
                                 key={id}
                             />))
                         ) : <>
-                            <Grid container direction="column" alignItems="center" justifyContent="center" sx={{marginY: "40px",}}>
+                            <Grid container direction="column" alignItems="center" justifyContent="center"
+                                  sx={{marginY: "40px",}}>
                                 <Grid sx={{mb: "12px"}}>
                                     <IconEmpty/>
                                 </Grid>
@@ -221,7 +223,7 @@ const ApproveProcessCard = ({approveProcesses, color, title}) => {
                                     />
                                 }
                             />
-                            <ApproveProcessFormModal title={title} show={showForm} setShow={setShowForm} />
+                            <ApproveProcessFormModal type={type} title={title} show={showForm} setShow={setShowForm}/>
                         </Grid>
                     </Grid>
                 </Card>
