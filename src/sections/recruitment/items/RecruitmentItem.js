@@ -574,7 +574,6 @@ export const RecruitmentItem = () => {
   };
 
   const onSubmit = async (data) => {
-    debugger;
     const body = { ...data, searchKey: data.searchKey };
 
     if (query) {
@@ -650,6 +649,13 @@ export const RecruitmentItem = () => {
       selectedKeys.splice(index, 1);
     }
 
+    if (selectedKeys?.length > 0) {
+      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = '89px';
+
+    } else {
+      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+
+    }
     setSelectedRowKeys(selectedKeys);
   };
 
@@ -663,6 +669,7 @@ export const RecruitmentItem = () => {
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
     setSelectedRowKeys([]);
+    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
   };
 
   return (

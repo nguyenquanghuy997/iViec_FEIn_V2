@@ -64,7 +64,7 @@ const RecruitmentBottomNav = ({ selectedList, open, onClose, onOpenForm }) => {
                     textTransform: "none",
                     padding: "6px 11px",
                   }}
-                  onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
+                  href={"recruitment/" + organization?.id}
                   icon={
                     <Iconify
                       icon={
@@ -78,31 +78,31 @@ const RecruitmentBottomNav = ({ selectedList, open, onClose, onOpenForm }) => {
                   }
                 />
                 <ButtonDS
-              type="submit"
-              variant="contained"
-              tittle="Xem tin tuyển dụng"
-              sx={{
-                color: "#455570",
-                backgroundColor: "#F3F4F6",
-                boxShadow: "none",
-                ":hover": {
-                  backgroundColor: "#E7E9ED",
-                },
-                marginRight: "12px",
-                textTransform: "none",
-                padding: "6px 11px",
-              }}
-              onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
-              icon={
-                <Iconify
-                  icon={"ri:share-box-line"}
-                  width={20}
-                  height={20}
-                  color="#5C6A82"
-                  mr={1}
+                  type="submit"
+                  variant="contained"
+                  tittle="Xem tin tuyển dụng"
+                  sx={{
+                    color: "#455570",
+                    backgroundColor: "#F3F4F6",
+                    boxShadow: "none",
+                    ":hover": {
+                      backgroundColor: "#E7E9ED",
+                    },
+                    marginRight: "12px",
+                    textTransform: "none",
+                    padding: "6px 11px",
+                  }}
+                  onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
+                  icon={
+                    <Iconify
+                      icon={"ri:share-box-line"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
+                      mr={1}
+                    />
+                  }
                 />
-              }
-            />
               </>
             )}
             <ButtonDS
