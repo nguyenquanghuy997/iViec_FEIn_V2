@@ -1,9 +1,7 @@
-import {FormProvider} from "@/components/hook-form";
 import {Box, Button} from "@mui/material";
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-create/style";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
 import React, {useState} from "react";
-import {useForm} from "react-hook-form";
 import RecruitmentChannelCard from "@/sections/recruitment-create/component/other/RecruitmentChannelCard";
 
 const dataChannels = [
@@ -31,12 +29,7 @@ const dataChannels = [
 ];
 
 const RecruitmentChannel = () => {
-
-  const methods = useForm({
-    mode: 'all',
-  });
-
-  const [checked, setChecked] = useState([false, false, false]);
+  const [checked, setChecked] = useState([true, true, false]);
   const handleChange = (index) => {
     const newChecked = [...checked].map((item, idx) => index === idx ? !item : item)
     setChecked(newChecked)
@@ -44,7 +37,6 @@ const RecruitmentChannel = () => {
 
   return (
       <BoxWrapperStyle className="wrapper">
-        <FormProvider methods={methods}>
           <Box className="box-item" sx={{display: 'flex'}}>
             <BoxInnerStyle style={{minWidth: '844px', backgroundColor: 'transparent', boxShadow: 'none'}}>
               {
@@ -75,7 +67,6 @@ const RecruitmentChannel = () => {
               </Button>
             </RightNoteText>
           </Box>
-        </FormProvider>
       </BoxWrapperStyle>
   )
 }

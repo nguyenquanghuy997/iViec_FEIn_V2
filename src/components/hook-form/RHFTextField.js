@@ -41,6 +41,7 @@ export default function RHFTextField({
             {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
             <TextFieldStyle
               {...field}
+              value={field.value || ""}
               error={!!error}
               helperText={error?.message}
               variant={variant}

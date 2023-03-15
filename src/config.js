@@ -168,6 +168,7 @@ export const ROLE_BY_PAGES = [
       PAGES.Report4,
 
       PAGES.Organization,
+      PAGES.Recruitment,
     ],
     roles: [ROLE.ADMIN],
   },

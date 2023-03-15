@@ -3,7 +3,7 @@ import {
   API_GET_ALL_PIPELINE,
   API_ADD_ROLE_GROUP,
   API_UPDATE_PIPELINE,
-  API_DELETE_PIPELINE,
+  API_DELETE_PIPELINE, API_GET_ALL_PIPELINE_BY_ORGANIZATION, API_GET_ALL_RECRUITMENT_STEP_PIPELINE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -22,6 +22,25 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
           url: API_GET_ALL_PIPELINE,
           method: "GET",
           params: {...defaultParams, ...params},
+        }
+      },
+    }),
+    getAllPipelineByOrganization: builder.query({
+      query: (params) => {
+        const defaultParams = { PageSize: 20 };
+        return {
+          url: API_GET_ALL_PIPELINE_BY_ORGANIZATION,
+          method: "GET",
+          params: {...defaultParams, ...params},
+        }
+      },
+    }),
+    getAllStepOfPipeline: builder.query({
+      query: (params) => {
+        return {
+          url: API_GET_ALL_RECRUITMENT_STEP_PIPELINE,
+          method: "GET",
+          params,
         }
       },
     }),
@@ -61,8 +80,10 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetAllPipelineQuery,
+  useGetAllPipelineByOrganizationQuery,
   useLazyGetAllPipelineQuery,
   useAddPipelineMutation,
   useUpdatePipelineMutation,
   useDeletePipelineMutation,
+  useGetAllStepOfPipelineQuery,
 } = PipelineFormSlice;

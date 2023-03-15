@@ -11,8 +11,9 @@ import {ButtonDraftStyle, JobTitleStyle} from "@/sections/recruitment-create/sty
 import {DraftIcon, PreviewIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
 import {BoxFlex} from "@/sections/emailform/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {isEmpty} from "lodash";
 
-const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ...props}) => {
+const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, errors, ...props}) => {
     return (
         <HeadingBar style={{marginBottom: '28px', position: 'fixed', top: '64px'}} {...props}>
             <BoxFlex>
@@ -46,6 +47,7 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ..
                         className="button-draft"
                         startIcon={<Iconify icon="majesticons:send"/>}
                         onClick={() => setIsOpenSubmitApprove(true)}
+                        disabled={!isEmpty(errors)}
                     >Gửi phê duyệt</ButtonDraftStyle>
                 </Box>
             </BoxFlex>

@@ -29,7 +29,7 @@ const GreenSwitch = styled(Switch)(({theme}) => ({
   },
 }));
 
-const SwitchForm = ({name, handleChange, style, ...other}) => {
+const SwitchForm = ({name, handleChange, style, checked, ...other}) => {
   const {control} = useFormContext();
   return (
       <FormControlLabel
@@ -42,7 +42,7 @@ const SwitchForm = ({name, handleChange, style, ...other}) => {
                   return (
                       <GreenSwitch
                           {...field}
-                          checked={field.value}
+                          checked={checked}
                           onChange={handleChange || field.onChange}
                           inputProps={{"aria-label": "controlled"}}
                       />
@@ -68,7 +68,7 @@ const InsideCard = ({checked = false}) => {
                 name="organization"
                 title="Nơi ở hiện tại"
                 placeholder="Chọn 1 đơn vị"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -77,7 +77,7 @@ const InsideCard = ({checked = false}) => {
                 name="role"
                 title="Tình trạng hôn nhân"
                 placeholder="Chọn 1 chức danh"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -88,7 +88,7 @@ const InsideCard = ({checked = false}) => {
                 name="organization"
                 title="Cán bộ phụ trách"
                 placeholder="Chọn 1 đơn vị"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -97,7 +97,7 @@ const InsideCard = ({checked = false}) => {
                 name="role"
                 title="Cán bộ phỏng vấn"
                 placeholder="Chọn 1 chức danh"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -165,7 +165,7 @@ const OutsideCard = ({checked = false}) => {
                 name="organization"
                 title="Nơi ở hiện tại"
                 placeholder="Chọn 1 đơn vị"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -174,7 +174,7 @@ const OutsideCard = ({checked = false}) => {
                 name="role"
                 title="Tình trạng hôn nhân"
                 placeholder="Chọn 1 chức danh"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -185,7 +185,7 @@ const OutsideCard = ({checked = false}) => {
                 name="organization"
                 title="Cán bộ phụ trách"
                 placeholder="Chọn 1 đơn vị"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -194,7 +194,7 @@ const OutsideCard = ({checked = false}) => {
                 name="role"
                 title="Cán bộ phỏng vấn"
                 placeholder="Chọn 1 chức danh"
-                isRequired
+                // isRequired
                 fullWidth
             />
           </div>
@@ -253,7 +253,7 @@ const RecruitmentChannelCard = ({color, title, type, logo, brand, handleChange, 
                   </CardContent>
                 </Box>
               </BoxFlex>
-              <SwitchForm name={"checked"} handleChange={handleChange}/>
+              <SwitchForm name={"checked"} checked={checked} handleChange={handleChange}/>
             </BoxFlex>
             <Divider/>
             {type === "inside" && (

@@ -177,6 +177,9 @@ export const API_GET_APPLICANT_USERS_ON_JOBTYPE = "/recruitment/JobPosition/GetA
 
 // Pipeline
 export const API_GET_ALL_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipelineFilter"; //new
+export const API_GET_ALL_RECRUITMENT_STEP_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipeline";
+
+export const API_GET_ALL_PIPELINE_BY_ORGANIZATION = "/organization/OrganizationPipeline/GetOrganizationPipelineByOrganization"; //new
 export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm"; // bật tắt trạng thái hoạt động
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
@@ -184,8 +187,10 @@ export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrga
 
 // API Application page
 // recruitment tin tuyển dụng
+export const API_GET_RECRUITMENT_BY_ID = "/recruitment/Recruitment/GetRecruitment"; // get recruitment by id
 export const API_GET_LIST_RECRUITMENT = "/recruitment/Recruitment/GetRecruitments"; // get all recruitment
 export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/GetRecruitmentByOrganizationId" // new - get recruitment by organization
+export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - get recruitment by organization
 
 // job source nguồn job
 export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
@@ -193,3 +198,4 @@ export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
 // get user from organization
 export const API_GET_USER_FROM_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId";
 export const API_GET_LIST_LANGUAGE = "/masterData/Language/GetLanguages"
+export const API_GET_LIST_CANDIDATELEVEL = "/masterData/CandidateLevel/GetCandidateLevels"
