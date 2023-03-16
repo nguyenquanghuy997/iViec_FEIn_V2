@@ -11,7 +11,7 @@ import {
 import React, { useCallback } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
-export default function RHFArrayQuestion({ name, ...props }) {
+export default function RHFArrayQuestion({ name }) {
   const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({

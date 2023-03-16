@@ -6,30 +6,29 @@ import { varFade } from "@/components/animate";
 import { fData } from "@/utils/formatNumber";
 import getFileData from "@/utils/getFileData";
 import {
-  Box,
   IconButton,
   List,
   ListItem,
   ListItemText,
-  Typography,
+
 } from "@mui/material";
-import { alpha, styled } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import { AnimatePresence, m } from "framer-motion";
 import PropTypes from "prop-types";
-import { useDropzone } from "react-dropzone";
+// import { useDropzone } from "react-dropzone";
 
-const DropZoneStyle = styled("div")(({ theme }) => ({
-  outline: "none",
-  padding: theme.spacing(5, 1),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.neutral,
-  border: `1px dashed ${theme.palette.grey[500_32]}`,
-  justifyContent: "center",
-  alignItems: "center",
-  width: "80px",
-  height: "80px",
-  "&:hover": { opacity: 0.72, cursor: "pointer" },
-}));
+// const DropZoneStyle = styled("div")(({ theme }) => ({
+//   outline: "none",
+//   padding: theme.spacing(5, 1),
+//   borderRadius: theme.shape.borderRadius,
+//   backgroundColor: theme.palette.background.neutral,
+//   border: `1px dashed ${theme.palette.grey[500_32]}`,
+//   justifyContent: "center",
+//   alignItems: "center",
+//   width: "80px",
+//   height: "80px",
+//   "&:hover": { opacity: 0.72, cursor: "pointer" },
+// }));
 
 MultiFilePreviewCustom.propTypes = {
   files: PropTypes.array.isRequired,
@@ -41,7 +40,6 @@ export default function MultiFilePreviewCustom({
   showPreview = false,
   files,
   onRemove,
-  ...props
 }) {
   const hasFile = files?.length > 0;
   // const { getRootProps } = useDropzone();

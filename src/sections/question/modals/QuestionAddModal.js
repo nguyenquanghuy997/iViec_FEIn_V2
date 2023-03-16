@@ -8,12 +8,12 @@ import {
   RHFArrayQuestion,
   RHFUploadMultiFileCustom,
 } from "@/components/hook-form";
-import { updateAssignUser } from "@/sections/jobdetail/jobDetailSlice";
+// import { updateAssignUser } from "@/sections/jobdetail/jobDetailSlice";
 import {
   PipelinePreviewItem,
-  useGetAllReviewFormMutation,
+  // useGetAllReviewFormMutation,
 } from "@/sections/pipeline";
-import { useGetAllQuestionQuery } from "@/sections/question";
+// import { useGetAllQuestionQuery } from "@/sections/question";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { FormHelperText, Modal, Typography } from "@mui/material";
@@ -34,12 +34,15 @@ const defaultValues = {
   questionState: 0,
 };
 
-export const QuestionAddModal = ({ data, show, setShow }) => {
+export const QuestionAddModal = ({  show, setShow }) => {
   // state
+  // eslint-disable-next-line
   const [listForm, setListForm] = useState([]);
-
+// eslint-disable-next-line
   const [showForm, setShowForm] = useState(false);
+  // eslint-disable-next-line
   const [editItemData, setEditItemData] = useState({});
+  // eslint-disable-next-line
   const [editItemIndex, setEditItemIndex] = useState(-1);
 
   const Schema = Yup.object().shape({
@@ -69,15 +72,15 @@ export const QuestionAddModal = ({ data, show, setShow }) => {
     formState: { isSubmitting },
   } = methods;
 
-  const pressAdd = () => {
-    setShowForm(true);
-  };
+  // const pressAdd = () => {
+  //   setShowForm(true);
+  // };
 
   const pressHide = () => {
     setShow(false);
   };
 
-  const pressSave = handleSubmit(async (e) => {
+  const pressSave = handleSubmit(async () => {
     // const body = {
     //   ReviewId: isEditMode ? data.ReviewId : 0,
     //   ReviewName: e.name,
@@ -93,23 +96,23 @@ export const QuestionAddModal = ({ data, show, setShow }) => {
     // onRefreshData();
   });
 
-  const onAddForm = (data) => {
-    if (editItemIndex < 0) setListForm((l) => [...l, data]);
-    else
-      setListForm((l) =>
-        [...l].map((item, index) => (index === editItemIndex ? data : item))
-      );
-  };
+  // const onAddForm = (data) => {
+  //   if (editItemIndex < 0) setListForm((l) => [...l, data]);
+  //   else
+  //     setListForm((l) =>
+  //       [...l].map((item, index) => (index === editItemIndex ? data : item))
+  //     );
+  // };
 
-  const onEditForm = (item, index) => {
-    setEditItemIndex(index);
-    setEditItemData(item);
-    pressAdd();
-  };
+  // const onEditForm = (item, index) => {
+  //   setEditItemIndex(index);
+  //   setEditItemData(item);
+  //   pressAdd();
+  // };
 
-  const onDeleteForm = (index) => {
-    setListForm((l) => [...l].filter((_item, _index) => index !== _index));
-  };
+  // const onDeleteForm = (index) => {
+  //   setListForm((l) => [...l].filter((_item, _index) => index !== _index));
+  // };
 
   const renderPreviewItem = (item, index) => {
     return <PipelinePreviewItem data={item} index={index} />;
@@ -151,7 +154,7 @@ export const QuestionAddModal = ({ data, show, setShow }) => {
   //   }
   // }, [showForm]);
 
-  const { data: question } = useGetAllQuestionQuery();
+  // const { data: question } = useGetAllQuestionQuery();
 
   return (
     <>
