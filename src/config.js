@@ -161,6 +161,7 @@ export const ROLE_BY_PAGES = [
       PAGES.Hashtag,
       PAGES.Industry,
       PAGES.CompanyInfor,
+      PAGES.Recruitment,
 
       PAGES.Report1,
       PAGES.Report2,

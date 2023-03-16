@@ -4,7 +4,6 @@ import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
 import NavItemContent from "@/components/nav-section/horizontal/NavItem";
 import { ListItemStyle } from "@/components/nav-section/horizontal/style";
-import BottomNavPipeline from "@/sections/pipeline/BottomNavPipeline";
 import { makeStyles } from "@mui/styles";
 import { Checkbox, Dropdown, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
@@ -12,7 +11,7 @@ import ReactDragListView from "react-drag-listview";
 
 const DynamicColumnsTable = (props) => {
   const {
-    columns,
+    columns = [],
     source,
     loading,
     ColumnData,
@@ -23,19 +22,15 @@ const DynamicColumnsTable = (props) => {
     scroll,
     // style,
     nodata,
-    // setPage,
-    // setPaginationSize
-  } = props;
-  const rowKey = "id";
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
+    page,
+    paginationSize,
+    handleChangePagination,
+    rowSelection,
+    onRow,
     selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const [columnsTable, setColumnsTable] = useState(columns);
+  } = props;
+
+  const [columnsTable, setColumnsTable] = useState([]);
 
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
@@ -50,14 +45,22 @@ const DynamicColumnsTable = (props) => {
     nodeSelector: "th",
   };
 
-  const [initialColumns, setInitialColumns] = useState([]);
   const [checkedColumns, setCheckedColumns] = useState([]);
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
-  const [isOpenBottomNav, setIsOpenBottomNav] = useState(false);
-  console.log(isOpenBottomNav)
+
   useEffect(() => {
-    setInitialColumns(columns);
-  }, []);
+    setColumnsTable(
+      columns.map((col) => {
+        const renderFunc = col.render;
+        if (renderFunc) {
+          col.render = (text, record, index) => {
+            return renderFunc(text, record, index, page, paginationSize);
+          };
+        }
+        return col;
+      })
+    );
+  }, [columns]);
 
   const menu = (
     <>
@@ -118,7 +121,7 @@ const DynamicColumnsTable = (props) => {
       checkedColumnsNew.push(e.target.id);
     }
 
-    var filtered = initialColumns;
+    var filtered = columnsTable;
     for (var i = 0; i < checkedColumnsNew.length; i++)
       filtered = filtered.filter((el) => {
         return el.dataIndex !== checkedColumns[i];
@@ -129,6 +132,10 @@ const DynamicColumnsTable = (props) => {
   const useStyles = makeStyles(() => ({
     table: {
       "& .ant-table": {
+        minHeight: "500px",
+        borderRadius: "8px",
+      },
+      "& .ant-table-content": {
         minHeight: "500px",
         borderRadius: "8px",
       },
@@ -195,9 +202,7 @@ const DynamicColumnsTable = (props) => {
   }));
 
   const classes = useStyles();
-  const toggleDrawer = (newOpen) => () => {
-    setIsOpenBottomNav(newOpen);
-  };
+
   let locale = {
     emptyText: (
       <div style={{ margin: "40px 0", minHeight: "250px" }}>
@@ -269,30 +274,32 @@ const DynamicColumnsTable = (props) => {
           <Table
             locale={locale}
             rowSelection={rowSelection}
-            columns={columnsTable}
+            onRow={onRow}
+            rowKey={(record) => record.id}
+            rowClassName={(record) =>
+              selectedRowKeys?.includes(record.id)
+                ? "ant-table-row-selected"
+                : ""
+            }
+            columns={[...columnsTable]}
             dataSource={source?.items}
-            rowKey={rowKey}
             scroll={scroll}
             size="large"
             loading={loading}
             className={classes.table}
             pagination={{
-              defaultPageSize: 10,
+              onChange: handleChangePagination,
+              total: `${source?.totalRecord}`,
+              defaultPageSize: paginationSize,
               showSizeChanger: true,
               pageSizeOptions: ["10", "20", "30"],
               locale: { items_per_page: "bản ghi trên trang" },
               showTotal: (total, range) =>
-                `${range[1]} / ${total} kết quả phù hợp`,
+                `${range[1]} / ${source?.totalRecord} kết quả phù hợp`,
             }}
           />
         </ReactDragListView.DragColumn>
       </div>
-      <BottomNavPipeline
-        open={selectedRowKeys?.length > 0}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-        selecedLength={selectedRowKeys?.length || 0}
-      />
     </View>
   );
 };

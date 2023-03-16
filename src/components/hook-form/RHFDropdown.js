@@ -83,7 +83,7 @@ function RHFDropdown({name, ...props}) {
                 {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
                 <SelectFieldStyle
                     {...field}
-                    value={field.value || ""}
+                    value={field.value}
                     displayEmpty
                     disabled={disabled}
                     error={!!error}

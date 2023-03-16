@@ -4,6 +4,10 @@ import {getRolesByPage} from "@/utils/role";
 import {Container} from "@mui/material";
 import ApproveProcessCard from "@/sections/approve-process/ApproveProcessCard";
 import useSettings from "@/hooks/useSettings";
+import Page from "@/components/Page";
+//import {JobTypeItem, useLazyGetAllJobTypeQuery} from "@/sections/jobtype";
+import PageWrapper from "@/components/PageWrapper";
+//import {useGetAllApproveProcessQuery} from "@/sections/approve-process/ApproveProcessSlice";
 
 ApproveProcess.getLayout = function getLayout({roles = []}, page) {
     return <SettingLayout roles={roles}>{page}</SettingLayout>;
@@ -37,25 +41,35 @@ const itemData = [
 ];
 
 export default function ApproveProcess() {
+    // const {data: {items: DataInternal = []} = {}} = useGetAllApproveProcessQuery();
+    // const {data: {items: DataUses = []} = {}} = useGetAllApproveProcessQuery();
+    // const {data: {items: DataInvite = []} = {}} = useGetAllApproveProcessQuery();
     const {themeStretch} = useSettings();
 
     return (
-        <Container maxWidth={themeStretch ? false : "xl"}>
-            <ApproveProcessCard
-                approveProcesses={itemData}
-                color={"#1E88E5"}
-                title="QUY TRÌNH PHÊ DUYỆT TIN TUYỂN DỤNG NỘI BỘ"
-            />
-            <ApproveProcessCard
-                approveProcesses={null}
-                color={"#1E88E5"}
-                title="QUY TRÌNH PHÊ DUYỆT LỜI MỜI NGƯỜI DÙNG"
-            />
-            <ApproveProcessCard
-                approveProcesses={itemData}
-                color={"#1E88E5"}
-                title="QUY TRÌNH PHÊ DUYỆT THƯ MỜI NHẬN VIỆC"
-            />
-        </Container>
+        <PageWrapper title={"Quy trình phê duyệt"}>
+            <Page title={"Quy trình phê duyệt"}>
+                <Container maxWidth={themeStretch ? false : "xl"}>
+                    <ApproveProcessCard
+                        type={0}
+                        approveProcesses={itemData}
+                        color={"#1E88E5"}
+                        title="QUY TRÌNH PHÊ DUYỆT TIN TUYỂN DỤNG NỘI BỘ"
+                    />
+                    <ApproveProcessCard
+                        type={1}
+                        approveProcesses={null}
+                        color={"#1E88E5"}
+                        title="QUY TRÌNH PHÊ DUYỆT LỜI MỜI NGƯỜI DÙNG"
+                    />
+                    <ApproveProcessCard
+                        type={2}
+                        approveProcesses={itemData}
+                        color={"#1E88E5"}
+                        title="QUY TRÌNH PHÊ DUYỆT THƯ MỜI NHẬN VIỆC"
+                    />
+                </Container>
+            </Page>
+        </PageWrapper>
     );
 }

@@ -1,21 +1,20 @@
 // @mui
 //
-import BlockContent from "./BlockContent";
-import MultiFilePreview from "./MultiFilePreview";
-import RejectionFiles from "./RejectionFiles";
-import { Box, Button, Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
+// import BlockContent from "./BlockContent";
+import MultiFilePreviewCustom from "./MultiFilePreviewCustom";
+// import RejectionFiles from "./RejectionFiles";
+import { Box } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDropzone } from "react-dropzone";
 
-const DropZoneStyle = styled("div")(({ theme }) => ({
-  outline: "none",
-  padding: theme.spacing(5, 1),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.neutral,
-  border: `1px dashed ${theme.palette.grey[500_32]}`,
-  "&:hover": { opacity: 0.72, cursor: "pointer" },
-}));
+// const DropZoneStyle = styled("div")(({ theme }) => ({
+//   outline: "none",
+//   padding: theme.spacing(5, 1),
+//   borderRadius: theme.shape.borderRadius,
+//   backgroundColor: theme.palette.background.neutral,
+//   border: `1px dashed ${theme.palette.grey[500_32]}`,
+//   "&:hover": { opacity: 0.72, cursor: "pointer" },
+// }));
 
 UploadMultiFile.propTypes = {
   files: PropTypes.array.isRequired,
@@ -29,30 +28,35 @@ UploadMultiFile.propTypes = {
 };
 
 export default function UploadMultiFile({
-  error,
+  // error,
   showPreview = false,
   files,
-  onUpload,
+  // onUpload,
   onRemove,
-  onRemoveAll,
-  helperText,
+  // onRemoveAll,
+  // helperText,
   sx,
   ...other
 }) {
+  console.log("🚀 ~ file: UploadMultiFileCustom.js:42 ~ files:", files);
   const {
     getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragReject,
-    fileRejections,
+    acceptedFiles,
+    // getInputProps,
+    // isDragActive,
+    // isDragReject,
+    // fileRejections,
   } = useDropzone({
     ...other,
   });
-  console.log("🚀 ~ file: UploadMultiFile.js:51 ~ getRootProps:", getRootProps);
+  console.log(
+    "🚀 ~ file: UploadMultiFileCustom.js:53 ~ acceptedFiles:",
+    acceptedFiles
+  );
 
   return (
     <Box sx={{ width: "100%", ...sx }}>
-      <DropZoneStyle
+      {/* <DropZoneStyle
         {...getRootProps()}
         sx={{
           ...(isDragActive && { opacity: 0.72 }),
@@ -66,18 +70,20 @@ export default function UploadMultiFile({
         <input {...getInputProps()} />
 
         <BlockContent />
-      </DropZoneStyle>
-
-      {fileRejections.length > 0 && (
+      </DropZoneStyle> */}
+      <MultiFilePreviewCustom
+        files={acceptedFiles}
+        showPreview={showPreview}
+        onRemove={onRemove}
+        {...getRootProps()}
+      />
+      {/* {fileRejections.length > 0 && (
         <RejectionFiles fileRejections={fileRejections} />
       )}
 
-      <MultiFilePreview
-        files={files}
-        showPreview={showPreview}
-        onRemove={onRemove}
-      />
+   
 
+      {/* 
       {files?.length > 0 && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
           <Button color="inherit" size="small" onClick={onRemoveAll}>
@@ -89,7 +95,7 @@ export default function UploadMultiFile({
         </Stack>
       )}
 
-      {helperText && helperText}
+      {helperText && helperText} */}
     </Box>
   );
 }

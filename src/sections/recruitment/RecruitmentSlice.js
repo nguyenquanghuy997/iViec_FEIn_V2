@@ -2,9 +2,7 @@ import { apiSlice } from '@/redux/api/apiSlice'
 import {
   API_CREATE_RECRUITMENT,
   API_GET_LIST_RECRUITMENT, API_GET_RECRUITMENT_BY_ID,
-  API_GET_RECRUITMENT_BY_ORGANIZATION,
 } from '@/routes/api'
-import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ['Recruitment'],
@@ -20,23 +18,24 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
     }),
     getRecruitments: builder.query({
-      query: (params) => ({
-        url: `${API_GET_LIST_RECRUITMENT}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
-        method: "POST",
-      }),
-    }),
-    getListRecruitments: builder.query({
-      query: (params) => ({
+      query: (data) => ({
         url: API_GET_LIST_RECRUITMENT,
+        method: "POST",
+        data
+      }),
+    }),
+    getRecruitmentById: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_BY_ID,
         method: 'GET',
         params
       }),
     }),
-    getRecruitmentByOrganizationId: builder.query({
-      query: (params) => ({
-        url: API_GET_RECRUITMENT_BY_ORGANIZATION,
-        method: 'GET',
-        params
+    createRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_CREATE_RECRUITMENT,
+        method: 'POST',
+        data
       }),
     }),
     createRecruitment: builder.mutation({
