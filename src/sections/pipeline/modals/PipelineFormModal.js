@@ -161,7 +161,6 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
         onPressAdd={pressAdd}
         onPressEdit={() => onEditForm(item, index)}
         onPressDelete={() => onDeleteForm(index)}
-        isDefault={false}
       />
     );
   };
