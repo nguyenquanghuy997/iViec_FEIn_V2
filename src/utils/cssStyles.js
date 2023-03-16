@@ -69,7 +69,6 @@ export const ButtonIcon = styled(ButtonDS)(({}) => ({
     backgroundColor: "#EFF3F7",
   },
   textTransform: "none",
-  marginLeft: "12px",
 }));
 export const ButtonGray = styled(ButtonDS)(({}) => ({
   color: "#455570",
@@ -79,5 +78,4 @@ export const ButtonGray = styled(ButtonDS)(({}) => ({
     backgroundColor: "#E7E9ED",
   },
   textTransform: "none",
-  marginLeft: "12px",
 }));

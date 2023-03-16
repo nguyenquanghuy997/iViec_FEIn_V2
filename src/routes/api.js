@@ -204,6 +204,8 @@ export const API_GET_LIST_RECRUITMENT = "/recruitment/Recruitment/GetRecruitment
 export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/GetRecruitmentByOrganizationId" // new - get recruitment by organization
 export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - get recruitment by organization
 
+// duyệt tin
+export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // get all recruitment
 // job source nguồn job
 
 // get user from organization
