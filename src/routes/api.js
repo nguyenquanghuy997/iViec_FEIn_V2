@@ -60,15 +60,14 @@ export const API_CREATE_JOB = "/api/jobs";
 export const API_LIST_TAGS = "/api/v1/tags";
 export const API_JOB_REMOVE_ASSIGNMENT = "/api/remove/assignment";
 
-// New API
-export const API_LOGIN = "/identity/Identity/Login"; //new
-
-export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 //auth
 export const API_REGISTER = "/organization/Organization/CreateOrganizationWithUser";  // new
+export const API_LOGIN = "/identity/Identity/Login"; //new
+export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 export const API_CONFIRM_EMAIL = "/identity/Identity/ConfirmEmail";  // new
 export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword"; //new
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken"; //new
+export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup"; // lấy danh sách application theo role groups
 // Common
 
 //Ứng viên
@@ -98,8 +97,6 @@ export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrgani
 export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin"; // lấy danh sách admin
 export const API_GET_ALL_USER_BY_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId"; // lấy danh sách người dùng theo đơn vị
 
-
-
 //Role
 export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
@@ -107,13 +104,6 @@ export const API_GET_LIST_ROLE_GROUP = "/identity/RoleGroup/GetRoleGroups"; // l
 export const API_ADD_ROLE_GROUP = "/identity/RoleGroup/CreateRoleGroup"
 export const API_REMOVE_ROLE_GROUP ='/Identity/RoleGroup/RemoveRoleGroups'
 
-// Lấy danh sách tỉnh / thành phố
-export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
-// Lấy danh sách quận / huyện
-export const API_GET_DISTRICT = "/masterData/District/GetDistricts";
-
-// Lấy danh sách job category
-export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories";
 
 // Báo cáo
 
@@ -191,9 +181,24 @@ export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/Get
 export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - get recruitment by organization
 
 // job source nguồn job
-export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
 
 // get user from organization
 export const API_GET_USER_FROM_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId";
-export const API_GET_LIST_LANGUAGE = "/masterData/Language/GetLanguages"
+// API ApproveProcess
+export const API_CREATE_APPROVE_PROCESS = "/organization/ApprovalProcess/CreateApprovalProcess";
+export const API_UPDATE_APPROVE_PROCESS = "/organization/ApprovalProcess/UpdateApprovalProcess/{id}";
+export const API_DELETE_APPROVE_PROCESS = "/organization/ApprovalProcess/RemoveApprovalProcess/{id}";
+export const API_GET_APPROVE_PROCESSES = "/organization/ApprovalProcess/GetApprovalProcesses";
+export const API_GET_APPROVE_PROCESS = "/organization/ApprovalProcess/GetApprovalProcess";
+
+// API master data
 export const API_GET_LIST_CANDIDATELEVEL = "/masterData/CandidateLevel/GetCandidateLevels"
+export const API_GET_LIST_LANGUAGE = "/masterData/Language/GetLanguages"
+export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
+// Lấy danh sách tỉnh / thành phố
+export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
+// Lấy danh sách quận / huyện
+export const API_GET_DISTRICT = "/masterData/District/GetDistricts";
+// Lấy danh sách job category
+export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories";
+

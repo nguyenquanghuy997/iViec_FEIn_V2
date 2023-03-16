@@ -1,68 +1,71 @@
 import React from "react";
-import {useFieldArray, useFormContext, Controller, useWatch} from "react-hook-form";
+import {useFieldArray, useFormContext, useWatch} from "react-hook-form";
 import {Box, Grid, IconButton} from "@mui/material";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {MinusIcon, PlusIcon} from "@/assets/ActionIcon";
-
+import RHFDropdownAvatarGroup from "@/components/hook-form/RHFDropdownAvatarGroup";
+import {
+    useGetRoleGroupListQuery,
+} from "@/sections/rolegroup";
+import {LIST_PROCESS_LEVEL_DETAIL_TYPE} from "@/utils/formatString";
+import {useGetApplicationByRoleGroupQuery} from "@/sections/auth/authSlice";
+import {useGetAllApplicantUserOrganizationByIdQuery} from "@/sections/organization/override/OverrideOrganizationSlice";
 
 const ConditionalInput = ({control, index, indexChild}) => {
     const value = useWatch({
-        name: `approve.${index}.approvalProcessLevelDetails.${indexChild}.processLevelDetailType`,
+        name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.processLevelDetailType`,
         control
     });
+    const {data: {items: RoleGroups = []} = {}} = useGetRoleGroupListQuery();
+    const roleGroupId = useWatch({
+        control,
+        name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`
+    });
+    const {data: {items: Applications = []} = {}} = useGetApplicationByRoleGroupQuery({RoleGroupId: roleGroupId}, {skip: !roleGroupId});
+    const {data: {items: ApplicationOrganization = []} = {}} = useGetAllApplicantUserOrganizationByIdQuery();
 
     return (
-        <Controller
-            control={control}
-            name={`approve.${index}.approvalProcessLevelDetails.${indexChild}.personInChargeIds`}
-            render={() => value === "1" ?
+        (value === "0" ?
                 <>
                     <Grid item xs={5} pr={2}>
                         <RHFDropdown
-                            options={[{id: "", name: ""}, {
-                                id: "1",
-                                name: "ABC"
-                            }]?.map(item => ({...item, value: item?.id, label: item?.name}))}
-                            name={`approve.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`}
+                            options={RoleGroups?.map(item => ({...item, value: item?.id, label: item?.name}))}
+                            name={`approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`}
                             isRequired
-                            placeholder="Chọn vai trò phê duyệt"
+                            placeholder="Chọn nhóm phê duyệt"
                         />
                     </Grid>
                     <Grid item xs={2}>
-                        <RHFDropdown
-                            options={[{id: "", name: ""}, {
-                                id: "1",
-                                name: "ABC"
-                            }, {
-                                id: "2",
-                                name: "ABCD"
-                            }, {
-                                id: "3",
-                                name: "ABCDE"
-                            }]?.map(item => ({...item, value: item?.id, label: item?.name}))}
-                            name={`approve.${index}.approvalProcessLevelDetails.${indexChild}.personInChargeIds`}
-                            multiple={true}
+                        <RHFDropdownAvatarGroup
+                            options={Applications?.map(item => ({
+                                ...item,
+                                value: item?.id,
+                                label: item?.lastName ? item.lastName : item?.email,
+                                subLabel: item?.email
+                            }))}
+                            name={`approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.personInChargeIds`}
                             isRequired
+                            multiple
                             placeholder="Chọn ..."
-
                         />
                     </Grid>
                 </>
                 :
                 <Grid item xs={7}>
-                    <RHFDropdown
-                        options={[{id: "", name: ""}, {
-                            id: "1",
-                            name: "ABC"
-                        }]?.map(item => ({...item, value: item?.id, label: item?.name}))}
-                        name={`approve.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`}
+                    <RHFDropdownAvatarGroup
+                        options={ApplicationOrganization?.map(item => ({
+                            ...item,
+                            value: item?.id,
+                            label: item?.lastName ? item?.lastName : item?.email,
+                            subLabel: item?.email
+                        }))}
+                        name={`approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.personInChargeIds`}
                         isRequired
-                        multiple={true}
-                        placeholder="Chọn vai trò phê duyệt"
+                        placeholder="Chọn người phê duyệt"
+                        render
                     />
                 </Grid>
-            }
-        />
+        )
     );
 };
 
@@ -79,10 +82,10 @@ export const ApproveProcessFormLevelItem = (props) => {
 
     const {fields, append, remove} = useFieldArray({
         control,
-        name: `approve.${index}.approvalProcessLevelDetails`
+        name: `approvalProcessLevels.${index}.approvalProcessLevelDetails`
     });
 
-    let watchFieldArray = useWatch({name: `approve.${index}.approvalProcessLevelDetails`, control});
+    let watchFieldArray = useWatch({name: `approvalProcessLevels.${index}.approvalProcessLevelDetails`, control});
 
     const addApproveProcessHandler = () => {
         append({
@@ -109,21 +112,21 @@ export const ApproveProcessFormLevelItem = (props) => {
                         backgroundColor: '#F2F4F5',
                     }}>
                     <Box className="box-content-inner" sx={{flex: 1}}>
-                        <Grid container alignItems={"center"}>
+                        <Grid container alignItems={"baseline"}>
                             <Grid item xs={3} pr={2}>
                                 <RHFDropdown
-                                    options={[{id: "1", name: "Vai trò"}, {
-                                        id: "2",
-                                        name: "Cán bộ"
-                                    }]?.map(item => ({...item, value: item?.id, label: item?.name}))}
-                                    name={`approve.${index}.approvalProcessLevelDetails.${indexChild}.processLevelDetailType`}
+                                    options={LIST_PROCESS_LEVEL_DETAIL_TYPE.map(item => ({
+                                        ...item,
+                                        value: item?.id,
+                                        label: item?.name
+                                    }))}
+                                    name={`approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.processLevelDetailType`}
                                     isRequired
-                                    placeholder="Chọn 1 vai trò"
+                                    placeholder="Chọn vai trò"
                                 />
                             </Grid>
                             <ConditionalInput {...{control, index, indexChild}} />
-                            <Grid item container flexDirection="row" justifyContent={"space-between"} xs={2} pl={3}
-                                  mb={1}>
+                            <Grid item container flexDirection="row" justifyContent={"space-between"} xs={2} pl={3}>
                                 <IconButton sx={{ml: 2}} onClick={addApproveProcessHandler}>
                                     <PlusIcon/>
                                 </IconButton>
@@ -132,7 +135,6 @@ export const ApproveProcessFormLevelItem = (props) => {
                                         <MinusIcon/>
                                     </IconButton>
                                 )}
-
                             </Grid>
                         </Grid>
                     </Box>

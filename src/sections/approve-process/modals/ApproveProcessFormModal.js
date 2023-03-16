@@ -3,47 +3,106 @@ import {Text, View} from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
 import {Label} from "@/components/hook-form/style";
-import {useAddJobTypeMutation, useGetPreviewJobTypeMutation, useUpdateJobTypeMutation,} from "@/sections/jobtype";
+import {
+    useAddApproveProcessMutation,
+    useUpdateApproveProcessMutation,
+    useGetPreviewApproveProcessQuery
+} from "@/sections/approve-process/ApproveProcessSlice";
 import {ViewModel} from "@/utils/cssStyles";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {CircularProgress, Divider, Modal} from "@mui/material";
+import {Box, Button, CircularProgress, Divider, Grid, IconButton, Modal, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
-import {useEffect} from "react";
-import {useForm} from "react-hook-form";
+import React, {useEffect} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {ApproveProcessFormLevel} from "@/sections/approve-process/Items/ApproveProcessFormLevel";
+import {MinusIcon} from "@/assets/ActionIcon";
+import {ApproveProcessFormLevelItem} from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
+import {styled} from "@mui/styles";
 
 const defaultValues = {
     name: "",
     description: "",
-    requirement: "",
-    benefit: "",
-    isActivated: true,
+    approvalProcessType: 0,
+    isAvailable: true,
+    approvalProcessLevels: [
+        {
+            approvalProcessLevelDetails: [
+                {
+                    roleGroupId: "",
+                    personInChargeIds: [],
+                    personInChargeId: "",
+                    processLevelDetailType: ""
+                }
+            ]
+        }
+    ]
 };
-export const ApproveProcessFormModal = ({title, data, show, setShow, onRefreshData}) => {
+
+const ButtonStyle = {
+    fontSize: 14,
+    fontWeight: 600,
+    minWidth: '56px',
+    borderRadius: 6,
+    padding: '8px 12px'
+}
+
+const ButtonAddInviteStyle = styled(Button)(({}) => ({
+    "&.button-add-invite": {
+        ...ButtonStyle,
+        backgroundColor: '#FDFDFD',
+        width: '100%',
+        color: '#1976D2',
+        ":hover": {
+            color: '#455570',
+            backgroundColor: '#FDFDFD',
+        }
+    }
+}));
+
+export const ApproveProcessFormModal = ({type, title, data, show, setShow, onRefreshData}) => {
     const isEditMode = !!data?.id;
     // api
-    const [addForm] = useAddJobTypeMutation();
-    const [updateForm] = useUpdateJobTypeMutation();
-    const [getPreview, {data: {Data: preview = {}} = {}}] =
-        useGetPreviewJobTypeMutation();
+    const [addForm] = useAddApproveProcessMutation();
+    const [updateForm] = useUpdateApproveProcessMutation();
+    const {data: {items: preview = {}} = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id});
     const isLoading = isEditMode && !preview.id;
 
     // form
     const Schema = Yup.object().shape({
-        name: Yup.string().required("Chưa nhập tên vị trí công việc"),
+        name: Yup.string().required("Chưa nhập tên quy trình phê duyệt"),
+        description: Yup.string(),
+        isAvailable: Yup.bool(),
+        approvalProcessLevels: Yup.array().of(
+            Yup.object().shape({
+                approvalProcessLevelDetails: Yup.array().of(
+                    Yup.object().shape({
+                        roleGroupId: Yup.string().required("Chưa chọn nhóm phê duyệt"),
+                        processLevelDetailType: Yup.string().required("Chưa chọn loại vai trò"),
+                        personInChargeIds: Yup.array().when('processLevelDetailType', {is: "0", then: Yup.array().min(1, "Chưa chọn người phê duyệt")}),
+                        personInChargeId: Yup.string().when('processLevelDetailType', {is: "1", then: Yup.string().required("Chưa chọn người phê duyệt")})
+                    })
+                )
+            })
+        )
     });
     const methods = useForm({
         defaultValues,
         resolver: yupResolver(Schema),
     });
+
     const {
         reset,
+        control,
         setValue,
         handleSubmit,
         formState: {isSubmitting},
     } = methods;
+
+    const {fields, append, remove} = useFieldArray({
+        control,
+        name: "approvalProcessLevels"
+    });
 
     // action
     const pressHide = () => {
@@ -55,10 +114,11 @@ export const ApproveProcessFormModal = ({title, data, show, setShow, onRefreshDa
             id: isEditMode ? data.id : 0,
             name: e.name,
             description: e.description,
-            requirement: e.requirement,
-            benefit: e.benefit,
-            isActivated: e.isActivated ? 1 : 0,
+            approvalProcessType: type,
+            isAvailable: e.isAvailable,
+            approvalProcessLevels: e.approvalProcessLevels
         };
+
         if (isEditMode) {
             try {
                 await updateForm(body).unwrap();
@@ -68,38 +128,26 @@ export const ApproveProcessFormModal = ({title, data, show, setShow, onRefreshDa
                 pressHide();
                 onRefreshData();
             } catch (err) {
-                if (err.status === "JPE_05") {
-                    enqueueSnackbar("Vị trí công việc đã tồn tại!", {
-                        autoHideDuration: 1000,
-                        variant: "error",
-                    });
-                } else {
-                    enqueueSnackbar("Thực hiện thất bại!", {
-                        autoHideDuration: 1000,
-                        variant: "error",
-                    });
-                }
+                enqueueSnackbar("Thực hiện thất bại!", {
+                    autoHideDuration: 1000,
+                    variant: "error",
+                });
             }
         } else {
             try {
                 await addForm(body).unwrap();
+                debugger
                 enqueueSnackbar("Thực hiện thành công!", {
                     autoHideDuration: 1000,
                 });
                 pressHide();
                 onRefreshData();
             } catch (err) {
-                if (err.status === "JPE_05") {
-                    enqueueSnackbar("Vị trí công việc đã tồn tại!", {
-                        autoHideDuration: 1000,
-                        variant: "error",
-                    });
-                } else {
-                    enqueueSnackbar("Thực hiện thất bại!", {
-                        autoHideDuration: 1000,
-                        variant: "error",
-                    });
-                }
+                debugger
+                enqueueSnackbar("Thực hiện thất bại!", {
+                    autoHideDuration: 1000,
+                    variant: "error",
+                });
             }
         }
     });
@@ -115,26 +163,23 @@ export const ApproveProcessFormModal = ({title, data, show, setShow, onRefreshDa
             reset();
             setValue("name", "");
             setValue("description", "");
-            setValue("requirement", "");
-            setValue("benefit", "");
-            setValue("isActivated", true);
+            setValue("isAvailable", true);
             return;
         }
 
         if (!isEditMode) return;
 
-        getPreview({id: data.id}).unwrap();
+
     }, [show]);
 
     useEffect(() => {
         if (!preview.id) return;
         setValue("name", preview.name);
         setValue("description", preview.description);
-        setValue("requirement", preview.requirement);
-        setValue("benefit", preview.benefit);
-        setValue("isActivated", !!preview.isActivated);
+        setValue("isAvailable", !!preview.isAvailable);
     }, [isEditMode, preview.id]);
-    const isActivated = methods.watch("isActivated");
+
+    const isAvailable = methods.watch("isAvailable");
     return (
         <FormProvider methods={methods}>
             <Modal
@@ -203,8 +248,54 @@ export const ApproveProcessFormModal = ({title, data, show, setShow, onRefreshDa
                                     name={"description"}
                                 />
                             </View>
-                            <Divider sx={{my: 1}}/>
-                            <ApproveProcessFormLevel/>
+                            <Divider sx={{mt: 1, mb: 3}}/>
+                            {/*<ApproveProcessFormLevel objecValue={defaultValues.approvalProcessLevels}/>*/}
+                            {fields.map((item, index) => {
+                                return (<View
+                                    style={{
+                                        padding: 16,
+                                        marginBottom: 24,
+                                        borderRadius: 6,
+                                        backgroundColor: "#F2F4F5"
+                                    }}
+                                    key={item.id}>
+                                    <Grid container direction="row"
+                                          justifyContent="center"
+                                          alignItems="center"
+                                          mb={2}>
+                                        <Grid item xs>
+                                            <Typography variant="subtitle1">
+                                                Cấp {index + 1}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <Typography variant="textSize13500">
+                                                Đã chọn: 12
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={9} container direction="row" justifyContent="flex-end">
+                                            <IconButton onClick={() => remove(index)}>
+                                                <MinusIcon/>
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
+                                    <Box className="box-content-wrapper" sx={{width: '100%'}}>
+                                        <ApproveProcessFormLevelItem
+                                            index={index}
+                                            key={item.id}
+                                        />
+                                    </Box>
+                                </View>)
+                            })}
+                            <ButtonAddInviteStyle
+                                variant="outlined"
+                                className='button-add-invite'
+                                onClick={() => {
+                                    append({...defaultValues.approvalProcessLevels[0]})
+                                }}
+                                startIcon={<Iconify icon="material-symbols:add"/>}>
+                                Thêm cấp phê duyệt
+                            </ButtonAddInviteStyle>
                         </View>
                     )}
                     {/* footer */}
@@ -227,8 +318,8 @@ export const ApproveProcessFormModal = ({title, data, show, setShow, onRefreshDa
                         <View flex="true"/>
                         {isLoading ? null : (
                             <SwitchStatusDS
-                                name={"isActivated"}
-                                label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+                                name={"isAvailable"}
+                                label={isAvailable ? "Đang hoạt động" : "Ngừng hoạt động"}
                             />
                         )}
                     </View>
