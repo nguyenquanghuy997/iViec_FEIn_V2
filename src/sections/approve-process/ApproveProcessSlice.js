@@ -23,16 +23,14 @@ const approveProcessFormSlice = apiWithTag.injectEndpoints({
         }),
         getPreviewApproveProcess: builder.query({
             query: (data) => ({
-                url: API_GET_APPROVE_PROCESS,
+                url: `${API_GET_APPROVE_PROCESS}?${qs.stringify(data)}`,
                 method: "GET",
-                data: qs.stringify(data),
             }),
         }),
         deleteApproveProcess: builder.mutation({
-            query: (data) => ({
-                url: API_DELETE_APPROVE_PROCESS,
-                method: "POST",
-                data: qs.stringify(data),
+            query: (id) => ({
+                url: `${API_DELETE_APPROVE_PROCESS}/${id}`,
+                method: "DELETE",
             }),
             invalidatesTags: ["AllProcess"]
         }),
@@ -46,9 +44,9 @@ const approveProcessFormSlice = apiWithTag.injectEndpoints({
         }),
         updateApproveProcess: builder.mutation({
             query: (data) => ({
-                url: API_UPDATE_APPROVE_PROCESS,
-                method: "POST",
-                data: data,
+                url: `${API_UPDATE_APPROVE_PROCESS}/${data.id}`,
+                method: "PATCH",
+                data,
             }),
             invalidatesTags: ["AllProcess"]
         }),

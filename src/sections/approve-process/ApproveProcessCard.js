@@ -4,15 +4,19 @@ import {ConnectCardStyle} from "@/sections/connect/style";
 import {Box, Card, Divider, FormControlLabel, Grid, Switch, Tooltip, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import {alpha, styled} from "@mui/material/styles";
-import PropTypes from "prop-types";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Controller, useForm, useFormContext} from "react-hook-form";
 import {DeleteIconGrey, EditIcon, PreviewIcon} from "@/assets/ActionIcon";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import ApproveProcessDialog from "@/sections/approve-process/ApproveProcessDialog";
 import IconEmpty from "../../../public/assets/icons/approveProcess/ic-empty";
-import {ApproveProcessFormModal} from "@/sections/approve-process/modals";
+import {ApproveProcessFormModal, ApproveProcessViewModal} from "@/sections/approve-process/modals";
+import {fDate} from "@/utils/formatTime";
+import {
+    useDeleteApproveProcessMutation, useUpdateApproveProcessMutation
+} from "@/sections/approve-process/ApproveProcessSlice";
+import {useSnackbar} from "notistack";
 
 const GreenSwitch = styled(Switch)(({theme}) => ({
     "& .MuiSwitch-switchBase.Mui-checked": {
@@ -44,24 +48,53 @@ const SwitchForm = ({name, handleChange, style, value, ...other}) => {
         {...other}
     />);
 };
-const ApproveProcessCardItem = ({approveProcess}) => {
-    const [checked, setChecked] = useState(false);
+const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) => {
     const [hovered, setHovered] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openModelView, setOpenModelView] = useState(false);
+    const [openActive, setOpenActive] = useState(false);
+    const [removeItem] = useDeleteApproveProcessMutation();
+    const [updateItem] = useUpdateApproveProcessMutation();
+    const {enqueueSnackbar} = useSnackbar();
     const handleMouseOver = () => {
         setHovered(true);
     };
     const handleMouseOut = () => {
         setHovered(false);
     };
-    const handleClose = () => {
-        setOpen(!open);
+    const handleClose = async (id) => {
+        try {
+            await removeItem(id).unwrap();
+            enqueueSnackbar("Thực hiện thành công!", {
+                autoHideDuration: 2000,
+            });
+        } catch (err) {
+            enqueueSnackbar("Thực hiện thất bại!", {
+                autoHideDuration: 1000,
+                variant: "error",
+            });
+        }
     }
-
-
-    useEffect(() => {
-        setChecked(approveProcess.isActive);
-    }, []);
+    const handleEdit = () => {
+        setData({id: approveProcess.id});
+        setShowForm(true);
+    };
+    const handleActiveClose = async (id) => {
+        try {
+            await updateItem({
+                id,
+                isAvailable: !approveProcess.isAvailable
+            }).unwrap();
+            enqueueSnackbar("Thực hiện thành công!", {
+                autoHideDuration: 2000,
+            });
+        } catch (err) {
+            enqueueSnackbar("Thực hiện thất bại!", {
+                autoHideDuration: 1000,
+                variant: "error",
+            });
+        }
+    }
 
     return (
 
@@ -80,14 +113,14 @@ const ApproveProcessCardItem = ({approveProcess}) => {
             <Grid container direction="row" justifyContent="space-between">
                 <Grid item>
                     <Typography>
-                        {approveProcess?.title}
+                        {approveProcess?.name}
                     </Typography>
                     <Grid container>
                         <Typography variant="textSize13" color="#5C6A82" mr={1}>
                             Ngày tạo:
                         </Typography>
                         <Typography variant="textSize13500" color="#455570">
-                            {approveProcess?.createdTime}
+                            {fDate(approveProcess?.createdTime, "dd/MM/yyyy")}
                         </Typography>
                         <Divider orientation="vertical" variant="middle" flexItem
                                  sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
@@ -95,7 +128,7 @@ const ApproveProcessCardItem = ({approveProcess}) => {
                             Người tạo:
                         </Typography>
                         <Typography variant="textSize13500" color="#455570">
-                            {approveProcess?.creator}
+                            {approveProcess?.creatorName}
                         </Typography>
                         <Divider orientation="vertical" variant="middle" flexItem
                                  sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
@@ -103,7 +136,7 @@ const ApproveProcessCardItem = ({approveProcess}) => {
                             Đang áp dụng:
                         </Typography>
                         <Typography variant="textSize13500" color="#455570">
-                            {approveProcess?.countApply}
+                            {approveProcess?.appliedCounting}
                         </Typography>
                         <Divider orientation="vertical" variant="middle" flexItem
                                  sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
@@ -111,22 +144,27 @@ const ApproveProcessCardItem = ({approveProcess}) => {
                             Cấp phê duyệt:
                         </Typography>
                         <Typography variant="textSize13500" color="#455570">
-                            {approveProcess?.approveLevel}
+                            {approveProcess?.levelCounting}
                         </Typography>
                     </Grid>
                     <Grid mt={2}>
                         <SwitchForm
-                            name={approveProcess.title}
-                            handleChange={() => setChecked(!checked)}
-                            value={checked}
+                            name={approveProcess.id}
+                            value={approveProcess.isAvailable}
+                            handleChange={() => setOpenActive(!openActive)}
                         />
+                        <ApproveProcessDialog open={openActive}
+                                              onClose={() => setOpenActive(!openActive)}
+                                              onAccept={() => handleActiveClose(approveProcess.id)}
+                                              content={approveProcess.name}
+                                              type={approveProcess.isAvailable ? 'approveProcessActive' : 'approveProcessDeActive'}/>
                         {hovered && <>
-                            <Tooltip title="Xem">
+                            <Tooltip title="Xem" onClick={() => setOpenModelView(true)}>
                                 <IconButton>
                                     <PreviewIcon width={16} height={16}/>
                                 </IconButton>
                             </Tooltip>
-                            <Tooltip title="Chỉnh sửa">
+                            <Tooltip title="Chỉnh sửa" onClick={handleEdit}>
                                 <IconButton>
                                     <EditIcon width={16} height={16}/>
                                 </IconButton>
@@ -136,14 +174,18 @@ const ApproveProcessCardItem = ({approveProcess}) => {
                                     <DeleteIconGrey width={16} height={16}/>
                                 </IconButton>
                             </Tooltip>
-                            <ApproveProcessDialog open={open} onClose={handleClose} content={approveProcess.title}
-                                                  type='approveProcess'/>
+                            <ApproveProcessDialog open={open} onAccept={() => handleClose(approveProcess.id)}
+                                                  onClose={() => setOpen(!open)}
+                                                  content={approveProcess.name}
+                                                  type='approveProcessDelete'/>
+                            <ApproveProcessViewModal title={title} data={approveProcess}
+                                                     show={openModelView} setShow={setOpenModelView}/>
                         </>}
                     </Grid>
                 </Grid>
                 <Grid item>
-                    {checked && (<Typography variant="caption" color="#388E3C" fontWeight={500}>
-                        Đang sử dụng
+                    {approveProcess?.isAvailable && (<Typography variant="caption" color="#388E3C" fontWeight={500}>
+                        Đang áp dụng
                     </Typography>)}
                 </Grid>
             </Grid>
@@ -152,12 +194,10 @@ const ApproveProcessCardItem = ({approveProcess}) => {
 };
 
 const ApproveProcessCard = ({type, approveProcesses, color, title}) => {
-    const methods = useForm({
-        defaultValues: {isChecked: true},
-    });
+    const methods = useForm();
+    const [data, setData] = useState(null);
 
     const [showForm, setShowForm] = useState(false);
-
     return (<Box>
         <Grid container
               direction="row"
@@ -184,10 +224,13 @@ const ApproveProcessCard = ({type, approveProcesses, color, title}) => {
                         mb: 2, borderRadius: "6px", borderLeft: `3px solid ${color}`, px: 3, py: 2,
                     }}
                 >
-                    {approveProcesses ?
+                    {approveProcesses && approveProcesses?.length > 0 ?
                         (
                             approveProcesses.map((approveProcess, id) => (<ApproveProcessCardItem
                                 approveProcess={approveProcess}
+                                setData={setData}
+                                setShowForm={setShowForm}
+                                title={title}
                                 key={id}
                             />))
                         ) : <>
@@ -223,21 +266,14 @@ const ApproveProcessCard = ({type, approveProcesses, color, title}) => {
                                     />
                                 }
                             />
-                            <ApproveProcessFormModal type={type} title={title} show={showForm} setShow={setShowForm}/>
+                            <ApproveProcessFormModal type={type} data={data} setData={setData} title={title}
+                                                     show={showForm} setShow={setShowForm}/>
                         </Grid>
                     </Grid>
                 </Card>
             </FormProvider>
         </ConnectCardStyle>
     </Box>);
-};
-
-ApproveProcessCard.propTypes = {
-    accounts: PropTypes.array,
-};
-
-ApproveProcessCard.defaultProps = {
-    accounts: [],
 };
 
 export default ApproveProcessCard;

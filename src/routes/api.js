@@ -191,8 +191,8 @@ export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
 
 // API ApproveProcess
 export const API_CREATE_APPROVE_PROCESS = "/organization/ApprovalProcess/CreateApprovalProcess";
-export const API_UPDATE_APPROVE_PROCESS = "/organization/ApprovalProcess/UpdateApprovalProcess/{id}";
-export const API_DELETE_APPROVE_PROCESS = "/organization/ApprovalProcess/RemoveApprovalProcess/{id}";
+export const API_UPDATE_APPROVE_PROCESS = "/organization/ApprovalProcess/UpdateApprovalProcess";
+export const API_DELETE_APPROVE_PROCESS = "/organization/ApprovalProcess/RemoveApprovalProcess";
 export const API_GET_APPROVE_PROCESSES = "/organization/ApprovalProcess/GetApprovalProcesses";
 export const API_GET_APPROVE_PROCESS = "/organization/ApprovalProcess/GetApprovalProcess";
 export const API_GET_LIST_LANGUAGE = "/masterData/Language/GetLanguages"

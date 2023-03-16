@@ -86,7 +86,6 @@ export const ApproveProcessFormLevelItem = (props) => {
     });
 
     let watchFieldArray = useWatch({name: `approvalProcessLevels.${index}.approvalProcessLevelDetails`, control});
-
     const addApproveProcessHandler = () => {
         append({
             roleGroupId: "",
@@ -130,7 +129,7 @@ export const ApproveProcessFormLevelItem = (props) => {
                                 <IconButton sx={{ml: 2}} onClick={addApproveProcessHandler}>
                                     <PlusIcon/>
                                 </IconButton>
-                                {watchFieldArray.length > 1 && (
+                                {watchFieldArray?.length > 1 && (
                                     <IconButton onClick={() => removeApproveProcessHandler(indexChild)}>
                                         <MinusIcon/>
                                     </IconButton>
