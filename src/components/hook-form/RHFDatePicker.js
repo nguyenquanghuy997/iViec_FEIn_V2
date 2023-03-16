@@ -1,19 +1,15 @@
-// @mui
-import { TextField } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers'
-
-import PropTypes from 'prop-types'
+import { DATE_FORMAT } from "@/config";
+import { TextField } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import PropTypes from "prop-types";
 // form
-import { Controller, useFormContext } from 'react-hook-form'
-
-// config
-import { DATE_FORMAT } from '@/config'
+import { Controller, useFormContext } from "react-hook-form";
 
 RHFDatePicker.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   DatePickerProps: PropTypes.object,
-}
+};
 
 export default function RHFDatePicker({
   name,
@@ -21,14 +17,14 @@ export default function RHFDatePicker({
   DatePickerProps,
   ...other
 }) {
-  const { control } = useFormContext()
+  const { control } = useFormContext();
   const props = {
     inputFormat: DATE_FORMAT,
     componentsProps: {
-      actionBar: { actions: ['clear', 'today'] },
+      actionBar: { actions: ["clear", "today"] },
     },
     ...DatePickerProps,
-  }
+  };
 
   return (
     <Controller
@@ -42,10 +38,19 @@ export default function RHFDatePicker({
           {...props}
           helperText={error?.message}
           renderInput={(params) => (
-            <TextField {...params} fullWidth {...other} />
+            <TextField
+              {...params}
+              fullWidth
+              {...other}
+              // InputProps={{
+              //   startAdornment: (
+              //     <InputAdornment position="start">{startText}</InputAdornment>
+              //   ),
+              // }}
+            />
           )}
         />
       )}
     />
-  )
+  );
 }

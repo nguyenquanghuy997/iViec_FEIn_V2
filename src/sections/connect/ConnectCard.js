@@ -51,7 +51,7 @@ const SwitchForm = ({ name, handleChange, style, ...other }) => {
               <GreenSwitch
                 {...field}
                 checked={field.value}
-                onChange={handleChange}
+                onChange={handleChange || field.onChange}
                 inputProps={{ "aria-label": "controlled" }}
               />
             );
@@ -134,6 +134,7 @@ const ConnectCardItem = ({ account, color, type }) => {
 
 const DetailCard = ({ checked, accounts }) => {
   const [isActive, setIsActive] = useState(false);
+  
   const methods = useForm({
     defaultValues: { isActive: true },
   });
@@ -188,12 +189,10 @@ const DetailCard = ({ checked, accounts }) => {
               <CardActionArea onClick={handleOpen} sx={{ p: 0 }}>
                 <DeleteIcon />
               </CardActionArea>
-              <ConnectDialog open={open} onClose={handleClose} />
+              <ConnectDialog open={open} onClose={handleClose} type='account'/>
               <SwitchForm
-                name={"active"}
-                handleChange={() => {
-                  setIsActive(!isActive);
-                }}
+                name={item.mail}
+                handleChange={()=> setIsActive(!isActive)}
               />
             </Box>
           </FormProvider>
@@ -225,6 +224,9 @@ const DetailSocial = ({ checked, accounts }) => {
   const methods = useForm({
     // defaultValues: { isActive: true },
   });
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return checked ? (
     <Card sx={{ display: "block", boxShadow: "none", borderTop: "none" }}>
       {accounts.map((item) => (
@@ -236,7 +238,6 @@ const DetailSocial = ({ checked, accounts }) => {
               display: "flex",
               borderRadius: 0,
               py: 2,
-              display: "flex",
               justifyContent: "space-between",
             }}
           >
@@ -252,14 +253,15 @@ const DetailSocial = ({ checked, accounts }) => {
               <Typography>{item.mail}</Typography>
             </div>
             <FormProvider methods={methods}>
-              <DeleteIcon />
+              <span onClick={handleOpen}><DeleteIcon /></span>
+              <ConnectDialog open={open} onClose={handleClose} type='unconnect' />
               <SwitchForm
                 name={"active"}
-                handleChange={() => {
-                  // setIsActive(!isActive);
-                }}
+                // handleChange={() => 
+                //   setIsActive(!isActive)
+                // }
                 style={{
-                  marginRight: "10px",
+                  marginLeft: "10px",
                 }}
               />
             </FormProvider>

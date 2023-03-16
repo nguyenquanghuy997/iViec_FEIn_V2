@@ -38,7 +38,6 @@ export const ApplicantInfo = ({ data }) => {
             sx={{
               "& .MuiTypography-root": {
                 fontSize: "13px",
-                fontSize: 13,
                 fontWeight: 600,
                 color: "#172B4D",
               },
@@ -250,7 +249,6 @@ export const ApplicantInfo = ({ data }) => {
                     },
                     "& .MuiListItemText-secondary .MuiTypography-root": {
                       fontSize: "13px",
-                      fontSize: 13,
                       fontWeight: 400,
                       color: "#455570",
                       marginBottom: "4px",

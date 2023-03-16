@@ -26,7 +26,56 @@ const DialogStyle = styled(Dialog)(({theme}) => ({
   },
 }))
 
+const ButtonStyle = {
+  fontSize: 14,
+  fontWeight: 600,
+  minWidth: '56px',
+  borderRadius: 6,
+  padding: '8px 12px'
+}
+
+const ButtonInviteStyle = styled(Button)(({}) => ({
+  "&.button-invite": {
+    ...ButtonStyle,
+    color: '#FDFDFD',
+    backgroundColor: '#1976D2',
+    ":hover": {
+      color: '#FDFDFD',
+      backgroundColor: '#1976D2',
+    }
+  }
+}));
+
+const ButtonCancelStyle = styled(Button)(({}) => ({
+  "&.button-cancel": {
+    ...ButtonStyle,
+    color: '#455570',
+    backgroundColor: '#FDFDFD',
+    ":hover": {
+      color: '#455570',
+      backgroundColor: '#FDFDFD',
+    }
+  }
+}));
+
+const ButtonAddInviteStyle = styled(Button)(({}) => ({
+  "&.button-add-invite": {
+    ...ButtonStyle,
+    backgroundColor: '#FDFDFD',
+    width: '100%',
+    color: '#1976D2',
+    ":hover": {
+      color: '#455570',
+      backgroundColor: '#FDFDFD',
+    }
+  }
+}));
+
 const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenInviteForm}) => {
+
+  const defaultValue = {
+   email: "", name: "", roleGroup: "", organization: []
+  }
 
   const FieldSchema = {
     email: Yup.string().email("Email không đúng định dạng").required("Email không được bỏ trống"),
@@ -129,6 +178,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                             options={[...ListOrganization, { id: "", name: "" }]?.map(item => ({...item, value: item?.id, label: item?.name}))}
                             name={`invite.${index}.organization`}
                             isRequired
+                            multiple
                             title="Đơn vị"
                             placeholder="Chọn 1 hoặc nhiều đơn vị"
                             sx={{minWidth: '276px', backgroundColor: '#FDFDFD'}}
@@ -142,31 +192,18 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                     </Box>
                 );
               })}
-              <Button variant="outlined"
-                      onClick={() => {append({ email: "", name: "", roleGroup: "", organization: "" })}}
-                      sx={{width: '100%', color: '#1976D2', fontSize: 14, fontWeight: 600, borderRadius: 0.75}}
-                      startIcon={<Iconify icon="material-symbols:add"/>}>
+              <ButtonAddInviteStyle
+                  variant="outlined"
+                  className='button-add-invite'
+                  onClick={() => {append({...defaultValue})}}
+                  startIcon={<Iconify icon="material-symbols:add"/>}>
                 Thêm lời mời
-              </Button>
+              </ButtonAddInviteStyle>
             </Box>
           </DialogContent>
           <DialogActions sx={{padding: 2}}>
-            <Button onClick={() => setIsOpenInviteForm(false)} sx={{
-              color: '#455570',
-              fontSize: 14,
-              backgroundColor: '#FDFDFD',
-              minWidth: '56px',
-              borderRadius: 0.75,
-              padding: '8px 12px'
-            }}>Hủy</Button>
-            <Button type="submit" sx={{
-              color: '#FDFDFD',
-              fontSize: 14,
-              backgroundColor: '#1976D2',
-              minWidth: '56px',
-              borderRadius: 0.75,
-              padding: '8px 12px'
-            }}>Gửi lời mời</Button>
+            <ButtonCancelStyle onClick={() => setIsOpenInviteForm(false)} className="button-cancel">Hủy</ButtonCancelStyle>
+            <ButtonInviteStyle type="submit" className="button-invite">Gửi lời mời</ButtonInviteStyle>
           </DialogActions>
         </FormProvider>
       </DialogStyle>

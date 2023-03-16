@@ -1,37 +1,39 @@
-import { Text, View } from "@/components/FlexStyled";
-import SvgIcon from "@/components/SvgIcon";
-import { FormProvider, RHFSwitch, RHFTextField } from "@/components/hook-form";
+import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
+import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import Iconify from "@/components/Iconify";
+import { FormProvider, RHFTextField } from "@/components/hook-form";
+import { Label } from "@/components/hook-form/style";
 import {
   useAddJobTypeMutation,
   useGetPreviewJobTypeMutation,
   useUpdateJobTypeMutation,
 } from "@/sections/jobtype";
+import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
-import { CircularProgress, Modal } from "@mui/material";
+import { CircularProgress, Divider, Modal } from "@mui/material";
 import dynamic from "next/dynamic";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
 
 const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
   ssr: false,
 });
 
 const defaultValues = {
-  code: "",
   name: "",
-  des: "",
-  require: "",
+  description: "",
+  requirement: "",
   benefit: "",
-  isActive: true,
+  isActivated: true,
 };
-
 export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
-  const isEditMode = !!data?.JobTypeId;
+  const isEditMode = !!data?.id;
 
-  const [des, setDes] = useState(null);
-  const [require, setRequire] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [requirement, setRequirement] = useState(null);
   const [benefit, setBenefit] = useState(null);
 
   // api
@@ -39,11 +41,10 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
   const [updateForm] = useUpdateJobTypeMutation();
   const [getPreview, { data: { Data: preview = {} } = {} }] =
     useGetPreviewJobTypeMutation();
-  const isLoading = isEditMode && !preview.JobTypeId;
+  const isLoading = isEditMode && !preview.id;
 
   // form
   const Schema = Yup.object().shape({
-    code: Yup.string().required("Chưa nhập mã vị trí"),
     name: Yup.string().required("Chưa nhập tên vị trí công việc"),
   });
   const methods = useForm({
@@ -61,215 +62,287 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
   const pressHide = () => {
     setShow(false);
   };
-
+  const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
     const body = {
-      JobTypeId: isEditMode ? data.JobTypeId : 0,
-      JobTypeCode: e.code,
-      Description: e.name,
-      JobRequirement: e.des,
-      JobRequest: e.require,
-      JobBenefit: e.benefit,
-      Status: e.isActive ? 1 : 0,
+      id: isEditMode ? data.id : 0,
+      name: e.name,
+      description: e.description,
+      requirement: e.requirement,
+      benefit: e.benefit,
+      isActivated: e.isActivated ? 1 : 0,
     };
-    pressHide();
-    isEditMode ? await updateForm(body).unwrap() : await addForm(body).unwrap();
-    onRefreshData();
+    if (isEditMode) {
+      try {
+        await updateForm(body).unwrap();
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
+        });
+        pressHide();
+        onRefreshData();
+      } catch (err) {
+        if (err.status === "JPE_05") {
+          enqueueSnackbar("Vị trí công việc đã tồn tại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
+        } else {
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
+        }
+      }
+    } else {
+      try {
+        await addForm(body).unwrap();
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 1000,
+        });
+        pressHide();
+        onRefreshData();
+      } catch (err) {
+        if (err.status === "JPE_05") {
+          enqueueSnackbar("Vị trí công việc đã tồn tại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
+        } else {
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
+        }
+      }
+    }
   });
 
   // render
   const renderTitle = (title, required) => {
-    return (
-      <Text flexRow mb={8} fontWeight={"600"}>
-        {title}
-        {required && (
-          <Text ml={4} color={"#E82E25"}>
-            {"*"}
-          </Text>
-        )}
-      </Text>
-    );
+    return <Label required={required}>{title}</Label>;
   };
 
   // effect
   useEffect(() => {
     if (!show) {
       reset();
-      setValue("code", "");
       setValue("name", "");
-      setValue("des", "");
-      setValue("require", "");
+      setValue("description", "");
+      setValue("requirement", "");
       setValue("benefit", "");
-      setValue("isActive", true);
+      setValue("isActivated", true);
 
-      setDes(null);
-      setRequire(null);
+      setDescription(null);
+      setRequirement(null);
       setBenefit(null);
       return;
     }
 
     if (!isEditMode) return;
 
-    getPreview({ JobTypeId: data.JobTypeId }).unwrap();
+    getPreview({ id: data.id }).unwrap();
   }, [show]);
 
   useEffect(() => {
-    if (!preview.JobTypeId) return;
+    if (!preview.id) return;
+    setValue("name", preview.name);
+    setValue("description", preview.description);
+    setValue("requirement", preview.requirement);
+    setValue("benefit", preview.benefit);
+    setValue("isActivated", !!preview.isActivated);
 
-    setValue("code", preview.JobTypeCode);
-    setValue("name", preview.Description);
-    setValue("des", preview.JobRequirement);
-    setValue("require", preview.JobRequest);
-    setValue("benefit", preview.JobBenefit);
-    setValue("isActive", !!preview.Status);
-
-    setDes(preview.JobRequirement);
-    setRequire(preview.JobRequest);
-    setBenefit(preview.JobBenefit);
-  }, [isEditMode, preview.JobTypeId]);
-
+    setDescription(preview.description);
+    setRequirement(preview.requirement);
+    setBenefit(preview.benefit);
+  }, [isEditMode, preview.id]);
+  const isActivated = methods.watch("isActivated");
   return (
-    <>
-      <FormProvider methods={methods}>
-        <Modal
-          open={show}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
-          onBackdropClick={pressHide}
-        >
-          <View width={"40vw"} bgColor={"#fff"}>
-            {/* header */}
-            <View flexRow pv={32} ph={24} bgColor={"#F1F5F8"}>
-              <Text flex1 fontSize={28} fontWeight={"600"}>
-                {isEditMode
-                  ? "Chỉnh sửa vị trí công việc"
-                  : "Thêm mới vị trí công việc"}
-              </Text>
-
-              <View
-                contentCenter
-                size={40}
-                borderRadius={4}
-                bgColor={"#fff"}
-                onPress={pressHide}
-              >
-                <SvgIcon>
-                  {
-                    '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.33325 1.33334L5.99991 6.00001M5.99991 6.00001L10.6666 10.6667M5.99991 6.00001L10.6666 1.33334M5.99991 6.00001L1.33325 10.6667" stroke="#393B3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-                  }
-                </SvgIcon>
-              </View>
-            </View>
-
-            {/* body */}
-            {isLoading ? (
-              <View flex1 contentCenter>
-                <CircularProgress />
-              </View>
-            ) : (
-              <View flex1 p={24} pb={28} style={{ overflow: "scroll" }}>
-                {/* code & name */}
-                <View flexRow>
-                  <View width={150}>
-                    {renderTitle("Mã vị trí", true)}
-
-                    <RHFTextField name={"code"} />
-                  </View>
-
-                  <View flex1 ml={20}>
-                    {renderTitle("Tên vị trí công việc", true)}
-
-                    <RHFTextField name={"name"} />
-                  </View>
-                </View>
-
-                {/* dept */}
-
-                {/* des */}
-                <View mt={28}>
-                  {renderTitle("Mô tả công việc")}
-
-                  <Editor
-                    data={des}
-                    onChange={(_, e) => {
-                      const text = e.getData();
-                      setValue("des", text);
-                    }}
-                  />
-                  <RHFTextField
-                    name={"des"}
-                    variant={"standard"}
-                    inputProps={{ style: { display: "none" } }}
-                  />
-                </View>
-
-                {/* require */}
-                <View mt={28}>
-                  {renderTitle("Yêu cầu công việc")}
-
-                  <Editor
-                    data={require}
-                    onChange={(_, e) => {
-                      const text = e.getData();
-                      setValue("require", text);
-                    }}
-                  />
-                  <RHFTextField
-                    name={"require"}
-                    variant={"standard"}
-                    inputProps={{ style: { display: "none" } }}
-                  />
-                </View>
-
-                {/* benefit */}
-                <View mt={28}>
-                  {renderTitle("Quyền lợi")}
-
-                  <Editor
-                    data={benefit}
-                    onChange={(_, e) => {
-                      const text = e.getData();
-                      setValue("benefit", text);
-                    }}
-                  />
-                  <RHFTextField
-                    name={"benefit"}
-                    variant={"standard"}
-                    inputProps={{ style: { display: "none" } }}
-                  />
-                </View>
-              </View>
-            )}
-
-            {/* footer */}
-            <View
-              flexRow
-              pv={12}
-              ph={16}
-              boxShadow={"inset 0px 1px 0px #EBECF4"}
-            >
-              <LoadingButton
-                size="large"
-                variant="contained"
-                loading={isSubmitting}
-                onClick={pressSave}
-              >
-                {isEditMode ? "Sửa" : "Thêm"}
-              </LoadingButton>
-              <View width={8} />
-
-              <LoadingButton size="large" variant="text" onClick={pressHide}>
-                {"Hủy"}
-              </LoadingButton>
-              <View width={8} />
-              <View flex1 />
-
-              {isLoading ? null : (
-                <RHFSwitch name={"isActive"} label={"Đang hoạt động"} />
-              )}
-            </View>
+    <FormProvider methods={methods}>
+      <Modal
+        open={show}
+        onClose={pressHide}
+        sx={{ display: "flex", justifyContent: "flex-end" }}
+      >
+        <ViewModel>
+          {/* header */}
+          <View
+            flexrow="true"
+            atcenter="center"
+            pv={12}
+            ph={24}
+            bgcolor={"#FDFDFD"}
+          >
+            <Text flex="true" fontsize={16} fontweight={"600"}>
+              {isEditMode
+                ? "Chỉnh sửa vị trí công việc"
+                : "Thêm mới vị trí công việc"}
+            </Text>
+            <ButtonDS
+              type="submit"
+              sx={{
+                backgroundColor: "#fff",
+                boxShadow: "none",
+                ":hover": {
+                  backgroundColor: "#EFF3F7",
+                },
+                textTransform: "none",
+                padding: "12px",
+                minWidth: "unset",
+              }}
+              onClick={pressHide}
+              icon={
+                <Iconify
+                  icon={"mi:close"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
+                />
+              }
+            />
           </View>
-        </Modal>
-      </FormProvider>
-    </>
+          <Divider />
+          {/* body */}
+          {isLoading ? (
+            <View flex="true" contentcenter="true">
+              <CircularProgress />
+            </View>
+          ) : (
+            <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
+              {/* code & name */}
+
+              <View mb={24}>
+                {renderTitle("Tên vị trí công việc", true)}
+
+                <RHFTextField
+                  name={"name"}
+                  placeholder="Nhập vị trí công việc"
+                />
+              </View>
+
+              <Divider />
+              {/* dept */}
+
+              {/* des */}
+              <View mt={28}>
+                {renderTitle("Mô tả công việc")}
+                <Editor
+                  data={description}
+                  onChange={(_, e) => {
+                    const text = e.getData();
+                    setValue("description", text);
+                  }}
+                  config={{
+                    toolbar: [
+                      "bold",
+                      "|",
+                      "italic",
+                      "|",
+                      "underline",
+                      "|",
+                      "link",
+                      "|",
+                      "bulletedList",
+                      "|",
+                      "numberedList",
+                      "|",
+                      "alignment",
+                      "|",
+                    ],
+                  }}
+                />
+              </View>
+
+              {/* require */}
+              <View mt={28}>
+                {renderTitle("Yêu cầu công việc")}
+
+                <Editor
+                  data={requirement}
+                  onChange={(_, e) => {
+                    const text = e.getData();
+                    setValue("requirement", text);
+                  }}
+                  config={{
+                    toolbar: [
+                      "bold",
+                      "|",
+                      "italic",
+                      "|",
+                      "underline",
+                      "|",
+                      "link",
+                      "|",
+                      "bulletedList",
+                      "|",
+                      "numberedList",
+                      "|",
+                      "alignment",
+                      "|",
+                    ],
+                  }}
+                />
+              </View>
+
+              {/* benefit */}
+              <View mt={28}>
+                {renderTitle("Quyền lợi")}
+
+                <Editor
+                  data={benefit}
+                  onChange={(_, e) => {
+                    const text = e.getData();
+                    setValue("benefit", text);
+                  }}
+                  config={{
+                    toolbar: [
+                      "bold",
+                      "|",
+                      "italic",
+                      "|",
+                      "underline",
+                      "|",
+                      "link",
+                      "|",
+                      "bulletedList",
+                      "|",
+                      "numberedList",
+                      "|",
+                      "alignment",
+                      "|",
+                    ],
+                  }}
+                />
+              </View>
+            </View>
+          )}
+          {/* footer */}
+          <View
+            flexrow="true"
+            pv={12}
+            ph={16}
+            boxshadow={"inset 0px 1px 0px #EBECF4"}
+          >
+            <ButtonDS
+              type="submit"
+              loading={isSubmitting}
+              variant="contained"
+              tittle={isEditMode ? "Sửa" : "Thêm"}
+              onClick={pressSave}
+            />
+            <View width={8} />
+             <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
+            <View width={8} />
+            <View flex="true" />
+
+            {isLoading ? null : (
+              <SwitchStatusDS
+                name={"isActivated"}
+                label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+              />
+            )}
+          </View>
+        </ViewModel>
+      </Modal>
+    </FormProvider>
   );
 };

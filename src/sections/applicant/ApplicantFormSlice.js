@@ -12,10 +12,12 @@ import {
   API_GET_USER_FROM_ORGANIZATION,
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
+  API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
+  API_GET_RECRUITMENT_BY_ORGANIZATION,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Applicant", "FilterApplicant"],
+  addTagTypes: ["GetColumnApplicants"],
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
@@ -81,33 +83,29 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         return response;
       },
     }),
-
-    //api lồng
-    // getRecruitmentsByApplicant: builder.query({
-    //   async queryFn(params, _queryApi, fetchWithBQ) {
-    //     // get a random user
-    //     const randomResult = await fetchWithBQ({
-    //       url: API_GET_RECRUITMENTS_BY_APPLICANT,
-    //       method: "GET",
-    //       params,
-    //     });
-    //     console.log("randomResult", randomResult);
-    //     // if (randomResult.error) return { error: randomResult.error }
-    //     // const user = randomResult.data
-    //     // const result = await fetchWithBQ(user/${user.id}/posts)
-    //     return randomResult;
-    //   },
-    // }),
+    updateApplicantRecruitmentToNextState: builder.mutation({
+      query: (data) => ({
+        url: API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
+        method: "PATCH",
+        data: data,
+      }),
+    }),
 
     // new
     // get all applicant with filter
-    getAllFilterApplicant: builder.mutation({
+    getAllFilterApplicant: builder.query({
       query: (data) => ({
         url: API_GET_FILTER_ALL_APPLICANTS,
         method: "POST",
         data,
       }),
-      invalidatesTags: ["FilterApplicant"],
+    }),
+    getRecruitmentByOrganizationId: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_BY_ORGANIZATION,
+        method: 'GET',
+        params
+      }),
     }),
     // get all skills
     getSkills: builder.query({
@@ -130,38 +128,35 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params,
       }),
+      transformResponse: (response) => {
+        return response?.items.map(item => ({
+          ...item,
+          value: item.id,
+          name: `${item?.lastName} ${item?.firstName}`,
+          label: `${item?.lastName} ${item?.firstName}`,
+        }))
+      },
     }),
   }),
 });
 
 export const {
-  useGetListApplicantsQuery,
-  useLazyGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
-  useUpdateListColumnApplicantsQuery,
-
-  useGetAllApplicantMutation,
-  useGetAllApplicantFormOwnerQuery,
-  useSetDefaultApplicantFormMutation,
-  useAddApplicantFormMutation,
-  useUpdateApplicantFormMutation,
-  useDeleteApplicantFormMutation,
-  useGetAllFilterApplicantMutation,
+  useGetAllFilterApplicantQuery,
+  useLazyGetRecruitmentByOrganizationIdQuery,
   // skills
   useGetSkillsQuery,
   // job sources
   useGetAllJobSourcesQuery,
-  useLazyGetAllJobSourcesQuery,
   // user from organization
   useGetAllUserFromOrganizationQuery,
   useLazyGetAllUserFromOrganizationQuery,
-
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
+  useUpdateApplicantRecruitmentToNextStateMutation
 } = ApplicantFormSlice;
 
 // export const getJobDetail = createAsyncThunk(

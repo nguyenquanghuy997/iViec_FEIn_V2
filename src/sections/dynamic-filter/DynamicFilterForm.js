@@ -40,7 +40,6 @@ const DynamicFilterForm = (props) => {
                         dropdownStyle={{maxHeight: 400, overflow: 'auto', zIndex: 9999}}
                         allowClear
                         treeDefaultExpandAll
-                        treeCheckable
                         notFoundContent={
                           <span style={{ display: 'block', padding: '10px' }}>
                             Không tìm thấy đơn vị phù hợp
@@ -252,7 +251,7 @@ const DynamicFilterForm = (props) => {
                         options={options[column.name]?.map((i) => ({
                           value: i.id,
                           label: i.name,
-                          name: i.name,
+                          name: i.item || i.name,
                         }))}
                         name={column.name}
                         multiple={column.multiple}

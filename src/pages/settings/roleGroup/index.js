@@ -1,19 +1,12 @@
-
+import { RoleContainer } from "@/sections/rolegroup";
 import Page from "@/components/Page";
+import PageWrapper from "@/components/PageWrapper";
 import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {
-  PipelineItem,
-} from "@/sections/pipeline";
 import { getRolesByPage } from "@/utils/role";
-import PageWrapper from "@/components/PageWrapper";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return (
-    <SettingLayout roles={roles}>
-      {page}
-    </SettingLayout>
-  );
+  return <SettingLayout roles={roles}>{page}</SettingLayout>;
 };
 
 export async function getStaticProps() {
@@ -25,11 +18,10 @@ export async function getStaticProps() {
 }
 
 export default function Setting() {
-
   return (
     <PageWrapper title={"Vai trò"}>
       <Page>
-        <PipelineItem />
+        <RoleContainer />
       </Page>
     </PageWrapper>
   );

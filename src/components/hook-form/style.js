@@ -68,6 +68,12 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
         fontSize: STYLE_CONSTANT.FONT_XS,
         color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
     },
+    "& .MuiInputAdornment-positionEnd": {
+        marginRight: 8
+    },
+    "& .MuiInputAdornment-positionStart": {
+        marginLeft: 8
+    }
 }));
 
 const SelectFieldStyle = styled(Select)(({theme}) => ({
@@ -154,7 +160,7 @@ const InputStyle = styled(Input)(({theme}) => ({
 
 const LabelStyle = styled(InputLabel)(({theme}) => ({
     fontSize: STYLE_CONSTANT.FONT_SM,
-    color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
+    color: STYLE_CONSTANT.COLOR_TEXT_BLACK,
     fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
     marginBottom: theme.spacing(1),
 }));
@@ -164,7 +170,12 @@ const FormHelperTextStyle = styled(FormHelperText)(({theme}) => ({
     fontSize: STYLE_CONSTANT.FONT_XS,
     color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
 }));
-
+const Label = styled(InputLabel)(({theme}) => ({
+    fontSize: STYLE_CONSTANT.FONT_SM,
+    color: STYLE_CONSTANT.COLOR_TEXT_BLACK,
+    fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+    marginBottom: theme.spacing(1),
+}));
 const SearchInputStyle = {
     boxShadow: "inset 0px -1px 0px #E7E9ED",
     "& .MuiInputBase-root": {
@@ -172,24 +183,26 @@ const SearchInputStyle = {
         borderRadius: 0,
     },
     "& .MuiInputBase-input": {
-        color: "#5C6A82",
+        color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
         padding: "10px 0",
         fontFamily: "Inter",
-        fontWeight: "500",
-        fontSize: "15px",
-        lineHeight: "20px",
+        fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+        fontSize: STYLE_CONSTANT.FONT_SM,
     },
     "& .MuiOutlinedInput-notchedOutline": {
         border: "none",
         padding: 0,
     },
+    "& .MuiInputAdornment-positionStart": {
+        marginLeft: 0
+    }
 }
 
 const MenuItemStyle = {
     color: "#172B4D",
     padding: "10px 16px",
-    fontSize: "14px",
-    fontWeight: 400,
+    fontSize: STYLE_CONSTANT.FONT_SM,
+    fontWeight: STYLE_CONSTANT.FONT_NORMAL,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -216,6 +229,7 @@ export {
     useStyles,
     InputStyle,
     LabelStyle,
+    Label,
     FormHelperTextStyle,
     TextFieldStyle,
     SelectFieldStyle,

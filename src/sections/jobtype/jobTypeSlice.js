@@ -2,6 +2,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_ADD_JOBTYPE,
   API_DELETE_JOBTYPE,
+  API_GET_APPLICANT_USERS_ON_JOBTYPE,
   API_GET_PAGING_JOBTYPE,
   API_GET_PREVIEW_JOBTYPE,
   API_UPDATE_JOBTYPE,
@@ -10,17 +11,28 @@ import {
 import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CompanyInfor"],
+  addTagTypes: ["JobPosition", "Filter"],
 });
 
 const evaluationFormSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
-    getAllJobType: builder.mutation({
-      query: () => ({
-        url: API_GET_PAGING_JOBTYPE,
+    //Danh sách vị trí
+    getAllJobType: builder.query({
+      query: (params) => ({
+        url: `${API_GET_PAGING_JOBTYPE}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
       }),
     }),
+
+    // filter người tạo
+    getApplicantUsersOnJobtype: builder.query({
+      query: (params) => ({
+        url: API_GET_APPLICANT_USERS_ON_JOBTYPE,
+        method: "GET",
+        params,
+      }),
+    }),
+
     updateStatusJobType: builder.mutation({
       query: (data) => ({
         url: API_UPDATE_STATUS_JOBTYPE,
@@ -46,21 +58,23 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
       query: (data) => ({
         url: API_ADD_JOBTYPE,
         method: "POST",
-        data: qs.stringify(data),
+        data: data,
       }),
     }),
     updateJobType: builder.mutation({
       query: (data) => ({
         url: API_UPDATE_JOBTYPE,
         method: "POST",
-        data: qs.stringify(data),
+        data: data,
       }),
     }),
   }),
 });
 
 export const {
-  useGetAllJobTypeMutation,
+  useGetAllJobTypeQuery,
+  useLazyGetAllJobTypeQuery,
+  useLazyGetApplicantUsersOnJobtypeQuery,
   useUpdateStatusJobTypeMutation,
   useGetPreviewJobTypeMutation,
   useDeleteJobTypeMutation,

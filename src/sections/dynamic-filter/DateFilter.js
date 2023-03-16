@@ -49,14 +49,14 @@ const DateFilter = React.forwardRef((props, ref) => {
                                 ...params.inputProps,
                                 ref: ref,
                                 placeholder: other.placeholder,
-                                readOnly: true
+                                // readOnly: true
                               }}
                           />
                       )}
                       inputFormat={DATE_FORMAT}
                   />
                 </LocalizationProvider>
-                {error && <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400, mt: 1}}>{error?.message}</FormHelperText>}
+                {error && <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400, mt: 0}}>{error?.message}</FormHelperText>}
               </>
           )}
       />

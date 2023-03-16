@@ -1,15 +1,19 @@
-export const HIRE_INSIDE = "inside";
-export const HIRE_OUTSIDE = "outside";
-export const HIRE_SOCIAL = "social";
+
+export const FANPAGE = "fanpage";
+export const ACCOUNT = "account";
+export const UNCONNECT = "unconnect";
+export const ROLE ='role'
 
 export const ACTION = {
-  HIRE_INSIDE,
-  HIRE_OUTSIDE,
-  HIRE_SOCIAL,
+  FANPAGE,
+  ACCOUNT,
+  UNCONNECT,
+  ROLE
 };
 
 export const ACTION_CONTENT = {
-  inside: { text: "KẾT NỐI WEBSITE TUYỂN DỤNG NỘI BỘ", color: "#FB8906" },
-  outside: { text: "KẾT NỐI WEBSITE TUYỂN DỤNG BÊN NGOÀI", color: "#43A047" },
-  social: { text: "KẾT NỐI MẠNG XÃ HỘI", color: "#1E88E5" },
+  role:{ confirm:'Xác nhận xóa vai trò', text:'Bạn có chắc chắn muốn xóa vai trò', color: "#E53935", textButton:'Xóa'},
+  fanpage: { confirm:'Xác nhận xóa Fanpage',text: "Bạn có chắc chắn muốn xóa Fanpage", color: "#E53935", textButton:'Xóa' },
+  account: { confirm:'Xác nhận xóa tài khoản',text: "Bạn có chắc chắn muốn xóa tài khoản", color: "#E53935",  textButton:'Xóa'},
+  unconnect: { confirm:'Xác nhận ngắt kết nối ',text: "Bạn có chắc chắn muốn ngắt kết nối với tài khoản ", color: "#455570" , textButton:'Ngắt kết nối'},
 };

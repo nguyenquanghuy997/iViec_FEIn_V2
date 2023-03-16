@@ -12,11 +12,12 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
+import {ACTION_CONTENT} from './config'
 // import { useForm } from "react-hook-form";
 // import { Controller, useFormContext } from "react-hook-form";
 
 const ConnectDialog = (props) => {
-  const { onClose, open } = props;
+  const { onClose, open,type,onDelete } = props;
   return (
     <Dialog
       onClose={onClose}
@@ -39,16 +40,16 @@ const ConnectDialog = (props) => {
       </DialogTitle>
 
       <DialogTitle
-        sx={{ color: "#E53935", display: "flex", justifyContent: "center" }}
+        sx={{ color: ACTION_CONTENT[type].color, display: "flex", justifyContent: "center" }}
       >
-        Xác nhận xóa Fanpage
+       {ACTION_CONTENT[type].confirm}
       </DialogTitle>
       <DialogContent>
         <DialogContentText
           id="alert-dialog-description"
           sx={{ display: "flex", justifyContent: "center" }}
         >
-          Bạn có chắc chắn muốn xóa Fanpage này không ?
+          {ACTION_CONTENT[type].text}
         </DialogContentText>
       </DialogContent>
       <Divider />
@@ -57,11 +58,11 @@ const ConnectDialog = (props) => {
           Hủy
         </Button>
         <Button
-          onClick={onClose}
+          onClick={onDelete}
           autoFocus
-          sx={{ color: "white", background: "#D32F2F" }}
+          sx={{ color: "white", background: ACTION_CONTENT[type].color,  }}
         >
-          Xóa
+           {ACTION_CONTENT[type].textButton}
         </Button>
       </DialogActions>
     </Dialog>

@@ -32,8 +32,8 @@ const BoxWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 
-const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
-  marginLeft: isDesktop ? theme.spacing(4.5) : theme.spacing(0),
+const BoxContentStyle = styled(Box)(({ isdesktop, theme }) => ({
+  marginLeft: isdesktop ? theme.spacing(4.5) : theme.spacing(0),
   [theme.breakpoints.up("lg")]: {
     width: `calc(100% - ${SIDEBAR_CONSTANTS.SIDEBAR_WIDTH}px - ${theme.spacing(
       4.5
@@ -46,7 +46,7 @@ const BoxContentStyle = styled(Box)(({ isDesktop, theme }) => ({
 
 const SideBarWrapper = ({ isOpenSidebar, onCloseSidebar }) => {
   const { pathname } = useRouter();
-  const isDesktop = useResponsive("up", "lg");
+  const isdesktop = useResponsive("up", "lg");
   const { isCollapse, collapseClick } = useCollapseDrawer();
   useEffect(() => {
     if (isOpenSidebar) {
@@ -67,7 +67,8 @@ const SideBarWrapper = ({ isOpenSidebar, onCloseSidebar }) => {
         }),
       }}
     >
-      {!isDesktop && (
+
+      {!isdesktop && (
         <Drawer
           open={isOpenSidebar}
           onClose={onCloseSidebar}
@@ -77,7 +78,7 @@ const SideBarWrapper = ({ isOpenSidebar, onCloseSidebar }) => {
         </Drawer>
       )}
 
-      {isDesktop && (
+      {isdesktop && (
         <SideBar navConfig={sidebarConfig} isCollapse={isCollapse} />
       )}
     </RootStyle>
@@ -90,13 +91,13 @@ SideBarWrapper.propTypes = {
 };
 
 export default function SettingLayout({ roles, children }) {
-  const isDesktop = useResponsive("up", "lg");
+  const isdesktop = useResponsive("up", "lg");
   return (
     <AuthGuard>
       <DashboardLayout roles={roles}>
         <BoxWrapper>
-          {isDesktop && <SideBarWrapper />}
-          <BoxContentStyle isDesktop>{children}</BoxContentStyle>
+          {isdesktop && <SideBarWrapper />}
+          <BoxContentStyle isdesktop={isdesktop.toString()}>{children}</BoxContentStyle>
         </BoxWrapper>
       </DashboardLayout>
     </AuthGuard>

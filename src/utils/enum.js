@@ -59,9 +59,11 @@ export const Status = (item) => {
 };
 //Địa chỉ
 export const Address = (item) =>
-  `${item?.address ? item?.address + "," : ""} ${item?.villageName ? item?.villageName + "," : ""}  ${
-    item?.districtName ? item?.districtName + "," : ""
-  } ${item?.provinceName ? item?.provinceName : ""}`;
+  `${item?.address ? item?.address + "," : ""} ${
+    item?.villageName ? item?.villageName + "," : ""
+  }  ${item?.districtName ? item?.districtName + "," : ""} ${
+    item?.provinceName ? item?.provinceName : ""
+  }`;
 //Đơn vị tiền tệ
 export const Currency = (item) => {
   switch (item) {
@@ -95,5 +97,69 @@ export const YearOfExperience = (item) => {
 
 //Link image
 export const srcImage = (image) => {
-  return DOMAIN_SERVER_API+"/Image/GetImage?imagePath="+image
+  return DOMAIN_SERVER_API + "/Image/GetImage?imagePath=" + image;
+};
+
+//RecruitmentProcessStatus
+export const RecruitmentProcessStatus = (item) => {
+  switch (item) {
+    case 0: //"Draft"
+      return "Bản nháp";
+    case 1: //"WaitingOrganizationApproval":
+      return "Chờ nội bộ phê duyệt";
+    case 2: //"OrganizationReject":
+      return "Nội bộ từ chối";
+    case 3: //"WaitingMedusaApproval":
+      return "Chờ iVIEC phê duyệt";
+    case 4: //"MedusaReject":
+      return "iVIEC từ chối";
+    case 5: //"Recruiting":
+      return "Đang tuyển dụng";
+    case 6: //"Calendared":
+      return "Đã lên lịch";
+    case 7: //"Expired":
+      return "Hết hạn";
+    case 8: //"Closed":
+      return "Đóng";
+  }
+};
+//RecruitmentProcessStatus
+export const DivProcessStatus = (item) => {
+  switch (item) {
+    case 0: //"Draft"
+      return <span style={{color:'#455570'}}>Bản nháp</span>
+    case 1: //"WaitingOrganizationApproval":
+      return <span style={{color:'#F77A0C'}}>Chờ nội bộ phê duyệt</span>;
+    case 2: //"OrganizationReject":
+      return <span style={{color:'#E53935'}}>Nội bộ từ chối</span>;
+    case 3: //"WaitingMedusaApproval":
+      return <span style={{color:'#F77A0C'}}>Chờ iVIEC phê duyệt</span>;
+    case 4: //"MedusaReject":
+      return <span style={{color:'#E53935'}}>iVIEC từ chối</span>;
+    case 5: //"Recruiting":
+      return <span style={{color:'#388E3C'}}>Đang tuyển dụng</span>;
+    case 6: //"Calendared":
+      return <span style={{color:'#388E3C'}}>Đã lên lịch</span>;
+    case 7: //"Expired":
+      return <span style={{color:'#455570'}}>Hết hạn</span>;
+    case 8: //"Closed":
+      return <span style={{color:'#455570'}}>Đóng</span>;
+  }
+};
+//RecruitmentWorkingForm
+export const RecruitmentWorkingForm = (item) => {
+  switch (item) {
+    case 0: //"FullTime"
+      return "Toàn thời gian";
+    case 1: //"PartTime":
+      return "Bán thời gian";
+    case 2: //"Remote":
+      return "Làm việc từ xa";
+    case 3: //"SeasonalWork":
+      return "Thời vụ";
+    case 4: //"Hybrid":
+      return "Linh động";
+    case 5: //"Other":
+      return "Khác";
+  }
 };

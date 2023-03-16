@@ -7,8 +7,7 @@ import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
-import { useGetAllJobTypeMutation } from "@/sections/jobtype";
+import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -17,6 +16,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import JobTypeFilterModal from "../modals/JobTypeFilterModal";
 
 const defaultValues = {
   searchKey: "",
@@ -26,8 +26,8 @@ export const JobTypeItem = () => {
   const router = useRouter();
   const { query, isReady } = router;
   // api get list
-  const [getAllFilter, { data: Data, isLoading }] =
-    useGetAllJobTypeMutation();
+
+  const [getAllFilter, {data: Data = [],isLoading }] = useLazyGetAllJobTypeQuery();
   // api get list Column
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
@@ -56,7 +56,7 @@ export const JobTypeItem = () => {
       type: "select",
       label: "Trạng thái",
       render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#E53935" }}>
+        <span style={{ color: item ? "#388E3C" : "#455570" }}>
           {Status(item)}
         </span>
       ),
@@ -155,18 +155,18 @@ export const JobTypeItem = () => {
     if (!isReady) return;
     const queryParams = {
       searchKey: query.searchKey,
-      isActive: query.isActive ? [Number(query.isActive)] : null,
+      isActive: query.isActive ? query.isActive : null,
       createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
       createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
       creatorIds:
         query.creatorIds && typeof query.creatorIds === "string"
-          ? [query.creatorIds]
+          ? query.creatorIds
           : query.creatorIds && query.creatorIds,
     };
     if (query) {
-      getAllFilter(JSON.stringify(queryParams)).unwrap();
+      getAllFilter(queryParams).unwrap();
     } else {
-      getAllFilter({}).unwrap();
+      getAllFilter().unwrap();
     }
   }, [isReady, query]);
 
@@ -213,18 +213,22 @@ export const JobTypeItem = () => {
     );
     handleCloseFilterForm();
   };
-
+  const refreshData = () => {
+    getAllFilter().unwrap();
+  };
   return (
     <View>
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
           columns={columns}
-          source={Data?.items}
+          source={Data}
           loading={isLoading}
           ColumnData={ColumnData}
           menuItemText={menuItemText}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
+          nodata="Hiện chưa có vị trí công việc nào"
+          isSetting={true}
           filter={
             <JobTypeHeader
               methods={methods}
@@ -233,16 +237,18 @@ export const JobTypeItem = () => {
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}
               onCloseFilterForm={handleCloseFilterForm}
+              onRefreshData={refreshData}
             />
           }
         />
       </Content>
       {isOpen && (
-        <ApplicantFilterModal
+        <JobTypeFilterModal
           columns={columns}
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
+          onRefreshData={refreshData}
         />
       )}
     </View>

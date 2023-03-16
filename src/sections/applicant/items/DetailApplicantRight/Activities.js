@@ -140,7 +140,9 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                           avatarName={p?.updaterName}
                           isShow={false}
                         />
-                      ) : p.updaterId ? (
+                      ) : 
+                      
+                      p.updaterId ? (
                         <NotificationBoard
                         icon={iconLogPipe('result',p.recruitmentPipelineStateType, p.pipelineStateResultType)}
                           title={

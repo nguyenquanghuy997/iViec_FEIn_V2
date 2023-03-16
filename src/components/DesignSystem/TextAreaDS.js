@@ -1,18 +1,18 @@
-import { FormLabel, styled, Typography } from "@mui/material";
+import { FormHelperText, FormLabel, styled } from "@mui/material";
 import { Input } from "antd";
 import PropTypes from "prop-types";
 import React from "react";
-import { boolean } from "yup";
+import { Controller, useFormContext } from "react-hook-form";
 
 export default function TextAreaDS(props) {
-  const { tittle, isRequired, placeholder, maxLength } = props;
+  const { name, placeholder, maxLength } = props;
   const { TextArea } = Input;
   const InputTextArea = styled(TextArea)`
     .ant-input {
       padding: 12px 16px 12px 12px;
-      font-weight: 500;
+      font-weight: 400;
       font-size: 14px;
-      color: #172B4D;
+      color: #172b4d;
     }
     .ant-input:hover {
       border-color: #a2aab7;
@@ -34,32 +34,40 @@ export default function TextAreaDS(props) {
       border-radius: 30px;
     }
   `;
-
+  const { control } = useFormContext();
   return (
-    <FormLabel>
-      <Typography fontWeight={"600"} color="#5C6A82" mt="24px" mb="8px">
-        {tittle} {isRequired ? <span style={{ color: "#E53935" }}>*</span> : ""}
-      </Typography>
-      <InputTextArea
-        showCount
-        maxLength={maxLength}
-        style={{
-          height: 120,
-          resize: "none",
-          "& :where(.css-dev-only-do-not-override-diro6f).ant-input:hover": {
-            backgroundColor: "#000",
-          },
-        }}
-        onChange={(e) => e.target.value}
-        placeholder={placeholder}
-      />
-    </FormLabel>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState: { error } }) => (
+        <>
+          <FormLabel>
+            <InputTextArea
+              showCount
+              maxLength={maxLength}
+              style={{
+                height: 120,
+                resize: "none",
+              }}
+              value={field.value}
+              onChange={field.onChange}
+              placeholder={placeholder}
+            />
+          </FormLabel>
+
+          {error && (
+            <FormHelperText error sx={{ px: 2, textTransform: "capitalize" }}>
+              {error?.message}
+            </FormHelperText>
+          )}
+        </>
+      )}
+    />
   );
 }
 
 TextAreaDS.prototype = {
-  tittle: PropTypes.any,
-  isRequired: boolean,
+  name: PropTypes.string,
   placeholder: PropTypes.any,
   maxLength: PropTypes.any,
 };

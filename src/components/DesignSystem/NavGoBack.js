@@ -5,7 +5,7 @@ import React from "react";
 import Iconify from "../Iconify";
 
 export default function NavGoBack(props) {
-  const { link,name} = props;
+  const { link,name, sx} = props;
 
   return (
     <NextLink href={link} passHref>
@@ -18,7 +18,8 @@ export default function NavGoBack(props) {
               fontWeight:'600',
               fontSize:'14px',
               padding: '12px 16px',
-              marginTop:'16px'
+              marginTop:'16px',
+              ...sx
             }}
           >
               <Iconify

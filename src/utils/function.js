@@ -1,4 +1,6 @@
 import _ from "lodash";
+import {ExcelIcon, PdfIcon, WordIcon} from "@/sections/offerform/component/editor/Icon";
+import React from "react";
 
 const containsText = (text, searchText) => {
   return convertViToEn(text).toLowerCase().indexOf(convertViToEn(searchText).toLowerCase()) > -1;
@@ -54,11 +56,90 @@ const convertFlatDataToTree = (flatData, parentKey = 'parentOrganizationId') => 
       dataTree.push(hashTable[aData.id]);
     }
   });
-  return removeEmpty(dataTree, 'children');
+  return removeEmpty(dataTree, 'children') || [];
 };
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      backgroundColor: stringToColor(name),
+      width: 24,
+      height: 24
+    },
+    children: <span style={{ fontSize: 10 }}>{name.split(' ')[0][0]}{name.split(' ')[1][0]}</span>,
+  };
+}
+
+const showIconByFileType = (fileType) => {
+  let icon = null;
+  switch (fileType) {
+    case ".doc":
+      icon = <WordIcon/>;
+      break;
+    case "doc":
+      icon = <WordIcon/>;
+      break;
+    case ".docx":
+      icon = <WordIcon/>;
+      break;
+    case "docx":
+      icon = <WordIcon/>;
+      break;
+    case ".pdf":
+      icon = <PdfIcon/>;
+      break;
+    case "pdf":
+      icon = <PdfIcon/>;
+      break;
+    case ".xlsx":
+      icon = <ExcelIcon/>;
+      break;
+    case "xlsx":
+      icon = <ExcelIcon/>;
+      break;
+    case ".xls":
+      icon = <ExcelIcon/>;
+      break;
+    case "xls":
+      icon = <ExcelIcon/>;
+      break;
+    default:
+      break;
+  }
+  return icon;
+}
+
+const calcFileSize = (fileSize) => {
+  let fileSizeStr = fileSize.toString();
+  if (fileSizeStr.length < 7) return `${(+fileSizeStr / 1024).toFixed(2)} KB`
+  return `${(Math.round(+fileSizeStr / 1024) / 1000).toFixed(2)} MB`
+}
 
 export {
   containsText,
   convertViToEn,
-  convertFlatDataToTree
+  convertFlatDataToTree,
+  stringToColor,
+  stringAvatar,
+  showIconByFileType,
+  calcFileSize
 }

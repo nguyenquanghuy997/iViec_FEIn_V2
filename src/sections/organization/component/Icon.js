@@ -101,3 +101,89 @@ export const AlertIcon = () => {
       </svg>
   )
 }
+
+export const CrownIcon = () => {
+  return (
+      <svg xmlns="http://www.w3.org/2000/svg" width={14} height={13} viewBox="0 0 14 13" fill="none">
+        <path d="M0.333252 11.6666H13.6666V12.9999H0.333252V11.6666ZM0.333252 2.33325L3.66659 4.33325L6.99992 0.333252L10.3333 4.33325L13.6666 2.33325V10.3333H0.333252V2.33325Z" fill="#FCAD3C" />
+      </svg>
+  )
+}
+export const CheckedSwitchIcon = () => {
+  return (
+      <svg xmlns="http://www.w3.org/2000/svg" width={56} height={36} viewBox="0 0 56 36" fill="none">
+        <path d="M18 0.500488H38C42.6413 0.500488 47.0925 2.34423 50.3744 5.62612C53.6563 8.908 55.5 13.3592 55.5 18.0005C55.5 22.6418 53.6563 27.093 50.3744 30.3749C47.0925 33.6567 42.6413 35.5005 38 35.5005H18C13.3587 35.5005 8.90752 33.6567 5.62563 30.3749C2.34374 27.093 0.5 22.6418 0.5 18.0005C0.5 13.3592 2.34374 8.908 5.62563 5.62612C8.90752 2.34423 13.3587 0.500488 18 0.500488ZM38 25.5005C39.9891 25.5005 41.8968 24.7103 43.3033 23.3038C44.7098 21.8973 45.5 19.9896 45.5 18.0005C45.5 16.0114 44.7098 14.1037 43.3033 12.6972C41.8968 11.2907 39.9891 10.5005 38 10.5005C36.0109 10.5005 34.1032 11.2907 32.6967 12.6972C31.2902 14.1037 30.5 16.0114 30.5 18.0005C30.5 19.9896 31.2902 21.8973 32.6967 23.3038C34.1032 24.7103 36.0109 25.5005 38 25.5005Z" fill="#1976D2" />
+      </svg>
+  )
+}
+
+export const UnCheckedSwitchIcon = () => {
+  return (
+      <svg xmlns="http://www.w3.org/2000/svg" width={56} height={36} viewBox="0 0 56 36" fill="none">
+        <path d="M18 5.49902C14.6848 5.49902 11.5054 6.81598 9.16117 9.16019C6.81696 11.5044 5.5 14.6838 5.5 17.999C5.5 21.3142 6.81696 24.4937 9.16117 26.8379C11.5054 29.1821 14.6848 30.499 18 30.499H38C41.3152 30.499 44.4946 29.1821 46.8388 26.8379C49.183 24.4937 50.5 21.3142 50.5 17.999C50.5 14.6838 49.183 11.5044 46.8388 9.16019C44.4946 6.81598 41.3152 5.49902 38 5.49902H18ZM18 0.499023H38C42.6413 0.499024 47.0925 2.34277 50.3744 5.62465C53.6563 8.90654 55.5 13.3577 55.5 17.999C55.5 22.6403 53.6563 27.0915 50.3744 30.3734C47.0925 33.6553 42.6413 35.499 38 35.499H18C13.3587 35.499 8.90752 33.6553 5.62563 30.3734C2.34374 27.0915 0.5 22.6403 0.5 17.999C0.5 13.3577 2.34374 8.90654 5.62563 5.62465C8.90752 2.34277 13.3587 0.499024 18 0.499023ZM18 25.499C16.0109 25.499 14.1032 24.7088 12.6967 23.3023C11.2902 21.8958 10.5 19.9881 10.5 17.999C10.5 16.0099 11.2902 14.1022 12.6967 12.6957C14.1032 11.2892 16.0109 10.499 18 10.499C19.9891 10.499 21.8968 11.2892 23.3033 12.6957C24.7098 14.1022 25.5 16.0099 25.5 17.999C25.5 19.9881 24.7098 21.8958 23.3033 23.3023C21.8968 24.7088 19.9891 25.499 18 25.499Z" fill="#455570" />
+      </svg>
+  )
+}
+
+export const ActionSwitchCheckedIcon = () => {
+  return (
+      <svg xmlns="http://www.w3.org/2000/svg" width={58} height={36} viewBox="0 0 58 36" fill="none">
+        <g clipPath="url(#clip0_3090_29852)">
+          <rect x={12} y={11} width={34} height={14} rx={7} fill="#A5D6A7" />
+          <g filter="url(#filter0_dd_3090_29852)">
+            <circle cx={40} cy={18} r={10} fill="#388E3C" />
+          </g>
+        </g>
+        <defs>
+          <filter id="filter0_dd_3090_29852" x={25} y={6} width={30} height={30} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+            <feFlood floodOpacity={0} result="BackgroundImageFix" />
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+            <feOffset />
+            <feGaussianBlur stdDeviation="0.5" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0.0352941 0 0 0 0 0.117647 0 0 0 0 0.258824 0 0 0 0.3 0" />
+            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3090_29852" />
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+            <feOffset dy={3} />
+            <feGaussianBlur stdDeviation="2.5" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0.0352941 0 0 0 0 0.117647 0 0 0 0 0.258824 0 0 0 0.2 0" />
+            <feBlend mode="normal" in2="effect1_dropShadow_3090_29852" result="effect2_dropShadow_3090_29852" />
+            <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_3090_29852" result="shape" />
+          </filter>
+          <clipPath id="clip0_3090_29852">
+            <rect width={58} height={36} fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+  )
+}
+export const ActionSwitchUnCheckedIcon = () => {
+  return (
+      <svg xmlns="http://www.w3.org/2000/svg" width={58} height={36} viewBox="0 0 58 36" fill="none">
+        <g clipPath="url(#clip0_839_22109)">
+          <rect x={12} y={11} width={34} height={14} rx={7} fill="#D0D4DB" />
+          <g filter="url(#filter0_dd_839_22109)">
+            <circle cx={18} cy={18} r={10} fill="#FDFDFD" />
+          </g>
+        </g>
+        <defs>
+          <filter id="filter0_dd_839_22109" x={3} y={6} width={30} height={30} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+            <feFlood floodOpacity={0} result="BackgroundImageFix" />
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+            <feOffset />
+            <feGaussianBlur stdDeviation="0.5" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0.0352941 0 0 0 0 0.117647 0 0 0 0 0.258824 0 0 0 0.3 0" />
+            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_839_22109" />
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+            <feOffset dy={3} />
+            <feGaussianBlur stdDeviation="2.5" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0.0352941 0 0 0 0 0.117647 0 0 0 0 0.258824 0 0 0 0.2 0" />
+            <feBlend mode="normal" in2="effect1_dropShadow_839_22109" result="effect2_dropShadow_839_22109" />
+            <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_839_22109" result="shape" />
+          </filter>
+          <clipPath id="clip0_839_22109">
+            <rect width={58} height={36} fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+  )
+}

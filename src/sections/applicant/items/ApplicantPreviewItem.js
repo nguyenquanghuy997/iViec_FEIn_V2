@@ -29,13 +29,17 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/styles";
 import React, { useState, useEffect } from "react";
-
+import { HEADER } from "@/config";
+import { RejectApplicantModal } from "../modals";
+import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
       ApplicantId,
       OrganizationId,
     });
+
+  const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
 
   const HearderApplicant = () => {
     return (
@@ -163,8 +167,9 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
           />
           <ButtonDS
             tittle={"Gửi offer"}
-            type="submit"
+            type="button"
             isDisabled={true}
+            onClick={() => setIsOpenSendOffer(true)}
             sx={{
               color: "#8A94A5",
               backgroundColor: "#1976D2",
@@ -189,6 +194,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
     );
   };
   const HeadingFixed = styled("div")(({}) => ({
+    top: HEADER.DASHBOARD_DESKTOP_HEIGHT,
     width: "100%",
     boxShadow:
       "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
@@ -225,10 +231,11 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
   const [selectedOption, setSelectedOption] = useState();
+  const [rejectApplicant, setRejectApplicant] = useState(false);
   const [ownerName, setOwnerName] = useState();
   useEffect(() => {
     if (!isFetching) {
-      setSelectedOption(options[0]?.name);
+      setSelectedOption(options[0]);
       setOwnerName(options[0]?.ownerName?.trim());
       fetchPipe({
         ApplicantId,
@@ -243,7 +250,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   }, [isFetching]);
 
   const onChangeRecruiment = (e) => {
-    setSelectedOption(e.target.value.name);
+    setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
     fetchPipe({
       ApplicantId,
@@ -251,15 +258,14 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
     }).unwrap();
     fetchData({
       ApplicantId,
-      RecruitmentId: options[0]?.id,
+      RecruitmentId: e.target.value.id,
       IsWithdrawHistory: true,
     }).unwrap();
   };
-
   return (
     <div>
       <HeadingFixed>
-        <HearderApplicant />
+        <HearderApplicant setIsOpenSendOffer={setIsOpenSendOffer} />
       </HeadingFixed>
       <Container
         maxWidth={themeStretch ? false : "xl"}
@@ -302,8 +308,12 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                           setSelectedOption={setSelectedOption}
                           onChange={onChangeRecruiment}
                           data={options}
+                          placeholder="Chọn tin tuyển dụng"
                           sx={{
                             background: "#F3F4F6",
+                            "&.MuiOutlinedInput-root":{
+                              minHeight:'36px'
+                            },
                             "& .MuiOutlinedInput-notchedOutline": {
                               borderColor: "#F3F4F6",
                               borderRadius: "6px",
@@ -368,7 +378,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                               textTransform: "none",
                               marginLeft: "12px",
                             }}
-                            // onClick={() => setRejectApplicant(true)}
+                             onClick={() => setRejectApplicant(true)}
                             icon={
                               <Iconify
                                 icon={"ic:outline-remove-circle"}
@@ -425,15 +435,24 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                 </Grid>
               </CardContent>
 
-              {/* <RejectApplicantModal
-                applicantId={"5141"}
-                recruimentId={"123"}
-                show={showRejectApplicant}
+              <RejectApplicantModal
+                applicantId={data?.id}
+                recruimentId={selectedOption?.id}
+                stage={pipelines}
+                show={rejectApplicant}
                 setShow={setRejectApplicant}
-              /> */}
+              />
             </Card>
           </Grid>
         </Grid>
+        {
+          isOpenSendOffer && <ApplicantSendOfferModal
+              isOpen={isOpenSendOffer}
+              onClose={() => setIsOpenSendOffer(false)}
+              showUploadFile={true}
+              title="Tạo thư mời nhận việc"
+            />
+        }
       </Container>
     </div>
   );

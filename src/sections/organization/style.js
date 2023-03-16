@@ -26,20 +26,20 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       height: 48,
       marginBottom: theme.spacing(0.5),
       position: 'relative',
+      borderLeft: '1px solid transparent',
       "&:active, &:focus": {
-        backgroundColor: 'transparent !important'
+        backgroundColor: 'transparent !important',
       },
       '&.Mui-selected': {
         "&.Mui-expanded": {
           backgroundColor: '#F2F4F5 !important',
-          borderLeft: '1px solid #D0D4DB'
+          borderLeft: '1px solid #d0d4db',
         },
         "&.Mui-focused": {
           backgroundColor: '#F2F4F5 !important',
-          borderLeft: '1px solid #D0D4DB'
+          borderLeft: '1px solid #d0d4db',
         },
         "&:hover": {
-          borderLeft: '1px solid #D0D4DB',
           backgroundColor: '#F2F4F5 !important',
         }
       },
@@ -60,7 +60,7 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       "& .MuiTreeItem-iconContainer": {
         position: 'absolute',
         top: '50%',
-        left: theme.spacing(6),
+        left: theme.spacing(5),
         transform: 'translateY(-50%)'
       },
       "& .MuiFormControlLabel-label": {
@@ -90,13 +90,16 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       justifyContent: 'space-between',
       height: 48,
       "& .tree-item-label-text": {
-        minWidth: 200,
+        lineHeight: 3,
+        minWidth: '80%',
       },
       "& .tree-item-label-actions": {
         display: 'none',
+        alignItems: 'center',
       },
       "& .tree-item-label-actions.tree-item-label-actions-checked": {
         display: 'flex',
+        alignItems: 'center',
       },
       "&:hover .tree-item-label-actions": {
         transition: 'all ease 0.5s',

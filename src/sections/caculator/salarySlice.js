@@ -19,7 +19,7 @@ export const salarySlice = createSlice({
   initialState: { data: {} },
   reducers: {},
   // extra reducers set get column to state
-  extraReducers: {
+  extraReducers: () =>  ({
     [getSalary.fulfilled]: (state, action) => {
       const { data = {}, rateInputValue } = action.payload
       const listKeys = Object.keys(data)
@@ -35,7 +35,7 @@ export const salarySlice = createSlice({
         {}
       )
     },
-  },
+  }),
 })
 
 export default salarySlice.reducer

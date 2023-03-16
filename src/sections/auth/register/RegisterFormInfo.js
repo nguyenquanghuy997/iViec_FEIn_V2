@@ -7,9 +7,9 @@ import {FormProvider, RHFAutocomplete, RHFCheckbox, RHFTextField,} from "@/compo
 import {PATH_AUTH} from "@/routes/paths";
 import {useRegisterMutation,} from "@/sections/auth/authSlice";
 import {
+    useGetDistrictByProvinceIdQuery,
     useGetJobCategoriesQuery,
-    useLazyGetDistrictByProvinceIdQuery,
-    useLazyGetProvinceQuery,
+    useGetProvinceQuery,
 } from "@/sections/companyinfor/companyInforSlice";
 import errorMessages from "@/utils/errorMessages";
 import {LIST_ORGANIZATION_SIZE} from "@/utils/formatString";
@@ -23,18 +23,11 @@ import {useRouter} from "next/router";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import ChipDS from "@/components/DesignSystem/ChipDS";
-import {PaperAutocompleteStyle} from "@/sections/auth/style";
 import {CHECK_EMAIL} from '@/utils/regex'
 
 const InputStyle = {width: 440, minHeight: 44};
 
-const CustomPaper = (props) => {
-    return <PaperAutocompleteStyle elevation={8} {...props} />;
-};
-
 function RegisterForm() {
-    // const classes = useStyles();
     const defaultValues = {
         userName: "",
         password: "",
@@ -105,7 +98,6 @@ function RegisterForm() {
             await postRegister(body).unwrap();
             await router.push(`/auth/register/success?username=${body.userName}`);
         } catch (error) {
-            console.log(error)
             const {status} = error;
             const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
             if (status === "AUE_06") {
@@ -119,18 +111,12 @@ function RegisterForm() {
         else methods.resetField(field);
     };
 
-    const [fetchProvice, {data: {items: ProviceList = []} = {}}] = useLazyGetProvinceQuery();
-    const [getDistrictByProvinceId, {data: {items: DistrictList = []} = {}}] = useLazyGetDistrictByProvinceIdQuery();
+    const {data: {items: ProviceList = []} = {}} = useGetProvinceQuery();
+    const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: !watchProvinceId });
     const {data: {items: JobCategoryList = []} = {}} = useGetJobCategoriesQuery();
-
-
-    useEffect(() => {
-        fetchProvice().unwrap();
-    }, []);
 
     useEffect(() => {
         if (watchProvinceId) {
-            getDistrictByProvinceId(watchProvinceId).unwrap();
             methods.resetField('organizationDistrictId')
         }
     }, [watchProvinceId]);
@@ -260,28 +246,7 @@ function RegisterForm() {
                                     title="Ngành nghề"
                                     isRequired
                                     placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"
-                                    AutocompleteProps={{
-                                        multiple: true,
-                                        PaperComponent: CustomPaper,
-                                        // renderOption: (props, option) => {
-                                        //     return (
-                                        //         <li {...props} className={classes.paperItem}>
-                                        //             {/*{option.label}*/}
-                                        //             {JSON.stringify(props)}
-                                        //         </li>
-                                        //     );
-                                        // },
-                                        isOptionEqualToValue: (option, value) => option.value === value.value,
-                                        renderTags: (value, getTagProps) => value.map(({label, id}, index) => (
-                                            <ChipDS
-                                                {...getTagProps({index})}
-                                                key={`${id}-${index}`}
-                                                size="medium"
-                                                label={label}
-                                                variant="filled"
-                                            />
-                                        )),
-                                    }}
+                                    multiple
                                 />
                             </div>
 
@@ -296,7 +261,6 @@ function RegisterForm() {
                                     }
                                     style={{...InputStyle}}
                                     name="organizationSize"
-                                    multiple={false}
                                     placeholder="Bắt buộc"
                                     title="Quy mô nhân sự"
                                     isRequired
@@ -317,7 +281,6 @@ function RegisterForm() {
                                         }
                                         style={{...InputStyle}}
                                         name="organizationProvinceId"
-                                        multiple={false}
                                         placeholder="Bắt buộc"
                                         title="Tỉnh/Thành phố"
                                         isRequired
@@ -336,7 +299,6 @@ function RegisterForm() {
                                         }
                                         style={{...InputStyle}}
                                         name="organizationDistrictId"
-                                        multiple={false}
                                         disabled={!watchProvinceId}
                                         placeholder="Bắt buộc"
                                         title="Quận/Huyện"

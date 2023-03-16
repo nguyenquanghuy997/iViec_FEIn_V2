@@ -3,14 +3,29 @@ import { LoadingButton } from "@mui/lab";
 import PropTypes from "prop-types";
 
 export default function ButtonDS(props) {
-  const {size,isSubmitting,isDisabled,tittle,type, onClick, icon, sx} = props;
-  
+  const {
+    size,
+    isSubmitting,
+    isDisabled,
+    tittle,
+    type,
+    onClick,
+    icon,
+    sx,
+    ...other
+  } = props;
+
   return (
-    <View sx={{"&:hover":{
-      backgroundColor:"#E7E9ED !important",
-      color:"#000"
-    },}}>
+    <View
+      sx={{
+        "&:hover": {
+          backgroundColor: "#E7E9ED !important",
+          color: "#000",
+        },
+      }}
+    >
       <LoadingButton
+        {...other}
         variant="contained"
         loading={isSubmitting}
         type={type}
@@ -20,24 +35,27 @@ export default function ButtonDS(props) {
         sx={{
           borderRadius: "6px",
           backgroundColor: "#1976D2",
-          "&:disabled":{
-            backgroundColor:"#D0D4DB",
-            color:"#8A94A5"
+          fontWeight: 600,
+          boxShadow: "unset",
+          "&:disabled": {
+            backgroundColor: "#D0D4DB",
+            color: "#8A94A5",
           },
-          ... sx,
-      }}
+          ...sx,
+        }}
       >
-      {icon}{tittle}
+        {icon}
+        {tittle}
       </LoadingButton>
     </View>
   );
 }
 
 ButtonDS.prototype = {
-  type:PropTypes.any,
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  isSubmitting:PropTypes.any,
-  tittle:PropTypes.any,
+  type: PropTypes.any,
+  size: PropTypes.oneOf(["small", "medium", "large"]),
+  isSubmitting: PropTypes.any,
+  tittle: PropTypes.any,
   onClick: PropTypes.any,
   icon: PropTypes.any,
   sx: PropTypes.object,

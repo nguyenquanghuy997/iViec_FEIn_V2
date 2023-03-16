@@ -4,8 +4,8 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { enUS, viVN } from "@mui/material/locale";
 
 // export const DOMAIN_SERVER_API = process?.env?.NEXT_PUBLIC_HOST_API_KEY || "";
-export const DOMAIN_SERVER_API = "https://api.iviec.vn/api";
-// export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api";
+//export const DOMAIN_SERVER_API = "https://api.iviec.vn/api";
+export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api";
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.dashboard;
 
@@ -97,11 +97,13 @@ export const PAGES = {
   Notification: "Notification",
   Candidates: "Candidates",
   Applicant: "Applicant",
+  ApproveProcess: "ApproveProcess",
   Interview: "Interview",
   Board: "Board",
   Calculator: "Calculator",
   Recruiter: "External recruiter",
   Jobs: "Jobs",
+  Recruitment: "Recruitment",
   Clients: "Clients",
   Users: "Users",
   Task: "Task",
@@ -121,6 +123,7 @@ export const PAGES = {
   Report4: "Report4",
 
   // Account: 'Account',
+  Organization: "Organization",
 };
 
 // ROLE AND PERMISSION
@@ -158,11 +161,14 @@ export const ROLE_BY_PAGES = [
       PAGES.Hashtag,
       PAGES.Industry,
       PAGES.CompanyInfor,
+      PAGES.Recruitment,
 
       PAGES.Report1,
       PAGES.Report2,
       PAGES.Report3,
       PAGES.Report4,
+
+      PAGES.Organization,
     ],
     roles: [ROLE.ADMIN],
   },
@@ -222,3 +228,5 @@ export const allLangs = [
 
 export const defaultLang = allLangs[0]; // English
 export const MAX_SIZE_FILEIMAGE = 5145728;
+
+export const API_KEY_EDITOR = "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189"

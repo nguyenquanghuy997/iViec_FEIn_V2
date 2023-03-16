@@ -20,6 +20,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css'
 import 'react-lazy-load-image-component/src/effects/opacity.css'
 // editor
 import 'react-quill/dist/quill.snow.css'
+import '@/styles/override/editor.css'
 //
 import { Provider as ReduxProvider } from 'react-redux'
 // scroll bar
@@ -45,6 +46,7 @@ import { store } from '@/redux/store'
 import ThemeProvider from '@/theme'
 // utils
 import { getSettings } from '@/utils/getSettings'
+import './style.css'
 
 MyApp.propTypes = {
   Component: PropTypes.func,

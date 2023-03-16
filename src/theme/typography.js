@@ -1,6 +1,6 @@
 import { pxToRem, responsiveFontSizes } from '@/utils/getFontValue'
 
-const FONT_PRIMARY = 'Public Sans, sans-serif' // Google Font
+const FONT_PRIMARY = 'Inter, sans-serif' // Google Font
 // const FONT_SECONDARY = 'CircularStd, sans-serif'; // Local Font
 
 const typography = {
@@ -78,6 +78,21 @@ const typography = {
     lineHeight: 24 / 14,
     fontSize: pxToRem(14),
     textTransform: 'capitalize',
+  },
+  textSize13: {
+    fontWeight: 400,
+    lineHeight: 1.5,
+    fontSize: pxToRem(13),
+  },
+  textSize13500: {
+    fontWeight: 500,
+    lineHeight: 1.5,
+    fontSize: pxToRem(13),
+  },
+  textSize14500: {
+    fontWeight: 500,
+    lineHeight: 1.5,
+    fontSize: pxToRem(14),
   },
 }
 
