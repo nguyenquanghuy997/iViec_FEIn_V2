@@ -25,9 +25,8 @@ const DynamicColumnsTable = (props) => {
     page,
     paginationSize,
     handleChangePagination,
-    rowSelection,
-    onRow,
     selectedRowKeys,
+    setSelectedRowKeys
   } = props;
 
   const [columnsTable, setColumnsTable] = useState([]);
@@ -213,6 +212,41 @@ const DynamicColumnsTable = (props) => {
         <p>{nodata}</p>
       </div>
     ),
+  };
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const onTableRowClick = (record) => {
+    const selectedKey = record.id;
+    const selectedKeys = [...selectedRowKeys];
+
+    const index = selectedKeys.indexOf(selectedKey);
+
+    if (index === -1) {
+      selectedKeys.push(selectedKey);
+    } else {
+      selectedKeys.splice(index, 1);
+    }
+
+    if (selectedKeys?.length > 0) {
+      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = '89px';
+
+    } else {
+      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+
+    }
+    setSelectedRowKeys(selectedKeys);
+  };
+
+  const onRow = (record) => {
+    return {
+      onClick: () => onTableRowClick(record),
+    };
   };
   return (
     <View>
