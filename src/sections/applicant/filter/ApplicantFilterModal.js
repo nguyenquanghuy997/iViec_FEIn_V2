@@ -31,12 +31,12 @@ import {
   useGetProvinceQuery
 } from "@/sections/companyinfor/companyInforSlice";
 import {convertFlatDataToTree} from "@/utils/function";
-import { useLazyGetRecruitmentByOrganizationIdQuery } from "@/sections/recruitment";
 
 import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {applicantFilterSlice} from "@/redux/slice/applicantFilterSlice";
 import {useDebounce} from "@/hooks/useDebounce";
+import { useLazyGetRecruitmentByOrganizationIdQuery } from "../ApplicantFormSlice";
 
 const GreenSwitch = styled(Switch)(({theme}) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -314,7 +314,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
                     tittle="Áp dụng"
                     onClick={handleSubmit(onSubmit)}
                 />
-                <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
+                <ButtonCancelStyle onClick={handleCloseModal}>Bỏ lọc</ButtonCancelStyle>
               </Stack>
               <FormControlLabel
                   // sx={{...style}}

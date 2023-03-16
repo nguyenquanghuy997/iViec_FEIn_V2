@@ -100,7 +100,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         data,
       }),
     }),
-    getRecruitmentByOrganization: builder.query({
+    getRecruitmentByOrganizationId: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_BY_ORGANIZATION,
         method: 'GET',
@@ -144,7 +144,7 @@ export const {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
-  useGetRecruitmentByOrganizationQuery,
+  useLazyGetRecruitmentByOrganizationIdQuery,
   // skills
   useGetSkillsQuery,
   // job sources
