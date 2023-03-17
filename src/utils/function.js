@@ -133,6 +133,10 @@ const calcFileSize = (fileSize) => {
   return `${(Math.round(+fileSizeStr / 1024) / 1000).toFixed(2)} MB`
 }
 
+const cleanObject = (obj) => {
+  return Object.entries(obj).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {})
+}
+
 export {
   containsText,
   convertViToEn,
@@ -140,5 +144,6 @@ export {
   stringToColor,
   stringAvatar,
   showIconByFileType,
-  calcFileSize
+  calcFileSize,
+  cleanObject,
 }
