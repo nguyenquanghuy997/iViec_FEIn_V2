@@ -148,7 +148,7 @@ const renderTree = (nodes) => {
   )
 };
 
-const renderOptions = (treeData, value, onChange, setOpen) => {
+const renderOptions = (treeData, value, onChange) => {
   return (
       <TreeViewStyle
           value={value}
@@ -161,7 +161,7 @@ const renderOptions = (treeData, value, onChange, setOpen) => {
           defaultExpanded={[treeData[0]?.id]}
           onNodeSelect={(e, id) => {
             onChange(id);
-            setOpen(false)
+            // setOpen(false)
           }}
       >
         {treeData?.map((item) => renderTree(item, value))}
@@ -178,7 +178,7 @@ function OrganizationSelect({name, ...props}) {
   const {options: treeData, defaultValue, isRequired, title, placeholder, disabled, keyObj} = props;
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const dataTree = useMemo(() => {
     return searchTree(convertFlatDataToTree(treeData), searchText);
   }, [treeData, searchText])
@@ -187,7 +187,7 @@ function OrganizationSelect({name, ...props}) {
       <Controller
           name={name}
           control={control}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue ? defaultValue : ''}
           render={({field, fieldState: {error}}) => (
               <Stack direction="column">
                 {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
@@ -196,10 +196,10 @@ function OrganizationSelect({name, ...props}) {
                     displayEmpty
                     disabled={disabled}
                     error={!!error}
-                    renderValue={() => renderValue(treeData, field.value ? field.value : defaultValue, placeholder, keyObj)}
+                    renderValue={() => renderValue(treeData, field.value, placeholder, keyObj)}
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
-                    open={open}
-                    onOpen={() => setOpen(true)}
+                    // open={open}
+                    // onOpen={() => setOpen(true)}
                 >
                   {treeData?.length > 3 && (
                       <TextFieldStyle
@@ -212,7 +212,7 @@ function OrganizationSelect({name, ...props}) {
                           onKeyDown={(e) => e.stopPropagation()}
                       />
                   )}
-                  {renderOptions(dataTree, field.value, field.onChange, setOpen)}
+                  {renderOptions(dataTree, field.value, field.onChange)}
                 </SelectFieldStyle>
                 <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
               </Stack>

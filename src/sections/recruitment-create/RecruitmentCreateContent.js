@@ -20,10 +20,12 @@ import {FormProvider} from "@/components/hook-form";
 import {useCreateRecruitmentMutation} from "@/sections/recruitment";
 import {useSnackbar} from "notistack";
 import {isEmpty} from "lodash";
+import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
 
 const RecruitmentCreateContent = ({ Recruitment }) => {
 
   const {enqueueSnackbar} = useSnackbar();
+  const {data: OrganizationOfUser = {}} = useGetOrganizationInfoQuery();
   const [createRecruitment] = useCreateRecruitmentMutation();
 
   // modal
@@ -31,10 +33,12 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
   const [isOpenSubmitApprove, setIsOpenSubmitApprove] = useState(false);
   const [isOpenAlertBack, setIsOpenAlertBack] = useState(false);
 
+  const [errorsState,setErrorsState] = useState(false);
+
   const defaultValues = useMemo(() => {
     return {
       name: '',
-      organizationId: '',
+      organizationId: OrganizationOfUser.id,
       description: '',
       benefit: '',
       requirement: '',
@@ -49,19 +53,19 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
       workingLanguageId: '',
       coOwnerIds: [],
       tags: [],
-      jobPositionId: null,
+      jobPositionId: '',
       ownerId: '',
-      workExperience: null,
+      workExperience: '',
       currencyUnit: '',
       candidateLevelId: "",
       organizationPipelineId: '',
-      isAutomaticStepChange: true,
+      isAutomaticStepChange: false,
       recruitmentCouncilIds: [],
       recruitmentJobCategoryIds: [],
       recruitmentAddressIds: [],
       recruitmentWorkingForms: [],
     }
-  }, [])
+  }, [OrganizationOfUser])
 
   // yup & handle form
   const FormSchema = Yup.object().shape({
@@ -106,7 +110,18 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
     defaultValues,
   });
 
-  const {handleSubmit, watch, setValue, formState: { errors }} = methods;
+  const {handleSubmit, watch, setValue} = methods;
+
+  const watchOrganization = watch('organizationId');
+  const watchOrganizationPipelineId = watch('organizationPipelineId');
+
+  useEffect(() => {
+    if(!watchOrganization || !watchOrganizationPipelineId) {
+      setErrorsState(true);
+    } else {
+      setErrorsState(false)
+    }
+  }, [watchOrganization, watchOrganizationPipelineId])
 
   useEffect(() => {
     if (!isEmpty(Recruitment)) {
@@ -116,7 +131,17 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
     }
   }, [Recruitment])
 
-  const organizationId = watch('organizationId');
+  useEffect(() => {
+    if (!isEmpty(OrganizationOfUser)) {
+      setValue('organizationId', OrganizationOfUser.id);
+    }
+  }, [OrganizationOfUser])
+
+  useEffect(() => {
+    if (watchOrganization) {
+      methods.resetField('organizationPipelineId');
+    }
+  }, [watchOrganization])
 
   const [valueTab, setValueTab] = useState('1');
   const handleChange = (event, newValue) => {
@@ -169,16 +194,13 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
     }
   }
 
-  const watchOrganization = watch('organizationId');
-  const watchOrganizationPipelineId = watch('organizationPipelineId');
-
   return (
       <View>
         <JobCreateHeader
             setIsOpenSubmitApprove={setIsOpenSubmitApprove}
             setIsOpenSaveDraft={setIsOpenSaveDraft}
             style={{padding: '18px 0', boxShadow: 'none', borderBottom: '1px solid #E7E9ED'}}
-            errors={errors}
+            errors={errorsState}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <TabContext value={valueTab}>
@@ -187,7 +209,7 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
               <View mt={'168px'}>
                 <TabPanel value="1">
                   <BoxFlex>
-                    <RecruitmentInformation organizationId={organizationId}/>
+                    <RecruitmentInformation organizationId={watchOrganization}/>
                   </BoxFlex>
                 </TabPanel>
                 <TabPanel value="2">
