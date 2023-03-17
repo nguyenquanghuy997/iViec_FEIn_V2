@@ -15,7 +15,7 @@ import {useSnackbar} from "notistack";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
-import errorMessages from '@/utils/errorMessages'
+import {errorMessages} from '@/utils/errorMessages'
 import {CHECK_EMAIL} from '@/utils/regex'
 // routes
 // import { PATH_AUTH } from '@/routes/paths'

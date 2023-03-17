@@ -13,7 +13,7 @@ import {PipelineStateType} from "@/utils/formatString";
 const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) => {
 
   const {data: {items: ListPipeline = []} = {}} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
-  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, { skip: !watchOrganizationPipelineId });
+  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
 
   return (
       <BoxWrapperStyle className="wrapper">
@@ -22,24 +22,20 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
           <BoxInnerStyle>
             <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
             <Box sx={{px: 4, py: 3}}>
-              <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
-                <div style={{flex: 1, marginRight: 8}}>
-                  <RHFDropdown
-                      name="organizationPipelineId"
-                      title="Quy trình tuyển dụng có sẵn"
-                      placeholder="Chọn 1 quy trình tuyển dụng"
-                      isRequired
-                      fullWidth
-                      options={ListPipeline.map(item => ({
-                        id: item.id,
-                        value: item.id,
-                        name: item.name,
-                        label: item.name
-                      }))}
-                  />
-                </div>
-              </Box>
-              <Divider sx={{mb: 1.5}}/>
+              <RHFDropdown
+                  name="organizationPipelineId"
+                  title="Quy trình tuyển dụng có sẵn"
+                  placeholder="Chọn 1 quy trình tuyển dụng"
+                  isRequired
+                  fullWidth
+                  options={ListPipeline.map(item => ({
+                    id: item.id,
+                    value: item.id,
+                    name: item.name,
+                    label: item.name
+                  }))}
+              />
+              <Divider sx={{my: 1.5}}/>
               <BoxFlex>
                 <Typography sx={{
                   color: style.COLOR_TEXT_PRIMARY,
@@ -54,7 +50,9 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
 
               <Box sx={{mt: 1}}>
                 {ListStepPipeline?.map((item, index) => {
-                  return <RecruitmentPipelineCard key={index} icon={PipelineStateType(item?.pipelineStateType).icon} title={PipelineStateType(item?.pipelineStateType).title} subtitle={PipelineStateType(item?.pipelineStateType).subtitle}/>
+                  return <RecruitmentPipelineCard key={index} icon={PipelineStateType(item?.pipelineStateType).icon}
+                                                  title={PipelineStateType(item?.pipelineStateType).title}
+                                                  subtitle={PipelineStateType(item?.pipelineStateType).subtitle}/>
                 })}
               </Box>
 
