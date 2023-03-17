@@ -24,7 +24,8 @@ function KanbanLabels({ Job, Labels, handleDeleteLabel, hasAddPermission }) {
         }}
         title={Job?.Client?.name}
       >
-        {Job?.Client?.name}
+        {/* {Job?.Client?.name} */}
+        Thang
       </CustomLabel>
 
       {Labels.map((label, index) => (

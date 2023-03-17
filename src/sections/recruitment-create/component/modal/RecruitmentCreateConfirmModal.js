@@ -2,12 +2,13 @@ import React from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, Divider, Typography} from "@mui/material";
 import {styled} from "@mui/styles";
 import OrganizationDialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
 
 const DialogStyle = styled(Dialog)(({theme}) => ({
   "& .dialog-delete": {
     boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
     borderRadius: '6px',
-    backgroundColor: "#FDFDFD",
+    backgroundColor: style.BG_WHITE,
     padding: theme.spacing(3)
   },
   "& .MuiDialog-container": {
@@ -24,12 +25,12 @@ const TitleAlertStyle = styled(Typography)(({theme}) => ({
   "&.title-active": {
     textAlign: 'center',
     width: '100%',
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#1976D2',
+    fontSize: style.FONT_BASE,
+    fontWeight: style.FONT_SEMIBOLD,
+    color: style.COLOR_PRIMARY,
     marginTop: theme.spacing(2),
     "&.title-inactive": {
-      color: '#455570 !important'
+      color: style.COLOR_TEXT_PRIMARY
     }
   }
 }))
@@ -38,44 +39,45 @@ const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
   "&.subtitle-active": {
     textAlign: 'center',
     width: '100%',
-    fontSize: '14px',
-    fontWeight: 400,
+    fontSize: style.FONT_SM,
+    fontWeight: style.FONT_NORMAL,
     display: 'block',
     marginTop: theme.spacing(2),
     "& .subtitle-active-name": {
-      fontWeight: 600
+      fontWeight: style.FONT_SEMIBOLD,
     }
   }
 }))
 
 const ButtonCancelStyle = styled(Button)(({}) => ({
   "&.button-cancel": {
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#455570',
+    fontSize: style.FONT_SM,
+    fontWeight: style.FONT_SEMIBOLD,
+    color: style.COLOR_TEXT_PRIMARY,
     backgroundColor: 'transparent',
     borderRadius: 6,
     "&:hover": {
-      color: '#455570',
+      color: style.COLOR_TEXT_PRIMARY,
       backgroundColor: 'transparent',
     }
   }
 }));
-const ButtonActiveStyle = styled(Button)(({}) => ({
+const ButtonActiveStyle = styled(Button)(({theme}) => ({
   "&.button-active": {
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#FDFDFD',
-    backgroundColor: '#1976D2',
+    fontSize: style.FONT_SM,
+    fontWeight: style.FONT_SEMIBOLD,
+    color: style.COLOR_WHITE,
+    backgroundColor: style.BG_PRIMARY,
     borderRadius: 6,
+    padding: theme.spacing(1, 2),
     "&:hover": {
-      color: '#FDFDFD',
-      backgroundColor: '#1976D2',
+      color: style.COLOR_WHITE,
+      backgroundColor: style.BG_PRIMARY
     }
   }
 }));
 
-const RecruitmentCreateConfirmModal = ({isOpen, onClose, icon, title, subtitle, buttonTitle, onSubmit}) => {
+const RecruitmentCreateConfirmModal = ({isOpen, onClose, icon, title, subtitle, buttonTitle, onSubmit, handleSubmit}) => {
   return (
       <DialogStyle
           open={isOpen}
@@ -97,7 +99,7 @@ const RecruitmentCreateConfirmModal = ({isOpen, onClose, icon, title, subtitle, 
         </DialogContent>
         <DialogActions sx={{borderTop: '1px solid #E7E9ED'}}>
           <ButtonCancelStyle className="button-cancel" onClick={onClose}>Hủy</ButtonCancelStyle>
-          <ButtonActiveStyle className="button-active" onClick={onSubmit}>
+          <ButtonActiveStyle type="submit" className="button-active" onClick={handleSubmit(onSubmit)}>
             {buttonTitle}
           </ButtonActiveStyle>
         </DialogActions>

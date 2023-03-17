@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from 'react'
 // @mui
 import {
   Box,
-  Button,
   CircularProgress,
   Paper,
   Stack,
@@ -14,7 +13,7 @@ import PropTypes from 'prop-types'
 import { Droppable } from 'react-beautiful-dnd'
 
 // components
-import Iconify from '@/components/Iconify'
+// import Iconify from '@/components/Iconify'
 // hooks
 import useIsScrollToBottom from '@/hooks/useIsScrollToBottom'
 import useKanban from '@/hooks/useKanban'
@@ -31,14 +30,14 @@ import { getMoreCardByColumn } from './kanbanSlice'
 KanbanColumn.propTypes = {
   column: PropTypes.object,
   hasAddPermission: PropTypes.bool,
-  onOpenAddTask: PropTypes.func,
+  // onOpenAddTask: PropTypes.func,
   onOpenUpdateTask: PropTypes.func,
 }
 
 function KanbanColumn({
   column,
   hasAddPermission,
-  onOpenAddTask,
+  // onOpenAddTask,
   onOpenUpdateTask,
 }) {
   const dispatch = useDispatch()
@@ -48,13 +47,15 @@ function KanbanColumn({
   const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
   const { isScrollToBottom } = useIsScrollToBottom(scrollRef)
   const {
-    nameColumn,
+    name,
     background,
-    CandidateJobs = [],
+    cardIds = [],
     id: columnId,
     isEndPage = false,
   } = column
-  const offset = CandidateJobs.length
+  // console.log('column',column)
+  // console.log('nameColumn',name)
+  const offset = cardIds.length
 
   useEffect(() => {
     if (!isScrollToBottom || isEndPage) return
@@ -78,6 +79,8 @@ function KanbanColumn({
         },
       }}
     >
+       <Stack spacing={2} sx={{ pb: 2 }}/>
+       <Typography variant='h6'>{name}</Typography>
       <Box
         sx={{
           background: background,
@@ -88,39 +91,7 @@ function KanbanColumn({
         }}
       />
 
-      <Stack spacing={2} sx={{ pb: 2 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            pt: 2,
-          }}
-        >
-          <Typography variant='h6'>{nameColumn}</Typography>
-          {hasAddPermission && (
-            <Button
-              color='inherit'
-              startIcon={
-                <Iconify
-                  icon={'eva:plus-circle-outline'}
-                  width={24}
-                  height={24}
-                />
-              }
-              sx={{
-                padding: 0,
-                justifyContent: 'end',
-                minWidth: 0,
-                '& .MuiButton-startIcon': {
-                  marginRight: 0,
-                },
-              }}
-              onClick={onOpenAddTask.bind(null, columnId)}
-            />
-          )}
-        </Box>
-      </Stack>
+      <Stack spacing={2} sx={{ pb: 2 }}/>
 
       <Droppable droppableId={columnId}>
         {(provided) => (
@@ -144,7 +115,7 @@ function KanbanColumn({
                 minHeight: '200px',
               }}
             >
-              {CandidateJobs.map((value, index) => (
+              {cardIds.map((value, index) => (
                 <KanbanTaskCard
                   key={`${value.id}-${index}`}
                   card={value}

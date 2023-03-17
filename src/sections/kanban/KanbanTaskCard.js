@@ -20,7 +20,7 @@ KanbanTaskCard.propTypes = {
   card: PropTypes.object,
   index: PropTypes.number,
   laneId: PropTypes.string,
-  onOpenUpdateTask: PropTypes.func,
+  // onOpenUpdateTask: PropTypes.func,
   hasAddPermission: PropTypes.bool,
 }
 
@@ -28,11 +28,12 @@ function KanbanTaskCard({
   card,
   index,
   laneId,
-  onOpenUpdateTask,
+  // onOpenUpdateTask,
   hasAddPermission,
 }) {
   const { translate } = useLocales()
-  const { Job, Candidate = {}, Labels = [], id: cardId } = card
+  const { Job, Candidate = {}, Labels = ['label test'], id: cardId } = card
+  console.log('card',card)
   const theme = useTheme()
   const isLight = theme.palette.mode === 'light'
 
@@ -65,7 +66,7 @@ function KanbanTaskCard({
     <Draggable
       draggableId={card.id}
       index={index}
-      isDragDisabled={!hasAddPermission}
+      // isDragDisabled={false}
     >
       {(provided) => (
         <div
@@ -85,7 +86,7 @@ function KanbanTaskCard({
           >
             <Box
               sx={{ cursor: 'pointer' }}
-              onClick={onOpenUpdateTask.bind(null, card)}
+              // onClick={onOpenUpdateTask.bind(null, card)}
             >
               <Box
                 sx={{

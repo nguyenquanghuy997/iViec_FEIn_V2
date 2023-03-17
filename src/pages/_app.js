@@ -46,6 +46,7 @@ import { store } from '@/redux/store'
 import ThemeProvider from '@/theme'
 // utils
 import { getSettings } from '@/utils/getSettings'
+import './style.css'
 
 MyApp.propTypes = {
   Component: PropTypes.func,

@@ -24,15 +24,12 @@ const RHFRecruitmentEditor = ({ name, title, isRequired = false, ...other }) => 
                     onChange={field.onChange}
                     error={!!error}
                     helperText={
-                      <FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>
+                      <FormHelperText error sx={{px: 0}}>
                         {error?.message}
                       </FormHelperText>
                     }
                     {...other}
                 />
-                <FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>
-                  {error?.message}
-                </FormHelperText>
               </>
           )}
       />

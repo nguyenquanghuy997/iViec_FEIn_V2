@@ -1,47 +1,52 @@
 import {styled} from "@mui/styles";
 import {Box, Button, Typography} from "@mui/material";
 import Tab from "@mui/material/Tab";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
 
 const JobTitleStyle = styled(Typography)(({}) => ({
   "&.job-title": {
-    fontSize: 20,
-    fontWeight: 600,
-    color: '#172B4D',
+    fontSize: style.FONT_XL,
+    fontWeight: style.FONT_SEMIBOLD,
+    color: style.COLOR_TEXT_BLACK,
   }
 }));
 
 const ButtonDraftStyle = styled(Button)(({theme}) => ({
   '&.button-draft': {
     padding: theme.spacing(1, 1.5),
-    backgroundColor: '#F3F4F6',
-    borderRadius: 6,
-    color: "#455570",
     minHeight: '36px',
-    fontSize: 14,
-    fontWeight: 500,
+    borderRadius: 6,
     marginLeft: theme.spacing(1),
+    backgroundColor: style.BG_GRAY,
+    color: style.COLOR_TEXT_PRIMARY,
+    fontSize: style.FONT_SM,
+    fontWeight: style.FONT_MEDIUM,
     "&:hover": {
-      backgroundColor: '#F3F4F6',
-      color: "#455570",
+      backgroundColor: style.BG_GRAY,
+      color: style.COLOR_TEXT_PRIMARY,
     },
+    "&.Mui-disabled": {
+      color: '#8A94A5',
+      backgroundColor: '#D0D4DB'
+    }
   }
 }));
 
 const TabStyle = styled(Tab)(({theme}) => ({
   "&.tab-item": {
     textAlign: 'left',
-    maxWidth: '100%',
-    backgroundColor: '#F2F4F5',
+    maxWidth: style.WIDTH_FULL,
+    backgroundColor: style.BG_GRAY,
     borderRadius: "6px",
     "&.MuiTab-root": {
-      height: '76px',
+      minHeight: '76px',
       textTransform: 'unset',
       padding: theme.spacing(2),
       marginRight: '20px'
     },
     "&.Mui-selected": {
-      color: "#FDFDFD",
-      backgroundColor: "#1976D2",
+      color: style.COLOR_WHITE,
+      backgroundColor: style.BG_PRIMARY,
     },
     "& .MuiTabs-indicator": {
       display: "none",
@@ -51,14 +56,12 @@ const TabStyle = styled(Tab)(({theme}) => ({
 
 // create
 const BoxWrapperStyle = styled(Box)(({}) => ({
-  width: '100%',
+  width: style.WIDTH_FULL,
   borderRadius: 6,
-  // overflow: 'hidden',
-  // padding: '0 0 24px',
 }))
 
 const BoxInnerStyle = styled(Box)(({}) => ({
-  backgroundColor: '#FDFDFD',
+  backgroundColor: style.BG_WHITE,
   boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
   maxWidth: '844px',
   flex: 1

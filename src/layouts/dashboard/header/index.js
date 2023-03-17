@@ -89,7 +89,7 @@ export default function DashboardHeader({
           </IconButtonAnimate>
         )}
 
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 1}} />
 
         <Stack
           direction="row"

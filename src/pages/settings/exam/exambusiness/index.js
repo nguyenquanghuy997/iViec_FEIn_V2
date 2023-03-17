@@ -1,23 +1,20 @@
 import { Text, View } from "@/components/FlexStyled";
 import Page from "@/components/Page";
+import PageWrapper from "@/components/PageWrapper";
 import SvgIcon from "@/components/SvgIcon";
 import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {
-  PipelineFormModal,
-  PipelineItem,
-  useGetAllReviewFormMutation,
-} from "@/sections/pipeline";
+// import {
+//   PipelineFormModal,
+//   PipelineItem,
+//   // useGetAllReviewFormMutation,
+// } from "@/sections/pipeline";
+import { QuestionAddModal } from "@/sections/question";
 import { getRolesByPage } from "@/utils/role";
-import { useRef, useState } from "react";
-import PageWrapper from "@/components/PageWrapper";
+import {  useState } from "react";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return (
-    <SettingLayout roles={roles}>
-      {page}
-    </SettingLayout>
-  );
+  return <SettingLayout roles={roles}>{page}</SettingLayout>;
 };
 
 export async function getStaticProps() {
@@ -30,16 +27,16 @@ export async function getStaticProps() {
 
 export default function Setting() {
   // ref
-  const refRequest = useRef({});
+  // const refRequest = useRef({});
 
   // state
   const [showForm, setShowForm] = useState(false);
 
   // api
-  const [fetchData] = useGetAllReviewFormMutation();
+  // const [fetchData] = useGetAllReviewFormMutation();
 
   const refreshData = () => {
-    fetchData(refRequest.current).unwrap();
+    // fetchData(refRequest.current).unwrap();
   };
 
   return (
@@ -47,12 +44,12 @@ export default function Setting() {
       <Page>
         {/* header */}
         <View
-            flexRow
-            atCenter
-            ph={24}
-            pv={16}
-            bgColor={"#fff"}
-            boxShadow={"inset 0px -1px 0px #DBE6EB"}
+          flexRow
+          atCenter
+          ph={24}
+          pv={16}
+          bgColor={"#fff"}
+          boxShadow={"inset 0px -1px 0px #DBE6EB"}
         >
           {/* title */}
           <Text fontSize={22} fontWeight={"600"}>
@@ -62,13 +59,13 @@ export default function Setting() {
 
           {/* button add */}
           <View
-              flexRow
-              atCenter
-              pv={8}
-              ph={12}
-              borderRadius={4}
-              bgColor={"#01B6A7"}
-              onPress={() => setShowForm(true)}
+            flexRow
+            atCenter
+            pv={8}
+            ph={12}
+            borderRadius={4}
+            bgColor={"#01B6A7"}
+            onPress={() => setShowForm(true)}
           >
             <SvgIcon>
               {
@@ -77,23 +74,23 @@ export default function Setting() {
             </SvgIcon>
 
             <Text
-                ml={12}
-                color={"#fff"}
-                fontSize={15}
-                lineHeight={20 / 15}
-                fontWeight={"600"}
+              ml={12}
+              color={"#fff"}
+              fontSize={15}
+              lineHeight={20 / 15}
+              fontWeight={"600"}
             >
               {"Thêm quy trình"}
             </Text>
           </View>
         </View>
         {/* table option */}
-        <PipelineItem />
+        {/* <PipelineItem /> */}
 
-        <PipelineFormModal
-            show={showForm}
-            setShow={setShowForm}
-            onRefreshData={refreshData}
+        <QuestionAddModal
+          show={showForm}
+          setShow={setShowForm}
+          onRefreshData={refreshData}
         />
       </Page>
     </PageWrapper>

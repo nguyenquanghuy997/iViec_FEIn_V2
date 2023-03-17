@@ -17,6 +17,7 @@ import {
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
+import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
 
 
 
@@ -24,7 +25,7 @@ RecruitmentFilterModal.propTypes = {
   columns: PropTypes.array, isOpen: PropTypes.bool, onClose: PropTypes.func, onSubmit: PropTypes.func,
 };
 
-function RecruitmentFilterModal({ isOpen, onClose, onSubmit}) {
+function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
 
   const router = useRouter();
   const { query } = router;
@@ -107,8 +108,8 @@ function RecruitmentFilterModal({ isOpen, onClose, onSubmit}) {
               boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
               zIndex: 999,
               position: 'fixed',
-              height: 'calc(100% - 64px)',
-              top: '64px',
+              height: 'calc(100% - 156px)',
+              top: '156px',
               right: 0,
             }, onScroll: handleScroll
           }}
@@ -126,6 +127,10 @@ function RecruitmentFilterModal({ isOpen, onClose, onSubmit}) {
             <Box sx={{py: 2, mt: 0}}>
               <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
               <Stack sx={{pb: 3, px: 2}}>
+                 <DynamicFilterForm
+                    columns={columns}
+                   
+                /> 
                 {/* <DynamicFilterForm
                     columns={columns}
                     options={{
@@ -144,7 +149,7 @@ function RecruitmentFilterModal({ isOpen, onClose, onSubmit}) {
                     tittle="Áp dụng"
                     onClick={handleSubmit(onSubmit)}
                 />
-                <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
+                <ButtonCancelStyle onClick={handleCloseModal}>Bỏ lọc</ButtonCancelStyle>
               </Stack>
             </ApplicantModalFooterStyle>
           </FormProvider>

@@ -9,18 +9,18 @@ const BoxItemStyle = styled(Box)(({theme}) => ({
     padding: theme.spacing(2, 2),
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     border: '1px solid #B9BFC9',
     borderRadius: 6,
     backgroundColor: '#FDFDFD'
   }
 }));
 
-const RecruitmentPipelineCard = ({title, subtitle, moreTitle}) => {
+const RecruitmentPipelineCard = ({title, subtitle, moreTitle, icon}) => {
   return (
       <BoxItemStyle className="card-pipeline-item">
-        {/*{showIconByFileType(fileType)}*/}
-        <Stack sx={{mx: 1}}>
+        {icon}
+        <Stack sx={{mx: 2}}>
           <Typography sx={{color: '#455570', fontSize: 13, fontWeight: 600}}>{title}</Typography>
           <Typography sx={{color: '#1565C0', fontSize: 12, fontWeight: 600, py: 0.5}}>{moreTitle}</Typography>
           <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>{subtitle}</Typography>

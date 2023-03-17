@@ -75,7 +75,6 @@ export const companyServiceApi = createApi({
         url: `${API_GET_PROVINCE}`,
         method: "GET",
       }),
-      invalidatesTags: ["Provinces"],
     }),
     getDistrictByProvinceId: builder.query({
       query: (provinceId) => ({
@@ -83,7 +82,6 @@ export const companyServiceApi = createApi({
         method: "GET",
         params: { ProvinceId: provinceId },
       }),
-      invalidatesTags: ["Districts"],
     }),
     uploadImageCompany: builder.mutation({
       query: (rest) => ({
@@ -111,9 +109,7 @@ export const companyServiceApi = createApi({
 export const {
   // Thông tin công ty
   useGetCompanyInfoQuery,
-  useGetCompanyInfoIdSQuery,
   useGetJobCategoriesQuery,
-  useLazyGetJobCategoriesQuery,
   useGetProvinceQuery,
   useLazyGetProvinceQuery,
   useGetDistrictByProvinceIdQuery,

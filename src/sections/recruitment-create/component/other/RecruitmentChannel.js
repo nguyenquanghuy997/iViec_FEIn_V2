@@ -1,9 +1,7 @@
-import {FormProvider} from "@/components/hook-form";
 import {Box, Button} from "@mui/material";
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-create/style";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
 import React, {useState} from "react";
-import {useForm} from "react-hook-form";
 import RecruitmentChannelCard from "@/sections/recruitment-create/component/other/RecruitmentChannelCard";
 
 const dataChannels = [
@@ -31,12 +29,7 @@ const dataChannels = [
 ];
 
 const RecruitmentChannel = () => {
-
-  const methods = useForm({
-    mode: 'all',
-  });
-
-  const [checked, setChecked] = useState([false, false, false]);
+  const [checked, setChecked] = useState([true, true, false]);
   const handleChange = (index) => {
     const newChecked = [...checked].map((item, idx) => index === idx ? !item : item)
     setChecked(newChecked)
@@ -44,9 +37,8 @@ const RecruitmentChannel = () => {
 
   return (
       <BoxWrapperStyle className="wrapper">
-        <FormProvider methods={methods}>
-          <Box className="box-item" sx={{backgroundColor: 'transparent', display: 'flex',}}>
-            <BoxInnerStyle style={{ minWidth: '844px', backgroundColor: 'transparent', boxShadow: 'none' }}>
+          <Box className="box-item" sx={{display: 'flex'}}>
+            <BoxInnerStyle style={{minWidth: '844px', backgroundColor: 'transparent', boxShadow: 'none'}}>
               {
                 dataChannels.map((item, index) => {
                   return (
@@ -70,12 +62,11 @@ const RecruitmentChannel = () => {
                   'Để thêm các kênh tuyển dụng khác, vui lòng truy cập mục Thiết lập kết nối để điều chỉnh',
                 ]}
             >
-              <Button variant="outlined" sx={{minWidht: '200px', marginLeft: 'auto', fontSize: 14, mb: 4}}>
+              <Button variant="outlined" sx={{padding: '12px 16px', marginLeft: 'auto'}}>
                 Thiết lập kết nối
               </Button>
             </RightNoteText>
           </Box>
-        </FormProvider>
       </BoxWrapperStyle>
   )
 }

@@ -10,8 +10,9 @@ import Iconify from "@/components/Iconify";
 import {ButtonDraftStyle, JobTitleStyle} from "@/sections/recruitment-create/style";
 import {DraftIcon, PreviewIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
 import {BoxFlex} from "@/sections/emailform/style";
+import {STYLE_CONSTANT as style} from "@/theme/palette";
 
-const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ...props}) => {
+const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, ...props}) => {
     return (
         <HeadingBar style={{marginBottom: '28px', position: 'fixed', top: '64px'}} {...props}>
             <BoxFlex>
@@ -21,13 +22,13 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ..
                             <Link>
                                 <IconButton
                                     size='small'
-                                    sx={{color: '#172B4D', mr: 1}}>
+                                    sx={{color: style.COLOR_TEXT_BLACK, mr: 1}}>
                                     <Iconify icon="material-symbols:arrow-back"/>
                                 </IconButton>
                             </Link>
                         </NextLink>
                         <JobTitleStyle className="job-title">
-                            Đăng tin tuyển dụng
+                            {title}
                         </JobTitleStyle>
                     </Box>
                 </Stack>
@@ -45,6 +46,7 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ..
                         className="button-draft"
                         startIcon={<Iconify icon="majesticons:send"/>}
                         onClick={() => setIsOpenSubmitApprove(true)}
+                        disabled={errors}
                     >Gửi phê duyệt</ButtonDraftStyle>
                 </Box>
             </BoxFlex>

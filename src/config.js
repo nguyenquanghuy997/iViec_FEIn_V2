@@ -104,6 +104,7 @@ export const PAGES = {
   Recruiter: "External recruiter",
   Jobs: "Jobs",
   Recruitment: "Recruitment",
+  RecruitmentAd: "RecruitmentAd",
   Clients: "Clients",
   Users: "Users",
   Task: "Task",
@@ -130,7 +131,7 @@ export const PAGES = {
 export const ROLE = {
   // DIRECTOR: 'Director',
   // LEADER: 'Leader',
-  // MEMBER: 'Member',
+  MEMBER: 'Member',
   ADMIN: "Admin",
   // BLOGER: 'Bloger',
 };
@@ -161,6 +162,8 @@ export const ROLE_BY_PAGES = [
       PAGES.Hashtag,
       PAGES.Industry,
       PAGES.CompanyInfor,
+      PAGES.Recruitment,
+      PAGES.RecruitmentAd,
 
       PAGES.Report1,
       PAGES.Report2,
@@ -168,6 +171,7 @@ export const ROLE_BY_PAGES = [
       PAGES.Report4,
 
       PAGES.Organization,
+      PAGES.Recruitment,
     ],
     roles: [ROLE.ADMIN],
   },
