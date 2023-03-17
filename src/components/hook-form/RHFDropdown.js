@@ -59,7 +59,7 @@ const renderValue = (options = [], value = '', placeholder = '', keyObj = 'name'
 
 function RHFDropdown({name, ...props}) {
   const {control} = useFormContext();
-  const {isRequired, title, placeholder, options, disabled, keyObj, type = 'text'} = props;
+  const {defaultValue, isRequired, title, placeholder, options, disabled, keyObj, type = 'text'} = props;
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
 
@@ -77,13 +77,13 @@ function RHFDropdown({name, ...props}) {
       <Controller
           name={name}
           control={control}
+          defaultValue={defaultValue || ""}
           render={({field, fieldState: {error}}) => (
               <Stack direction="column">
                 {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
                 <SelectFieldStyle
                     {...field}
-                    value={field.value || ""}
-                    defaultValue=""
+                    value={field.value}
                     displayEmpty
                     disabled={disabled}
                     error={!!error}

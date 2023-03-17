@@ -11,7 +11,7 @@ import Layout from '@/layouts'
 import {getRolesByPage} from '@/utils/role'
 import RecruitmentCreateContent from "@/sections/recruitment-create/RecruitmentCreateContent";
 
-UserCreate.getLayout = function getLayout({roles = []}, page) {
+CreateRecruitment.getLayout = function getLayout({roles = []}, page) {
   return <Layout roles={roles}>{page}</Layout>
 }
 
@@ -23,7 +23,7 @@ export async function getStaticProps() {
   }
 }
 
-export default function UserCreate() {
+export default function CreateRecruitment() {
   return (
       <Page title='Đăng tin tuyển dụng'>
         <RecruitmentCreateContent />

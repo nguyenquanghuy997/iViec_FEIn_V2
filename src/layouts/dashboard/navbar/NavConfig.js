@@ -215,6 +215,12 @@ export const headerMenuConfig = [
     items: [
       {
         title: "Tin tuyển dụng",
+        path: "/adrecruitment",
+        // icon: ICONS.job,
+        roles: ROLES[PAGES.RecruitmentAd],
+      },
+      {
+        title: "Tin tuyển dụng",
         path: "/recruitment",
         // icon: ICONS.job,
         roles: ROLES[PAGES.Recruitment],

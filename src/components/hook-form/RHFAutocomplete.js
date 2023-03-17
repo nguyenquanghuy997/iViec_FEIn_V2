@@ -1,5 +1,6 @@
 // @mui
 import PropTypes from "prop-types";
+import { isEqual } from 'lodash';
 // form
 import {Controller, useFormContext} from "react-hook-form";
 import {AutocompleteFieldStyle, LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
@@ -20,7 +21,18 @@ const CustomPaper = (props) => {
   return <PaperAutocompleteStyle className="paper-autocomplete" elevation={8} {...props} />;
 };
 
-export default function RHFAutocomplete({name, options = [], title = '', multiple = false, limitTags, isRequired = false, AutocompleteProps, ...other}) {
+export default function RHFAutocomplete(
+    {
+        name,
+        options = [],
+        title = '',
+        multiple = false,
+        isRequired = false,
+        showAvatar = false,
+        showCheckbox = false,
+        AutocompleteProps,
+        ...other
+    }) {
   const {control} = useFormContext();
   const props = {
     onChange: (field) => (event, newValue) => field.onChange(newValue),
@@ -39,10 +51,7 @@ export default function RHFAutocomplete({name, options = [], title = '', multipl
         }}
     />)),
     renderInput: (params) => (<TextFieldStyle
-        //{...field}*/}
         fullWidth
-        // error={!!error}
-        // helperText={error?.message}
         {...other}
         {...params}
     />), ...AutocompleteProps,
@@ -53,16 +62,15 @@ export default function RHFAutocomplete({name, options = [], title = '', multipl
   return (<Controller
       name={name}
       control={control}
+      defaultValue={multiple ? [] : ""}
       render={({field, fieldState: {error}}) => (<>
         {title && (<LabelStyle required={isRequired}>{title}</LabelStyle>)}
         <AutocompleteFieldStyle
-            value={multiple ? field.value || [] : field.value || ""}
+            value={field.value}
             autoFocus
             fullWidth
             multiple={multiple}
-            limitTags={limitTags}
             onChange={onChange(field)}
-            // onChange={(_, data) => field.onChange(data)}
             options={options}
             renderTags={renderTags}
             renderInput={renderInput}
@@ -71,7 +79,7 @@ export default function RHFAutocomplete({name, options = [], title = '', multipl
             renderOption={(props, option, {selected}) => (
                 <li {...props} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   <div>
-                    {AutocompleteProps && AutocompleteProps.showCheckbox && (
+                    {showCheckbox && (
                         <Checkbox
                             sx={{ p: 0.25 }}
                             icon={<CheckboxIconDefault/>}
@@ -81,7 +89,7 @@ export default function RHFAutocomplete({name, options = [], title = '', multipl
                         />
                     )}
                     <BoxFlex justifyContent="flex-start">
-                      {AutocompleteProps && AutocompleteProps?.showAvatar && (
+                      {showAvatar && (
                           <AvatarDS
                               sx={{height: "20px", width: "20px", borderRadius: "100px", fontSize: "10px"}}
                               name={option.label}
@@ -94,7 +102,7 @@ export default function RHFAutocomplete({name, options = [], title = '', multipl
                       <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/> : null}
                 </li>
             )}
-            isOptionEqualToValue={(option, value) => AutocompleteProps?.freeSolo ? option === value : option.value === value.value}
+            isOptionEqualToValue={(option, value) => value === "" || isEqual(option, value)}
             {...rest}
         />
         <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
