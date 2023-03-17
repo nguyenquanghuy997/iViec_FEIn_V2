@@ -1,35 +1,21 @@
-import AdjustIcon from "../../../assets/interview/AdjustIcon";
 import PlusIcon from "../../../assets/interview/PlusIcon";
 import { DropDown } from "../components/DropDown";
 import AddGroupForm from "./AddGroupForm";
 import AdjustForm from "./AdjustForm";
-import DragCandidate from "./DragCandidate";
 import EditIcon from "@/assets/EditIcon";
 import DeleteIcon from "@/assets/interview/DeleteIcon";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { FormProvider } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Typography, Box, Card, Checkbox } from "@mui/material";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
-import React, { useState } from "react";
+import { Button, Typography, Box, Card } from "@mui/material";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import Candidate from './Candidate'
+import React,{useState} from "react";
 
 const ListCandidate = ({ value }) => {
   const [open, setOpen] = useState(false);
   const [openForm, setOpenForm] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const data = [
-    {
-      name: "Đinh Tiến Thành",
-      phone: "0987655345",
-    },
-    {
-      name: "Đinh Tiến Thành 2",
-      phone: "0987655345",
-    },
-  ];
 
   const ConnectSchema = Yup.object().shape({
     email: Yup.string()
@@ -75,7 +61,7 @@ const ListCandidate = ({ value }) => {
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <DropDown />
           </FormProvider>
-          <div>
+          {/* <div>
             {data ? (
               <Box>
                 <div
@@ -112,7 +98,8 @@ const ListCandidate = ({ value }) => {
             ) : (
               ""
             )}
-          </div>
+          </div> */}
+          <Candidate />
           {openForm && (
             <AdjustForm open={openForm} onClose={() => setOpenForm(false)} />
           )}

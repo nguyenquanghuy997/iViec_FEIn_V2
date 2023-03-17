@@ -1,5 +1,6 @@
+import OptionComponent from "./OptionComponent";
 import { FormProvider } from "@/components/hook-form";
-import { RHFTextField } from "@/components/hook-form";
+import { RHFTextField, RHFCheckbox } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -7,28 +8,16 @@ import {
   Stack,
   Typography,
   InputLabel,
-  FormGroup,
-  Checkbox,
-  FormControlLabel,
 } from "@mui/material";
 import { Alert } from "@mui/material";
 import { Input } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import Select from './Select'
 
 const PersonalInterview = () => {
   const { TextArea } = Input;
-  const [type, setType] = useState("");
-  console.log(type);
-
-  const handleChange = (event) => {
-    setType(event.target.value);
-    // console.log(event.target.value);
-  };
-
   const ConnectSchema = Yup.object().shape({
     email: Yup.string()
       .email("Email không đúng định dạng")
@@ -86,7 +75,7 @@ const PersonalInterview = () => {
           <RHFTextField
             isRequired
             sx={{ width: "100%", minHeight: 44 }}
-            name="detail "
+            name="recruitmentId "
             title="Tin tuyển dụng"
             placeholder="Bắt buộc"
           />
@@ -97,58 +86,19 @@ const PersonalInterview = () => {
             <Typography>
               Hình thức phỏng vấn <span style={{ color: "red" }}>*</span>
             </Typography>
-           <Select
-           name='interviewType'
-           onChange={handleChange}
-           options={options}/>
-            {/* <FormControl sx={{ minWidth: "100%" }}>
-              <Select
-                value={type}
-                onChange={handleChange}
-                displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
-              >
-                {options.map((option) => (
-                  <MenuItem value={option?.name}>{option?.name}</MenuItem>
-                ))}
-              </Select>
-            </FormControl> */}
+            <RHFDropdown
+              options={options.map((i) => ({
+                value: i.id,
+                label: i.name,
+                name: i.name,
+              }))}
+              name="interviewType"
+              multiple={false}
+              required
+            />
           </Box>
         </Stack>
-        {type === "Direct" ? (
-          <Controller
-            name="workingEnvironment"
-            render={({ field }) => (
-              <Stack>
-                <InputLabel
-                  required
-                  sx={{
-                    color: "#172B4D",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    mb: 1,
-                  }}
-                >
-                  Địa điểm phỏng vấn
-                </InputLabel>
-
-                <TextArea
-                  value={field?.value}
-                  placeholder="Nội dung ..."
-                  style={{
-                    height: 80,
-                    width: "100%",
-                    resize: "none",
-                    marginBottom: "20px",
-                  }}
-                  onChange={() => {}}
-                />
-              </Stack>
-            )}
-          />
-        ) : (
-          ""
-        )}
+        <OptionComponent />
         <Controller
           name="workingEnvironment"
           render={({ field }) => (
@@ -166,6 +116,7 @@ const PersonalInterview = () => {
 
               <TextArea
                 showCount
+                name="note"
                 value={field?.value}
                 placeholder="Nhập nội dung lưu ý"
                 maxLength={150}
@@ -180,16 +131,13 @@ const PersonalInterview = () => {
             </Stack>
           )}
         />
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
+        <Box sx={{ display:'flex', flexDirection:'column' }}>
+          <RHFCheckbox
+            name="isSendMailCouncil"
             label="Gửi email cho hội đồng tuyển dụng"
           />
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="Gửi email cho ứng viên"
-          />
-        </FormGroup>
+          <RHFCheckbox name="isSendMailApplicant" label="Gửi email cho ứng viên" />
+        </Box>
 
         <Box sx={{ mb: 2, width: "100%" }}>
           <Typography>
@@ -202,7 +150,7 @@ const PersonalInterview = () => {
               label: i.option,
               name: i.option,
             }))}
-            name="organizationSize"
+            name="reviewFormId"
             multiple={false}
             placeholder="Chọn mẫu đánh giá"
             required

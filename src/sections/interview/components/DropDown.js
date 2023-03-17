@@ -1,15 +1,11 @@
-import PlusIcon from "@/assets/interview/PlusIcon";
+import Candidate from "./Candidate";
 import SvgIconStyle from "@/components/SvgIconStyle";
-import {
-  SearchInputStyle,
-  TextFieldStyle,
-} from "@/components/hook-form/style";
+import { SearchInputStyle, TextFieldStyle } from "@/components/hook-form/style";
 import {
   FormControl,
   MenuItem,
   Select,
   Checkbox,
-  Button,
   Box,
   Typography,
 } from "@mui/material";
@@ -17,7 +13,6 @@ import { ListSubheader, InputAdornment } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {
   makeStyles,
-  /*withStyles*/
 } from "@mui/styles";
 import { useState } from "react";
 import { useMemo } from "react";
@@ -101,7 +96,6 @@ export const DropDown = () => {
       },
     },
     input: {
-     
       fontWeight: `400`,
       fontSize: `14px`,
       lineHeight: `20px`,
@@ -111,7 +105,6 @@ export const DropDown = () => {
         borderBottom: `none`,
       },
     },
-  
   }));
 
   const classes = useStyles();
@@ -139,18 +132,7 @@ export const DropDown = () => {
           value={variantName}
           onChange={handleChange}
           renderValue={(selected) => {
-            if (selected.length === 0) {
-              return (
-                <Button
-                  sx={{ width: "100%", textTransform: "none" }}
-                  startIcon={<PlusIcon />}
-                  onClick={() => console.log("hi")}
-                >
-                  Thêm ứng viên
-                </Button>
-              );
-            }
-            return selected.map((x) => x.name).join(", ");
+            return <Candidate data={selected} />;
           }}
           MenuProps={MenuProps}
           //
