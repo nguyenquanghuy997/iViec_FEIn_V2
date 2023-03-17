@@ -1,23 +1,21 @@
 // @mui
-import { Box, Button, Stack } from '@mui/material'
-import { styled } from '@mui/material/styles'
-
-import PropTypes from 'prop-types'
-import { useDropzone } from 'react-dropzone'
-
 //
-import BlockContent from './BlockContent'
-import MultiFilePreview from './MultiFilePreview'
-import RejectionFiles from './RejectionFiles'
+import BlockContent from "./BlockContent";
+import MultiFilePreview from "./MultiFilePreview";
+import RejectionFiles from "./RejectionFiles";
+import { Box, Button, Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import { useDropzone } from "react-dropzone";
 
-const DropZoneStyle = styled('div')(({ theme }) => ({
-  outline: 'none',
+const DropZoneStyle = styled("div")(({ theme }) => ({
+  outline: "none",
   padding: theme.spacing(5, 1),
   borderRadius: theme.shape.borderRadius,
   backgroundColor: theme.palette.background.neutral,
   border: `1px dashed ${theme.palette.grey[500_32]}`,
-  '&:hover': { opacity: 0.72, cursor: 'pointer' },
-}))
+  "&:hover": { opacity: 0.72, cursor: "pointer" },
+}));
 
 UploadMultiFile.propTypes = {
   files: PropTypes.array.isRequired,
@@ -28,7 +26,7 @@ UploadMultiFile.propTypes = {
   onRemoveAll: PropTypes.func,
   helperText: PropTypes.node,
   sx: PropTypes.object,
-}
+};
 
 export default function UploadMultiFile({
   error,
@@ -49,18 +47,19 @@ export default function UploadMultiFile({
     fileRejections,
   } = useDropzone({
     ...other,
-  })
+  });
+  console.log("🚀 ~ file: UploadMultiFile.js:51 ~ getRootProps:", getRootProps);
 
   return (
-    <Box sx={{ width: '100%', ...sx }}>
+    <Box sx={{ width: "100%", ...sx }}>
       <DropZoneStyle
         {...getRootProps()}
         sx={{
           ...(isDragActive && { opacity: 0.72 }),
           ...((isDragReject || error) && {
-            color: 'error.main',
-            borderColor: 'error.light',
-            bgcolor: 'error.lighter',
+            color: "error.main",
+            borderColor: "error.light",
+            bgcolor: "error.lighter",
           }),
         }}
       >
@@ -79,12 +78,12 @@ export default function UploadMultiFile({
         onRemove={onRemove}
       />
 
-      {files.length > 0 && (
-        <Stack direction='row' justifyContent='flex-end' spacing={1.5}>
-          <Button color='inherit' size='small' onClick={onRemoveAll}>
+      {files?.length > 0 && (
+        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+          <Button color="inherit" size="small" onClick={onRemoveAll}>
             Remove all
           </Button>
-          <Button size='small' variant='contained' onClick={onUpload}>
+          <Button size="small" variant="contained" onClick={onUpload}>
             Upload files
           </Button>
         </Stack>
@@ -92,5 +91,5 @@ export default function UploadMultiFile({
 
       {helperText && helperText}
     </Box>
-  )
+  );
 }

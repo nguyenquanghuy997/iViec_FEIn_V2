@@ -1,3 +1,10 @@
+import {
+  ApplyJobIcon,
+  AssessmentIcon,
+  InterviewIcon, OfferIcon,
+  ResultIcon
+} from "@/sections/recruitment-create/component/icon/PipelineIcon";
+
 export const LIST_BRANCH_SIZE = [
     {id: "Less10", value: "[0-9]", name: "Dưới 10"},
     {id: "From10to49", value: "[10-49]", name: "10-49"},
@@ -45,51 +52,91 @@ export const LIST_GENDER = [
 ]
 
 export const LIST_EXPERIENCE_NUMBER = [
-  { id: "0", value: "0", name: "Chưa có kinh nghiệm", label: "Chưa có kinh nghiệm" },
-  { id: "1", value: "1", name: "Dưới 1 năm", label: "Dưới 1 năm" },
-  { id: "2", value: "2", name: "1 - 2 năm", label: "1 - 2 năm" },
-  { id: "3", value: "3", name: "2 - 3 năm", label: "2 - 3 năm" },
-  { id: "4", value: "4", name: "3 - 5 năm", label: "3 - 5 năm" },
-  { id: "4", value: "5", name: "5-7 năm", label: "5-7 năm" },
-  { id: "6", value: "6", name: "5 - 10 năm", label: "5 - 10 năm" },
-  { id: "7", value: "7", name: "10 năm trở lên", label: "10 năm trở lên" },
-  { id: "", value: "", name: "", label: "" },
+  {id: "0", value: "0", name: "Chưa có kinh nghiệm", label: "Chưa có kinh nghiệm"},
+  {id: "0", value: "1", name: "Dưới 1 năm", label: "Dưới 1 năm"},
+  {id: "1", value: "2", name: "1 - 2 năm", label: "1 - 2 năm"},
+  {id: "2", value: "3", name: "2 - 3 năm", label: "2 - 3 năm"},
+  {id: "3", value: "4", name: "3 - 5 năm", label: "3 - 5 năm"},
+  {id: "3", value: "5", name: "5-7 năm", label: "5-7 năm"},
+  {id: "4", value: "6", name: "5 - 10 năm", label: "5 - 10 năm"},
+  {id: "5", value: "7", name: "10 năm trở lên", label: "10 năm trở lên"},
+  {id: "", value: "", name: "", label: ""},
 ]
 
 export const LIST_STEP_RECRUITMENT = [
-    {id: "0", value: "0", name: "Ứng tuyển"},
-    {id: "1", value: "1", name: "Thi tuyển"},
-    {id: "2", value: "2", name: "Phỏng vấn máy"},
-    {id: "3", value: "3", name: "Phỏng vấn"},
-    {id: "4", value: "4", name: "Kết quả - Đạt"},
-    {id: "5", value: "5", name: "Kết quả - Cân nhắc"},
-    {id: "6", value: "6", name: "Kết quả - Loại"},
-    {id: "7", value: "7", name: "Mời nhận việc"},
-    {id: "", value: "", name: ""},
+  {id: "0", value: "0", name: "Ứng tuyển"},
+  {id: "1", value: "1", name: "Thi tuyển"},
+  {id: "2", value: "2", name: "Phỏng vấn máy"},
+  {id: "3", value: "3", name: "Phỏng vấn"},
+  {id: "4", value: "4", name: "Kết quả - Đạt"},
+  {id: "5", value: "5", name: "Kết quả - Cân nhắc"},
+  {id: "6", value: "6", name: "Kết quả - Loại"},
+  {id: "7", value: "7", name: "Mời nhận việc"},
+  {id: "", value: "", name: ""},
 ]
 
 export const LIST_RECRUITMENT_WORKING_FORM = [
-  { id: "0", value: "0", name: "Toàn thời gian", label: "Toàn thời gian" },
-  { id: "1", value: "1", name: "Bán thời gian", label: "Bán thời gian" },
-  { id: "2", value: "2", name: "Làm việc từ xa", label: "Làm việc từ xa" },
-  { id: "3", value: "3", name: "Thời vụ", label: "Thời vụ" },
-  { id: "4", value: "4", name: "Linh động", label: "Linh động" },
-  { id: "5", value: "5", name: "Khác", label: "Khác" },
-  { id: "", value: "", name: "", label: "" },
+  {id: "0", value: "0", name: "Toàn thời gian", label: "Toàn thời gian"},
+  {id: "1", value: "1", name: "Bán thời gian", label: "Bán thời gian"},
+  {id: "2", value: "2", name: "Làm việc từ xa", label: "Làm việc từ xa"},
+  {id: "3", value: "3", name: "Thời vụ", label: "Thời vụ"},
+  {id: "4", value: "4", name: "Linh động", label: "Linh động"},
+  {id: "5", value: "5", name: "Khác", label: "Khác"},
 ]
 
 export const LIST_CURRENCY_TYPE = [
-  { id: "0", value: "0", name: "VNĐ", label: "VNĐ" },
-  { id: "1", value: "1", name: "USD", label: "USD" },
-  { id: "", value: "", name: "", label: "" },
+  {id: "0", value: "0", name: "VNĐ", label: "VNĐ"},
+  {id: "1", value: "1", name: "USD", label: "USD"},
+  {id: "", value: "", name: "", label: ""},
 ]
 
 export const LIST_RECRUITMENT_SALARY_DISPLAY_TYPE = [
-  { id: "0", value: "0", name: "Không lương", label: "Không lương" },
-  { id: "1", value: "1", name: "Lương thỏa thuận", label: "Lương thỏa thuận" },
-  { id: "2", value: "2", name: "Mức lương chi tiết", label: "Mức lương chi tiết" },
-  { id: "", value: "", name: "", label: "" },
+  {id: "0", value: "0", name: "Không lương", label: "Không lương"},
+  {id: "1", value: "1", name: "Lương thỏa thuận", label: "Lương thỏa thuận"},
+  {id: "2", value: "2", name: "Mức lương chi tiết", label: "Mức lương chi tiết"},
+  {id: "", value: "", name: "", label: ""},
 ]
+
+export const PipelineStateType = (item) => {
+  switch (item) {
+    case 0:
+      return {
+        title: "Ứng tuyển",
+        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        icon: <ApplyJobIcon />
+      }
+    case 1:
+      return {
+        title: "Thi tuyển",
+        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        icon: <AssessmentIcon />
+      }
+    case 2:
+      return {
+        title: "Phỏng vấn",
+        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        icon: <InterviewIcon />
+      }
+    case 3:
+      return {
+        title: "Kết quả",
+        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        icon: <ResultIcon />
+      }
+    case 4:
+      return {
+        title: "Mời nhận việc",
+        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        icon: <OfferIcon />
+      }
+    default:
+      return {
+        title: "Ứng tuyển",
+        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        icon: <ApplyJobIcon />
+      }
+  }
+};
 
 export function joinArrStr(arr, key) {
     return Array.isArray(arr) ? arr.filter((item) => !!item).join(key) : "";

@@ -37,6 +37,7 @@ export default function ButtonDS(props) {
           backgroundColor: "#1976D2",
           fontWeight: 600,
           boxShadow: "unset",
+          textTransform: "none",
           "&:disabled": {
             backgroundColor: "#D0D4DB",
             color: "#8A94A5",

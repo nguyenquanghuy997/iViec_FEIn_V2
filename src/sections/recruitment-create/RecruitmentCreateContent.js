@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 // mui
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
@@ -18,9 +18,14 @@ import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
 import {useCreateRecruitmentMutation} from "@/sections/recruitment";
+import {useSnackbar} from "notistack";
+import {isEmpty} from "lodash";
+import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
 
-const RecruitmentCreateContent = () => {
+const RecruitmentCreateContent = ({ Recruitment }) => {
 
+  const {enqueueSnackbar} = useSnackbar();
+  const {data: OrganizationOfUser = {}} = useGetOrganizationInfoQuery();
   const [createRecruitment] = useCreateRecruitmentMutation();
 
   // modal
@@ -28,9 +33,39 @@ const RecruitmentCreateContent = () => {
   const [isOpenSubmitApprove, setIsOpenSubmitApprove] = useState(false);
   const [isOpenAlertBack, setIsOpenAlertBack] = useState(false);
 
+  const [errorsState,setErrorsState] = useState(false);
+
   const defaultValues = useMemo(() => {
-    recruitmentAddressIds: []
-  }, [])
+    return {
+      name: '',
+      organizationId: OrganizationOfUser.id,
+      description: '',
+      benefit: '',
+      requirement: '',
+      numberPosition: null,
+      minSalary: null,
+      maxSalary: null,
+      salaryDisplayType: '',
+      sex: '',
+      startDate: null,
+      endDate: null,
+      address: '',
+      workingLanguageId: '',
+      coOwnerIds: [],
+      tags: [],
+      jobPositionId: '',
+      ownerId: '',
+      workExperience: '',
+      currencyUnit: '',
+      candidateLevelId: "",
+      organizationPipelineId: '',
+      isAutomaticStepChange: false,
+      recruitmentCouncilIds: [],
+      recruitmentJobCategoryIds: [],
+      recruitmentAddressIds: [],
+      recruitmentWorkingForms: [],
+    }
+  }, [OrganizationOfUser])
 
   // yup & handle form
   const FormSchema = Yup.object().shape({
@@ -75,17 +110,48 @@ const RecruitmentCreateContent = () => {
     defaultValues,
   });
 
-  const {handleSubmit} = methods;
+  const {handleSubmit, watch, setValue} = methods;
 
-  const [value, setValue] = useState('1');
+  const watchOrganization = watch('organizationId');
+  const watchOrganizationPipelineId = watch('organizationPipelineId');
+
+  useEffect(() => {
+    if(!watchOrganization || !watchOrganizationPipelineId) {
+      setErrorsState(true);
+    } else {
+      setErrorsState(false)
+    }
+  }, [watchOrganization, watchOrganizationPipelineId])
+
+  useEffect(() => {
+    if (!isEmpty(Recruitment)) {
+      for(let i in defaultValues) {
+        setValue(i, Recruitment[i]);
+      }
+    }
+  }, [Recruitment])
+
+  useEffect(() => {
+    if (!isEmpty(OrganizationOfUser)) {
+      setValue('organizationId', OrganizationOfUser.id);
+    }
+  }, [OrganizationOfUser])
+
+  useEffect(() => {
+    if (watchOrganization) {
+      methods.resetField('organizationPipelineId');
+    }
+  }, [watchOrganization])
+
+  const [valueTab, setValueTab] = useState('1');
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setValueTab(newValue);
   };
 
   const onSubmit = async (data) => {
     const body = {
       name: data.name,
-      organizationId: "01000000-ac12-0242-b7ac-08db10d764a3",
+      organizationId: data.organizationId,
       description: data.description,
       benefit: data.benefit,
       requirement: data.requirement,
@@ -100,7 +166,7 @@ const RecruitmentCreateContent = () => {
       workingLanguageId: data.workingLanguageId,
       coOwnerIds: data.coOwnerIds.map(item => item.value),
       tags: data.tags,
-      jobPositionId: data.jobPositionId.value,
+      jobPositionId: data.jobPositionId,
       ownerId: data.ownerId,
       workExperience: Number(data.workExperience),
       currencyUnit: data.currencyUnit,
@@ -110,12 +176,20 @@ const RecruitmentCreateContent = () => {
       recruitmentCouncilIds: data.recruitmentCouncilIds.map(item => item.value),
       recruitmentJobCategoryIds: data.recruitmentJobCategoryIds.map(item => item.value),
       recruitmentAddressIds: data.recruitmentAddressIds.map(item => item.value),
-      recruitmentWorkingFormIds: data.recruitmentWorkingForms.map(item => Number(item.value)),
-      recruitmentCreationType: 0
+      recruitmentWorkingForms: data.recruitmentWorkingForms.map(item => Number(item.value)),
+      recruitmentCreationType: isOpenSaveDraft ? 0 : 1,
     }
     try {
       await createRecruitment(body).unwrap();
+      setIsOpenSubmitApprove(false);
+      enqueueSnackbar("Thêm tin tuyển dụng thành công!", {
+        autoHideDuration: 1000
+      });
     } catch (e) {
+      enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+        autoHideDuration: 1000,
+        variant: 'error',
+      });
       console.log(e)
     }
   }
@@ -126,19 +200,20 @@ const RecruitmentCreateContent = () => {
             setIsOpenSubmitApprove={setIsOpenSubmitApprove}
             setIsOpenSaveDraft={setIsOpenSaveDraft}
             style={{padding: '18px 0', boxShadow: 'none', borderBottom: '1px solid #E7E9ED'}}
+            errors={errorsState}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <TabContext value={value}>
+          <TabContext value={valueTab}>
             <JobCreateSubHeader handleChange={handleChange}/>
             <Content>
               <View mt={'168px'}>
                 <TabPanel value="1">
                   <BoxFlex>
-                    <RecruitmentInformation/>
+                    <RecruitmentInformation organizationId={watchOrganization}/>
                   </BoxFlex>
                 </TabPanel>
                 <TabPanel value="2">
-                  <RecruitmentPipeLine/>
+                  <RecruitmentPipeLine watchOrganization={watchOrganization} watchOrganizationPipelineId={watchOrganizationPipelineId} />
                 </TabPanel>
                 <TabPanel value="3">
                   <RecruitmentChannel/>

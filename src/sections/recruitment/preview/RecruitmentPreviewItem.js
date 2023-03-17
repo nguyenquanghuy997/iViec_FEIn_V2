@@ -8,7 +8,7 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
 import { ButtonGray, ButtonIcon } from "@/utils/cssStyles";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { TabContext, TabList } from "@mui/lab";
 import {
   Box,
   Container,
@@ -436,10 +436,10 @@ function RecruitmentPreviewItem({}) {
           maxWidth={themeStretch ? false : "xl"}
           sx={{ ...(smDown && { padding: 0 }) }}
         >
-          <TabPanel value="1">
+          {/* <TabPanel value="1">
             "ha"
           </TabPanel>
-          <TabPanel value="2">"hi"</TabPanel>
+          <TabPanel value="2">"hi"</TabPanel> */}
         </Container>
       </TabContext>
     </div>

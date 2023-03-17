@@ -2,12 +2,12 @@ import React, { memo } from 'react'
 
 import { Box, Button, Stack, Typography } from '@mui/material'
 
-import { compareAsc, format, parseISO } from 'date-fns'
+import { compareAsc, parseISO } from 'date-fns'
 import PropTypes from 'prop-types'
 
 import IconTimer from '@/assets/icon_timer'
 import Iconify from '@/components/Iconify'
-import { DATETIME_FORMAT, DATE_FORMAT_DAY_MONTH } from '@/config'
+// import { DATETIME_FORMAT, DATE_FORMAT_DAY_MONTH } from '@/config'
 
 KanbanBasicInfo.propTypes = {
   Candidate: PropTypes.object,
@@ -15,9 +15,9 @@ KanbanBasicInfo.propTypes = {
   Job: PropTypes.object,
 }
 
-function KanbanBasicInfo({ Candidate, card, Job }) {
+function KanbanBasicInfo({ Candidate, card }) {
   const isAfterNow = (date) => compareAsc(parseISO(date), new Date()) === 1
-
+  console.log('card',card)
   return (
     <Box>
       <Typography
@@ -34,7 +34,7 @@ function KanbanBasicInfo({ Candidate, card, Job }) {
       </Typography>
 
       <Stack spacing={1} sx={{ marginY: '8px', position: 'relative' }}>
-        {card.Interviews.length > 0 && (
+        {/* {card.Interviews.length > 0 && ( */}
           <Box
             sx={{
               position: 'absolute',
@@ -52,11 +52,12 @@ function KanbanBasicInfo({ Candidate, card, Job }) {
               }}
             />
           </Box>
-        )}
+        {/* )} */}
 
-        {card.Interviews?.map((interview) => (
+        {/* {card.Interviews?.map((interview) => ( */}
           <Button
-            key={interview.id}
+            // key={interview.id}
+            key={"23008a1f-ad94-4771-b85c-3566755afab7"}
             variant='contained'
             color='secondary'
             size='small'
@@ -71,11 +72,11 @@ function KanbanBasicInfo({ Candidate, card, Job }) {
             }}
           >
             <IconTimer fill='#fff' color='white' />
-            {format(new Date(interview.timeInterview), DATE_FORMAT_DAY_MONTH)}
+            {/* {format(new Date(interview.timeInterview), DATE_FORMAT_DAY_MONTH)} */}
           </Button>
-        ))}
+        {/* ))} */}
 
-        {card.expectedDate && (
+        {/* {card.expectedDate && ( */}
           <Button
             variant='contained'
             color={`${isAfterNow(card.expectedDate) ? 'primary' : 'error'}`}
@@ -91,13 +92,14 @@ function KanbanBasicInfo({ Candidate, card, Job }) {
             }}
           >
             <IconTimer fill='#fff' color='white' />
-            {format(new Date(card.expectedDate), DATETIME_FORMAT)}
+            {/* {format(new Date(card.expectedDate), DATETIME_FORMAT)} */}
           </Button>
-        )}
+        {/* )} */}
       </Stack>
 
       <Typography variant='subtitle2' color='#777'>
-        {Job.title}
+        {/* {Job.title} */}
+        Job.title
       </Typography>
     </Box>
   )

@@ -86,23 +86,23 @@ const RecruitmentHeader = ({data, methods, onOpenFilterForm, onSubmit, handleSub
             };
         })
 
-        for (let i = 1; i <= dataFormat.length; i++) {
-            for (let j = 0; j < columns.length; j++) {
-                ws[`${columns[j]}${i + 1}`].s = {
-                    font: {
-                        name: "Palatino Linotype",
-                        sz: 11
-                    },
-                    border: {
-                        top: {style: 'thin'},
-                        bottom: {style: 'thin'},
-                        right: {style: 'thin'},
-                        left: {style: 'thin'},
-                    },
-                    numFmt: '0'
-                };
-            }
-        }
+        // for (let i = 1; i <= dataFormat.length; i++) {
+        //     for (let j = 0; j < columns.length; j++) {
+        //         ws[`${columns[j]}${i + 1}`].s = {
+        //             font: {
+        //                 name: "Palatino Linotype",
+        //                 sz: 11
+        //             },
+        //             border: {
+        //                 top: { style: 'thin' },
+        //                 bottom: { style: 'thin' },
+        //                 right: { style: 'thin' },
+        //                 left: { style: 'thin' },
+        //             },
+        //             numFmt: '0'
+        //         };
+        //     }
+        // }
         ws["!cols"] = columnWidth.map(column => ({wch: column}));
         ws["!rows"] = rowsHeight.map(rowHeight => ({hpx: rowHeight}))
 

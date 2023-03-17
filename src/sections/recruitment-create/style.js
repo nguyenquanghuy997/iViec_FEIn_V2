@@ -25,6 +25,10 @@ const ButtonDraftStyle = styled(Button)(({theme}) => ({
       backgroundColor: style.BG_GRAY,
       color: style.COLOR_TEXT_PRIMARY,
     },
+    "&.Mui-disabled": {
+      color: '#8A94A5',
+      backgroundColor: '#D0D4DB'
+    }
   }
 }));
 
