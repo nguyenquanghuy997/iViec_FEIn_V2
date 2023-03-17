@@ -9,7 +9,7 @@ import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 
-const CreateInterview = ({ open, onClose, onOpen }) => {
+const CreateCalendar = ({ open, onClose, onOpen }) => {
   const [value, setValue] = useState("1");
   const handleChange = (event, newValue) => {
     console.log(event);
@@ -101,4 +101,4 @@ const CreateInterview = ({ open, onClose, onOpen }) => {
     </div>
   );
 };
-export default CreateInterview;
+export default CreateCalendar;

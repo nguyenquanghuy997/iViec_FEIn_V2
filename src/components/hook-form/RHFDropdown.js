@@ -53,7 +53,6 @@ function RHFDropdown({name, ...props}) {
   const {isRequired, title, placeholder, options, disabled} = props;
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
-
   const [filterOptions, setFilterOptions] = useState([]);
 
   useEffect(() => {

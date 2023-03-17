@@ -10,21 +10,19 @@ import {
   FormGroup,
   Checkbox,
   FormControlLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import { Alert } from "@mui/material";
-import FormControl from "@mui/material/FormControl";
 import { Input } from "antd";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import Select from './Select'
 
 const PersonalInterview = () => {
   const { TextArea } = Input;
   const [type, setType] = useState("");
-  console.log(type)
+  console.log(type);
 
   const handleChange = (event) => {
     setType(event.target.value);
@@ -57,7 +55,6 @@ const PersonalInterview = () => {
     formState: { errors },
   } = methods;
   const onSubmit = async () => {};
-
   const options = [
     {
       id: "00001",
@@ -94,52 +91,17 @@ const PersonalInterview = () => {
             placeholder="Bắt buộc"
           />
         </Stack>
-        {/* <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
-          <Box sx={{ mb: 2, width: "50%" }}>
-            <Typography>
-              Ngày phỏng vấn <span style={{ color: "red" }}>*</span>
-            </Typography>
-            {/* <RHFTextField
-              name="name"
-              placeholder="Chọn ngày giờ phỏng vấn"
-              isRequired
-              sx={{ minHeight: 44, width: "100%" }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end" sx={{ mr: 2 }}>
-                    <CalendarIcon />
-                  </InputAdornment>
-                ),
-              }}
-            /> */}
-          {/*   <RHFDateTimePicker name={"test"} />
-          </Box>
-          <Box sx={{ mb: 2, width: "50%" }}>
-            <Typography>
-              Giờ phỏng vấn <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <RHFTextField
-              isRequired
-              sx={{ minHeight: 44, width: "100%" }}
-              name="detail "
-              placeholder="Nhập số phút"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end" sx={{ mr: 2 }}>
-                    <WatchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-        </Stack> */}
+
         <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
-          <Box sx={{ mb: 2, width: "100%", height:44 }}>
+          <Box sx={{ mb: 2, width: "100%", height: 44 }}>
             <Typography>
               Hình thức phỏng vấn <span style={{ color: "red" }}>*</span>
             </Typography>
-
-            <FormControl sx={{ minWidth: "100%" }}>
+           <Select
+           name='interviewType'
+           onChange={handleChange}
+           options={options}/>
+            {/* <FormControl sx={{ minWidth: "100%" }}>
               <Select
                 value={type}
                 onChange={handleChange}
@@ -150,70 +112,42 @@ const PersonalInterview = () => {
                   <MenuItem value={option?.name}>{option?.name}</MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Box>
-          {/* <Box sx={{ mb: 2, width: "50%" }}>
-            <Typography>
-              Nhập số phút <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <RHFTextField
-              isRequired
-              sx={{ minHeight: 44, width: "100%" }}
-              name="detail "
-              placeholder="Bắt buộc"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Typography
-                      sx={{
-                        color: "text.disabled",
-                        width: 20,
-                        height: 20,
-                        mr: 4,
-                      }}
-                    >
-                      {" "}
-                      Phút
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box> */}
         </Stack>
         {type === "Direct" ? (
-         <Controller
-         name="workingEnvironment"
-         render={({ field }) => (
-           <Stack>
-             <InputLabel
-               required
-               sx={{
-                 color: "#172B4D",
-                 fontSize: 14,
-                 fontWeight: 500,
-                 mb: 1,
-               }}
-             >
-               Địa điểm phỏng vấn
-             </InputLabel>
+          <Controller
+            name="workingEnvironment"
+            render={({ field }) => (
+              <Stack>
+                <InputLabel
+                  required
+                  sx={{
+                    color: "#172B4D",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    mb: 1,
+                  }}
+                >
+                  Địa điểm phỏng vấn
+                </InputLabel>
 
-             <TextArea
-               value={field?.value}
-               placeholder="Nội dung ..."
-               style={{
-                 height: 80,
-                 width: "100%",
-                 resize: "none",
-                 marginBottom: "20px",
-               }}
-               onChange={() => {}}
-             />
-           </Stack>
-         )}
-       />
+                <TextArea
+                  value={field?.value}
+                  placeholder="Nội dung ..."
+                  style={{
+                    height: 80,
+                    width: "100%",
+                    resize: "none",
+                    marginBottom: "20px",
+                  }}
+                  onChange={() => {}}
+                />
+              </Stack>
+            )}
+          />
         ) : (
-          ''
+          ""
         )}
         <Controller
           name="workingEnvironment"

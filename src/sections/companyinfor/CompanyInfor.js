@@ -1,25 +1,27 @@
 import TickIcon from "../../assets/TickIcon";
 import CropImageAva from "./CropImageAva";
 import CropImageBG from "./CropImageBG";
+import { SIZE } from "./config";
 import DrawerEdit from "./edit/DrawerEdit";
 import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
 import { useGetCompanyInfoQuery } from "@/sections/companyinfor/companyInforSlice";
+import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Typography, Divider } from "@mui/material";
-import Paper from "@mui/material/Paper";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 export default function CompanyInfor() {
   const { data: Data } = useGetCompanyInfoQuery();
-  // const [updateImage] = useUpdateCompanyInfoMutation()
   const ProfileSchema = Yup.object().shape({
     avatar: Yup.string(),
   });
   const defaultValues = {
     avatar: Data?.avatar,
   };
-
+  const { data: { items: JobCategoryList = [] } = {} } =
+    useGetJobCategoriesQuery();
+  console.log(JobCategoryList);
   const methods = useForm({
     mode: "all",
     resolver: yupResolver(ProfileSchema),
@@ -63,34 +65,41 @@ export default function CompanyInfor() {
     );
   };
 
-  
-  const renderDoubleText = (text) => {
+  const renderItem = (title, value, main) => {
     return (
-      <Box sx={{ flexGrow: 1, overflow: "hidden", mt: 3.5 }}>
-        <Paper
-          sx={{
-            my: 1,
+      <div style={{ flex: main ? undefined : 1 }}>
+        <span
+          style={{
+            display: "flex",
+            fontSize: 16,
+            fontWeight: 600,
+            lineHeight: 24 / 15,
+            marginTop: 36,
+            marginBottom: 12,
+            color: "#172B4D",
           }}
         >
-          <Typography
-            sx={{
-              fontSize: 16,
-              fontWeight: 600,
-              width: "160px",
+          {title}
+        </span>
+
+        {String(value).startsWith("<") ? (
+          <p dangerouslySetInnerHTML={{ __html: value }} />
+        ) : (
+          <span
+            style={{
+              display: "flex",
+              fontSize: 14,
+              lineHeight: 24 / 16,
+              color: "#172B4D",
+              overflow: "hidden",
+              whiteSpace: "nowrap" /* Don't forget this one */,
+              textOverflow: "ellipsis",
             }}
           >
-            {text}
-          </Typography>
-          <Typography sx={{mt:1, fontSize:'14px'}}>
-            Đội ngũ lãnh đạo của Atlantic Group tin tưởng vào việc trao quyền
-            cho các nhóm thực hiện công việc có tác động mạnh mẽ nhất của họ,
-            bằng cách cam kết xây dựng một sản phẩm mà mọi người yêu thích và
-            một nền văn hóa nơi mọi người đều có thể phát triển. Tìm hiểu họ bên
-            dưới và tìm hiểu thêm trong Thư của những người sáng lập của... Xem
-            thêm
-          </Typography>
-        </Paper>
-      </Box>
+            {value}
+          </span>
+        )}
+      </div>
     );
   };
 
@@ -104,7 +113,7 @@ export default function CompanyInfor() {
 
   return (
     <FormProvider {...methods}>
-      <CropImageBG data={Data?.coverPhoto} />
+      <CropImageBG data={Data?.organizationInformation?.coverPhoto} />
       <div
         style={{
           display: "flex",
@@ -123,7 +132,10 @@ export default function CompanyInfor() {
             // mb: "28px",
           }}
         >
-          <CropImageAva data={Data?.avatar} handleSubmit={handleSubmit} />
+          <CropImageAva
+            data={Data?.organizationInformation?.avatar}
+            handleSubmit={handleSubmit}
+          />
 
           <Box
             sx={{
@@ -143,9 +155,7 @@ export default function CompanyInfor() {
                   mt: "18px",
                 }}
               >
-                {/* {Data?.name } */}
-                Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic
-                Group)
+                {Data?.name}
                 <span style={{ marginLeft: "0.6em" }}>
                   <TickIcon />
                 </span>
@@ -163,25 +173,40 @@ export default function CompanyInfor() {
             <DrawerEdit dataForm={Data} />
           </Box>
         </Box>
-  
-        <Box sx={{ml: '135px', mb:3}}>
-        <Divider />
-        {renderText("Số điện thoại :", Data?.phoneNumber || "")}
-        {renderText("Email :", Data?.email || "")}
-        {renderText(
-          "Ngành nghề :",
-          Data?.jobCategories?.map((item) => item.name)
-        )}
-        {renderText("Quy mô :", Data?.organizationSize)}
-        {renderText(
-          "Địa chỉ :",
-          `${Data?.address}, ${Data?.districtName}, ${Data?.provinceName}`
-        )}
 
-        {renderDoubleText(
-          "Giới thiệu công ty ",
-          Data?.text,
-        )}
+        <Box sx={{ ml: "135px", mb: 3 }}>
+          <Divider />
+          {renderText(
+            "Số điện thoại :",
+            `0${Data?.organizationInformation?.phoneNumber}` || ""
+          )}
+          {renderText("Email :", Data?.organizationInformation?.email || "")}
+          {renderText(
+            "Ngành nghề :",
+            JobCategoryList?.filter(
+              (item) =>
+                item.id ==
+                Data?.organizationInformation?.jobCategories?.map(
+                  (item) => item.jobCategoryId
+                )
+            ).map((item) => item?.name)
+          )}
+          {renderText(
+            "Quy mô :",
+            SIZE.filter(
+              (item) =>
+                item.id == Data?.organizationInformation?.organizationSize
+            ).map((item) => item?.text)
+          )}
+          {renderText(
+            "Địa chỉ :",
+            `${Data?.organizationInformation?.address},${Data?.organizationInformation?.districtName}, ${Data?.organizationInformation?.provinceName}`
+          )}
+          {renderItem(
+            "Giới thiệu công ty",
+            Data?.organizationInformation?.description,
+            true
+          )}
         </Box>
       </div>
     </FormProvider>

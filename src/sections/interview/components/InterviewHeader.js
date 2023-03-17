@@ -122,7 +122,7 @@ const InterviewHeader = ({
               textTransform:'none'
             }}
           >
-            {"Thêm lịch phỏng vấn"}
+            {"Đặt lịch phỏng vấn"}
           </span>
         </Button>
       </Stack>

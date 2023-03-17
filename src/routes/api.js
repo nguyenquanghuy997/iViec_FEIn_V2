@@ -149,8 +149,8 @@ export const API_UPDATE_BRANCH = "api/Branch/UpdateBranch";
 // Thông tin công ty
 export const API_GET_COMPANY_INFOR = 'organization/Organization/GetOrganization';
 export const API_GET_COMPANY_INFOR_BY_IDS = 'organization/Organization/GetOrganizationIds'
-export const API_UPDATE_COMPANY_INFOR = 'organization/Organization/UpdateOrganization'
-export const API_GET_IMAGE ='Image/GetImage'
+export const API_UPDATE_COMPANY_INFOR = 'organization/OrganizationInformation/UpdateOrganizationInformation'
+export const API_UPLOAD_IMAGE ='organization/Organization/OrganizationUploadImage'
 // Thông báo
 export const API_GET_LIST_NOTIFICATION = "api/UserNotifications/GetPaging";
 export const API_MASK_READ_NOTIFICATION = "api/UserNotifications/MaskAsRead?id=";

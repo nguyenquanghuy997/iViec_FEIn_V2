@@ -1,5 +1,5 @@
 import InterviewSchedule from "./InterviewSchedule";
-import CreateInterview from "./components/CreateInterview";
+import CreateCalendar from "./components/CreateCalendar";
 import InterviewHeader from "./components/InterviewHeader";
 import { View } from "@/components/FlexStyled";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -69,7 +69,7 @@ export const InterviewTimeline = () => {
           onCloseFilterForm={handleCloseFilterForm}
         />
         {open && (
-          <CreateInterview
+          <CreateCalendar
             open={open}
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
