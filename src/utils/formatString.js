@@ -18,8 +18,8 @@ export const LIST_BRANCH_SIZE = [
 
 
 export const LIST_PROCESS_LEVEL_DETAIL_TYPE = [
-    {id: "0", name: "Vai trò"},
-    {id: "1", name: "Cán bộ"},
+    {id: 0, name: "Vai trò"},
+    {id: 1, name: "Cán bộ"},
 ];
 
 export const LIST_ORGANIZATION_SIZE = [

@@ -179,7 +179,8 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
                                                   content={approveProcess.name}
                                                   type='approveProcessDelete'/>
                             <ApproveProcessViewModal title={title} data={approveProcess}
-                                                     show={openModelView} setShow={setOpenModelView}/>
+                                                     show={openModelView} handleEdit={handleEdit}
+                                                     setShow={setOpenModelView}/>
                         </>}
                     </Grid>
                 </Grid>
@@ -251,7 +252,9 @@ const ApproveProcessCard = ({type, approveProcesses, color, title}) => {
                         <Grid item>
                             <ButtonDS
                                 tittle={"Thêm quy trình"}
-                                onClick={() => setShowForm(true)}
+                                onClick={() =>
+                                    setShowForm(true)
+                                }
                                 size="large"
                                 sx={{
                                     fontSize: "14px"

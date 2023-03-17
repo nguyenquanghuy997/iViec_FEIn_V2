@@ -21,11 +21,12 @@ const ConditionalInput = ({control, index, indexChild}) => {
         control,
         name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`
     });
+
     const {data: {items: Applications = []} = {}} = useGetApplicationByRoleGroupQuery({RoleGroupId: roleGroupId}, {skip: !roleGroupId});
     const {data: {items: ApplicationOrganization = []} = {}} = useGetAllApplicantUserOrganizationByIdQuery();
 
     return (
-        (value === "0" ?
+        (value === 0 ?
                 <>
                     <Grid item xs={5} pr={2}>
                         <RHFDropdown
@@ -88,9 +89,9 @@ export const ApproveProcessFormLevelItem = (props) => {
     let watchFieldArray = useWatch({name: `approvalProcessLevels.${index}.approvalProcessLevelDetails`, control});
     const addApproveProcessHandler = () => {
         append({
-            roleGroupId: "",
+            roleGroupId: undefined,
             personInChargeIds: [],
-            processLevelDetailType: ""
+            processLevelDetailType: undefined
         });
     };
 

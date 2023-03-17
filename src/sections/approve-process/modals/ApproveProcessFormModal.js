@@ -19,20 +19,20 @@ import {ButtonCancelStyle} from "@/sections/applicant/style";
 import {MinusIcon} from "@/assets/ActionIcon";
 import {ApproveProcessFormLevelItem} from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
 import {styled} from "@mui/styles";
-import {formatDataPush} from "@/sections/approve-process/config";
+import {formatDataGet, formatDataPush} from "@/sections/approve-process/config";
 
 const defaultValues = {
-    name: "",
-    description: "",
-    approvalProcessType: 0,
+    name: undefined,
+    description: undefined,
+    approvalProcessType: undefined,
     isAvailable: false,
     approvalProcessLevels: [
         {
             approvalProcessLevelDetails: [
                 {
-                    roleGroupId: "",
+                    roleGroupId: undefined,
                     personInChargeIds: [],
-                    processLevelDetailType: ""
+                    processLevelDetailType: undefined
                 }
             ]
         }
@@ -65,7 +65,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         // api
         const [addForm] = useAddApproveProcessMutation();
         const [updateForm] = useUpdateApproveProcessMutation();
-        const {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id});
+        let {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id});
         const isLoading = isEditMode && !preview.id;
         // form
         const Schema = Yup.object().shape({
@@ -107,8 +107,8 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         });
 // action
         const pressHide = () => {
-            setShow(false);
             setData(null);
+            setShow(false);
         };
         const {enqueueSnackbar} = useSnackbar();
         const pressSave = handleSubmit(async (e) => {
@@ -163,16 +163,18 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                 setValue("name", "");
                 setValue("description", "");
                 setValue("isAvailable", false);
-                return;
             }
         }, [show]);
 
         useEffect(() => {
-            if (!preview.id) return;
-            setValue("name", preview.name);
-            setValue("description", preview.description);
-            setValue("approvalProcessLevels", preview.approvalProcessLevels);
-        }, [isEditMode, preview.id]);
+            if (!data?.id) return;
+            let body = preview;
+            body = formatDataGet(body);
+            setValue("name", body.name);
+            setValue("description", body.description);
+            setValue("isAvailable", body.isAvailable);
+            setValue("approvalProcessLevels", body.approvalProcessLevels);
+        }, [isEditMode, data, preview]);
 
         return (
             <FormProvider methods={methods}>
@@ -310,9 +312,10 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                             <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
                             <View width={8}/>
                             <View flex="true"/>
-                            {!isLoading && !isEditMode ? (
+                            {!isLoading ? (
                                 <SwitchStatusDS
                                     name={"isAvailable"}
+                                    disabled={!isEditMode}
                                     label={methods.watch("isAvailable") ? "Đang áp dụng" : "Không áp dụng"}
                                 />
                             ) : null}
