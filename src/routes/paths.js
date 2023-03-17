@@ -114,4 +114,8 @@ export const PATH_DASHBOARD = {
   company: {
     root: path(ROOTS_DASHBOARD, "settings/companyinfor"),
   },
+  // pipeline
+  pipeline: {
+    root: path(ROOTS_DASHBOARD, "settings/pipeline"),
+  },
 };

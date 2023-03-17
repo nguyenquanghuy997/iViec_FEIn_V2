@@ -62,7 +62,7 @@ export const ApplicantItem = () => {
   const handleChangePagination = (pageIndex, pageSize) => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
-      dataFilter = {...dataFilter,pageSize: pageSize, pageIndex: pageIndex }
+    handleSetDataFilter({...dataFilter,pageSize: pageSize, pageIndex: pageIndex })
   };
   const columns = useMemo(() => {
     return [
