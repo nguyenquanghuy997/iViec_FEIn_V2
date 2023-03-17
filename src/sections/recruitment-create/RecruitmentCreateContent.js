@@ -166,7 +166,7 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
       workingLanguageId: data.workingLanguageId,
       coOwnerIds: data.coOwnerIds.map(item => item.value),
       tags: data.tags,
-      jobPositionId: data.jobPositionId.value,
+      jobPositionId: data.jobPositionId,
       ownerId: data.ownerId,
       workExperience: Number(data.workExperience),
       currencyUnit: data.currencyUnit,
