@@ -36,3 +36,23 @@ export function formatDataPush(approveProcesses) {
     });
     return approveProcesses;
 }
+
+export function formatDataGet(approveProcesses) {
+    if (!approveProcesses || !approveProcesses.approvalProcessLevels) return "";
+    const newList = {
+        ...approveProcesses, approvalProcessLevels: approveProcesses.approvalProcessLevels.map((item) => {
+            const newItem = {
+                ...item, approvalProcessLevelDetails: item?.approvalProcessLevelDetails?.map((itemChild) => {
+                    let _itemChild = {...itemChild}
+                    if (_itemChild.processLevelDetailType === 1)
+                        _itemChild.personInChargeIds = _itemChild.processLevelDetailPersonInCharges[0].personInChargeId
+                    else
+                        _itemChild.personInChargeIds = _itemChild?.processLevelDetailPersonInCharges?.map((itemChildTwo) => itemChildTwo.personInChargeId);
+                    return _itemChild;
+                })
+            };
+            return newItem;
+        })
+    };
+    return newList;
+}

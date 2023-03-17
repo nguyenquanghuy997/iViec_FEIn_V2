@@ -3,18 +3,34 @@ import {Text, View} from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import {useGetPreviewApproveProcessQuery} from "@/sections/approve-process/ApproveProcessSlice";
 import {ViewModel} from "@/utils/cssStyles";
-import {Avatar, CircularProgress, Divider, Grid, Modal, Typography} from "@mui/material";
+import {CircularProgress, Divider, Grid, Modal, Typography} from "@mui/material";
 import React from "react";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {stringAvatar} from "@/utils/function";
+import AvatarDS from "../../../components/DesignSystem/AvatarDS";
 
-export const ApproveProcessViewModal = ({title, data, show, setShow}) => {
-    const {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id});
+export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}) => {
+    const {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id || !show});
     const isLoading = !preview.id;
 
     // action
     const pressHide = () => {
         setShow(false);
+    };
+
+    const moveToEdit = () => {
+        pressHide();
+        handleEdit();
+    };
+
+    const mapResult = (members) => {
+        let children = [];
+
+        return members.map(m => {
+            if (m.processLevelDetailPersonInCharges && m.processLevelDetailPersonInCharges.length) {
+                children = [...children, ...m.processLevelDetailPersonInCharges];
+            }
+            return m.processLevelDetailPersonInCharges;
+        }).concat(children.length ? mapResult(children) : children);
     };
 
     return (
@@ -89,7 +105,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow}) => {
                                         borderRadius: 6,
                                         backgroundColor: "#F2F4F5"
                                     }}
-                                    key={item}>
+                                    key={item.id}>
                                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
                                         <Grid item>
                                             <Typography variant={"subtitle1"} color={"#455570"}>
@@ -99,7 +115,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow}) => {
                                         <Grid item>
                                             <Typography variant={"textSize13500"} color={"#455570"}>
                                                 Đã
-                                                chọn {item?.approvalProcessLevelDetails.flatMap((x) => x?.processLevelDetailPersonInCharges?.length)}
+                                                chọn {mapResult(item?.approvalProcessLevelDetails).filter(x => x !== undefined).length}
                                             </Typography>
                                         </Grid>
                                         <Grid mt={3} container direction="row" justifyContent="flex-start"
@@ -111,36 +127,42 @@ export const ApproveProcessViewModal = ({title, data, show, setShow}) => {
                                             </Grid>
                                             <Grid item>
                                                 {item?.approvalProcessLevelDetails.map((itemRole, index) => {
-                                                    return <>
-                                                        <Typography key={itemRole.id} variant={"subtitle2"}
-                                                                    mb={1} color={"#455570"}>
-                                                            Nguễn Quang
-                                                            Huy {itemRole.roleGroupName} ({itemRole.processLevelDetailPersonInCharges.length}) {(index + 1) < item?.approvalProcessLevelDetails.length ? "," : ""}
-                                                        </Typography>
-                                                    </>
+                                                    if (itemRole.processLevelDetailType === 0)
+                                                        return (<Typography key={itemRole.id} variant={"subtitle2"}
+                                                                            mb={1} color={"#455570"}>
+                                                            {itemRole.roleGroupName} ({itemRole.processLevelDetailPersonInCharges.length}) {(index + 1) < item?.approvalProcessLevelDetails.length ? "," : ""}
+                                                        </Typography>)
                                                 })}
                                             </Grid>
                                         </Grid>
-                                        <Grid mt={3} container direction="row" justifyContent="flex-start"
+                                        <Grid mt={3} container direction="column" justifyContent="flex-start"
                                               alignItems="baseline">
-                                            <Grid item pr={1}>
+                                            <Grid item pr={1} mb={"10px"}>
                                                 <Typography variant={"textSize13500"} color={"#455570"}>
                                                     Cán bộ:
                                                 </Typography>
                                             </Grid>
-                                            <Grid item>
-                                                {item?.approvalProcessLevelDetails.map((itemRole) => {
-                                                    itemRole?.processLevelDetailPersonInCharges.map((itemUser) => {
-                                                        return <>
-                                                            <Avatar
-                                                                key={itemUser.id} {...stringAvatar(itemUser?.personInChargeName)}
-                                                                sx={{width: "28px", height: "28px"}}/>
-                                                            <Typography key={itemUser.id + "typo"} variant={"textSize13500"} mb={1}
-                                                                        color={"#455570"}>
-                                                                {itemUser?.personInChargeName}
-                                                            </Typography>
-                                                        </>
-                                                    });
+                                            <Grid item container direction="row">
+                                                {(item?.approvalProcessLevelDetails).filter(x => x && x.processLevelDetailPersonInCharges).map((itemRole) => {
+                                                    return itemRole?.processLevelDetailPersonInCharges.map((itemUser) => {
+                                                        return (
+                                                            <Grid item xs={3} wrap="nowrap" container
+                                                                  direction="row"
+                                                                  alignItems={"center"} key={itemUser.id}>
+                                                                <AvatarDS
+                                                                    name={itemUser?.personInChargeName}
+                                                                    sx={{
+                                                                        width: "28px",
+                                                                        height: "28px",
+                                                                        fontSize: "11px"
+                                                                    }}/>
+                                                                <Typography
+                                                                    variant={"textSize13500"} pl={1}
+                                                                    color={"#455570"}>
+                                                                    {itemUser?.personInChargeName}
+                                                                </Typography>
+                                                            </Grid>)
+                                                    })
                                                 })}
                                             </Grid>
                                         </Grid>
@@ -161,6 +183,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow}) => {
                         type="submit"
                         variant="contained"
                         tittle={"Chỉnh sửa"}
+                        onClick={moveToEdit}
                     />
                     <View width={8}/>
                     <ButtonCancelStyle onClick={pressHide}>Đóng</ButtonCancelStyle>
