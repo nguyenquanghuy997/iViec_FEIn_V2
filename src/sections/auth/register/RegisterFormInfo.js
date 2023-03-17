@@ -11,7 +11,7 @@ import {
     useGetJobCategoriesQuery,
     useGetProvinceQuery,
 } from "@/sections/companyinfor/companyInforSlice";
-import errorMessages from "@/utils/errorMessages";
+import {errorMessages} from "@/utils/errorMessages";
 import {LIST_ORGANIZATION_SIZE} from "@/utils/formatString";
 import {yupResolver} from "@hookform/resolvers/yup";
 // @mui

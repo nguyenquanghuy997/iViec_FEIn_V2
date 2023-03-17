@@ -42,9 +42,9 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
       description: '',
       benefit: '',
       requirement: '',
-      numberPosition: null,
-      minSalary: null,
-      maxSalary: null,
+      numberPosition: '',
+      minSalary: '',
+      maxSalary: '',
       salaryDisplayType: '',
       sex: '',
       startDate: null,
@@ -102,6 +102,10 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
     description: Yup.string().required("Mô tả công việc không được bỏ trống"),
     requirement: Yup.string().required("Yêu cầu công việc không được bỏ trống"),
     benefit: Yup.string().required("Quyền lợi không được bỏ trống"),
+    // owner & concil
+    ownerId: Yup.string().required("Cán bộ tuyển dụng không được bỏ trống"),
+    // pipeline
+    organizationPipelineId: Yup.string().required("Quy trình tuyển dụng không được bỏ trống"),
   });
 
   const methods = useForm({
@@ -127,6 +131,11 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
     if (!isEmpty(Recruitment)) {
       for(let i in defaultValues) {
         setValue(i, Recruitment[i]);
+        setValue('recruitmentAddressIds', Recruitment.recruitmentAddresses.map(item => item.provinceId))
+        setValue('recruitmentJobCategoryIds', Recruitment.recruitmentJobCategories.map(item => item.jobCategoryId))
+        setValue('recruitmentWorkingForms', Recruitment.recruitmentWorkingForms.map(item => item))
+        setValue('workExperience', Recruitment.workExperience.toString())
+        // setValue('recruitmentAddressIds', Recruitment.recruitmentAddresses.map(item => item.provinceId))
       }
     }
   }, [Recruitment])
@@ -201,6 +210,7 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
             setIsOpenSaveDraft={setIsOpenSaveDraft}
             style={{padding: '18px 0', boxShadow: 'none', borderBottom: '1px solid #E7E9ED'}}
             errors={errorsState}
+            title={!isEmpty(Recruitment) ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng'}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <TabContext value={valueTab}>

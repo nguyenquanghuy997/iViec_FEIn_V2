@@ -132,8 +132,8 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         return response?.items.map(item => ({
           ...item,
           value: item.id,
-          name: `${item?.lastName} ${item?.firstName}`,
-          label: `${item?.lastName} ${item?.firstName}`,
+          name: item?.lastName,
+          label: item?.lastName,
         }))
       },
     }),

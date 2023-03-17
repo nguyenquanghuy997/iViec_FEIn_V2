@@ -21,6 +21,7 @@ import {useGetListCandidateLevelsQuery, useGetListLanguagesQuery} from "@/redux/
 import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
 import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 import OrganizationSelect from "@/sections/recruitment-create/component/form/OrganizationSelect";
+import RHFDropdownMultiple from "@/sections/recruitment-create/component/form/RHFDropdownMultiple";
 
 const RecruitmentInformation = ({organizationId}) => {
     const {data: {items: ListOrganization} = []} = useGetOrganizationsDataWithChildQuery();
@@ -51,7 +52,7 @@ const RecruitmentInformation = ({organizationId}) => {
                         </Box>
                         {/* Khu vực đăng tin */}
                         <Box sx={{mb: 2}}>
-                            <RHFAutocomplete
+                            <RHFDropdownMultiple
                                 options={ListProvince.map(i => ({
                                     value: i.id,
                                     label: i.name,
@@ -86,17 +87,6 @@ const RecruitmentInformation = ({organizationId}) => {
                                     fullWidth
                                 />
                             </div>
-                            {/*<div style={{flex: 1, marginLeft: 8}}>*/}
-                            {/*  <RHFDropdownMultiple*/}
-                            {/*      options={ListCandidateLevels}*/}
-                            {/*      name="candidateLevelId"*/}
-                            {/*      title="Chức danh"*/}
-                            {/*      placeholder="Chọn 1 chức danh"*/}
-                            {/*      isRequired*/}
-                            {/*      fullWidth*/}
-                            {/*      multiple*/}
-                            {/*  />*/}
-                            {/*</div>*/}
                         </Box>
                         {/* Địa điểm làm việc */}
                         <Box sx={{mb: 2}}>
@@ -110,7 +100,7 @@ const RecruitmentInformation = ({organizationId}) => {
                         </Box>
                         {/* Ngành nghề */}
                         <Box sx={{mb: 2}}>
-                            <RHFAutocomplete
+                            <RHFDropdownMultiple
                                 options={JobCategoryList?.map((i) => ({
                                     value: i.id,
                                     label: i.name,
@@ -126,7 +116,7 @@ const RecruitmentInformation = ({organizationId}) => {
                         </Box>
                         {/* Hình thức làm việc */}
                         <Box sx={{mb: 2}}>
-                            <RHFAutocomplete
+                            <RHFDropdownMultiple
                                 options={LIST_RECRUITMENT_WORKING_FORM}
                                 name="recruitmentWorkingForms"
                                 title="Hình thức làm việc"
@@ -178,6 +168,8 @@ const RecruitmentInformation = ({organizationId}) => {
                                     placeholder="Chọn ngôn ngữ"
                                     fullWidth
                                     options={ListLanguage}
+                                    isRequired
+                                    defaultValue={ListLanguage[0]?.id}
                                 />
                             </div>
                         </Box>
@@ -328,15 +320,15 @@ const RecruitmentInformation = ({organizationId}) => {
                         />
                     </Box>
                     <Box sx={{px: 4, py: 3, pt: 2}}>
-                        {/*<RHFAutocomplete*/}
-                        {/*    options={[]}*/}
-                        {/*    name="tags"*/}
-                        {/*    title="Từ khóa"*/}
-                        {/*    placeholder="Nhập từ khóa và bấm enter để thêm"*/}
-                        {/*    fullWidth*/}
-                        {/*    multiple*/}
-                        {/*    AutocompleteProps={{freeSolo: true}}*/}
-                        {/*/>*/}
+                        <RHFAutocomplete
+                            options={[]}
+                            name="tags"
+                            title="Từ khóa"
+                            placeholder="Nhập từ khóa và bấm enter để thêm"
+                            fullWidth
+                            multiple
+                            AutocompleteProps={{freeSolo: true}}
+                        />
                     </Box>
                 </BoxInnerStyle>
                 <RightNoteText
@@ -374,10 +366,11 @@ const RecruitmentInformation = ({organizationId}) => {
                             />
                         </Box>
                         <Box sx={{mb: 2}}>
-                            <RHFAutocomplete
+                            <RHFDropdownMultiple
                                 options={ListUserFromOrganization.map(item => ({
                                     id: item.id,
                                     value: item.value,
+                                    name: item.email,
                                     label: item?.email
                                 }))}
                                 name="coOwnerIds"
@@ -385,14 +378,15 @@ const RecruitmentInformation = ({organizationId}) => {
                                 placeholder="Chọn 1 hoặc nhiều cán bộ"
                                 fullWidth
                                 multiple
-                                showAvatar
+                                type={"avatar"}
                             />
                         </Box>
                         <Box sx={{mb: 2}}>
-                            <RHFAutocomplete
+                            <RHFDropdownMultiple
                                 options={ListUserFromOrganization.map(item => ({
                                     id: item.id,
                                     value: item.value,
+                                    name: item.email,
                                     label: item?.email
                                 }))}
                                 name="recruitmentCouncilIds"
@@ -401,6 +395,7 @@ const RecruitmentInformation = ({organizationId}) => {
                                 fullWidth
                                 multiple
                                 showAvatar
+                                type={"avatar"}
                             />
                         </Box>
                     </Box>
