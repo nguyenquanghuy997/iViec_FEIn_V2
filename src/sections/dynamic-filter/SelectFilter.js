@@ -12,7 +12,6 @@ import {
   useStyles,
 } from '@/components/hook-form/style';
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import {isEmpty} from "lodash";
 
 const Placeholder = (placeholder) => {
   return <Typography variant="body2" sx={{color: '#8A94A5', fontSize: 14, fontWeight: 400}}>{placeholder}</Typography>
@@ -21,6 +20,10 @@ const Placeholder = (placeholder) => {
 const MenuProps = {
   PaperProps: {
     style: {maxHeight: 330,},
+  },
+  disableAutoFocusItem: true,
+  MenuListProps: {
+    disableListWrap: true,
   },
 };
 
@@ -35,12 +38,12 @@ const InputProps = {
 const renderOptions = (options, value, multiple = false) => {
   return options?.map((option, i) => {
     if (!multiple) {
-      return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
-        {option.label}
+      return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value}>
+        {option.label || option.name}
         {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
       </MenuItem>
     } else {
-      return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
+      return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value}>
         {option.label}
         {/*{value?.map(item => item?.includes(option.value) !== -1)?.[i] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}*/}
       </MenuItem>
@@ -48,8 +51,13 @@ const renderOptions = (options, value, multiple = false) => {
   })
 }
 
-const renderValue = (options = [], value = '', multiple, placeholder = '') => {
-  return (!value || multiple) ? Placeholder(placeholder) : options.find(option => option.value === value)?.name;
+const renderValue = (options = [], selected, multiple = false, placeholder = '') => {
+  // return (!value || multiple) ? Placeholder(placeholder) : options.find(option => option.value === value)?.name;
+  if(multiple) {
+    return Placeholder(placeholder);
+  } else {
+    return selected || selected === 0 ? options.find(option => option.value === selected)?.name : Placeholder(placeholder)
+  }
 }
 
 const renderChipsSelect = (options, value, onDelete) => {
@@ -69,7 +77,7 @@ const renderChipsSelect = (options, value, onDelete) => {
 
 const SelectFilter = React.forwardRef((props, ref) => {
   const {control} = useFormContext();
-  const {name, isRequired, title, placeholder, options, disabled, multiple = false} = props;
+  const {name, defaultValue, isRequired, title, placeholder, options, disabled, multiple = false} = props;
   const {remove} = useFieldArray({control, name});
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
@@ -88,24 +96,24 @@ const SelectFilter = React.forwardRef((props, ref) => {
       <Controller
           name={name}
           control={control}
+          defaultValue={defaultValue || ""}
           render={({field, fieldState: {error}}) => (
               <Stack direction="column">
                 {title && (<LabelStyle required={isRequired}>{title}</LabelStyle>)}
                 <SelectFieldStyle
                     ref={ref}
                     {...field}
-                    defaultValue={""}
+                    value={field.value}
                     displayEmpty
                     disabled={disabled}
                     error={!!error}
                     {...props}
                     onClose={() => setSearchText("")}
-                    renderValue={() => renderValue(options, field.value, multiple, placeholder)}
+                    renderValue={(selected) => renderValue(options, selected, multiple, placeholder)}
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
                 >
                   {options?.length > 3 && (
                       <TextFieldStyle
-                          ref={ref}
                           fullWidth
                           placeholder="Tìm kiếm..."
                           autoFocus
