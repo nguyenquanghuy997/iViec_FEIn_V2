@@ -128,7 +128,6 @@ function AuthProvider({ children }) {
     //   .then(result => console.log(result))
     //   .catch(error => console.log('error', error));
 
-    console.log('response.token',response.token)
     var config = {
       method: "get",
       url: DOMAIN_SERVER_API + API_USER_INFO,

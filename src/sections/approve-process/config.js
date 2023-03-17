@@ -7,8 +7,8 @@ export const ACTION_CONTENT = {
     },
     approveProcessLevelDelete: {
         confirm: 'Xác nhận xóa cấp phê duyệt',
-        text: "Bạn có chắc chắn muốn xóa cấp phê duyệt này",
-        color: "#455570",
+        text: "Bạn có chắc chắn muốn xóa cấp phê duyệt này?",
+        color: "#E53935",
         textButton: 'Xóa'
     },
     approveProcessDeActive: {

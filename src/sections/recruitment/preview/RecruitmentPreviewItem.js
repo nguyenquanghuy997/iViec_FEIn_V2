@@ -1,24 +1,29 @@
-import { ButtonDS, NavGoBack } from "@/components/DesignSystem";
+import {NavGoBack} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
+import {FormProvider, RHFTextField} from "@/components/hook-form";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
-import { PATH_DASHBOARD } from "@/routes/paths";
-import { ButtonFilterStyle } from "@/sections/applicant/style";
-import { BoxFlex } from "@/sections/emailform/style";
-import { ButtonGray, ButtonIcon } from "@/utils/cssStyles";
-import { TabContext, TabList } from "@mui/lab";
+import {PATH_DASHBOARD} from "@/routes/paths";
+import {ButtonFilterStyle} from "@/sections/applicant/style";
+import {BoxFlex} from "@/sections/emailform/style";
+import {ButtonGray, ButtonIcon} from "@/utils/cssStyles";
+import {TabContext, TabList} from "@mui/lab";
 import {
   Box,
+  Button,
+  ButtonGroup,
+  ClickAwayListener,
   Container,
-  InputAdornment,
+  Grow,
+  InputAdornment, MenuItem, MenuList,
+  Paper, Popper,
   Stack,
   Tab,
   Tooltip,
 } from "@mui/material";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import {useRef, useState} from "react";
+import {useForm} from "react-hook-form";
 
 function RecruitmentPreviewItem({}) {
   const defaultValues = {
@@ -185,14 +190,14 @@ function RecruitmentPreviewItem({}) {
       <div class="content-title">Đồng phụ trách: </div>
       <div>
       ${
-        recruitment?.coOwners
-          ?.map((p, index) => {
-            if (index < 3) {
-              return p.email;
-            }
-          })
-          .join(", ") || "-"
-      }
+    recruitment?.coOwners
+      ?.map((p, index) => {
+        if (index < 3) {
+          return p.email;
+        }
+      })
+      .join(", ") || "-"
+  }
       <span>+ ${recruitment?.coOwners?.length - 3 || ""}</span>
       </div>
     </div>
@@ -200,14 +205,14 @@ function RecruitmentPreviewItem({}) {
       <div class="content-title">Hội đồng tuyển dụng: </div>
       <div>
       ${
-        recruitment?.recruitmentCouncils
-          ?.map((p, index) => {
-            if (index < 3) {
-              return p.councilEmail;
-            }
-          })
-          .join(", ") || "-"
-      }
+    recruitment?.recruitmentCouncils
+      ?.map((p, index) => {
+        if (index < 3) {
+          return p.councilEmail;
+        }
+      })
+      .join(", ") || "-"
+  }
       <span>+ ${recruitment?.recruitmentCouncils?.length - 3 || ""}</span>
       </div>
     </div>
@@ -215,14 +220,14 @@ function RecruitmentPreviewItem({}) {
       <div class="content-title">Kênh tuyển dụng: </div>
       <div>
       ${
-        recruitment?.jobSource
-          ?.map((p, index) => {
-            if (index < 3) {
-              return p.name;
-            }
-          })
-          .join(", ") || "-"
-      }
+    recruitment?.jobSource
+      ?.map((p, index) => {
+        if (index < 3) {
+          return p.name;
+        }
+      })
+      .join(", ") || "-"
+  }
       <span>+ ${recruitment?.jobSource?.length - 3 || ""}</span>
       </div>
     </div>
@@ -233,20 +238,34 @@ function RecruitmentPreviewItem({}) {
   </div>
   `;
   const [value, setValue] = useState("1");
+  const [openGroup, setOpenGroup] = useState(false);
+  const anchorRef = useRef(null);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const handleCloseGroup = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setOpenGroup(false);
+  };
+
+  const handleToggle = () => {
+    setOpenGroup((prevOpen) => !prevOpen);
+  };
+
   const smDown = useResponsive("down", "sm");
-  const { themeStretch } = useSettings();
+  const {themeStretch} = useSettings();
   return (
     <div>
       <TabContext value={value}>
-        <HeadingBar style={{ mb: "28px", position: "unset", top: 8 }}>
+        <HeadingBar style={{mb: "28px", position: "unset", top: 8}}>
           <BoxFlex>
             <Stack flexDirection="row" alignItems="center">
               <Tooltip
                 title={
-                  <div dangerouslySetInnerHTML={{ __html: inforRecruitment }} />
+                  <div dangerouslySetInnerHTML={{__html: inforRecruitment}}/>
                 }
                 placement="right-start"
                 componentsProps={{
@@ -277,7 +296,7 @@ function RecruitmentPreviewItem({}) {
               >
                 <div>
                   <NavGoBack
-                    sx={{ marginTop: 0, padding: 0 }}
+                    sx={{marginTop: 0, padding: 0}}
                     link={PATH_DASHBOARD.dashboard}
                     name={"Nhân Viên Marketing Online - HCM"}
                   ></NavGoBack>
@@ -315,7 +334,7 @@ function RecruitmentPreviewItem({}) {
               />
             </Stack>
           </BoxFlex>
-          <Box sx={{ width: "100%", typography: "body1", mb: 3 }}>
+          <Box sx={{width: "100%", typography: "body1", mb: 3}}>
             <Box>
               <TabList
                 onChange={handleChange}
@@ -345,55 +364,55 @@ function RecruitmentPreviewItem({}) {
                     },
                   }}
                 />
-                <Tab label="Lịch phỏng vấn" value="2" />
+                <Tab label="Lịch phỏng vấn" value="2"/>
               </TabList>
             </Box>
           </Box>
           <BoxFlex>
             <Stack flexDirection="row" alignItems="center">
-            <Box>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-                sx={{
-                  "& .MuiTab-root": {
-                    minHeight: "36px",
-                    textTransform: "unset",
-                    padding: "8px 12px",
-                  },
-                  "& .Mui-selected": {
-                    color: "white !important",
-                    backgroundColor: "#455570",
-                    borderRadius: "6px",
-                  },
-                  "& .MuiTabs-indicator": {
-                    display: "none",
-                  },
-                }}
-              >
-                <Tab
-                  label="Kanban"
-                  value="1"
+              <Box>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
                   sx={{
-                    "&:not(:last-of-type)": {
-                      marginRight: "16px",
+                    "& .MuiTab-root": {
+                      minHeight: "36px",
+                      textTransform: "unset",
+                      padding: "8px 12px",
+                    },
+                    "& .Mui-selected": {
+                      color: "white !important",
+                      backgroundColor: "#455570",
+                      borderRadius: "6px",
+                    },
+                    "& .MuiTabs-indicator": {
+                      display: "none",
                     },
                   }}
-                />
-                <Tab label="List" value="" />
-              </TabList>
-            </Box>
+                >
+                  <Tab
+                    label="Kanban"
+                    value="1"
+                    sx={{
+                      "&:not(:last-of-type)": {
+                        marginRight: "16px",
+                      },
+                    }}
+                  />
+                  <Tab label="List" value=""/>
+                </TabList>
+              </Box>
               <FormProvider methods={methods}>
                 <RHFTextField
                   name="searchKey"
                   placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
-                  sx={{ minWidth: "510px" }}
+                  sx={{minWidth: "510px"}}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                      <InputAdornment position="start" sx={{ml: 1.5}}>
                         <Iconify
                           icon={"eva:search-fill"}
-                          sx={{ color: "text.disabled", width: 20, height: 20 }}
+                          sx={{color: "text.disabled", width: 20, height: 20}}
                         />
                       </InputAdornment>
                     ),
@@ -403,7 +422,7 @@ function RecruitmentPreviewItem({}) {
               <ButtonFilterStyle
                 startIcon={
                   <Iconify
-                    sx={{ height: "18px", width: "18px" }}
+                    sx={{height: "18px", width: "18px"}}
                     icon="material-symbols:filter-alt-outline"
                   />
                 }
@@ -412,14 +431,15 @@ function RecruitmentPreviewItem({}) {
               </ButtonFilterStyle>
             </Stack>
             <Stack flexDirection={"row"}>
-              <ButtonDS
-                tittle={"Thêm ứng viên"}
-                type="submit"
-                sx={{
-                  textTransform: "none",
-                  boxShadow: "none",
-                }}
-                icon={
+              <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button" sx={{
+                boxShadow: "unset",
+                '& .MuiButtonGroup-grouped:not(:last-of-type)': {
+                  borderColor: "white"
+                }, '& .MuiButtonGroup-grouped:hover': {
+                  opacity: 0.8
+                }
+              }}>
+                <Button>
                   <Iconify
                     icon={"material-symbols:add"}
                     width={20}
@@ -427,14 +447,64 @@ function RecruitmentPreviewItem({}) {
                     color="#fff"
                     mr={1}
                   />
-                }
-              />
+                  Thêm ứng viên</Button>
+                <Button
+                  size="small"
+                  aria-controls={open ? 'split-button-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
+                  aria-haspopup="menu"
+                  onClick={handleToggle}
+                >
+                  <Iconify
+                    icon={"material-symbols:arrow-drop-down"}
+                    width={20}
+                    height={20}
+                    color="#fff"
+                  />
+                </Button>
+              </ButtonGroup>
+              <Popper
+                sx={{
+                  zIndex: 1,
+                }}
+                open={openGroup}
+                role={undefined}
+                anchorEl={anchorRef.current}
+                transition
+              >
+                {({TransitionProps, placement}) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === 'bottom' ? 'left top' : 'left top',
+                      anchorOrigin: 'right bottom'
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleCloseGroup}>
+                        <MenuList autoFocusItem>
+                          <MenuItem>
+                            Tải mẫu Excel
+                          </MenuItem>
+                          <MenuItem>
+                            Import Excel
+                          </MenuItem>
+                          <MenuItem>
+                            Scan CV hàng loạt
+                          </MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
             </Stack>
           </BoxFlex>
         </HeadingBar>
         <Container
           maxWidth={themeStretch ? false : "xl"}
-          sx={{ ...(smDown && { padding: 0 }) }}
+          sx={{...(smDown && {padding: 0})}}
         >
           {/* <TabPanel value="1">
             "ha"
