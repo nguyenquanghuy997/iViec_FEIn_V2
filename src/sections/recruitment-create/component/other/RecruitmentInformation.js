@@ -290,7 +290,7 @@ const RecruitmentInformation = ({organizationId}) => {
                 <BoxInnerStyle>
                     <DividerCard title="MÔ TẢ CÔNG VIỆC"/>
                     <Box sx={{px: 4, py: 3}}>
-                        <RHFAutocomplete
+                        <RHFDropdown
                             options={ListJobType.map(i => ({
                                 id: i.id,
                                 value: i.id,
@@ -299,7 +299,7 @@ const RecruitmentInformation = ({organizationId}) => {
                             }))}
                             name="jobPositionId"
                             title="Vị trí công việc có sẵn"
-                            placeholder="Chọn 1 vị trí công việc có sẵn hoặc nhập tên vị trí thêm mới"
+                            placeholder="Chọn vị trí công việc có sẵn"
                             // isRequired
                         />
                     </Box>
