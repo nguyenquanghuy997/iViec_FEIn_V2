@@ -17,7 +17,7 @@ export async function getStaticProps() {
 }
 export default function RecruitmentAdmin() {
     return (
-            <Page title={"Tin tuyển dụng"}>
+            <Page title={"Duyệt tin"}>
                 <RecruitmentAdItem />
             </Page>
     );

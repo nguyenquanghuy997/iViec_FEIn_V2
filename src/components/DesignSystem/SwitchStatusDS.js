@@ -26,7 +26,7 @@ const SwitchItem = styled(Switch)(() => ({
     },
 }));
 
-export default function SwitchStatusDS({name, label}) {
+export default function SwitchStatusDS({name, label, disabled}) {
     const {control} = useFormContext();
     return (
         <Controller
@@ -34,7 +34,7 @@ export default function SwitchStatusDS({name, label}) {
             control={control}
             render={({field}) => (
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <SwitchItem {...field} checked={field.value}/>
+                    <SwitchItem {...field} checked={field.value} disabled={disabled}/>
                     <label
                         style={{
                             fontWeight: 600,

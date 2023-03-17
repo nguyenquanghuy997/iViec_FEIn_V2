@@ -630,41 +630,6 @@ export const RecruitmentItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const onTableRowClick = (record) => {
-    const selectedKey = record.id;
-    const selectedKeys = [...selectedRowKeys];
-
-    const index = selectedKeys.indexOf(selectedKey);
-
-    if (index === -1) {
-      selectedKeys.push(selectedKey);
-    } else {
-      selectedKeys.splice(index, 1);
-    }
-
-    if (selectedKeys?.length > 0) {
-      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = '89px';
-
-    } else {
-      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
-
-    }
-    setSelectedRowKeys(selectedKeys);
-  };
-
-  const onRow = (record) => {
-    return {
-      onClick: () => onTableRowClick(record),
-    };
-  };
-
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -696,11 +661,10 @@ export const RecruitmentItem = () => {
             menuItemText={menuItemText}
             UpdateListColumn={handleUpdateListColumnApplicants}
             settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
-            rowSelection={rowSelection}
-            onRow={onRow}
             scroll={{ x: 3954 }}
             nodata="Hiện chưa có tin tuyển dụng nào"
             selectedRowKeys={selectedRowKeys}
+            setSelectedRowKeys={setSelectedRowKeys}
           />
         </View>
         <RecruitmentBottomNav
