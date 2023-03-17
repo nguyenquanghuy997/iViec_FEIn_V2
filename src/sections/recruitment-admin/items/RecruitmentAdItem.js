@@ -398,6 +398,7 @@ export const RecruitmentAdItem = () => {
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
+          setselectedList={setSelectedRowKeys}
         />
       </Content>
       {isOpen && (

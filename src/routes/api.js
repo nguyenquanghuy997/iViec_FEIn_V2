@@ -162,7 +162,7 @@ export const API_GET_COMPANY_INFOR_BY_IDS = 'organization/Organization/GetOrgani
 export const API_UPDATE_COMPANY_INFOR = 'organization/Organization/UpdateOrganization'
 export const API_GET_IMAGE ='Image/GetImage'
 // Thông báo
-export const API_GET_LIST_NOTIFICATION = "api/UserNotifications/GetPaging";
+export const API_GET_LIST_NOTIFICATION = "/UserNotifications/GetPaging";
 export const API_MASK_READ_NOTIFICATION =
   "api/UserNotifications/MaskAsRead?id=";
 
@@ -205,7 +205,10 @@ export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/Get
 export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - get recruitment by organization
 
 // duyệt tin
-export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // get all recruitment
+export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // list tin cần iviec duyệt
+export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments"; // phê duyệt nhiều tin
+export const API_REJECT_RECRUITMENT = "/recruitment/Recruitment/RejectRecruitment"; // phê duyệt nhiều tin
+
 // job source nguồn job
 
 // get user from organization
