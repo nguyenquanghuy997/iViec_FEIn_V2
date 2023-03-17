@@ -422,7 +422,7 @@ export default function Board() {
         accounts={itemData}
         color={"#FB8906"}
         title="KẾT NỐI WEBSITE TUYỂN DỤNG NỘI BỘ"
-        type='inside'
+        type='outside'
       />
       <ConnectCard
         accounts={itemTest}

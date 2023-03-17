@@ -1,5 +1,5 @@
-import HeaderCard from "./HeaderCard";
-import Simple from "./components/Simple";
+import HeaderCard from "../HeaderCard";
+import Simple from "./Simple";
 import { Box } from "@mui/material";
 import "react-multi-carousel/lib/styles.css";
 
@@ -7,7 +7,18 @@ const HumanCompany = ({ deviceType }) => {
   return (
     <>
       <HeaderCard text={"Con người công ty"} />
-      <Box>
+      <Box
+        sx={{
+          px: 5,
+          py: 3,
+          background: "white",
+          "& li.react-multi-carousel-item": {
+            maxWidth: "215px!important",
+            objectFit: 'cover',
+            mr: 2
+          },
+        }}
+      >
         <Simple deviceType={deviceType} />
       </Box>
     </>
