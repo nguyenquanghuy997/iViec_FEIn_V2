@@ -1,21 +1,30 @@
 import { useGetRecruitmentByIdQuery } from "../RecruitmentSlice";
 import RecruitmentConfirmMultipleModal from "../modals/RecruitmentConfirmMultipleModal";
-import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
+import {DeleteIcon, EditIcon} from "@/assets/ActionIcon";
 import Content from "@/components/BaseComponents/Content";
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import { DivProcessStatus } from "@/utils/enum";
+import {DivProcessStatus, RecruitmentProcessStatus, RecruitmentWorkingForm} from "@/utils/enum";
 import {
   Box,
   Divider,
   Drawer,
-  IconButton,
+  IconButton, Link,
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
+import {PATH_DASHBOARD} from "@/routes/paths";
+import NextLink from "next/link";
+import {handleExportExcel} from "@/sections/recruitment/helper/excel";
+import {fDate} from "@/utils/formatTime";
+import {LIST_EXPERIENCE_NUMBER} from "@/utils/formatString";
 
-const RecruitmentBottomNav = ({ selectedList, open, onClose, onOpenForm }) => {
+const RecruitmentBottomNav = ({ selectedList, itemSelected, open, onClose, onOpenForm }) => {
+  useEffect(() => {
+
+  }, [])
+
   const { data: organization } = useGetRecruitmentByIdQuery(
     {
       Id: selectedList[0],
@@ -32,6 +41,40 @@ const RecruitmentBottomNav = ({ selectedList, open, onClose, onOpenForm }) => {
   const handleOpenFormWithCurrentNode = () => {
     onOpenForm();
   };
+
+  const exportExcel = (data) => {
+    const dataFormat = data?.map((recruitment, index) => {
+      const minSalary = recruitment.minSalary ? recruitment.minSalary : '';
+      const maxSalary = recruitment.maxSalary ? recruitment.maxSalary : '';
+      return {
+        index: index + 1,
+        name: recruitment.name || "",
+        jobPosition: recruitment?.jobPosition?.name || "",
+        organizationName: recruitment.organizationName || "",
+        processStatus: RecruitmentProcessStatus(recruitment.processStatus) || "",
+        startDate: fDate(recruitment?.startDate) || "",
+        endDate: fDate(recruitment?.endDate) || "",
+        createdTime: fDate(recruitment?.createdTime) || "",
+
+        numOfApplied: recruitment?.numOfApplied || 0,
+        numberPosition: recruitment?.numberPosition || 0,
+        numOfPass: recruitment?.numOfPass || 0,
+        numOfAcceptOffer: recruitment?.numOfAcceptOffer || 0,
+
+        ownerName: recruitment?.ownerName || "",
+        coOwnerName: recruitment?.coOwners?.map(item => item?.name).join(', ') || "",
+
+        recruitmentAddresses: recruitment.recruitmentAddresses.map(item => item?.provinceName).join(', ') || "",
+        recruitmentWorkingForms: recruitment.recruitmentWorkingForms.map(i => RecruitmentWorkingForm(i?.workingForm)).join(', ') || "",
+
+        salary: `${minSalary ? minSalary + '-' : minSalary}` + maxSalary,
+        candidateLevelName: recruitment.candidateLevelName || "",
+        workExperience: LIST_EXPERIENCE_NUMBER.find(item => item.value === recruitment.workExperience)?.name || "",
+        language: recruitment.workingLanguageName || "Tiếng Việt",
+      }
+    });
+    handleExportExcel(dataFormat)
+  }
 
   return (
     <Drawer
@@ -132,13 +175,13 @@ const RecruitmentBottomNav = ({ selectedList, open, onClose, onOpenForm }) => {
               }
             />
             {selectedList.length === 1 && (
-              <IconButton
-                size="small"
-                sx={{ color: "#8A94A5", mx: 1 }}
-                onClick={() => handleOpenFormWithCurrentNode(organization)}
-              >
-                <EditIcon />
-              </IconButton>
+                <NextLink href={PATH_DASHBOARD.recruitment.update(selectedList[0])} passHref>
+                  <Link>
+                    <IconButton size='small' sx={{ color: '#8A94A5', mx: 1 }}>
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                </NextLink>
             )}
             <ButtonDS
               type="submit"
@@ -153,7 +196,7 @@ const RecruitmentBottomNav = ({ selectedList, open, onClose, onOpenForm }) => {
                 textTransform: "none",
                 marginLeft: "12px",
               }}
-              onClick={() => handleOpenFormWithCurrentNode(organization)}
+              onClick={() => exportExcel(itemSelected)}
               icon={
                 <Iconify
                   icon={"vscode-icons:file-type-excel"}
