@@ -13,14 +13,15 @@ const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, han
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-            padding="16px 16px 4px 16px"
+            padding="16px"
+            backgroundColor={"#FDFDFD"}
         >
           <View style={{flexDirection: "row", alignItems: "center"}}>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
               <RHFTextField
                   name="searchKey"
                   placeholder="Tìm kiếm theo tên, email hoặc SĐT..."
-                  sx={{minWidth: "360px", height: '36px', '.MuiInput-root': {height: '36px'}}}
+                  sx={{minWidth: "360px", height: '36px'}}
                   InputProps={{
                     startAdornment: (
                         <InputAdornment position="start" sx={{ml: 1.5}}>
@@ -34,7 +35,6 @@ const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, han
               />
             </FormProvider>
             <ButtonFilterStyle
-                style={{height: 36}}
                 onClick={onOpenFilterForm}
                 startIcon={
                   <Iconify
@@ -42,6 +42,7 @@ const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, han
                       icon="material-symbols:filter-alt-outline"
                   />
                 }
+                style={{ height: 44 }}
             >
               Bộ lọc
             </ButtonFilterStyle>

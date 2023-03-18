@@ -1,10 +1,10 @@
 import React from 'react'
-import {AccordionDetails, AccordionSummary, Box, Checkbox, IconButton, Typography} from "@mui/material";
+import {AccordionDetails, AccordionSummary, Box, Checkbox, IconButton, Stack, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
 import {
   BoxFlex,
   CardEmailFormItemContentStyle,
-  CardEmailFormItemStyle,
+  CardEmailFormItemStyle, CardEmailFormItemSubTitleStyle,
   CardEmailFormItemTitleStyle
 } from "@/sections/emailform/style";
 import {AvatarDS} from "@/components/DesignSystem";
@@ -28,7 +28,7 @@ const CardEmailFormItem = ({isCheckbox, expanded, checked, onChangeSelected, onC
             id={`panel${index}a-header`}
         >
           <BoxFlex>
-            <CardEmailFormItemTitleStyle className="card-email-item-title">
+            <BoxFlex justifyContent="flex-start">
               { isCheckbox && <Checkbox
                   value={item}
                   checked={checked}
@@ -36,17 +36,23 @@ const CardEmailFormItem = ({isCheckbox, expanded, checked, onChangeSelected, onC
                   icon={<CheckboxIconDefault />}
                   checkedIcon={<CheckboxIconChecked />}
               /> }
-              {item.title}
-              <Typography className="card-email-item-subtitle" component="span">{item.subtitle}</Typography>
-            </CardEmailFormItemTitleStyle>
+              <AvatarDS
+                  sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "12px"}}
+                  name={item.lastName}
+              />
+              <Stack>
+                <CardEmailFormItemTitleStyle className="card-email-item-title">
+                  {`${item.lastName} ${item.firstName}`}
+                </CardEmailFormItemTitleStyle>
+                <CardEmailFormItemSubTitleStyle className="card-email-item-subtitle">
+                  {`${item.email} ${item.phoneNumber ? item.phoneNumber : ''}`}
+                </CardEmailFormItemSubTitleStyle>
+              </Stack>
+            </BoxFlex>
             {item.isActive && <Typography sx={{color: '#388E3C', fontSize: 12, fontWeight: 500, mr: 7}}>Đang áp dụng</Typography>}
           </BoxFlex>
           <BoxFlex>
             <BoxFlex>
-              <AvatarDS
-                  sx={{height: "24px", width: "24px", borderRadius: "100px", fontSize: "10px"}}
-                  name={item.user}
-              />
               <CardEmailFormItemContentStyle className="card-email-item-content-text">
                 {item.user}
                 <Typography component="span" className="card-email-item-content-subtext">

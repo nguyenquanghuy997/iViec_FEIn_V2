@@ -53,7 +53,7 @@ export const ApplicantItem = () => {
       JSON.stringify(Object.entries(dataFilter).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {}))
   );
   // api get list Column
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
+  const { data: ColumnData, isLoading: loadingColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
@@ -480,6 +480,8 @@ export const ApplicantItem = () => {
     setSelectedRowKeys([]);
     event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
   };
+
+  if (isLoading || loadingColumnData) return null;
 
   return (
     <View>

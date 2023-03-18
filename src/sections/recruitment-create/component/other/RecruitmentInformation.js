@@ -28,13 +28,15 @@ const Editor = dynamic(() => import('@/sections/recruitment-create/component/edi
 });
 
 const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
-  const {data: {items: ListOrganization} = []} = useGetOrganizationsDataWithChildQuery();
-  const {data: {items: JobCategoryList = []} = {}} = useGetJobCategoriesQuery();
-  const {data: {items: ListProvince = []} = {}} = useGetProvinceQuery();
-  const {data: ListCandidateLevels = []} = useGetListCandidateLevelsQuery();
-  const {data: {items: ListJobType = []} = {}} = useGetAllJobTypeQuery();
-  const {data: ListLanguage = []} = useGetListLanguagesQuery();
-  const {data: ListUserFromOrganization = []} = useGetAllUserFromOrganizationQuery({Id: organizationId});
+  const {data: {items: ListOrganization = []} = {}, isLoading: loadingOrganization} = useGetOrganizationsDataWithChildQuery();
+  const {data: {items: JobCategoryList = []} = {}, isLoading: loadingCategory} = useGetJobCategoriesQuery();
+  const {data: {items: ListProvince = []} = {}, isLoading: loadingProvince} = useGetProvinceQuery();
+  const {data: ListCandidateLevels = [], isLoading: loadingCadidateLevel} = useGetListCandidateLevelsQuery();
+  const {data: {items: ListJobType = []} = {}, isLoading: loadingJobType} = useGetAllJobTypeQuery();
+  const {data: ListLanguage = [], isLoading: loadingLanguage} = useGetListLanguagesQuery();
+  const {data: ListUserFromOrganization = [], isLoading: loadingUser} = useGetAllUserFromOrganizationQuery({Id: organizationId});
+
+  if(loadingOrganization || loadingCategory || loadingProvince || loadingCadidateLevel || loadingJobType || loadingLanguage || loadingUser) return null;
 
   return (
       <BoxWrapperStyle className="wrapper">

@@ -14,10 +14,12 @@ import {PATH_DASHBOARD} from "@/routes/paths";
 
 const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) => {
 
-  const {data: {items: ListPipeline = []} = {}} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
-  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
+  const {data: {items: ListPipeline = []} = {}, isLoading} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
+  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}, isLoading: loadingPipe} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
 
   const router = useRouter();
+
+  if (isLoading || loadingPipe) return null;
 
   return (
       <BoxWrapperStyle className="wrapper">

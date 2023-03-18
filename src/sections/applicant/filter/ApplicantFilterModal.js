@@ -1,6 +1,6 @@
 import {memo, useEffect, useMemo, useState} from "react";
 import {isEmpty} from "lodash";
-import {Box, ClickAwayListener, Divider, IconButton, Stack, SwipeableDrawer, Typography} from "@mui/material";
+import {Box, ClickAwayListener, Divider, IconButton, Stack, Drawer, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
@@ -22,17 +22,12 @@ import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useDebounce} from "@/hooks/useDebounce";
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
-import {
-  useGetAllJobSourcesQuery,
-  useGetAllUserFromOrganizationQuery,
-  useGetSkillsQuery,
-} from "@/sections/applicant";
+import {useGetAllJobSourcesQuery, useGetAllUserFromOrganizationQuery, useGetSkillsQuery,} from "@/sections/applicant";
 import {
   useGetDistrictByProvinceIdQuery,
   useGetJobCategoriesQuery,
   useGetProvinceQuery
 } from "@/sections/companyinfor/companyInforSlice";
-import {convertFlatDataToTree} from "@/utils/function";
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
 import {useGetRecruitmentByOrganizationIdQuery} from "@/sections/recruitment";
 
@@ -87,12 +82,8 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
   const [checked, setChecked] = useState(false);
 
   const dataFilter = useSelector((state) => state.filterReducer.data);
-  // const ListRecruitmentByOrganization = useSelector((state) => state.applicantFilterReducer.data);
 
   const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setDataFilter(data));
-  // const handleClearDataFilterByKey = (data) => dispatch(filterSlice.actions.clearDataFilterByKey(data));
-  // const handleSetDataRecruitment = (data) => dispatch(applicantFilterSlice.actions.setData(data));
-  // const handleClearDataRecruitment = () => dispatch(applicantFilterSlice.actions.clearData());
 
   // yup & handle form
   const ApplicantFormSchema = Yup.object().shape({
@@ -106,9 +97,9 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
     mode: 'all',
     resolver: yupResolver(ApplicantFormSchema),
     defaultValues: useMemo(
-        () => ({...defaultValues, ...dataFilter}),
+        () => ({ ...defaultValues, ...dataFilter }),
         [dataFilter]
-    ),
+    )
   });
   const {watch, handleSubmit, formState: {isSubmitting}} = methods;
   const watchProvinceId = watch("livingAddressProvinceIds");
@@ -170,7 +161,8 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
   const {data: {items: ListProvince = []} = {}, isLoading: isLoadingProvince} = useGetProvinceQuery();
   const {data: {items: ListDistrictLiving = []} = {}, isLoading: isLoadingDistrictLiving} = useGetDistrictByProvinceIdQuery(watchProvinceId, {skip: isEmpty(watchProvinceId)});
   const {data: {items: ListDistrictHomeTower = []} = {}, isLoading: isLoadingDistrictHomeTower} = useGetDistrictByProvinceIdQuery(watchProvinceHomeTownId, {skip: isEmpty(watchProvinceHomeTownId)});
-  const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery({Id: watchOrganizationIds[watchOrganizationIds.length - 1]});
+  // const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery({Id: watchOrganizationIds[watchOrganizationIds.length - 1]});
+  const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery();
   // const [getRecruitmentByOrganization, result] = useLazyGetRecruitmentByOrganizationIdQuery();
   const {data: {items: ListRecruitmentByOrganization = [] } = {}, isLoading: isLoadingRecruitment} = useGetRecruitmentByOrganizationIdQuery();
 
@@ -253,15 +245,13 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
 
   if (isLoadingOrganization || isLoadingJobSource || isLoadingJobCategory || isLoadingSkill || isLoadingProvince || isLoadingDistrictLiving || isLoadingDistrictHomeTower || isLoadingUser || isLoadingRecruitment) return null;
 
-  console.log(1)
-
   return (
       <ClickAwayListener
           mouseEvent="onMouseDown"
           touchEvent="onTouchStart"
           onClickAway={() => isOpen && onClose()}
       >
-        <SwipeableDrawer
+        <Drawer
             open={isOpen}
             onClose={onClose}
             onOpen={onOpen}
@@ -269,7 +259,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
             variant="persistent"
             PaperProps={{
               sx: {
-                width: {xs: 1, sm: 560, md: 384},
+                width: {xs: 1, sm: 560, md: 400},
                 boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
                 zIndex: 999,
                 position: 'fixed',
@@ -284,7 +274,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
-              <IconButton size="small" onClick={onClose}>
+              <IconButton size="small" onClick={onClose} sx={{ mr: 1.5 }}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
             </ApplicantModalHeadStyle>
@@ -295,13 +285,12 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
               <Stack sx={{pb: 3, px: 2}}>
                 <DynamicFilterForm
                     columns={columns}
+                    disabled={{
+                      livingAddressDistrictIds: !watchlivingAddressProvinceIds,
+                      homeTowerDistrictIds: !watchhomeTowerProvinceIds,
+                    }}
                     options={{
-                      organizationIds: convertFlatDataToTree(ListOrganization?.map((item) => ({
-                        ...item,
-                        title: item.name,
-                        key: item.id,
-                        value: item.id
-                      }))),
+                      organizationIds: ListOrganization,
                       jobSourceIds: ListJobSources,
                       recruitmentIds: ListRecruitmentByOrganization,
                       recruitmentPipelineStates: LIST_STEP_RECRUITMENT,
@@ -348,7 +337,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
               />
             </ApplicantModalFooterStyle>
           </FormProvider>
-        </SwipeableDrawer>
+        </Drawer>
       </ClickAwayListener>
   );
 }
