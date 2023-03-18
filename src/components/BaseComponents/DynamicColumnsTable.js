@@ -28,6 +28,8 @@ const DynamicColumnsTable = (props) => {
     handleChangePagination,
     selectedRowKeys,
     setSelectedRowKeys,
+    itemSelected,
+    setItemSelected
   } = props;
 
   const [columnsTable, setColumnsTable] = useState([]);
@@ -253,6 +255,7 @@ const DynamicColumnsTable = (props) => {
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
+    setItemSelected(source?.items.filter(item => newSelectedRowKeys.includes(item.id)))
   };
   const rowSelection = {
     selectedRowKeys,
@@ -261,13 +264,16 @@ const DynamicColumnsTable = (props) => {
   const onTableRowClick = (record) => {
     const selectedKey = record.id;
     const selectedKeys = [...selectedRowKeys];
+    const selectedList = [...itemSelected];
 
     const index = selectedKeys.indexOf(selectedKey);
 
     if (index === -1) {
       selectedKeys.push(selectedKey);
+      selectedList.push(record);
     } else {
       selectedKeys.splice(index, 1);
+      selectedList.splice(index, 1);
     }
 
     if (selectedKeys?.length > 0) {
@@ -280,6 +286,7 @@ const DynamicColumnsTable = (props) => {
       )[0].style.paddingBottom = null;
     }
     setSelectedRowKeys(selectedKeys);
+    setItemSelected(selectedList)
   };
 
   const onRow = (record) => {

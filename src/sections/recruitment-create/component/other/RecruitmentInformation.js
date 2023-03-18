@@ -4,7 +4,6 @@ import DividerCard from "@/sections/recruitment-create/component/DividerCard";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
 import {RHFAutocomplete, RHFTextField} from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import RHFRecruitmentEditor from "@/sections/recruitment-create/component/form/RHRRecruitmentEditor";
 import DateFilter from "@/sections/dynamic-filter/DateFilter";
 import {LabelStyle} from "@/components/hook-form/style";
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
@@ -22,6 +21,11 @@ import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormat
 import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 import OrganizationSelect from "@/sections/recruitment-create/component/form/OrganizationSelect";
 import RHFDropdownMultiple from "@/sections/recruitment-create/component/form/RHFDropdownMultiple";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(() => import('@/sections/recruitment-create/component/editor/RHFEditor'), {
+  ssr: false,
+});
 
 const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
   const {data: {items: ListOrganization} = []} = useGetOrganizationsDataWithChildQuery();
@@ -231,7 +235,7 @@ const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
                       <RHFDropdown
                           name="currencyUnit"
                           title="Loại tiền tệ"
-                          value={0}
+                          defaultValue={0}
                           placeholder="VNĐ"
                           fullWidth
                           isRequired
@@ -303,26 +307,38 @@ const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
             </Box>
             <Box sx={{px: 4, py: 0}}>
               <LabelStyle required={true}>Mô tả công việc</LabelStyle>
-              <RHFRecruitmentEditor
+              {/*<RHFRecruitmentEditor*/}
+              {/*    name="description"*/}
+              {/*    placeholder="Nhập mô tả công việc..."*/}
+              {/*    sx={{width: '780px', minHeight: '370px'}}*/}
+              {/*/>*/}
+              <Editor
                   name="description"
                   placeholder="Nhập mô tả công việc..."
-                  sx={{width: '780px', minHeight: '370px'}}
               />
             </Box>
             <Box sx={{px: 4, py: 3}}>
               <LabelStyle required={true}>Yêu cầu công việc</LabelStyle>
-              <RHFRecruitmentEditor
+              {/*<RHFRecruitmentEditor*/}
+              {/*    name="requirement"*/}
+              {/*    placeholder="Nhập mô tả công việc..."*/}
+              {/*    sx={{width: '780px', minHeight: '370px'}}*/}
+              {/*/>*/}
+              <Editor
                   name="requirement"
                   placeholder="Nhập mô tả công việc..."
-                  sx={{width: '780px', minHeight: '370px'}}
               />
             </Box>
             <Box sx={{px: 4, py: 0}}>
               <LabelStyle required={true}>Quyền lợi</LabelStyle>
-              <RHFRecruitmentEditor
+              {/*<RHFRecruitmentEditor*/}
+              {/*    name="benefit"*/}
+              {/*    placeholder="Nhập quyền lợi..."*/}
+              {/*    sx={{width: '780px', minHeight: '370px'}}*/}
+              {/*/>*/}
+              <Editor
                   name="benefit"
                   placeholder="Nhập quyền lợi..."
-                  sx={{width: '780px', minHeight: '370px'}}
               />
             </Box>
             <Box sx={{px: 4, py: 3, pt: 2}}>

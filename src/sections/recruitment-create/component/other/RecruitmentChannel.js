@@ -29,7 +29,7 @@ const dataChannels = [
 ];
 
 const RecruitmentChannel = () => {
-  const [checked, setChecked] = useState([true, true, false]);
+  const [checked, setChecked] = useState([false, false, false]);
   const handleChange = (index) => {
     const newChecked = [...checked].map((item, idx) => index === idx ? !item : item)
     setChecked(newChecked)

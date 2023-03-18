@@ -134,7 +134,7 @@ const calcFileSize = (fileSize) => {
 }
 
 const cleanObject = (obj) => {
-  return Object.entries(obj).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {})
+  return Object.entries(obj).reduce((a, [k, v]) => ((v === null || v === undefined || v === "" || v?.length === 0) ? a : ((a[k] = v), a)), {})
 }
 
 export {

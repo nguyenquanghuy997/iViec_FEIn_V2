@@ -59,7 +59,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       jobPositionId: '',
       ownerId: '',
       workExperience: '',
-      currencyUnit: '',
+      currencyUnit: 0,
       candidateLevelId: "",
       organizationPipelineId: '',
       isAutomaticStepChange: false,
@@ -99,7 +99,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     description: Yup.string().required("Mô tả công việc không được bỏ trống"),
     requirement: Yup.string().required("Yêu cầu công việc không được bỏ trống"),
     benefit: Yup.string().required("Quyền lợi không được bỏ trống"),
-    // owner & concil
+    // owner & council
     ownerId: Yup.string().required("Cán bộ tuyển dụng không được bỏ trống"),
     // pipeline
     organizationPipelineId: Yup.string().required("Quy trình tuyển dụng không được bỏ trống"),
@@ -155,6 +155,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
         setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => item?.councilUserId))
         setValue('coOwnerIds', Recruitment?.coOwners?.map(item => item?.id))
         setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
+        setValue('currencyUnit', Recruitment?.currencyUnit);
       }
     }
   }, [Recruitment])
@@ -207,7 +208,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       jobPositionId: data.jobPositionId,
       ownerId: data.ownerId,
       workExperience: data.workExperience,
-      currencyUnit: data.currencyUnit,
+      currencyUnit: data.currencyUnit || 0,
       candidateLevelId: data.candidateLevelId,
       organizationPipelineId: data.organizationPipelineId,
       isAutomaticStepChange: data.isAutomaticStepChange,
@@ -254,7 +255,10 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       }
     } else {
       try {
-        await createRecruitment(cleanObject(body)).unwrap();
+        await createRecruitment(cleanObject({
+          ...body,
+          recruitmentCreationType: isOpenSaveDraft ? 0 : 1
+        })).unwrap();
         setIsOpenSubmitApprove(false);
         enqueueSnackbar("Thêm tin tuyển dụng thành công!", {
           autoHideDuration: 1000
@@ -279,6 +283,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
             style={{padding: '18px 0', boxShadow: 'none', borderBottom: '1px solid #E7E9ED'}}
             errors={isValid}
             watchName={watchNameDebounce}
+            processStatus={Recruitment?.processStatus}
             title={!isEmpty(Recruitment) ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng'}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
