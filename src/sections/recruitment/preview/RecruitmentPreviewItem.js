@@ -1,4 +1,4 @@
-import {NavGoBack} from "@/components/DesignSystem";
+import {ButtonDS, NavGoBack} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
@@ -14,16 +14,19 @@ import {
   Button,
   ButtonGroup,
   ClickAwayListener,
-  Container,
-  Grow,
-  InputAdornment, MenuItem, MenuList,
-  Paper, Popper,
+  Container, Divider,
+  InputAdornment,
+  MenuItem,
+  MenuList,
   Stack,
   Tab,
-  Tooltip,
+  Tooltip, Typography,
 } from "@mui/material";
-import {useRef, useState} from "react";
+import React, {useState} from "react";
 import {useForm} from "react-hook-form";
+import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
+import {DownloadLineIcon, ImportLinkIcon, TeamLineIcon} from "@/assets/ActionIcon";
+import {RecruitmentApplicationChooseStage} from "@/sections/recruitment/modals/RecruitmentApplicationChooseStage";
 
 function RecruitmentPreviewItem({}) {
   const defaultValues = {
@@ -237,26 +240,27 @@ function RecruitmentPreviewItem({}) {
     </div>
   </div>
   `;
+
   const [value, setValue] = useState("1");
-  const [openGroup, setOpenGroup] = useState(false);
-  const anchorRef = useRef(null);
+  const [showDialogStage, setShowDialogStage] = useState(false);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  const handleCloseGroup = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-    setOpenGroup(false);
-  };
-
-  const handleToggle = () => {
-    setOpenGroup((prevOpen) => !prevOpen);
-  };
-
   const smDown = useResponsive("down", "sm");
   const {themeStretch} = useSettings();
+
+  const [openGroup, setOpenGroup] = useState(false);
+  const [modelApplication, setModelApplication] = useState({id: undefined, stage: undefined});
+  const handleCloseGroup = () => {
+    setModelApplication(modelApplication);
+    setOpenGroup(false);
+  };
+  const handleOpenGroup = () => {
+    setOpenGroup(true);
+  };
+
+
   return (
     <div>
       <TabContext value={value}>
@@ -368,139 +372,235 @@ function RecruitmentPreviewItem({}) {
               </TabList>
             </Box>
           </Box>
-          <BoxFlex>
-            <Stack flexDirection="row" alignItems="center">
-              <Box>
-                <TabList
-                  onChange={handleChange}
-                  aria-label="lab API tabs example"
-                  sx={{
-                    "& .MuiTab-root": {
-                      minHeight: "36px",
-                      textTransform: "unset",
-                      padding: "8px 12px",
-                    },
-                    "& .Mui-selected": {
-                      color: "white !important",
-                      backgroundColor: "#455570",
-                      borderRadius: "6px",
-                    },
-                    "& .MuiTabs-indicator": {
-                      display: "none",
-                    },
-                  }}
-                >
-                  <Tab
-                    label="Kanban"
-                    value="1"
+          {value == 1 ? (
+            <BoxFlex>
+              <Stack flexDirection="row" alignItems="center">
+                <Box>
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
                     sx={{
-                      "&:not(:last-of-type)": {
-                        marginRight: "16px",
+                      "& .MuiTab-root": {
+                        minHeight: "36px",
+                        textTransform: "unset",
+                        padding: "8px 12px",
+                      },
+                      "& .Mui-selected": {
+                        color: "white !important",
+                        backgroundColor: "#455570",
+                        borderRadius: "6px",
+                      },
+                      "& .MuiTabs-indicator": {
+                        display: "none",
                       },
                     }}
-                  />
-                  <Tab label="List" value=""/>
-                </TabList>
-              </Box>
-              <FormProvider methods={methods}>
-                <RHFTextField
-                  name="searchKey"
-                  placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
-                  sx={{minWidth: "510px"}}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ml: 1.5}}>
-                        <Iconify
-                          icon={"eva:search-fill"}
-                          sx={{color: "text.disabled", width: 20, height: 20}}
-                        />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </FormProvider>
-              <ButtonFilterStyle
-                startIcon={
-                  <Iconify
-                    sx={{height: "18px", width: "18px"}}
-                    icon="material-symbols:filter-alt-outline"
-                  />
-                }
-              >
-                Bộ lọc
-              </ButtonFilterStyle>
-            </Stack>
-            <Stack flexDirection={"row"}>
-              <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button" sx={{
-                boxShadow: "unset",
-                '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-                  borderColor: "white"
-                }, '& .MuiButtonGroup-grouped:hover': {
-                  opacity: 0.8
-                }
-              }}>
-                <Button>
-                  <Iconify
-                    icon={"material-symbols:add"}
-                    width={20}
-                    height={20}
-                    color="#fff"
-                    mr={1}
-                  />
-                  Thêm ứng viên</Button>
-                <Button
-                  size="small"
-                  aria-controls={open ? 'split-button-menu' : undefined}
-                  aria-expanded={open ? 'true' : undefined}
-                  aria-haspopup="menu"
-                  onClick={handleToggle}
-                >
-                  <Iconify
-                    icon={"material-symbols:arrow-drop-down"}
-                    width={20}
-                    height={20}
-                    color="#fff"
-                  />
-                </Button>
-              </ButtonGroup>
-              <Popper
-                sx={{
-                  zIndex: 1,
-                }}
-                open={openGroup}
-                role={undefined}
-                anchorEl={anchorRef.current}
-                transition
-              >
-                {({TransitionProps, placement}) => (
-                  <Grow
-                    {...TransitionProps}
-                    style={{
-                      transformOrigin:
-                        placement === 'bottom' ? 'left top' : 'left top',
-                      anchorOrigin: 'right bottom'
-                    }}
                   >
-                    <Paper>
+                    <Tab
+                      label="Kanban"
+                      value="1"
+                      sx={{
+                        "&:not(:last-of-type)": {
+                          marginRight: "16px",
+                        },
+                      }}
+                    />
+                    <Tab label="List" value=""/>
+                  </TabList>
+                </Box>
+
+                <FormProvider methods={methods}>
+                  <RHFTextField
+                    name="searchKey"
+                    placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
+                    sx={{minWidth: "510px"}}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ml: 1.5}}>
+                          <Iconify
+                            icon={"eva:search-fill"}
+                            sx={{
+                              color: "text.disabled",
+                              width: 20,
+                              height: 20,
+                            }}
+                          />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </FormProvider>
+                <ButtonFilterStyle
+                  startIcon={
+                    <Iconify
+                      sx={{height: "18px", width: "18px"}}
+                      icon="material-symbols:filter-alt-outline"
+                    />
+                  }
+                >
+                  Bộ lọc
+                </ButtonFilterStyle>
+              </Stack>
+              <Stack flexDirection={"row"}>
+                <ButtonGroup variant="contained" aria-label="split button" sx={{
+                  boxShadow: "unset",
+                  '& .MuiButtonGroup-grouped:not(:last-of-type)': {
+                    borderColor: "white"
+                  }, '& .MuiButtonGroup-grouped:hover': {
+                    opacity: 0.8
+                  }
+                }}>
+
+                  <Button onClick={() => setShowDialogStage(true)}>
+                    <Iconify
+                      icon={"material-symbols:add"}
+                      width={20}
+                      height={20}
+                      color="#fff"
+                      mr={1}
+                    />
+                    Thêm ứng viên
+                  </Button>
+                  <LightTooltip
+                    placement="bottom-start"
+                    onClose={handleCloseGroup}
+                    disableFocusListener
+                    disableHoverList ener
+                    disableTouchListener
+                    open={openGroup}
+                    title={
                       <ClickAwayListener onClickAway={handleCloseGroup}>
-                        <MenuList autoFocusItem>
+                        <MenuList autoFocusItem divider={true} disableGutters={true}>
                           <MenuItem>
-                            Tải mẫu Excel
+                            <DownloadLineIcon/>
+                            <Typography ml={"12px"} variant={"textSize13600"}>
+                              Tải mẫu Excel
+                            </Typography>
                           </MenuItem>
+                          <Divider/>
                           <MenuItem>
-                            Import Excel
+                            <ImportLinkIcon sx={{mr: "12px"}}/>
+                            <Typography ml={"12px"} variant={"textSize13600"}>
+                              Import Excel
+                            </Typography>
                           </MenuItem>
+                          <Divider/>
                           <MenuItem>
-                            Scan CV hàng loạt
+                            <TeamLineIcon sx={{mr: "12px"}}/>
+                            <Typography ml={"12px"} variant={"textSize13600"}>
+                              Scan CV hàng loạt
+                            </Typography>
                           </MenuItem>
                         </MenuList>
                       </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-            </Stack>
-          </BoxFlex>
+                    }
+                  >
+                    <Button
+                      size="small"
+                      aria-haspopup="menu"
+                      onClick={handleOpenGroup}
+                    >
+                      <Iconify
+                        icon={"material-symbols:arrow-drop-down"}
+                        width={20}
+                        height={20}
+                        color="#fff"
+                      />
+                    </Button>
+                  </LightTooltip>
+                </ButtonGroup>
+                <RecruitmentApplicationChooseStage show={showDialogStage} setShow={setShowDialogStage}
+                                                   setStage={setModelApplication}/>
+              </Stack>
+            </BoxFlex>
+          ) : (
+            <BoxFlex>
+              <Stack flexDirection="row" alignItems="center">
+                <Box>
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
+                    sx={{
+                      "& .MuiTab-root": {
+                        minHeight: "36px",
+                        textTransform: "unset",
+                        padding: "8px 12px",
+                      },
+                      "& .Mui-selected": {
+                        color: "white !important",
+                        backgroundColor: "#455570",
+                        borderRadius: "6px",
+                      },
+                      "& .MuiTabs-indicator": {
+                        display: "none",
+                      },
+                    }}
+                  >
+                    <Tab
+                      label="Kanban"
+                      value="1"
+                      sx={{
+                        "&:not(:last-of-type)": {
+                          marginRight: "16px",
+                        },
+                      }}
+                    />
+                    <Tab label="List" value=""/>
+                  </TabList>
+                </Box>
+
+                <FormProvider methods={methods}>
+                  <RHFTextField
+                    name="searchKey"
+                    placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
+                    sx={{minWidth: "510px"}}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ml: 1.5}}>
+                          <Iconify
+                            icon={"eva:search-fill"}
+                            sx={{
+                              color: "text.disabled",
+                              width: 20,
+                              height: 20,
+                            }}
+                          />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </FormProvider>
+                <ButtonFilterStyle
+                  startIcon={
+                    <Iconify
+                      sx={{height: "18px", width: "18px"}}
+                      icon="material-symbols:filter-alt-outline"
+                    />
+                  }
+                >
+                  Bộ lọc
+                </ButtonFilterStyle>
+              </Stack>
+              <Stack flexDirection={"row"}>
+                <ButtonDS
+                  tittle={"Đặt lịch phỏng vấn"}
+                  type="submit"
+                  sx={{
+                    textTransform: "none",
+                    boxShadow: "none",
+                  }}
+                  icon={
+                    <Iconify
+                      icon={"material-symbols:add"}
+                      width={20}
+                      height={20}
+                      color="#fff"
+                      mr={1}
+                    />
+                  }
+                />
+              </Stack>
+            </BoxFlex>
+          )}
         </HeadingBar>
         <Container
           maxWidth={themeStretch ? false : "xl"}
