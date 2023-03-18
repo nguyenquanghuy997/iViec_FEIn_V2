@@ -45,7 +45,6 @@ export const PipelineDraggableItem = ({
         borderwidth={1}
         borderradius={6}
         bgcolor={"#fff"}
-        
         bordercolor={"#C9D9E0"}
       >
         <View>
@@ -57,10 +56,14 @@ export const PipelineDraggableItem = ({
         </View>
 
         <View flex="true" mh={12}>
-          <Text fontSize={15} fontWeight={"600"}>
-            {data.name}
+        <Text style={{fontSize:15 , fontWeight:600, marginBottom:"2px"}} >
+            {data?.stageType?.name}
           </Text>
-
+          {data?.exam && 
+            <Text style={{fontSize:15 , fontWeight:600, color:"#1976D2", marginBottom:"2px"}} >
+              Đề thi: {data?.exam?.name}
+            </Text>
+          }
           {!!data.des && <Text>{data.des}</Text>}
         </View>
 
@@ -136,22 +139,18 @@ export const PipelineDraggableItem = ({
       >
         <View>
           <Iconify
-              icon={"mingcute:lock-line"}
-              width={16}
-              height={16}
-              color="#455570"
-            />
+            icon={"mingcute:lock-line"}
+            width={16}
+            height={16}
+            color="#455570"
+          />
         </View>
-        <View
-          flex="true"
-          pl={12}
-        >
+        <View flex="true" pl={12}>
           <Text fontsize={15} fontweight={"600"}>
-            {data[0].name}
+            {data[0]?.name}
           </Text>
-          {!!data[0].des && <Text>{data[0].des}</Text>}
+          {!!data[0]?.des && <Text>{data[0]?.des}</Text>}
         </View>
-        
       </View>
     );
   }

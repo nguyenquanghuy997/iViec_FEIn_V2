@@ -1,6 +1,7 @@
 import { useLazyGetAllPipelineQuery } from "../PipelineFormSlice";
 import PipelineHeader from "../PipelineHeader";
 import PipelineFilterModal from "../modals/PipelineFilterModal";
+import PipelineBottomNav from "./PipelineBottomNav";
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import { AvatarDS } from "@/components/DesignSystem";
@@ -10,9 +11,10 @@ import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import { Status } from "@/utils/enum";
+import { PipelineStateType, Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Tag } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +37,19 @@ export const PipelineItem = () => {
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
+  const handleChangePagination = (pageIndex, pageSize) => {
+    setPaginationSize(pageSize);
+    setPage(pageIndex);
+    if (query) {
+      getAllFilter({
+        ...queryParams,
+        pageSize: pageSize,
+        pageIndex: pageIndex,
+      }).unwrap();
+    } else {
+      getAllFilter({ pageSize: pageSize, pageIndex: pageIndex }).unwrap();
+    }
+  };
   const columns = [
     {
       title: "STT",
@@ -43,22 +58,71 @@ export const PipelineItem = () => {
       width: "60px",
       fixed: "left",
     },
-    { dataIndex: "name", title: "Quy trình tuyển dụng", width: "240px", fixed: "left", },
+    {
+      dataIndex: "name",
+      title: "Quy trình tuyển dụng",
+      width: "240px",
+      fixed: "left",
+    },
     {
       dataIndex: "organizationPipelineStates",
       title: "Bước tuyển dụng",
-      width: "520px",
+      width: "400px",
       name: "organizationPipelineStates",
       type: "select",
       label: "Bước tuyển dụng",
-      render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#E53935" }}>
-          {Status(item)}
-        </span>
+      render: (_, { organizationPipelineStates }) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {organizationPipelineStates?.map((p, index) => {
+            if (index < 6) {
+              if (index < 5) {
+                return (
+                  <span
+                    key={index}
+                    style={{
+                      color: "#172B4D",
+                      fontWeight: 400,
+                      fontSize: 13,
+                      display: "flex",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {PipelineStateType(p?.pipelineStateType)}
+
+                    {index < organizationPipelineStates.length - 1 && index < 4 && (
+                      <Iconify
+                        width={16}
+                        height={16}
+                        icon="ic:round-keyboard-arrow-right"
+                      />
+                    )}
+                  </span>
+                );
+              } else {
+                var indexplus = organizationPipelineStates.length - 5;
+                return (
+                  <Tag
+                    key={p}
+                    style={{
+                      background: "#EFF3F7",
+                      borderRadius: "4px",
+                      color: "#5C6A82",
+                      border: "none",
+                      marginLeft:"8px"
+                    }}
+                  >
+                    +{indexplus}
+                  </Tag>
+                );
+              }
+            }
+          })}
+        </div>
       ),
     },
     {
-      dataIndex: "numberOfRecruitmentApplied",
+      dataIndex: "recruitmentAppliedCount",
       title: "Số tin áp dụng",
       width: "160px",
       align: "center",
@@ -71,7 +135,7 @@ export const PipelineItem = () => {
       type: "select",
       label: "Trạng thái",
       render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#E53935" }}>
+        <span style={{ color: item ? "#388E3C" : "#455570" }}>
           {Status(item)}
         </span>
       ),
@@ -83,9 +147,7 @@ export const PipelineItem = () => {
       type: "date",
       label: "Ngày tạo",
       name: "createdTime",
-      render: (date) => {
-        date != null ? fDate(date) : "";
-      },
+      render: (date) => fDate(date),
       items: [
         {
           name: "createdTimeFrom",
@@ -167,23 +229,25 @@ export const PipelineItem = () => {
   });
 
   const { handleSubmit } = methods;
-
+  const queryParams = {
+    searchKey: query.searchKey,
+    isActive: query.isActive ? query.isActive : null,
+    createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
+    createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
+    creatorIds:
+      query.creatorIds && typeof query.creatorIds === "string"
+        ? query.creatorIds
+        : query.creatorIds && query.creatorIds,
+    pageSize: paginationSize,
+    pageIndex: page,
+  };
   useEffect(() => {
     if (!isReady) return;
-    const queryParams = {
-      searchKey: query.searchKey,
-      isActive: query.isActive ? query.isActive : null,
-      createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-      createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-      creatorIds:
-        query.creatorIds && typeof query.creatorIds === "string"
-          ? query.creatorIds
-          : query.creatorIds && query.creatorIds,
-    };
+
     if (query) {
       getAllFilter(queryParams).unwrap();
     } else {
-      getAllFilter().unwrap();
+      getAllFilter({ pageSize: paginationSize, pageIndex: page }).unwrap();
     }
   }, [isReady, query]);
 
@@ -233,10 +297,25 @@ export const PipelineItem = () => {
   const refreshData = () => {
     getAllFilter().unwrap();
   };
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [, setIsOpenBottomNav] = useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+    setSelectedRowKeys([]);
+    event.currentTarget.getElementsByClassName(
+      "css-28xiqa"
+    )[0].style.paddingBottom = null;
+  };
   return (
     <View>
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
+          page={page}
+          paginationSize={paginationSize}
+          handleChangePagination={handleChangePagination}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
           columns={columns}
           source={Data}
           loading={isLoading}
@@ -247,8 +326,6 @@ export const PipelineItem = () => {
           scroll={{ x: 1618 }}
           isSetting={true}
           nodata="Hiện chưa có quy trình tuyển dụng nào"
-          setPaginationSize={setPaginationSize}
-          setPage={setPage}
           filter={
             <PipelineHeader
               methods={methods}
@@ -260,6 +337,13 @@ export const PipelineItem = () => {
               onRefreshData={refreshData}
             />
           }
+        />
+        <PipelineBottomNav
+          open={selectedRowKeys?.length > 0}
+          onClose={toggleDrawer(false)}
+          selectedList={selectedRowKeys || []}
+          onOpenForm={toggleDrawer(true)}
+          setselectedList={setSelectedRowKeys}
         />
       </Content>
       {isOpen && (
