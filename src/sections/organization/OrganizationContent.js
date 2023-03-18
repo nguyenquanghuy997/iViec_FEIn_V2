@@ -141,7 +141,7 @@ const OrganizationContent = () => {
             {
               ListUserAdmin?.map(user => {
                 return (
-                    <Stack flexDirection="row" sx={{mt: 2, mr: 2}}>
+                    <Stack flexDirection="row" sx={{mt: 2, mr: 2}} key={user?.id}>
                       <Box sx={{position: 'relative'}}>
                         <Avatar variant="rounded" sx={{width: 40, height: 40}}/>
                         <span style={{position: 'absolute', top: -12, right: -6}}>
