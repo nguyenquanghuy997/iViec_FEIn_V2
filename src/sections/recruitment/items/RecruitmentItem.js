@@ -434,7 +434,7 @@ export const RecruitmentItem = () => {
   });
 
   const { handleSubmit } = methods;
-  const queryParams = {
+  let queryParams = {
     ...query,
     applicantSkillIds:
       query.applicantSkillIds && typeof query.applicantSkillIds === "string"

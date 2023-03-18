@@ -112,6 +112,16 @@ export const DialogModelStyle = styled(Dialog)(({ }) => ({
     },
   },
 }));
+export const DialogModel = styled(Dialog)(({ }) => ({
+  "& .MuiDialog-container": {
+    "& .MuiPaper-root": {
+      padding: 0,
+      borderRadius: "6px",
+      width: 'max-content',
+      maxWidth: "600px !important",
+    },
+  },
+}));
 export const DialogContentTextModelStyle = styled(DialogContentText)(({ theme }) => ({
   "&.subtite": {
     textAlign: "center",

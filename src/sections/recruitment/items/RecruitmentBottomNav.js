@@ -13,7 +13,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {PATH_DASHBOARD} from "@/routes/paths";
 import NextLink from "next/link";
 import {handleExportExcel} from "@/sections/recruitment/helper/excel";
@@ -21,9 +21,6 @@ import {fDate} from "@/utils/formatTime";
 import {LIST_EXPERIENCE_NUMBER} from "@/utils/formatString";
 
 const RecruitmentBottomNav = ({ selectedList, itemSelected, open, onClose, onOpenForm }) => {
-  useEffect(() => {
-
-  }, [])
 
   const { data: organization } = useGetRecruitmentByIdQuery(
     {
