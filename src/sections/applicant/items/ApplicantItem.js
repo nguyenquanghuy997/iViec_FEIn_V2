@@ -48,8 +48,6 @@ export const ApplicantItem = () => {
 
   const { handleSubmit } = methods;
 
-  console.log(dataFilter)
-
   // api get list
   const { data: Data, isLoading } = useGetAllFilterApplicantQuery(
       JSON.stringify(Object.entries(dataFilter).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {}))

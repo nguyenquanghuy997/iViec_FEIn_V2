@@ -13,6 +13,7 @@ import {BoxFlex} from "@/sections/emailform/style";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 
 const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, watchName, ...props}) => {
+    // processStatus
     return (
         <HeadingBar style={{marginBottom: '28px', position: 'fixed', top: '64px'}} {...props}>
             <BoxFlex>
