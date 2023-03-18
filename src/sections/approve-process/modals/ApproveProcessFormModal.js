@@ -12,7 +12,7 @@ import {ViewModel} from "@/utils/cssStyles";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Button, CircularProgress, Divider, Grid, IconButton, Modal, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useFieldArray, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
@@ -20,6 +20,7 @@ import {MinusIcon} from "@/assets/ActionIcon";
 import {ApproveProcessFormLevelItem} from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
 import {styled} from "@mui/styles";
 import {formatDataGet, formatDataPush} from "@/sections/approve-process/config";
+import ApproveProcessDialog from "@/sections/approve-process/ApproveProcessDialog";
 
 const defaultValues = {
     name: undefined,
@@ -62,6 +63,7 @@ const ButtonAddInviteStyle = styled(Button)(({}) => ({
 
 export const ApproveProcessFormModal = ({type, title, data, setData, show, setShow}) => {
         const isEditMode = !!data?.id;
+        const [openDialogConfirm, setOpenDialogConfirm] = useState(false);
         // api
         const [addForm] = useAddApproveProcessMutation();
         const [updateForm] = useUpdateApproveProcessMutation();
@@ -245,7 +247,6 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                                     />
                                 </View>
                                 <Divider sx={{mt: 1, mb: 3}}/>
-                                {/*<ApproveProcessFormLevel objecValue={defaultValues.approvalProcessLevels}/>*/}
                                 {fields.map((item, index) => {
                                     return (<View
                                         style={{
@@ -266,11 +267,11 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                                             </Grid>
                                             <Grid item xs={2}>
                                                 <Typography variant="textSize13500">
-                                                    Đã chọn: 12
+                                                    Đã chọn: ...
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={9} container direction="row" justifyContent="flex-end">
-                                                <IconButton onClick={() => remove(index)}>
+                                                <IconButton onClick={() => setOpenDialogConfirm(true)}>
                                                     <MinusIcon/>
                                                 </IconButton>
                                             </Grid>
@@ -281,6 +282,9 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                                                 key={item.id}
                                             />
                                         </Box>
+                                        <ApproveProcessDialog open={openDialogConfirm} onAccept={() => remove(index)}
+                                                              onClose={() => setOpenDialogConfirm(false)}
+                                                              type='approveProcessLevelDelete'/>
                                     </View>)
                                 })}
                                 <ButtonAddInviteStyle
