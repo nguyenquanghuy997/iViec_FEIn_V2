@@ -480,6 +480,7 @@ export const ApplicantItem = () => {
     setSelectedRowKeys([]);
     event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
   };
+
   return (
     <View>
       <ApplicantHeader
@@ -521,6 +522,7 @@ export const ApplicantItem = () => {
           columns={columns}
           isOpen={toggleFormFilter}
           onClose={handleCloseFilterForm}
+          onOpen={handleOpenFilterForm}
           onSubmit={onSubmit}
         />
       )}
