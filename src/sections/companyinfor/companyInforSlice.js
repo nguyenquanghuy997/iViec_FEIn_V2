@@ -1,4 +1,4 @@
-import { apiSlice } from "@/redux/api/apiSlice";
+import { DOMAIN_SERVER_API } from "@/config";
 import {
   API_GET_JOB_CATEGORIES,
   API_GET_COMPANY_INFOR,
@@ -6,14 +6,42 @@ import {
   API_GET_DISTRICT,
   API_GET_COMPANY_INFOR_BY_IDS,
   API_UPDATE_COMPANY_INFOR,
-  API_GET_IMAGE,
+  API_UPLOAD_IMAGE
 } from "@/routes/api";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import axios from "axios";
 
-const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CompanyInfor"],
-});
+const axiosBaseQuery =
+  () =>
+  async ({ url, method, data, params, headers }) => {
+    try {
+      const result = await axios({
+        baseURL: DOMAIN_SERVER_API,
+        url,
+        method,
+        data,
+        params,
+        headers: {
+          ...headers,
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      });
+      return { data: result.data };
+    } catch (axiosError) {
+      return {
+        error: {
+          status: axiosError?.response?.status || axiosError?.code,
+          data:
+            axiosError.response?.data || axiosError?.data || axiosError.message,
+        },
+      };
+    }
+  };
 
-export const companyInforSlice = apiWithTag.injectEndpoints({
+export const companyServiceApi = createApi({
+  reducerPath: "companyServiceApi",
+  baseQuery: axiosBaseQuery(),
+  tagTypes: ["CompanyInfor"],
   endpoints: (builder) => ({
     // Thông tin công ty
     // getBranchByUser: builder.query({
@@ -55,27 +83,25 @@ export const companyInforSlice = apiWithTag.injectEndpoints({
         params: { ProvinceId: provinceId },
       }),
     }),
-    updateCompanyInfo: builder.mutation({
+    uploadImageCompany: builder.mutation({
       query: (rest) => ({
-        url: API_UPDATE_COMPANY_INFOR,
-        method: "PATCH",
+        url: API_UPLOAD_IMAGE,
+        method: "POST",
         data: rest,
-        headers:{"Content-Type": "multipart/form-data"}
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
       }),
-      
-      prepareHeaders: (headers) => {
-        headers.set("Content-Type", "multipart/form-data")
-          return headers
-      },
       invalidatesTags: ["CompanyInfor"],
     }),
-
-    getImage: builder.query({
-      query: (item) => ({
-        url: `${API_GET_IMAGE}`,
-        method: "GET",
-        params: { imagePath: item },
+    updateCompanyInfo: builder.mutation({
+      query: (rest) => ({
+        url: `${API_UPDATE_COMPANY_INFOR}/${rest.id}`,
+        method: "PATCH",
+        data: rest,
+   
       }),
+      invalidatesTags: ["CompanyInfor"],
     }),
   }),
 });
@@ -89,6 +115,5 @@ export const {
   useGetDistrictByProvinceIdQuery,
   useLazyGetDistrictByProvinceIdQuery,
   useUpdateCompanyInfoMutation,
-  useUploadImageMutation,
-  useGetImageQuery,
-} = companyInforSlice;
+  useUploadImageCompanyMutation,
+} = companyServiceApi;

@@ -13,8 +13,11 @@ import {
   DialogActions,
   Button,
   Typography,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import { Alert, IconButton } from "@mui/material";
+import { styled } from "@mui/styles";
 // import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
@@ -22,11 +25,19 @@ import { useForm } from "react-hook-form";
 // import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 
+const ActiveSwitch = styled(Switch)(({}) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: "#388E3C",
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: "#388E3C",
+  },
+}));
 
 const ConnectForm = (props) => {
   const { onClose, open } = props;
 
-//   const { enqueueSnackbar } = useSnackbar();
+  //   const { enqueueSnackbar } = useSnackbar();
 
   // const isMountedRef = useIsMountedRef();
 
@@ -179,21 +190,18 @@ const ConnectForm = (props) => {
         </DialogContent>
         <Divider />
         <DialogActions>
+          <FormControlLabel
+            control={<ActiveSwitch defaultChecked />}
+            label="Đang hoạt động"
+          />
           <Button onClick={onClose} sx={{ color: "#455570" }}>
             Hủy
           </Button>
           <Button
             onClick={onClose}
-            autoFocus
-            sx={{background: "#F3F4F6", color: "#455570" }}
-          >
-            Thêm và chưa kết nối
-          </Button>
-          <Button
-            onClick={onClose}
             sx={{ color: "white", background: "#388E3C" }}
           >
-            Kết nối ngay
+            Kết nối
           </Button>
         </DialogActions>
       </Dialog>

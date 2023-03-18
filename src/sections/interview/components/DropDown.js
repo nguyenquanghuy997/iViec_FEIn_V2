@@ -1,13 +1,20 @@
+import PlusIcon from "@/assets/interview/PlusIcon";
 import SvgIconStyle from "@/components/SvgIconStyle";
+import {
+  SearchInputStyle,
+  TextFieldStyle,
+} from "@/components/hook-form/style";
 import {
   FormControl,
   MenuItem,
   Select,
   Checkbox,
-  ListItemText,
+  Button,
+  Box,
+  Typography,
 } from "@mui/material";
-import { ListSubheader, TextField, InputAdornment } from "@mui/material";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import { ListSubheader, InputAdornment } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import {
   makeStyles,
   /*withStyles*/
@@ -26,37 +33,34 @@ const MenuProps = {
     },
   },
 };
-
 const variants = [
   {
-    id: 3,
-    name: "Hà Nội",
+    id: "gary",
+    name: "Đinh Tiến Thành",
+    phone: "0987655345",
   },
   {
-    id: 4,
-    name: "Hải Phòng",
+    id: "cato",
+    name: "Đỗ Ánh Tuyết",
+    phone: "0987655345",
   },
   {
-    id: 1,
-    name: "Cao Bằng",
+    id: "kvn",
+    name: "Trần Văn Linh",
+    phone: "0987655345",
   },
   {
-    id: 2,
-    name: "Đà Nẵng",
+    id: "mooncake",
+    name: "Đào Duy Tùng",
+    phone: "0987655345",
   },
   {
-    id: 12,
-    name: "Hồ Chí Minh",
-  },
-  {
-    id: 10,
-    name: "Huế",
-  },
-  {
-    id: 11,
-    name: "Nước ngoài",
+    id: "quinn",
+    name: "Doãn Trung Kiên",
+    phone: "0987655345",
   },
 ];
+
 const containsText = (text, searchText) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
@@ -89,37 +93,36 @@ export const DropDown = () => {
 
   const useStyles = makeStyles(() => ({
     select: {
-      padding: `4px 2px`,
-      color: `#5C6A82`,
-      // borderRadius: `8px 8px 0 0`,
-      background: `#EFF3F7`,
-      boxShadow: `inset 0px -1px 0px #E7E9ED`,
+      height: "36px",
+      minWidth: "100%",
+      border: "1px solid rgba(33, 150, 243, 0.5)",
+      "& .MuiSvgIcon-root": {
+        display: "none",
+      },
     },
     input: {
-      padding: `0px 0px 0px 9px`,
+     
       fontWeight: `400`,
       fontSize: `14px`,
       lineHeight: `20px`,
       justifyContent: `center`,
       display: `flex`,
-      '&:before': {
+      "&:before": {
         borderBottom: `none`,
       },
     },
-    search: {
-      "&,&:before, &:hover": {
-        borderBottom: `none`,
-      },
-    },
+  
   }));
 
   const classes = useStyles();
 
   const getIcon = (name) => (
-    <SvgIconStyle
-      src={`/assets/icons/ds/${name}.svg`}
-      sx={{ width: 17, height: 15 }}
-    />
+    <div className="icon-select">
+      <SvgIconStyle
+        src={`/assets/icons/ds/${name}.svg`}
+        sx={{ width: 17, height: 15 }}
+      />
+    </div>
   );
 
   const ICONS = {
@@ -128,17 +131,24 @@ export const DropDown = () => {
 
   return (
     <div>
-      <FormControl sx={{ width: 400 }}>
+      <FormControl sx={{ width: "100%" }}>
         <Select
           className={classes.select}
           multiple
           displayEmpty
           value={variantName}
           onChange={handleChange}
-          input={<OutlinedInput />}
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <>Chọn Tỉnh/Thành phố</>;
+              return (
+                <Button
+                  sx={{ width: "100%", textTransform: "none" }}
+                  startIcon={<PlusIcon />}
+                  onClick={() => console.log("hi")}
+                >
+                  Thêm ứng viên
+                </Button>
+              );
             }
             return selected.map((x) => x.name).join(", ");
           }}
@@ -146,13 +156,11 @@ export const DropDown = () => {
           //
         >
           <ListSubheader>
-            <TextField
-              variant="standard"
-              size="small"
-              // Autofocus on textfield
-              autoFocus
+            <TextFieldStyle
               placeholder="Tìm kiếm..."
               fullWidth
+              autoFocus
+              sx={{ ...SearchInputStyle }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment className={classes.input} position="start">
@@ -167,8 +175,6 @@ export const DropDown = () => {
                   e.stopPropagation();
                 }
               }}
-              className={classes.search}
-              sx={{}}
             />
           </ListSubheader>
           {displayedOptions.map((variant) => (
@@ -177,15 +183,40 @@ export const DropDown = () => {
               value={variant}
               sx={{
                 borderTop: `1px solid #EFF3F7`,
+                display: "flex",
+                justifyContent: "space-between",
               }}
             >
-              <Checkbox
-                color="default"
-                checked={
-                  variantName.findIndex((item) => item.id === variant.id) >= 0
-                }
-              />
-              <ListItemText primary={variant.name} />
+              {" "}
+              <Box sx={{ display: "flex" }}>
+                <img
+                  style={{ width: 28, height: 28, borderRadius: "10px" }}
+                  src="https://i.pinimg.com/236x/c6/90/fe/c690fe74d48aa77c2ab0e5000131304a.jpg"
+                />
+                <Box sx={{ ml: 1 }}>
+                  <Typography sx={{ fontSize: 13 }}>{variant.name}</Typography>
+                  <Typography
+                    sx={{ fontSize: 13, fontWeight: 400, color: "#5C6A82" }}
+                  >
+                    {variant.phone}
+                  </Typography>
+                </Box>
+              </Box>
+              <FormControl component="fieldset">
+                <FormControlLabel
+                  labelPlacement="start"
+                  control={
+                    <Checkbox
+                      color="default"
+                      checked={
+                        variantName.findIndex(
+                          (item) => item.id === variant.id
+                        ) >= 0
+                      }
+                    />
+                  }
+                ></FormControlLabel>
+              </FormControl>
             </MenuItem>
           ))}
         </Select>
