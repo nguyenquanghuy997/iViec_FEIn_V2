@@ -2,6 +2,8 @@ import _ from "lodash";
 import {ExcelIcon, PdfIcon, WordIcon} from "@/sections/offerform/component/editor/Icon";
 import React from "react";
 
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
 const containsText = (text, searchText) => {
   return convertViToEn(text).toLowerCase().indexOf(convertViToEn(searchText).toLowerCase()) > -1;
 };
@@ -138,6 +140,7 @@ const cleanObject = (obj) => {
 }
 
 export {
+  phoneRegExp,
   containsText,
   convertViToEn,
   convertFlatDataToTree,

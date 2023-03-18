@@ -1,69 +1,45 @@
-import {ButtonDS, SwitchStatusDS, TextAreaDS} from "@/components/DesignSystem";
+import {ButtonDS, TextAreaDS} from "@/components/DesignSystem";
 import {Text, View} from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import {RHFTextField} from "@/components/hook-form";
 import {Label} from "@/components/hook-form/style";
 import {
   useAddApproveProcessMutation,
-  useUpdateApproveProcessMutation,
-  useGetPreviewApproveProcessQuery
+  useGetPreviewApproveProcessQuery,
+  useUpdateApproveProcessMutation
 } from "@/sections/approve-process/ApproveProcessSlice";
 import {ViewModel} from "@/utils/cssStyles";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Box, Button, CircularProgress, Divider, Grid, IconButton, Modal, Typography} from "@mui/material";
+import {CircularProgress, Divider, Modal} from "@mui/material";
 import {useSnackbar} from "notistack";
-import React, {useEffect, useState} from "react";
-import {useFieldArray, useForm, FormProvider} from "react-hook-form";
+import React, {useEffect} from "react";
+import {FormProvider, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {MinusIcon} from "@/assets/ActionIcon";
-import {ApproveProcessFormLevelItem} from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
-import {styled} from "@mui/styles";
-import {formatDataGet, formatDataPush} from "@/sections/approve-process/config";
-import ApproveProcessDialog from "@/sections/approve-process/ApproveProcessDialog";
+import {formatDataGet} from "@/sections/approve-process/config";
+import {phoneRegExp} from "@/utils/function";
 
 const defaultValues = {
-  name: undefined,
-  description: undefined,
-  approvalProcessType: undefined,
-  isAvailable: false,
-  approvalProcessLevels: [
-    {
-      approvalProcessLevelDetails: [
-        {
-          roleGroupId: undefined,
-          personInChargeIds: [],
-          processLevelDetailType: undefined
-        }
-      ]
-    }
-  ]
+  RecruitmentId: undefined,
+  FullName: undefined,
+  PortraitImage: undefined,
+  DateOfBirth: undefined,
+  Email: undefined,
+  PhoneNumber: undefined,
+  Weight: undefined,
+  Height: undefined,
+  CvFile: undefined,
+  YearOfExperience: false,
+  ApplicantSkillIds: [],
+  Experience: undefined,
+  IdentityNumber: undefined,
+  Education: undefined,
+  Sex: undefined,
+  MaritalStatus: undefined,
 };
 
-const ButtonStyle = {
-  fontSize: 14,
-  fontWeight: 600,
-  minWidth: '56px',
-  borderRadius: 6,
-  padding: '8px 12px'
-}
-
-const ButtonAddInviteStyle = styled(Button)(({}) => ({
-  "&.button-add-invite": {
-    ...ButtonStyle,
-    backgroundColor: '#FDFDFD',
-    width: '100%',
-    color: '#1976D2',
-    ":hover": {
-      color: '#455570',
-      backgroundColor: '#FDFDFD',
-    }
-  }
-}));
-
-export const ApproveProcessFormModal = ({type, title, data, setData, show, setShow}) => {
+export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isEditMode = !!data?.id;
-    const [openDialogConfirm, setOpenDialogConfirm] = useState(false);
     // api
     const [addForm] = useAddApproveProcessMutation();
     const [updateForm] = useUpdateApproveProcessMutation();
@@ -71,23 +47,22 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
     const isLoading = isEditMode && !preview.id;
     // form
     const Schema = Yup.object().shape({
-      name: Yup.string().required("Chưa nhập tên quy trình phê duyệt"),
-      description: Yup.string(),
-      isAvailable: Yup.bool(),
-      approvalProcessLevels: Yup.array().of(
-        Yup.object().shape({
-          approvalProcessLevelDetails: Yup.array().of(
-            Yup.object().shape({
-              processLevelDetailType: Yup.string().required("Chưa chọn loại vai trò"),
-              roleGroupId: Yup.string().when("processLevelDetailType", {
-                is: "0",
-                then: (schema) => schema.required("Chưa chọn nhóm phê duyệt")
-              }),
-              personInChargeIds: Yup.lazy(val => (Array.isArray(val) ? Yup.array().min(1, "Chưa chọn người phê duyệt") : Yup.string().required("Chưa chọn người phê duyệt"))),
-            })
-          )
-        })
-      )
+      RecruitmentId: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
+      FullName: Yup.string().required("Chưa nhập họ tên").max(50, "Họ tên không quá 50 ký tự"),
+      PortraitImage: Yup.string(),
+      DateOfBirth: undefined,
+      Email: Yup.string().required("Chưa nhập email").email("Email cần nhập đúng định dạng"),
+      PhoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
+      Weight: Yup.number(),
+      Height: Yup.number(),
+      CvFile: Yup.string(),
+      YearOfExperience: Yup.string(),
+      ApplicantSkillIds: [],
+      Experience: Yup.string(),
+      IdentityNumber: Yup.number(),
+      Education: Yup.string(),
+      Sex: Yup.string(),
+      MaritalStatus: Yup.string(),
     });
 
     const methods = useForm({
@@ -97,19 +72,15 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
 
     const {
       reset,
-      control,
+      // control,
       setValue,
       handleSubmit,
       formState: {isSubmitting},
     } = methods;
 
-    const {fields, append, remove} = useFieldArray({
-      control,
-      name: "approvalProcessLevels"
-    });
 // action
     const pressHide = () => {
-      setData(null);
+      setData(obj => ({...obj, stage: undefined}));
       setShow(false);
     };
     const {enqueueSnackbar} = useSnackbar();
@@ -118,11 +89,9 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         id: isEditMode ? data.id : 0,
         name: e.name,
         description: e.description,
-        approvalProcessType: type,
         isAvailable: e.isAvailable,
         approvalProcessLevels: e.approvalProcessLevels
       };
-      body = formatDataPush(body);
 
       if (isEditMode) {
         try {
@@ -196,9 +165,10 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
             >
               <Text flex="true" fontsize={16} fontweight={"600"}>
                 {isEditMode
-                  ? `Chỉnh sửa ${title.toLowerCase()}`
-                  : `Thêm mới ${title.toLowerCase()}`}
+                  ? `Chỉnh sửa ứng viên`
+                  : `Thêm mới ứng viên`}
               </Text>
+              <Text>{JSON.stringify(data)}</Text>
               <ButtonDS
                 type="submit"
                 sx={{
@@ -247,55 +217,6 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                   />
                 </View>
                 <Divider sx={{mt: 1, mb: 3}}/>
-                {fields.map((item, index) => {
-                  return (<View
-                    style={{
-                      padding: 16,
-                      marginBottom: 24,
-                      borderRadius: 6,
-                      backgroundColor: "#F2F4F5"
-                    }}
-                    key={item.id}>
-                    <Grid container direction="row"
-                          justifyContent="center"
-                          alignItems="center"
-                          mb={2}>
-                      <Grid item xs>
-                        <Typography variant="subtitle1">
-                          Cấp {index + 1}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="textSize13500">
-                          Đã chọn: ...
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={9} container direction="row" justifyContent="flex-end">
-                        <IconButton onClick={() => setOpenDialogConfirm(true)}>
-                          <MinusIcon/>
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                    <Box className="box-content-wrapper" sx={{width: '100%'}}>
-                      <ApproveProcessFormLevelItem
-                        index={index}
-                        key={item.id}
-                      />
-                    </Box>
-                    <ApproveProcessDialog open={openDialogConfirm} onAccept={() => remove(index)}
-                                          onClose={() => setOpenDialogConfirm(false)}
-                                          type='approveProcessLevelDelete'/>
-                  </View>)
-                })}
-                <ButtonAddInviteStyle
-                  variant="outlined"
-                  className='button-add-invite'
-                  onClick={() => {
-                    append({...defaultValues.approvalProcessLevels[0]})
-                  }}
-                  startIcon={<Iconify icon="material-symbols:add"/>}>
-                  Thêm cấp phê duyệt
-                </ButtonAddInviteStyle>
               </View>
             )}
             {/* footer */}
@@ -316,13 +237,6 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                 />
                 <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
               </View>
-              {!isLoading ? (
-                <SwitchStatusDS
-                  name={"isAvailable"}
-                  disabled={!isEditMode}
-                  label={methods.watch("isAvailable") ? "Đang áp dụng" : "Không áp dụng"}
-                />
-              ) : null}
             </View>
           </ViewModel>
         </Modal>

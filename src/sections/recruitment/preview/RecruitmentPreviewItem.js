@@ -22,11 +22,12 @@ import {
   Tab,
   Tooltip, Typography,
 } from "@mui/material";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
 import {DownloadLineIcon, ImportLinkIcon, TeamLineIcon} from "@/assets/ActionIcon";
-import {RecruitmentApplicationChooseStage} from "@/sections/recruitment/modals/RecruitmentApplicationChooseStage";
+import {RecruitmentApplicantChooseStage} from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
+import {RecruitmentApplicantCreate} from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 
 function RecruitmentPreviewItem({}) {
   const defaultValues = {
@@ -240,9 +241,10 @@ function RecruitmentPreviewItem({}) {
     </div>
   </div>
   `;
-
+  const recruitmentId = window.location.pathname.split("/")[2];
   const [value, setValue] = useState("1");
   const [showDialogStage, setShowDialogStage] = useState(false);
+  const [showModelCreate, setShowModelCreate] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -251,15 +253,18 @@ function RecruitmentPreviewItem({}) {
   const {themeStretch} = useSettings();
 
   const [openGroup, setOpenGroup] = useState(false);
-  const [modelApplication, setModelApplication] = useState({id: undefined, stage: undefined});
+  const [modelApplication, setModelApplication] = useState({id: undefined, stage: undefined, recruitmentId: recruitmentId});
+
   const handleCloseGroup = () => {
-    setModelApplication(modelApplication);
     setOpenGroup(false);
   };
   const handleOpenGroup = () => {
     setOpenGroup(true);
   };
 
+  useEffect(() => {
+    if (modelApplication.stage) setShowModelCreate(true);
+  }, [showDialogStage]);
 
   return (
     <div>
@@ -372,7 +377,7 @@ function RecruitmentPreviewItem({}) {
               </TabList>
             </Box>
           </Box>
-          {value == 1 ? (
+          {value === "1" ? (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
                 <Box>
@@ -508,8 +513,8 @@ function RecruitmentPreviewItem({}) {
                     </Button>
                   </LightTooltip>
                 </ButtonGroup>
-                <RecruitmentApplicationChooseStage show={showDialogStage} setShow={setShowDialogStage}
-                                                   setStage={setModelApplication}/>
+                <RecruitmentApplicantChooseStage show={showDialogStage} setShow={setShowDialogStage}
+                                                 setStage={setModelApplication}/>
               </Stack>
             </BoxFlex>
           ) : (
@@ -612,6 +617,8 @@ function RecruitmentPreviewItem({}) {
           <TabPanel value="2">"hi"</TabPanel> */}
         </Container>
       </TabContext>
+      <RecruitmentApplicantCreate show={showModelCreate} setShow={setShowModelCreate} data={modelApplication}
+                                  setData={setModelApplication}/>
     </div>
   );
 }
