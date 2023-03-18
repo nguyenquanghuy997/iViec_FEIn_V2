@@ -174,14 +174,14 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
                                     <DeleteIconGrey width={16} height={16}/>
                                 </IconButton>
                             </Tooltip>
-                            <ApproveProcessDialog open={open} onAccept={() => handleClose(approveProcess.id)}
-                                                  onClose={() => setOpen(!open)}
-                                                  content={approveProcess.name}
-                                                  type='approveProcessDelete'/>
-                            <ApproveProcessViewModal title={title} data={approveProcess}
-                                                     show={openModelView} handleEdit={handleEdit}
-                                                     setShow={setOpenModelView}/>
                         </>}
+                        <ApproveProcessDialog open={open} onAccept={() => handleClose(approveProcess.id)}
+                                              onClose={() => setOpen(!open)}
+                                              content={approveProcess.name}
+                                              type='approveProcessDelete'/>
+                        <ApproveProcessViewModal title={title} data={approveProcess}
+                                                 show={openModelView} handleEdit={handleEdit}
+                                                 setShow={setOpenModelView}/>
                     </Grid>
                 </Grid>
                 <Grid item>
