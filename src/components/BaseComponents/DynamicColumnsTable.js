@@ -274,7 +274,7 @@ const DynamicColumnsTable = (props) => {
   const onTableRowClick = (record) => {
     const selectedKey = record.id;
     const selectedKeys = [...selectedRowKeys];
-    const selectedList = [...itemSelected];
+    const selectedList = itemSelected ? [...itemSelected]:[];
 
     const index = selectedKeys.indexOf(selectedKey);
     if (index === -1) {
@@ -306,7 +306,8 @@ const DynamicColumnsTable = (props) => {
       }
     }
     setSelectedRowKeys(selectedKeys);
-    setItemSelected(selectedList)
+    itemSelected ? setItemSelected(selectedList) : ""
+    
   };
 
   const onRow = (record) => {

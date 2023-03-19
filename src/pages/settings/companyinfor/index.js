@@ -22,6 +22,7 @@ export default function Setting() {
           display: "flex",
           justifyContent: "space-between",
           py: 3,
+          pt: 0
         }}
       >
         <Typography variant="h6" gutterBottom>
