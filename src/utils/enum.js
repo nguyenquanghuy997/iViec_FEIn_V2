@@ -114,11 +114,11 @@ export const RecruitmentProcessStatus = (item) => {
     case 4: //"MedusaReject":
       return "iVIEC từ chối";
     case 5: //"Recruiting":
-      return "Đang tuyển dụng";
+      return "Đang tuyển dụng";//DADTWJ LICHJ
     case 6: //"Calendared":
       return "Đã lên lịch";
     case 7: //"Expired":
-      return "Hết hạn";
+      return "Hết hạn";//DATWJH LICHJ
     case 8: //"Closed":
       return "Đóng";
   }

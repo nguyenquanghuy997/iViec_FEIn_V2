@@ -1,37 +1,36 @@
-import OptionComponent from "./OptionComponent";
-import { FormProvider } from "@/components/hook-form";
+import { TextAreaDS } from "@/components/DesignSystem";
 import { RHFTextField, RHFCheckbox } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import { LabelStyle,  } from "@/components/hook-form/style";
+// import { useGetListJobsMutation } from "@/sections/job/jobSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Stack,
   Typography,
-  InputLabel,
+  // InputLabel,
+  // TextareaAutosize,
+  TextField,
 } from "@mui/material";
-import { Alert } from "@mui/material";
-import { Input } from "antd";
+// import { Alert } from "@mui/material";
+// import { Input } from "antd";
 import React from "react";
-import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
+import {Label} from "@/components/hook-form/style";
 
 const PersonalInterview = () => {
-  const { TextArea } = Input;
+  // const { TextArea } = Input;
+  // const { data } = useGetListJobsMutation();
   const ConnectSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Email không đúng định dạng")
-      .required("Email không được bỏ trống"),
-    password: Yup.string()
-      .min(6, "Mật khẩu cần tối thiểu 6 ký tự")
-      .required("Mật khẩu không được bỏ trống"),
+    name: Yup.string().required("Nhập tên buổi phỏng vấn"),
   });
 
   const defaultValues = {
-    email: "",
-    password: "",
-    remember: true,
+    name: "",
   };
+  const { control } = useFormContext();
 
   const methods = useForm({
     resolver: yupResolver(ConnectSchema),
@@ -40,10 +39,10 @@ const PersonalInterview = () => {
 
   const {
     // setError,
-    handleSubmit,
-    formState: { errors },
+    // handleSubmit,
+    formState: {  },
   } = methods;
-  const onSubmit = async () => {};
+  // const onSubmit = async () => {};
   const options = [
     {
       id: "00001",
@@ -55,106 +54,174 @@ const PersonalInterview = () => {
     },
   ];
 
+  const options2 = [
+    {
+      id: "00001",
+      name: "Nhân Viên Marketing Online - HCM",
+    },
+    {
+      id: "00002",
+      name: "Nhân Viên Marketing Online - HN",
+    },
+  ];
+
+  const options3 = [
+    {
+      id: "00001",
+      name: "Mẫu đánh giá lập trình viên junior",
+    },
+    {
+      id: "00002",
+      name: "Mẫu đánh giá lập trình viên senior",
+    },
+    {
+      id: "00003",
+      name: "Mẫu đánh giá thực tập sinh IT",
+    },
+  ];
+
+  const option4 = [
+    {
+      id: "00001",
+      name: "Phỏng vấn 1",
+    },
+    {
+      id: "00002",
+      name: "Ko cần pvan",
+    },
+  ];
+
+  const renderTitle = (title, required) => {
+    return <Label required={required}>{title}</Label>;
+};
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3}>
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
-        <Stack>
-          <RHFTextField
-            name="name"
-            title="Tên buổi phỏng vấn"
-            placeholder="VD: Phỏng vấn lập trình viên lần 1..."
-            isRequired
-            sx={{ width: "100%", minHeight: 44 }}
-          />
-        </Stack>
-
-        <Stack>
-          <RHFTextField
-            isRequired
-            sx={{ width: "100%", minHeight: 44 }}
-            name="recruitmentId "
-            title="Tin tuyển dụng"
-            placeholder="Bắt buộc"
-          />
-        </Stack>
-
-        <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
-          <Box sx={{ mb: 2, width: "100%", height: 44 }}>
-            <Typography>
-              Hình thức phỏng vấn <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <RHFDropdown
-              options={options.map((i) => ({
-                value: i.id,
-                label: i.name,
-                name: i.name,
-              }))}
-              name="interviewType"
-              multiple={false}
-              required
-            />
-          </Box>
-        </Stack>
-        <OptionComponent />
-        <Controller
-          name="workingEnvironment"
-          render={({ field }) => (
-            <Stack>
-              <InputLabel
-                sx={{
-                  color: "#172B4D",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  mb: 1,
-                }}
-              >
-                Lưu ý cho ứng viên
-              </InputLabel>
-
-              <TextArea
-                showCount
-                name="note"
-                value={field?.value}
-                placeholder="Nhập nội dung lưu ý"
-                maxLength={150}
-                style={{
-                  height: 180,
-                  width: "100%",
-                  resize: "none",
-                  marginBottom: "20px",
-                }}
-                onChange={() => {}}
-              />
-            </Stack>
-          )}
+    <Stack spacing={3}>
+      <Stack>
+        <RHFTextField
+          name="name"
+          title="Tên buổi phỏng vấn"
+          placeholder="VD: Phỏng vấn lập trình viên lần 1..."
+          isRequired
+          sx={{ width: "100%", minHeight: 44 }}
         />
-        <Box sx={{ display:'flex', flexDirection:'column' }}>
-          <RHFCheckbox
-            name="isSendMailCouncil"
-            label="Gửi email cho hội đồng tuyển dụng"
-          />
-          <RHFCheckbox name="isSendMailApplicant" label="Gửi email cho ứng viên" />
-        </Box>
+      </Stack>
 
-        <Box sx={{ mb: 2, width: "100%" }}>
+      <Stack>
+        <Box sx={{ mb: 2, width: "100%", height: 44 }}>
           <Typography>
-            Mẫu đánh giá <span style={{ color: "red" }}>*</span>
+            Tin tuyển dụng <span style={{ color: "red" }}>*</span>
           </Typography>
+          <RHFDropdown
+            options={options2.map((i) => ({
+              value: i.id,
+              label: i.name,
+              name: i.name,
+            }))}
+            name="recruitmentId"
+            multiple={false}
+            required
+          />
+        </Box>
+      </Stack>
 
+      <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
+        <Box sx={{ mb: 2, width: "50%", height: 44 }}>
+          <Typography>
+            Bước phỏng vấn <span style={{ color: "red" }}>*</span>
+          </Typography>
+          <RHFDropdown
+            options={option4.map((i) => ({
+              value: i.id,
+              label: i.name,
+              name: i.name,
+            }))}
+            name="recruitmentPipelineStateId"
+            multiple={false}
+            required
+          />
+        </Box>
+        <Box sx={{ mb: 2, width: "50%", height: 44 }}>
+          <Typography>
+            Hình thức phỏng vấn <span style={{ color: "red" }}>*</span>
+          </Typography>
           <RHFDropdown
             options={options.map((i) => ({
               value: i.id,
-              label: i.option,
-              name: i.option,
+              label: i.name,
+              name: i.name,
+            }))}
+            name="interviewType"
+            multiple={false}
+            required
+          />
+        </Box>
+      </Stack>
+
+      <Stack>
+        <Controller
+          name={"onlineInterviewAddress"}
+          control={control}
+          render={({ field, fieldState: { error } }) => {
+            return (
+              <>
+                <LabelStyle required={true}>Địa điểm</LabelStyle>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows="2"
+                  defaultValue="Default Value"
+                  placeholder="Nội dung"
+                  variant="outlined"
+                  {...field}
+                  value={field.value || ""}
+                  error={!!error}
+                  helperText={error?.message}
+                  sx={{
+                    "& textarea": {
+                      p: "0!important",
+                      fontSize: 14,
+                    },
+                  }}
+                />
+              </>
+            );
+          }}
+        />
+      </Stack>
+      <Stack>
+        {renderTitle('Lưu ý cho ứng viên')}
+        <TextAreaDS
+          maxLength={150}
+          placeholder="Nhập nội dung lưu ý..."
+          name={"note"}
+        />
+      </Stack>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <RHFCheckbox
+          name="isSendMailCouncil"
+          label="Gửi email cho hội đồng tuyển dụng"
+        />
+        <RHFCheckbox
+          name="isSendMailApplicant"
+          label="Gửi email cho ứng viên"
+        />
+      </Box>
+      <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
+        <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
+          <Typography>
+            Mẫu đánh giá<span style={{ color: "red" }}>*</span>
+          </Typography>
+          <RHFDropdown
+            options={options3.map((i) => ({
+              value: i.id,
+              label: i.name,
+              name: i.name,
             }))}
             name="reviewFormId"
             multiple={false}
-            placeholder="Chọn mẫu đánh giá"
             required
           />
+
           <Typography
             sx={{
               fontSize: "12px",
@@ -169,7 +236,7 @@ const PersonalInterview = () => {
           </Typography>
         </Box>
       </Stack>
-    </FormProvider>
+    </Stack>
   );
 };
 export default PersonalInterview;

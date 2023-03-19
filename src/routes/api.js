@@ -228,3 +228,7 @@ export const API_GET_DISTRICT = "/masterData/District/GetDistricts";
 // Lấy danh sách job category
 export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories";
 
+
+
+//ĐẶT LỊCH
+export const API_POST_BOOK_CALENDAR = 'applicant/BookingCalendar/CreateBookingCalendar'

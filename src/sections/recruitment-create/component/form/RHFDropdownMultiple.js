@@ -109,6 +109,7 @@ function RHFDropdownMultiple({name, ...props}) {
                     renderValue={(selected) => renderValue(options, selected, remove, placeholder)}
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
                 >
+                  
                   {options?.length > 3 && (
                       <TextFieldStyle
                           placeholder="Tìm kiếm..."

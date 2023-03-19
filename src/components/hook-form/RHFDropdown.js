@@ -1,4 +1,3 @@
-import OptionComponent from "../../sections/interview/components/OptionComponent";
 import {
   LabelStyle,
   MenuItemStyle,
@@ -140,7 +139,6 @@ function RHFDropdown({ name, ...props }) {
       render={({ field, fieldState: { error } }) => (
         <Stack direction="column">
           {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
-          {console.log("field", field)}
           <SelectFieldStyle
             {...field}
             value={field.value}
@@ -171,12 +169,6 @@ function RHFDropdown({ name, ...props }) {
           >
             {error?.message}
           </FormHelperText>
-
-          {field?.value === "00001" ? (
-            <OptionComponent type={field?.value} />
-          ) : (
-            ""
-          )}
         </Stack>
       )}
     />

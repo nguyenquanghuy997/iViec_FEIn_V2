@@ -46,7 +46,7 @@ const PipelineForm = ({ onClose }) => {
     handleSubmit,
     control,
     register,
-    formState: {errors, isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = (values) => {
@@ -77,13 +77,20 @@ const PipelineForm = ({ onClose }) => {
           />
         </Stack>
 
-        <Stack sx={{ pb: 2 }}>
+        <Stack>
           <RHFTextField
-            sx={{ ...InputStyle }}
-            name="description"
+            style={{
+              width: "100%",
+              height: "144px",
+              "& .MuiInputBase-root": {
+                display: "flex",
+                alignItems: "start",
+              },
+            }}
+            name="note"
             title="Mô tả"
-            placeholder="Nhập nội dung mô tả...
-          "
+            placeholder="Nhập nội dung mô tả..."
+            maxLength={150}
           />
         </Stack>
         <Divider />
