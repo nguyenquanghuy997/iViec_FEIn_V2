@@ -218,7 +218,7 @@ const DynamicFilterForm = (props) => {
                                 <SelectFilter
                                     options={options[item.name]?.map((i) => ({
                                       ...i,
-                                      value: i.id,
+                                      value: i.id ? i.id : i.value,
                                       label: i.name,
                                       name: i.name,
                                     }))}
@@ -242,7 +242,7 @@ const DynamicFilterForm = (props) => {
                     <Typography variant="body1" sx={{...TypographyStyle}}>{column.label}</Typography>
                     <SelectFilter
                         options={options[column.name]?.map((i) => ({
-                          value: i.id,
+                          value: i.id ? i.id : i.value,
                           label: i.name,
                           name: i.item || i.name,
                         }))}

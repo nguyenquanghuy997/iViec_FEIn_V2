@@ -21,6 +21,7 @@ export default function RHFRadioGroup({ name, options, ...other }) {
     <Controller
       name={name}
       control={control}
+      defaultValue=""
       render={({ field, fieldState: { error } }) => (
         <div>
           <RadioGroup {...field} row {...other}>

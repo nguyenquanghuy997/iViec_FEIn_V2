@@ -17,7 +17,12 @@ import {
 import OrganizationUserFilterModal from "@/sections/organizationdetail/component/OrganizationUserFilterModal";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
 import OrganizationDetailTableHeader from "@/sections/organizationdetail/component/OrganizationDetailTableHeader";
-import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
+import OrganizationCard from "@/sections/organizationdetail/component/OrganizationCard";
+import {modalSlice} from "@/redux/common/modalSlice";
+import {useDispatch, useSelector} from "@/redux/store";
+import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
+import OrganizationBottomNav from "@/sections/organizationdetail/component/OrganizationDetailBottomNav";
+import ActiveModal from "@/sections/emailform/component/ActiveModal";
 
 const defaultValues = {
   searchKey: "",
@@ -76,6 +81,7 @@ const columns = [
 
 
 const OrganizationDetailContent = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const {query} = router;
   const {id} = router.query;
@@ -85,16 +91,28 @@ const OrganizationDetailContent = () => {
   }, {skip: !id});
 
   const {data: { items: ListUser = [] } = {}, isLoading: loadingUser} = useGetAllApplicantUserOrganizationByIdQuery({
-    Id: '01000000-ac12-0242-0a6d-08db2759c10a'
+    Id: id
   }, {skip: !id});
 
   const {data: {items: ListOrganization = []} = {}, isLoading: loadingOrganization} = useGetListOrganizationWithChildQuery();
 
-  const [expands, setExpands] = useState(Array(ListUser.length).fill(false));
-  const [selected, setSelected] = useState(Array(ListUser.length).fill(false));
-  const [selectedValue, setSelectedValue] = useState(Array(ListUser.length).fill({checked: false}));
-  // const [, setIsOpenBottomNav] = useState(false);
-  const [isOpen, setIsOpen] = useState(false)
+  const [selected, setSelected] = useState([]);
+  const [checked, setChecked] = useState(Array(ListUser?.length).fill(false));
+  const [isOpen, setIsOpen] = useState(false);
+
+  // modal redux
+  const toggleConfirm = useSelector((state) => state.modalReducer.openConfirm);
+  const toggleActive = useSelector((state) => state.modalReducer.openActive);
+  const item = useSelector((state) => state.modalReducer.data);
+  const selectedData = useSelector((state) => state.modalReducer.selectedData);
+
+  const handleOpenConfirm = (data) => dispatch(modalSlice.actions.confirmModal(data));
+  const handleOpenActive = (data) => dispatch(modalSlice.actions.activeModal(data));
+
+  const handleOpenBottomNav = (data) => dispatch(modalSlice.actions.onBottomNavModal(data));
+
+  const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
+
   const handleOpenForm = () => {
     setIsOpen(true);
   }
@@ -141,21 +159,35 @@ const OrganizationDetailContent = () => {
     console.log(data)
   };
 
-  // expand card item
-  const handleChangeExpand = (index) => {
-    const expandsNext = [...expands].map((item, idx) => idx === index ? !item : item)
-    setExpands(expandsNext);
+  const handleSelected = (data, index) => {
+    let findIndex = selected.indexOf(data.id);
+    if (findIndex !== -1) {
+      const selectedNext = [...selected].filter(i => i !== data.id)
+      setSelected(selectedNext);
+    } else {
+      const selectedNext = [...selected, data.id]
+      setSelected(selectedNext);
+    }
+    const checkedNext = [...checked].map((i, idx) => idx === index ? !i : i)
+    setChecked(checkedNext);
+  }
+
+  // handle bottom nav
+  const handleCloseBottomNav = () => {
+    handleOpenBottomNav(null);
+    setSelected([]);
   };
 
-  const handleSelected = (data, index) => {
-    const selectedNext = [...selected].map((i, idx) => idx === index ? !i : i)
-    const selectedValueNext = [...selectedValue].map((i, idx) => idx === index ? {...i, checked: !i.checked} : {
-      ...i,
-      checked: i.checked
-    })
-    setSelected(selectedNext);
-    setSelectedValue(selectedValueNext);
+  const handleDelete = (data) => {
+    console.log(data)
   }
+
+  const handleActive = (data) => {
+    console.log(data)
+  }
+
+  console.log(item)
+  console.log(selectedData)
 
   if (isLoading || loadingUser || loadingOrganization) return null;
 
@@ -176,7 +208,6 @@ const OrganizationDetailContent = () => {
               icon="ri:edit-2-fill"/></IconButton>
         </Box>
         {/* End Name */}
-
         {/* Sub info */}
         <Box sx={{display: 'flex', alignItems: 'center', mt: 2}}>
           <Box sx={{display: 'flex', alignItems: 'center', mr: 3.5}}>
@@ -201,7 +232,6 @@ const OrganizationDetailContent = () => {
           </Box>
         </Box>
         {/* End Sub info */}
-
         {/* Table */}
         <Box sx={{mt: 2}}>
           <OrganizationDetailTableHeader
@@ -214,22 +244,18 @@ const OrganizationDetailContent = () => {
               setIsOpenInviteForm={setIsOpenInviteForm}
           />
           {ListUser.map((column, index) => {
-            return <CardEmailFormItem
+            return <OrganizationCard
                 isCheckbox
                 key={index}
-                index={index}
                 item={column}
-                expanded={expands[index]}
-                checked={selectedValue[index]?.checked}
-                onChangeSelected={() => handleSelected(column, index)}
-                onChangeExpand={() => handleChangeExpand(index)}
-                // onOpenConfirmDelete={handleOpenConfirm}
-                // onOpenActiveModal={handleOpenActiveModal}
+                checked={checked[index]}
+                onChangeSelected={() => handleSelected(column)}
+                onOpenConfirmDelete={() => handleOpenConfirm(column)}
                 onOpenFormModal={handleOpenForm}
             />
           })}
         </Box>
-        {/*  Modal Edit */}
+        {/*  Modal Edit Organization */}
         <OrganizationForm
             actionType={1}
             isOpen={isOpen}
@@ -237,19 +263,56 @@ const OrganizationDetailContent = () => {
             parentNode={organization}
         />
         {/* Filer */}
-        {isOpenFilter && (
+        {isOpenFilter &&
             <OrganizationUserFilterModal
                 columns={columns}
                 isOpen={isOpenFilter}
                 onClose={handleCloseFilterForm}
                 onSubmit={onSubmit}
             />
-        )}
+        }
         {
           isOpenInviteForm && <OrganizationInviteForm
                 ListOrganization={ListOrganization}
                 isOpenInviteForm={isOpenInviteForm}
-                setIsOpenInviteForm={setIsOpenInviteForm}/>
+                setIsOpenInviteForm={setIsOpenInviteForm}
+            />
+        }
+      {/*  Confirm Modal  */}
+        {toggleConfirm && <ConfirmModal
+            confirmDelete={toggleConfirm}
+            onCloseConfirmDelete={handleCloseModal}
+            onSubmit={handleDelete}
+            title="Xác nhận xóa người dùng"
+            subtitle="Bạn có chắc chắn muốn xóa người dùng"
+            strongSubtitle={`${item.lastName ? item.lastName : ''} ${item.firstName ? item.firstName : ''}`}
+            item={item}
+        />}
+      {/* Active Modal */}
+        {toggleActive && <ActiveModal
+            isOpenActive={toggleActive}
+            onCloseActiveModal={handleCloseModal}
+            onSubmit={handleActive}
+            title={item.isActive ? "Tắt trạng thái áp dụng cho mẫu email" : "Bật trạng thái áp dụng cho mẫu email"}
+            subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt trạng thái áp dụng cho mẫu email" : "Bạn có chắc chắn muốn bật trạng thái áp dụng cho mẫu email"}
+            item={item}
+        />}
+      {/* Bottom Nav */}
+        {
+            selected?.length > 0 && <OrganizationBottomNav
+                item={ListUser.find(i => selected.includes(i.id))}
+                open={selected?.length > 0}
+                onClose={handleCloseBottomNav}
+                // setShowDelete={setShowDelete}
+                // setShowMultipleDelete={setShowMultipleDelete}
+                onOpenActive={handleOpenActive}
+                onCloseActive={handleCloseModal}
+                selectedList={selected?.length || 0}
+                // setActionType={setActionType}
+                // setActionTypeActive={setActionTypeActive}
+                status={ListUser?.filter(i => selected.includes(i.id)).every(i => i.isActive === true)}
+                onOpenForm={handleOpenForm}
+            />
         }
       </Box>
   )

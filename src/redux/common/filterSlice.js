@@ -14,6 +14,12 @@ export const filterSlice = createSlice({
         openFilterModal: (state) => {
             state.openForm = true;
         },
+        setAllDataFilter: (state, action) => {
+            state.data = {
+                ...state.data,
+                ...action.payload,
+            };
+        },
         setDataFilter: (state, action) => {
             const { key, value } = action.payload;
             state.data = {
