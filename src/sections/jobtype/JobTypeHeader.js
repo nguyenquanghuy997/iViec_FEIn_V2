@@ -30,7 +30,7 @@ const JobTypeHeader = ({
                             placeholder="Tìm kiếm quy trình tuyển dụng"
                             sx={{
                                 minWidth: "360px", height: '36px', '.MuiInput-root': {
-                                    height: '36px'
+                                    height: '36px', minHeight:"36px"
                                 }
                             }}
                             InputProps={{
