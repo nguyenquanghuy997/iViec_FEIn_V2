@@ -198,3 +198,27 @@ export const DownloadLineIcon = () => {
     </svg>
   );
 }
+
+export const UploadLineIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      fill="none"
+      viewBox="0 0 20 20"
+    >
+      <g clipPath="url(#clip0_4490_24894)">
+        <path
+          fill="#1976D2"
+          d="M2.5 15.833h15V17.5h-15v-1.667zm8.333-10.977v9.31H9.167v-9.31l-5.06 5.06L2.93 8.738 10 1.667l7.07 7.07-1.178 1.179-5.059-5.058v-.002z"
+        ></path>
+      </g>
+      <defs>
+        <clipPath id="clip0_4490_24894">
+          <path fill="#fff" d="M0 0H20V20H0z"></path>
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
