@@ -137,7 +137,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
                   columns={columns}
                   options={{
                     isActive: LIST_STATUS,
-                    creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: ""}],
+                    creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName || ""} ${i?.firstName}`})), {id: "", value: "", name: ""}],
                   }}
               />
 

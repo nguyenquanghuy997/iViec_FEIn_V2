@@ -19,7 +19,6 @@ import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useEffect, useMemo, useState} from "react";
-import ApplicantBottomNav from "@/sections/applicant/modals/ApplicantBottomNav";
 import {cleanObject} from "@/utils/function";
 
 const defaultValues = {
@@ -477,12 +476,12 @@ export const ApplicantItem = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
 
-  const [, setIsOpenBottomNav] = useState(false);
-  const toggleDrawer = (newOpen) => () => {
-    setIsOpenBottomNav(newOpen);
-    setSelectedRowKeys([]);
-    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
-  };
+  // const [, setIsOpenBottomNav] = useState(false);
+  // const toggleDrawer = (newOpen) => () => {
+  //   setIsOpenBottomNav(newOpen);
+  //   setSelectedRowKeys([]);
+  //   event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+  // };
 
   if (isLoading || loadingColumnData) return null;
 
@@ -516,13 +515,12 @@ export const ApplicantItem = () => {
             setItemSelected={setItemSelected}
           />
         </View>
-        <ApplicantBottomNav
+        {/* <RecruitmentBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
-          itemSelected={itemSelected}
-        />
+        /> */}
       </Content>
       {toggleFormFilter && (
         <ApplicantFilterModal

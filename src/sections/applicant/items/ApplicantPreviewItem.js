@@ -310,7 +310,9 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                           data={options}
                           placeholder="Chọn tin tuyển dụng"
                           sx={{
+                            fontSize: '14px',
                             background: "#F3F4F6",
+                            fontWeight: 500,
                             "&.MuiOutlinedInput-root":{
                               minHeight:'36px'
                             },

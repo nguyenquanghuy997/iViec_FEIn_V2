@@ -14,15 +14,22 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({  
     //Danh sách vị trí
+    // getAllPipeline: builder.query({
+    //   query: (params) => {
+    //     const defaultParams = { PageSize: 20 };
+    //     return {
+    //       url: API_GET_ALL_PIPELINE,
+    //       method: "GET",
+    //       params: {...defaultParams, ...params},
+    //     }
+    //   },
+    // }),
     getAllPipeline: builder.query({
-      query: (params) => {
-        const defaultParams = { PageSize: 20 };
-        return {
-          url: API_GET_ALL_PIPELINE,
-          method: "GET",
-          params: {...defaultParams, ...params},
-        }
-      },
+      query: (params) => ({
+        url: API_GET_ALL_PIPELINE,
+        method: "GET",
+        params
+      }),
     }),
 
     getPipelineById: builder.query({
