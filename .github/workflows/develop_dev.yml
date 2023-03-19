@@ -20,3 +20,15 @@ jobs:
 
       - name: Push Docker Image to docker hub
         run: docker-compose push
+  deploy_hosted_machine:
+    name: Deploy Inside service
+    timeout-minutes: 15
+    needs: [ build_and_deploy ]
+    runs-on: self-hosted
+    steps:
+      - name: Pulling Inside docker image
+        run: docker pull thuybon1/inside_iviec:1.0.0
+
+      - name: Deploy Inside Iviec service
+        working-directory: /root/iViec_Fe
+        run: docker-compose up -d iviec_inside
