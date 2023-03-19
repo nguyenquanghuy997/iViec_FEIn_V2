@@ -113,14 +113,14 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
       try {
         const dataSubmit = pick(body, ['id', 'name', 'code', 'email', 'phoneNumber', 'provinceId', 'districtId', 'address']);
         await updateOrganization({
-          OrganizationId: organization?.id,
-          Name: dataSubmit.name,
-          Code: dataSubmit.code,
-          PhoneNumber: dataSubmit.phoneNumber,
-          Email: dataSubmit.email,
-          ProvinceId: dataSubmit.provinceId,
-          DistrictId: dataSubmit.districtId,
-          Address: dataSubmit.address,
+          organizationId: organization?.id,
+          name: dataSubmit.name,
+          code: dataSubmit.code,
+          phoneNumber: dataSubmit.phoneNumber,
+          email: dataSubmit.email,
+          provinceId: dataSubmit.provinceId,
+          districtId: dataSubmit.districtId,
+          address: dataSubmit.address,
         }).unwrap();
         enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
         onClose();

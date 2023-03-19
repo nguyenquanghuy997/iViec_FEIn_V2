@@ -2,10 +2,10 @@ import {
   API_CREATE_CHILD_ORGANIZATION, API_DELETE_MULTIPLE_ORGANIZATION,
   API_DELETE_ORGANIZATION,
   API_GET_ALL_ADMIN_ORGANIZATION,
-  API_GET_ALL_USER_BY_ORGANIZATION,
+  API_GET_ALL_USER_BY_ORGANIZATION, API_GET_LIST_USER_INVITE,
   API_GET_ORGANIZATION_DETAIL_BY_ID,
-  API_GET_ORGANIZATION_WITH_CHILD, API_SET_ACTIVE_ORGANIZATION,
-  API_UPDATE_ORGANIZATION
+  API_GET_ORGANIZATION_WITH_CHILD, API_INVITE_USER, API_SET_ACTIVE_ORGANIZATION,
+  API_UPDATE_ORGANIZATION, API_USER_CONFIRM_INVITE
 } from "@/routes/api";
 import {createApi} from '@reduxjs/toolkit/query/react'
 import axios from "axios";
@@ -79,7 +79,7 @@ export const organizationServiceApi = createApi({
     }),
     updateOrganization: build.mutation({
       query: (data) => ({
-        url: API_UPDATE_ORGANIZATION,
+        url: `${API_UPDATE_ORGANIZATION}/${data.organizationId}`,
         method: 'PATCH',
         data: data,
         headers: {
@@ -111,7 +111,33 @@ export const organizationServiceApi = createApi({
       }),
       invalidatesTags: ['Organization', 'OrganizationById']
     }),
-
+    // invite user
+    inviteUser: build.mutation({
+      query: (data) => ({
+        url: API_INVITE_USER,
+        method: 'POST',
+        data
+      })
+    }),
+    // confirm invite
+    activeInviteUser: build.mutation({
+      query: (data) => ({
+        url: API_USER_CONFIRM_INVITE,
+        method: 'POST',
+        data
+      })
+    }),
+    // get list user invite
+    getListInviteUser: build.query({
+      query: (params) =>  {
+        const defaultParams = { PageIndex: 1, PageSize: 20 }
+        return {
+          url: API_GET_LIST_USER_INVITE,
+          method: 'GET',
+          params: { ...defaultParams, ...params }
+        }
+      }
+    }),
   }),
 })
 
@@ -125,4 +151,7 @@ export const {
   useGetAllAdminByOrganizationIdQuery,
   useDeleteMultipleOrganizationMutation,
   useSetActiveOrganizationMutation,
+  useInviteUserMutation,
+  useActiveInviteUserMutation,
+  useGetListInviteUserQuery,
 } = organizationServiceApi;
