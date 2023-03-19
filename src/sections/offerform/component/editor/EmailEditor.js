@@ -81,7 +81,7 @@ export default function EmailEditor({
               id="textarea"
               init={{
                 language: 'vi',
-                height: sx.minHeight,
+                height: sx?.minHeight || '370px',
                 menubar: false,
                 contextmenu: false,
                 branding: false,

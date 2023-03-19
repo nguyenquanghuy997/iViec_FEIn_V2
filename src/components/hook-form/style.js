@@ -48,7 +48,8 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
     },
     "& .MuiInput-root": {
         border: '1px solid #D0D4DB',
-        height: "44px",
+        minHeight: "44px",
+        height: '100%',
         fontSize: STYLE_CONSTANT.FONT_SM,
         borderRadius: theme.spacing(0.75),
         width: STYLE_CONSTANT.WIDTH_FULL,
@@ -60,7 +61,8 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
     },
     "& .MuiInput-root.Mui-error": {
         border: '1px solid red',
-        height: "44px",
+        minHeight: "44px",
+        height: '100%',
     },
     "& .MuiFormHelperText-root": {
         marginTop: theme.spacing(1),
@@ -84,7 +86,7 @@ const SelectFieldStyle = styled(Select)(({theme}) => ({
         border: '1px solid red',
     },
     "&.MuiInputBase-root": {
-        height: "44px",
+        minHeight: "44px",
         fontSize: STYLE_CONSTANT.FONT_SM,
         borderRadius: 6,
         width: STYLE_CONSTANT.WIDTH_FULL,
@@ -145,7 +147,8 @@ const InputStyle = styled(Input)(({theme}) => ({
         },
     },
     border: '1px solid #D0D4DB',
-    height: "44px",
+    minHeight: "44px",
+    height: '100%',
     fontSize: STYLE_CONSTANT.FONT_SM,
     borderRadius: theme.spacing(0.75),
     width: STYLE_CONSTANT.WIDTH_FULL,
@@ -153,7 +156,8 @@ const InputStyle = styled(Input)(({theme}) => ({
         borderWidth: '1px',
     },
     "& > .MuiInputBase-input": {
-        width: '376px',
+        minWidth: '376px',
+        width: '100%',
         padding: '0 0 0 14px !important',
     },
 }));

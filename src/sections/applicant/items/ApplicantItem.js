@@ -19,6 +19,7 @@ import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useEffect, useMemo, useState} from "react";
+import RecruitmentBottomNav from "@/sections/recruitment/items/RecruitmentBottomNav";
 
 const defaultValues = {
   searchKey: "",
@@ -47,8 +48,6 @@ export const ApplicantItem = () => {
 
   const { handleSubmit } = methods;
 
-  console.log(dataFilter)
-
   // api get list
   const { data: Data, isLoading } = useGetAllFilterApplicantQuery(
       JSON.stringify(Object.entries(dataFilter).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {}))
@@ -62,7 +61,7 @@ export const ApplicantItem = () => {
   const handleChangePagination = (pageIndex, pageSize) => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
-      dataFilter = {...dataFilter,pageSize: pageSize, pageIndex: pageIndex }
+    handleSetDataFilter({...dataFilter,pageSize: pageSize, pageIndex: pageIndex })
   };
   const columns = useMemo(() => {
     return [
@@ -473,6 +472,15 @@ export const ApplicantItem = () => {
     handleCloseFilterForm();
   };
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const [, setIsOpenBottomNav] = useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+    setSelectedRowKeys([]);
+    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+  };
+
   return (
     <View>
       <ApplicantHeader
@@ -498,14 +506,23 @@ export const ApplicantItem = () => {
             settingName={"DANH SÁCH ỨNG VIÊN"}
             scroll={{ x: 6500 }}
             nodata="Hiện chưa có ứng viên nào"
+            selectedRowKeys={selectedRowKeys}
+            setSelectedRowKeys={setSelectedRowKeys}
           />
         </View>
+        <RecruitmentBottomNav
+          open={selectedRowKeys?.length > 0}
+          onClose={toggleDrawer(false)}
+          selectedList={selectedRowKeys || []}
+          onOpenForm={toggleDrawer(true)}
+        />
       </Content>
       {toggleFormFilter && (
         <ApplicantFilterModal
           columns={columns}
           isOpen={toggleFormFilter}
           onClose={handleCloseFilterForm}
+          onOpen={handleOpenFilterForm}
           onSubmit={onSubmit}
         />
       )}

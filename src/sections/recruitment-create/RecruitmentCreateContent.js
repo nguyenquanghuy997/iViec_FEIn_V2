@@ -17,34 +17,37 @@ import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
-import {useCreateRecruitmentMutation} from "@/sections/recruitment";
+import {useCreateRecruitmentMutation, useUpdateRecruitmentOfficialMutation, useUpdateRecruitmentDraftMutation} from "@/sections/recruitment";
 import {useSnackbar} from "notistack";
 import {isEmpty} from "lodash";
 import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
+import {cleanObject} from "@/utils/function";
+import {useDebounce} from "@/hooks/useDebounce";
 
-const RecruitmentCreateContent = ({ Recruitment }) => {
+const RecruitmentCreateContent = ({Recruitment}) => {
 
   const {enqueueSnackbar} = useSnackbar();
   const {data: OrganizationOfUser = {}} = useGetOrganizationInfoQuery();
   const [createRecruitment] = useCreateRecruitmentMutation();
+  const [updateRecruitmentOfficial] = useUpdateRecruitmentOfficialMutation();
+  const [updateRecruitmentDraft] = useUpdateRecruitmentDraftMutation();
 
   // modal
   const [isOpenSaveDraft, setIsOpenSaveDraft] = useState(false);
   const [isOpenSubmitApprove, setIsOpenSubmitApprove] = useState(false);
   const [isOpenAlertBack, setIsOpenAlertBack] = useState(false);
 
-  const [errorsState,setErrorsState] = useState(false);
-
   const defaultValues = useMemo(() => {
     return {
+      id: "",
       name: '',
       organizationId: OrganizationOfUser.id,
       description: '',
       benefit: '',
       requirement: '',
-      numberPosition: null,
-      minSalary: null,
-      maxSalary: null,
+      numberPosition: '',
+      minSalary: '',
+      maxSalary: '',
       salaryDisplayType: '',
       sex: '',
       startDate: null,
@@ -56,7 +59,7 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
       jobPositionId: '',
       ownerId: '',
       workExperience: '',
-      currencyUnit: '',
+      currencyUnit: 0,
       candidateLevelId: "",
       organizationPipelineId: '',
       isAutomaticStepChange: false,
@@ -92,16 +95,38 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
         .typeError("Ngày kết thúc không đúng định dạng")
         .min(Yup.ref('startDate'), "Ngày kết thúc phải lớn hơn ngày bắt đầu")
         .required('Ngày kết thúc không được bỏ trống'),
-    // salary
-    salaryDisplayType: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Cách hiển thị không được bỏ trống'),
-    currencyUnit: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Loại tiền tệ không được bỏ trống'),
-    minSalary: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required("Mức lương tối thiểu không được bỏ trống"),
-    maxSalary: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('minSalary'), 'Mức lương tối đa cần lớn hơn mức lương tối thiểu').required("Mức lương tối đa không được bỏ trống"),
     // detail description
-    // jobPositionId: Yup.string().transform(value => value ? value?.value : undefined).required("Vị trí công việc không được bỏ trống"),
     description: Yup.string().required("Mô tả công việc không được bỏ trống"),
     requirement: Yup.string().required("Yêu cầu công việc không được bỏ trống"),
     benefit: Yup.string().required("Quyền lợi không được bỏ trống"),
+    // owner & council
+    ownerId: Yup.string().required("Cán bộ tuyển dụng không được bỏ trống"),
+    // pipeline
+    organizationPipelineId: Yup.string().required("Quy trình tuyển dụng không được bỏ trống"),
+    // salary
+    salaryDisplayType: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Cách hiển thị không được bỏ trống'),
+    currencyUnit: Yup.number()
+        .transform(value => (isNaN(value) ? undefined : value))
+        .when("salaryDisplayType", (salaryDisplayType, schema) => {
+          if (salaryDisplayType === 1 || salaryDisplayType === 2)
+            return schema.required("Loại tiền tệ không được bỏ trống")
+          return schema
+        }),
+    minSalary: Yup.number()
+        .transform(value => (isNaN(value) ? undefined : value))
+        .when("salaryDisplayType", (salaryDisplayType, schema) => {
+          if (salaryDisplayType === 2)
+            return schema.required("Mức lương tối thiểu không được bỏ trống")
+          return schema
+        }),
+    maxSalary: Yup.number()
+        .transform(value => (isNaN(value) ? undefined : value))
+        .min(Yup.ref('minSalary'), 'Mức lương tối đa cần lớn hơn mức lương tối thiểu')
+        .when("salaryDisplayType", (salaryDisplayType, schema) => {
+          if (salaryDisplayType === 2)
+            return schema.required("Mức lương tối đa không được bỏ trống")
+          return schema
+        }),
   });
 
   const methods = useForm({
@@ -110,46 +135,60 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
     defaultValues,
   });
 
-  const {handleSubmit, watch, setValue} = methods;
+  const {handleSubmit, watch, setValue, reset, formState: {errors, isValid}} = methods;
 
+  const watchName = watch('name');
+  const watchNameDebounce = useDebounce(watchName, 1000);
   const watchOrganization = watch('organizationId');
+  const watchSalaryDisplayType = watch('salaryDisplayType');
   const watchOrganizationPipelineId = watch('organizationPipelineId');
 
   useEffect(() => {
-    if(!watchOrganization || !watchOrganizationPipelineId) {
-      setErrorsState(true);
-    } else {
-      setErrorsState(false)
-    }
-  }, [watchOrganization, watchOrganizationPipelineId])
-
-  useEffect(() => {
     if (!isEmpty(Recruitment)) {
-      for(let i in defaultValues) {
+      for (let i in defaultValues) {
         setValue(i, Recruitment[i]);
+        setValue('organizationId', Recruitment?.organizationId)
+        setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => item?.provinceId))
+        setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => item?.jobCategoryId))
+        setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => item?.workingForm))
+        setValue('jobPositionId', Recruitment?.jobPosition?.id)
+        setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => item?.councilUserId))
+        setValue('coOwnerIds', Recruitment?.coOwners?.map(item => item?.id))
+        setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
+        setValue('currencyUnit', Recruitment?.currencyUnit);
       }
     }
   }, [Recruitment])
 
   useEffect(() => {
-    if (!isEmpty(OrganizationOfUser)) {
+    if (!isEmpty(OrganizationOfUser) && isEmpty(Recruitment)) {
       setValue('organizationId', OrganizationOfUser.id);
     }
-  }, [OrganizationOfUser])
+  }, [OrganizationOfUser, Recruitment])
 
   useEffect(() => {
-    if (watchOrganization) {
-      methods.resetField('organizationPipelineId');
+    if (watchSalaryDisplayType) {
+      methods.resetField('currencyUnit');
+      methods.resetField('minSalary');
+      methods.resetField('maxSalary');
     }
-  }, [watchOrganization])
+  }, [watchSalaryDisplayType])
 
-  const [valueTab, setValueTab] = useState('1');
+  const [valueTab, setValueTab] = useState(errors.organizationPipelineId ? '2' : '1');
   const handleChange = (event, newValue) => {
     setValueTab(newValue);
   };
 
   const onSubmit = async (data) => {
+    if (!isEmpty(errors)) {
+      enqueueSnackbar(Object.entries(errors)[0]?.message, {
+        autoHideDuration: 1000,
+        variant: 'error',
+      });
+      return;
+    }
     const body = {
+      id: data.id,
       name: data.name,
       organizationId: data.organizationId,
       description: data.description,
@@ -164,33 +203,75 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
       endDate: data.endDate,
       address: data.address,
       workingLanguageId: data.workingLanguageId,
-      coOwnerIds: data.coOwnerIds.map(item => item.value),
+      coOwnerIds: data.coOwnerIds,
       tags: data.tags,
       jobPositionId: data.jobPositionId,
       ownerId: data.ownerId,
-      workExperience: Number(data.workExperience),
-      currencyUnit: data.currencyUnit,
+      workExperience: data.workExperience,
+      currencyUnit: data.currencyUnit || 0,
       candidateLevelId: data.candidateLevelId,
       organizationPipelineId: data.organizationPipelineId,
-      isAutomaticStepChange: true,
-      recruitmentCouncilIds: data.recruitmentCouncilIds.map(item => item.value),
-      recruitmentJobCategoryIds: data.recruitmentJobCategoryIds.map(item => item.value),
-      recruitmentAddressIds: data.recruitmentAddressIds.map(item => item.value),
-      recruitmentWorkingForms: data.recruitmentWorkingForms.map(item => Number(item.value)),
+      isAutomaticStepChange: data.isAutomaticStepChange,
+      recruitmentCouncilIds: data.recruitmentCouncilIds,
+      recruitmentJobCategoryIds: data.recruitmentJobCategoryIds,
+      recruitmentAddressIds: data.recruitmentAddressIds,
+      recruitmentWorkingForms: data.recruitmentWorkingForms.map(item => Number(item)),
       recruitmentCreationType: isOpenSaveDraft ? 0 : 1,
     }
-    try {
-      await createRecruitment(body).unwrap();
-      setIsOpenSubmitApprove(false);
-      enqueueSnackbar("Thêm tin tuyển dụng thành công!", {
-        autoHideDuration: 1000
-      });
-    } catch (e) {
-      enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
-        autoHideDuration: 1000,
-        variant: 'error',
-      });
-      console.log(e)
+    if (data?.id) {
+      if(data.recruitmentCreationType === 0) {
+        try {
+          await updateRecruitmentDraft(cleanObject({
+            ...body,
+            recruitmentCreationType: 0
+          })).unwrap();
+          setIsOpenSubmitApprove(false);
+          enqueueSnackbar("Cập nhật tin tuyển dụng thành công!", {
+            autoHideDuration: 1000
+          });
+        } catch (e) {
+          enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+            autoHideDuration: 1000,
+            variant: 'error',
+          });
+          setIsOpenSubmitApprove(false);
+          throw e;
+        }
+      } else {
+        try {
+          await updateRecruitmentOfficial(cleanObject(body)).unwrap();
+          setIsOpenSubmitApprove(false);
+          enqueueSnackbar("Cập nhật tin tuyển dụng thành công!", {
+            autoHideDuration: 1000
+          });
+        } catch (e) {
+          enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+            autoHideDuration: 1000,
+            variant: 'error',
+          });
+          setIsOpenSubmitApprove(false);
+          throw e;
+        }
+      }
+    } else {
+      try {
+        await createRecruitment(cleanObject({
+          ...body,
+          recruitmentCreationType: isOpenSaveDraft ? 0 : 1
+        })).unwrap();
+        setIsOpenSubmitApprove(false);
+        enqueueSnackbar("Thêm tin tuyển dụng thành công!", {
+          autoHideDuration: 1000
+        });
+        reset(defaultValues);
+      } catch (e) {
+        enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+          autoHideDuration: 1000,
+          variant: 'error',
+        });
+        setIsOpenSubmitApprove(false);
+        throw e;
+      }
     }
   }
 
@@ -200,7 +281,10 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
             setIsOpenSubmitApprove={setIsOpenSubmitApprove}
             setIsOpenSaveDraft={setIsOpenSaveDraft}
             style={{padding: '18px 0', boxShadow: 'none', borderBottom: '1px solid #E7E9ED'}}
-            errors={errorsState}
+            errors={isValid}
+            watchName={watchNameDebounce}
+            processStatus={Recruitment?.processStatus}
+            title={!isEmpty(Recruitment) ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng'}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <TabContext value={valueTab}>
@@ -209,11 +293,17 @@ const RecruitmentCreateContent = ({ Recruitment }) => {
               <View mt={'168px'}>
                 <TabPanel value="1">
                   <BoxFlex>
-                    <RecruitmentInformation organizationId={watchOrganization}/>
+                    <RecruitmentInformation
+                        organizationId={watchOrganization}
+                        salaryDisplayType={watchSalaryDisplayType}
+                    />
                   </BoxFlex>
                 </TabPanel>
                 <TabPanel value="2">
-                  <RecruitmentPipeLine watchOrganization={watchOrganization} watchOrganizationPipelineId={watchOrganizationPipelineId} />
+                  <RecruitmentPipeLine
+                      watchOrganization={watchOrganization}
+                      watchOrganizationPipelineId={watchOrganizationPipelineId}
+                  />
                 </TabPanel>
                 <TabPanel value="3">
                   <RecruitmentChannel/>

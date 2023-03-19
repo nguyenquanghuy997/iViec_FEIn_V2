@@ -434,7 +434,7 @@ export const RecruitmentItem = () => {
   });
 
   const { handleSubmit } = methods;
-  const queryParams = {
+  let queryParams = {
     ...query,
     applicantSkillIds:
       query.applicantSkillIds && typeof query.applicantSkillIds === "string"
@@ -533,14 +533,13 @@ export const RecruitmentItem = () => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
     if (query) {
-      queryParams = {
-        ...queryParams,
-        pageSize: pageSize,
-        pageIndex: pageIndex,
-      };
       getAllFilter(
         JSON.stringify(
-          Object.entries(queryParams).reduce(
+          Object.entries({
+            ...queryParams,
+            pageSize: pageSize,
+            pageIndex: pageIndex,
+          }).reduce(
             (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
             {}
           )
@@ -630,40 +629,7 @@ export const RecruitmentItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const onTableRowClick = (record) => {
-    const selectedKey = record.id;
-    const selectedKeys = [...selectedRowKeys];
-
-    const index = selectedKeys.indexOf(selectedKey);
-
-    if (index === -1) {
-      selectedKeys.push(selectedKey);
-    } else {
-      selectedKeys.splice(index, 1);
-    }
-
-    if (selectedKeys?.length > 0) {
-      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = '89px';
-
-    } else {
-      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
-
-    }
-    setSelectedRowKeys(selectedKeys);
-  };
-
-  const onRow = (record) => {
-    return {
-      onClick: () => onTableRowClick(record),
-    };
-  };
+  const [itemSelected, setItemSelected] = useState([]);
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -696,11 +662,12 @@ export const RecruitmentItem = () => {
             menuItemText={menuItemText}
             UpdateListColumn={handleUpdateListColumnApplicants}
             settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
-            rowSelection={rowSelection}
-            onRow={onRow}
             scroll={{ x: 3954 }}
             nodata="Hiện chưa có tin tuyển dụng nào"
             selectedRowKeys={selectedRowKeys}
+            setSelectedRowKeys={setSelectedRowKeys}
+            itemSelected={itemSelected}
+            setItemSelected={setItemSelected}
           />
         </View>
         <RecruitmentBottomNav
@@ -708,6 +675,7 @@ export const RecruitmentItem = () => {
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
+          itemSelected={itemSelected}
         />
       </Content>
       {isOpen && (

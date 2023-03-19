@@ -214,7 +214,7 @@ export const headerMenuConfig = [
     subheader: "Quản Lý",
     items: [
       {
-        title: "Tin tuyển dụng",
+        title: "Duyệt tin",
         path: "/adrecruitment",
         // icon: ICONS.job,
         roles: ROLES[PAGES.RecruitmentAd],

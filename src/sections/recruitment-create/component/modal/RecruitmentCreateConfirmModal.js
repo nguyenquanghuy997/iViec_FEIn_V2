@@ -62,13 +62,14 @@ const ButtonCancelStyle = styled(Button)(({}) => ({
     }
   }
 }));
-const ButtonActiveStyle = styled(Button)(({}) => ({
+const ButtonActiveStyle = styled(Button)(({theme}) => ({
   "&.button-active": {
     fontSize: style.FONT_SM,
     fontWeight: style.FONT_SEMIBOLD,
     color: style.COLOR_WHITE,
     backgroundColor: style.BG_PRIMARY,
     borderRadius: 6,
+    padding: theme.spacing(1, 2),
     "&:hover": {
       color: style.COLOR_WHITE,
       backgroundColor: style.BG_PRIMARY

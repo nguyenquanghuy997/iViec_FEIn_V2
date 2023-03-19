@@ -1,3 +1,4 @@
+import JobTypeFilterModal from "../modals/JobTypeFilterModal";
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import { AvatarDS } from "@/components/DesignSystem";
@@ -9,6 +10,7 @@ import {
 } from "@/sections/applicant";
 import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
+import PipelineBottomNav from "@/sections/pipeline/items/PipelineBottomNav";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,7 +18,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import JobTypeFilterModal from "../modals/JobTypeFilterModal";
 
 const defaultValues = {
   searchKey: "",
@@ -27,7 +28,8 @@ export const JobTypeItem = () => {
   const { query, isReady } = router;
   // api get list
 
-  const [getAllFilter, {data: Data = [],isLoading }] = useLazyGetAllJobTypeQuery();
+  const [getAllFilter, { data: Data = [], isLoading }] =
+    useLazyGetAllJobTypeQuery();
   // api get list Column
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
@@ -150,19 +152,36 @@ export const JobTypeItem = () => {
   });
 
   const { handleSubmit } = methods;
-
+  const [page, setPage] = useState(1);
+  const [paginationSize, setPaginationSize] = useState(10);
+  const queryParams = {
+    searchKey: query.searchKey,
+    isActive: query.isActive ? query.isActive : null,
+    createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
+    createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
+    creatorIds:
+      query.creatorIds && typeof query.creatorIds === "string"
+        ? query.creatorIds
+        : query.creatorIds && query.creatorIds,
+    pageSize: paginationSize,
+    pageIndex: page,
+  };
+  const handleChangePagination = (pageIndex, pageSize) => {
+    setPaginationSize(pageSize);
+    setPage(pageIndex);
+    if (query) {
+      getAllFilter({
+        ...queryParams,
+        pageSize: pageSize,
+        pageIndex: pageIndex,
+      }).unwrap();
+    } else {
+      getAllFilter({ pageSize: pageSize, pageIndex: pageIndex }).unwrap();
+    }
+  };
   useEffect(() => {
     if (!isReady) return;
-    const queryParams = {
-      searchKey: query.searchKey,
-      isActive: query.isActive ? query.isActive : null,
-      createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-      createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-      creatorIds:
-        query.creatorIds && typeof query.creatorIds === "string"
-          ? query.creatorIds
-          : query.creatorIds && query.creatorIds,
-    };
+
     if (query) {
       getAllFilter(queryParams).unwrap();
     } else {
@@ -216,10 +235,25 @@ export const JobTypeItem = () => {
   const refreshData = () => {
     getAllFilter().unwrap();
   };
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [, setIsOpenBottomNav] = useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+    setSelectedRowKeys([]);
+    event.currentTarget.getElementsByClassName(
+      "css-28xiqa"
+    )[0].style.paddingBottom = null;
+  };
+
   return (
     <View>
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
+          page={page}
+          paginationSize={paginationSize}
+          handleChangePagination={handleChangePagination}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
           columns={columns}
           source={Data}
           loading={isLoading}
@@ -240,6 +274,13 @@ export const JobTypeItem = () => {
               onRefreshData={refreshData}
             />
           }
+        />
+        <PipelineBottomNav
+          open={selectedRowKeys?.length > 0}
+          onClose={toggleDrawer(false)}
+          selectedList={selectedRowKeys || []}
+          onOpenForm={toggleDrawer(true)}
+          setselectedList={setSelectedRowKeys}
         />
       </Content>
       {isOpen && (

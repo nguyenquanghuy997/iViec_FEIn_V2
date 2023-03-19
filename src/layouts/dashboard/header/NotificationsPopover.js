@@ -1,85 +1,85 @@
-import Iconify from "@/components/Iconify";
-import MenuPopover from "@/components/MenuPopover";
-import Scrollbar from "@/components/Scrollbar";
-import { IconButtonAnimate } from "@/components/animate";
-import { PATH_DASHBOARD } from "@/routes/paths";
-import {
-  useGetAllNotificationMutation,
-  useMaskReadNotificationMutation,
-} from "@/sections/notification/notificationSlice";
-import { fToNow } from "@/utils/formatTime";
-import {
-  Badge,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  List,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
-  Typography,
-} from "@mui/material";
-import { useRouter } from "next/router";
-import * as qs from "qs";
-import { useEffect, useState } from "react";
+// import Iconify from "@/components/Iconify";
+// import MenuPopover from "@/components/MenuPopover";
+// import Scrollbar from "@/components/Scrollbar";
+// import { IconButtonAnimate } from "@/components/animate";
+// import { PATH_DASHBOARD } from "@/routes/paths";
+// import {
+//   useGetAllNotificationMutation,
+//   useMaskReadNotificationMutation,
+// } from "@/sections/notification/notificationSlice";
+// import { fToNow } from "@/utils/formatTime";
+// import {
+//   Badge,
+//   Box,
+//   Button,
+//   CircularProgress,
+//   Divider,
+//   List,
+//   ListItemButton,
+//   ListItemText,
+//   ListSubheader,
+//   Typography,
+// } from "@mui/material";
+// import { useRouter } from "next/router";
+// import * as qs from "qs";
+// import { useEffect, useState } from "react";
 
 export default function NotificationsPopover() {
-  const router = useRouter();
+  // const router = useRouter();
 
-  // api
-  const [maskRead] = useMaskReadNotificationMutation();
-  const [fetchData, { data: { DataList = [] } = {}, isLoading }] =
-    useGetAllNotificationMutation();
+  // // api
+  // const [maskRead] = useMaskReadNotificationMutation();
+  // const [fetchData, { data: { DataList = [] } = {}, isLoading }] =
+  //   useGetAllNotificationMutation();
 
-  // state
-  const [openState, setOpenState] = useState(null);
-  const [list, setList] = useState([]);
-  const listUnread = list.filter((item) => item.IsNewNotify);
-  const listReaded = list.filter((item) => !item.IsNewNotify);
-  const totalUnread = listUnread.length;
+  // // state
+  // const [openState, setOpenState] = useState(null);
+  // const [list, setList] = useState([]);
+  // const listUnread = list.filter((item) => item.IsNewNotify);
+  // const listReaded = list.filter((item) => !item.IsNewNotify);
+  // const totalUnread = listUnread.length;
 
-  const fetchNotification = () => {
-    fetchData(
-      qs.stringify({
-        pageSize: 9999,
-        pageIndex: 1,
-      })
-    ).unwrap();
-  };
+  // const fetchNotification = () => {
+  //   fetchData(
+  //     qs.stringify({
+  //       pageSize: 9999,
+  //       pageIndex: 1,
+  //     })
+  //   ).unwrap();
+  // };
 
-  const pressOpen = (event) => {
-    fetchNotification();
-    setOpenState(event.currentTarget);
-  };
+  // const pressOpen = (event) => {
+  //   fetchNotification();
+  //   setOpenState(event.currentTarget);
+  // };
 
-  const pressClose = () => {
-    setOpenState(null);
-  };
+  // const pressClose = () => {
+  //   setOpenState(null);
+  // };
 
-  const pressItem = async (id) => {
-    await maskRead(id).unwrap();
-    setList((prev) =>
-      [...prev].map((i) => (i.Id === id ? { ...i, IsNewNotify: false } : i))
-    );
-  };
+  // const pressItem = async (id) => {
+  //   await maskRead(id).unwrap();
+  //   setList((prev) =>
+  //     [...prev].map((i) => (i.Id === id ? { ...i, IsNewNotify: false } : i))
+  //   );
+  // };
 
-  const pressViewAll = () => {
-    router.push(PATH_DASHBOARD.notification);
-    pressClose();
-  };
+  // const pressViewAll = () => {
+  //   router.push(PATH_DASHBOARD.notification);
+  //   pressClose();
+  // };
 
-  useEffect(() => {
-    fetchNotification();
-  }, []);
+  // useEffect(() => {
+  //   fetchNotification();
+  // }, []);
 
-  useEffect(() => {
-    Array.isArray(DataList) && setList(DataList);
-  }, [JSON.stringify(DataList)]);
+  // useEffect(() => {
+  //   Array.isArray(DataList) && setList(DataList);
+  // }, [JSON.stringify(DataList)]);
 
   return (
     <>
-      <IconButtonAnimate
+      {/* <IconButtonAnimate
         color={openState ? "inherit" : "inherit"}
         onClick={pressOpen}
         sx={{ width: 40, height: 40 }}
@@ -147,79 +147,79 @@ export default function NotificationsPopover() {
             </Button>
           </Box>
         )}
-      </MenuPopover>
+      </MenuPopover> */}
     </>
   );
 }
 
-const NotificationItem = ({ data, pressItem }) => {
-  const { Id, NotifyTitle, NotifyContent, IsNewNotify, CreatedDate } = data;
-  return (
-    <ListItemButton
-      sx={{
-        py: 1.5,
-        px: 2.5,
-        mt: "1px",
-        ...(IsNewNotify && {
-          bgcolor: "action.selected",
-        }),
-      }}
-      onClick={() => pressItem(Id)}
-    >
-      <ListItemText
-        primary={
-          <Typography variant="subtitle2">
-            {NotifyTitle}{" "}
-            <Typography
-              component="span"
-              variant="body2"
-              sx={{ color: "text.secondary" }}
-              dangerouslySetInnerHTML={{ __html: NotifyContent }}
-            />
-          </Typography>
-        }
-        secondary={
-          <Typography
-            variant="caption"
-            sx={{
-              mt: 0.5,
-              display: "flex",
-              alignItems: "center",
-              color: "text.disabled",
-            }}
-          >
-            <Iconify
-              icon="eva:clock-outline"
-              sx={{ mr: 0.5, width: 16, height: 16 }}
-            />
-            {fToNow(CreatedDate)}
-          </Typography>
-        }
-      />
-    </ListItemButton>
-  );
-};
+// const NotificationItem = ({ data, pressItem }) => {
+//   const { Id, NotifyTitle, NotifyContent, IsNewNotify, CreatedDate } = data;
+//   return (
+//     <ListItemButton
+//       sx={{
+//         py: 1.5,
+//         px: 2.5,
+//         mt: "1px",
+//         ...(IsNewNotify && {
+//           bgcolor: "action.selected",
+//         }),
+//       }}
+//       onClick={() => pressItem(Id)}
+//     >
+//       <ListItemText
+//         primary={
+//           <Typography variant="subtitle2">
+//             {NotifyTitle}{" "}
+//             <Typography
+//               component="span"
+//               variant="body2"
+//               sx={{ color: "text.secondary" }}
+//               dangerouslySetInnerHTML={{ __html: NotifyContent }}
+//             />
+//           </Typography>
+//         }
+//         secondary={
+//           <Typography
+//             variant="caption"
+//             sx={{
+//               mt: 0.5,
+//               display: "flex",
+//               alignItems: "center",
+//               color: "text.disabled",
+//             }}
+//           >
+//             <Iconify
+//               icon="eva:clock-outline"
+//               sx={{ mr: 0.5, width: 16, height: 16 }}
+//             />
+//             {fToNow(CreatedDate)}
+//           </Typography>
+//         }
+//       />
+//     </ListItemButton>
+//   );
+// };
 
-const NotificationList = ({ title, data, pressItem }) => {
-  return (
-    <List
-      disablePadding
-      subheader={
-        <ListSubheader
-          disableSticky
-          sx={{ py: 1, px: 2.5, typography: "overline" }}
-        >
-          {title}
-        </ListSubheader>
-      }
-    >
-      {data.map((item, index) => (
-        <NotificationItem
-          key={item.Id || index}
-          data={item}
-          pressItem={pressItem}
-        />
-      ))}
-    </List>
-  );
-};
+// const NotificationList = ({ title, data, pressItem }) => {
+//   return (
+//     <List
+//       disablePadding
+//       subheader={
+//         <ListSubheader
+//           disableSticky
+//           sx={{ py: 1, px: 2.5, typography: "overline" }}
+//         >
+//           {title}
+//         </ListSubheader>
+//       }
+//     >
+//       {data.map((item, index) => (
+//         <NotificationItem
+//           key={item.Id || index}
+//           data={item}
+//           pressItem={pressItem}
+//         />
+//       ))}
+//     </List>
+//   );
+// };

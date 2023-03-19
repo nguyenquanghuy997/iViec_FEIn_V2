@@ -8,6 +8,7 @@ const HeadingBarStyle = styled("div")(({ theme }) => ({
   backgroundColor: "#FDFDFD",
   padding: theme.spacing(3, 0),
   position: 'fixed',
+  left:0,
   top: theme.spacing(8),
   zIndex: 1000
 }));

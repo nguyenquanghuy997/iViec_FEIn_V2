@@ -13,6 +13,7 @@ export default function DrawerEdit({dataForm}) {
     setOpen(newOpen);
   };
 
+
   const list = () => (
     <Box
       sx={{ width: 600 }}
@@ -25,7 +26,7 @@ export default function DrawerEdit({dataForm}) {
         p:0
       }}>
         <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-          Chỉnh sửa thông tin công ty
+          Chỉnh sửa Thông tin công ty
         </Typography>
         <Button onClick={toggleDrawer(false)} sx={{
           '&:hover':{
@@ -36,7 +37,7 @@ export default function DrawerEdit({dataForm}) {
       </List>
       <Divider />
       <List sx={{ p:0}}>
-        <FormCompanyInfor data={dataForm}/>
+        <FormCompanyInfor data={dataForm} onClose={toggleDrawer(false)}/>
       </List>
     </Box>
   );

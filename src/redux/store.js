@@ -13,6 +13,7 @@ import kanbanReducer from '@/sections/kanban/kanbanSlice'
 import uploadAvatarReducer from '@/sections/user/account/uploadAvatarSlice'
 import {organizationServiceApi} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {modalSlice} from "@/redux/common/modalSlice";
+import {companyServiceApi} from '@/sections/companyinfor/companyInforSlice'
 import {filterSlice} from "@/redux/common/filterSlice";
 import {applicantFilterSlice} from "@/redux/slice/applicantFilterSlice";
 
@@ -20,6 +21,7 @@ const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     [organizationServiceApi.reducerPath]: organizationServiceApi.reducer,
+    [companyServiceApi.reducerPath]: companyServiceApi.reducer,
     avatar: uploadAvatarReducer,
     kanban: kanbanReducer,
     client: clientReducer,
@@ -35,7 +37,9 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
       immutableCheck: false,
-    }).concat(apiSlice.middleware).concat(organizationServiceApi.middleware),
+    }).concat(apiSlice.middleware)
+    .concat(organizationServiceApi.middleware)
+    .concat(companyServiceApi.middleware),
 })
 
 const { dispatch } = store

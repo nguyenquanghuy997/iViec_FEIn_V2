@@ -134,7 +134,7 @@ const ConnectCardItem = ({ account, color, type }) => {
 
 const DetailCard = ({ checked, accounts }) => {
   const [isActive, setIsActive] = useState(false);
-  
+
   const methods = useForm({
     defaultValues: { isActive: true },
   });
@@ -170,9 +170,9 @@ const DetailCard = ({ checked, accounts }) => {
           >
             <span>Tài khoản {item.id}</span>
             {isActive ? (
-              <span style={{ color: "#388E3C" }}> Đang kết nối</span>
+              <span style={{ color: "#388E3C" }}> Đã hoạt động</span>
             ) : (
-              ""
+              <span style={{ color: "#8A94A5" }}>Ngừng hoạt động"</span>
             )}
           </Typography>
           <Typography component="div" fontSize={"14px"} sx={{ mb: 3 }}>
@@ -189,10 +189,10 @@ const DetailCard = ({ checked, accounts }) => {
               <CardActionArea onClick={handleOpen} sx={{ p: 0 }}>
                 <DeleteIcon />
               </CardActionArea>
-              <ConnectDialog open={open} onClose={handleClose} type='account'/>
+              <ConnectDialog open={open} onClose={handleClose} type="account" />
               <SwitchForm
                 name={item.mail}
-                handleChange={()=> setIsActive(!isActive)}
+                handleChange={() => setIsActive(!isActive)}
               />
             </Box>
           </FormProvider>
@@ -253,11 +253,17 @@ const DetailSocial = ({ checked, accounts }) => {
               <Typography>{item.mail}</Typography>
             </div>
             <FormProvider methods={methods}>
-              <span onClick={handleOpen}><DeleteIcon /></span>
-              <ConnectDialog open={open} onClose={handleClose} type='unconnect' />
+              <span onClick={handleOpen}>
+                <DeleteIcon />
+              </span>
+              <ConnectDialog
+                open={open}
+                onClose={handleClose}
+                type="unconnect"
+              />
               <SwitchForm
                 name={"active"}
-                // handleChange={() => 
+                // handleChange={() =>
                 //   setIsActive(!isActive)
                 // }
                 style={{

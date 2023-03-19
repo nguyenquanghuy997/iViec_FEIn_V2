@@ -7,8 +7,8 @@ export const ACTION_CONTENT = {
     },
     approveProcessLevelDelete: {
         confirm: 'Xác nhận xóa cấp phê duyệt',
-        text: "Bạn có chắc chắn muốn xóa cấp phê duyệt này",
-        color: "#455570",
+        text: "Bạn có chắc chắn muốn xóa cấp phê duyệt này?",
+        color: "#E53935",
         textButton: 'Xóa'
     },
     approveProcessDeActive: {
@@ -35,4 +35,24 @@ export function formatDataPush(approveProcesses) {
         });
     });
     return approveProcesses;
+}
+
+export function formatDataGet(approveProcesses) {
+    if (!approveProcesses || !approveProcesses.approvalProcessLevels) return "";
+    const newList = {
+        ...approveProcesses, approvalProcessLevels: approveProcesses.approvalProcessLevels.map((item) => {
+            const newItem = {
+                ...item, approvalProcessLevelDetails: item?.approvalProcessLevelDetails?.map((itemChild) => {
+                    let _itemChild = {...itemChild}
+                    if (_itemChild.processLevelDetailType === 1)
+                        _itemChild.personInChargeIds = _itemChild.processLevelDetailPersonInCharges[0].personInChargeId
+                    else
+                        _itemChild.personInChargeIds = _itemChild?.processLevelDetailPersonInCharges?.map((itemChildTwo) => itemChildTwo.personInChargeId);
+                    return _itemChild;
+                })
+            };
+            return newItem;
+        })
+    };
+    return newList;
 }

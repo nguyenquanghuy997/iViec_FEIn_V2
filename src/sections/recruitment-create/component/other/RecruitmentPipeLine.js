@@ -9,11 +9,15 @@ import RecruitmentPipelineCard from "@/sections/recruitment-create/component/oth
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {useGetAllPipelineByOrganizationQuery, useGetAllStepOfPipelineQuery} from "@/sections/pipeline";
 import {PipelineStateType} from "@/utils/formatString";
+import {useRouter} from "next/router";
+import {PATH_DASHBOARD} from "@/routes/paths";
 
 const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) => {
 
   const {data: {items: ListPipeline = []} = {}} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
-  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, { skip: !watchOrganizationPipelineId });
+  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
+
+  const router = useRouter();
 
   return (
       <BoxWrapperStyle className="wrapper">
@@ -22,24 +26,20 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
           <BoxInnerStyle>
             <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
             <Box sx={{px: 4, py: 3}}>
-              <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
-                <div style={{flex: 1, marginRight: 8}}>
-                  <RHFDropdown
-                      name="organizationPipelineId"
-                      title="Quy trình tuyển dụng có sẵn"
-                      placeholder="Chọn 1 quy trình tuyển dụng"
-                      isRequired
-                      fullWidth
-                      options={ListPipeline.map(item => ({
-                        id: item.id,
-                        value: item.id,
-                        name: item.name,
-                        label: item.name
-                      }))}
-                  />
-                </div>
-              </Box>
-              <Divider sx={{mb: 1.5}}/>
+              <RHFDropdown
+                  name="organizationPipelineId"
+                  title="Quy trình tuyển dụng có sẵn"
+                  placeholder="Chọn 1 quy trình tuyển dụng"
+                  isRequired
+                  fullWidth
+                  options={ListPipeline.map(item => ({
+                    id: item.id,
+                    value: item.id,
+                    name: item.name,
+                    label: item.name
+                  }))}
+              />
+              <Divider sx={{my: 1.5}}/>
               <BoxFlex>
                 <Typography sx={{
                   color: style.COLOR_TEXT_PRIMARY,
@@ -54,7 +54,11 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
 
               <Box sx={{mt: 1}}>
                 {ListStepPipeline?.map((item, index) => {
-                  return <RecruitmentPipelineCard key={index} icon={PipelineStateType(item?.pipelineStateType).icon} title={PipelineStateType(item?.pipelineStateType).title} subtitle={PipelineStateType(item?.pipelineStateType).subtitle}/>
+                  return <RecruitmentPipelineCard
+                      key={index}
+                      icon={PipelineStateType(item?.pipelineStateType).icon}
+                      title={PipelineStateType(item?.pipelineStateType).title}
+                      subtitle={PipelineStateType(item?.pipelineStateType).subtitle}/>
                 })}
               </Box>
 
@@ -67,7 +71,11 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
                 'Nếu chưa có quy trình tuyển dụng phù hợp, Hãy liên hệ Quản trị viên doanh nghiệp của bạn để thêm quy trình mới.',
               ]}
           >
-            <Button variant="outlined" sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}>
+            <Button
+                variant="outlined"
+                sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}
+                onClick={() => router.push(PATH_DASHBOARD.pipeline.root)}
+            >
               Thiết lập quy trình tuyển dụng
             </Button>
 

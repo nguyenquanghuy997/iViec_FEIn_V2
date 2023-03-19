@@ -4,7 +4,6 @@ import {Controller, useFormContext} from "react-hook-form";
 import Iconify from "@/components/Iconify";
 import {containsText} from "@/utils/function";
 import {LabelStyle, MenuItemStyle, SearchInputStyle, SelectFieldStyle, TextFieldStyle, useStyles,} from './style';
-import {isEmpty} from "lodash";
 import {AvatarDS} from "@/components/DesignSystem";
 
 const Placeholder = (placeholder) => {
@@ -19,7 +18,7 @@ const MenuProps = {
   MenuListProps: {
     disableListWrap: true,
   },
-  disableScrollLock: true
+  // disableScrollLock: true
 };
 
 const InputProps = {
@@ -33,10 +32,10 @@ const InputProps = {
 const renderOptions = (options, value, type = "text") => {
   if(type === 'avatar') {
     return options?.map((option, i) => {
-      return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
+      return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value}>
         <Box>
           <AvatarDS
-              sx={{height: "20px", width: "20px", borderRadius: "100px", fontSize: "10px"}}
+              sx={{height: "24px", width: "24px", borderRadius: "100px", fontSize: "10px"}}
               name={option.lastName}
           />
           {option.label || option.name}
@@ -46,15 +45,15 @@ const renderOptions = (options, value, type = "text") => {
     })
   }
   return options?.map((option, i) => {
-    return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value} className={`${isEmpty(option.value) ? 'empty-option' : ''}`}>
+    return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value}>
       {option.label || option.name}
       {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{ width: 24, height: 24 }} /> }
     </MenuItem>
   })
 }
 
-const renderValue = (options = [], value = '', placeholder = '', keyObj = 'name') => {
-  return !isEmpty(value) ? options.find(option => option.value === value)?.[keyObj] : Placeholder(placeholder)
+const renderValue = (options = [], value, placeholder = '', keyObj = 'name') => {
+  return value || value === 0 ? options.find(option => option.value === value)?.[keyObj] : Placeholder(placeholder)
 }
 
 function RHFDropdown({name, ...props}) {
@@ -62,7 +61,6 @@ function RHFDropdown({name, ...props}) {
   const {defaultValue, isRequired, title, placeholder, options, disabled, keyObj, type = 'text'} = props;
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
-
   const [filterOptions, setFilterOptions] = useState([]);
 
   useEffect(() => {
