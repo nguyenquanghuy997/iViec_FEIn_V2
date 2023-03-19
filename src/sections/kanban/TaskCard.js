@@ -22,12 +22,11 @@ function TaskCard({ item, index,pipelineStateType }) {
               ...provided.draggableProps.style
             }}
           >
-             <div>
-              { pipelineStateType}
-              </div>
             <div>
-             
-              {item.email}
+              {pipelineStateType}
+            </div>
+            <div>
+             {item.email}
             </div>
           </div>
         );

@@ -15,6 +15,7 @@ import {Column} from '@/sections/kanban';
 import { getRolesByPage } from '@/utils/role'
 import {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useUpdateApplicantRecruitmentToNextStateMutation
 } from "@/sections/applicant";
 Recruitment.getLayout = function getLayout({ roles = [] }, page) {
   return <Layout roles={roles}>{page}</Layout>
@@ -33,21 +34,26 @@ export default function Recruitment() {
   const router = useRouter();
   const RecruitmentId = router.query.slug;
   const { data: ColumnData } = useGetRecruitmentPipelineStatesByRecruitmentQuery(RecruitmentId);
-
-  const onDragEnd = (result, columns, setColumns) => {
+  console.log('ColumnData',ColumnData)
+  const [ChangeToNextState] = useUpdateApplicantRecruitmentToNextStateMutation();
+  const onDragEnd = async(result, columns, setColumns) => {
     if (!result.destination) return;
     const { source, destination } = result;
     // khác cột
     if (source.droppableId !== destination.droppableId) {
+      console.log('1234',columns)
+      console.log('12345',result)
       const sourceColumn = columns[source.droppableId];
       const destColumn = columns[destination.droppableId];
       const sourceItems = [...sourceColumn.items];
       const destItems = [...destColumn.items];
       const [removed] = sourceItems.splice(source.index, 1);
       destItems.splice(destination.index, 0, removed);
-      // call api
-
-      //
+      console.log('12346',sourceColumn)
+      console.log('12347',destColumn)
+      console.log('12348',sourceItems)
+      console.log('12349',destItems)
+      let applicantId
       setColumns({
         ...columns,
         [source.droppableId]: {
@@ -59,6 +65,49 @@ export default function Recruitment() {
           items: destItems
         }
       });
+      sourceColumn.items.map((item)=>{
+        if(item.id==result.draggableId)
+         applicantId=item.applicantId
+
+      })
+      // let sourceColumn2=sourceColumn
+      // let applicantId=sourceColumn2?.items((item)=>{
+      //   if(source.draggableId==item.id)
+      //   // applicantId=item.applicantId
+      //   return item.applicantId
+      // })
+      // console.log('12347',destColumn)
+      // console.log('12348',sourceItems)
+      // console.log('12349',destItems)
+      // console.log('123410',source.draggableId)
+      
+      // call api
+      let body
+      if(destColumn.pipelineStateType==3){
+        body ={
+          "applicantId": applicantId,
+          "recruitmentId": RecruitmentId,
+          "recruitmentPipelineStateId":destColumn.id,
+          "pipelineStateResultType": 0,
+          "note":"abc"
+        }
+      }
+      else{
+         body ={
+          "applicantId": applicantId,
+          "recruitmentId": RecruitmentId,
+          "recruitmentPipelineStateId":destColumn.id,
+        }
+      }
+    
+
+
+      await ChangeToNextState(body)
+      
+      
+      // await ChangeToNextState({ Id }).unwrap();
+      //
+ 
     } else {
       // cùng cột
       const column = columns[source.droppableId];
