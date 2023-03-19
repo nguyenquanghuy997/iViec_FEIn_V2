@@ -130,7 +130,7 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
                 <DynamicFilterForm
                     columns={columns}
                     options={{
-                      creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.email}`, item: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: "", item: ""}],
+                      creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.email}`, item: `${i?.lastName || ""} ${i?.firstName}`})), {id: "", value: "", name: "", item: ""}],
                       isActive: LIST_STATUS,
                     }}
                 />

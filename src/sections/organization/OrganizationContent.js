@@ -150,7 +150,7 @@ const OrganizationContent = () => {
                       </Box>
                       <Stack sx={{ml: 1.5}}>
                         <Typography sx={{color: '#172B4D', fontSize: 14, fontWeight: 600}}>
-                          {_.get(user, 'lastName') && _.get(user, 'lastName')}
+                          {_.get(user, 'lastName') && _.get(user, 'lastName') || ''}
                           {_.get(user, 'firstName') && _.get(user, 'firstName')}
                         </Typography>
                         <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>

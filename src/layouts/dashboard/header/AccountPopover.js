@@ -78,7 +78,7 @@ export default function AccountPopover() {
     <>
       <Stack justifyContent="flex-end" sx={{ textAlign: 'right' }}>
         <TypographyStyle variant="subtitle2" noWrap sx={{ fontSize: 13, fontWeight: 700, color: '#E7E9ED' }}>
-          {currentUser && `${currentUser?.lastName} ${currentUser?.firstName}`}
+          {currentUser && `${currentUser?.lastName||''} ${currentUser?.firstName}`}
         </TypographyStyle>
         <TypographyStyle variant="body2" sx={{ fontSize: 12, fontWeight: 400, color: '#E7E9ED' }} noWrap>
           {currentUser && currentUser?.email}
@@ -132,7 +132,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {currentUser && `${currentUser?.lastName} ${currentUser?.firstName}`}
+            {currentUser && `${currentUser?.lastName || ""} ${currentUser?.firstName}`}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
             {currentUser && currentUser?.email}

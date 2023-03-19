@@ -265,7 +265,7 @@ const DynamicColumnsTable = (props) => {
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    setItemSelected(source?.items.filter(item => newSelectedRowKeys.includes(item.id)))
+    itemSelected ? setItemSelected(source?.items.filter(item => newSelectedRowKeys.includes(item.id))):""
   };
   const rowSelection = {
     selectedRowKeys,
