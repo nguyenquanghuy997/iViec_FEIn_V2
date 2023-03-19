@@ -3,8 +3,8 @@ import { ButtonDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
-import { ButtonCancel, ButtonIcon, DialogModel} from "@/utils/cssStyles";
-import { DialogActions, Divider} from "@mui/material";
+import { ButtonCancel, ButtonIcon, DialogModel } from "@/utils/cssStyles";
+import { DialogActions, Divider } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Checkbox, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
@@ -72,75 +72,85 @@ const DynamicColumnsTable = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-           <FormProvider
-        // methods={methods}
-      >
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "unset",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "22px 24px",
-          }}
-        >
-          <div style={{ color: "#172B4D", fontWeight: 600 }}>Quản lý cột</div>
-          <div>
-            <ButtonIcon
-              onClick={() => setVisibleMenuSettings(false)}
-              icon={
-                <Iconify width={20} height={20} icon="ic:baseline-close" color="#455570"/>
-              }
-            >
-            </ButtonIcon>
-          </div>
-        </View>
-        <Divider />
-        <Menu style={{overflowY: 'auto', maxHeight: '600px',  }}>
-          {ColumnData &&
-            Object.keys(ColumnData).map((key, index) => {
-              if (key == "id") {
-                return;
-              }
-              if (key == "name" || key == "id" || key == "phoneNumber") {
-                return (
-                  <Menu.Item key={index + 1}>
-                    <Checkbox
-                      id={key}
-                      onChange={onChange}
-                      defaultChecked={ColumnData[key]}
-                      disabled
-                    >
-                      {menuItemText[key]}
-                    </Checkbox>
-                  </Menu.Item>
-                );
-              } else {
-                return (
-                  <Menu.Item key={index + 1}>
-                    <Checkbox
-                      id={key}
-                      onChange={onChange}
-                      defaultChecked={ColumnData[key]}
-                    >
-                      {menuItemText[key]}
-                    </Checkbox>
-                  </Menu.Item>
-                );
-              }
-            })}
-        </Menu>
-        <DialogActions sx={{ borderTop: "1px solid #E7E9ED", padding: '16px 24px !important' }}>
-          <ButtonCancel tittle="Hủy" onClick={()=>setVisibleMenuSettings(false)} />
-
-          <ButtonDS
-            tittle="Áp dụng"
-            onClick={() => {
-              UpdateListColumn();
-              setVisibleMenuSettings(false);
+        <FormProvider methods={{}}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "unset",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "22px 24px",
             }}
-          />
-        </DialogActions>
+          >
+            <div style={{ color: "#172B4D", fontWeight: 600 }}>Quản lý cột</div>
+            <div>
+              <ButtonIcon
+                onClick={() => setVisibleMenuSettings(false)}
+                icon={
+                  <Iconify
+                    width={20}
+                    height={20}
+                    icon="ic:baseline-close"
+                    color="#455570"
+                  />
+                }
+              ></ButtonIcon>
+            </div>
+          </View>
+          <Divider />
+          <Menu style={{ overflowY: "auto", maxHeight: "600px" }}>
+            {ColumnData &&
+              Object.keys(ColumnData).map((key, index) => {
+                if (key == "id") {
+                  return;
+                }
+                if (key == "name" || key == "id" || key == "phoneNumber") {
+                  return (
+                    <Menu.Item key={index + 1}>
+                      <Checkbox
+                        id={key}
+                        onChange={onChange}
+                        defaultChecked={ColumnData[key]}
+                        disabled
+                      >
+                        {menuItemText[key]}
+                      </Checkbox>
+                    </Menu.Item>
+                  );
+                } else {
+                  return (
+                    <Menu.Item key={index + 1}>
+                      <Checkbox
+                        id={key}
+                        onChange={onChange}
+                        defaultChecked={ColumnData[key]}
+                      >
+                        {menuItemText[key]}
+                      </Checkbox>
+                    </Menu.Item>
+                  );
+                }
+              })}
+          </Menu>
+          <DialogActions
+            sx={{
+              borderTop: "1px solid #E7E9ED",
+              padding: "16px 24px !important",
+            }}
+          >
+            <ButtonCancel
+              tittle="Hủy"
+              onClick={() => setVisibleMenuSettings(false)}
+            />
+
+            <ButtonDS
+              tittle="Áp dụng"
+              onClick={() => {
+                UpdateListColumn();
+                setVisibleMenuSettings(false);
+              }}
+            />
+          </DialogActions>
         </FormProvider>
       </DialogModel>
     </>
@@ -264,10 +274,9 @@ const DynamicColumnsTable = (props) => {
   const onTableRowClick = (record) => {
     const selectedKey = record.id;
     const selectedKeys = [...selectedRowKeys];
-    const selectedList = [...itemSelected];
+    const selectedList = itemSelected ? [...itemSelected]:[];
 
     const index = selectedKeys.indexOf(selectedKey);
-
     if (index === -1) {
       selectedKeys.push(selectedKey);
       selectedList.push(record);
@@ -275,18 +284,30 @@ const DynamicColumnsTable = (props) => {
       selectedKeys.splice(index, 1);
       selectedList.splice(index, 1);
     }
-
-    if (selectedKeys?.length > 0) {
-      event.currentTarget.getElementsByClassName(
-        "css-6pqpl8"
-      )[0].style.paddingBottom = "89px";
+    if (filter) {
+      if (selectedKeys?.length > 0) {
+        event.currentTarget.getElementsByClassName(
+          "css-28xiqa"
+        )[0].style.paddingBottom = "89px";
+      } else {
+        event.currentTarget.getElementsByClassName(
+          "css-28xiqa"
+        )[0].style.paddingBottom = null;
+      }
     } else {
-      event.currentTarget.getElementsByClassName(
-        "css-6pqpl8"
-      )[0].style.paddingBottom = null;
+      if (selectedKeys?.length > 0) {
+        event.currentTarget.getElementsByClassName(
+          "css-6pqpl8"
+        )[0].style.paddingBottom = "89px";
+      } else {
+        event.currentTarget.getElementsByClassName(
+          "css-6pqpl8"
+        )[0].style.paddingBottom = null;
+      }
     }
     setSelectedRowKeys(selectedKeys);
-    setItemSelected(selectedList)
+    itemSelected ? setItemSelected(selectedList) : ""
+    
   };
 
   const onRow = (record) => {
@@ -307,7 +328,7 @@ const DynamicColumnsTable = (props) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <ButtonIcon
             onClick={showSetting}
-            sx={{backgroundColor:"unset"}}
+            sx={{ backgroundColor: "unset" }}
             icon={
               <Iconify
                 icon={"material-symbols:settings"}

@@ -12,7 +12,6 @@ import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import {
-  useAddJobTypeMutation,
   useUpdateJobTypeMutation,
 } from "@/sections/jobtype";
 import { ViewModel } from "@/utils/cssStyles";
@@ -26,6 +25,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { useAddPipelineMutation } from "../PipelineFormSlice";
 
 const defaultValues = {
   name: "",
@@ -37,7 +37,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   const isEditMode = !!data?.id;
 
   // api
-  const [addForm] = useAddJobTypeMutation();
+  const [addForm] = useAddPipelineMutation();
   const [updateForm] = useUpdateJobTypeMutation();
 
   // form
@@ -89,18 +89,18 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   };
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
-    debugger;
+    console.log(e);
     if (e.pipelineStates == 0) {
       setErrorStage("Chưa thêm bước tuyển dụng");
     } else {
       const body = {
-        id: isEditMode ? data.id : 0,
+        id: isEditMode ? data.id : "",
         name: e.name,
         description: e.description,
         pipelineStates: e.pipelineStates.map((i) => ({
-          state: i.stageTypeId,
-          examinationId: i.examinationId,
-          description: i.description,
+          state: i.stageType.id,
+          examinationId: i.exam.id,
+          description: i.des,
         })),
         isActivated: e.isActivated ? 1 : 0,
       };
@@ -161,6 +161,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
         onPressAdd={pressAdd}
         onPressEdit={() => onEditForm(item, index)}
         onPressDelete={() => onDeleteForm(index)}
+        isDefault={false}
       />
     );
   };
@@ -183,9 +184,9 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     setValue("isActivated", !!data.isActivated);
     setListForm(
       data.pipelineStates?.map?.((i) => ({
-        state: i.stageTypeId,
-        examinationId: i.examinationId,
-        description: i.description,
+        state: i.stageType.id,
+        examinationId: i.exam.id,
+        description: i.des,
       })) || []
     );
   }, []);

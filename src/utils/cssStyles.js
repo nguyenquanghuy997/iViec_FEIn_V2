@@ -67,7 +67,7 @@ export const ButtonIcon = styled(ButtonDS)(({}) => ({
   minWidth: "unset",
   backgroundColor: "#fff",
   boxShadow: "none",
-  ":hover": {
+  "&:hover": {
     backgroundColor: "#EFF3F7",
   },
   textTransform: "none",
@@ -85,7 +85,7 @@ export const ButtonGray = styled(ButtonDS)(({}) => ({
   color: "#455570",
   backgroundColor: "#F3F4F6",
   boxShadow: "none",
-  ":hover": {
+  "&:hover": {
     backgroundColor: "#E7E9ED",
   },
   textTransform: "none",
