@@ -161,6 +161,7 @@ export const STYLE_CONSTANT= {
   COLOR_TEXT_GRAY: "#8A94A5",
   COLOR_TEXT_DANGER: "#E53935",
   COLOR_DIVIDER: "#E7E9ED",
+  COLOR_SUCCESS: '#388E3C',
   // bg color
   BG_TRANSPARENT: "transparent",
   BG_LIGHT: "#FDFDFD",

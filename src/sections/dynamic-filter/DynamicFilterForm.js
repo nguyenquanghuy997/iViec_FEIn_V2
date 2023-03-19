@@ -22,7 +22,7 @@ function compare(a) {
 }
 
 const DynamicFilterForm = (props) => {
-  const { options } = props;
+  const { options, disabled } = props;
 
   return (
       <Stack>
@@ -37,14 +37,6 @@ const DynamicFilterForm = (props) => {
                         name={column.name}
                         multiple
                         placeholder={column.placeholder || "Tìm kiếm..."}
-                        dropdownStyle={{maxHeight: 400, overflow: 'auto', zIndex: 9999}}
-                        allowClear
-                        treeDefaultExpandAll
-                        notFoundContent={
-                          <span style={{ display: 'block', padding: '10px' }}>
-                            Không tìm thấy đơn vị phù hợp
-                          </span>
-                        }
                     />
                   </Stack>
                   <Divider/>
@@ -226,13 +218,14 @@ const DynamicFilterForm = (props) => {
                                 <SelectFilter
                                     options={options[item.name]?.map((i) => ({
                                       ...i,
-                                      value: i.id,
+                                      value: i.id ? i.id : i.value,
                                       label: i.name,
                                       name: i.name,
                                     }))}
                                     name={item.name}
                                     multiple={item.multiple}
                                     placeholder={item.placeholder || "Tìm kiếm..."}
+                                    disabled={disabled?.[item.name] || false}
                                 />
                               </div>
                           )
@@ -249,12 +242,13 @@ const DynamicFilterForm = (props) => {
                     <Typography variant="body1" sx={{...TypographyStyle}}>{column.label}</Typography>
                     <SelectFilter
                         options={options[column.name]?.map((i) => ({
-                          value: i.id,
+                          value: i.id ? i.id : i.value,
                           label: i.name,
                           name: i.item || i.name,
                         }))}
                         name={column.name}
                         multiple={column.multiple}
+                        disabled={disabled?.[column.name] || false}
                         placeholder={column.placeholder || "Tìm kiếm..."}
                     />
                   </Stack>

@@ -62,9 +62,9 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
     code: Yup.string().nullable().required("Mã đơn vị không được bỏ trống").max(20, "Mã đơn vị tối đa 20 ký tự"),
     email: Yup.string().nullable().email('Email không đúng định dạng').required("Email không được bỏ trống"),
     phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
-    provinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống"),
-    districtId: Yup.string().required("Quận/Huyện không được bỏ trống"),
-    address: Yup.string().max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
+    provinceId: Yup.string().nullable().required("Tỉnh/Thành phố không được bỏ trống"),
+    districtId: Yup.string().nullable().required("Quận/Huyện không được bỏ trống"),
+    address: Yup.string().nullable().max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
   });
 
   // form

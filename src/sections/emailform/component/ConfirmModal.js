@@ -82,7 +82,7 @@ const ButtonDeleteStyle = styled(Button)(({}) => ({
   }
 }));
 
-const ConfirmModal = ({confirmDelete, onCloseConfirmDelete, onSubmit, item, title, subtitle}) => {
+const ConfirmModal = ({confirmDelete, onCloseConfirmDelete, onSubmit, item, title, subtitle, strongSubtitle}) => {
 
   return (
       <DialogStyle
@@ -100,7 +100,7 @@ const ConfirmModal = ({confirmDelete, onCloseConfirmDelete, onSubmit, item, titl
           </TitleAlertStyle>
           <DialogContentTextStyle id="alert-dialog-description" className="subtitle-delete">
             {subtitle}
-            <span className="subtitle-delete-name">{item?.title}</span>?
+            <span className="subtitle-delete-name">{strongSubtitle}</span>?
           </DialogContentTextStyle>
           <Divider/>
         </DialogContent>

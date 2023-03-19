@@ -83,7 +83,7 @@ export const organizationServiceApi = createApi({
         method: 'PATCH',
         data: data,
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "application/json"
         }
       }),
       invalidatesTags: ['Organization', 'OrganizationById']

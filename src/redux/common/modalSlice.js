@@ -29,8 +29,8 @@ export const modalSlice = createSlice({
         },
         onBottomNavModal: (state, action) => {
             state.openBottomNav = true;
-            state.data = {...state.data, ...action.payload};
-            state.selectedData = [...state.selectedData, ...action.payload];
+            state.data = {...state.data, ...action.payload.data};
+            state.selectedData = [...state.selectedData, ...action.payload.selectedData];
         },
         onFilterModal: (state) => {
             state.openFilter = true;
