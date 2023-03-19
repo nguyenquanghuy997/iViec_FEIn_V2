@@ -2,12 +2,9 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Droppable } from "react-beautiful-dnd";
 import TaskCard from "./TaskCard";
-import {
-    useGetApplicantByPipelineStateIdQuery
-  } from "@/sections/applicant";
+
 const Column = ({ droppableId, column }) => {
-  const { data: ColumnData } = useGetApplicantByPipelineStateIdQuery(droppableId);
-  console.log('ColumnData',ColumnData?.items)
+  console.log('column',column)
   return (
     <Droppable droppableId={droppableId} key={droppableId}>
       {(provided, snapshot) => {
@@ -24,8 +21,8 @@ const Column = ({ droppableId, column }) => {
               borderRadius: "4px"
             }}
           >
-            {ColumnData?.items?.map((item, index) => {
-              return <TaskCard key={item.id} item={item} index={index} />;
+         {column?.items?.map((item, index) => {
+              return <TaskCard key={item.id} item={item} index={index} pipelineStateType={column.pipelineStateType}/>;
             })}
             {provided.placeholder}
           </div>

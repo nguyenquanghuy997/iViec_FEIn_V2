@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Draggable } from "react-beautiful-dnd";
 
-function TaskCard({ item, index }) {
+function TaskCard({ item, index,pipelineStateType }) {
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
       {(provided, snapshot) => {
@@ -22,8 +22,11 @@ function TaskCard({ item, index }) {
               ...provided.draggableProps.style
             }}
           >
+             <div>
+              { pipelineStateType}
+              </div>
             <div>
-           
+             
               {item.email}
             </div>
           </div>
