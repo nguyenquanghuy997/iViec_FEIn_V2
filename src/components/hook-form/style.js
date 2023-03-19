@@ -32,6 +32,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const TextFieldStyle = styled(TextField)(({theme}) => ({
+    display: "flex",
     "& input": {
         "&:-webkit-autofill": {
             WebkitBoxShadow: "0 0 0 30px white inset !important",

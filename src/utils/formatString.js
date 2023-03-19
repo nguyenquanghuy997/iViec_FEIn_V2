@@ -38,9 +38,9 @@ export const LIST_STATUS = [
     {value: 2, name: "Ngừng hoạt động"},
 ]
 export const LIST_MARITAL_STATUSES = [
-    {value: 0, name: "Độc thân"},
-    {value: 1, name: "Kết hôn"},
-    {value: 2, name: "Khác"},
+    {value: 0, name: "Độc thân", label: "Độc thân"},
+    {value: 1, name: "Kết hôn", label: "Kết hôn"},
+    {value: 2, name: "Khác", label: "Khác"},
 ]
 
 export const LIST_GENDER = [
