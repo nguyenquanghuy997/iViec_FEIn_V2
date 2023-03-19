@@ -14,8 +14,8 @@ import {
   API_GET_APPLICANT_RECRUITMENT,
   API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
   API_GET_RECRUITMENT_BY_ORGANIZATION,
+  API_GET_APPLICANT_BY_PIPELINESTETEID
 } from "@/routes/api";
-
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["GetColumnApplicants"],
 });
@@ -64,6 +64,10 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params,
       }),
+      // transformResponse: (response) => {
+      //   const presponseModified = convertArrayToObject(response.items, 'id');
+      //   return presponseModified;
+      // },
     }),
     getApplicantCurrentStateWithRecruitmentStates: builder.mutation({
       query: (params) => ({
@@ -83,6 +87,38 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         return response;
       },
     }),
+    getApplicantByPipelineStateId: builder.query({
+      query: (PipelineStateId) => ({
+        url: `${API_GET_APPLICANT_BY_PIPELINESTETEID}?PipelineStateId=${PipelineStateId}`,
+        method: "GET",
+      }),
+    }),
+    // getApplicantByPipelineStateId: builder.query({
+    //   async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+    //     const listPipeline = await fetchWithBQ({
+    //       url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
+    //       method: "GET",
+    //       params:{"RecruitmentId":_arg},
+    //     })
+
+    //     let data=listPipeline.data.items.map(async(item)=>{
+    //          const listTask = await fetchWithBQ({
+    //         url: `${API_GET_APPLICANT_BY_PIPELINESTETEID}?PipelineStateId=${item.id}`,
+    //         method: "GET",
+    //       })
+    //       let newItem ={
+    //         id:item.id,
+    //         pipelineStateType:item.pipelineStateType,
+    //         task:listTask.data.items
+    //       }
+    //       return newItem
+    //     })
+    //     console.log('data',data)
+    //     const presponseModified = convertArrayToObject(data, 'id');
+    //     console.log('presponseModified',presponseModified)
+    //     return listPipeline.data ? { data: presponseModified } :[]
+    //   },
+    // }),
     updateApplicantRecruitmentToNextState: builder.mutation({
       query: (data) => ({
         url: API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
@@ -156,7 +192,9 @@ export const {
   useGetRecruitmentsByApplicantQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
-  useUpdateApplicantRecruitmentToNextStateMutation
+  useUpdateApplicantRecruitmentToNextStateMutation,
+  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useGetApplicantByPipelineStateIdQuery,
 } = ApplicantFormSlice;
 
 // export const getJobDetail = createAsyncThunk(

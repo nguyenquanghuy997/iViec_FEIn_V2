@@ -1,189 +1,118 @@
-// import Page from "@/components/Page";
-// import { PAGES } from "@/config";
-// import useLocales from "@/hooks/useLocales";
-// import Layout from "@/layouts";
-// import { getRolesByPage } from "@/utils/role";
-// import React from "react";
-import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPreviewItem";
-
-// RecruitmentPreview.getLayout = function getLayout({ roles = [] }, page) {
-//   return <Layout roles={roles}>{page}</Layout>;
-// };
-
-
-
-// function RecruitmentPreview() {
-//   const { translate } = useLocales();
-//   return (
-//     <Page title={translate("Chi tiết tin tuyển dụng")}>
-//       <RecruitmentPreviewItem/>
-//     </Page>
-//   );
-// }
-
-// export default RecruitmentPreview;
-
 import React, { useEffect, useState } from 'react'
 
-// @mui
-import { Container, Stack } from '@mui/material'
+import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPreviewItem";
 
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-
-// _mock_
-import { board } from '@/_mock'
 // components
-// import HeaderBreadcrumbs from '@/components/HeaderBreadcrumbs'
 import Page from '@/components/Page'
-import { SkeletonKanbanColumn } from '@/components/skeleton'
 // config
-import { PAGES } from '@/config'
-// hooks
-import useSettings from '@/hooks/useSettings'
+import {PAGES } from '@/config'
 // layouts
 import Layout from '@/layouts'
-// routes
-// import { PATH_DASHBOARD } from '@/routes/paths'
-// sections
-import { KanbanColumn } from '@/sections/kanban'
+import { DragDropContext } from "react-beautiful-dnd";
+import {Column} from '@/sections/kanban';
+
 // utils
 import { getRolesByPage } from '@/utils/role'
-
-RecruitmentPreview.getLayout = function getLayout({ roles = [] }, page) {
+import {
+  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+} from "@/sections/applicant";
+Recruitment.getLayout = function getLayout({ roles = [] }, page) {
   return <Layout roles={roles}>{page}</Layout>
 }
+import {PipelineStateType} from '@/utils/enum'
 
 export async function getServerSideProps() {
   return {
     props: {
       roles: getRolesByPage(PAGES.Recruitment),
     },
-  };
+  }
 }
 
-export default function RecruitmentPreview() {
-  const { themeStretch } = useSettings()
-  const [isMounted, setIsMounted] = useState(false)
 
+export default function Recruitment() {
+  const { data: ColumnList } = useGetRecruitmentPipelineStatesByRecruitmentQuery({"RecruitmentId":"01000000-ac12-0242-10ee-08db277f57a2"});
+  const onDragEnd = (result, columns, setColumns) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    // khác cột
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columns[source.droppableId];
+      const destColumn = columns[destination.droppableId];
+      const sourceItems = [...sourceColumn.items];
+      const destItems = [...destColumn.items];
+      const [removed] = sourceItems.splice(source.index, 1);
+      destItems.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          items: sourceItems
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          items: destItems
+        }
+      });
+    } else {
+      // cùng cột
+      const column = columns[source.droppableId];
+      const copiedItems = [...column.items];
+      const [removed] = copiedItems.splice(source.index, 1);
+      copiedItems.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          items: copiedItems
+        }
+      });
+    }
+  };
+
+  const [columns, setColumns] = useState([]);
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  const onDragEnd = (result) => {
-    // Reorder card
-    const { destination, source, draggableId, type } = result
-
-    if (!destination) return
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    )
-      return
-
-    if (type === 'column') {
-      const newColumnOrder = Array.from(board.columnOrder)
-      newColumnOrder.splice(source.index, 1)
-      newColumnOrder.splice(destination.index, 0, draggableId)
-
-      // dispatch(persistColumn(newColumnOrder));
-      return
-    }
-
-    const start = board.columns[source.droppableId]
-    const finish = board.columns[destination.droppableId]
-
-    if (start.id === finish.id) {
-      const updatedCardIds = [...start.cardIds]
-      updatedCardIds.splice(source.index, 1)
-      updatedCardIds.splice(destination.index, 0, draggableId)
-
-      // const updatedColumn = {
-      //   ...start,
-      //   cardIds: updatedCardIds,
-      // };
-
-      // dispatch(
-      //   persistCard({
-      //     ...board.columns,
-      //     [updatedColumn.id]: updatedColumn,
-      //   })
-      // );
-      return
-    }
-
-    const startCardIds = [...start.cardIds]
-    startCardIds.splice(source.index, 1)
-    // const updatedStart = {
-    //   ...start,
-    //   cardIds: startCardIds,
-    // };
-
-    const finishCardIds = [...finish.cardIds]
-    finishCardIds.splice(destination.index, 0, draggableId)
-    // const updatedFinish = {
-    //   ...finish,
-    //   cardIds: finishCardIds,
-    // };
-
-    // dispatch(
-    //   persistCard({
-    //     ...board.columns,
-    //     [updatedStart.id]: updatedStart,
-    //     [updatedFinish.id]: updatedFinish,
-    //   })
-    // );
-  }
+    setColumns(ColumnList?.items)
+  }, [ColumnList])
 
   return (
-    <Page title={PAGES.Board}>
+    <Page title={"Chi tiết tin"}>
+     
         <RecruitmentPreviewItem/>
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        {/* <HeaderBreadcrumbs
-          heading='Board'
-          links={[
-            {
-              name: PAGES.Dashboard,
-              href: PATH_DASHBOARD.dashboard,
-            },
-            { name: 'Board' },
-          ]}
-        /> */}
-        {isMounted && (
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable
-              droppableId='all-columns'
-              direction='horizontal'
-              type='column'
-            >
-              {(provided) => (
-                <Stack
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  direction='row'
-                  alignItems='flex-start'
-                  spacing={3}
-                  sx={{ height: 'calc(100% - 32px)', overflowY: 'hidden' }}
-                >
-                  {!board.columnOrder.length ? (
-                    <SkeletonKanbanColumn />
-                  ) : (
-                    board.columnOrder.map((columnId, index) => (
-                      <KanbanColumn
-                        index={index}
-                        key={columnId}
-                        column={board.columns[columnId]}
-                      />
-                    ))
-                  )}
+        <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+      <DragDropContext
+        onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+      >
+        {
+          columns&&columns.map((item,index)=>{
+            let columnId =item.id
+            let column= item
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center"
+                }}
+                key={columnId}
+              >
+                <h2>{PipelineStateType(column.pipelineStateType)}</h2>
+                <div style={{ margin: 8 }}>
+                  <Column
+                    droppableId={columnId}
+                    key={columnId}
+                    index={index}
+                    column={column}
+                  />
+                </div>
+              </div>
+            );
+          })
+        }
     
-                  {provided.placeholder}
-                </Stack>
-              )}
-            </Droppable>
-          </DragDropContext>
-        )}
-      </Container>
-    </Page>
+    
+      </DragDropContext>
+    </div>
+  </Page>
   )
 }
