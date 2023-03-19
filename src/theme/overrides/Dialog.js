@@ -37,8 +37,6 @@ export default function Dialog(theme) {
     MuiDialogContent: {
       styleOverrides: {
         root: {
-          borderTop: 0,
-          borderBottom: 0,
           padding: theme.spacing(3),
         },
       },

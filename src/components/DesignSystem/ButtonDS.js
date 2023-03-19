@@ -1,8 +1,9 @@
 import { View } from "../FlexStyled";
 import { LoadingButton } from "@mui/lab";
 import PropTypes from "prop-types";
+import { memo } from 'react'
 
-export default function ButtonDS(props) {
+function ButtonDS(props) {
   const {
     size,
     isSubmitting,
@@ -62,3 +63,5 @@ ButtonDS.prototype = {
   sx: PropTypes.object,
   isDisabled: PropTypes.any,
 };
+
+export default memo(ButtonDS);

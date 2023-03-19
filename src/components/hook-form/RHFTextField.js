@@ -1,3 +1,4 @@
+import { memo } from 'react';
 // @mui
 import { LabelStyle, TextFieldStyle } from "@/components/hook-form/style";
 import PropTypes from "prop-types";
@@ -17,7 +18,7 @@ RHFTextField.defaultProps = {
   isRequired: false,
 };
 
-export default function RHFTextField({
+function RHFTextField({
   name,
   title,
   isRequired,
@@ -57,3 +58,5 @@ export default function RHFTextField({
     />
   );
 }
+
+export default memo(RHFTextField)
