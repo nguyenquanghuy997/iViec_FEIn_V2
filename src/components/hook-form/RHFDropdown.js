@@ -58,7 +58,7 @@ const renderValue = (options = [], value, placeholder = '', keyObj = 'name') => 
 
 function RHFDropdown({name, ...props}) {
   const {control} = useFormContext();
-  const {defaultValue, isRequired, title, placeholder, options, disabled, keyObj, type = 'text'} = props;
+  const {defaultValue, isRequired, title, placeholder, options, disabled, keyObj, type = 'text', ...other} = props;
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
@@ -88,6 +88,7 @@ function RHFDropdown({name, ...props}) {
                     onClose={() => setSearchText("")}
                     renderValue={() => renderValue(options, field.value, placeholder, keyObj)}
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
+                    {...other}
                 >
                   {options?.length > 3 && (
                       <TextFieldStyle
