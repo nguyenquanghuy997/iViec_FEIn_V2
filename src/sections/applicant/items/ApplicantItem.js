@@ -2,7 +2,6 @@ import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import {View} from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import TextMaxLine from "@/components/TextMaxLine";
 import {
   useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
@@ -13,12 +12,12 @@ import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterMod
 import {Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience,} from "@/utils/enum";
 import {fDate} from "@/utils/formatTime";
 import {Tag} from "antd";
-import Link from "next/link";
 import {useRouter} from "next/router";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useEffect, useMemo, useState} from "react";
+import ApplicantBottomNav from "./ApplicantBottomNav";
 
 const defaultValues = {
   searchKey: "",
@@ -79,22 +78,6 @@ export const ApplicantItem = () => {
         title: "Họ và tên",
         fixed: "left",
         width: "220px",
-        render: (text, record) => (
-          <Link
-            passHref
-            href={{
-              pathname: `applicant/${record.applicantId}`,
-              query: { or: `${record.organizationId}` },
-            }}
-          >
-            <TextMaxLine
-              line={1}
-              sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
-            >
-              {text}
-            </TextMaxLine>
-          </Link>
-        ),
       },
       {
         dataIndex: "phoneNumber",
@@ -473,13 +456,13 @@ export const ApplicantItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  // const [, setIsOpenBottomNav] = useState(false);
-  // const toggleDrawer = (newOpen) => () => {
-  //   setIsOpenBottomNav(newOpen);
-  //   setSelectedRowKeys([]);
-  //   event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
-  // };
-
+  const [, setIsOpenBottomNav] = useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+    setSelectedRowKeys([]);
+    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+  };
+  const [itemSelected, setItemSelected] = useState([]);
   return (
     <View>
       <ApplicantHeader
@@ -507,14 +490,17 @@ export const ApplicantItem = () => {
             nodata="Hiện chưa có ứng viên nào"
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
+            itemSelected={itemSelected}
+            setItemSelected={setItemSelected}
           />
         </View>
-        {/* <RecruitmentBottomNav
+        <ApplicantBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
-        /> */}
+          itemSelected={itemSelected}
+        />
       </Content>
       {toggleFormFilter && (
         <ApplicantFilterModal
