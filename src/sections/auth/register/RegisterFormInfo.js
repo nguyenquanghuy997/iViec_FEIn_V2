@@ -85,7 +85,8 @@ function RegisterForm() {
     const onSubmit = async (data) => {
         try {
             const body = {
-                userName: data.userName.trim(),                                 // organization username (Email đăng nhập)
+                userName: data.userName.trim(),
+                firstName: data.organizationName.trim(),                            // organization username (Email đăng nhập)
                 password: data.password,                                        // organization password
                 organizationName: data.organizationName.trim(),                 // organization name
                 organizationPhoneNumber: data.organizationPhoneNumber.trim(),   // organization phone number

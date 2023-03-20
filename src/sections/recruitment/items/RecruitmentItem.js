@@ -434,7 +434,7 @@ export const RecruitmentItem = () => {
   });
 
   const { handleSubmit } = methods;
-  const queryParams = {
+  let queryParams = {
     ...query,
     applicantSkillIds:
       query.applicantSkillIds && typeof query.applicantSkillIds === "string"
@@ -533,14 +533,13 @@ export const RecruitmentItem = () => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
     if (query) {
-      queryParams = {
-        ...queryParams,
-        pageSize: pageSize,
-        pageIndex: pageIndex,
-      };
       getAllFilter(
         JSON.stringify(
-          Object.entries(queryParams).reduce(
+          Object.entries({
+            ...queryParams,
+            pageSize: pageSize,
+            pageIndex: pageIndex,
+          }).reduce(
             (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
             {}
           )
@@ -630,6 +629,8 @@ export const RecruitmentItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
+  const [itemSelected, setItemSelected] = useState([]);
+
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -665,6 +666,8 @@ export const RecruitmentItem = () => {
             nodata="Hiện chưa có tin tuyển dụng nào"
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
+            itemSelected={itemSelected}
+            setItemSelected={setItemSelected}
           />
         </View>
         <RecruitmentBottomNav
@@ -672,6 +675,7 @@ export const RecruitmentItem = () => {
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
+          itemSelected={itemSelected}
         />
       </Content>
       {isOpen && (

@@ -68,9 +68,9 @@ export const Address = (item) =>
 export const Currency = (item) => {
   switch (item) {
     case 0:
-      return "USD";
-    case 1:
       return "VNĐ";
+    case 1:
+      return "USD";
   }
 };
 //Số năm kinh nghiệm

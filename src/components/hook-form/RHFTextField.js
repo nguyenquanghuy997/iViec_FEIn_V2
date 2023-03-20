@@ -1,3 +1,4 @@
+import { memo } from 'react';
 // @mui
 import { LabelStyle, TextFieldStyle } from "@/components/hook-form/style";
 import PropTypes from "prop-types";
@@ -17,13 +18,16 @@ RHFTextField.defaultProps = {
   isRequired: false,
 };
 
-export default function RHFTextField({
+function RHFTextField({
   name,
   title,
   isRequired,
   variant,
   beforeChange,
   maxLength,
+  disabled,
+  defaultValue,
+  type,
   ...other
 }) {
   const { control } = useFormContext();
@@ -31,6 +35,7 @@ export default function RHFTextField({
     <Controller
       name={name}
       control={control}
+      defaultValue={defaultValue || ""}
       render={({ field, fieldState: { error } }) => {
         if (beforeChange) {
           const { value } = field;
@@ -41,8 +46,9 @@ export default function RHFTextField({
             {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
             <TextFieldStyle
               {...field}
-              value={field.value || ""}
               error={!!error}
+              type={type}
+              disabled={disabled}
               helperText={error?.message}
               variant={variant}
               {...other}
@@ -57,3 +63,5 @@ export default function RHFTextField({
     />
   );
 }
+
+export default memo(RHFTextField)

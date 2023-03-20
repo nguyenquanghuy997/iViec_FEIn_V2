@@ -1,4 +1,4 @@
-import { apiSlice } from "@/redux/api/apiSlice";
+import {apiSlice} from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
   API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
@@ -13,9 +13,10 @@ import {
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
   API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
-  API_GET_RECRUITMENT_BY_ORGANIZATION,
+  API_GET_RECRUITMENT_BY_ORGANIZATION, API_UPDATE_APPLICANT,
+  API_GET_APPLICANT_BY_PIPELINESTETEID
 } from "@/routes/api";
-
+import {convertArrayToObject} from '@/utils/help'
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["GetColumnApplicants"],
 });
@@ -45,8 +46,17 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
       providesTags: ["UpdateColumnApplicants"],
       invalidatesTags: ["GetColumnApplicants"],
     }),
+    updateApplicant: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_APPLICANT}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+      providesTags: ["UpdateColumnApplicants"],
+      invalidatesTags: ["GetColumnApplicants"],
+    }),
     getApplicantById: builder.query({
-      query: ({ applicantId }) => ({
+      query: ({applicantId}) => ({
         url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
         method: "GET",
       }),
@@ -80,6 +90,40 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
       transformResponse: (response) => {
         response.events = response.events.reverse();
         return response;
+      },
+    }),
+    getApplicantByPipelineStateId: builder.query({
+      query: (PipelineStateId) => ({
+        url: `${API_GET_APPLICANT_BY_PIPELINESTETEID}?PipelineStateId=${PipelineStateId}`,
+        method: "GET",
+      }),
+    }),
+    getRecruitmentPipelineStatesByRecruitment: builder.query({
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+        console.log('data',_arg)
+        const listPipeline = await fetchWithBQ({
+          url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
+          method: "GET",
+          params:{"RecruitmentId":_arg},
+        })
+
+        let data=await Promise.all(listPipeline.data.items.map(async(item)=>{
+             const listTask = await fetchWithBQ({
+            url: `${API_GET_APPLICANT_BY_PIPELINESTETEID}?PipelineStateId=${item.id}`,
+            method: "GET",
+          })
+          
+          let newItem ={
+            id:item.id,
+            pipelineStateType:item.pipelineStateType,
+            items:listTask.data.items
+          }
+          return newItem
+        })
+        )
+        const presponseModified = convertArrayToObject(data, 'id');
+
+        return {data:presponseModified}
       },
     }),
     updateApplicantRecruitmentToNextState: builder.mutation({
@@ -140,32 +184,25 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetListApplicantsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
-  useLazyGetRecruitmentByOrganizationIdQuery,
+  useLazyGetAllFilterApplicantQuery,
+  useGetRecruitmentByOrganizationIdQuery,
   // skills
   useGetSkillsQuery,
   // job sources
   useGetAllJobSourcesQuery,
   // user from organization
   useGetAllUserFromOrganizationQuery,
+  useUpdateApplicantMutation,
   useLazyGetAllUserFromOrganizationQuery,
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useUpdateApplicantRecruitmentToNextStateMutation,
+  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useGetApplicantByPipelineStateIdQuery,
 } = ApplicantFormSlice;
-
-// export const getJobDetail = createAsyncThunk(
-//   'jobDetail/getJobDetail',
-//   async ({ jobId }) => {
-//     const url = `${API_LIST_JOBS}/${jobId}`
-//     const response = await _getApi(url)
-
-//     return response?.data?.success ? response.data : []
-//   }
-// )

@@ -1,6 +1,5 @@
 import { useUploadImageCompanyMutation } from "../companyInforSlice";
 import EditUpload from "./EditUpload";
-import ChipDS from "@/components/DesignSystem/ChipDS";
 import {
   FormProvider,
   RHFAutocomplete,
@@ -8,35 +7,32 @@ import {
 } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RHFListImage from "@/components/hook-form/RHFListImage";
-import { PaperAutocompleteStyle } from "@/sections/auth/style";
 import {
-  useUpdateCompanyInfoMutation,
   useGetJobCategoriesQuery,
-  useLazyGetProvinceQuery,
   useLazyGetDistrictByProvinceIdQuery,
+  useLazyGetProvinceQuery,
+  useUpdateCompanyInfoMutation,
 } from "@/sections/companyinfor/companyInforSlice";
 import { LIST_ORGANIZATION_SIZE } from "@/utils/formatString";
-import { CHECK_EMAIL } from "@/utils/regex";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { Alert, Stack } from "@mui/material";
-import { Box, Typography, Divider, InputLabel } from "@mui/material";
+import {
+  Box,
+  Divider,
+  InputLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { React, useEffect, useState, useRef } from "react";
-import { Controller } from "react-hook-form";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 const InputStyle = { width: 265, minHeight: 40 };
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
 });
-const CustomPaper = (props) => {
-  return <PaperAutocompleteStyle elevation={8} {...props} />;
-};
-const FormCompanyInfor = ({ data }) => {
+
+const FormCompanyInfor = ({ data, onClose }) => {
   const refAvatar = useRef(null);
   const refBackground = useRef(null);
 
@@ -44,10 +40,6 @@ const FormCompanyInfor = ({ data }) => {
   const [bg, setBg] = useState(data?.organizationInformation.coverPhoto);
   const [imageFile, setImageFile] = useState(null);
   const [imageBg, setImageBg] = useState(null);
-  const router = useRouter();
-  const onFinish = () => {
-    router.push("/settings/companyinfor");
-  };
   const imageHandler = (e) => {
     setImageFile(e.target.files[0]);
     const reader = new FileReader();
@@ -73,23 +65,23 @@ const FormCompanyInfor = ({ data }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [description, setDescription] = useState(null);
   const defaultValues = { ...data?.organizationInformation };
-  const ProfileSchema = Yup.object().shape({
-    provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
-    districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
-    address: Yup.string().required("Chưa nhập Địa chỉ"),
-    email: Yup.string()
-      .email("Email không đúng định dạng")
-      .matches(CHECK_EMAIL, "Email không đúng định dạng")
-      .required("Email không được bỏ trống"),
-    phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
-    jobCategoryIds: Yup.array()
-      .min(1, "Ngành nghề không được bỏ trống")
-      .max(3, "Chọn tối đa 3 ngành nghê"),
-    organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
-    description: Yup.string(),
-    avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-    coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-  });
+  // const ProfileSchema = Yup.object().shape({
+  //   provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
+  //   districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
+  //   address: Yup.string().required("Chưa nhập Địa chỉ"),
+  //   email: Yup.string()
+  //     .email("Email không đúng định dạng")
+  //     .matches(CHECK_EMAIL, "Email không đúng định dạng")
+  //     .required("Email không được bỏ trống"),
+  //   phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
+  //   jobCategoryIds: Yup.array()
+  //     .min(1, "Ngành nghề không được bỏ trống")
+  //     .max(3, "Chọn tối đa 3 ngành nghê"),
+  //   organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
+  //   description: Yup.string(),
+  //   avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
+  //   coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
+  // });
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
   const { data: { items: JobCategoryList = [] } = {} } =
@@ -101,7 +93,7 @@ const FormCompanyInfor = ({ data }) => {
     useLazyGetDistrictByProvinceIdQuery();
 
   const methods = useForm({
-    resolver: yupResolver(ProfileSchema),
+    // resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
 
@@ -137,7 +129,7 @@ const FormCompanyInfor = ({ data }) => {
     });
     try {
       if (imageRes) {
-        const res = await updateCompanyInfo({
+        const res = {
           id: data?.organizationInformation?.id,
           avatar: imageRes?.data,
           coverPhoto: bgRes?.data,
@@ -149,16 +141,26 @@ const FormCompanyInfor = ({ data }) => {
           phoneNumber: d.phoneNumber,
           jobCategoryIds: d.jobCategoryIds?.map((item) => item?.value),
           organizationSize: d.organizationSize,
-        }).unwrap();
-
-        if (!res.Succeeded) throw res;
-        enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!");
-        onFinish();
+        };
+        try {
+          await updateCompanyInfo(res).unwrap();
+          enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
+            autoHideDuration: 2000,
+          });
+          onClose()
+          // location.reload()
+        } catch (err) {
+          enqueueSnackbar(errors.afterSubmit?.message, {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
+        }
       }
     } catch (err) {
       const message =
         err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
       setError("afterSubmit", { ...err, message });
+      enqueueSnackbar(errors.afterSubmit?.message);
     }
   };
 
@@ -183,9 +185,9 @@ const FormCompanyInfor = ({ data }) => {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {!!errors.afterSubmit && (
-        <Alert severity="error">{errors.afterSubmit?.message}</Alert>
-      )}
+      {/* {!!errors.afterSubmit && (
+            <Alert severity="error">{errors.afterSubmit?.message}</Alert>
+        )} */}
       <div
         style={{
           flex: 1,
@@ -282,29 +284,17 @@ const FormCompanyInfor = ({ data }) => {
           <div style={{ width: "100%", minHeight: 40 }}>
             <RHFAutocomplete
               options={JobCategoryList?.map((i) => ({
-                value: i.id,
-                label: `${i.name[0].toUpperCase()}${i.name.slice(1)}`,
+                value: i?.id,
+                label: i?.name,
                 name: i?.name,
               }))}
               name="jobCategoryIds"
               title="Ngành nghề"
               isRequired
               placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"
+              multiple
               AutocompleteProps={{
                 multiple: true,
-                PaperComponent: CustomPaper,
-                isOptionEqualToValue: (option, value) =>
-                  option.value === value.value,
-                renderTags: (value, getTagProps) =>
-                  value.map(({ label, id }, index) => (
-                    <ChipDS
-                      {...getTagProps({ index })}
-                      key={`${id}-${index}`}
-                      size="medium"
-                      label={label}
-                      variant="filled"
-                    />
-                  )),
               }}
             />
           </div>

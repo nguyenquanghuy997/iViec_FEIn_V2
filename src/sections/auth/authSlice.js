@@ -5,7 +5,7 @@ import {
     API_CHANGE_PASSWORD_WITH_TOKEN,
     API_REGISTER,
     API_USER_INFO,
-    API_GET_APPLICATION_BY_ROLE_GROUP,
+    API_GET_APPLICATION_BY_ROLE_GROUP, API_USER_INVITE_SET_PASSWORD,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -60,6 +60,13 @@ export const authSlice = apiWithTag.injectEndpoints({
                 data,
             }),
         }),
+        userInviteSetPassword: builder.mutation({
+            query: (data) => ({
+                url: API_USER_INVITE_SET_PASSWORD,
+                method: "PATCH",
+                data,
+            }),
+        }),
     }),
     overrideExisting: true,
 });
@@ -71,4 +78,5 @@ export const {
     useChangePasswordWithTokenMutation,
     useLazyGetCurrentUserQuery,
     useGetApplicationByRoleGroupQuery,
+    useUserInviteSetPasswordMutation
 } = authSlice;

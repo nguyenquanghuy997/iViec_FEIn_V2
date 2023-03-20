@@ -3,7 +3,6 @@ import {
   MenuItemStyle,
   SearchInputStyle,
   SelectFieldStyle,
-  TextFieldStyle,
   useStyles,
 } from "./style";
 import { AvatarDS } from "@/components/DesignSystem";
@@ -15,9 +14,10 @@ import {
   InputAdornment,
   MenuItem,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
-import React, {memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 const Placeholder = (placeholder) => {
@@ -65,7 +65,7 @@ const renderOptions = (options, value, type = "text") => {
               }}
               name={option.lastName}
             />
-            {option.label || option.name}
+            {option.label || option.name || option.email}
           </Box>
           {value === option.value && (
             <Iconify
@@ -78,20 +78,6 @@ const renderOptions = (options, value, type = "text") => {
       );
     });
   }
-  return options?.map((option, i) => {
-    return (
-      <MenuItem sx={{ ...MenuItemStyle }} key={i} value={option.value}>
-        {option.label || option.name}
-        {value === option.value && (
-          <Iconify
-            color="#1e5ef3"
-            icon="material-symbols:check"
-            sx={{ width: 24, height: 24 }}
-          />
-        )}
-      </MenuItem>
-    );
-  });
 };
 
 const renderValue = (
@@ -100,8 +86,14 @@ const renderValue = (
   placeholder = "",
   keyObj = "name"
 ) => {
+  const displayLabelWithKey = options.find(
+    (option) => option.value === value
+  )?.[keyObj];
+  const displayLabel = options.find((option) => option.value === value)?.name;
   return value || value === 0
-    ? options.find((option) => option.value === value)?.[keyObj]
+    ? displayLabelWithKey
+      ? displayLabelWithKey
+      : displayLabel
     : Placeholder(placeholder);
 };
 
@@ -110,18 +102,18 @@ function RHFDropdown({ name, ...props }) {
   const {
     defaultValue,
     isRequired,
-   
     title,
     placeholder,
     options,
     disabled,
     keyObj,
     type = "text",
+    ...other
   } = props;
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
- 
+
   useEffect(() => {
     if (searchText) {
       setFilterOptions(
@@ -142,8 +134,6 @@ function RHFDropdown({ name, ...props }) {
           {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
           <SelectFieldStyle
             {...field}
-            // inputRef={nameRef}
-            onChange={field.onChange }
             value={field.value}
             displayEmpty
             disabled={disabled}
@@ -153,18 +143,22 @@ function RHFDropdown({ name, ...props }) {
               renderValue(options, field.value, placeholder, keyObj)
             }
             MenuProps={{ ...MenuProps, classes: { paper: classes.paper } }}
+            {...other}
           >
-            {options?.length > 3 && (
-              <TextFieldStyle
-                placeholder="Tìm kiếm..."
-                fullWidth
-                autoFocus
-                InputProps={{ ...InputProps }}
-                sx={{ ...SearchInputStyle }}
-                onChange={(e) => setSearchText(e.target.value)}
-                onKeyDown={(e) => e.stopPropagation()}
-              />
-            )}
+            <TextField
+              placeholder="Tìm kiếm..."
+              fullWidth
+              autoFocus
+              inputRef={(input) => {
+                if (input != null) {
+                  input.focus();
+                }
+              }}
+              InputProps={{ ...InputProps }}
+              sx={{ ...SearchInputStyle }}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={(e) => e.stopPropagation()}
+            />
             {renderOptions(filterOptions, field.value, type)}
           </SelectFieldStyle>
           <FormHelperText

@@ -1,5 +1,5 @@
 import React from "react";
-import {get} from 'lodash'
+import {get, isEmpty} from 'lodash'
 import {Box, Button, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
@@ -67,7 +67,11 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
             {renderInfoOrganization('Mã đơn vị', get(organization, 'code') && get(organization, 'code'))}
             {renderInfoOrganization('Email', get(organization, 'email') && get(organization, 'email'))}
             {renderInfoOrganization('Số điện thoại', get(organization, 'phoneNumber') && get(organization, 'phoneNumber'))}
-            {renderInfoOrganization('Địa chỉ', `${get(organization, 'address')}, ${get(organization, 'districtName')}, ${get(organization, 'provinceName')}`)}
+            {renderInfoOrganization('Địa chỉ',
+                `${!isEmpty(get(organization, 'address')) ? `${get(organization, 'address')}, ` : ''}` +
+                `${!isEmpty(get(organization, 'districtName')) ? `${get(organization, 'districtName')}, ` : ''}` +
+                `${!isEmpty(get(organization, 'provinceName')) ? `${get(organization, 'provinceName')}` : ''}`
+              )}
             {renderInfoOrganization('Trực thuộc', get(organization, 'parentOrganizationName') && get(organization, 'parentOrganizationName'))}
             {renderInfoOrganization('Đơn vị trực thuộc', get(organization, 'subsidiaryNames')?.map((sub, index, arr) => index < arr.length - 1 ? `${sub}, ` : `${sub}`))}
             <Button

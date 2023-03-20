@@ -96,6 +96,15 @@ const CardEmailFormItemTitleStyle = styled(Typography)(({theme}) => ({
   }
 }));
 
+const CardEmailFormItemSubTitleStyle = styled(Typography)(({theme}) => ({
+    "& .card-email-item-subtitle": {
+      color: '#455570',
+      fontSize: 13,
+      fontWeight: 400,
+      marginLeft: theme.spacing(0.5)
+    }
+}));
+
 const CardEmailFormItemContentStyle = styled(Typography)(({theme}) => ({
   '&.card-email-item-content-text': {
     display: 'flex',
@@ -155,6 +164,7 @@ export {
   CardEmailFormItemStyle,
   CardEmailFormItemTitleStyle,
   CardEmailFormItemContentStyle,
+  CardEmailFormItemSubTitleStyle,
   EmailFormHeadStyle,
   EmailFormFooterStyle
 }

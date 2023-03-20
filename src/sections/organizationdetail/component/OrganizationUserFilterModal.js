@@ -1,13 +1,11 @@
 import {memo, useEffect} from "react";
 import Scrollbar from "@/components/Scrollbar";
-import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, ClickAwayListener, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
-import * as Yup from "yup";
 import {isArray} from 'lodash';
 import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
 import {LIST_STATUS} from "@/utils/formatString";
 import {useRouter} from "next/router";
@@ -25,17 +23,9 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
   const defaultValues = {
     isActive: "",
   };
-  // yup & handle form
-  const ApplicantFormSchema = Yup.object().shape({
-    // createdTimeTo: Yup.date().transform(value => (!value ? new Date().toISOString() : value)).min(
-    //     Yup.ref('createdTimeFrom'),
-    //     "Thời gian kết thúc phải lớn hơn thời gian bắt đầu"
-    // ),
-  });
 
   const methods = useForm({
     mode: 'all',
-    resolver: yupResolver(ApplicantFormSchema),
     defaultValues,
   });
 
@@ -65,6 +55,11 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
   // options select
 
   return (
+      <ClickAwayListener
+          mouseEvent="onMouseDown"
+          touchEvent="onTouchStart"
+          onClickAway={() => isOpen && onClose()}
+      >
       <Drawer
           open={isOpen}
           onClose={onClose}
@@ -72,7 +67,7 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
           variant="persistent"
           PaperProps={{
             sx: {
-              width: {xs: 1, sm: 560, md: 384},
+              width: {xs: 1, sm: 560, md: 400},
               boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
               zIndex: 999,
               position: 'fixed',
@@ -122,6 +117,7 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
           </FormProvider>
         </Scrollbar>
       </Drawer>
+      </ClickAwayListener>
   );
 }
 

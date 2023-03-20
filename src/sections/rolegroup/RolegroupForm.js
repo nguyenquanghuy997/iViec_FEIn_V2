@@ -52,7 +52,6 @@ const PipelineForm = ({ onClose }) => {
   const onSubmit = (values) => {
     addRoleGroup(values);
     onClose();
-    // console.log("hi", values)
   };
 
   useEffect(() => {

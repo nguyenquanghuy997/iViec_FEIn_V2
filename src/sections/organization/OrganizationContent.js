@@ -21,6 +21,7 @@ import {
 import {CrownIcon} from "@/sections/organization/component/Icon";
 import OrganizationConfirmMultipleModal from "@/sections/organization/component/OrganizationConfirmMultipleModal";
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
+import OrganizationListUserInviteModal from "@/sections/organization/component/OrganizationListUserInviteModal";
 
 const OrganizationContent = () => {
   // selected
@@ -37,6 +38,7 @@ const OrganizationContent = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [showMultipleDelete, setShowMultipleDelete] = useState(false);
   const [isOpenInviteForm, setIsOpenInviteForm] = useState(false);
+  const [isOpenListUserInvite, setIsOpenListUserInvite] = useState(false);
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0)    // 1 active 0 inactive
 
@@ -126,7 +128,7 @@ const OrganizationContent = () => {
             <ButtonInviteListStyle
                 className='button-invite-list'
                 startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
-                onClick={() => setIsOpenInviteForm(true)}
+                onClick={() => setIsOpenListUserInvite(true)}
             >Danh sách mời</ButtonInviteListStyle>
             <ButtonInviteStyle
                 className="button-invite"
@@ -141,7 +143,7 @@ const OrganizationContent = () => {
             {
               ListUserAdmin?.map(user => {
                 return (
-                    <Stack flexDirection="row" sx={{mt: 2, mr: 2}}>
+                    <Stack flexDirection="row" sx={{mt: 2, mr: 2}} key={user?.id}>
                       <Box sx={{position: 'relative'}}>
                         <Avatar variant="rounded" sx={{width: 40, height: 40}}/>
                         <span style={{position: 'absolute', top: -12, right: -6}}>
@@ -150,7 +152,7 @@ const OrganizationContent = () => {
                       </Box>
                       <Stack sx={{ml: 1.5}}>
                         <Typography sx={{color: '#172B4D', fontSize: 14, fontWeight: 600}}>
-                          {_.get(user, 'lastName') && _.get(user, 'lastName')}
+                          {_.get(user, 'lastName') && _.get(user, 'lastName') || ''}
                           {_.get(user, 'firstName') && _.get(user, 'firstName')}
                         </Typography>
                         <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>
@@ -239,6 +241,10 @@ const OrganizationContent = () => {
             setIsOpenInviteForm={setIsOpenInviteForm}
             ListOrganization={ListOrganization}
         />}
+        {isOpenListUserInvite && <OrganizationListUserInviteModal
+            isOpenListUserInvite={isOpenListUserInvite}
+            setIsOpenListUserInvite={setIsOpenListUserInvite}
+        />}
         {isOpenActive && <OrganizationActiveModal
             actionTypeActive={actionTypeActive}
             setIsOpenActive={setIsOpenActive}
@@ -247,7 +253,6 @@ const OrganizationContent = () => {
             selectedList={selected || []}
             onCloseBottomNav={handleCloseBottomNav}
         />}
-
       </Box>
   )
 }

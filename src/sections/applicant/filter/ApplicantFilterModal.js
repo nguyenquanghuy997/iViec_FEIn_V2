@@ -1,42 +1,35 @@
-import {memo, useEffect, useState} from "react";
+import {memo, useEffect, useMemo, useState} from "react";
 import {isEmpty} from "lodash";
-import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, ClickAwayListener, Divider, IconButton, Stack, Drawer, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
-
 import {alpha, styled} from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
-import Scrollbar from "@/components/Scrollbar";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
-import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
 import {
   ApplicantModalFooterStyle,
   ApplicantModalHeadStyle,
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
-
+import {useDispatch, useSelector} from "@/redux/store";
+import {filterSlice} from "@/redux/common/filterSlice";
+import {useDebounce} from "@/hooks/useDebounce";
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
-import {useGetAllJobSourcesQuery, useGetAllUserFromOrganizationQuery, useGetSkillsQuery} from "@/sections/applicant";
+import {useGetAllJobSourcesQuery, useGetAllUserFromOrganizationQuery, useGetSkillsQuery,} from "@/sections/applicant";
 import {
   useGetDistrictByProvinceIdQuery,
   useGetJobCategoriesQuery,
   useGetProvinceQuery
 } from "@/sections/companyinfor/companyInforSlice";
-import {convertFlatDataToTree} from "@/utils/function";
-
-import {useDispatch, useSelector} from "@/redux/store";
-import {filterSlice} from "@/redux/common/filterSlice";
-import {applicantFilterSlice} from "@/redux/slice/applicantFilterSlice";
-import {useDebounce} from "@/hooks/useDebounce";
-import { useLazyGetRecruitmentByOrganizationIdQuery } from "../ApplicantFormSlice";
+import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
+import {useGetRecruitmentByOrganizationIdQuery} from "@/sections/applicant/ApplicantFormSlice";
 
 const GreenSwitch = styled(Switch)(({theme}) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -86,15 +79,11 @@ const defaultValues = {
 
 function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
   const dispatch = useDispatch();
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
 
   const dataFilter = useSelector((state) => state.filterReducer.data);
-  const ListRecruitmentByOrganization = useSelector((state) => state.applicantFilterReducer.data);
 
   const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setDataFilter(data));
-  // const handleClearDataFilterByKey = (data) => dispatch(filterSlice.actions.clearDataFilterByKey(data));
-  const handleSetDataRecruitment = (data) => dispatch(applicantFilterSlice.actions.setData(data));
-  const handleClearDataRecruitment = () => dispatch(applicantFilterSlice.actions.clearData());
 
   // yup & handle form
   const ApplicantFormSchema = Yup.object().shape({
@@ -103,11 +92,15 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
     weightFrom: Yup.number().transform(value => (isNaN(value) ? undefined : value)),
     weightTo: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('weightFrom'), 'Cân nặng cần lớn hơn hoặc bằng cân nặng bắt đầu'),
     expectSalaryTo: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('expectSalaryFrom'), 'Mức lương cần lớn hơn hoặc bằng mức lương bắt đầu'),
+    sexs: Yup.number().transform(value => (isNaN(value) ? undefined : value)),
   });
   const methods = useForm({
     mode: 'all',
     resolver: yupResolver(ApplicantFormSchema),
-    defaultValues: { ...defaultValues, ...dataFilter },
+    defaultValues: useMemo(
+        () => ({ ...defaultValues, ...dataFilter }),
+        [dataFilter]
+    )
   });
   const {watch, handleSubmit, formState: {isSubmitting}} = methods;
   const watchProvinceId = watch("livingAddressProvinceIds");
@@ -162,67 +155,51 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
 
   const handleCloseModal = () => dispatch(filterSlice.actions.clearDataFilter());
 
-  const {data: {items: ListOrganization} = []} = useGetOrganizationsDataWithChildQuery();
-  const {data: {items: ListJobSources} = []} = useGetAllJobSourcesQuery();  // nguồn job
-  const {data: {items: ListJobCategory = []} = {}} = useGetJobCategoriesQuery();
-  const {data: {items: ListSkills = []} = {}} = useGetSkillsQuery();
-  const {data: {items: ListProvince = []} = {}} = useGetProvinceQuery();
-  const {data: {items: ListDistrictLiving = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: isEmpty(watchProvinceId) });
-  const {data: {items: ListDistrictHomeTower = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceHomeTownId, { skip: isEmpty(watchProvinceHomeTownId) });
-  const {data: ListUserFromOrganization = []} = useGetAllUserFromOrganizationQuery({Id: watchOrganizationIds[watchOrganizationIds.length - 1]});
-  const [getRecruitmentByOrganization] = useLazyGetRecruitmentByOrganizationIdQuery();
+  const {data: {items: ListOrganization = []} = {}, isLoading: isLoadingOrganization} = useGetOrganizationsDataWithChildQuery();
+  const {data: {items: ListJobSources = []} = {}, isLoading: isLoadingJobSource} = useGetAllJobSourcesQuery();  // nguồn job
+  const {data: {items: ListJobCategory = []} = {}, isLoading: isLoadingJobCategory} = useGetJobCategoriesQuery();
+  const {data: {items: ListSkills = []} = {}, isLoading: isLoadingSkill} = useGetSkillsQuery();
+  const {data: {items: ListProvince = []} = {}, isLoading: isLoadingProvince} = useGetProvinceQuery();
+  const {data: {items: ListDistrictLiving = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, {skip: isEmpty(watchProvinceId)});
+  const {data: {items: ListDistrictHomeTower = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceHomeTownId, {skip: isEmpty(watchProvinceHomeTownId)});
+  const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery();
+  const {data: {items: ListRecruitmentByOrganization = [] } = {}, isLoading: isLoadingRecruitment} = useGetRecruitmentByOrganizationIdQuery();
 
   useEffect(() => {
-    async function fetchData() {
-      if (!isEmpty(watchOrganizationIds)) {
-        handleClearDataRecruitment();
-        const endpoints = watchOrganizationIds.map(item => getRecruitmentByOrganization({Id: item}))
-        Promise.all(endpoints)
-            .then(res => res.map(item => handleSetDataRecruitment(item.data?.items)))
-            .catch(e => console.log(e))
-      } else {
-        const data = await getRecruitmentByOrganization();
-        handleSetDataRecruitment(data.data?.items)
-      }
-    }
-    fetchData();
-  }, [watchOrganizationIds])
-
-  useEffect(() => {
-    if(checked) {
+    if (checked) {
       // select
-      !isEmpty(watchOrganizationIds) ? handleSetDataFilter({ key: 'organizationIds', value: watchOrganizationIds }) : handleSetDataFilter({ key: 'organizationIds', value: [] });
-      !isEmpty(watchRecruitment) ? handleSetDataFilter({ key: 'recruitmentIds', value: watchRecruitment }) : handleSetDataFilter({ key: 'recruitmentIds', value: [] });
-      !isEmpty(watchPipeLine) ? handleSetDataFilter({ key: 'recruitmentPipelineStates', value: watchPipeLine?.map((pipe) => Number(pipe)) }) : handleSetDataFilter({ key: 'recruitmentPipelineStates', value: [] });
-      !isEmpty(watchJobSource) ? handleSetDataFilter({ key: 'jobSourceIds', value: watchJobSource }) : handleSetDataFilter({ key: 'jobSourceIds', value: [] });
-      !isEmpty(watchOwnerIds) ? handleSetDataFilter({ key: 'ownerIds', value: watchOwnerIds }) : handleSetDataFilter({ key: 'ownerIds', value: [] });
-      !isEmpty(watchCreatorIds) ? handleSetDataFilter({ key: 'creatorIds', value: watchCreatorIds }) : handleSetDataFilter({ key: 'creatorIds', value: [] });
-      !isEmpty(watchCouncilIds) ? handleSetDataFilter({ key: 'councilIds', value: watchCouncilIds }) : handleSetDataFilter({ key: 'councilIds', value: [] });
+      !isEmpty(watchOrganizationIds) ? handleSetDataFilter({key: 'organizationIds', value: watchOrganizationIds}) : handleSetDataFilter({key: 'organizationIds', value: []});
+      !isEmpty(watchRecruitment) ? handleSetDataFilter({key: 'recruitmentIds', value: watchRecruitment}) : handleSetDataFilter({key: 'recruitmentIds', value: []});
+      !isEmpty(watchPipeLine) ? handleSetDataFilter({key: 'recruitmentPipelineStates', value: watchPipeLine?.map((pipe) => Number(pipe))}) : handleSetDataFilter({key: 'recruitmentPipelineStates', value: []});
+      !isEmpty(watchJobSource) ? handleSetDataFilter({key: 'jobSourceIds', value: watchJobSource}) : handleSetDataFilter({key: 'jobSourceIds', value: []});
+      !isEmpty(watchOwnerIds) ? handleSetDataFilter({key: 'ownerIds', value: watchOwnerIds}) : handleSetDataFilter({key: 'ownerIds', value: []});
+      !isEmpty(watchCreatorIds) ? handleSetDataFilter({key: 'creatorIds', value: watchCreatorIds}) : handleSetDataFilter({key: 'creatorIds', value: []});
+      !isEmpty(watchCouncilIds) ? handleSetDataFilter({key: 'councilIds', value: watchCouncilIds}) : handleSetDataFilter({key: 'councilIds', value: []});
       // date
-      watchCreatedTimeFrom ? handleSetDataFilter({ key: 'createdTimeFrom', value: watchCreatedTimeFrom }) : handleSetDataFilter({ key: 'createdTimeFrom', value: null });
-      watchCreatedTimeTo ? handleSetDataFilter({ key: 'createdTimeTo', value: watchCreatedTimeTo }) : handleSetDataFilter({ key: 'createdTimeTo', value: null });
+      watchCreatedTimeFrom ? handleSetDataFilter({key: 'createdTimeFrom', value: new Date(watchCreatedTimeFrom).toISOString()}) : handleSetDataFilter({key: 'createdTimeFrom', value: null});
+      watchCreatedTimeTo ? handleSetDataFilter({key: 'createdTimeTo', value: new Date(watchCreatedTimeTo).toISOString()}) : handleSetDataFilter({key: 'createdTimeTo', value: null});
       // other
-      !isEmpty(watchExpectWorkingAddressProvinceIds) ? handleSetDataFilter({ key: 'expectWorkingAddressProvinceIds', value: watchExpectWorkingAddressProvinceIds }) : handleSetDataFilter({ key: 'expectWorkingAddressProvinceIds', value: [] });
-      !isEmpty(watchApplicantSkillIds) ? handleSetDataFilter({ key: 'applicantSkillIds', value: watchApplicantSkillIds }) : handleSetDataFilter({ key: 'applicantSkillIds', value: [] });
-      !isEmpty(watchYearsOfExperience) ? handleSetDataFilter({ key: 'yearsOfExperience', value: [Number(watchYearsOfExperience)] }) : handleSetDataFilter({ key: 'yearsOfExperience', value: "" });
-      !isEmpty(watchMaritalStatuses) ? handleSetDataFilter({ key: 'maritalStatuses', value: [Number(watchMaritalStatuses)] }) : handleSetDataFilter({ key: 'maritalStatuses', value: "" });
-      !isEmpty(watchSexs) ? handleSetDataFilter({ key: 'sexs', value: [Number(watchSexs)] }) : handleSetDataFilter({ key: 'sexs', value: "" });
+      !isEmpty(watchExpectWorkingAddressProvinceIds) ? handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: watchExpectWorkingAddressProvinceIds}) : handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: []});
+      !isEmpty(watchApplicantSkillIds) ? handleSetDataFilter({key: 'applicantSkillIds', value: watchApplicantSkillIds}) : handleSetDataFilter({key: 'applicantSkillIds', value: []});
+      !isEmpty(watchYearsOfExperience) ? handleSetDataFilter({key: 'yearsOfExperience', value: [Number(watchYearsOfExperience)]}) : handleSetDataFilter({key: 'yearsOfExperience', value: ""});
+      !isEmpty(watchMaritalStatuses) ? handleSetDataFilter({key: 'maritalStatuses', value: [Number(watchMaritalStatuses)]}) : handleSetDataFilter({key: 'maritalStatuses', value: ""});
+      !isEmpty(watchSexs) ? handleSetDataFilter({key: 'sexs', value: [Number(watchSexs)]}) : handleSetDataFilter({key: 'sexs', value: ""});
       // address
-      !isEmpty(watchlivingAddressProvinceIds) ? handleSetDataFilter({ key: 'livingAddressProvinceIds', value: [watchlivingAddressProvinceIds] }) : handleSetDataFilter({ key: 'livingAddressProvinceIds', value: "" });
-      !isEmpty(watchlivingAddressDistrictIds) ? handleSetDataFilter({ key: 'livingAddressDistrictIds', value: [watchlivingAddressDistrictIds] }) : handleSetDataFilter({ key: 'livingAddressDistrictIds', value: "" });
-      !isEmpty(watchhomeTowerProvinceIds) ? handleSetDataFilter({ key: 'homeTowerProvinceIds', value: [watchhomeTowerProvinceIds] }) : handleSetDataFilter({ key: 'homeTowerProvinceIds', value: "" });
-      !isEmpty(watchhomeTowerDistrictIds) ? handleSetDataFilter({ key: 'homeTowerDistrictIds', value: [watchhomeTowerDistrictIds] }) : handleSetDataFilter({ key: 'homeTowerDistrictIds', value: "" });
+      !isEmpty(watchlivingAddressProvinceIds) ? handleSetDataFilter({key: 'livingAddressProvinceIds', value: [watchlivingAddressProvinceIds]}) : handleSetDataFilter({key: 'livingAddressProvinceIds', value: ""});
+      !isEmpty(watchlivingAddressDistrictIds) ? handleSetDataFilter({key: 'livingAddressDistrictIds', value: [watchlivingAddressDistrictIds]}) : handleSetDataFilter({key: 'livingAddressDistrictIds', value: ""});
+      !isEmpty(watchhomeTowerProvinceIds) ? handleSetDataFilter({key: 'homeTowerProvinceIds', value: [watchhomeTowerProvinceIds]}) : handleSetDataFilter({key: 'homeTowerProvinceIds', value: ""});
+      !isEmpty(watchhomeTowerDistrictIds) ? handleSetDataFilter({key: 'homeTowerDistrictIds', value: [watchhomeTowerDistrictIds]}) : handleSetDataFilter({key: 'homeTowerDistrictIds', value: ""});
       // input
-      watchHeightFromDebounce ? handleSetDataFilter({ key: 'heightFrom', value: Number(watchHeightFromDebounce) }) : handleSetDataFilter({ key: 'heightFrom', value: "" });
-      watchHeightToDebounce ? handleSetDataFilter({ key: 'heightTo', value: Number(watchHeightToDebounce) }) : handleSetDataFilter({ key: 'heightTo', value: "" });
-      watchWeightFromDebounce ? handleSetDataFilter({ key: 'weightFrom', value: Number(watchWeightFromDebounce) }) : handleSetDataFilter({ key: 'weightFrom', value: "" });
-      watchWeightToDebounce ? handleSetDataFilter({ key: 'weightTo', value: Number(watchWeightToDebounce) }) : handleSetDataFilter({ key: 'weightTo', value: "" });
-      watchEducationsToDebounce ? handleSetDataFilter({ key: 'educations', value: watchEducationsToDebounce }) : handleSetDataFilter({ key: 'educations', value: "" });
-      watchExperienceToDebounce ? handleSetDataFilter({ key: 'experience', value: watchExperienceToDebounce }) : handleSetDataFilter({ key: 'experience', value: "" });
-      watchExpectSalaryFromDebounce ? handleSetDataFilter({ key: 'expectSalaryFrom', value: watchExpectSalaryFromDebounce }) : handleSetDataFilter({ key: 'expectSalaryFrom', value: "" });
-      watchExpectSalaryToDebounce ? handleSetDataFilter({ key: 'expectSalaryTo', value: watchExpectSalaryToDebounce }) : handleSetDataFilter({ key: 'expectSalaryTo', value: "" });
+      watchHeightFromDebounce ? handleSetDataFilter({key: 'heightFrom', value: Number(watchHeightFromDebounce)}) : handleSetDataFilter({key: 'heightFrom', value: ""});
+      watchHeightToDebounce ? handleSetDataFilter({key: 'heightTo', value: Number(watchHeightToDebounce)}) : handleSetDataFilter({key: 'heightTo', value: ""});
+      watchWeightFromDebounce ? handleSetDataFilter({key: 'weightFrom', value: Number(watchWeightFromDebounce)}) : handleSetDataFilter({key: 'weightFrom', value: ""});
+      watchWeightToDebounce ? handleSetDataFilter({key: 'weightTo', value: Number(watchWeightToDebounce)}) : handleSetDataFilter({key: 'weightTo', value: ""});
+      watchEducationsToDebounce ? handleSetDataFilter({key: 'educations', value: watchEducationsToDebounce}) : handleSetDataFilter({key: 'educations', value: ""});
+      watchExperienceToDebounce ? handleSetDataFilter({key: 'experience', value: watchExperienceToDebounce}) : handleSetDataFilter({key: 'experience', value: ""});
+      watchExpectSalaryFromDebounce ? handleSetDataFilter({key: 'expectSalaryFrom', value: watchExpectSalaryFromDebounce}) : handleSetDataFilter({key: 'expectSalaryFrom', value: ""});
+      watchExpectSalaryToDebounce ? handleSetDataFilter({key: 'expectSalaryTo', value: watchExpectSalaryToDebounce}) : handleSetDataFilter({key: 'expectSalaryTo', value: ""});
     }
-  }, [
+      }, [
         checked,
         watchOrganizationIds, watchRecruitment, watchPipeLine, watchJobSource,
         watchCreatedTimeFrom, watchCreatedTimeTo,
@@ -245,43 +222,57 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
     }
   }, [watchProvinceHomeTownId]);
 
+
+  if (isLoadingOrganization || isLoadingJobSource || isLoadingJobCategory || isLoadingSkill || isLoadingProvince || isLoadingUser || isLoadingRecruitment) return null;
+
   return (
-      <Drawer
-          open={isOpen}
-          onClose={onClose}
-          anchor="right"
-          variant="temporary"
-          hideBackdrop
-          PaperProps={{
-            sx: {
-              width: {xs: 1, sm: 560, md: 384},
-              boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-              zIndex: 999,
-              position: 'fixed',
-              height: 'calc(100% - 92px - 64px - 1px)',
-              top: '157px',
-              right: 0,
-            }
-          }}
+      <ClickAwayListener
+          mouseEvent="onMouseDown"
+          touchEvent="onTouchStart"
+          onClickAway={() => isOpen && onClose()}
       >
-        <Scrollbar sx={{zIndex: 99, "& label": {zIndex: 0}}}>
+        <Drawer
+            open={true}
+            onClose={onClose}
+            anchor="right"
+            variant="persistent"
+            PaperProps={{
+              sx: {
+                width: {xs: 1, sm: 560, md: 400},
+                boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+                zIndex: 999,
+                position: 'fixed',
+                height: 'calc(100% - 92px - 64px - 1px)',
+                top: '157px',
+                right: 0,
+                "::-webkit-scrollbar": {
+                  display: 'none'
+                }
+              }
+            }}
+        >
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <ApplicantModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
-              <IconButton size="small" onClick={onClose}>
+              <IconButton size="small" onClick={onClose} sx={{ mr: -1 }}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
             </ApplicantModalHeadStyle>
             <Divider/>
             <Box sx={{py: 2, mt: 0}}>
-              <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
+              <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ
+                liệu</HelperTextTypography>
               <Stack sx={{pb: 3, px: 2}}>
                 <DynamicFilterForm
                     columns={columns}
+                    disabled={{
+                      livingAddressDistrictIds: !watchlivingAddressProvinceIds,
+                      homeTowerDistrictIds: !watchhomeTowerProvinceIds,
+                    }}
                     options={{
-                      organizationIds: convertFlatDataToTree(ListOrganization?.map((item) => ({...item, title: item.name, key: item.id, value: item.id}))),
+                      organizationIds: ListOrganization,
                       jobSourceIds: ListJobSources,
                       recruitmentIds: ListRecruitmentByOrganization,
                       recruitmentPipelineStates: LIST_STEP_RECRUITMENT,
@@ -300,7 +291,6 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
                       homeTowerDistrictIds: ListDistrictHomeTower
                     }}
                 />
-
               </Stack>
             </Box>
 
@@ -329,8 +319,8 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
               />
             </ApplicantModalFooterStyle>
           </FormProvider>
-        </Scrollbar>
-      </Drawer>
+        </Drawer>
+      </ClickAwayListener>
   );
 }
 

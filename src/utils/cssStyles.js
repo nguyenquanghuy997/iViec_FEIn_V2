@@ -1,6 +1,8 @@
 import { ButtonDS } from "@/components/DesignSystem";
+import { Box, Dialog, DialogContentText } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
+import { Typography } from "antd";
 
 function getDirection(value = "bottom") {
   return {
@@ -65,17 +67,106 @@ export const ButtonIcon = styled(ButtonDS)(({}) => ({
   minWidth: "unset",
   backgroundColor: "#fff",
   boxShadow: "none",
-  ":hover": {
+  "&:hover": {
     backgroundColor: "#EFF3F7",
   },
   textTransform: "none",
+}));
+export const ButtonCancel = styled(ButtonDS)(({}) => ({
+    color: "#455570",
+    backgroundColor: "transparent",
+    borderRadius: 6,
+    "&:hover": {
+      color: "#455570",
+      backgroundColor: "transparent",
+    },
 }));
 export const ButtonGray = styled(ButtonDS)(({}) => ({
   color: "#455570",
   backgroundColor: "#F3F4F6",
   boxShadow: "none",
-  ":hover": {
+  "&:hover": {
     backgroundColor: "#E7E9ED",
   },
   textTransform: "none",
+}));
+//Model
+export const TitleModelStyle = styled(Typography)(({ }) => ({
+  "&.title": {
+    textAlign: "center",
+    width: "100%",
+    fontSize: "16px",
+    fontWeight: 700,
+    color: "#1976D2",
+    marginTop: "12px",
+  },
+}));
+export const DialogModelStyle = styled(Dialog)(({ }) => ({
+  "& .MuiDialog-container": {
+    "& .MuiPaper-root": {
+      padding: 0,
+      borderRadius: "6px",
+      width: "100%",
+      maxWidth: "600px !important",
+      top: -200,
+    },
+  },
+}));
+export const DialogModel = styled(Dialog)(({ }) => ({
+  "& .MuiDialog-container": {
+    "& .MuiPaper-root": {
+      padding: 0,
+      borderRadius: "6px",
+      width: 'max-content',
+      maxWidth: "600px !important",
+    },
+  },
+}));
+export const DialogContentTextModelStyle = styled(DialogContentText)(({ theme }) => ({
+  "&.subtite": {
+    textAlign: "center",
+    width: "100%",
+    fontSize: "14px",
+    fontWeight: 700,
+    display: "block",
+    color:"#455570",
+    marginTop: theme.spacing(2),
+    "& .subtitle-name": {
+      fontWeight: 600,
+    },
+  },
+}));
+export const HeaderPreviewStyle = styled(Box)(({theme}) => ({
+  "&.form-head": {
+    position: "fixed",
+    top: 0,
+    right: 0,
+    width: `600px`,
+    backgroundColor: '#FDFDFD',
+    zIndex: 1,
+    borderBottom: '1px solid #E7E9ED',
+    padding: theme.spacing(2),
+    height: theme.spacing(8),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  }
+
+}));
+
+export const FooterPreviewStyle  = styled(Box)(({theme}) => ({
+  "&.form-footer": {
+    position: "fixed",
+    bottom: 0,
+    right: 0,
+    width: 600,
+    backgroundColor: '#FDFDFD',
+    zIndex: 1,
+    borderTop: '1px solid #E7E9ED',
+    padding: theme.spacing(2),
+    height: theme.spacing(8),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  }
 }));

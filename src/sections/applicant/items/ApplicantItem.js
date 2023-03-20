@@ -19,7 +19,8 @@ import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useEffect, useMemo, useState} from "react";
-import RecruitmentBottomNav from "@/sections/recruitment/items/RecruitmentBottomNav";
+import {cleanObject} from "@/utils/function";
+import {isEmpty} from "lodash";
 
 const defaultValues = {
   searchKey: "",
@@ -27,19 +28,19 @@ const defaultValues = {
 
 export const ApplicantItem = () => {
   const router = useRouter();
-  const { query } = router;
-
+  const { query, isReady } = router;
   const dispatch = useDispatch();
   const toggleFormFilter = useSelector((state) => state.filterReducer.openForm);
   const dataFilter = useSelector((state) => state.filterReducer.data);
   const handleOpenFilterForm = () => dispatch(filterSlice.actions.openFilterModal());
   const handleCloseFilterForm = () => dispatch(filterSlice.actions.closeModal());
-  const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setDataFilter(data));
+  const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setAllDataFilter(data));
   const handleClearDataFilter = () => dispatch(filterSlice.actions.clearDataFilter());
 
   useEffect(() => {
+    if (!isReady) return;
     handleClearDataFilter();
-  }, [])
+  }, [isReady, query])
 
   const methods = useForm({
     mode: "onChange",
@@ -48,14 +49,11 @@ export const ApplicantItem = () => {
 
   const { handleSubmit } = methods;
 
-  console.log(dataFilter)
-
   // api get list
-  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(
-      JSON.stringify(Object.entries(dataFilter).reduce((a, [k, v]) => ((v === null || v === undefined || !v || v?.length === 0) ? a : ((a[k] = v), a)), {}))
-  );
+  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(JSON.stringify(cleanObject(dataFilter)));
+
   // api get list Column
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
+  const { data: ColumnData, isLoading: loadingColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
@@ -63,7 +61,7 @@ export const ApplicantItem = () => {
   const handleChangePagination = (pageIndex, pageSize) => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
-      dataFilter = {...dataFilter,pageSize: pageSize, pageIndex: pageIndex }
+    handleSetDataFilter({...dataFilter,pageSize: pageSize, pageIndex: pageIndex })
   };
   const columns = useMemo(() => {
     return [
@@ -450,50 +448,50 @@ export const ApplicantItem = () => {
   };
 
   const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
+    handleSetDataFilter({ searchKey: data.searchKey });
   };
 
   const onSubmit = async (data) => {
     const body = {
       ...data,
-      searchKey: data.searchKey,
+      createdTimeFrom: data.createdTimeFrom ? new Date(data.createdTimeFrom).toISOString() : null,
+      createdTimeTo: data.createdTimeTo ? new Date(data.createdTimeTo).toISOString() : null,
       recruitmentPipelineStates: data.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
-      yearsOfExperience: data.yearsOfExperience ? [Number(data.yearsOfExperience)] : null,
-      recruitmentIds: data.recruitmentIds || null,
-      educations: data.educations,
+      yearsOfExperience: typeof data.yearsOfExperience === 'number' ? [data.yearsOfExperience] : null,
+      sexs: typeof data.sexs === 'number' ? [data.sexs] : null,
+      maritalStatuses: typeof data.maritalStatuses === 'number' ? [data.maritalStatuses] : null,
+      livingAddressProvinceIds: data.livingAddressProvinceIds && typeof data.livingAddressProvinceIds === 'string' ? [data.livingAddressProvinceIds] : null,
+      livingAddressDistrictIds: data.livingAddressDistrictIds && typeof data.livingAddressDistrictIds === 'string' ? [data.livingAddressDistrictIds] : null,
+      homeTowerProvinceIds: data.homeTowerProvinceIds && typeof data.homeTowerProvinceIds === 'string' ? [data.homeTowerProvinceIds] : null,
+      homeTowerDistrictIds: data.homeTowerDistrictIds && typeof data.homeTowerDistrictIds === 'string' ? [data.homeTowerDistrictIds] : null,
     };
-    // const cleanBody = Object.entries(body).reduce((a, [k, v]) => ((v === null || v === undefined || !v || (Array.isArray(v) && v.length === 0)) ? a : ((a[k] = v), a)), {})
     handleSetDataFilter(body);
     handleCloseFilterForm();
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [itemSelected, setItemSelected] = useState([]);
 
-  const [, setIsOpenBottomNav] = useState(false);
-  const toggleDrawer = (newOpen) => () => {
-    setIsOpenBottomNav(newOpen);
-    setSelectedRowKeys([]);
-    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
-  };
+  // const [, setIsOpenBottomNav] = useState(false);
+  // const toggleDrawer = (newOpen) => () => {
+  //   setIsOpenBottomNav(newOpen);
+  //   setSelectedRowKeys([]);
+  //   event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+  // };
+
+  if (isLoading || loadingColumnData) return null;
+
   return (
     <View>
       <ApplicantHeader
-          data={Data?.items}
           methods={methods}
           onSubmit={onSubmitSearch}
           handleSubmit={handleSubmit}
           onOpenFilterForm={handleOpenFilterForm}
-          onCloseFilterForm={handleCloseFilterForm}
+          dataFilter={dataFilter}
       />
       <Content>
-        <View mt={96}>
+        <View mt={!isEmpty(cleanObject(dataFilter)) ? 136 : 96}>
           <DynamicColumnsTable
             page={page}
             paginationSize={paginationSize}
@@ -509,20 +507,23 @@ export const ApplicantItem = () => {
             nodata="Hiện chưa có ứng viên nào"
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
+            itemSelected={itemSelected}
+            setItemSelected={setItemSelected}
           />
         </View>
-        <RecruitmentBottomNav
+        {/* <RecruitmentBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
-        />
+        /> */}
       </Content>
       {toggleFormFilter && (
         <ApplicantFilterModal
           columns={columns}
           isOpen={toggleFormFilter}
           onClose={handleCloseFilterForm}
+          onOpen={handleOpenFilterForm}
           onSubmit={onSubmit}
         />
       )}

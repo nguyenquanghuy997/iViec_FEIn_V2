@@ -9,11 +9,17 @@ import RecruitmentPipelineCard from "@/sections/recruitment-create/component/oth
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {useGetAllPipelineByOrganizationQuery, useGetAllStepOfPipelineQuery} from "@/sections/pipeline";
 import {PipelineStateType} from "@/utils/formatString";
+import {useRouter} from "next/router";
+import {PATH_DASHBOARD} from "@/routes/paths";
 
 const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) => {
 
-  const {data: {items: ListPipeline = []} = {}} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
-  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
+  const {data: {items: ListPipeline = []} = {}, isLoading} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
+  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}, isLoading: loadingPipe} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
+
+  const router = useRouter();
+
+  if (isLoading || loadingPipe) return null;
 
   return (
       <BoxWrapperStyle className="wrapper">
@@ -50,9 +56,11 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
 
               <Box sx={{mt: 1}}>
                 {ListStepPipeline?.map((item, index) => {
-                  return <RecruitmentPipelineCard key={index} icon={PipelineStateType(item?.pipelineStateType).icon}
-                                                  title={PipelineStateType(item?.pipelineStateType).title}
-                                                  subtitle={PipelineStateType(item?.pipelineStateType).subtitle}/>
+                  return <RecruitmentPipelineCard
+                      key={index}
+                      icon={PipelineStateType(item?.pipelineStateType).icon}
+                      title={PipelineStateType(item?.pipelineStateType).title}
+                      subtitle={PipelineStateType(item?.pipelineStateType).subtitle}/>
                 })}
               </Box>
 
@@ -65,7 +73,11 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
                 'Nếu chưa có quy trình tuyển dụng phù hợp, Hãy liên hệ Quản trị viên doanh nghiệp của bạn để thêm quy trình mới.',
               ]}
           >
-            <Button variant="outlined" sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}>
+            <Button
+                variant="outlined"
+                sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}
+                onClick={() => router.push(PATH_DASHBOARD.pipeline.root)}
+            >
               Thiết lập quy trình tuyển dụng
             </Button>
 

@@ -67,6 +67,7 @@ export const API_LOGIN = "/identity/Identity/Login"; //new
 export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 export const API_CONFIRM_EMAIL = "/identity/Identity/ConfirmEmail";  // new
 export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword"; //new
+export const API_USER_INVITE_SET_PASSWORD = "/identity/Identity/UserInvitedSetPassword"; //new
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken"; //new
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup"; // lấy danh sách application theo role groups
 // Common
@@ -74,7 +75,9 @@ export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicat
 //Ứng viên
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new lấy danh sách ứng viên
 export const API_GET_FILTER_ALL_APPLICANTS =
-  "/applicant/ApplicantRecruitment/FilterApplicantRecruitments"; // new lấy danh sách ứng viên
+  "/applicant/ApplicantRecruitment/FilterApplicantRecruitments";
+export const API_UPLOAD_FILE_APPLICANTS =
+  "/applicant/ApplicantRecruitment/UploadApplicantFile"; // new lấy danh sách ứng viên
 export const API_GET_COLUMN_APPLICANTS =
   "/aggregator/ApplicantRecruitmentVisible/GetApplicantRecruitmentVisible"; //new lấy danh sách cột
 export const API_UPDATE_COLUMN_APPLICANTS =
@@ -85,6 +88,8 @@ export const API_GET_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/Ge
 export const API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT = "/recruitment/Recruitment/GetRecruitmentPipelineStatesByRecruitment"; //List bước tuyển dụng
 export const API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES = "/applicant/ApplicantRecruitment/GetApplicantCurrentStateWithRecruitmentStates"; //List pipeline và trạng thái UV theo TTD
 export const API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE = "/applicant/ApplicantRecruitment/UpdateApplicantRecruitmentToNextState"; //Chuyển bước uv
+export const API_GET_APPLICANT_BY_PIPELINESTETEID ="/applicant/ApplicantRecruitment/GetApplicantByPipelineStateId"
+export const API_UPDATE_APPLICANT = "/applicant/Applicant/UpdateApplicant";
 
 export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantSkills";
 //Tin tuyển dụng
@@ -94,13 +99,15 @@ export const API_GET_ORGANIZATION = "/organization/Organization/GetOrganization"
 export const API_GET_ORGANIZATION_WITH_CHILD = "/organization/Organization/GetOrganizationsLessDataWithChild"; // lấy danh sách đơn vị để đổ dữ liệu dạng cây
 export const API_GET_ORGANIZATION_DETAIL_BY_ID = "/organization/Organization/GetOrganizationDetailById"; // lấy chi tiết thông tin đơn vị
 export const API_CREATE_CHILD_ORGANIZATION = "/organization/Organization/CreateChildOrganization"; // tạo đơn vị
-export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganization"; // cập nhật thông tin đơn vị
+export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganizationData"; // cập nhật thông tin đơn vị
 export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganizationById"; // xóa đơn vị
 export const API_DELETE_MULTIPLE_ORGANIZATION = "/organization/Organization/RemoveOrganizations"; // xóa nhiều đơn vị
 export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrganizationsActive"; // xóa nhiều đơn vị
 export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin"; // lấy danh sách admin
 export const API_GET_ALL_USER_BY_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId"; // lấy danh sách người dùng theo đơn vị
-
+export const API_INVITE_USER = "/organization/OrganizationUserInvite/CreateOrganizationUserInvites";
+export const API_USER_CONFIRM_INVITE = "/identity/Identity/UserInvitedActive";
+export const API_GET_LIST_USER_INVITE = "/organization/OrganizationUserInvite/GetOrganizationUserInvites";
 //Role
 export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
@@ -162,7 +169,7 @@ export const API_GET_COMPANY_INFOR_BY_IDS = 'organization/Organization/GetOrgani
 export const API_UPDATE_COMPANY_INFOR = 'organization/OrganizationInformation/UpdateOrganizationInformation'
 export const API_UPLOAD_IMAGE ='organization/Organization/OrganizationUploadImage'
 // Thông báo
-export const API_GET_LIST_NOTIFICATION = "api/UserNotifications/GetPaging";
+export const API_GET_LIST_NOTIFICATION = "/UserNotifications/GetPaging";
 export const API_MASK_READ_NOTIFICATION =
   "api/UserNotifications/MaskAsRead?id=";
 
@@ -189,10 +196,11 @@ export const API_GET_APPLICANT_USERS_ON_JOBTYPE = "/recruitment/JobPosition/GetA
 
 // Pipeline
 export const API_GET_ALL_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipelineFilter"; //new
+export const API_GET_PIPELINE_BY_ID = "/organization/OrganizationPipeline/GetOrganizationPipeline";
 export const API_GET_ALL_RECRUITMENT_STEP_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipeline";
 
 export const API_GET_ALL_PIPELINE_BY_ORGANIZATION = "/organization/OrganizationPipeline/GetOrganizationPipelineByOrganization"; //new
-export const API_SET_DEFAULT_PIPELINE = "ReviewForm/SetDefaultReviewForm"; // bật tắt trạng thái hoạt động
+export const API_SET_ORGANIZATION_PIPELINE_ACTIVE = "/organization/OrganizationPipeline/SetOrganizationPipelinesActive"; // bật tắt trạng thái hoạt động
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
 export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
@@ -202,10 +210,15 @@ export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrga
 export const API_GET_RECRUITMENT_BY_ID = "/recruitment/Recruitment/GetRecruitment"; // get recruitment by id
 export const API_GET_LIST_RECRUITMENT = "/recruitment/Recruitment/GetRecruitments"; // get all recruitment
 export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/GetRecruitmentByOrganizationId" // new - get recruitment by organization
-export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - get recruitment by organization
-
+export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - create recruitment
+export const API_UPDATE_RECRUITMENT_OFFICIAL = "/recruitment/Recruitment/UpdateRecruitment" // new - update recruitment official
+export const API_UPDATE_RECRUITMENT_DRAFT = "/recruitment/Recruitment/SetRecruitmentDraftOrOfficial" // new - update recruitment draft
+export const API_CREATE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/CreateApplicantRecruitment"
 // duyệt tin
-export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // get all recruitment
+export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // list tin cần iviec duyệt
+export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments"; // phê duyệt nhiều tin
+export const API_REJECT_RECRUITMENT = "/recruitment/Recruitment/RejectRecruitment"; // phê duyệt nhiều tin
+
 // job source nguồn job
 
 // get user from organization
@@ -232,3 +245,5 @@ export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories"
 
 //ĐẶT LỊCH
 export const API_POST_BOOK_CALENDAR = 'applicant/BookingCalendar/CreateBookingCalendar'
+// Thi tuyển
+export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";

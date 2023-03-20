@@ -1,161 +1,217 @@
-import * as XLSXSTYLE from "xlsx-js-style";
-import * as XLSX from "xlsx";
-import FileSaver from 'file-saver';
+import { isEmpty } from 'lodash';
 import InputAdornment from "@mui/material/InputAdornment";
 import Stack from "@mui/material/Stack";
 import HeadingBar from "../../components/heading-bar/HeadingBar";
 import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
 import {ButtonFilterStyle} from "@/sections/applicant/style";
-import {ButtonInviteStyle} from "@/sections/organization/style";
-import {tableColumns} from "@/sections/applicant/others/columns";
+import {BoxFlex} from "@/sections/emailform/style";
+import ChipDS from "@/components/DesignSystem/ChipDS";
+import {CloseIcon} from "@/theme/overrides/CustomIcons";
+import {useEffect} from "react";
+import {filterSlice} from "@/redux/common/filterSlice";
+import {useDispatch} from "@/redux/store";
+import {Box, Button, Divider} from "@mui/material";
 import {fDate} from "@/utils/formatTime";
-import {Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience} from "@/utils/enum";
+import {cleanObject} from "@/utils/function";
+import {MaritalStatus, PipelineStateType, Sex, YearOfExperience} from "@/utils/enum";
 
-const ApplicantHeader = ({data, methods, onOpenFilterForm, onSubmit, handleSubmit}) => {
-    const handleExportExcel = () => {
-        const dataFormat = data?.map((applicant, index) => {
-            return {
-                index: index + 1,
-                fullName: applicant.fullName || "",
-                dateOfBirth: fDate(applicant.dateOfBirth) || "",
-                sex: Sex(applicant.sex) || "",
-                email: applicant.email || "",
-                phoneNumber: applicant.phoneNumber || "",
-                creatorName: applicant.creatorName || "",
-                createdTime: fDate(applicant.createdTime) || "",
-                jobSourceName: applicant.jobSourceName || "",
-                jobCategories: applicant.jobCategories[0]?.name || "",
-                identityNumber: `${applicant.identityNumber}` || "",
-                maritalStatus: MaritalStatus(applicant.maritalStatus) || "",
-                height: applicant.height || "",
-                weight: applicant.weight || "",
-                livingAddress: Address(applicant.livingAddress) || "",
-                skills: applicant.applicantSkills[0]?.name || "",
-                expectedSalary: `${applicant?.expectedSalaryFrom} - ${applicant?.expectedSalaryTo}` || "",
-                expectedWorkingAddress: Address(applicant.expectedWorkingAddress) || "",
-                yearOfExperience: YearOfExperience(applicant.yearOfExperience) || "",
-                homeTower: Address(applicant.homeTower) || "",
-                education: applicant.education || "",
-                experience: applicant.experience || "",
-                applyTime: fDate(applicant.createdTime) || "",
-                ownerName: applicant.ownerName || "",
-                recruitmentName: applicant.recruitmentName || "",
-                organizationName: applicant.organizationName || "",
-                jobPosition: 'No data',
-                recruitmentPipelineState: PipelineStateType(applicant.recruitmentPipelineState, 1) || "",
-                averageScore: 'No data',
-                testDay: 'No data',
-                point: 'No data',
-                interviewDate1: 'No data',
-                interviewResult1: 'No data',
-                interviewDate2: 'No data',
-                interviewResult2: 'No data',
-                interviewDate3: 'No data',
-                interviewResult3: 'No data',
-                interviewDate4: 'No data',
-                interviewResult4: 'No data',
-                interviewDate5: 'No data',
-                interviewResult5: 'No data',
-            }
-        });
-        const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        const fileExtension = ".xlsx";
-        const ws = XLSX.utils.json_to_sheet(dataFormat, {cellStyles: true});
-        let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO']
-        let columnWidth = [5, 20, 15, 10, 20, 15, 20, 12, 12, 15, 20, 22, 15, 15, 16, 10, 28, 28, 25, 20, 20, 25, 20, 25, 20, 10, 18, 20, 20, 20, 20, 25, 26, 25, 26, 25, 26, 25, 26, 25, 26];
-        let rowsHeight = [30, ...Array(dataFormat.length).fill(16.5)];
-        tableColumns.forEach((column, index) => {
-            ws[`${columns[index]}1`].v = column;
-            ws[`${columns[index]}1`].s = {
-                font: {
-                    name: "Palatino Linotype",
-                    bold: true,
-                    sz: 12
-                },
-                alignment: {wrapText: true, vertical: 'center'},
-                fill: {
-                    fgColor: {rgb: "B7DEE8"},
-                },
-                border: {
-                    top: { style: 'thin' },
-                    bottom: { style: 'thin' },
-                    right: { style: 'thin' },
-                    left: { style: 'thin' },
-                },
-                numFmt: '0'
-            };
-        })
+const chipSx = {
+  backgroundColor: '#EFF3F6',
+  color: '#455570',
+  fontSize: 12,
+  fontWeight: 500,
+  mr: 1
+}
 
-        for (let i = 1; i <= dataFormat.length; i++) {
-            for (let j = 0; j < columns.length; j++) {
-                if(columns[j] === 'A' || columns[j] === 'C' || columns[j] === 'F' || columns[j] === 'H') {
-                    ws[`${columns[j]}${i+1}`].s = {
-                        font: {
-                            name: "Palatino Linotype",
-                            sz: 11
-                        },
-                        alignment: {
-                            horizontal: 'center',
-                        },
-                        border: {
-                            top: { style: 'thin' },
-                            bottom: { style: 'thin' },
-                            right: { style: 'thin' },
-                            left: { style: 'thin' },
-                        },
-                    };
-                } else {
-                    ws[`${columns[j]}${i+1}`].s = {
-                        font: {
-                            name: "Palatino Linotype",
-                            sz: 11
-                        },
-                        border: {
-                            top: { style: 'thin' },
-                            bottom: { style: 'thin' },
-                            right: { style: 'thin' },
-                            left: { style: 'thin' },
-                        },
-                        numFmt: '0'
-                    };
-                }
-            }
-        }
+const ApplicantHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit, dataFilter}) => {
+  const dispatch = useDispatch();
 
-        ws["!cols"] = columnWidth.map(column => ({wch: column}));
-        ws["!rows"] = rowsHeight.map(rowHeight => ({ hpx: rowHeight }))
+  const {watch} = methods;
 
-        const wb = {Sheets: {'Danh sách úng viên': ws}, SheetNames: ["Danh sách úng viên"]};
-        const excelBuffer = XLSXSTYLE.write(wb, {bookType: "xlsx", type: "array"});
-        const dataExport = new Blob([excelBuffer], {type: fileType});
-        FileSaver.saveAs(dataExport, 'Danh sách úng viên' + fileExtension);
+  const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setDataFilter(data));
+  const handleClearDataFilter = () => dispatch(filterSlice.actions.clearDataFilter());
+
+  useEffect(() => {
+    if (!watch('searchKey')) {
+      handleSetDataFilter({key: 'searchKey', value: ''})
     }
+  }, [watch('searchKey')])
 
-    return (<HeadingBar sx={{ mb: '28px', position: 'fixed', top: 8 }}>
-        <Stack flexDirection="row" alignItems="center" padding="0 24px">
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <RHFTextField
-                    name="searchKey"
-                    placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
-                    sx={{minWidth: '510px'}}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start' sx={{ ml: 1.5 }}>
-                                <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }}/>
-                            </InputAdornment>
-                        ),
+  return (<HeadingBar sx={{mb: '28px', top: 0}} style={{position: 'absolute', top: 0}}>
+    <Stack flexDirection="row" alignItems="center" padding="0">
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <RHFTextField
+            name="searchKey"
+            placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
+            sx={{minWidth: '510px'}}
+            defaultValue={dataFilter?.searchKey}
+            InputProps={{
+              startAdornment: (
+                  <InputAdornment position='start' sx={{ml: 1.5}}>
+                    <Iconify icon={'eva:search-fill'} sx={{color: 'text.disabled', width: 20, height: 20}}/>
+                  </InputAdornment>
+              ),
+            }}
+        />
+      </FormProvider>
+      <ButtonFilterStyle
+          onClick={onOpenFilterForm}
+          startIcon={<Iconify sx={{height: '18px', width: '18px'}} icon="material-symbols:filter-alt-outline"/>}>
+        Bộ lọc
+      </ButtonFilterStyle>
+    </Stack>
+    <Box>
+      {
+          !isEmpty(cleanObject(dataFilter)) &&
+          <BoxFlex justifyContent='flex-start' style={{marginTop: 20}}>
+            {
+              dataFilter.searchKey && <ChipDS
+                    label={`Từ khóa: ${dataFilter?.searchKey}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'searchKey', value: ''})}
+                />
+            }
+            {
+                !isEmpty(dataFilter.organizationIds) && <ChipDS
+                    label={`Đơn vị: ${dataFilter?.organizationIds?.map(item => item).join(', ')}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'organizationIds', value: []})}
+                />
+            }
+            {
+                !isEmpty(dataFilter.recruitmentIds) && <ChipDS
+                    label={`Tin tuyển dụng: ${dataFilter?.recruitmentIds?.map(item => item).join(', ')}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'recruitmentIds', value: []})}
+                />
+            }
+            {
+                !isEmpty(dataFilter.recruitmentPipelineStates) && <ChipDS
+                    label={`Bước tuyển dụng: ${dataFilter?.recruitmentPipelineStates.map(item => PipelineStateType(item ,1)).join(', ')}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'recruitmentPipelineStates', value: []})}
+                />
+            }
+            {
+                (dataFilter.createdTimeFrom || dataFilter.createdTimeTo) && <ChipDS
+                    label={`Ngày ứng tuyển: ${dataFilter.createdTimeFrom ? fDate(dataFilter.createdTimeFrom) : ''} ${dataFilter.createdTimeTo ? fDate(dataFilter.createdTimeTo) : ''}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => {
+                      handleSetDataFilter({key: 'createdTimeFrom', value: null});
+                      handleSetDataFilter({key: 'createdTimeTo', value: null})
+                      }
+                    }
+                />
+            }
+            {
+                dataFilter.educations && <ChipDS
+                    label={`Học vấn: ${dataFilter?.educations}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'educations', value: ''})}
+                />
+            }
+            {
+                dataFilter.experience && <ChipDS
+                    label={`Kinh nghiệm: ${dataFilter?.experience}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'experience', value: ''})}
+                />
+            }
+            {
+                !isEmpty(dataFilter.yearsOfExperience) && <ChipDS
+                    label={`Số năm kinh nghiệm: ${dataFilter.yearsOfExperience.map(item => YearOfExperience(item)).join('')}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'yearsOfExperience', value: ''})}
+                />
+            }
+            {
+                !isEmpty(dataFilter.sexs) && <ChipDS
+                    label={`Giới tính: ${dataFilter.sexs.map(item => Sex(item)).join('')}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'sexs', value: ''})}
+                />
+            }
+            {
+                !isEmpty(dataFilter.maritalStatuses) && <ChipDS
+                    label={`Tình trạng hôn nhân: ${dataFilter.maritalStatuses.map(item => MaritalStatus(item)).join('')}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => handleSetDataFilter({key: 'maritalStatuses', value: ''})}
+                />
+            }
+            {
+                (dataFilter.heightFrom || dataFilter.heightTo) && <ChipDS
+                    label={`Chiều cao: ${dataFilter.heightFrom} ${dataFilter.heightTo}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => {
+                      handleSetDataFilter({key: 'heightFrom', value: ''});
+                      handleSetDataFilter({key: 'heightTo', value: ''});
                     }}
                 />
-            </FormProvider>
-            <ButtonFilterStyle onClick={onOpenFilterForm} startIcon={<Iconify sx={{ height: '18px', width: '18px' }} icon="material-symbols:filter-alt-outline"/>}>
-                Bộ lọc
-            </ButtonFilterStyle>
-            <ButtonInviteStyle className='button-invite' onClick={handleExportExcel} startIcon={<Iconify sx={{ height: '18px', width: '18px' }} icon="material-symbols:filter-alt-outline"/>}>
-                Xuất Excel
-            </ButtonInviteStyle>
-        </Stack>
-    </HeadingBar>);
+            }
+            {
+                (dataFilter.weightFrom || dataFilter.weightTo) && <ChipDS
+                    label={`Cân nặng: ${dataFilter.weightFrom} ${dataFilter.weightTo}`}
+                    variant="filled"
+                    size="small"
+                    sx={{...chipSx}}
+                    deleteIcon={<CloseIcon/>}
+                    onDelete={() => {
+                      handleSetDataFilter({key: 'weightFrom', value: ''});
+                      handleSetDataFilter({key: 'weightTo', value: ''});
+                    }}
+                />
+            }
+            <Divider orientation="vertical" variant="middle" flexItem sx={{mx: 2}}/>
+            <Button
+                onClick={handleClearDataFilter}
+                sx={{
+                  color: '#172B4D',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  "&:hover": {
+                    backgroundColor: 'transparent'
+                  }
+                }}>
+              Bỏ lọc
+            </Button>
+          </BoxFlex>
+      }
+    </Box>
+  </HeadingBar>);
 };
 
 export default ApplicantHeader;

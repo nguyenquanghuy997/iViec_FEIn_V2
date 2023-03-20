@@ -1,11 +1,12 @@
+import { FormProvider } from "../hook-form";
 import { ButtonDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
-import NavItemContent from "@/components/nav-section/horizontal/NavItem";
-import { ListItemStyle } from "@/components/nav-section/horizontal/style";
+import { ButtonCancel, ButtonIcon, DialogModel } from "@/utils/cssStyles";
+import { DialogActions, Divider } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Checkbox, Dropdown, Menu, Table } from "antd";
+import { Checkbox, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import ReactDragListView from "react-drag-listview";
 
@@ -26,7 +27,9 @@ const DynamicColumnsTable = (props) => {
     paginationSize,
     handleChangePagination,
     selectedRowKeys,
-    setSelectedRowKeys
+    setSelectedRowKeys,
+    itemSelected,
+    setItemSelected
   } = props;
 
   const [columnsTable, setColumnsTable] = useState([]);
@@ -63,51 +66,97 @@ const DynamicColumnsTable = (props) => {
 
   const menu = (
     <>
-      <Menu>
-        {ColumnData &&
-          Object.keys(ColumnData).map((key, index) => {
-            if (key == "id") {
-              return;
-            }
-            if (key == "name" || key == "id" || key == "phoneNumber") {
-              return (
-                <Menu.Item key={index + 1}>
-                  <Checkbox
-                    id={key}
-                    onChange={onChange}
-                    defaultChecked={ColumnData[key]}
-                    disabled
-                  >
-                    {menuItemText[key]}
-                  </Checkbox>
-                </Menu.Item>
-              );
-            } else {
-              return (
-                <Menu.Item key={index + 1}>
-                  <Checkbox
-                    id={key}
-                    onChange={onChange}
-                    defaultChecked={ColumnData[key]}
-                  >
-                    {menuItemText[key]}
-                  </Checkbox>
-                </Menu.Item>
-              );
-            }
-          })}
-      </Menu>
-      <ButtonDS
-        tittle="Áp dụng"
-        onClick={() => {
-          UpdateListColumn();
-          setVisibleMenuSettings(false);
-        }}
-      />
+      <DialogModel
+        open={visibleMenuSettings}
+        onClose={() => setVisibleMenuSettings(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <FormProvider methods={{}}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "unset",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "22px 24px",
+            }}
+          >
+            <div style={{ color: "#172B4D", fontWeight: 600 }}>Quản lý cột</div>
+            <div>
+              <ButtonIcon
+                onClick={() => setVisibleMenuSettings(false)}
+                icon={
+                  <Iconify
+                    width={20}
+                    height={20}
+                    icon="ic:baseline-close"
+                    color="#455570"
+                  />
+                }
+              ></ButtonIcon>
+            </div>
+          </View>
+          <Divider />
+          <Menu style={{ overflowY: "auto", maxHeight: "600px" }}>
+            {ColumnData &&
+              Object.keys(ColumnData).map((key, index) => {
+                if (key == "id") {
+                  return;
+                }
+                if (key == "name" || key == "id" || key == "phoneNumber") {
+                  return (
+                    <Menu.Item key={index + 1}>
+                      <Checkbox
+                        id={key}
+                        onChange={onChange}
+                        defaultChecked={ColumnData[key]}
+                        disabled
+                      >
+                        {menuItemText[key]}
+                      </Checkbox>
+                    </Menu.Item>
+                  );
+                } else {
+                  return (
+                    <Menu.Item key={index + 1}>
+                      <Checkbox
+                        id={key}
+                        onChange={onChange}
+                        defaultChecked={ColumnData[key]}
+                      >
+                        {menuItemText[key]}
+                      </Checkbox>
+                    </Menu.Item>
+                  );
+                }
+              })}
+          </Menu>
+          <DialogActions
+            sx={{
+              borderTop: "1px solid #E7E9ED",
+              padding: "16px 24px !important",
+            }}
+          >
+            <ButtonCancel
+              tittle="Hủy"
+              onClick={() => setVisibleMenuSettings(false)}
+            />
+
+            <ButtonDS
+              tittle="Áp dụng"
+              onClick={() => {
+                UpdateListColumn();
+                setVisibleMenuSettings(false);
+              }}
+            />
+          </DialogActions>
+        </FormProvider>
+      </DialogModel>
     </>
   );
-  const handleVisibleChange = (flag) => {
-    setVisibleMenuSettings(flag);
+  const showSetting = () => {
+    setVisibleMenuSettings(true);
   };
 
   const onChange = (e) => {
@@ -216,6 +265,7 @@ const DynamicColumnsTable = (props) => {
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
+    itemSelected ? setItemSelected(source?.items.filter(item => newSelectedRowKeys.includes(item.id))):""
   };
   const rowSelection = {
     selectedRowKeys,
@@ -224,23 +274,40 @@ const DynamicColumnsTable = (props) => {
   const onTableRowClick = (record) => {
     const selectedKey = record.id;
     const selectedKeys = [...selectedRowKeys];
+    const selectedList = itemSelected ? [...itemSelected]:[];
 
     const index = selectedKeys.indexOf(selectedKey);
-
     if (index === -1) {
       selectedKeys.push(selectedKey);
+      selectedList.push(record);
     } else {
       selectedKeys.splice(index, 1);
+      selectedList.splice(index, 1);
     }
-
-    if (selectedKeys?.length > 0) {
-      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = '89px';
-
+    if (filter) {
+      if (selectedKeys?.length > 0) {
+        event.currentTarget.getElementsByClassName(
+          "css-28xiqa"
+        )[0].style.paddingBottom = "89px";
+      } else {
+        event.currentTarget.getElementsByClassName(
+          "css-28xiqa"
+        )[0].style.paddingBottom = null;
+      }
     } else {
-      event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
-
+      if (selectedKeys?.length > 0) {
+        event.currentTarget.getElementsByClassName(
+          "css-6pqpl8"
+        )[0].style.paddingBottom = "89px";
+      } else {
+        event.currentTarget.getElementsByClassName(
+          "css-6pqpl8"
+        )[0].style.paddingBottom = null;
+      }
     }
     setSelectedRowKeys(selectedKeys);
+    itemSelected ? setItemSelected(selectedList) : ""
+    
   };
 
   const onRow = (record) => {
@@ -259,19 +326,20 @@ const DynamicColumnsTable = (props) => {
         mb={16}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Dropdown
-            menu={menu}
-            onOpenChange={handleVisibleChange}
-            open={visibleMenuSettings}
-          >
-            <ListItemStyle>
-              <NavItemContent
-                icon={<Iconify icon="material-symbols:settings" />}
-                title=""
+          <ButtonIcon
+            onClick={showSetting}
+            sx={{ backgroundColor: "unset" }}
+            icon={
+              <Iconify
+                icon={"material-symbols:settings"}
+                width={20}
+                height={20}
+                color="#5C6A82"
+                background="#5C6A82"
+                mr={1}
               />
-            </ListItemStyle>
-          </Dropdown>
-
+            }
+          />
           <View>
             <TextMaxLine
               line={1}
@@ -334,6 +402,7 @@ const DynamicColumnsTable = (props) => {
           />
         </ReactDragListView.DragColumn>
       </div>
+      {visibleMenuSettings && <>{menu}</>}
     </View>
   );
 };
