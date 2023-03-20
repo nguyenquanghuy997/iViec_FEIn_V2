@@ -139,7 +139,7 @@ export default function Recruitment() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",borderRadius:"8px"
               }}
               key={columnId}
             > 

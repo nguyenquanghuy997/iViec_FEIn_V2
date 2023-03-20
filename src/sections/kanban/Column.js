@@ -79,7 +79,7 @@ const Column = ({ droppableId, column }) => {
             mt={0.5}
           />
         </Box>
-        <div style={{ display: "flex", overflow: "auto" }}>
+        <div style={{ display: "flex", overflow: "auto" ,borderRadius: "8px"}}>
           <Droppable droppableId={droppableId} key={droppableId}>
             {(provided) => {
               return (
