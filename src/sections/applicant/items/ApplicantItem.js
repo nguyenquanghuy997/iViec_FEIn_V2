@@ -2,7 +2,6 @@ import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import {View} from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import TextMaxLine from "@/components/TextMaxLine";
 import {
   useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
@@ -13,13 +12,13 @@ import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterMod
 import {Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience,} from "@/utils/enum";
 import {fDate} from "@/utils/formatTime";
 import {Tag} from "antd";
-import Link from "next/link";
 import {useRouter} from "next/router";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useEffect, useMemo, useState} from "react";
 import {cleanObject} from "@/utils/function";
+import ApplicantBottomNav from "./ApplicantBottomNav";
 
 const defaultValues = {
   searchKey: "",
@@ -51,7 +50,7 @@ export const ApplicantItem = () => {
   const { data: Data, isLoading } = useGetAllFilterApplicantQuery(JSON.stringify(cleanObject(dataFilter)));
 
   // api get list Column
-  const { data: ColumnData, isLoading: loadingColumnData } = useGetListColumnApplicantsQuery();
+  const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
@@ -78,22 +77,6 @@ export const ApplicantItem = () => {
         title: "Họ và tên",
         fixed: "left",
         width: "220px",
-        render: (text, record) => (
-          <Link
-            passHref
-            href={{
-              pathname: `applicant/${record.applicantId}`,
-              query: { or: `${record.organizationId}` },
-            }}
-          >
-            <TextMaxLine
-              line={1}
-              sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
-            >
-              {text}
-            </TextMaxLine>
-          </Link>
-        ),
       },
       {
         dataIndex: "phoneNumber",
@@ -476,15 +459,12 @@ export const ApplicantItem = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
 
-  // const [, setIsOpenBottomNav] = useState(false);
-  // const toggleDrawer = (newOpen) => () => {
-  //   setIsOpenBottomNav(newOpen);
-  //   setSelectedRowKeys([]);
-  //   event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
-  // };
-
-  if (isLoading || loadingColumnData) return null;
-
+  const [, setIsOpenBottomNav] = useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setIsOpenBottomNav(newOpen);
+    setSelectedRowKeys([]);
+    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+  };
   return (
     <View>
       <ApplicantHeader
@@ -515,12 +495,13 @@ export const ApplicantItem = () => {
             setItemSelected={setItemSelected}
           />
         </View>
-        {/* <RecruitmentBottomNav
+        <ApplicantBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
-        /> */}
+          itemSelected={itemSelected}
+        />
       </Content>
       {toggleFormFilter && (
         <ApplicantFilterModal
