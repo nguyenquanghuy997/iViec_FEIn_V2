@@ -345,6 +345,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                               },
                               textTransform: "none",
                             }}
+
                             icon={
                               <Iconify
                                 icon={"ci:transfer"}

@@ -8,6 +8,7 @@ import { Grid, Modal, Typography } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { useSnackbar } from "notistack";
 
 export const RejectApplicantModal = ({
   applicantId,
@@ -15,6 +16,7 @@ export const RejectApplicantModal = ({
   stage,
   show,
   setShow,
+  rejectid,
 }) => {
   const recruitmentPipelineStateId = stage?.recruitmentPipelineStates?.filter(
     (i) => i.pipelineStateType == 3
@@ -31,21 +33,29 @@ export const RejectApplicantModal = ({
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  const { enqueueSnackbar } = useSnackbar();
   const [addForm] = useUpdateApplicantRecruitmentToNextStateMutation();
-  const pressSave = async () => {
-    const body = {
-      applicantId: applicantId,
-      recruitmentId: recruimentId,
-      recruitmentPipelineStateId: recruitmentPipelineStateId,
-      pipelineStateResultType: 2,
-      note: "Ứng viên chưa đạt tiêu chí đánh giá",
-    };
-    await addForm(body).unwrap();
-    location.reload();
-    // pressHide();
-    // isEditMode ? await updateForm(body).unwrap() : await addForm(body).unwrap();
-    // onRefreshData();
-  };
+  const pressSave = handleSubmit(async (e) => {
+    try {
+      const body = {
+        applicantId: applicantId,
+        recruitmentId: recruimentId,
+        recruitmentPipelineStateId: rejectid
+          ? rejectid
+          : recruitmentPipelineStateId,
+        pipelineStateResultType: 2,
+        note: e?.note,
+      };
+      await addForm(body).unwrap();
+      enqueueSnackbar("Loại ứng viên thành công");
+      location.reload()
+    } catch (err) {
+      enqueueSnackbar("Loại ứng viên thất bại", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
+  });
 
   // const [text, setText] = React.useState('');
   return (
@@ -54,33 +64,9 @@ export const RejectApplicantModal = ({
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       onBackdropClick={() => setShow(false)}
     >
-      <FormProvider methods={methods} onSubmit={handleSubmit(pressSave)}>
+      <FormProvider methods={methods}>
         <View width={600} borderRadius={8} bgColor={"#fff"}>
-          <View pt={8} pb={36} ph={24}>
-            <ButtonDS
-              type="submit"
-              sx={{
-                justifyContent: "end",
-                padding: "8px",
-                minWidth: "unset",
-                backgroundColor: "#fff",
-                boxShadow: "none",
-                ":hover": {
-                  backgroundColor: "#EFF3F7",
-                },
-                textTransform: "none",
-              }}
-              onClick={() => setShow(false)}
-              icon={
-                <Iconify
-                  icon={"iconoir:cancel"}
-                  width={20}
-                  height={20}
-                  color="#5C6A82"
-                />
-              }
-            />
-
+          <View pt={24} pb={36} ph={24}>           
             <Typography
               fontSize={20}
               fontWeight={"700"}
@@ -148,7 +134,7 @@ export const RejectApplicantModal = ({
                 padding: "6px 12px",
               }}
               loading={isSubmitting}
-              onClick={(e) => pressSave(e)}
+              onClick={pressSave}
             />
           </Grid>
         </View>
