@@ -23,7 +23,12 @@ const EditorStyle = styled('div')(({theme: {palette}}) => ({
   }
 }));
 
-const MemoEditor = memo(TinyEditor, () => true);
+const MemoEditor = memo(TinyEditor, (prevProps, nextProps) => {
+  if (nextProps.initialValue !== prevProps.initialValue) {
+    return false;
+  }
+  return true;
+});
 
 export default function Editor(
     {
