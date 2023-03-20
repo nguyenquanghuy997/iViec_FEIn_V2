@@ -110,7 +110,7 @@ export const ApplicantItem = () => {
         placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
         type: "select",
         multiple: true,
-        render: (item) => PipelineStateType(item, 1),
+        render: (item, record) => PipelineStateType(item, record?.pipelineStateResultType),
       },
       {
         dataIndex: "createdTime",
@@ -500,6 +500,7 @@ export const ApplicantItem = () => {
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
+          setselectedList={setSelectedRowKeys}
           itemSelected={itemSelected}
         />
       </Content>

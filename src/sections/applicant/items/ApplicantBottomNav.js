@@ -1,4 +1,7 @@
 import { handleExportExcel } from "../helper/excel";
+import { RejectApplicantModal } from "../modals";
+import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
+import ApplicantTransferRecruitmentModal from "../modals/ApplicantTransferRecruitmentModal";
 import Content from "@/components/BaseComponents/Content";
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
@@ -18,19 +21,19 @@ const ApplicantBottomNav = ({
   selectedList,
   open,
   onClose,
-  // setselectedList,
+  setselectedList,
   itemSelected,
 }) => {
-  const [, setShowConfirmMultiple] = useState(false);
-  const [, setTypeConfirmMultiple] = useState("");
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+  const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
   };
-  // const onCloseModel = () => {
-  //   setShowConfirmMultiple(false);
-  //   setselectedList([]);
-  // };
+  const onCloseModel = () => {
+    setShowConfirmMultiple(false);
+    setselectedList([]);
+  };
   // const handleOpenFormWithCurrentNode = () => {
   //   onOpenForm();
   // };
@@ -85,7 +88,9 @@ const ApplicantBottomNav = ({
     });
     handleExportExcel(dataFormat);
   };
-
+  const [reject, setReject] = useState(false);
+  const [rejectid, setRejectid] = useState();
+  console.log("rejectid", rejectid);
   return (
     <Drawer
       anchor={"bottom"}
@@ -111,7 +116,7 @@ const ApplicantBottomNav = ({
                     marginRight: "16px",
                     padding: "6px 11px",
                   }}
-                  onClick={() => handleShowConfirmMultiple("approve")}
+                  onClick={() => handleShowConfirmMultiple("tranferPipeline")}
                   icon={
                     <Iconify
                       icon={"ci:transfer"}
@@ -126,7 +131,12 @@ const ApplicantBottomNav = ({
                   sx={{
                     marginRight: "16px",
                   }}
-                  href={"applicant/" + itemSelected[0]?.applicantId +"?or="+ itemSelected[0]?.organizationId}
+                  href={
+                    "applicant/" +
+                    itemSelected[0]?.applicantId +
+                    "?or=" +
+                    itemSelected[0]?.organizationId
+                  }
                   icon={
                     <Iconify
                       icon={"ri:eye-2-line"}
@@ -151,6 +161,21 @@ const ApplicantBottomNav = ({
                     />
                   }
                 />
+                <ButtonIcon
+                  sx={{
+                    marginRight: "16px",
+                  }}
+                  onClick={() => handleShowConfirmMultiple("tranferRe")}
+                  // onClick={() => exportExcel(itemSelected)}
+                  icon={
+                    <Iconify
+                      icon={"ri:share-forward-2-fill"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
+                    />
+                  }
+                />
               </>
             )}
             <ButtonIcon
@@ -167,36 +192,6 @@ const ApplicantBottomNav = ({
                 />
               }
             />
-
-            <ButtonIcon
-              sx={{
-                marginRight: "16px",
-              }}
-              // onClick={() => exportExcel(itemSelected)}
-              icon={
-                <Iconify
-                  icon={"ri:share-forward-2-fill"}
-                  width={20}
-                  height={20}
-                  color="#5C6A82"
-                />
-              }
-            />
-            {selectedList.length === 1 && (
-              <>
-                <ButtonIcon
-                  // onClick={() => exportExcel(itemSelected)}
-                  icon={
-                    <Iconify
-                      icon={"material-symbols:delete-outline-rounded"}
-                      width={20}
-                      height={20}
-                      color="#D32F2F"
-                    />
-                  }
-                />
-              </>
-            )}
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
@@ -224,15 +219,38 @@ const ApplicantBottomNav = ({
           </Box>
         </Box>
       </Content>
-      {/* {showConfirmMultiple && typeConfirmMultiple.includes("approve") && (
-        <RecruitmentAdConfirmMultipleModal
+
+      {showConfirmMultiple &&
+        typeConfirmMultiple.includes("tranferPipeline") && (
+          <ApplicantTransferPipelineModal
+            showConfirmMultiple={showConfirmMultiple}
+            setShowConfirmMultiple={setShowConfirmMultiple}
+            onClose={onCloseModel}
+            itemSelected={itemSelected[0]}
+            setRejectid={setRejectid}
+            setReject={setReject}
+          />
+        )}
+      {showConfirmMultiple && typeConfirmMultiple.includes("tranferRe") && (
+        <ApplicantTransferRecruitmentModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
-          recruitmentIds={selectedList}
+          onClose={onCloseModel}
+          applicantIds={[itemSelected[0]?.applicantId]}
+          itemSelected={itemSelected[0]}
+        />
+      )}
+      {reject && (
+        <RejectApplicantModal
+          applicantId={itemSelected[0]?.applicantId}
+          recruimentId={itemSelected[0]?.recruitmentId}
+          rejectid={rejectid}
+          show={reject}
+          setShow={setReject}
           onClose={onCloseModel}
         />
       )}
-      {showConfirmMultiple && typeConfirmMultiple.includes("reject") && (
+      {/* {showConfirmMultiple && typeConfirmMultiple.includes("reject") && (
         <RecruitmentAdRejectModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
