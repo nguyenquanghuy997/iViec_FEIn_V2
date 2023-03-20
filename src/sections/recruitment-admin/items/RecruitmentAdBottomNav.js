@@ -144,16 +144,12 @@ const RecruitmentAdBottomNav = ({
         />
       )}
       {showConfirmMultiple && typeConfirmMultiple.includes("preview") && (
-        // <RecruitmentAdRejectModal
-        //   showConfirmMultiple={showConfirmMultiple}
-        //   setShowConfirmMultiple={setShowConfirmMultiple}
-        //   recruitmentId={selectedList[0]}
-        //   setselectedList={setselectedList}
-        // />
         <RecruitmentAdPreviewModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
+          recruitmentId={selectedList[0]}
           onClose={onCloseModel}
+          handleShowConfirmMultiple={() => handleShowConfirmMultiple("reject")}
         />
       )}
     </Drawer>

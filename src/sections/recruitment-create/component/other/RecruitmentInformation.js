@@ -28,13 +28,15 @@ const Editor = dynamic(() => import('@/sections/recruitment-create/component/edi
 });
 
 const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
-  const {data: {items: ListOrganization} = []} = useGetOrganizationsDataWithChildQuery();
-  const {data: {items: JobCategoryList = []} = {}} = useGetJobCategoriesQuery();
-  const {data: {items: ListProvince = []} = {}} = useGetProvinceQuery();
-  const {data: ListCandidateLevels = []} = useGetListCandidateLevelsQuery();
-  const {data: {items: ListJobType = []} = {}} = useGetAllJobTypeQuery();
-  const {data: ListLanguage = []} = useGetListLanguagesQuery();
-  const {data: ListUserFromOrganization = []} = useGetAllUserFromOrganizationQuery({Id: organizationId});
+  const {data: {items: ListOrganization = []} = {}, isLoading: loadingOrganization} = useGetOrganizationsDataWithChildQuery();
+  const {data: {items: JobCategoryList = []} = {}, isLoading: loadingCategory} = useGetJobCategoriesQuery();
+  const {data: {items: ListProvince = []} = {}, isLoading: loadingProvince} = useGetProvinceQuery();
+  const {data: ListCandidateLevels = [], isLoading: loadingCadidateLevel} = useGetListCandidateLevelsQuery();
+  const {data: {items: ListJobType = []} = {}, isLoading: loadingJobType} = useGetAllJobTypeQuery();
+  const {data: ListLanguage = [], isLoading: loadingLanguage} = useGetListLanguagesQuery();
+  const {data: ListUserFromOrganization = [], isLoading: loadingUser} = useGetAllUserFromOrganizationQuery({Id: organizationId});
+
+  if(loadingOrganization || loadingCategory || loadingProvince || loadingCadidateLevel || loadingJobType || loadingLanguage || loadingUser) return null;
 
   return (
       <BoxWrapperStyle className="wrapper">
@@ -302,16 +304,10 @@ const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
                   name="jobPositionId"
                   title="Vị trí công việc có sẵn"
                   placeholder="Chọn vị trí công việc có sẵn"
-                  // isRequired
               />
             </Box>
             <Box sx={{px: 4, py: 0}}>
               <LabelStyle required={true}>Mô tả công việc</LabelStyle>
-              {/*<RHFRecruitmentEditor*/}
-              {/*    name="description"*/}
-              {/*    placeholder="Nhập mô tả công việc..."*/}
-              {/*    sx={{width: '780px', minHeight: '370px'}}*/}
-              {/*/>*/}
               <Editor
                   name="description"
                   placeholder="Nhập mô tả công việc..."
@@ -319,23 +315,13 @@ const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
             </Box>
             <Box sx={{px: 4, py: 3}}>
               <LabelStyle required={true}>Yêu cầu công việc</LabelStyle>
-              {/*<RHFRecruitmentEditor*/}
-              {/*    name="requirement"*/}
-              {/*    placeholder="Nhập mô tả công việc..."*/}
-              {/*    sx={{width: '780px', minHeight: '370px'}}*/}
-              {/*/>*/}
               <Editor
                   name="requirement"
-                  placeholder="Nhập mô tả công việc..."
+                  placeholder="Nhập yêu cầu công việc..."
               />
             </Box>
             <Box sx={{px: 4, py: 0}}>
               <LabelStyle required={true}>Quyền lợi</LabelStyle>
-              {/*<RHFRecruitmentEditor*/}
-              {/*    name="benefit"*/}
-              {/*    placeholder="Nhập quyền lợi..."*/}
-              {/*    sx={{width: '780px', minHeight: '370px'}}*/}
-              {/*/>*/}
               <Editor
                   name="benefit"
                   placeholder="Nhập quyền lợi..."

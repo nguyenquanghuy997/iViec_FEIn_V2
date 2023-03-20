@@ -1,4 +1,3 @@
-import {FormHelperText} from '@mui/material'
 import {Controller, useFormContext} from 'react-hook-form'
 import {LabelStyle} from "@/components/hook-form/style";
 import React from "react";
@@ -23,13 +22,9 @@ const RHFContentEditor = React.forwardRef((props, ref)  => {
                     ref={ref}
                     id={name}
                     value={field.value}
+                    initialValue={field.value || ""}
                     onChange={field.onChange}
-                    error={!!error}
-                    helperText={
-                      <FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>
-                        {error?.message}
-                      </FormHelperText>
-                    }
+                    error={error}
                     {...other}
                 />
               </>

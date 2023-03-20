@@ -99,6 +99,10 @@ const typography = {
     lineHeight: 1.5,
     fontSize: pxToRem(14),
   },
+  textSize12: {
+    fontWeight: 400,
+    fontSize: pxToRem(12),
+  },
 }
 
 export default typography

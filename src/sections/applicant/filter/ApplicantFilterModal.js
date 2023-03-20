@@ -1,6 +1,6 @@
 import {memo, useEffect, useMemo, useState} from "react";
 import {isEmpty} from "lodash";
-import {Box, ClickAwayListener, Divider, IconButton, Stack, SwipeableDrawer, Typography} from "@mui/material";
+import {Box, ClickAwayListener, Divider, IconButton, Stack, Drawer, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
@@ -22,17 +22,12 @@ import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useDebounce} from "@/hooks/useDebounce";
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
-import {
-  useGetAllJobSourcesQuery,
-  useGetAllUserFromOrganizationQuery,
-  useGetSkillsQuery,
-} from "@/sections/applicant";
+import {useGetAllJobSourcesQuery, useGetAllUserFromOrganizationQuery, useGetSkillsQuery,} from "@/sections/applicant";
 import {
   useGetDistrictByProvinceIdQuery,
   useGetJobCategoriesQuery,
   useGetProvinceQuery
 } from "@/sections/companyinfor/companyInforSlice";
-import {convertFlatDataToTree} from "@/utils/function";
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
 import {useGetRecruitmentByOrganizationIdQuery} from "@/sections/recruitment";
 
@@ -82,17 +77,13 @@ const defaultValues = {
   homeTowerDistrictIds: "",                                                   // quê quán                 select province - district  // 1
 };
 
-function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
+function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState(false);
 
   const dataFilter = useSelector((state) => state.filterReducer.data);
-  // const ListRecruitmentByOrganization = useSelector((state) => state.applicantFilterReducer.data);
 
   const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setDataFilter(data));
-  // const handleClearDataFilterByKey = (data) => dispatch(filterSlice.actions.clearDataFilterByKey(data));
-  // const handleSetDataRecruitment = (data) => dispatch(applicantFilterSlice.actions.setData(data));
-  // const handleClearDataRecruitment = () => dispatch(applicantFilterSlice.actions.clearData());
 
   // yup & handle form
   const ApplicantFormSchema = Yup.object().shape({
@@ -101,14 +92,15 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
     weightFrom: Yup.number().transform(value => (isNaN(value) ? undefined : value)),
     weightTo: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('weightFrom'), 'Cân nặng cần lớn hơn hoặc bằng cân nặng bắt đầu'),
     expectSalaryTo: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(Yup.ref('expectSalaryFrom'), 'Mức lương cần lớn hơn hoặc bằng mức lương bắt đầu'),
+    sexs: Yup.number().transform(value => (isNaN(value) ? undefined : value)),
   });
   const methods = useForm({
     mode: 'all',
     resolver: yupResolver(ApplicantFormSchema),
     defaultValues: useMemo(
-        () => ({...defaultValues, ...dataFilter}),
+        () => ({ ...defaultValues, ...dataFilter }),
         [dataFilter]
-    ),
+    )
   });
   const {watch, handleSubmit, formState: {isSubmitting}} = methods;
   const watchProvinceId = watch("livingAddressProvinceIds");
@@ -168,65 +160,45 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
   const {data: {items: ListJobCategory = []} = {}, isLoading: isLoadingJobCategory} = useGetJobCategoriesQuery();
   const {data: {items: ListSkills = []} = {}, isLoading: isLoadingSkill} = useGetSkillsQuery();
   const {data: {items: ListProvince = []} = {}, isLoading: isLoadingProvince} = useGetProvinceQuery();
-  const {data: {items: ListDistrictLiving = []} = {}, isLoading: isLoadingDistrictLiving} = useGetDistrictByProvinceIdQuery(watchProvinceId, {skip: isEmpty(watchProvinceId)});
-  const {data: {items: ListDistrictHomeTower = []} = {}, isLoading: isLoadingDistrictHomeTower} = useGetDistrictByProvinceIdQuery(watchProvinceHomeTownId, {skip: isEmpty(watchProvinceHomeTownId)});
-  const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery({Id: watchOrganizationIds[watchOrganizationIds.length - 1]});
-  // const [getRecruitmentByOrganization, result] = useLazyGetRecruitmentByOrganizationIdQuery();
+  const {data: {items: ListDistrictLiving = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, {skip: isEmpty(watchProvinceId)});
+  const {data: {items: ListDistrictHomeTower = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceHomeTownId, {skip: isEmpty(watchProvinceHomeTownId)});
+  const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery();
   const {data: {items: ListRecruitmentByOrganization = [] } = {}, isLoading: isLoadingRecruitment} = useGetRecruitmentByOrganizationIdQuery();
 
-
-  // useEffect(() => {
-  //   console.log(result)
-  //   async function fetchData() {
-  //     if (!isEmpty(watchOrganizationIds)) {
-  //       handleClearDataRecruitment();
-  //       const endpoints = watchOrganizationIds.map(item => getRecruitmentByOrganization({Id: item}))
-  //       Promise.all(endpoints)
-  //           .then(res => res.map(item => handleSetDataRecruitment(item.data?.items)))
-  //           .catch(e => console.log(e))
-  //     } else {
-  //       const data = await getRecruitmentByOrganization();
-  //       handleSetDataRecruitment(result.data?.items)
-  //     }
-  //   }
-  //
-  //   fetchData();
-  // }, [watchOrganizationIds])
-
   useEffect(() => {
-        if (checked) {
-          // select
-          !isEmpty(watchOrganizationIds) ? handleSetDataFilter({key: 'organizationIds', value: watchOrganizationIds}) : handleSetDataFilter({key: 'organizationIds', value: []});
-          !isEmpty(watchRecruitment) ? handleSetDataFilter({key: 'recruitmentIds', value: watchRecruitment}) : handleSetDataFilter({key: 'recruitmentIds', value: []});
-          !isEmpty(watchPipeLine) ? handleSetDataFilter({key: 'recruitmentPipelineStates', value: watchPipeLine?.map((pipe) => Number(pipe))}) : handleSetDataFilter({key: 'recruitmentPipelineStates', value: []});
-          !isEmpty(watchJobSource) ? handleSetDataFilter({key: 'jobSourceIds', value: watchJobSource}) : handleSetDataFilter({key: 'jobSourceIds', value: []});
-          !isEmpty(watchOwnerIds) ? handleSetDataFilter({key: 'ownerIds', value: watchOwnerIds}) : handleSetDataFilter({key: 'ownerIds', value: []});
-          !isEmpty(watchCreatorIds) ? handleSetDataFilter({key: 'creatorIds', value: watchCreatorIds}) : handleSetDataFilter({key: 'creatorIds', value: []});
-          !isEmpty(watchCouncilIds) ? handleSetDataFilter({key: 'councilIds', value: watchCouncilIds}) : handleSetDataFilter({key: 'councilIds', value: []});
-          // date
-          watchCreatedTimeFrom ? handleSetDataFilter({key: 'createdTimeFrom', value: watchCreatedTimeFrom}) : handleSetDataFilter({key: 'createdTimeFrom', value: null});
-          watchCreatedTimeTo ? handleSetDataFilter({key: 'createdTimeTo', value: watchCreatedTimeTo}) : handleSetDataFilter({key: 'createdTimeTo', value: null});
-          // other
-          !isEmpty(watchExpectWorkingAddressProvinceIds) ? handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: watchExpectWorkingAddressProvinceIds}) : handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: []});
-          !isEmpty(watchApplicantSkillIds) ? handleSetDataFilter({key: 'applicantSkillIds', value: watchApplicantSkillIds}) : handleSetDataFilter({key: 'applicantSkillIds', value: []});
-          !isEmpty(watchYearsOfExperience) ? handleSetDataFilter({key: 'yearsOfExperience', value: [Number(watchYearsOfExperience)]}) : handleSetDataFilter({key: 'yearsOfExperience', value: ""});
-          !isEmpty(watchMaritalStatuses) ? handleSetDataFilter({key: 'maritalStatuses', value: [Number(watchMaritalStatuses)]}) : handleSetDataFilter({key: 'maritalStatuses', value: ""});
-          !isEmpty(watchSexs) ? handleSetDataFilter({key: 'sexs', value: [Number(watchSexs)]}) : handleSetDataFilter({key: 'sexs', value: ""});
-          // address
-          !isEmpty(watchlivingAddressProvinceIds) ? handleSetDataFilter({key: 'livingAddressProvinceIds', value: [watchlivingAddressProvinceIds]}) : handleSetDataFilter({key: 'livingAddressProvinceIds', value: ""});
-          !isEmpty(watchlivingAddressDistrictIds) ? handleSetDataFilter({key: 'livingAddressDistrictIds', value: [watchlivingAddressDistrictIds]}) : handleSetDataFilter({key: 'livingAddressDistrictIds', value: ""});
-          !isEmpty(watchhomeTowerProvinceIds) ? handleSetDataFilter({key: 'homeTowerProvinceIds', value: [watchhomeTowerProvinceIds]}) : handleSetDataFilter({key: 'homeTowerProvinceIds', value: ""});
-          !isEmpty(watchhomeTowerDistrictIds) ? handleSetDataFilter({key: 'homeTowerDistrictIds', value: [watchhomeTowerDistrictIds]}) : handleSetDataFilter({key: 'homeTowerDistrictIds', value: ""});
-          // input
-          watchHeightFromDebounce ? handleSetDataFilter({key: 'heightFrom', value: Number(watchHeightFromDebounce)}) : handleSetDataFilter({key: 'heightFrom', value: ""});
-          watchHeightToDebounce ? handleSetDataFilter({key: 'heightTo', value: Number(watchHeightToDebounce)}) : handleSetDataFilter({key: 'heightTo', value: ""});
-          watchWeightFromDebounce ? handleSetDataFilter({key: 'weightFrom', value: Number(watchWeightFromDebounce)}) : handleSetDataFilter({key: 'weightFrom', value: ""});
-          watchWeightToDebounce ? handleSetDataFilter({key: 'weightTo', value: Number(watchWeightToDebounce)}) : handleSetDataFilter({key: 'weightTo', value: ""});
-          watchEducationsToDebounce ? handleSetDataFilter({key: 'educations', value: watchEducationsToDebounce}) : handleSetDataFilter({key: 'educations', value: ""});
-          watchExperienceToDebounce ? handleSetDataFilter({key: 'experience', value: watchExperienceToDebounce}) : handleSetDataFilter({key: 'experience', value: ""});
-          watchExpectSalaryFromDebounce ? handleSetDataFilter({key: 'expectSalaryFrom', value: watchExpectSalaryFromDebounce}) : handleSetDataFilter({key: 'expectSalaryFrom', value: ""});
-          watchExpectSalaryToDebounce ? handleSetDataFilter({key: 'expectSalaryTo', value: watchExpectSalaryToDebounce}) : handleSetDataFilter({key: 'expectSalaryTo', value: ""});
-        }
+    if (checked) {
+      // select
+      !isEmpty(watchOrganizationIds) ? handleSetDataFilter({key: 'organizationIds', value: watchOrganizationIds}) : handleSetDataFilter({key: 'organizationIds', value: []});
+      !isEmpty(watchRecruitment) ? handleSetDataFilter({key: 'recruitmentIds', value: watchRecruitment}) : handleSetDataFilter({key: 'recruitmentIds', value: []});
+      !isEmpty(watchPipeLine) ? handleSetDataFilter({key: 'recruitmentPipelineStates', value: watchPipeLine?.map((pipe) => Number(pipe))}) : handleSetDataFilter({key: 'recruitmentPipelineStates', value: []});
+      !isEmpty(watchJobSource) ? handleSetDataFilter({key: 'jobSourceIds', value: watchJobSource}) : handleSetDataFilter({key: 'jobSourceIds', value: []});
+      !isEmpty(watchOwnerIds) ? handleSetDataFilter({key: 'ownerIds', value: watchOwnerIds}) : handleSetDataFilter({key: 'ownerIds', value: []});
+      !isEmpty(watchCreatorIds) ? handleSetDataFilter({key: 'creatorIds', value: watchCreatorIds}) : handleSetDataFilter({key: 'creatorIds', value: []});
+      !isEmpty(watchCouncilIds) ? handleSetDataFilter({key: 'councilIds', value: watchCouncilIds}) : handleSetDataFilter({key: 'councilIds', value: []});
+      // date
+      watchCreatedTimeFrom ? handleSetDataFilter({key: 'createdTimeFrom', value: watchCreatedTimeFrom}) : handleSetDataFilter({key: 'createdTimeFrom', value: null});
+      watchCreatedTimeTo ? handleSetDataFilter({key: 'createdTimeTo', value: watchCreatedTimeTo}) : handleSetDataFilter({key: 'createdTimeTo', value: null});
+      // other
+      !isEmpty(watchExpectWorkingAddressProvinceIds) ? handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: watchExpectWorkingAddressProvinceIds}) : handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: []});
+      !isEmpty(watchApplicantSkillIds) ? handleSetDataFilter({key: 'applicantSkillIds', value: watchApplicantSkillIds}) : handleSetDataFilter({key: 'applicantSkillIds', value: []});
+      !isEmpty(watchYearsOfExperience) ? handleSetDataFilter({key: 'yearsOfExperience', value: [Number(watchYearsOfExperience)]}) : handleSetDataFilter({key: 'yearsOfExperience', value: ""});
+      !isEmpty(watchMaritalStatuses) ? handleSetDataFilter({key: 'maritalStatuses', value: [Number(watchMaritalStatuses)]}) : handleSetDataFilter({key: 'maritalStatuses', value: ""});
+      !isEmpty(watchSexs) ? handleSetDataFilter({key: 'sexs', value: [Number(watchSexs)]}) : handleSetDataFilter({key: 'sexs', value: ""});
+      // address
+      !isEmpty(watchlivingAddressProvinceIds) ? handleSetDataFilter({key: 'livingAddressProvinceIds', value: [watchlivingAddressProvinceIds]}) : handleSetDataFilter({key: 'livingAddressProvinceIds', value: ""});
+      !isEmpty(watchlivingAddressDistrictIds) ? handleSetDataFilter({key: 'livingAddressDistrictIds', value: [watchlivingAddressDistrictIds]}) : handleSetDataFilter({key: 'livingAddressDistrictIds', value: ""});
+      !isEmpty(watchhomeTowerProvinceIds) ? handleSetDataFilter({key: 'homeTowerProvinceIds', value: [watchhomeTowerProvinceIds]}) : handleSetDataFilter({key: 'homeTowerProvinceIds', value: ""});
+      !isEmpty(watchhomeTowerDistrictIds) ? handleSetDataFilter({key: 'homeTowerDistrictIds', value: [watchhomeTowerDistrictIds]}) : handleSetDataFilter({key: 'homeTowerDistrictIds', value: ""});
+      // input
+      watchHeightFromDebounce ? handleSetDataFilter({key: 'heightFrom', value: Number(watchHeightFromDebounce)}) : handleSetDataFilter({key: 'heightFrom', value: ""});
+      watchHeightToDebounce ? handleSetDataFilter({key: 'heightTo', value: Number(watchHeightToDebounce)}) : handleSetDataFilter({key: 'heightTo', value: ""});
+      watchWeightFromDebounce ? handleSetDataFilter({key: 'weightFrom', value: Number(watchWeightFromDebounce)}) : handleSetDataFilter({key: 'weightFrom', value: ""});
+      watchWeightToDebounce ? handleSetDataFilter({key: 'weightTo', value: Number(watchWeightToDebounce)}) : handleSetDataFilter({key: 'weightTo', value: ""});
+      watchEducationsToDebounce ? handleSetDataFilter({key: 'educations', value: watchEducationsToDebounce}) : handleSetDataFilter({key: 'educations', value: ""});
+      watchExperienceToDebounce ? handleSetDataFilter({key: 'experience', value: watchExperienceToDebounce}) : handleSetDataFilter({key: 'experience', value: ""});
+      watchExpectSalaryFromDebounce ? handleSetDataFilter({key: 'expectSalaryFrom', value: watchExpectSalaryFromDebounce}) : handleSetDataFilter({key: 'expectSalaryFrom', value: ""});
+      watchExpectSalaryToDebounce ? handleSetDataFilter({key: 'expectSalaryTo', value: watchExpectSalaryToDebounce}) : handleSetDataFilter({key: 'expectSalaryTo', value: ""});
+    }
       }, [
         checked,
         watchOrganizationIds, watchRecruitment, watchPipeLine, watchJobSource,
@@ -251,9 +223,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
   }, [watchProvinceHomeTownId]);
 
 
-  if (isLoadingOrganization || isLoadingJobSource || isLoadingJobCategory || isLoadingSkill || isLoadingProvince || isLoadingDistrictLiving || isLoadingDistrictHomeTower || isLoadingUser || isLoadingRecruitment) return null;
-
-  console.log(1)
+  if (isLoadingOrganization || isLoadingJobSource || isLoadingJobCategory || isLoadingSkill || isLoadingProvince || isLoadingUser || isLoadingRecruitment) return null;
 
   return (
       <ClickAwayListener
@@ -261,15 +231,14 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
           touchEvent="onTouchStart"
           onClickAway={() => isOpen && onClose()}
       >
-        <SwipeableDrawer
-            open={isOpen}
+        <Drawer
+            open={true}
             onClose={onClose}
-            onOpen={onOpen}
             anchor="right"
             variant="persistent"
             PaperProps={{
               sx: {
-                width: {xs: 1, sm: 560, md: 384},
+                width: {xs: 1, sm: 560, md: 400},
                 boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
                 zIndex: 999,
                 position: 'fixed',
@@ -284,7 +253,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
-              <IconButton size="small" onClick={onClose}>
+              <IconButton size="small" onClick={onClose} sx={{ mr: 1.5 }}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
             </ApplicantModalHeadStyle>
@@ -295,13 +264,12 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
               <Stack sx={{pb: 3, px: 2}}>
                 <DynamicFilterForm
                     columns={columns}
+                    disabled={{
+                      livingAddressDistrictIds: !watchlivingAddressProvinceIds,
+                      homeTowerDistrictIds: !watchhomeTowerProvinceIds,
+                    }}
                     options={{
-                      organizationIds: convertFlatDataToTree(ListOrganization?.map((item) => ({
-                        ...item,
-                        title: item.name,
-                        key: item.id,
-                        value: item.id
-                      }))),
+                      organizationIds: ListOrganization,
                       jobSourceIds: ListJobSources,
                       recruitmentIds: ListRecruitmentByOrganization,
                       recruitmentPipelineStates: LIST_STEP_RECRUITMENT,
@@ -348,7 +316,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onOpen, onSubmit}) {
               />
             </ApplicantModalFooterStyle>
           </FormProvider>
-        </SwipeableDrawer>
+        </Drawer>
       </ClickAwayListener>
   );
 }

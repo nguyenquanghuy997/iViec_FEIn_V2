@@ -1,62 +1,74 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import React, {useEffect, useRef, useState} from "react";
+import {memo, useMemo, useRef} from 'react';
+import {FormHelperText} from '@mui/material';
+import {styled} from '@mui/material/styles';
+import {Editor as TinyEditor} from '@tinymce/tinymce-react';
+import {API_KEY_EDITOR} from '@/config';
 
-function Editor({onChange, name, value, placeholder}) {
-  const editorRef = useRef()
-  const [editorLoaded, setEditorLoaded] = useState(false)
-  const {CKEditor, ClassicEditor} = editorRef.current || {}
-
-  useEffect(() => {
-    editorRef.current = {
-      CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
-      ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
-      // Alignment: require('@ckeditor/ckeditor5-alignment').Alignment,
+const EditorStyle = styled('div')(({theme: {palette}}) => ({
+  '.tox-tinymce': {
+    border: '1px solid ' + palette.text.primary,
+    borderRadius: '6px',
+  },
+  '.tox-editor-header .tox-toolbar__primary': {
+    '> .tox-toolbar__group:not(:last-of-type)': {
+      position: 'relative',
+      '&:after': {
+        position: 'absolute',
+        content: `""`,
+        top: 9, right: 0,
+        borderRight: '1px solid ' + palette.text.primary,
+        height: '60%', width: 1,
+      }
     }
-    setEditorLoaded(true)
-  }, []);
+  }
+}));
+
+const MemoEditor = memo(TinyEditor, () => true);
+
+export default function Editor(
+    {
+      id = null,
+      initialValue,
+      onChange,
+      height = 380,
+      menubar = false,
+      plugins = [
+          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+          'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+          'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+      ],
+      toolbar = 'bold italic underline strikethrough | forecolor numlist bullist | link',
+      error,
+      ...props
+    }) {
+  const _editor = useRef(null);
+  const editorId = useMemo(() => id || 'editor_' + Date.now(), [id]);
 
   return (
-      <>
-        {editorLoaded && <CKEditor
-            name={name}
-            config={{
-              toolbar: {
-                items: [
-                  'bold',
-                  '|',
-                  'italic',
-                  '|',
-                  'link',
-                  '|',
-                  'bulletedList',
-                  '|',
-                  'numberedList',
-                ]
-              },
-              alignment: {
-                options: ['left', 'right']
-              },
+      <EditorStyle>
+        <MemoEditor
+            id={editorId}
+            apiKey={API_KEY_EDITOR}
+            onInit={(evt, editor) => _editor.current = editor}
+            initialValue={initialValue}
+            init={{
               language: 'vi',
-              placeholder: placeholder || 'Nhập thông tin',
+              height,
+              menubar,
+              plugins,
+              toolbar,
+              statusbar: false,
+              content_style: `
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                body { font-family: Inter, sans-serif; font-size:14px; color: #455570 }
+              `,
+              placeholder: props.placeholder || '',
             }}
-            editor={ClassicEditor}
-            data={value}
-            onReady={editor => {
-              editor.editing.view.change((writer) => {
-                writer.setStyle(
-                    "height",
-                    "370px",
-                    editor.editing.view.document.getRoot()
-                );
-              });
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              onChange(data);
-            }}
-        />}
-      </>
+            onEditorChange={onChange}
+            {...props}
+        />
+
+        {!!error && (<FormHelperText error sx={{ mt: 2}}>{error.message}</FormHelperText>)}
+      </EditorStyle>
   )
 }
-
-export default Editor;

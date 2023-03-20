@@ -23,9 +23,11 @@ import {isEmpty} from "lodash";
 import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
 import {cleanObject} from "@/utils/function";
 import {useDebounce} from "@/hooks/useDebounce";
+import {useRouter} from "next/router";
+import {PATH_DASHBOARD} from "@/routes/paths";
 
 const RecruitmentCreateContent = ({Recruitment}) => {
-
+  const router = useRouter();
   const {enqueueSnackbar} = useSnackbar();
   const {data: OrganizationOfUser = {}} = useGetOrganizationInfoQuery();
   const [createRecruitment] = useCreateRecruitmentMutation();
@@ -229,6 +231,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
           enqueueSnackbar("Cập nhật tin tuyển dụng thành công!", {
             autoHideDuration: 1000
           });
+          await router.push(PATH_DASHBOARD.recruitment.root);
         } catch (e) {
           enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
             autoHideDuration: 1000,
@@ -244,6 +247,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
           enqueueSnackbar("Cập nhật tin tuyển dụng thành công!", {
             autoHideDuration: 1000
           });
+          await router.push(PATH_DASHBOARD.recruitment.root);
         } catch (e) {
           enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
             autoHideDuration: 1000,
@@ -264,6 +268,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
           autoHideDuration: 1000
         });
         reset(defaultValues);
+        await router.push(PATH_DASHBOARD.recruitment.root);
       } catch (e) {
         enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
           autoHideDuration: 1000,

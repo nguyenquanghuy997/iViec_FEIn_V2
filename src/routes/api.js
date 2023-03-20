@@ -74,7 +74,9 @@ export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicat
 //Ứng viên
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new lấy danh sách ứng viên
 export const API_GET_FILTER_ALL_APPLICANTS =
-  "/applicant/ApplicantRecruitment/FilterApplicantRecruitments"; // new lấy danh sách ứng viên
+  "/applicant/ApplicantRecruitment/FilterApplicantRecruitments";
+export const API_UPLOAD_FILE_APPLICANTS =
+  "/applicant/ApplicantRecruitment/UploadApplicantFile"; // new lấy danh sách ứng viên
 export const API_GET_COLUMN_APPLICANTS =
   "/aggregator/ApplicantRecruitmentVisible/GetApplicantRecruitmentVisible"; //new lấy danh sách cột
 export const API_UPDATE_COLUMN_APPLICANTS =
@@ -86,6 +88,7 @@ export const API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT = "/recruitment/
 export const API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES = "/applicant/ApplicantRecruitment/GetApplicantCurrentStateWithRecruitmentStates"; //List pipeline và trạng thái UV theo TTD
 export const API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE = "/applicant/ApplicantRecruitment/UpdateApplicantRecruitmentToNextState"; //Chuyển bước uv
 export const API_GET_APPLICANT_BY_PIPELINESTETEID ="/applicant/ApplicantRecruitment/GetApplicantByPipelineStateId"
+export const API_UPDATE_APPLICANT = "/applicant/Applicant/UpdateApplicant";
 
 export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantSkills";
 //Tin tuyển dụng
@@ -95,13 +98,15 @@ export const API_GET_ORGANIZATION = "/organization/Organization/GetOrganization"
 export const API_GET_ORGANIZATION_WITH_CHILD = "/organization/Organization/GetOrganizationsLessDataWithChild"; // lấy danh sách đơn vị để đổ dữ liệu dạng cây
 export const API_GET_ORGANIZATION_DETAIL_BY_ID = "/organization/Organization/GetOrganizationDetailById"; // lấy chi tiết thông tin đơn vị
 export const API_CREATE_CHILD_ORGANIZATION = "/organization/Organization/CreateChildOrganization"; // tạo đơn vị
-export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganization"; // cập nhật thông tin đơn vị
+export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganizationData"; // cập nhật thông tin đơn vị
 export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganizationById"; // xóa đơn vị
 export const API_DELETE_MULTIPLE_ORGANIZATION = "/organization/Organization/RemoveOrganizations"; // xóa nhiều đơn vị
 export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrganizationsActive"; // xóa nhiều đơn vị
 export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin"; // lấy danh sách admin
 export const API_GET_ALL_USER_BY_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId"; // lấy danh sách người dùng theo đơn vị
-
+export const API_INVITE_USER = "/organization/OrganizationUserInvite/CreateOrganizationUserInvites";
+export const API_USER_CONFIRM_INVITE = "/identity/Identity/UserInvitedActive";
+export const API_GET_LIST_USER_INVITE = "/organization/OrganizationUserInvite/GetOrganizationUserInvites";
 //Role
 export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
@@ -207,6 +212,7 @@ export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/Get
 export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - create recruitment
 export const API_UPDATE_RECRUITMENT_OFFICIAL = "/recruitment/Recruitment/UpdateRecruitment" // new - update recruitment official
 export const API_UPDATE_RECRUITMENT_DRAFT = "/recruitment/Recruitment/SetRecruitmentDraftOrOfficial" // new - update recruitment draft
+export const API_CREATE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/CreateApplicantRecruitment"
 // duyệt tin
 export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // list tin cần iviec duyệt
 export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments"; // phê duyệt nhiều tin

@@ -120,6 +120,7 @@ function Account() {
             onSubmit={handleDelete}
             title="Xác nhận xóa mẫu email"
             subtitle="Bạn có chắc chắn muốn xóa mẫu email"
+            strongSubtitle={item.title}
             item={item}
         />}
         {toggleActive && <ActiveModal
