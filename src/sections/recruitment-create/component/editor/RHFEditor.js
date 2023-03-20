@@ -21,8 +21,8 @@ const RHFContentEditor = React.forwardRef((props, ref)  => {
                 <Editor
                     ref={ref}
                     id={name}
-                    value={field.value}
-                    initialValue={field.value || ""}
+                    // value={field.value}
+                    initialValue={field.value}
                     onChange={field.onChange}
                     error={error}
                     {...other}
