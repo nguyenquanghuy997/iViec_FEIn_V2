@@ -29,7 +29,7 @@ import {
   useGetProvinceQuery
 } from "@/sections/companyinfor/companyInforSlice";
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
-import {useGetRecruitmentByOrganizationIdQuery} from "@/sections/recruitment";
+import {useGetRecruitmentByOrganizationIdQuery} from "@/sections/applicant/ApplicantFormSlice";
 
 const GreenSwitch = styled(Switch)(({theme}) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -176,8 +176,8 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
       !isEmpty(watchCreatorIds) ? handleSetDataFilter({key: 'creatorIds', value: watchCreatorIds}) : handleSetDataFilter({key: 'creatorIds', value: []});
       !isEmpty(watchCouncilIds) ? handleSetDataFilter({key: 'councilIds', value: watchCouncilIds}) : handleSetDataFilter({key: 'councilIds', value: []});
       // date
-      watchCreatedTimeFrom ? handleSetDataFilter({key: 'createdTimeFrom', value: watchCreatedTimeFrom}) : handleSetDataFilter({key: 'createdTimeFrom', value: null});
-      watchCreatedTimeTo ? handleSetDataFilter({key: 'createdTimeTo', value: watchCreatedTimeTo}) : handleSetDataFilter({key: 'createdTimeTo', value: null});
+      watchCreatedTimeFrom ? handleSetDataFilter({key: 'createdTimeFrom', value: new Date(watchCreatedTimeFrom).toISOString()}) : handleSetDataFilter({key: 'createdTimeFrom', value: null});
+      watchCreatedTimeTo ? handleSetDataFilter({key: 'createdTimeTo', value: new Date(watchCreatedTimeTo).toISOString()}) : handleSetDataFilter({key: 'createdTimeTo', value: null});
       // other
       !isEmpty(watchExpectWorkingAddressProvinceIds) ? handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: watchExpectWorkingAddressProvinceIds}) : handleSetDataFilter({key: 'expectWorkingAddressProvinceIds', value: []});
       !isEmpty(watchApplicantSkillIds) ? handleSetDataFilter({key: 'applicantSkillIds', value: watchApplicantSkillIds}) : handleSetDataFilter({key: 'applicantSkillIds', value: []});
@@ -245,6 +245,9 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
                 height: 'calc(100% - 92px - 64px - 1px)',
                 top: '157px',
                 right: 0,
+                "::-webkit-scrollbar": {
+                  display: 'none'
+                }
               }
             }}
         >
@@ -253,7 +256,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
-              <IconButton size="small" onClick={onClose} sx={{ mr: 1.5 }}>
+              <IconButton size="small" onClick={onClose} sx={{ mr: -1 }}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
             </ApplicantModalHeadStyle>
