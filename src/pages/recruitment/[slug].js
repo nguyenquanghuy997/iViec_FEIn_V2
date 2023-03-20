@@ -128,7 +128,7 @@ export default function Recruitment() {
     <Page title={"Chi tiết tin"}>
      
         <RecruitmentPreviewItem RecruitmentData={RecruitmentData}/>
-         <div style={{ display: "flex", justifyContent: "center", height: "100%",backgroundSize: 'cover', backgroundRepeat: 'no-repeat' ,backgroundImage:`url('../assets/icons/candidate/bgImage.png')`}}> 
+         <div style={{ width: '100%',  display: "flex", justifyContent: "center", height: "100%",backgroundSize: 'cover', backgroundRepeat: 'no-repeat' ,backgroundImage:`url('../assets/icons/candidate/bgImage.png')`}}> 
 
        <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
