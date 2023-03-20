@@ -193,7 +193,7 @@ export const {
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
   useLazyGetAllFilterApplicantQuery,
-  useLazyGetRecruitmentByOrganizationIdQuery,
+  useGetRecruitmentByOrganizationIdQuery,
   // skills
   useGetSkillsQuery,
   // job sources

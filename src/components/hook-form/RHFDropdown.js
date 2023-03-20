@@ -1,9 +1,9 @@
 import React, {memo, useEffect, useState} from "react";
-import {Box, FormHelperText, InputAdornment, MenuItem, Stack, Typography} from "@mui/material";
+import {Box, FormHelperText, InputAdornment, MenuItem, Stack, TextField, Typography} from "@mui/material";
 import {Controller, useFormContext} from "react-hook-form";
 import Iconify from "@/components/Iconify";
 import {containsText} from "@/utils/function";
-import {LabelStyle, MenuItemStyle, SearchInputStyle, SelectFieldStyle, TextFieldStyle, useStyles,} from './style';
+import {LabelStyle, MenuItemStyle, SearchInputStyle, SelectFieldStyle, useStyles,} from './style';
 import {AvatarDS} from "@/components/DesignSystem";
 
 const Placeholder = (placeholder) => {
@@ -12,7 +12,7 @@ const Placeholder = (placeholder) => {
 
 const MenuProps = {
   PaperProps: {
-    style: { maxHeight: 330 },
+    style: {maxHeight: 330},
   },
   disableAutoFocusItem: true,
   MenuListProps: {
@@ -30,7 +30,7 @@ const InputProps = {
 }
 
 const renderOptions = (options, value, type = "text") => {
-  if(type === 'avatar') {
+  if (type === 'avatar') {
     return options?.map((option, i) => {
       return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value}>
         <Box>
@@ -38,22 +38,25 @@ const renderOptions = (options, value, type = "text") => {
               sx={{height: "24px", width: "24px", borderRadius: "100px", fontSize: "10px"}}
               name={option.lastName}
           />
-          {option.label || option.name}
+          {option.label || option.name || option.email}
         </Box>
-        {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{ width: 24, height: 24 }} /> }
+        {value === option.value &&
+            <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
       </MenuItem>
     })
   }
   return options?.map((option, i) => {
     return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value}>
-      {option.label || option.name}
-      {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{ width: 24, height: 24 }} /> }
+      {option.label || option.name || option.email}
+      {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
     </MenuItem>
   })
 }
 
 const renderValue = (options = [], value, placeholder = '', keyObj = 'name') => {
-  return value || value === 0 ? options.find(option => option.value === value)?.[keyObj] : Placeholder(placeholder)
+  const displayLabelWithKey = options.find(option => option.value === value)?.[keyObj];
+  const displayLabel = options.find(option => option.value === value)?.name;
+  return value || value === 0 ? displayLabelWithKey ? displayLabelWithKey : displayLabel : Placeholder(placeholder)
 }
 
 function RHFDropdown({name, ...props}) {
@@ -90,17 +93,20 @@ function RHFDropdown({name, ...props}) {
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
                     {...other}
                 >
-                  {options?.length > 3 && (
-                      <TextFieldStyle
-                          placeholder="Tìm kiếm..."
-                          fullWidth
-                          autoFocus
-                          InputProps={{...InputProps}}
-                          sx={{...SearchInputStyle}}
-                          onChange={(e) => setSearchText(e.target.value)}
-                          onKeyDown={(e) => e.stopPropagation()}
-                      />
-                  )}
+                  <TextField
+                      placeholder="Tìm kiếm..."
+                      fullWidth
+                      autoFocus
+                      inputRef={(input) => {
+                        if (input != null) {
+                          input.focus();
+                        }
+                      }}
+                      InputProps={{...InputProps}}
+                      sx={{...SearchInputStyle}}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      onKeyDown={(e) => e.stopPropagation()}
+                  />
                   {renderOptions(filterOptions, field.value, type)}
                 </SelectFieldStyle>
                 <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>

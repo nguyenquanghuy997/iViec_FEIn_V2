@@ -271,7 +271,7 @@ function RecruitmentPreviewItem({}) {
   };
 
   useEffect(() => {
-    if (modelApplication.stage) setShowModelCreate(true);
+    if (modelApplication && modelApplication.stage) setShowModelCreate(true);
   }, [showDialogStage]);
 
   return (

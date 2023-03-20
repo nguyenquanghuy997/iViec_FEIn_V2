@@ -26,6 +26,8 @@ function RHFTextField({
   beforeChange,
   maxLength,
   disabled,
+  defaultValue,
+  type,
   ...other
 }) {
   const { control } = useFormContext();
@@ -33,6 +35,7 @@ function RHFTextField({
     <Controller
       name={name}
       control={control}
+      defaultValue={defaultValue || ""}
       render={({ field, fieldState: { error } }) => {
         if (beforeChange) {
           const { value } = field;
@@ -43,8 +46,8 @@ function RHFTextField({
             {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
             <TextFieldStyle
               {...field}
-              value={field.value || ""}
               error={!!error}
+              type={type}
               disabled={disabled}
               helperText={error?.message}
               variant={variant}
