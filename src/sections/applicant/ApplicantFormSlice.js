@@ -67,8 +67,14 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
     getRecruitmentsByApplicant: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENTS_BY_APPLICANT,
-        method: 'GET',
-        params
+        method: "GET",
+        params,
+      }),
+    }),
+    getRecruitmentPipelineStatesByRecruitment1: builder.query({
+      query: (id) => ({
+        url: `${API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT}?RecruitmentId=${id}`,
+        method: "GET",
       }),
     }),
     getRecruitments: builder.query({
@@ -78,7 +84,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         data
       }),
     }),
-    getRecruitmentPipelineStatesByRecruitment: builder.query({
+    getRecruitmentPipelineStatesByRecruitment2: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
         method: "GET",
@@ -170,8 +176,8 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
     getRecruitmentByOrganizationId: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_BY_ORGANIZATION,
-        method: 'GET',
-        params
+        method: "GET",
+        params,
       }),
     }),
     // get all skills
@@ -196,12 +202,12 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         params,
       }),
       transformResponse: (response) => {
-        return response?.items.map(item => ({
+        return response?.items.map((item) => ({
           ...item,
           value: item.id,
           name: item?.lastName,
           label: item?.lastName,
-        }))
+        }));
       },
     }),
   }),
@@ -209,6 +215,9 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetRecruitmentsQuery,
+  useGetListApplicantsQuery,
+  useGetRecruitmentPipelineStatesByRecruitment1Query,
+  useGetRecruitmentPipelineStatesByRecruitment2Query,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,

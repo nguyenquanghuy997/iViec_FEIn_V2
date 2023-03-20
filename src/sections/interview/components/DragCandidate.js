@@ -1,46 +1,25 @@
 import DeleteIcon from "@/assets/interview/DeleteIcon";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
-import { RHFDatePicker } from "@/components/hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
+import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
+// import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
+// import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography, Box, Card, Collapse } from "@mui/material";
-import React, { useState } from "react";
+// import { MobileTimePicker } from "@mui/x-date-pickers";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { TimePicker } from "antd";
+// import dayjs from "dayjs";
+import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
 
-const finalSpaceCharacters = [
-  {
-    id: "gary",
-    name: "Đinh Tiến Thành",
-    phone: "0987655345",
-  },
-  {
-    id: "cato",
-    name: "Đỗ Ánh Tuyết",
-    phone: "0987655345",
-  },
-  {
-    id: "kvn",
-    name: "Trần Văn Linh",
-    phone: "0987655345",
-  },
-  {
-    id: "mooncake",
-    name: "Đào Duy Tùng",
-    phone: "0987655345",
-  },
-  {
-    id: "quinn",
-    name: "Doãn Trung Kiên",
-    phone: "0987655345",
-  },
-];
-
-function DragCandidate() {
-  const [characters, updateCharacters] = useState(finalSpaceCharacters);
-  const [checked, setChecked] = React.useState(false);
-
+function DragCandidate({ data, onDelete }) {
+  const [characters, setCharacters] = useState([]);
+  const [checked, setChecked] = useState(false);
+  
+  useEffect(() => {
+    setCharacters([...data]);
+  }, [data]);
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
@@ -51,35 +30,10 @@ function DragCandidate() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    updateCharacters(items);
+    setCharacters(items);
   }
-  const ConnectSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Email không đúng định dạng")
-      .required("Email không được bỏ trống"),
-    password: Yup.string()
-      .min(6, "Mật khẩu cần tối thiểu 6 ký tự")
-      .required("Mật khẩu không được bỏ trống"),
-  });
-
-  const defaultValues = {
-    email: "",
-    password: "",
-    remember: true,
-  };
-
-  const methods = useForm({
-    resolver: yupResolver(ConnectSchema),
-    defaultValues,
-  });
-
-  const {
-    // setError,
-    handleSubmit,
-
-  } = methods;
-  const onSubmit = async () => {};
   const time = false;
+
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -158,28 +112,27 @@ function DragCandidate() {
                                 </Box>
                               </div>
                               <div style={{ display: "flex" }}>
-                                <Box sx={{ mt: "2px" }}>
+                                <Box
+                                  sx={{ mt: "2px", cursor: "pointer" }}
+                                  onClick={onDelete}
+                                >
                                   <DeleteIcon />
                                 </Box>
                               </div>
                             </div>
                           </Card>
                           {checked ? (
-                            <FormProvider
-                              methods={methods}
-                              onSubmit={handleSubmit(onSubmit)}
-                            >
+                            <>
                               <Box sx={{ mb: 2, width: "100%" }}>
                                 <Typography>
                                   Ngày phỏng vấn{" "}
                                   <span style={{ color: "red" }}>*</span>
                                 </Typography>
-
                                 <RHFDatePicker
-                                  name={"test"}
+                                  name="date"
                                   style={{
                                     background: "white",
-                                    borderRadius: "6px",
+                                    borderRadius: "8px",
                                   }}
                                 />
                               </Box>
@@ -194,16 +147,12 @@ function DragCandidate() {
                                             *
                                           </span>
                                         </Typography>
-                                        <RHFTextField
-                                          isRequired
-                                          sx={{
-                                            minHeight: 44,
+                                        <RHFTimePicker
+                                          name="time"
+                                          style={{
                                             width: "100%",
                                             background: "white",
-                                            border: "8px",
                                           }}
-                                          name="detail "
-                                          placeholder="Nhập số phút"
                                         />
                                       </Box>
                                     </Collapse>
@@ -229,7 +178,7 @@ function DragCandidate() {
                                             background: "white",
                                             border: "8px",
                                           }}
-                                          name="detail "
+                                          name="interviewDuration"
                                           placeholder="Nhập số phút"
                                         />
                                       </Box>
@@ -237,7 +186,27 @@ function DragCandidate() {
                                   </div>
                                 </Box>
                               </Box>
-                            </FormProvider>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "end",
+                                }}
+                              >
+                                <Button
+                                  onClick={() => setChecked(!checked)}
+                                  sx={{ color: "#172B4D" }}
+                                >
+                                  Hủy
+                                </Button>
+                                <Button
+                                  type="submit"
+                                  variant="contained"
+                                  sx={{ background: "#1976D2" }}
+                                >
+                                  Lưu
+                                </Button>
+                              </div>
+                            </>
                           ) : (
                             ""
                           )}
@@ -262,10 +231,7 @@ function DragCandidate() {
                           ) : (
                             <>
                               {checked ? (
-                                <div style={{display:'flex', justifyContent:'end'}}>
-                                <Button onClick={()=>setChecked(!checked)} sx={{color:'#172B4D'}}>Hủy</Button>
-                                <Button variant='contained' sx={{background: '#1976D2'}}>Lưu</Button>
-                                </div>
+                                ""
                               ) : (
                                 <Card
                                   sx={{

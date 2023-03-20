@@ -183,12 +183,10 @@ export default function CompanyInfor() {
           {renderText("Email :", Data?.organizationInformation?.email || "")}
           {renderText(
             "Ngành nghề :",
-            JobCategoryList?.filter(
-              (item) =>
-                item.id ==
-                Data?.organizationInformation?.jobCategories?.map(
-                  (item) => item.jobCategoryId
-                )
+            JobCategoryList?.filter(() =>
+              Data?.organizationInformation?.jobCategories?.includes(
+                (item) => item.jobCategoryId
+              )
             ).map((item) => item?.name)
           )}
           {renderText(

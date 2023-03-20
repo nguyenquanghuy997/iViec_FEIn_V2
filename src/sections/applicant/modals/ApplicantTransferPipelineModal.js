@@ -1,5 +1,5 @@
 import {
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useGetRecruitmentPipelineStatesByRecruitment1Query,
   useUpdateApplicantRecruitmentToNextStateMutation,
 } from "../ApplicantFormSlice";
 import { ButtonDS } from "@/components/DesignSystem";
@@ -80,7 +80,7 @@ const ApplicantTransferPipelineModal = ({
   };
 
   const { data: { items: items = [] } = {} } =
-    useGetRecruitmentPipelineStatesByRecruitmentQuery({
+    useGetRecruitmentPipelineStatesByRecruitment1Query({
       RecruitmentId: itemSelected?.recruitmentId,
     });
 

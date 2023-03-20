@@ -1,6 +1,6 @@
 import {
   useAddApplicantRecruitmentMutation,
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useGetRecruitmentPipelineStatesByRecruitment1Query,
   useGetRecruitmentsQuery,
 } from "../ApplicantFormSlice";
 import {
@@ -71,7 +71,7 @@ const ApplicantTransferRecruitmentModal = ({
   };
 
   const { data: { items = [] } = {} } =
-    useGetRecruitmentPipelineStatesByRecruitmentQuery({
+    useGetRecruitmentPipelineStatesByRecruitment1Query({
       RecruitmentId: selectedOption?.id,
     });
   const [tranfer] = useAddApplicantRecruitmentMutation();
