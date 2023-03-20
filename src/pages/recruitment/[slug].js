@@ -8,18 +8,26 @@ import {PAGES } from '@/config'
 import Layout from '@/layouts'
 import { DragDropContext } from "react-beautiful-dnd";
 import {Column} from '@/sections/kanban';
-
+import {useGetRecruitmentByIdQuery} from "@/sections/recruitment";
 // utils
 import { getRolesByPage } from '@/utils/role'
 import {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useUpdateApplicantRecruitmentToNextStateMutation
 } from "@/sections/applicant";
+
+import { useRouter } from "next/router";
+import image from "./bgImage.png"; 
+import {  Modal } from 'antd';
+import Iconify from "@/components/Iconify";
+import {
+
+  Typography,
+
+} from '@mui/material'
 Recruitment.getLayout = function getLayout({ roles = [] }, page) {
   return <Layout roles={roles}>{page}</Layout>
 }
-import { useRouter } from "next/router";
-import image from "./bgImage.png"; 
 export async function getServerSideProps() {
   return {
     props: {
@@ -27,9 +35,23 @@ export async function getServerSideProps() {
     },
   }
 }
+import Box from '@mui/material/Box';
 export default function Recruitment() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   const router = useRouter();
   const RecruitmentId = router.query.slug;
+  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({ Id: RecruitmentId })
   const { data: ColumnData } = useGetRecruitmentPipelineStatesByRecruitmentQuery(RecruitmentId);
   console.log('ColumnData',ColumnData)
   const [ChangeToNextState] = useUpdateApplicantRecruitmentToNextStateMutation();
@@ -64,13 +86,14 @@ export default function Recruitment() {
       // call api
       let body
       if(destColumn.pipelineStateType==3){
-        body ={
-          "applicantId": applicantId,
-          "recruitmentId": RecruitmentId,
-          "recruitmentPipelineStateId":destColumn.id,
-          "pipelineStateResultType": 0,
-          "note":"abc"
-        }
+        showModal()
+        // body ={
+        //   "applicantId": applicantId,
+        //   "recruitmentId": RecruitmentId,
+        //   "recruitmentPipelineStateId":destColumn.id,
+        //   "pipelineStateResultType": 0,
+        //   "note":"abc"
+        // }
       }
       else{
          body ={
@@ -105,7 +128,7 @@ export default function Recruitment() {
   return (
     <Page title={"Chi tiết tin"}>
      
-        <RecruitmentPreviewItem/>
+        <RecruitmentPreviewItem RecruitmentData={RecruitmentData}/>
          <div style={{ display: "flex", justifyContent: "center", height: "100%" ,backgroundImage:`url(${image})`}}> 
 
        <DragDropContext
@@ -133,7 +156,24 @@ export default function Recruitment() {
           );
         })}
        
-    
+
+      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    p: 1,
+                    m: 1,
+                    borderRadius: 1,
+                }}
+            >
+                 <Iconify icon={"fluent-mdl2:circle-half-full"} width={20} height={20} color="#D32F2F"/>
+                 <Typography fontSize="12px">{"Chuyển ứng viên sang bước kết quả"}</Typography>
+                 <Typography fontSize="12px">{"Lưu ý: Bạn chỉ có thể gửi Offer khi ứng viên ở trạng thái Kết quả - Đạt"}</Typography>
+                 
+            </Box>
+      </Modal>
 
       </DragDropContext> 
 
