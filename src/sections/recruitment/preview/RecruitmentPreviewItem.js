@@ -28,7 +28,8 @@ import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
 import {DownloadLineIcon, ImportLinkIcon, TeamLineIcon} from "@/assets/ActionIcon";
 import {RecruitmentApplicantChooseStage} from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
 import {RecruitmentApplicantCreate} from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
-
+import MenuIcon from "@/assets/interview/MenuIcon";
+import DateIcon from "@/assets/interview/DateIcon";
 function RecruitmentPreviewItem({}) {
   const defaultValues = {
     name: "",
@@ -381,36 +382,38 @@ function RecruitmentPreviewItem({}) {
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
                 <Box>
-                  <TabList
-                    onChange={handleChange}
-                    aria-label="lab API tabs example"
-                    sx={{
-                      "& .MuiTab-root": {
-                        minHeight: "36px",
-                        textTransform: "unset",
-                        padding: "8px 12px",
-                      },
-                      "& .Mui-selected": {
-                        color: "white !important",
-                        backgroundColor: "#455570",
-                        borderRadius: "6px",
-                      },
-                      "& .MuiTabs-indicator": {
-                        display: "none",
-                      },
-                    }}
-                  >
-                    <Tab
-                      label="Kanban"
-                      value="1"
-                      sx={{
-                        "&:not(:last-of-type)": {
-                          marginRight: "16px",
-                        },
-                      }}
-                    />
-                    <Tab label="List" value=""/>
-                  </TabList>
+                <ButtonGroup
+            disableElevation
+            variant="contained"
+            aria-label="Disabled elevation buttons"
+            sx={{ mx: 1, boxShadow: "none" }}
+          >
+            <Button
+              startIcon={<DateIcon />}
+              sx={{
+                background: "#1976D2",
+                borderRadius: "6px 0px 0px 6px",
+                height: "44px",
+                width: "52px",
+                "& .MuiButton-startIcon": { mr: 0 },
+              }}
+            />
+            <Button
+              variant="outlined"
+              startIcon={<MenuIcon />}
+              sx={{
+                borderColor: "#D0D4DB",
+                borderRadius: "0 6px 6px 0",
+                height: "44px",
+                width: "52px",
+                "&:hover": {
+                  background: "white",
+                  borderColor: "#D0D4DB",
+                },
+                "& .MuiButton-startIcon": { mr: 0 },
+              }}
+            />
+          </ButtonGroup>
                 </Box>
 
                 <FormProvider methods={methods}>

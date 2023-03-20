@@ -17,7 +17,20 @@ import {
 import {srcImage} from '@/utils/enum'
 import Iconify from "@/components/Iconify";
 import {fDate} from "@/utils/formatTime";
-
+function Item(props) {
+  const { sx, ...other } = props;
+  return (
+      <Box
+          sx={{
+              display: 'flex',
+              fontSize: '0.875rem',
+              fontWeight: '700',
+              ...sx,
+          }}
+          {...other}
+      />
+  );
+}
 
 function TaskCard({ item, index,pipelineStateType }) {
   return (
@@ -136,7 +149,7 @@ function TaskCard({ item, index,pipelineStateType }) {
                  alignItems: 'flex-start',
              }}
          >
-                <Stack
+                {/* <Stack
               direction="row"
               
               spacing={0.5}
@@ -154,46 +167,54 @@ function TaskCard({ item, index,pipelineStateType }) {
             >
               <Typography fontSize="14px" fontWeight="600">{"Kết quả :"}</Typography>
               <Typography fontSize="14px" fontWeight="600" >{item?.processStatus==4?"Đạt":"Không Đạt"}</Typography>
-            </Stack>
+            </Stack> */}
          </Box>
      
         }
         {/* Phỏng vấn */}
           {pipelineStateType==2&&
-          <Stack
-              direction="col"
-             
-              spacing={2}
-              color={item?.processStatus==4?"##388E3C":"#D32F2F"}
-            >
-              <Typography fontSize="14px">{"Phỏng vấn lần 1"}</Typography>
-              <ButtonDS
-            tittle={"Đặt lịch phỏng vấn"}
-            type="submit"
-            sx={{
-              color: "#455570",
-              backgroundColor: "#FFFFFF",
-
-              marginRight: "12px",
-              fontSize: "14px",
-              padding: "6px 12px",
-              textTransform: "none",
-            }}
-       
-          />
-            </Stack>
+          
+          <ButtonDS tittle={"Đặt lịch phỏng vấn"}
+          type="submit"
+          sx={{
+            ":hover": {
+              backgroundColor: "#F3F4F6",
+            },
+            pt:'2px',
+            color: "#455570",
+            backgroundColor: "#FFFFFF",
+            borderRadius:1,
+            border:1,
+            borderColor:'#455570',
+            marginRight: "2px",
+            fontSize: "14px",
+            padding: "6px 12px",
+            textTransform: "none",
+          }}
+     
+        />
         }
 
-         {/* Phỏng vấn */}
+         {/* Kết quả */}
      {pipelineStateType==3&&
     <Box>
-      <Grid display="flex">
+       <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    p: 1,
+                    m: 1,
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                }}
+            >
+           
           <ButtonDS
             tittle={"Đạt"}
             type="submit"
             sx={{
-              color: "#FDFDFD",
-              backgroundColor: "#4CAF50",
+              color: item.pipelineStateResultType==0?"#FDFDFD":"#455570",
+              backgroundColor: item.pipelineStateResultType==0?"#4CAF50":"#FDFDFD",
               boxShadow: "none",
               ":hover": {
                 backgroundColor: "#E7E9ED",
@@ -208,8 +229,8 @@ function TaskCard({ item, index,pipelineStateType }) {
             tittle={"Cân Nhắc"}
             type="submit"
             sx={{
-              color: "#FDFDFD",
-              backgroundColor: "#FF9800",
+              color: item.pipelineStateResultType==1?"#FDFDFD":"#455570",
+              backgroundColor: item.pipelineStateResultType==1?"#FF9800":"#FDFDFD",
               boxShadow: "none",
               ":hover": {
                 backgroundColor: "#1565C0",
@@ -226,8 +247,8 @@ function TaskCard({ item, index,pipelineStateType }) {
             type="submit"
             mr={2}
             sx={{
-              color: "#FDFDFD",
-              backgroundColor: "#F44336",
+              color: item.pipelineStateResultType==2?"#FDFDFD":"#455570",
+              backgroundColor: item.pipelineStateResultType==2?"#F44336":"#FDFDFD",
               boxShadow: "none",
               ":hover": {
                 backgroundColor: "#01B6A7",
@@ -240,10 +261,9 @@ function TaskCard({ item, index,pipelineStateType }) {
    
           />
        
-        </Grid>
+       </Box>
     
-        <ButtonDS
-            tittle={"Tái Khai Thác"}
+       {item.pipelineStateResultType==2&&<ButtonDS tittle={"Tái Khai Thác"}
             type="submit"
             sx={{
               ":hover": {
@@ -262,8 +282,74 @@ function TaskCard({ item, index,pipelineStateType }) {
             }}
        
           />
+      }
+           {item.pipelineStateResultType==0&&<ButtonDS tittle={"Gửi thư mời nhận việc"}
+            type="submit"
+            sx={{
+              ":hover": {
+                backgroundColor: "#F3F4F6",
+              },
+              pt:'2px',
+              color: "#455570",
+              backgroundColor: "#FFFFFF",
+              borderRadius:1,
+              border:1,
+              borderColor:'#455570',
+              marginRight: "2px",
+              fontSize: "14px",
+              padding: "6px 12px",
+              textTransform: "none",
+            }}
+       
+          />
+      }
 
     </Box>
+        }
+         {/* Mời nhận việc */}
+        {pipelineStateType==4&&item.offerStateResultType==0&& 
+            <Box sx={{ display: 'flex',pt:1}}>
+              <Item sx={{ flexShrink: 1 }}>
+              <Iconify icon={"ri:mail-check-fill"} width={20} height={20} color="#172B4D"/>
+              </Item>
+              <Item sx={{ width: '100%' ,color:"#172B4D" }}>Đã tạo thư mời nhận việc</Item>
+              <Item sx={{ flexShrink: 0 }}>
+              <Iconify icon={"fluent-mdl2:circle-half-full"} width={20} height={20} color="#172B4D"/>
+               </Item>
+            </Box>
+        }
+         {pipelineStateType==4&&item.offerStateResultType==1&& 
+            <Box sx={{ display: 'flex',pt:1}}>
+              <Item sx={{ flexShrink: 1 }}>
+              <Iconify icon={"ic:round-mark-email-unread"} width={20} height={20} color="#F77A0C"/>
+              </Item>
+              <Item sx={{ width: '100%',color:"#F77A0C" }}>Đã gửi, chờ phản hồi</Item>
+              <Item sx={{ flexShrink: 0 }}>
+              <Iconify icon={"fluent-mdl2:circle-half-full"} width={20} height={20} color="#F77A0C"/>
+               </Item>
+            </Box>
+        }
+         {pipelineStateType==4&&item.offerStateResultType==2&& 
+            <Box sx={{ display: 'flex',pt:1}}>
+              <Item sx={{ flexShrink: 1 }}>
+              <Iconify icon={"material-symbols:check-circle"} width={20} height={20} color="#388E3C"/>
+              </Item>
+              <Item sx={{ width: '100%', color:"#388E3C" }}>Đồng ý nhận việc</Item>
+              <Item sx={{ flexShrink: 0 }}>
+              <Iconify icon={"fluent-mdl2:circle-half-full"} width={20} height={20} color="#388E3C"/>
+               </Item>
+            </Box>
+        }
+          {pipelineStateType==4&&item.offerStateResultType==3&& 
+            <Box sx={{ display: 'flex', pt:1}}>
+              <Item sx={{ flexShrink: 1 }}>
+              <Iconify icon={"mdi:alpha-x-circle"} width={20} height={20} color="#D32F2F"/>
+              </Item>
+              <Item sx={{ width: '100%',color:"#D32F2F" }}>Từ chối nhận việc</Item>
+              <Item sx={{ flexShrink: 0 }}>
+              <Iconify icon={"fluent-mdl2:circle-half-full"} width={20} height={20} color="#D32F2F"/>
+               </Item>
+            </Box>
         }
 
             

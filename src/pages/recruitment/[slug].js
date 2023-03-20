@@ -19,6 +19,7 @@ Recruitment.getLayout = function getLayout({ roles = [] }, page) {
   return <Layout roles={roles}>{page}</Layout>
 }
 import { useRouter } from "next/router";
+import image from "./bgImage.png"; 
 export async function getServerSideProps() {
   return {
     props: {
@@ -105,7 +106,7 @@ export default function Recruitment() {
     <Page title={"Chi tiết tin"}>
      
         <RecruitmentPreviewItem/>
-         <div style={{ display: "flex", justifyContent: "center", height: "100%"}}> 
+         <div style={{ display: "flex", justifyContent: "center", height: "100%" ,backgroundImage:`url(${image})`}}> 
 
        <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
@@ -133,7 +134,7 @@ export default function Recruitment() {
         })}
        
     
-    
+
       </DragDropContext> 
 
     </div>
