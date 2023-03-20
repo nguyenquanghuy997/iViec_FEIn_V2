@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
-
 import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPreviewItem";
-
-// components
+// componentsf
 import Page from '@/components/Page'
 // config
 import {PAGES } from '@/config'
@@ -20,7 +18,6 @@ import {
 Recruitment.getLayout = function getLayout({ roles = [] }, page) {
   return <Layout roles={roles}>{page}</Layout>
 }
-import {PipelineStateType} from '@/utils/enum'
 import { useRouter } from "next/router";
 export async function getServerSideProps() {
   return {
@@ -29,7 +26,6 @@ export async function getServerSideProps() {
     },
   }
 }
-
 export default function Recruitment() {
   const router = useRouter();
   const RecruitmentId = router.query.slug;
@@ -41,18 +37,12 @@ export default function Recruitment() {
     const { source, destination } = result;
     // khác cột
     if (source.droppableId !== destination.droppableId) {
-      console.log('1234',columns)
-      console.log('12345',result)
       const sourceColumn = columns[source.droppableId];
       const destColumn = columns[destination.droppableId];
       const sourceItems = [...sourceColumn.items];
       const destItems = [...destColumn.items];
       const [removed] = sourceItems.splice(source.index, 1);
       destItems.splice(destination.index, 0, removed);
-      console.log('12346',sourceColumn)
-      console.log('12347',destColumn)
-      console.log('12348',sourceItems)
-      console.log('12349',destItems)
       let applicantId
       setColumns({
         ...columns,
@@ -70,17 +60,6 @@ export default function Recruitment() {
          applicantId=item.applicantId
 
       })
-      // let sourceColumn2=sourceColumn
-      // let applicantId=sourceColumn2?.items((item)=>{
-      //   if(source.draggableId==item.id)
-      //   // applicantId=item.applicantId
-      //   return item.applicantId
-      // })
-      // console.log('12347',destColumn)
-      // console.log('12348',sourceItems)
-      // console.log('12349',destItems)
-      // console.log('123410',source.draggableId)
-      
       // call api
       let body
       if(destColumn.pipelineStateType==3){
@@ -99,15 +78,7 @@ export default function Recruitment() {
           "recruitmentPipelineStateId":destColumn.id,
         }
       }
-    
-
-
       await ChangeToNextState(body)
-      
-      
-      // await ChangeToNextState({ Id }).unwrap();
-      //
- 
     } else {
       // cùng cột
       const column = columns[source.droppableId];
@@ -134,8 +105,9 @@ export default function Recruitment() {
     <Page title={"Chi tiết tin"}>
      
         <RecruitmentPreviewItem/>
-        <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-      <DragDropContext
+         <div style={{ display: "flex", justifyContent: "center", height: "100%"}}> 
+
+       <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
       >
          {columns&&Object.entries(columns).map(([columnId, column], index) => {
@@ -147,8 +119,7 @@ export default function Recruitment() {
                 alignItems: "center"
               }}
               key={columnId}
-            >
-             <h2>{PipelineStateType(column.pipelineStateType)}</h2>
+            > 
               <div style={{ margin: 8 }}>
                 <Column
                   droppableId={columnId}
@@ -163,7 +134,8 @@ export default function Recruitment() {
        
     
     
-      </DragDropContext>
+      </DragDropContext> 
+
     </div>
   </Page>
   )
