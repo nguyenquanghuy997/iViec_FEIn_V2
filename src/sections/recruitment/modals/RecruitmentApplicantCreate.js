@@ -22,6 +22,7 @@ import UploadFileDragAndDrop from "@/components/upload/UploadFileDragAndDrop";
 
 const defaultValues = {
   recruitmentId: undefined,
+  recruitmentPipelineStageId: undefined,
   fullName: undefined,
   portraitImage: undefined,
   cvFile: undefined,
@@ -39,8 +40,6 @@ const defaultValues = {
   maritalStatus: undefined,
   yearOfExperience: undefined,
   sex: undefined,
-  applicantSkillIds: [],
-  jobCategoryIds: [],
   academicLevelId: undefined,
   rawApplicantSkills: undefined,
   homeTower: {
@@ -62,22 +61,27 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isLoading = isEditMode && !preview.id;
     // form
     const Schema = Yup.object().shape({
-      RecruitmentId: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
-      FullName: Yup.string().required("Chưa nhập họ tên").max(50, "Họ tên không quá 50 ký tự"),
-      PortraitImage: Yup.string(),
-      DateOfBirth: undefined,
-      Email: Yup.string().required("Chưa nhập email").email("Email cần nhập đúng định dạng"),
-      PhoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
-      Weight: Yup.number(),
-      Height: Yup.number(),
-      CvFile: Yup.string(),
-      YearOfExperience: Yup.string(),
-      ApplicantSkillIds: [],
-      Experience: Yup.string(),
-      IdentityNumber: Yup.number(),
-      Education: Yup.string(),
-      Sex: Yup.string(),
-      MaritalStatus: Yup.string(),
+      recruitmentId: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
+      recruitmentPipelineStageId: Yup.string(),
+      fullName: Yup.string().max(50, "Họ tên không quá 50 ký tự").required("Chưa nhập họ tên"),
+      portraitImage: Yup.string(),
+      email: Yup.string().email("Email cần nhập đúng định dạng").required("Chưa nhập email"),
+      phoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
+      weight: Yup.number(),
+      height: Yup.number(),
+      cvFile: Yup.string(),
+      yearOfExperience: Yup.number(),
+      experience: Yup.string(),
+      identityNumber: Yup.number(),
+      education: Yup.string(),
+      sex: Yup.number(),
+      maritalStatus: Yup.number(),
+      homeTower: Yup.object().shape({
+        address: Yup.string()
+      }),
+      livingAddress: Yup.object().shape({
+        address: Yup.string()
+      })
     });
 
     const methods = useForm({
@@ -95,19 +99,14 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     } = methods;
 
     const pressHide = () => {
-      setData(obj => ({...obj, stage: undefined}));
+      setAvatar(undefined);
+      setCV(undefined);
+      setData(data => ({...data, stage: null}));
       setShow(false);
     };
     const {enqueueSnackbar} = useSnackbar();
     const pressSave = handleSubmit(async (e) => {
-      let body = {
-        id: isEditMode ? data.id : 0,
-        name: e.name,
-        description: e.description,
-        isAvailable: e.isAvailable,
-        approvalProcessLevels: e.approvalProcessLevels
-      };
-
+      let body = e;
       if (isEditMode) {
         try {
           await updateForm(body).unwrap();
@@ -139,9 +138,10 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
 
     // effect
     useEffect(() => {
-      if (show) return;
+      if (!show) return;
       reset();
       setValue("recruitmentId", data.recruitmentId);
+      setValue("recruitmentPipelineStageId", data.stage);
     }, [show]);
 
     useEffect(() => {
@@ -160,8 +160,6 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
         setValue("cvFile", cv[0]?.response);
       }
     }, [cv]);
-
-    console.log(cv)
 
     return (
       <FormProvider {...methods}>
@@ -243,7 +241,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                                   src={DOMAIN_SERVER_API + "/File/GetFile?filePath=" + watch('portraitImage')}/>
                         </Grid>
                         <UploadAvatarApplicant multiple={false} fileList={avatar} setFileList={setAvatar} maxFile={1}
-                                               showUploadList={false}/>
+                                               showUploadList={false} accept={"image/png, image/gif, image/jpeg"}/>
                       </Grid>
                     </Grid>
                     <Grid mb={3}>
@@ -258,7 +256,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                         <RHFTextField
                           title={"Số điện thoại"}
                           isRequired={true}
-                          name={"FullName"}
+                          name={"phoneNumber"}
                           placeholder="Nhập số điện thoại ứng viên"
                         />
                       </Grid>
@@ -266,7 +264,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                         <RHFTextField
                           title={"Email"}
                           isRequired={true}
-                          name={"Email"}
+                          name={"email"}
                           placeholder="Nhập email ứng viên"
                         />
                       </Grid>
@@ -313,14 +311,14 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                     <Grid mb={3}>
                       <Label>Nơi ở hiện tại</Label>
                       <TextAreaDS
-                        name={"education"}
+                        name={"livingAddress.address"}
                         placeholder="VD: Số nhà, Tên đường, Xã/Phường, Quận/Huyện, Tỉnh/Thành..."
                       />
                     </Grid>
                     <Grid mb={3}>
                       <Label>Quê quán</Label>
                       <TextAreaDS
-                        name={"education"}
+                        name={"homeTower.address"}
                         placeholder="VD: Số nhà, Tên đường, Xã/Phường, Quận/Huyện, Tỉnh/Thành..."
                       />
                     </Grid>
@@ -363,6 +361,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       <Grid item xs={6} pr={"12px"}>
                         <RHFTextField
                           title={"Chiều cao"}
+                          type={"number"}
                           name={"height"}
                           placeholder="Chọn chiều cao"
                         />
@@ -370,6 +369,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       <Grid item xs={6} pl={"12px"}>
                         <RHFTextField
                           title={"Cân nặng"}
+                          type={"number"}
                           name={"weight"}
                           placeholder="Chọn cân nặng"
                         />
