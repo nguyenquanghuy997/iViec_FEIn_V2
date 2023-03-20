@@ -1,32 +1,38 @@
 import { TextAreaDS } from "@/components/DesignSystem";
 import { RHFTextField, RHFCheckbox } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import { LabelStyle,  } from "@/components/hook-form/style";
+import { LabelStyle } from "@/components/hook-form/style";
+import { Label } from "@/components/hook-form/style";
+import { useGetRecruitmentPipelineStatesByRecruitmentQuery } from "@/sections/applicant/ApplicantFormSlice";
+import { useGetRecruitmentByOrganizationIdQuery } from "@/sections/recruitment/RecruitmentSlice";
+import { PipelineStateType } from "@/utils/enum";
 // import { useGetListJobsMutation } from "@/sections/job/jobSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Stack,
-  Typography,
-  // InputLabel,
+  Typography, // InputLabel,
   // TextareaAutosize,
   TextField,
 } from "@mui/material";
-// import { Alert } from "@mui/material";
-// import { Input } from "antd";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
-import {Label} from "@/components/hook-form/style";
 
-const PersonalInterview = () => {
-  // const { TextArea } = Input;
-  // const { data } = useGetListJobsMutation();
+const PersonalInterview = ({ watch }) => {
   const ConnectSchema = Yup.object().shape({
     name: Yup.string().required("Nhập tên buổi phỏng vấn"),
   });
 
+  const {
+    data: { items: ListRecruitmentByOrganization = [] } = {},
+    isLoading: isLoadingRecruitment,
+  } = useGetRecruitmentByOrganizationIdQuery();
+ if(isLoadingRecruitment) return null
+  const { data: { items: ListStep = [] } = {} } =
+    useGetRecruitmentPipelineStatesByRecruitmentQuery(watch);
+  console.log("step", ListStep);
   const defaultValues = {
     name: "",
   };
@@ -38,30 +44,18 @@ const PersonalInterview = () => {
   });
 
   const {
-    // setError,
-    // handleSubmit,
-    formState: {  },
+    formState: {},
   } = methods;
   // const onSubmit = async () => {};
+
   const options = [
     {
-      id: "00001",
+      id: 0,
       name: "Online",
     },
     {
-      id: "00002",
+      id: 1,
       name: "Direct",
-    },
-  ];
-
-  const options2 = [
-    {
-      id: "00001",
-      name: "Nhân Viên Marketing Online - HCM",
-    },
-    {
-      id: "00002",
-      name: "Nhân Viên Marketing Online - HN",
     },
   ];
 
@@ -80,20 +74,12 @@ const PersonalInterview = () => {
     },
   ];
 
-  const option4 = [
-    {
-      id: "00001",
-      name: "Phỏng vấn 1",
-    },
-    {
-      id: "00002",
-      name: "Ko cần pvan",
-    },
-  ];
+  const onChange = () => {};
 
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
-};
+  };
+
   return (
     <Stack spacing={3}>
       <Stack>
@@ -112,11 +98,12 @@ const PersonalInterview = () => {
             Tin tuyển dụng <span style={{ color: "red" }}>*</span>
           </Typography>
           <RHFDropdown
-            options={options2.map((i) => ({
+            options={ListRecruitmentByOrganization?.map((i) => ({
               value: i.id,
               label: i.name,
               name: i.name,
             }))}
+            onChange={onChange}
             name="recruitmentId"
             multiple={false}
             required
@@ -130,9 +117,11 @@ const PersonalInterview = () => {
             Bước phỏng vấn <span style={{ color: "red" }}>*</span>
           </Typography>
           <RHFDropdown
-            options={option4.map((i) => ({
+            options={ListStep.filter(
+              (item) => item.pipelineStateType == 3
+            )?.map((i) => ({
               value: i.id,
-              label: i.name,
+              label: PipelineStateType(i.pipelineStateType),
               name: i.name,
             }))}
             name="recruitmentPipelineStateId"
@@ -189,7 +178,7 @@ const PersonalInterview = () => {
         />
       </Stack>
       <Stack>
-        {renderTitle('Lưu ý cho ứng viên')}
+        {renderTitle("Lưu ý cho ứng viên")}
         <TextAreaDS
           maxLength={150}
           placeholder="Nhập nội dung lưu ý..."

@@ -54,6 +54,7 @@ export default function InterviewSchedule() {
           Thứ 4, Ngày 07/03/2023 (Hôm nay)
         </Typography>
       </CardContent>
+
       {type.map((item) => (
         <>
           <CardContent

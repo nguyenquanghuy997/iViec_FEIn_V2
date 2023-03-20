@@ -1,28 +1,26 @@
 import CloseIcon from "../../../assets/CloseIcon";
-// import { useAddCalendarMutation } from "../InterviewSlice";
+import { useAddCalendarMutation } from "../InterviewSlice";
 import { FormInterview } from "./FormInterview";
 import InterviewCouncil from "./InterviewCouncil";
 import ListCandidate from "./ListCandidate";
 import { FormProvider } from "@/components/hook-form";
-// import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Typography, Grid, } from "@mui/material";
+import { Box, Button, Typography, Grid } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
+import moment from "moment";
+import { useSnackbar } from "notistack";
 import React, { useState } from "react";
-// import * as Yup from "yup";
-import {useFieldArray, useForm} from "react-hook-form";
-// import {useSnackbar} from "notistack";
-
+import { useFieldArray, useForm } from "react-hook-form";
 
 const CreateCalendar = ({ open, onClose, onOpen }) => {
   const [values, setValues] = useState("1");
-  const handleChange = (event, newValue) => {
+  const handleChange = ( newValue) => {
     setValues(newValue);
   };
 
-  // const [addCalendar] = useAddCalendarMutation();
+  const [addCalendar] = useAddCalendarMutation();
   const BoxInnerStyle = styled("Box")(({ theme }) => ({
     [theme.breakpoints.up("xl")]: {
       width: "1500px",
@@ -43,15 +41,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     reviewFormId: "",
     isSendMailCouncil: false,
     isSendMailApplicant: false,
-    bookingCalendarGroups: [
-      {
-        name: "",
-        interviewGroupType: 0,
-        interviewTime: "",
-        interviewDuration: "",
-        applicantIds: [],
-      },
-    ],
+    bookingCalendarGroups: [],
   };
 
   // const CalendarSchema = Yup.object().shape({
@@ -83,50 +73,74 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   });
 
   const {
-    // reset,
     control,
-    // setError,
-    // setValue,
+    setError,
+    watch,
     handleSubmit,
-    formState: {  },
+    formState: {},
   } = methods;
-
-  const { fields, append, remove } = useFieldArray({
+  const wacthStep = watch('recruitmentId')
+  console.log('ha',wacthStep)
+  const { } = useFieldArray({
     control,
     name: "bookingCalendarGroups",
   });
 
   // const pressHide = () => {
-  //   setData(null);
+  // setData(null);
   //   setShow(false);
   // };
+  function toHHMMSS(num) {
+    var sec_num = parseInt(num * 60, 10); // don't forget the second param
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - hours * 3600) / 60);
+    var seconds = sec_num - hours * 3600 - minutes * 60;
 
-  // const { enqueueSnackbar } = useSnackbar();
-  // const onSubmit = async (d) => {
-  //   try {
-  //     const body = {
-  //       name: d.name,
-  //       recruitmentId: d.recruitmentId,
-  //       recruitmentPipelineStateId: d.recruitmentPipelineStateId,
-  //       reviewFormId: d.reviewFormId,
-  //       interviewType: type,
-  //       onlineInterviewAddress: d.onlineInterviewAddress,
-  //       note: d.note,
-  //       isSendMailCouncil: d.isSendMailApplicant,
-  //       isSendMailApplicant: d.isSendMailApplicant,
-  //       councilIds: d.councilIds,
-  //       bookingCalendarGroups: d.bookingCalendarGroups,
-  //     };
-  //     // body = formatDataPush(body);
-  //     await addCalendar(body).unwrap();
-  //     enqueueSnackbar("Thực hiện thành công!", {
-  //       autoHideDuration: 1000,
-  //     });
-  //     pressHide();
-  //   } catch (error) {
-  //     setError("afterSubmit", { ...error });
-  //   }
-  // };
+    if (hours < 10) {
+      hours = "0" + hours;
+    }
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    if (seconds < 10) {
+      seconds = "0" + seconds;
+    }
+    return hours + ":" + minutes + ":" + seconds;
+  }
+  const { enqueueSnackbar } = useSnackbar();
+  const onSubmit = async (d) => {
+    try {
+      const body = {
+        name: d.name,
+        recruitmentId: d.recruitmentId,
+        recruitmentPipelineStateId: d.recruitmentPipelineStateId,
+        reviewFormId: d.reviewFormId,
+        interviewType: d.interviewType,
+        onlineInterviewAddress: d.onlineInterviewAddress,
+        note: d.note,
+        isSendMailCouncil: d.isSendMailApplicant,
+        isSendMailApplicant: d.isSendMailApplicant,
+        councilIds: d.councilIds,
+        bookingCalendarGroups: {
+          name: "person",
+          interviewGroupType: 0,
+          applicantIds: d?.bookingCalendarGroups,
+          interviewTime: moment(
+            `${moment(d?.date).format("YYYY-MM-DD")}T${d?.time}`
+          ).format(),
+          interviewDuration: toHHMMSS(d?.interviewDuration),
+        },
+      };
+      // body = formatDataPush(body);
+      await addCalendar(body).unwrap();
+      enqueueSnackbar("Thực hiện thành công!", {
+        autoHideDuration: 1000,
+      });
+      // pressHide();
+    } catch (error) {
+      setError("afterSubmit", { ...error });
+    }
+  };
 
   // const handleClearField = (field) => {
   //   if (!field) return;
@@ -151,7 +165,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
 
   const list = () => (
     <BoxInnerStyle>
-      <FormProvider methods={methods} onSubmit={handleSubmit((item) => console.log('huih',item))}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <List
           sx={{
             display: "flex",
@@ -177,10 +191,10 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         <Box>
           <Grid container border="1px solid #E7E9ED">
             <Grid item xs={12} md={6} borderRight="1px solid #E7E9ED">
-              <FormInterview handleChange={handleChange} value={values} />
+              <FormInterview handleChange={handleChange} value={values} watch={wacthStep}/>
             </Grid>
             <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
-              <ListCandidate value={values} action={{fields, append, remove}} defaultValues={defaultValues}/>
+              <ListCandidate value={values} defaultValues={defaultValues} />
             </Grid>
             <Grid item xs={5} md={3}>
               <InterviewCouncil value={values} />

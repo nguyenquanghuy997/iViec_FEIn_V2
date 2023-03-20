@@ -1,7 +1,5 @@
-import DragCandidate from "./DragCandidate";
+import DeleteIcon from "@/assets/interview/DeleteIcon";
 import PlusIcon from "@/assets/interview/PlusIcon";
-// import { AvatarDS } from "@/components/DesignSystem";
-// import ChipDS from "@/components/DesignSystem/ChipDS";
 import Iconify from "@/components/Iconify";
 import {
   LabelStyle,
@@ -21,25 +19,10 @@ import {
   Stack,
   Typography,
   Button,
-  // FormControlLabel,
+  Card,
 } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-
-// const Placeholder = (placeholder) => {
-//   return (
-//     <Typography
-//       variant="body2"
-//       sx={{
-//         color: style.COLOR_TEXT_GRAY,
-//         fontSize: style.FONT_SM,
-//         fontWeight: style.FONT_NORMAL,
-//       }}
-//     >
-//       {placeholder}
-//     </Typography>
-//   );
-// };
 
 const MenuProps = {
   PaperProps: {
@@ -71,10 +54,10 @@ const renderOptions = (options) => {
               height: 28,
               borderRadius: "10px",
             }}
-            src="https://i.pinimg.com/236x/c6/90/fe/c690fe74d48aa77c2ab0e5000131304a.jpg"
+            src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
           />
           <Box sx={{ ml: 1 }}>
-            <Typography sx={{ fontSize: 13 }}>{variant.name}</Typography>
+            <Typography sx={{ fontSize: 13 }}>{variant.mail}</Typography>
             <Typography
               sx={{
                 fontSize: 13,
@@ -82,7 +65,7 @@ const renderOptions = (options) => {
                 color: "#5C6A82",
               }}
             >
-              {variant.phone}
+              {variant.position}
             </Typography>
           </Box>
         </Box>
@@ -110,18 +93,79 @@ const renderOptions = (options) => {
   });
 };
 
-
-const renderChipsSelect = (options, value) => {
+const renderChipsSelect = (
+  options,
+  value
+  // onDelete
+) => {
   return (
     <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-      <DragCandidate
+      {/* <DragCandidate
         data={options?.filter((option) => value.includes(option?.value))}
-      />
+      /> */}
+      {options
+        ?.filter((option) => value.includes(option?.value))
+        ?.map((item) => (
+          <Card
+            sx={{
+              dispaly: "flex",
+              background: "#F2F4F5",
+              mb: 2,
+              borderRadius: "6px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                margin: "13px",
+                marginBottom: 0,
+              }}
+            >
+              <img
+                style={{
+                  width: 40,
+                  height: 40,
+                  marginRight: "16px",
+                  borderRadius: "11px",
+                }}
+                src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
+              />
+
+              <div style={{}}>
+                <Typography
+                  component="div"
+                  sx={{ fontSize: "13px", fontWeight: "600" }}
+                >
+                  {item?.name}
+                </Typography>
+                <Typography
+                  color="#455570"
+                  sx={{ fontSize: "12px", fontWeight: "400" }}
+                >
+                  {item?.mail}
+                </Typography>
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "12px",
+              }}
+            >
+              <Typography sx={{ fontSize: "13px", fontWeight: "500" }}>
+                {item?.position}
+              </Typography>
+              <DeleteIcon />
+            </div>
+          </Card>
+        ))}
     </Stack>
   );
 };
 
-function RHFSelectMultiple({ name, ...props }) {
+function SelectCouncils({ name, ...props }) {
   const { control } = useFormContext();
   const classes = useStyles();
   const {
@@ -134,19 +178,19 @@ function RHFSelectMultiple({ name, ...props }) {
     disabled,
     multiple,
   } = props;
-  const { remove } = useFieldArray({ control, name })
-  const [searchText, setSearchText] = useState("")
-  const [filterOptions, setFilterOptions] = useState([])
+  const { remove } = useFieldArray({ control, name });
+  const [searchText, setSearchText] = useState("");
+  const [filterOptions, setFilterOptions] = useState([]);
 
   useEffect(() => {
     if (searchText) {
       setFilterOptions(
         options?.filter((option) => containsText(option.name, searchText))
-      )
+      );
     } else {
-      setFilterOptions(options)
+      setFilterOptions(options);
     }
-  }, [searchText, options])
+  }, [searchText, options]);
 
   return (
     <Controller
@@ -179,16 +223,16 @@ function RHFSelectMultiple({ name, ...props }) {
                     sx={{ width: "100%", textTransform: "none" }}
                     startIcon={<PlusIcon />}
                   >
-                    Thêm ứng viên
+                    Thêm cán bộ
                   </Button>
-                )
+                );
               }
               return (
                 <Button
                   sx={{ width: "100%", textTransform: "none" }}
                   startIcon={<PlusIcon />}
                 >
-                  Thêm ứng viên
+                  Thêm cán bộ
                 </Button>
               );
             }}
@@ -223,4 +267,4 @@ function RHFSelectMultiple({ name, ...props }) {
   );
 }
 
-export default memo(RHFSelectMultiple);
+export default memo(SelectCouncils);

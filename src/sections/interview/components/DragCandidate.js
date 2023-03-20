@@ -1,7 +1,7 @@
 import DeleteIcon from "@/assets/interview/DeleteIcon";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
-// import { RHFDatePicker } from "@/components/hook-form";
+import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
+import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
 // import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography, Box, Card, Collapse } from "@mui/material";
@@ -10,14 +10,13 @@ import { Button, Typography, Box, Card, Collapse } from "@mui/material";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { TimePicker } from "antd";
 // import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useForm } from "react-hook-form";
-// import * as Yup from "yup";
 
 function DragCandidate({ data, onDelete }) {
   const [characters, setCharacters] = useState([]);
   const [checked, setChecked] = useState(false);
+  
   useEffect(() => {
     setCharacters([...data]);
   }, [data]);
@@ -33,39 +32,6 @@ function DragCandidate({ data, onDelete }) {
 
     setCharacters(items);
   }
-  // const ConnectSchema = Yup.object().shape({
-  //   email: Yup.string()
-  //     .email("Email không đúng định dạng")
-  //     .required("Email không được bỏ trống"),
-  //   password: Yup.string()
-  //     .min(6, "Mật khẩu cần tối thiểu 6 ký tự")
-  //     .required("Mật khẩu không được bỏ trống"),
-  // });
-
-  const defaultValues = {
-    name: "",
-    recruitmentId: "",
-    reviewFormId: "",
-    interviewType: "",
-    address: "",
-    interviewDuration: "",
-    interviewTime: "",
-    note: "",
-    isSendMailCouncil: true,
-    isSendMailApplicant: true,
-    isRemove: true,
-  };
-
-  const methods = useForm({
-    // resolver: yupResolver(ConnectSchema),
-    defaultValues,
-  });
-
-  const {
-    // setError,
-    handleSubmit,
-  } = methods;
-
   const time = false;
 
   return (
@@ -156,27 +122,18 @@ function DragCandidate({ data, onDelete }) {
                             </div>
                           </Card>
                           {checked ? (
-                            <FormProvider
-                              methods={methods}
-                              onSubmit={handleSubmit((data) =>
-                                console.log("đaad", data)
-                              )}
-                            >
+                            <>
                               <Box sx={{ mb: 2, width: "100%" }}>
                                 <Typography>
                                   Ngày phỏng vấn{" "}
                                   <span style={{ color: "red" }}>*</span>
                                 </Typography>
-                                <RHFTextField
-                                  isRequired
-                                  sx={{
-                                    minHeight: 44,
-                                    width: "100%",
+                                <RHFDatePicker
+                                  name="date"
+                                  style={{
                                     background: "white",
-                                    border: "8px",
+                                    borderRadius: "8px",
                                   }}
-                                  name={`bookingCalendarGroups${index}.interviewTime`}
-                                  placeholder="Nhập số phút"
                                 />
                               </Box>
                               <Box sx={{ width: "100%" }}>
@@ -190,17 +147,12 @@ function DragCandidate({ data, onDelete }) {
                                             *
                                           </span>
                                         </Typography>
-
-                                        <RHFTextField
-                                          isRequired
-                                          sx={{
-                                            minHeight: 44,
+                                        <RHFTimePicker
+                                          name="time"
+                                          style={{
                                             width: "100%",
                                             background: "white",
-                                            border: "8px",
                                           }}
-                                          name={`bookingCalendarGroups${index}.interviewTime`}
-                                          placeholder="Nhập số phút"
                                         />
                                       </Box>
                                     </Collapse>
@@ -226,7 +178,7 @@ function DragCandidate({ data, onDelete }) {
                                             background: "white",
                                             border: "8px",
                                           }}
-                                          name={`bookingCalendarGroups${index}.interviewDuration`}
+                                          name="interviewDuration"
                                           placeholder="Nhập số phút"
                                         />
                                       </Box>
@@ -254,7 +206,7 @@ function DragCandidate({ data, onDelete }) {
                                   Lưu
                                 </Button>
                               </div>
-                            </FormProvider>
+                            </>
                           ) : (
                             ""
                           )}

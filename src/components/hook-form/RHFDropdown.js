@@ -17,7 +17,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { memo, useEffect, useState } from "react";
+import React, {memo, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 const Placeholder = (placeholder) => {
@@ -110,6 +110,7 @@ function RHFDropdown({ name, ...props }) {
   const {
     defaultValue,
     isRequired,
+   
     title,
     placeholder,
     options,
@@ -120,7 +121,7 @@ function RHFDropdown({ name, ...props }) {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
-
+ 
   useEffect(() => {
     if (searchText) {
       setFilterOptions(
@@ -141,6 +142,8 @@ function RHFDropdown({ name, ...props }) {
           {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
           <SelectFieldStyle
             {...field}
+            // inputRef={nameRef}
+            onChange={field.onChange }
             value={field.value}
             displayEmpty
             disabled={disabled}
