@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from "@/redux/store";
 import {filterSlice} from "@/redux/common/filterSlice";
 import {useEffect, useMemo, useState} from "react";
 import {cleanObject} from "@/utils/function";
+import {isEmpty} from "lodash";
 
 const defaultValues = {
   searchKey: "",
@@ -27,7 +28,7 @@ const defaultValues = {
 
 export const ApplicantItem = () => {
   const router = useRouter();
-  const { query } = router;
+  const { query, isReady } = router;
   const dispatch = useDispatch();
   const toggleFormFilter = useSelector((state) => state.filterReducer.openForm);
   const dataFilter = useSelector((state) => state.filterReducer.data);
@@ -37,8 +38,9 @@ export const ApplicantItem = () => {
   const handleClearDataFilter = () => dispatch(filterSlice.actions.clearDataFilter());
 
   useEffect(() => {
+    if (!isReady) return;
     handleClearDataFilter();
-  }, [])
+  }, [isReady, query])
 
   const methods = useForm({
     mode: "onChange",
@@ -446,20 +448,14 @@ export const ApplicantItem = () => {
   };
 
   const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
+    handleSetDataFilter({ searchKey: data.searchKey });
   };
 
   const onSubmit = async (data) => {
     const body = {
       ...data,
-      searchKey: data.searchKey,
+      createdTimeFrom: data.createdTimeFrom ? new Date(data.createdTimeFrom).toISOString() : null,
+      createdTimeTo: data.createdTimeTo ? new Date(data.createdTimeTo).toISOString() : null,
       recruitmentPipelineStates: data.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
       yearsOfExperience: typeof data.yearsOfExperience === 'number' ? [data.yearsOfExperience] : null,
       sexs: typeof data.sexs === 'number' ? [data.sexs] : null,
@@ -492,10 +488,10 @@ export const ApplicantItem = () => {
           onSubmit={onSubmitSearch}
           handleSubmit={handleSubmit}
           onOpenFilterForm={handleOpenFilterForm}
-          onCloseFilterForm={handleCloseFilterForm}
+          dataFilter={dataFilter}
       />
       <Content>
-        <View mt={96}>
+        <View mt={!isEmpty(cleanObject(dataFilter)) ? 136 : 96}>
           <DynamicColumnsTable
             page={page}
             paginationSize={paginationSize}

@@ -67,6 +67,7 @@ export const API_LOGIN = "/identity/Identity/Login"; //new
 export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner"; //new
 export const API_CONFIRM_EMAIL = "/identity/Identity/ConfirmEmail";  // new
 export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword"; //new
+export const API_USER_INVITE_SET_PASSWORD = "/identity/Identity/UserInvitedSetPassword"; //new
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken"; //new
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup"; // lấy danh sách application theo role groups
 // Common

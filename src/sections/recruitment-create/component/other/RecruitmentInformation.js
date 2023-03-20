@@ -362,7 +362,8 @@ const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
                 <RHFDropdown
                     options={ListUserFromOrganization.map(item => ({
                       ...item,
-                      label: item?.email
+                      label: item?.email,
+                      name: item?.lastName
                     }))}
                     name="ownerId"
                     title="Cán bộ tuyển dụng"
@@ -378,11 +379,11 @@ const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
                     options={ListUserFromOrganization.map(item => ({
                       id: item.id,
                       value: item.value,
-                      name: item.email,
-                      label: item?.email
+                      name: item?.email || item.lastName,
+                      label: item?.email || item.lastName
                     }))}
                     name="coOwnerIds"
-                    title="Đồng phụ trách"
+                    title="Đồng phụ tráchh"
                     placeholder="Chọn 1 hoặc nhiều cán bộ"
                     fullWidth
                     multiple
@@ -394,8 +395,8 @@ const RecruitmentInformation = ({organizationId, salaryDisplayType}) => {
                     options={ListUserFromOrganization.map(item => ({
                       id: item.id,
                       value: item.value,
-                      name: item.email,
-                      label: item?.email
+                      name: item?.email || item.lastName,
+                      label: item?.email || item.lastName
                     }))}
                     name="recruitmentCouncilIds"
                     title="Thành viên hội đồng tuyển dụng"

@@ -1,4 +1,3 @@
-import UserActiveSuccess from "@/sections/auth/user-activate/UserActiveSuccess";
 import {LogoHeader} from "@/components/BaseComponents";
 import Page from "@/components/Page";
 import GuestGuard from "@/guards/GuestGuard";
@@ -8,6 +7,7 @@ import {Box} from "@mui/material";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {useActiveInviteUserMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
+import UserInviteActiveSuccess from "@/sections/auth/user-invite-active/UserInviteActiveSuccess";
 
 const UserInviteActivePage = () => {
     const [statusActiveUser, setStatusActiveUser] = useState(false);
@@ -39,7 +39,7 @@ const UserInviteActivePage = () => {
                 <LogoHeader />
                 <Box sx={{ ...BoxWrapperStyle }}>
                     <Box >
-                        {statusActiveUser? <UserActiveSuccess USER_NAME={decodeURI(email)} />:  <UserActiveFailure />}
+                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURI(email)} token={codeActive} />:  <UserActiveFailure />}
                     </Box>
                 </Box>
             </Page>

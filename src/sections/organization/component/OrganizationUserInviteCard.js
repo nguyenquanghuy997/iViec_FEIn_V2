@@ -23,7 +23,7 @@ const OrganizationUserInviteCard = (
                 <CardUserFormItemTitleStyle className="card-user-item-title">
                     <AvatarDS
                         sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
-                        name={`${item?.lastName ? item?.lastName : ''} ${item.firstName ? item.firstName : ''}`}
+                        name={`${item?.fullName ? item?.fullName : ''}`}
                     />
                     <Stack>
                         <Typography sx={{
@@ -31,7 +31,7 @@ const OrganizationUserInviteCard = (
                             fontSize: style.FONT_SM,
                             fontWeight: style.FONT_SEMIBOLD
                         }}>
-                            {`${item?.lastName ? item?.lastName : ''} ${item.firstName ? item.firstName : ''}`}
+                            {`${item?.fullName ? item?.fullName : ''}`}
                         </Typography>
                         <Typography
                             className="card-user-item-subtitle"
@@ -41,13 +41,13 @@ const OrganizationUserInviteCard = (
                     </Stack>
                 </CardUserFormItemTitleStyle>
                 <Typography sx={{color: style.COLOR_SUCCESS, fontSize: style.FONT_XS, fontWeight: style.FONT_MEDIUM}}>
-                    {item.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}
+                    {!item.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}
                 </Typography>
             </BoxFlex>
             <BoxFlex>
                 <BoxFlex>
                     <CardUserFormItemContentStyle className="card-user-item-content-text">
-                        Giám đốc nhân sự
+                        {/*Giám đốc nhân sự*/}
                     </CardUserFormItemContentStyle>
                 </BoxFlex>
                 <BoxFlex>
