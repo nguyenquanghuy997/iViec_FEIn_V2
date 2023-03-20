@@ -7,32 +7,17 @@ import {
 import {PipelineApplicant} from "../others";
 import {ApplicantPreviewCV} from "./ApplicantPreviewCV";
 import {ApplicantPreviewLog} from "./ApplicantPreviewLog";
-import {
-  AvatarDS,
-  ButtonDS,
-  NavGoBack,
-  SelectAutoCompleteDS,
-} from "@/components/DesignSystem";
+import {AvatarDS, ButtonDS, NavGoBack, SelectAutoCompleteDS,} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import {PATH_DASHBOARD} from "@/routes/paths";
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-  Container,
-} from "@mui/material";
+import {Box, Card, CardContent, Container, Divider, Grid, Stack, Typography,} from "@mui/material";
 import {styled} from "@mui/styles";
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {HEADER} from "@/config";
 import {RejectApplicantModal} from "../modals";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
-import {RecruitmentApplicantCreate} from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 
 function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
   const {data: {items: options = []} = {}, isFetching} =
