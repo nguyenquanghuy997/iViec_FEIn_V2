@@ -1,4 +1,4 @@
-import { apiSlice } from "@/redux/api/apiSlice";
+import {apiSlice} from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
   API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
@@ -13,7 +13,7 @@ import {
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
   API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
-  API_GET_RECRUITMENT_BY_ORGANIZATION,
+  API_GET_RECRUITMENT_BY_ORGANIZATION, API_UPDATE_APPLICANT,
   API_GET_APPLICANT_BY_PIPELINESTETEID
 } from "@/routes/api";
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -45,8 +45,17 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
       providesTags: ["UpdateColumnApplicants"],
       invalidatesTags: ["GetColumnApplicants"],
     }),
+    updateApplicant: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_APPLICANT}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+      providesTags: ["UpdateColumnApplicants"],
+      invalidatesTags: ["GetColumnApplicants"],
+    }),
     getApplicantById: builder.query({
-      query: ({ applicantId }) => ({
+      query: ({applicantId}) => ({
         url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
         method: "GET",
       }),
@@ -188,6 +197,7 @@ export const {
   useGetAllJobSourcesQuery,
   // user from organization
   useGetAllUserFromOrganizationQuery,
+  useUpdateApplicantMutation,
   useLazyGetAllUserFromOrganizationQuery,
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
@@ -197,13 +207,3 @@ export const {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetApplicantByPipelineStateIdQuery,
 } = ApplicantFormSlice;
-
-// export const getJobDetail = createAsyncThunk(
-//   'jobDetail/getJobDetail',
-//   async ({ jobId }) => {
-//     const url = `${API_LIST_JOBS}/${jobId}`
-//     const response = await _getApi(url)
-
-//     return response?.data?.success ? response.data : []
-//   }
-// )

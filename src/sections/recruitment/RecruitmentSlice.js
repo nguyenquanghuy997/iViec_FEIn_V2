@@ -5,6 +5,7 @@ import {
   API_GET_RECRUITMENT_BY_ID,
   API_UPDATE_RECRUITMENT_DRAFT,
   API_UPDATE_RECRUITMENT_OFFICIAL,
+  API_CREATE_APPLICANT_RECRUITMENT,
 } from '@/routes/api'
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -31,6 +32,13 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
     createRecruitment: builder.mutation({
       query: (data) => ({
         url: API_CREATE_RECRUITMENT,
+        method: 'POST',
+        data
+      }),
+    }),
+    createApplicantRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_CREATE_APPLICANT_RECRUITMENT,
         method: 'POST',
         data
       }),
@@ -63,6 +71,7 @@ export const {
   // get list recruitment by organization
   useGetRecruitmentByOrganizationIdQuery,
   useLazyGetRecruitmentByOrganizationIdQuery,
+  useCreateApplicantRecruitmentMutation,
   useLazyGetRecruitmentsQuery,
   useCreateRecruitmentMutation,
   useUpdateRecruitmentOfficialMutation,
