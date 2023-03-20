@@ -25,7 +25,9 @@ function RHFTextField({
   variant,
   beforeChange,
   maxLength,
-  disabled, defaultValue,
+  disabled,
+  defaultValue,
+  type,
   ...other
 }) {
   const { control } = useFormContext();
@@ -45,6 +47,7 @@ function RHFTextField({
             <TextFieldStyle
               {...field}
               error={!!error}
+              type={type}
               disabled={disabled}
               helperText={error?.message}
               variant={variant}
