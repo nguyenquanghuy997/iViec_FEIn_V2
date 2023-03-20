@@ -17,7 +17,6 @@ import {
 } from "@/sections/applicant";
 
 import { useRouter } from "next/router";
-import image from "./bgImage.png"; 
 import {  Modal } from 'antd';
 import Iconify from "@/components/Iconify";
 import {
@@ -129,7 +128,7 @@ export default function Recruitment() {
     <Page title={"Chi tiết tin"}>
      
         <RecruitmentPreviewItem RecruitmentData={RecruitmentData}/>
-         <div style={{ display: "flex", justifyContent: "center", height: "100%" ,backgroundImage:`url(${image})`}}> 
+         <div style={{ display: "flex", justifyContent: "center", height: "100%",backgroundSize: 'cover', backgroundRepeat: 'no-repeat' ,backgroundImage:`url('../assets/icons/candidate/bgImage.png')`}}> 
 
        <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
