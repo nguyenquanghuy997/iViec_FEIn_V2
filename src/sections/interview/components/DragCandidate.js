@@ -18,7 +18,7 @@ function DragCandidate({ data, onDelete }) {
   const [checked, setChecked] = useState(false);
   
   useEffect(() => {
-    setCharacters([...data]);
+    setCharacters([]);
   }, [data]);
   const handleChange = () => {
     setChecked((prev) => !prev);

@@ -6,8 +6,6 @@ import { Label } from "@/components/hook-form/style";
 import { useGetRecruitmentPipelineStatesByRecruitmentQuery } from "@/sections/applicant/ApplicantFormSlice";
 import { useGetRecruitmentByOrganizationIdQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
-// import { useGetListJobsMutation } from "@/sections/job/jobSlice";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Stack,
@@ -16,38 +14,19 @@ import {
   TextField,
 } from "@mui/material";
 import React from "react";
-import { useForm } from "react-hook-form";
 import { Controller, useFormContext } from "react-hook-form";
-import * as Yup from "yup";
 
-const PersonalInterview = ({ watch }) => {
-  const ConnectSchema = Yup.object().shape({
-    name: Yup.string().required("Nhập tên buổi phỏng vấn"),
-  });
-
+const PersonalInterview = ({ wacthStep }) => {
   const {
     data: { items: ListRecruitmentByOrganization = [] } = {},
     isLoading: isLoadingRecruitment,
   } = useGetRecruitmentByOrganizationIdQuery();
- if(isLoadingRecruitment) return null
+  if (isLoadingRecruitment) return null;
   const { data: { items: ListStep = [] } = {} } =
-    useGetRecruitmentPipelineStatesByRecruitmentQuery(watch);
+    useGetRecruitmentPipelineStatesByRecruitmentQuery(wacthStep);
   console.log("step", ListStep);
-  const defaultValues = {
-    name: "",
-  };
+
   const { control } = useFormContext();
-
-  const methods = useForm({
-    resolver: yupResolver(ConnectSchema),
-    defaultValues,
-  });
-
-  const {
-    formState: {},
-  } = methods;
-  // const onSubmit = async () => {};
-
   const options = [
     {
       id: 0,

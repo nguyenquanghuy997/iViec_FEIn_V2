@@ -6,7 +6,7 @@ import Tab from "@mui/material/Tab";
 import React from "react";
 import PersonalInterview from './PersonalInterview'
 
-export const FormInterview = ({handleChange,value, watch}) => {
+export const FormInterview = ({handleChange,value, wacthStep}) => {
 
   return (
     <Grid item sx={{ padding: "24px 24px 0 24px" }}>
@@ -47,7 +47,7 @@ export const FormInterview = ({handleChange,value, watch}) => {
               />
             </TabList>
           </Box>
-          <TabPanel value="1"><PersonalInterview watch={watch}/></TabPanel>
+          <TabPanel value="1"><PersonalInterview wacthStep={wacthStep}/></TabPanel>
           <TabPanel value="2"><PersonalInterview /></TabPanel>
         </TabContext>
       </Box>

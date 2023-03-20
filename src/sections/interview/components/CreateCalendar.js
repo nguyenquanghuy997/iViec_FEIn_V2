@@ -191,7 +191,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         <Box>
           <Grid container border="1px solid #E7E9ED">
             <Grid item xs={12} md={6} borderRight="1px solid #E7E9ED">
-              <FormInterview handleChange={handleChange} value={values} watch={wacthStep}/>
+              <FormInterview handleChange={handleChange} value={values} wacthStep={wacthStep}/>
             </Grid>
             <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
               <ListCandidate value={values} defaultValues={defaultValues} />
