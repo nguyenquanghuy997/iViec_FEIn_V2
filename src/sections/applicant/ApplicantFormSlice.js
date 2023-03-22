@@ -13,12 +13,15 @@ import {
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
   API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
-  API_GET_RECRUITMENT_BY_ORGANIZATION, API_UPDATE_APPLICANT,
-  API_GET_APPLICANT_BY_PIPELINESTETEID
+  API_GET_RECRUITMENT_BY_ORGANIZATION, 
+  API_UPDATE_APPLICANT,
+  API_GET_APPLICANT_BY_PIPELINESTETEID,
+  API_GET_LIST_RECRUITMENT,
+  API_GET_ADD_APPLICANT_TO_RECRUITMENT
 } from "@/routes/api";
 import {convertArrayToObject} from '@/utils/help'
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["GetColumnApplicants"],
+  addTagTypes: ["GetColumnApplicants", "GetListsApplicants"],
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
@@ -64,21 +67,34 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
     getRecruitmentsByApplicant: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENTS_BY_APPLICANT,
-        method: 'GET',
-        params
+        method: "GET",
+        params,
       }),
     }),
-    // getRecruitmentPipelineStatesByRecruitment: builder.query({
-    //   query: (params) => ({
-    //     url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
-    //     method: "GET",
-    //     params,
-    //   }),
-    //   // transformResponse: (response) => {
-    //   //   const presponseModified = convertArrayToObject(response.items, 'id');
-    //   //   return presponseModified;
-    //   // },
-    // }),
+    getRecruitmentPipelineStatesByRecruitment1: builder.query({
+      query: (id) => ({
+        url: `${API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT}?RecruitmentId=${id}`,
+        method: "GET",
+      }),
+    }),
+    getRecruitments: builder.query({
+      query: (data) => ({
+        url: API_GET_LIST_RECRUITMENT,
+        method: "POST",
+        data
+      }),
+    }),
+    getRecruitmentPipelineStatesByRecruitment2: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
+        method: "GET",
+        params,
+      }),
+      // transformResponse: (response) => {
+      //   const presponseModified = convertArrayToObject(response.items, 'id');
+      //   return presponseModified;
+      // },
+    }),
     getApplicantCurrentStateWithRecruitmentStates: builder.mutation({
       query: (params) => ({
         url: API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
@@ -137,8 +153,16 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data: data,
       }),
+      invalidatesTags: ["GetListsApplicants"],
     }),
-
+    addApplicantRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_GET_ADD_APPLICANT_TO_RECRUITMENT,
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: ["GetListsApplicants"],
+    }),
     // new
     // get all applicant with filter
     getAllFilterApplicant: builder.query({
@@ -147,12 +171,13 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data,
       }),
+      providesTags: ["GetListsApplicants"],
     }),
     getRecruitmentByOrganizationId: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_BY_ORGANIZATION,
-        method: 'GET',
-        params
+        method: "GET",
+        params,
       }),
     }),
     // get all skills
@@ -177,18 +202,22 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         params,
       }),
       transformResponse: (response) => {
-        return response?.items.map(item => ({
+        return response?.items.map((item) => ({
           ...item,
           value: item.id,
           name: item?.lastName,
           label: item?.lastName,
-        }))
+        }));
       },
     }),
   }),
 });
 
 export const {
+  useGetRecruitmentsQuery,
+  useGetListApplicantsQuery,
+  useGetRecruitmentPipelineStatesByRecruitment1Query,
+  useGetRecruitmentPipelineStatesByRecruitment2Query,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
@@ -207,6 +236,7 @@ export const {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useUpdateApplicantRecruitmentToNextStateMutation,
+  useAddApplicantRecruitmentMutation,
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useGetApplicantByPipelineStateIdQuery,
 } = ApplicantFormSlice;

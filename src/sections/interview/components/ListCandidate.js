@@ -1,202 +1,75 @@
-import AdjustIcon from "../../../assets/interview/AdjustIcon";
-import PlusIcon from "../../../assets/interview/PlusIcon";
-import { DropDown } from "../components/DropDown";
-import AddGroupForm from "./AddGroupForm";
-import AdjustForm from "./AdjustForm";
-import DragCandidate from "./DragCandidate";
-import EditIcon from "@/assets/EditIcon";
-import DeleteIcon from "@/assets/interview/DeleteIcon";
-import MenuListIcon from "@/assets/interview/MenuListIcon";
-import { FormProvider } from "@/components/hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Typography, Box, Card, Checkbox } from "@mui/material";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+// import PlusIcon from "../../../assets/interview/PlusIcon";
+// import DragCandidate from "./DragCandidate";
+import RHFSelectMultiple from "./RHFSelectMultiple";
+import { RHFTextField } from "@/components/hook-form";
+import { useSelector } from "@/redux/store";
+import {
+  useGetAllFilterApplicantQuery,
+} from "@/sections/applicant";
+// import Popover from "@mui/material/Popover";
+// import _without from "lodash/without";
+// import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
+// import { useState } from "react";
+// import { Controller, useFormContext } from "react-hook-form";
+import {
+  // Button,
+  // MenuItem,
+  // FormControlLabel,
+  Box,
+  Typography,
+} from "@mui/material";
 
-const ListCandidate = ({ value }) => {
-  const [open, setOpen] = useState(false);
-  const [openForm, setOpenForm] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const data = [
-    {
-      name: "Đinh Tiến Thành",
-      phone: "0987655345",
-    },
-    {
-      name: "Đinh Tiến Thành 2",
-      phone: "0987655345",
-    },
-  ];
+const ListCandidate = ({
+  value,
+  // defaultValues,
+  action,
+}) => {
+  const dataFilter = useSelector((state) => state.filterReducer.data);
+  const { data: Data } = useGetAllFilterApplicantQuery(
+    JSON.stringify(
+      Object.entries(dataFilter).reduce(
+        (a, [k, v]) =>
+          v === null || v === undefined || !v || v?.length === 0
+            ? a
+            : ((a[k] = v), a),
+        {}
+      )
+    )
+  );
 
-  const ConnectSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Email không đúng định dạng")
-      .required("Email không được bỏ trống"),
-    password: Yup.string()
-      .min(6, "Mật khẩu cần tối thiểu 6 ký tự")
-      .required("Mật khẩu không được bỏ trống"),
-  });
-
-  const defaultValues = {
-    email: "",
-    password: "",
-    remember: true,
-  };
-
-  const methods = useForm({
-    resolver: yupResolver(ConnectSchema),
-    defaultValues,
-  });
-
-  const {
-    // setError,
-    handleSubmit,
-  } = methods;
-  const onSubmit = async () => {};
-
-  return (
+  return value == 1 ? (
     <Box sx={{ p: 3 }}>
       <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
         Danh sách ứng viên
       </Typography>
-      {value == 1 ? (
-        <>
-          {/* <Button
-            variant="outlined"
-            sx={{ width: "100%", mb: 3,textTransform: 'none'}}
-            startIcon={<PlusIcon />}
-            onClick={}
-          >
-            Thêm ứng viên
-          </Button> */}
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <DropDown />
-          </FormProvider>
-          <div>
-            {data ? (
-              <Box>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={checked}
-                          onClick={() => setChecked(!checked)}
-                        />
-                      }
-                      label="Điều chỉnh hàng loạt"
-                    />
-                  </FormGroup>
-                  {checked ? (
-                    <Button
-                      sx={{ textTransform: "none" }}
-                      onClick={() => setOpenForm(true)}
-                    >
-                      <AdjustIcon />
-                      Điều chỉnh
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <DragCandidate />
-              </Box>
-            ) : (
-              ""
-            )}
-          </div>
-          {openForm && (
-            <AdjustForm open={openForm} onClose={() => setOpenForm(false)} />
-          )}
-        </>
-      ) : (
-        <>
-          <div style={{ border: "1px solid #f2f4f5", padding: "16px" }}>
-            <Card
-              sx={{
-                dispaly: "flex",
-                flexDirection: "row",
-                boxShadow: "none",
-                border: "none",
-                mb: 2,
-                borderRadius: "6px",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div style={{ display: "flex" }}>
-                  <MenuListIcon />
-                  <Box sx={{ display: "flex", ml: 1 }}>
-                    <div>
-                      <Typography
-                        component="div"
-                        sx={{ fontSize: "13px", fontWeight: "600" }}
-                      >
-                        Nguyễn Thị Thanh Thủy
-                      </Typography>
-                      <Typography
-                        color="#455570"
-                        sx={{ fontSize: "12px", fontWeight: "400" }}
-                      >
-                        15:00 - 19:00
-                      </Typography>
-                    </div>
-                  </Box>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <Box sx={{ mr: 4 }}>
-                    <EditIcon />
-                  </Box>
-                  <Box sx={{ mt: "2px" }}>
-                    <DeleteIcon />
-                  </Box>
-                </div>
-              </div>
-            </Card>
-            <Button
-              variant="outlined"
-              sx={{ width: "100%", mb: 3 }}
-              startIcon={<PlusIcon />}
-            >
-              Thêm ứng viên
-            </Button>
-          </div>
-          <Button
-            variant="contained"
-            sx={{
-              width: "100%",
-              my: 3,
-              background: "#F3F4F6",
-              color: "#455570",
-              boxShadow: "none",
-              "&:hover": {
-                background: "#F3F4F6",
-                color: "#455570",
-                boxShadow: "none",
-              },
-            }}
-            startIcon={<PlusIcon />}
-            onClick={() => setOpen(true)}
-          >
-            Thêm nhóm
-          </Button>
-          {open && (
-            <AddGroupForm
-              open={open}
-              onClose={() => setOpen(false)}
-              onOpen={() => setOpen(true)}
-            />
-          )}
-        </>
-      )}
+      <RHFSelectMultiple
+        options={Data?.items?.map((i) => ({
+          id: i.id,
+          value: i.id,
+          label: i.fullName,
+          phone: i.phoneNumber,
+          name: i.fullName,
+        }))}
+        name="bookingCalendarGroups"
+        action={action}
+        fullWidth
+        multiple
+        isRequired
+      />
+      <RHFTextField
+        name="name"
+        hidden
+        sx={{ width: "100%", minHeight: 44, display: "none" }}
+      />
+      ;
+    </Box>
+  ) : (
+    <Box sx={{ p: 3 }}>
+      <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
+        Danh sách ứng viên
+      </Typography>
     </Box>
   );
 };
+
 export default ListCandidate;

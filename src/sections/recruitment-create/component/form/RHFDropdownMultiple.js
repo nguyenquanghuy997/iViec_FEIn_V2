@@ -89,6 +89,7 @@ function RHFDropdownMultiple({name, ...props}) {
                     MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
                     {...other}
                 >
+                  
                   {options?.length > 3 && (
                       <TextFieldStyle
                           inputRef={(input) => {

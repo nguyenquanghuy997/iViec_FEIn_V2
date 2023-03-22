@@ -1,6 +1,6 @@
 // @mui
 import PropTypes from "prop-types";
-import { isEqual } from 'lodash';
+import {isEqual} from 'lodash';
 // form
 import {Controller, useFormContext} from "react-hook-form";
 import {AutocompleteFieldStyle, LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
@@ -8,10 +8,11 @@ import ChipDS from "@/components/DesignSystem/ChipDS";
 import {PaperAutocompleteStyle} from "@/sections/auth/style";
 import Iconify from "@/components/Iconify";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
-import {Checkbox, FormHelperText, MenuItem} from "@mui/material";
+import {Checkbox, MenuItem} from "@mui/material";
 import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 import {AvatarDS} from "@/components/DesignSystem";
 import {BoxFlex} from "@/sections/emailform/style";
+import HelperText from "@/components/BaseComponents/HelperText";
 
 RHFAutocomplete.propTypes = {
   name: PropTypes.string, options: PropTypes.array, AutocompleteProps: PropTypes.object,
@@ -103,10 +104,10 @@ export default function RHFAutocomplete(
                   {props['aria-selected'] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
                 </MenuItem>
             )}
-            isOptionEqualToValue={(option, value) => value === "" || isEqual(option.value, value.value)}
+            isOptionEqualToValue={(option, value) => value === "" || typeof value === 'string' ? isEqual(option, value) : isEqual(option.value, value.value)}
             {...rest}
         />
-        <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
+        <HelperText errorText={error?.message} />
       </>)}
   />);
 }

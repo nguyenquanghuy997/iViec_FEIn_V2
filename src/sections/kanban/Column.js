@@ -1,22 +1,19 @@
-import React, { memo,useRef } from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Droppable } from "react-beautiful-dnd";
 import TaskCard from "./TaskCard";
 import {
   Box,
-  Paper,
+
   Stack,
   Typography
 } from '@mui/material'
-import useKanban from '@/hooks/useKanban'
+
 import {PipelineStateType} from '@/utils/enum'
 import Iconify from "@/components/Iconify";
-const CARD_WIDTH=250
-const KANBAN_STATUS_HEADER_HEIGHT=300
+
 const Column = ({ droppableId, column }) => {
-  const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
-  const scrollRef = useRef(null)
-  console.log('âdad',column.items.length)
+  // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
   return (
     <Stack spacing={2} sx={{ p: 2 }} >
 
@@ -77,64 +74,31 @@ const Column = ({ droppableId, column }) => {
                 mt={0.5}
               />
             </Box>
-
-    <Droppable droppableId={droppableId} key={droppableId}>
+            <div style={{ display: 'flex', overflow: 'auto' }}>
+            <Droppable droppableId={droppableId} key={droppableId}>
       {(provided) => {
         return (
-      
-          <Paper
-          variant='outlined'
-          sx={{
-            px: 2,
-            bgcolor: 'rgba(9, 30, 66, 0.1)',
-            height: {
-              lg: `calc(100vh - ${lgHeight}px)`,
-              xs: `calc(100vh - ${xsHeight}px)`,
-            },
-            backdropFilter: "blur(3px)",
-          }}
-        >
-                <Box
-          sx={{
-            // background: background,
-            borderTopLeftRadius: '1rem',
-            borderTopRightRadius: '1rem',
-            height: '8px',
-            marginX: -2,
-          }}
-        />
-            <Box
-            ref={scrollRef}
-            sx={{
-              height: {
-                lg: `calc(100vh - ${lgHeight + KANBAN_STATUS_HEADER_HEIGHT}px)`,
-                xs: `calc(100vh - ${xsHeight + KANBAN_STATUS_HEADER_HEIGHT}px)`,
-              },
-              width: `${CARD_WIDTH}px`,
-              overflowY: 'auto',
-              mb: 2,
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            style={{
+              background: 'rgba(9, 30, 66, 0.1)',
+              padding: 4,
+              width: 300,
+              minHeight: 1000,
+              border: "2px solid #ccc",
+              borderRadius: "8px"
             }}
           >
-            <Stack
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              spacing={2}
-              sx={{
-                minHeight: '200px',
-              }}
-            >
             {column?.items?.map((item, index) => {
               return <TaskCard key={item.id} item={item} index={index} pipelineStateType={column.pipelineStateType}/>;
             })}
             {provided.placeholder}
-            </Stack>
-          </Box>
-          </Paper>
+          </div>
         );
       }}
-
-
     </Droppable>
+    </div>
     </Stack>
   );
 };
