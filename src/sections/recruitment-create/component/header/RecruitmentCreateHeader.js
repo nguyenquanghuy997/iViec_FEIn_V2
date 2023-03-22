@@ -12,10 +12,10 @@ import {DraftIcon, PreviewIcon} from "@/sections/recruitment-create/component/ic
 import {BoxFlex} from "@/sections/emailform/style";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 
-const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, watchName, ...props}) => {
+const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, watchName}) => {
     // processStatus
     return (
-        <HeadingBar style={{marginBottom: '28px', position: 'fixed', top: '64px'}} {...props}>
+        <HeadingBar style={{marginBottom: '28px', position: 'fixed', top: '64px'}}>
             <BoxFlex>
                 <Stack flexDirection="row" alignItems="center">
                     <Box sx={{display: 'flex', alignItems: 'center'}}>

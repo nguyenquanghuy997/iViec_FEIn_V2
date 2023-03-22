@@ -1,12 +1,8 @@
-import { memo } from "react";
-import dynamic from 'next/dynamic'
+import {memo} from "react";
 import FormHelperText from '@mui/material/FormHelperText';
 import {Controller, useFormContext} from 'react-hook-form';
 import {LabelStyle} from "@/components/hook-form/style";
-const RecruitmentEditor = dynamic(() => import('@/sections/recruitment-create/component/form/RecruitmentEditor'), {
-    loading: () => <div>Loading...</div>,
-    ssr: false,
-})
+import RecruitmentEditor from '@/sections/recruitment-create/component/form/RecruitmentEditor';
 
 const RHFRecruitmentEditor = ({ name, title, isRequired = false, ...other }) => {
   const {control} = useFormContext()

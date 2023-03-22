@@ -1,7 +1,19 @@
 import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
 import {styled} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
-import {Autocomplete, FormHelperText, Input, InputLabel, Select, TextField} from "@mui/material";
+import {
+    Autocomplete,
+    FormHelperText,
+    Input,
+    InputAdornment,
+    InputLabel,
+    Select,
+    TextField,
+    Typography
+} from "@mui/material";
+import Iconify from "@/components/Iconify";
+import React from "react";
+import {STYLE_CONSTANT as style} from "@/theme/palette";
 
 const useStyles = makeStyles(() => ({
     paper: {
@@ -230,6 +242,42 @@ const InputLabelErrorStyle = {
     marginLeft: 0,
 };
 
+const Placeholder = (placeholder) => {
+    return <Typography variant="body2" sx={{
+        color: style.COLOR_TEXT_GRAY,
+        fontSize: style.FONT_SM,
+        fontWeight: style.FONT_NORMAL
+    }}>{placeholder}</Typography>
+}
+
+const MenuProps = {
+    PaperProps: {
+        style: {maxHeight: 330},
+    },
+    disableAutoFocusItem: true,
+    MenuListProps: {
+        disableListWrap: true,
+    },
+};
+
+const InputProps = {
+    startAdornment: (
+        <InputAdornment position="start">
+            <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
+        </InputAdornment>
+    )
+}
+
+const ChipSelectStyle = {
+    padding: '5px 6px',
+    color: style.COLOR_TEXT_PRIMARY,
+    fontSize: style.FONT_XS,
+    fontWeight: style.FONT_MEDIUM,
+    borderRadius: '4px',
+    mr: 1,
+    my: 0.5
+}
+
 export {
     useStyles,
     InputStyle,
@@ -243,4 +291,8 @@ export {
     MenuItemStyle,
     InputLabelStyle,
     InputLabelErrorStyle,
+    Placeholder,
+    MenuProps,
+    InputProps,
+    ChipSelectStyle
 }

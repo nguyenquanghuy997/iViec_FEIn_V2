@@ -8,7 +8,7 @@ import ChipDS from "@/components/DesignSystem/ChipDS";
 import {PaperAutocompleteStyle} from "@/sections/auth/style";
 import Iconify from "@/components/Iconify";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
-import {Checkbox, FormHelperText} from "@mui/material";
+import {Checkbox, FormHelperText, MenuItem} from "@mui/material";
 import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 import {AvatarDS} from "@/components/DesignSystem";
 import {BoxFlex} from "@/sections/emailform/style";
@@ -26,6 +26,7 @@ export default function RHFAutocomplete(
         name,
         options = [],
         title = '',
+        disabledOption,
         multiple = false,
         isRequired = false,
         showAvatar = false,
@@ -76,8 +77,9 @@ export default function RHFAutocomplete(
             renderInput={renderInput}
             noOptionsText={'Không tìm thấy dữ liệu'}
             PaperComponent={CustomPaper}
+            disableCloseOnSelect
             renderOption={(props, option, {selected}) => (
-                <li {...props} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <MenuItem {...props} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} disabled={disabledOption}>
                   <div>
                     {showCheckbox && (
                         <Checkbox
@@ -98,11 +100,10 @@ export default function RHFAutocomplete(
                       {option.label}
                     </BoxFlex>
                   </div>
-                  {props['aria-selected'] ?
-                      <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/> : null}
-                </li>
+                  {props['aria-selected'] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
+                </MenuItem>
             )}
-            isOptionEqualToValue={(option, value) => value === "" || isEqual(option, value)}
+            isOptionEqualToValue={(option, value) => value === "" || isEqual(option.value, value.value)}
             {...rest}
         />
         <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
