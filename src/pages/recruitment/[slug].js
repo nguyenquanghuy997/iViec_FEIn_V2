@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useRef } from 'react'
 import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPreviewItem";
 // componentsf
 import Page from '@/components/Page'
@@ -123,13 +123,15 @@ export default function Recruitment() {
     
     setColumns(ColumnData)
   }, [ColumnData])
-
+  const windowWidth = useRef(window.innerWidth);
+  const windowHeight = useRef(window.innerHeight);
+  console.log('columns',columns,windowWidth)
   return (
     <Page title={"Chi tiết tin"}>
      
         <RecruitmentPreviewItem RecruitmentData={RecruitmentData}/>
-         <div style={{ width: '100%',  display: "flex", justifyContent: "center", height: "100%",backgroundSize: 'cover', backgroundRepeat: 'no-repeat' ,backgroundImage:`url('../assets/icons/candidate/bgImage.png')`}}> 
-
+         <div style={{ overflow: "scroll", width: windowWidth,  display: "flex", justifyContent: "center", height: windowHeight,backgroundSize: 'cover', backgroundRepeat: 'no-repeat' ,backgroundImage:`url('../assets/icons/candidate/bgImage.png')`}}> 
+         <div style={{ overflow: "scroll", width: windowWidth,  display: "flex", justifyContent: "left", height: windowHeight}}> 
        <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
       >
@@ -175,7 +177,7 @@ export default function Recruitment() {
       </Modal>
 
       </DragDropContext> 
-
+      </div>
     </div>
   </Page>
   )
