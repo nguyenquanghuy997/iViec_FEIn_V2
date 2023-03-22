@@ -318,7 +318,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                 isRequired
                                                 title="Đơn vị"
                                                 multiple
-                                                placeholder="Chọn 1 vai trò"
+                                                placeholder="Chọn 1 hoặc nhiều đơn vị"
                                                 sx={{
                                                     minWidth: '276px',
                                                     backgroundColor: '#FDFDFD',

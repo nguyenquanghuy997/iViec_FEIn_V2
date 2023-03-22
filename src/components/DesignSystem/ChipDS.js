@@ -1,6 +1,6 @@
 import {Chip} from '@mui/material';
 
-const ChipDS = ({ label, onClick, onDelete, variant = "outlined", icon, color = "default", size, ...props}) => {
+const ChipDS = ({ label, onClick, onDelete, variant = "outlined", icon, color = "default", size = 'small', ...props}) => {
   return (<Chip
       label={label}
       onClick={onClick}

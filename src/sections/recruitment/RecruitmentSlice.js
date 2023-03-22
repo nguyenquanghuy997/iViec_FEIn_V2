@@ -65,13 +65,6 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetRecruitmentByIdQuery,
-  useGetListJobsMutation,
-  // get list recruitment
-  useGetListRecruitmentsQuery,
-  useLazyGetListRecruitmentsQuery,
-  // get list recruitment by organization
-  useGetRecruitmentByOrganizationIdQuery,
-  useLazyGetRecruitmentByOrganizationIdQuery,
   useCreateApplicantRecruitmentMutation,
   useLazyGetRecruitmentsQuery,
   useCreateRecruitmentMutation,

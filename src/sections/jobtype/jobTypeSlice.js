@@ -2,7 +2,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_ADD_JOBTYPE,
   API_DELETE_JOBTYPE,
-  API_GET_APPLICANT_USERS_ON_JOBTYPE,
+  API_GET_APPLICANT_USERS_ON_JOBTYPE, API_GET_DETAIL_JOB_POSITION,
   API_GET_PAGING_JOBTYPE,
   API_GET_PREVIEW_JOBTYPE,
   API_UPDATE_JOBTYPE,
@@ -21,6 +21,13 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
       query: (params) => ({
         url: `${API_GET_PAGING_JOBTYPE}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
+      }),
+    }),
+    getJobPositionById: builder.query({
+      query: (params) => ({
+        url: API_GET_DETAIL_JOB_POSITION,
+        method: "GET",
+        params
       }),
     }),
 
@@ -73,6 +80,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetAllJobTypeQuery,
+  useGetJobPositionByIdQuery,
   useLazyGetAllJobTypeQuery,
   useLazyGetApplicantUsersOnJobtypeQuery,
   useUpdateStatusJobTypeMutation,
