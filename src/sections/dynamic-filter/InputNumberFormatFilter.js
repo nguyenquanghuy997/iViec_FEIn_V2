@@ -20,6 +20,7 @@ const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
               },
             });
           }}
+          isAllowed={values => values.value >= 0}
           thousandSeparator
           valueIsNumericString
           prefix=""

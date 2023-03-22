@@ -13,7 +13,7 @@ import {DraftIcon, OrangeAlertIcon, SendIcon} from "@/sections/recruitment-creat
 import RecruitmentInformation from '@/sections/recruitment-create/component/other/RecruitmentInformation';
 import RecruitmentPipeLine from '@/sections/recruitment-create/component/other/RecruitmentPipeLine';
 import RecruitmentChannel from '@/sections/recruitment-create/component/other/RecruitmentChannel';
-import {useForm} from "react-hook-form";
+import {useForm, useWatch} from "react-hook-form";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
@@ -30,6 +30,7 @@ import {useDebounce} from "@/hooks/useDebounce";
 import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
 import {RecruitmentWorkingForm} from "@/utils/enum";
+import {useGetJobPositionByIdQuery} from "@/sections/jobtype";
 
 const RecruitmentCreateContent = ({Recruitment}) => {
   const router = useRouter();
@@ -87,7 +88,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     workExperience: Yup.string().required("Số năm kinh nghiệm không được bỏ trống"),
     recruitmentJobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghề"),
     recruitmentWorkingForms: Yup.array().min(1, "Hình thức làm việc không được bỏ trống").max(3, "Chọn tối đa 3 hình thức làm việc"),
-    numberPosition: Yup.number().transform(value => (isNaN(value) ? undefined : value)).max(9999, 'Số lượng nhân viên cần tuyển tối đa 9999').required("Số lượng nhân viên cần tuyển không được bỏ trống"),
+    numberPosition: Yup.number().min(1, 'Số lượng nhân viên cần tuyển tối thiểu là 1').transform(value => (isNaN(value) ? undefined : value)).max(9999, 'Số lượng nhân viên cần tuyển tối đa 9999').required("Số lượng nhân viên cần tuyển không được bỏ trống"),
     sex: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Giới tính không được bỏ trống'),
     workingLanguageId: Yup.string().required('Ngôn ngữ làm việc không được bỏ trống'),
     // date
@@ -120,6 +121,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
           return schema
         }),
     minSalary: Yup.number()
+        .min(1000000, 'Mức lương tối thiểu ít nhất 7 chữ số')
         .transform(value => (isNaN(value) ? undefined : value))
         .when("salaryDisplayType", (salaryDisplayType, schema) => {
           if (salaryDisplayType === 2)
@@ -127,8 +129,9 @@ const RecruitmentCreateContent = ({Recruitment}) => {
           return schema
         }),
     maxSalary: Yup.number()
+        .min(1000000, 'Mức lương tối đa ít nhất 7 chữ số')
         .transform(value => (isNaN(value) ? undefined : value))
-        .min(Yup.ref('minSalary'), 'Mức lương tối đa cần lớn hơn mức lương tối thiểu')
+        .min(Yup.ref('minSalary'), 'Mức lương tối đa cần lớn hơn hoặc bằng mức lương tối thiểu')
         .when("salaryDisplayType", (salaryDisplayType, schema) => {
           if (salaryDisplayType === 2)
             return schema.required("Mức lương tối đa không được bỏ trống")
@@ -142,19 +145,36 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     defaultValues,
   });
 
-  const {handleSubmit, watch, setValue, reset, formState: {errors, isValid}} = methods;
+  const {control, handleSubmit, setValue, reset, formState: {errors, isValid}} = methods;
 
-  const watchName = watch('name');
+  const watchAllFields = useWatch({ control })
+
+  const watchName = useWatch({ control, name: 'name' });
   const watchNameDebounce = useDebounce(watchName, 500);
-  const watchOrganization = watch('organizationId');
-  const watchSalaryDisplayType = watch('salaryDisplayType');
-  const watchCurrencyType = watch('currencyUnit');
-  const watchOrganizationPipelineId = watch('organizationPipelineId');
+  const watchOrganization = useWatch({ control, name: 'organizationId' });
+  const watchSalaryDisplayType = useWatch({ control, name: 'salaryDisplayType' });
+  const watchCurrencyType = useWatch({ control, name: 'currencyUnit' });
+  const watchOrganizationPipelineId = useWatch({ control, name: 'organizationPipelineId' });
+  const watchJobPositionId = useWatch({ control, name: 'jobPositionId' });
 
   // validate
-  const watchRecruitmentAddressIds = watch('recruitmentAddressIds');
-  const watchRecruitmentJobCategoryIds = watch('recruitmentJobCategoryIds');
+  const watchRecruitmentAddressIds = useWatch({ control, name: 'recruitmentAddressIds' });
+  const watchRecruitmentJobCategoryIds = useWatch({ control, name: 'recruitmentJobCategoryIds' });
+  const watchRecruitmentWorkingForms = useWatch({ control, name: 'recruitmentWorkingForms' });
+  const watchStartDate = useWatch({ control, name: 'startDate' });
 
+  const { data: JobPosition = {} } = useGetJobPositionByIdQuery({ Id: watchJobPositionId }, { skip: !watchJobPositionId })
+
+  useEffect(() => {
+    if (!isEmpty(JobPosition)) {
+      reset({
+        ...watchAllFields,
+        description: JobPosition?.description,
+        requirement: JobPosition?.requirement,
+        benefit: JobPosition?.benefit,
+      })
+    }
+  }, [JobPosition])
 
   useEffect(() => {
     if (!isEmpty(Recruitment)) {
@@ -310,11 +330,14 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                 <TabPanel value="1">
                   <BoxFlex>
                     <RecruitmentInformation
+                        recruitment={Recruitment}
+                        startDate={watchStartDate}
                         organizationId={watchOrganization}
                         salaryDisplayType={watchSalaryDisplayType}
                         currencyUnit={watchCurrencyType}
                         recruitmentAddressIds={watchRecruitmentAddressIds}
                         recruitmentJobCategoryIds={watchRecruitmentJobCategoryIds}
+                        recruitmentWorkingForms={watchRecruitmentWorkingForms}
                     />
                   </BoxFlex>
                 </TabPanel>

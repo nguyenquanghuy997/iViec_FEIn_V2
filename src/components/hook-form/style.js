@@ -1,4 +1,3 @@
-import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
 import {styled} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
 import {
@@ -63,9 +62,9 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
         border: '1px solid #D0D4DB',
         minHeight: "44px",
         height: '100%',
-        fontSize: STYLE_CONSTANT.FONT_SM,
+        fontSize: style.FONT_SM,
         borderRadius: theme.spacing(0.75),
-        width: STYLE_CONSTANT.WIDTH_FULL,
+        width: style.WIDTH_FULL,
         '&.Mui-focused': {
             backgroundColor: 'transparent',
             boxShadow: 'none',
@@ -80,8 +79,8 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
     "& .MuiFormHelperText-root": {
         marginTop: theme.spacing(1),
         marginLeft: 0,
-        fontSize: STYLE_CONSTANT.FONT_XS,
-        color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
+        fontSize: style.FONT_XS,
+        color: style.COLOR_TEXT_DANGER,
     },
     "& .MuiInputAdornment-positionEnd": {
         marginRight: 8
@@ -100,9 +99,9 @@ const SelectFieldStyle = styled(Select)(({theme}) => ({
     },
     "&.MuiInputBase-root": {
         minHeight: "44px",
-        fontSize: STYLE_CONSTANT.FONT_SM,
+        fontSize: style.FONT_SM,
         borderRadius: 6,
-        width: STYLE_CONSTANT.WIDTH_FULL,
+        width: style.WIDTH_FULL,
     },
     "& .MuiSelect-select": {
         borderRadius: 6,
@@ -118,8 +117,8 @@ const AutocompleteFieldStyle = styled(Autocomplete)(({theme}) => ({
         paddingTop: '4.5px',
         paddingBottom: '4.5px',
         fontSize: "14px",
-        color: "#1E5EF3",
-        fontWeight: 500,
+        color: style.COLOR_TEXT_BLACK,
+        fontWeight: style.FONT_MEDIUM,
         borderRadius: '6px',
         borderWidth: 1
     },
@@ -162,9 +161,9 @@ const InputStyle = styled(Input)(({theme}) => ({
     border: '1px solid #D0D4DB',
     minHeight: "44px",
     height: '100%',
-    fontSize: STYLE_CONSTANT.FONT_SM,
+    fontSize: style.FONT_SM,
     borderRadius: theme.spacing(0.75),
-    width: STYLE_CONSTANT.WIDTH_FULL,
+    width: style.WIDTH_FULL,
     "&.MuiInputBase-root.Mui-error": {
         borderWidth: '1px',
     },
@@ -176,35 +175,36 @@ const InputStyle = styled(Input)(({theme}) => ({
 }));
 
 const LabelStyle = styled(InputLabel)(({theme}) => ({
-    fontSize: STYLE_CONSTANT.FONT_SM,
-    color: STYLE_CONSTANT.COLOR_TEXT_BLACK,
-    fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+    fontSize: style.FONT_SM,
+    color: style.COLOR_TEXT_BLACK,
+    fontWeight: style.FONT_MEDIUM,
     marginBottom: theme.spacing(1),
 }));
 const FormHelperTextStyle = styled(FormHelperText)(({theme}) => ({
     marginTop: theme.spacing(1),
     marginLeft: 0,
-    fontSize: STYLE_CONSTANT.FONT_XS,
-    color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
+    fontSize: style.FONT_XS,
+    color: style.COLOR_TEXT_DANGER,
 }));
 const Label = styled(InputLabel)(({theme}) => ({
-    fontSize: STYLE_CONSTANT.FONT_SM,
-    color: STYLE_CONSTANT.COLOR_TEXT_BLACK,
-    fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+    fontSize: style.FONT_SM,
+    color: style.COLOR_TEXT_BLACK,
+    fontWeight: style.FONT_MEDIUM,
     marginBottom: theme.spacing(1),
 }));
 const SearchInputStyle = {
     boxShadow: "inset 0px -1px 0px #E7E9ED",
+    minHeight: '44px',
     "& .MuiInputBase-root": {
         border: 0,
         borderRadius: 0,
     },
     "& .MuiInputBase-input": {
-        color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
+        color: style.COLOR_TEXT_SECONDARY,
         padding: "10px 0",
         fontFamily: "Inter",
-        fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
-        fontSize: STYLE_CONSTANT.FONT_SM,
+        fontWeight: style.FONT_MEDIUM,
+        fontSize: style.FONT_SM,
     },
     "& .MuiOutlinedInput-notchedOutline": {
         border: "none",
@@ -216,10 +216,10 @@ const SearchInputStyle = {
 }
 
 const MenuItemStyle = {
-    color: "#172B4D",
+    color: style.COLOR_TEXT_BLACK,
     padding: "10px 16px",
-    fontSize: STYLE_CONSTANT.FONT_SM,
-    fontWeight: STYLE_CONSTANT.FONT_NORMAL,
+    fontSize: style.FONT_SM,
+    fontWeight: style.FONT_NORMAL,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -232,13 +232,13 @@ const MenuItemStyle = {
 }
 
 const InputLabelStyle = {
-    fontSize: STYLE_CONSTANT.FONT_SM,
-    color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY,
-    fontWeight: STYLE_CONSTANT.FONT_MEDIUM,
+    fontSize: style.FONT_SM,
+    color: style.COLOR_TEXT_SECONDARY,
+    fontWeight: style.FONT_MEDIUM,
     marginBottom: 1,
 };
 const InputLabelErrorStyle = {
-    color: STYLE_CONSTANT.COLOR_TEXT_DANGER,
+    color: style.COLOR_TEXT_DANGER,
     marginLeft: 0,
 };
 

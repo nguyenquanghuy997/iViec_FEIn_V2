@@ -21,14 +21,19 @@ import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormat
 import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 import RHFRecruitmentEditor from "@/sections/recruitment-create/component/form/RHRRecruitmentEditor";
 import TreeSelectMultiple from "@/sections/organization/component/TreeSelectMultiple";
+import {isEmpty} from "lodash";
+import {Currency} from "@/utils/enum";
 
 const RecruitmentInformation = (
     {
+      recruitment,
+      startDate,
       organizationId,
       salaryDisplayType,
       currencyUnit,
       recruitmentAddressIds,
       recruitmentJobCategoryIds,
+      recruitmentWorkingForms,
     }
 ) => {
   const {data: {items: ListOrganization = []} = {}, isLoading: loadingOrganization} = useGetOrganizationsDataWithChildQuery();
@@ -71,8 +76,7 @@ const RecruitmentInformation = (
                     fullWidth
                     multiple
                     isRequired
-                    defaultValue={[]}
-                    disabledOption={recruitmentAddressIds.length === 3}
+                    disabledOption={recruitmentAddressIds?.length === 3}
                     AutocompleteProps={{
                       disableCloseOnSelect: true
                     }}
@@ -123,7 +127,7 @@ const RecruitmentInformation = (
                     fullWidth
                     multiple
                     isRequired
-                    disabledOption={recruitmentJobCategoryIds.length === 3}
+                    disabledOption={recruitmentJobCategoryIds?.length === 3}
                     AutocompleteProps={{
                       disableCloseOnSelect: true
                     }}
@@ -135,10 +139,11 @@ const RecruitmentInformation = (
                     options={LIST_RECRUITMENT_WORKING_FORM}
                     name="recruitmentWorkingForms"
                     title="Hình thức làm việc"
-                    placeholder="Chọn 1 hoặc nhiều hình thức làm việc"
+                    placeholder="Chọn tối đa 3 hình thức làm việc"
                     fullWidth
                     multiple
                     isRequired
+                    disabledOption={recruitmentWorkingForms?.length === 3}
                     AutocompleteProps={{
                       disableCloseOnSelect: true
                     }}
@@ -157,13 +162,20 @@ const RecruitmentInformation = (
                   />
                 </div>
                 <div style={{flex: 1, marginLeft: 8}}>
-                  <RHFTextField
+                  {/*<RHFTextField*/}
+                  {/*    name="numberPosition"*/}
+                  {/*    title="Số lượng cần tuyển"*/}
+                  {/*    placeholder="Nhập số lượng cần tuyển"*/}
+                  {/*    isRequired*/}
+                  {/*    fullWidth*/}
+                  {/*    type="number"*/}
+                  {/*/>*/}
+                  <InputNumberFormatFilter
                       name="numberPosition"
                       title="Số lượng cần tuyển"
                       placeholder="Nhập số lượng cần tuyển"
                       isRequired
                       fullWidth
-                      type="number"
                   />
                 </div>
               </Box>
@@ -187,7 +199,6 @@ const RecruitmentInformation = (
                       fullWidth
                       options={ListLanguage}
                       isRequired
-                      defaultValue={ListLanguage[0]?.id}
                   />
                 </div>
               </Box>
@@ -213,9 +224,9 @@ const RecruitmentInformation = (
                   <DateFilter
                       name='startDate'
                       placeholder='Chọn ngày'
-                      // DatePickerProps={{
-                      //   minDate: new Date()
-                      // }}
+                      DatePickerProps={{
+                        minDate: !isEmpty(recruitment) ? startDate : new Date()
+                      }}
                   />
                 </div>
                 <div style={{flex: 1, marginLeft: 8}}>
@@ -223,9 +234,9 @@ const RecruitmentInformation = (
                   <DateFilter
                       name='endDate'
                       placeholder='Chọn ngày'
-                      // DatePickerProps={{
-                      //   minDate: new Date()
-                      // }}
+                      DatePickerProps={{
+                        minDate: !isEmpty(recruitment) ? startDate : new Date()
+                      }}
                   />
                 </div>
               </Box>
@@ -276,7 +287,7 @@ const RecruitmentInformation = (
                               InputProps={{
                                 endAdornment: (
                                     <InputAdornment position='end'>
-                                      {LIST_CURRENCY_TYPE.find(item => item.value === currencyUnit)?.label}
+                                      {Currency(currencyUnit)}
                                     </InputAdornment>
                                 ),
                               }}
@@ -292,7 +303,7 @@ const RecruitmentInformation = (
                               InputProps={{
                                 endAdornment: (
                                     <InputAdornment position='end'>
-                                      {LIST_CURRENCY_TYPE.find(item => item.value === currencyUnit)?.label}
+                                      {Currency(currencyUnit)}
                                     </InputAdornment>
                                 ),
                               }}
@@ -377,7 +388,7 @@ const RecruitmentInformation = (
               {/*Cán bộ tuyển dụng */}
               <Box sx={{mb: 2, width: '50%'}}>
                 <RHFDropdown
-                    options={ListUserFromOrganization.map(item => ({
+                    options={ListUserFromOrganization?.map(item => ({
                       ...item,
                       label: item?.email || item?.lastName,
                       name: item?.lastName
@@ -393,7 +404,7 @@ const RecruitmentInformation = (
               </Box>
               <Box sx={{mb: 2}}>
                 <RHFAutocomplete
-                    options={ListUserFromOrganization.map(item => ({
+                    options={ListUserFromOrganization?.map(item => ({
                       value: item.id,
                       label: item?.email || item?.lastName,
                     }))}
@@ -410,7 +421,7 @@ const RecruitmentInformation = (
               </Box>
               <Box sx={{mb: 2}}>
                 <RHFAutocomplete
-                    options={ListUserFromOrganization.map(item => ({
+                    options={ListUserFromOrganization?.map(item => ({
                       id: item.id,
                       value: item.value,
                       name: item?.email || item.lastName,

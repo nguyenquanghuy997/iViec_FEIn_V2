@@ -1,10 +1,10 @@
 import React from 'react'
-import {vi} from "date-fns/locale";
+import vi from "date-fns/locale/vi";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {FormHelperText, InputAdornment} from "@mui/material";
 import InputFilter from "@/sections/dynamic-filter/InputFilter";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {Controller, useFormContext} from "react-hook-form";
 import {DATE_FORMAT} from "@/config";
 
@@ -13,9 +13,6 @@ const DateFilter = React.forwardRef((props, ref) => {
   const {control} = useFormContext()
   const propsInput = {
     inputFormat: DATE_FORMAT,
-    componentsProps: {
-      actionBar: {actions: ['clear', 'today']},
-    },
     InputProps: {
       startAdornment: startIcon && (
           <InputAdornment position='start' sx={{color: '#000'}}>{startIcon}</InputAdornment>
@@ -26,20 +23,25 @@ const DateFilter = React.forwardRef((props, ref) => {
     },
     ...DatePickerProps,
   }
+
   return (
       <Controller
           name={name}
           control={control}
+          defaultValue={null}
           render={({field, fieldState: {error}}) => (
               <>
-                <LocalizationProvider adapterLocale={vi} dateAdapter={AdapterDateFns}>
+                <LocalizationProvider
+                    adapterLocale={vi}
+                    dateAdapter={AdapterDateFns}
+                    dateFormats={{ monthAndYear: 'MM-yyyy' }}
+                >
                   <DatePicker
                       ref={ref}
                       {...field}
                       error={!!error}
                       label={label}
                       {...propsInput}
-                      value={field.value || null}
                       renderInput={(params) => (
                           <InputFilter
                               sx={{mb: 2}}
