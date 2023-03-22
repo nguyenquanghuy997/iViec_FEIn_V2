@@ -4,9 +4,9 @@ import { srcImage } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { Box, Paper, Stack, Typography, Grid } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { memo } from "react";
+import React, { memo,useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-
+import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 function Item(props) {
   const { sx, ...other } = props;
   return (
@@ -110,6 +110,7 @@ function InterviewItem(props) {
   );
 }
 function ResultItem(props) {
+  const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const { item } = props;
   return (
     <div>
@@ -216,6 +217,7 @@ function ResultItem(props) {
                       )}
                       {item.pipelineStateResultType == 0 && (
                         <ButtonDS
+                         onClick={()=>{setIsOpenSendOffer(true)}}
                           tittle={"Gửi thư mời nhận việc"}
                           type="submit"
                           sx={{
@@ -234,8 +236,16 @@ function ResultItem(props) {
                             textTransform: "none",
                           }}
                         />
-                      )}
+                   )} 
                     </Box>
+                         {
+          isOpenSendOffer && <ApplicantSendOfferModal
+            isOpen={isOpenSendOffer}
+            onClose={() => setIsOpenSendOffer(false)}
+            showUploadFile={true}
+            title="Tạo thư mời nhận việc"
+          />
+        }
     </div>
   );
 }
