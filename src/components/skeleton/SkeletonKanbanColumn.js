@@ -4,7 +4,7 @@ import { Box, Paper, Skeleton, Stack } from '@mui/material'
 // hooks
 import useKanban from '@/hooks/useKanban'
 // sections
-import { CARD_WIDTH } from '@/sections/kanban/config'
+// import { CARD_WIDTH } from '@/sections/kanban/config'
 
 export default function SkeletonKanbanColumn() {
   const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
@@ -24,7 +24,7 @@ export default function SkeletonKanbanColumn() {
           key={index}
           sx={{
             p: 2.5,
-            width: CARD_WIDTH,
+            // width: CARD_WIDTH,
             height: {
               lg: `calc(100vh - ${lgHeight}px)`,
               xs: `calc(100vh - ${xsHeight}px)`,
