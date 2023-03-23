@@ -219,6 +219,8 @@ export const API_CREATE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment
 export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // list tin cần iviec duyệt
 export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments"; // phê duyệt nhiều tin
 export const API_REJECT_RECRUITMENT = "/recruitment/Recruitment/RejectRecruitment"; // phê duyệt nhiều tin
+export const API_CLOSE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments"; // đóng nhiều tin tuyển dụng
+export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments"; // xóa nhiều tin tuyển dụng
 
 // job source nguồn job
 
