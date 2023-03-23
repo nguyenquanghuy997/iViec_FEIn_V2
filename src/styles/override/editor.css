@@ -57,7 +57,7 @@
     display: none !important;
 }
 
-.tox-toolbar__group:last-child {
+.text-editor .tox-toolbar__group:last-child {
     margin-left: auto !important;
 }
 

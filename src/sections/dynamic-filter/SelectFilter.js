@@ -1,50 +1,33 @@
 import React, {memo, useEffect, useState} from "react";
-import {FormHelperText, InputAdornment, MenuItem, Stack, Typography} from "@mui/material";
+import {MenuItem, Stack} from "@mui/material";
 import {Controller, useFormContext} from "react-hook-form";
 import Iconify from "@/components/Iconify";
 import {containsText} from "@/utils/function";
 import {
+  ChipSelectStyle,
+  InputProps,
   LabelStyle,
   MenuItemStyle,
+  MenuProps,
+  Placeholder,
   SearchInputStyle,
   SelectFieldStyle,
   TextFieldStyle,
   useStyles,
 } from '@/components/hook-form/style';
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
-
-const Placeholder = (placeholder) => {
-  return <Typography variant="body2" sx={{color: '#8A94A5', fontSize: 14, fontWeight: 400}}>{placeholder}</Typography>
-}
-
-const MenuProps = {
-  PaperProps: {
-    style: {maxHeight: 330,},
-  },
-  disableAutoFocusItem: true,
-  MenuListProps: {
-    disableListWrap: true,
-  },
-};
-
-const InputProps = {
-  startAdornment: (
-      <InputAdornment position="start">
-        <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
-      </InputAdornment>
-  )
-}
+import HelperText from "@/components/BaseComponents/HelperText";
 
 const renderOptions = (options, value, multiple) => {
   if (multiple) {
     return options?.map((option, i) => {
       return <MenuItem
-              sx={{...MenuItemStyle, textAlign: 'left', justifyContent: 'flex-start'}}
-              key={i}
-              value={option.value}
+          sx={{...MenuItemStyle}}
+          key={i}
+          value={option.value}
       >
         {option.label}
+        {value.includes(option.value) && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
       </MenuItem>
     })
   } else {
@@ -70,9 +53,9 @@ const renderChipsSelect = (options, value, onDelete) => {
     {options?.filter(option => value?.includes(option?.value))?.map((item, index) => {
       return <ChipDS
           key={index}
-          sx={{padding: '5px 8px', color: '#455570', fontSize: 12, fontWeight: 500, mt: 2.5, ml: 0.5,}}
+          sx={{...ChipSelectStyle, my: 1}}
           label={item?.name || item?.label}
-          size="medium"
+          size="small"
           variant="filled"
           onDelete={() => onDelete(item.value)}
       />
@@ -140,11 +123,7 @@ const SelectFilter = React.forwardRef((props, ref) => {
                   {renderOptions(filterOptions, field.value, props.multiple)}
                 </SelectFieldStyle>
                 {props.multiple && renderChipsSelect(options, field.value, (item) => handleDelete(field, item))}
-                <FormHelperText sx={{
-                  color: style.COLOR_TEXT_DANGER,
-                  fontSize: style.FONT_XS,
-                  fontWeight: style.FONT_NORMAL
-                }}>{error?.message}</FormHelperText>
+                <HelperText errorText={error?.message}/>
               </Stack>
           )}
       />
