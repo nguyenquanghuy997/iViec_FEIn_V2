@@ -1,5 +1,5 @@
 import {styled} from "@mui/styles";
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Typography} from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 
@@ -75,6 +75,77 @@ const DividerCardStyle = styled(Box)(({theme}) => ({
   padding: theme.spacing(2, 3),
 }))
 
+// modal
+const DialogStyle = styled(Dialog)(({theme}) => ({
+  minHeight: '288px !important',
+  "& .dialog-confirm": {
+    boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+    borderRadius: '6px',
+    backgroundColor: "#FDFDFD",
+  },
+  "& .MuiDialog-container": {
+    "& .MuiPaper-root": {
+      padding: theme.spacing(0, 2),
+      borderRadius: '6px',
+      width: "100%",
+      maxWidth: '600px !important',
+      top: -200
+    },
+  },
+}))
+
+const DialogContentStyle = styled(DialogContent)(({theme}) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+  mt: theme.spacing(3)
+}))
+
+const DialogActionsStyle = styled(DialogActions)(({theme}) => ({
+  borderTop: '1px solid #E7E9ED',
+  mt: theme.spacing(1)
+}))
+
+const TitleAlertStyle = styled(Typography)(({theme}) => ({
+  "&.title-confirm": {
+    textAlign: 'center',
+    width: '100%',
+    fontSize: '16px',
+    fontWeight: 600,
+    color: '#E53935',
+    marginTop: theme.spacing(2),
+  }
+}))
+
+const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
+  "&.subtitle-confirm": {
+    textAlign: 'center',
+    width: '100%',
+    fontSize: '14px',
+    fontWeight: 400,
+    display: 'block',
+    marginTop: theme.spacing(2),
+    "& .subtitle-confirm-name": {
+      fontWeight: 600,
+      marginLeft: theme.spacing(0.5)
+    }
+  }
+}))
+
+const ButtonCancelStyle = styled(Button)(({}) => ({
+  "&.button-cancel": {
+    fontSize: 14,
+    fontWeight: 600,
+    color: '#455570',
+    backgroundColor: 'transparent',
+    borderRadius: 6,
+    "&:hover": {
+      color: '#455570',
+      backgroundColor: 'transparent',
+    }
+  }
+}));
 
 export {
   JobTitleStyle,
@@ -82,5 +153,11 @@ export {
   TabStyle,
   DividerCardStyle,
   BoxWrapperStyle,
-  BoxInnerStyle
+  BoxInnerStyle,
+  DialogStyle,
+  DialogContentStyle,
+  DialogActionsStyle,
+  TitleAlertStyle,
+  DialogContentTextStyle,
+  ButtonCancelStyle,
 }
