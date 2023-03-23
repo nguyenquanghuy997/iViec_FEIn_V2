@@ -1,32 +1,27 @@
 import React, {memo, useEffect, useState} from "react";
-import {Box, FormHelperText, InputAdornment, MenuItem, Stack, TextField, Typography} from "@mui/material";
+import {Box, MenuItem, Stack, TextField} from "@mui/material";
 import {Controller, useFormContext} from "react-hook-form";
 import Iconify from "@/components/Iconify";
 import {containsText} from "@/utils/function";
-import {LabelStyle, MenuItemStyle, SearchInputStyle, SelectFieldStyle, useStyles,} from './style';
+import {
+  InputProps,
+  LabelStyle,
+  MenuItemStyle,
+  MenuProps,
+  Placeholder,
+  SearchInputStyle,
+  SelectFieldStyle,
+  useStyles,
+} from './style';
 import {AvatarDS} from "@/components/DesignSystem";
+import HelperText from "@/components/BaseComponents/HelperText";
 
-const Placeholder = (placeholder) => {
-  return <Typography variant="body2" sx={{color: '#8A94A5', fontSize: 14, fontWeight: 400}}>{placeholder}</Typography>
-}
-
-const MenuProps = {
-  PaperProps: {
-    style: {maxHeight: 330},
-  },
-  disableAutoFocusItem: true,
-  MenuListProps: {
-    disableListWrap: true,
-  },
-  // disableScrollLock: true
-};
-
-const InputProps = {
-  startAdornment: (
-      <InputAdornment position="start">
-        <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
-      </InputAdornment>
-  )
+export const CheckedIconOutlined = () => {
+  return <Iconify
+      color="#1e5ef3"
+      icon="material-symbols:check"
+      sx={{width: 24, height: 24}}
+  />
 }
 
 const renderOptions = (options, value, type = "text") => {
@@ -40,15 +35,14 @@ const renderOptions = (options, value, type = "text") => {
           />
           {option.label || option.name || option.email}
         </Box>
-        {value === option.value &&
-            <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
+        {value === option.value && <CheckedIconOutlined />}
       </MenuItem>
     })
   }
   return options?.map((option, i) => {
     return <MenuItem sx={{...MenuItemStyle}} key={i} value={option.value}>
       {option.label || option.name || option.email}
-      {value === option.value && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
+      {value === option.value && <CheckedIconOutlined />}
     </MenuItem>
   })
 }
@@ -107,9 +101,12 @@ function RHFDropdown({name, ...props}) {
                       onChange={(e) => setSearchText(e.target.value)}
                       onKeyDown={(e) => e.stopPropagation()}
                   />
+                  {!isRequired && <MenuItem sx={{ ...MenuItemStyle }} value="">
+                    <em>Bỏ chọn</em>
+                  </MenuItem>}
                   {renderOptions(filterOptions, field.value, type)}
                 </SelectFieldStyle>
-                <FormHelperText sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
+                <HelperText errorText={error?.message} />
               </Stack>
           )}
       />
