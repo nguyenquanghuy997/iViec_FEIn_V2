@@ -93,27 +93,27 @@ export const RecruitmentItem = () => {
         width: "200px",
       },
       {
-        dataIndex: ["processStatus", "rejectReason"],
+        dataIndex: "processStatus",
         title: "Trạng thái",
         width: "180px",
-        render: (text, row) => (
-            <div style={{display: "flex", alignItems: "center"}}>
-              {DivProcessStatus(get(row, "processStatus", ""))}
-              {get(row, "rejectReason", "") && (
-                  <Tooltip title={get(row, "rejectReason", "")} placement="top" followCursor>
-                    <div>
-                      <Iconify
-                          icon={"mdi:question-mark-circle-outline"}
-                          width={20}
-                          height={20}
-                          color="#E53935"
-                          ml={1}
-                          style={{marginTop: '4px'}}
-                      />
-                    </div>
-                  </Tooltip>
-              )}
-            </div>
+        render: (text, record) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+             { DivProcessStatus(record?.processStatus)}
+            {record?.rejectReason && (
+              <Tooltip title={record?.rejectReason} placement="top" followCursor>
+                <div>
+                <Iconify
+                  icon={"mdi:question-mark-circle-outline"}
+                  width={20}
+                  height={20}
+                  color="#E53935"
+                  ml={1}
+                  style={{marginTop:'4px'}}
+                />
+                </div>
+              </Tooltip>
+            )}
+         </div>
         ),
       },
       {

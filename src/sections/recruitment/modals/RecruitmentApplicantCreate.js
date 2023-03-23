@@ -113,6 +113,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 2000,
           });
+          location.reload()
           pressHide();
         } catch (err) {
           enqueueSnackbar("Thực hiện thất bại!", {
@@ -126,6 +127,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 1000,
           });
+          location.reload()
           pressHide();
         } catch (err) {
           enqueueSnackbar("Thực hiện thất bại!", {
