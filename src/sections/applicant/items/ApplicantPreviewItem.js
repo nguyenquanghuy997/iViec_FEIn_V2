@@ -155,7 +155,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
           <ButtonDS
             tittle={"Gửi offer"}
             type="button"
-            isDisabled={true}
+            // isDisabled={true}
             onClick={() => setIsOpenSendOffer(true)}
             sx={{
               color: "#8A94A5",
