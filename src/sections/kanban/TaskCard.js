@@ -4,9 +4,9 @@ import { srcImage } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { Box, Paper, Stack, Typography, Grid } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { memo } from "react";
+import React, { memo,useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-
+import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 function Item(props) {
   const { sx, ...other } = props;
   return (
@@ -21,146 +21,72 @@ function Item(props) {
     />
   );
 }
-
-function TaskCard({ item, index, pipelineStateType }) {
+function Baseitem(props) {
+  const { item } = props;
   return (
-    <Draggable key={item.id} draggableId={item.id} index={index}>
-      {(provided) => {
-        return (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <Paper
-              sx={{
-                width: 1,
-                position: "relative",
-                boxShadow: (theme) => theme.customShadows.z1,
-                "&:hover": {
-                  boxShadow: (theme) => theme.customShadows.z16,
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  justifyContent: "space-between",
-                  display: "flex",
-                  flexDirection: "row",
-                  p: 1,
-                }}
-              >
-                <Typography
-                  display="flex"
-                  fontSize="20px"
-                  fontWeight="600"
-                  alignItems="center"
-                >
-                  <Iconify
-                    icon={"carbon:dot-mark"}
-                    width={20}
-                    height={20}
-                    color="#4CAF50"
-                    ml={1}
-                  />
-                  <Typography fontSize="12px">
-                    {fDate(item.createdTime)}
-                  </Typography>
-                </Typography>
-                <Iconify
-                  icon={"ph:dots-three"}
-                  width={20}
-                  height={20}
-                  color="#4CAF50"
-                  ml={1}
-                />
-              </Box>
+    <Grid
+      display="flex"
+      alignItems="center"
+      sx={{ "& .MuiBadge-dot": { width: "6px", minWidth: "6px", height: "6px", top: 3, right: 3, } }}
+    >
+      <AvatarDS
+        sx={{ height: "32px", width: "32px", borderRadius: "14px", }}
+        src={srcImage(item?.portraitImage)}
+      />
 
-              <Box
-              sx={{ cursor: 'pointer',  mb:2}}
-              // onClick={onOpenUpdateTask.bind(null, card)}
-              >
-                <Stack
-                  spacing={1}
-                  sx={{
-                    borderRadius: '8px' ,
-                    p: 2,
-                    background: "#FDFDFD",
-                    // boxShadow: '0 0 0 0 rgb(9 30 66 / 25%)',
-                  }}
-                >
-                  <Grid
-                    display="flex"
-                    alignItems="center"
-                    sx={{
-                      "& .MuiBadge-dot": {
-                        width: "6px",
-                        minWidth: "6px",
-                        height: "6px",
-                        top: 3,
-                        right: 3,
-                      },
-                    }}
-                  >
-                    <AvatarDS
-                      sx={{
-                        height: "32px",
-                        width: "32px",
-                        borderRadius: "14px",
-                      }}
-                      src={srcImage(item?.portraitImage)}
-                    ></AvatarDS>
-                    <Box pl={1}>
-                      <Typography
-                        display="flex"
-                        fontSize="13px"
-                        fontWeight="600"
-                        alignItems="center"
-                      >
-                        {item?.fullName}
-                      </Typography>
-                      <Stack direction="row" spacing={2} color="#172B4D">
-                        <Typography fontSize="12px">
-                          {item.phoneNumber}
-                        </Typography>
-                      </Stack>
-                    </Box>
-                  </Grid>
-                  {/* Thi tuyển */}
-                  {pipelineStateType == 1 && (
-                    <Box
-                      sx={{
-                        backgroundColor:
-                          item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE",
-                        display: "flex",
-                        flexDirection: "column-reverse",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      {/* <Stack
-              direction="row"
-              
-              spacing={0.5}
-              p={0.5}
-              color={item?.processStatus==4?"##388E3C":"#D32F2F"}
-            >
-              <Typography fontSize="14px" fontWeight="600">{"Điểm:"}</Typography>
-              <Typography fontSize="14px" fontWeight="600" >{item?.processStatus==4?"15/16":"3/16"}</Typography>
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={0.5}
-              p={0.5}
-              color={item?.processStatus==4?"##388E3C":"#D32F2F"}
-            >
-              <Typography fontSize="14px" fontWeight="600">{"Kết quả :"}</Typography>
-              <Typography fontSize="14px" fontWeight="600" >{item?.processStatus==4?"Đạt":"Không Đạt"}</Typography>
-            </Stack> */}
-                    </Box>
-                  )}
-                  {/* Phỏng vấn */}
-                  {pipelineStateType == 2 && (
-                    <ButtonDS
+      <Box pl={1}>
+        <Typography fontSize="12px" display="flex" fontSize="13px" fontWeight="600" alignItems="center">
+          {item?.fullName}
+        </Typography>
+        <Stack direction="row" spacing={2} color="#172B4D">
+          <Typography fontSize="12px">
+            {item.phoneNumber}
+          </Typography>
+        </Stack>
+      </Box>
+    </Grid>
+  );
+}
+
+function ExaminationItem(props) {
+  const { item } = props;
+  return (
+    <div>
+      <Baseitem item={item} />
+      <Box
+        sx={{ backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE",display: "flex", 
+          flexDirection: "column-reverse",
+          alignItems: "flex-start", }}
+       >
+        <Stack
+          direction="row"
+           spacing={0.5}
+          p={0.5}
+          color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
+        >
+          <Typography fontSize="14px" fontWeight="600">{"Điểm:"}</Typography>
+          <Typography fontSize="14px" fontWeight="600" >{item?.processStatus == 4 ? "15/16" : "3/16"}</Typography>
+        </Stack>
+        <Stack
+          direction="row"
+          spacing={0.5}
+          p={0.5}
+          color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
+        >
+          <Typography fontSize="14px" fontWeight="600">{"Kết quả :"}</Typography>
+          <Typography fontSize="14px" fontWeight="600" >{item?.processStatus == 4 ? "Đạt" : "Không Đạt"}</Typography>
+        </Stack>
+      </Box>
+    </div>
+  );
+}
+
+function InterviewItem(props) {
+  const { item } = props;
+  return (
+    <div>
+      <Baseitem item={item} />
+      <ButtonDS
                       tittle={"Đặt lịch phỏng vấn"}
                       type="submit"
                       sx={{
@@ -179,11 +105,17 @@ function TaskCard({ item, index, pipelineStateType }) {
                         textTransform: "none",
                       }}
                     />
-                  )}
-
-                  {/* Kết quả */}
-                  {pipelineStateType == 3 && (
-                    <Box>
+      
+    </div>
+  );
+}
+function ResultItem(props) {
+  const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
+  const { item } = props;
+  return (
+    <div>
+      <Baseitem item={item} />
+      <Box>
                       <Box
                         sx={{
                           display: "flex",
@@ -285,6 +217,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                       )}
                       {item.pipelineStateResultType == 0 && (
                         <ButtonDS
+                         onClick={()=>{setIsOpenSendOffer(true)}}
                           tittle={"Gửi thư mời nhận việc"}
                           type="submit"
                           sx={{
@@ -303,11 +236,25 @@ function TaskCard({ item, index, pipelineStateType }) {
                             textTransform: "none",
                           }}
                         />
-                      )}
+                   )} 
                     </Box>
-                  )}
-                  {/* Mời nhận việc */}
-                  {pipelineStateType == 4 && item.offerStateResultType == 0 && (
+                         {
+          isOpenSendOffer && <ApplicantSendOfferModal
+            isOpen={isOpenSendOffer}
+            onClose={() => setIsOpenSendOffer(false)}
+            showUploadFile={true}
+            title="Tạo thư mời nhận việc"
+          />
+        }
+    </div>
+  );
+}
+function OfferItem(props) {
+  const { item } = props;
+  return (
+    <div>
+      <Baseitem item={item} />
+      {item.offerStateResultType == 0 && (
                     <Box sx={{ display: "flex", pt: 1 }}>
                       <Item sx={{ flexShrink: 1 }}>
                         <Iconify
@@ -330,7 +277,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                       </Item>
                     </Box>
                   )}
-                  {pipelineStateType == 4 && item.offerStateResultType == 1 && (
+                  {item.offerStateResultType == 1 && (
                     <Box sx={{ display: "flex", pt: 1 }}>
                       <Item sx={{ flexShrink: 1 }}>
                         <Iconify
@@ -353,7 +300,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                       </Item>
                     </Box>
                   )}
-                  {pipelineStateType == 4 && item.offerStateResultType == 2 && (
+                  {item.offerStateResultType == 2 && (
                     <Box sx={{ display: "flex", pt: 1 }}>
                       <Item sx={{ flexShrink: 1 }}>
                         <Iconify
@@ -376,7 +323,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                       </Item>
                     </Box>
                   )}
-                  {pipelineStateType == 4 && item.offerStateResultType == 3 && (
+                  { item.offerStateResultType == 3 && (
                     <Box sx={{ display: "flex", pt: 1 }}>
                       <Item sx={{ flexShrink: 1 }}>
                         <Iconify
@@ -400,6 +347,77 @@ function TaskCard({ item, index, pipelineStateType }) {
                     </Box>
                   )}
 
+
+    </div>
+  );
+}
+
+function TaskCard({ item, index, pipelineStateType }) {
+  return (
+    <Draggable key={item.id} draggableId={item.id} index={index}>
+      {(provided) => {
+        return (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <Paper
+              sx={{
+                width: 1,
+                position: "relative",
+                boxShadow: (theme) => theme.customShadows.z1,
+                "&:hover": {
+                  boxShadow: (theme) => theme.customShadows.z16,
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  justifyContent: "space-between",
+                  display: "flex",
+                  flexDirection: "row",
+                  p: 1,
+                }}
+              >
+                <Typography
+                  display="flex"
+                  fontSize="20px"
+                  fontWeight="600"
+                  alignItems="center"
+                >
+                  <Iconify
+                    icon={"carbon:dot-mark"}
+                    width={20}
+                    height={20}
+                    color="#4CAF50"
+                    ml={1}
+                  />
+                  <Typography fontSize="12px">
+                    {fDate(item.createdTime)}
+                  </Typography>
+                </Typography>
+                <Iconify
+                  icon={"ph:dots-three"}
+                  width={20}
+                  height={20}
+                  color="#4CAF50"
+                  ml={1}
+                />
+              </Box>
+
+              <Box sx={{ cursor: 'pointer', mb: 2 }}>
+                <Stack
+                  spacing={1}
+                  sx={{ borderRadius: '8px', p: 2, background: "#FDFDFD" }}
+                >
+                  {pipelineStateType == 0 && <Baseitem item={item} />}
+                  {pipelineStateType == 1 && <ExaminationItem item={item} />}
+                  {pipelineStateType == 2 && <InterviewItem item={item} />}
+                  {pipelineStateType == 3 && <ResultItem item={item} />}
+                  {pipelineStateType == 4 && <OfferItem item={item} />}
+
+              
                   <Box
                     display="Grid"
                     alignItems="center"

@@ -445,8 +445,6 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
           />
         }
       </Container>
-      {/*<RecruitmentApplicantCreate show={showModelCreate} setShow={setShowModelCreate} data={modelApplication}*/}
-      {/*                            setData={setModelApplication}/>*/}
     </div>
   );
 }
