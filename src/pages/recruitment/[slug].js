@@ -117,14 +117,15 @@ export default function Recruitment() {
       const [removed] = sourceItems.splice(source.index, 1);
       destItems.splice(destination.index, 0, removed);
       let applicantId
-  
+      console.log('result.draggableId',result.draggableId)
+      console.log('destColumn',destColumn)
       sourceColumn.items.map((item)=>{
         if(item.id==result.draggableId)
          applicantId=item.applicantId
 
       })
       // call api
-      let body
+      
       if(destColumn.pipelineStateType==3){
         setApplicantId(applicantId)
         setRecruitmentId(RecruitmentId)
@@ -132,7 +133,14 @@ export default function Recruitment() {
         showModal()
       }
       else{
-         body ={
+        
+        // disable offer
+        if(destColumn.pipelineStateType==4){
+
+        }
+        else{
+        //
+        let body ={
           "applicantId": applicantId,
           "recruitmentId": RecruitmentId,
           "recruitmentPipelineStateId":destColumn.id,
@@ -150,6 +158,7 @@ export default function Recruitment() {
           }
         });
       }
+    }
  
     } else {
       // cùng cột
