@@ -16,7 +16,7 @@ function RecruitmentEditor({error, value, initialValue, placeholder, onChange, h
     return (
         <div>
             <RootStyle
-                className='text-editor'
+                className='recruitment-editor'
                 sx={{
                     ...(error && {
                         border: (theme) => `solid 1px ${theme.palette.error.main}`,
@@ -29,20 +29,18 @@ function RecruitmentEditor({error, value, initialValue, placeholder, onChange, h
                     onEditorChange={onChange}
                     value={value}
                     initialValue={initialValue}
-                    id="textarea"
                     init={{
                         language: 'vi',
-                        height: sx.minHeight,
+                        height: '370px',
                         menubar: false,
                         contextmenu: false,
                         branding: false,
                         placeholder: placeholder || '',
                         entity_encoding: 'raw',
                         entities: '160,nbsp,38,amp,60,lt,62,gt',
-                        selector: '#textarea',
+                        selector: '#recruitment-editor',
                         plugins: 'autosave link lists wordcount',
-                        image_caption: true,
-                        toolbar: ` bold italic underline link | alignleft aligncenter alignright alignjustify | numlist bullist`,
+                        toolbar: `bold italic underline link alignleft aligncenter alignright alignjustify numlist bullist`,
                         content_style: "body { font-family:Inter,sans-serif; font-size:14px; }",
                     }}
                     {...other}

@@ -62,16 +62,6 @@ export const DeleteIconGrey = ({width = 18, height = 18}) => {
   )
 }
 
-export const CancelIcon = () => {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={10} height={10} viewBox="0 0 10 10" fill="none">
-      <path
-        d="M4.99999 4.05781L8.29999 0.757812L9.24266 1.70048L5.94266 5.00048L9.24266 8.30048L8.29999 9.24315L4.99999 5.94315L1.69999 9.24315L0.757324 8.30048L4.05732 5.00048L0.757324 1.70048L1.69999 0.757812L4.99999 4.05781Z"
-        fill="#5C6A82"/>
-    </svg>
-  )
-}
-
 export const ForwardIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 20 20" fill="none">

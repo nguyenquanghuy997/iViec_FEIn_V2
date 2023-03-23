@@ -55,8 +55,8 @@ export const LIST_EXPERIENCE_NUMBER = [
   {value: 2, name: "1 - 2 năm", label: "1 - 2 năm"},
   {value: 3, name: "2 - 3 năm", label: "2 - 3 năm"},
   {value: 4, name: "3 - 5 năm", label: "3 - 5 năm"},
-  {value: 5, name: "5-7 năm", label: "5-7 năm"},
-  {value: 6, name: "5 - 10 năm", label: "5 - 10 năm"},
+  {value: 5, name: "5 - 7 năm", label: "5 - 7 năm"},
+  {value: 6, name: "7 - 10 năm", label: "7 - 10 năm"},
   {value: 7, name: "10 năm trở lên", label: "10 năm trở lên"},
 ]
 

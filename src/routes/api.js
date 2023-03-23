@@ -193,6 +193,7 @@ export const API_DELETE_REVIEW_FORM = "ReviewForm/DeleteReviewForm";
 
 // Vị trí công việc
 export const API_GET_PAGING_JOBTYPE = "recruitment/JobPosition/GetJobPositions";//new
+export const API_GET_DETAIL_JOB_POSITION = "/recruitment/JobPosition/GetJobPosition";//new
 export const API_UPDATE_STATUS_JOBTYPE = "JobType/UpdateJobTypeStatus";
 export const API_GET_PREVIEW_JOBTYPE = "JobType/GetJobTypeById";
 export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
@@ -224,6 +225,8 @@ export const API_CREATE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment
 export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // list tin cần iviec duyệt
 export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments"; // phê duyệt nhiều tin
 export const API_REJECT_RECRUITMENT = "/recruitment/Recruitment/RejectRecruitment"; // phê duyệt nhiều tin
+export const API_CLOSE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments"; // đóng nhiều tin tuyển dụng
+export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments"; // xóa nhiều tin tuyển dụng
 
 // job source nguồn job
 

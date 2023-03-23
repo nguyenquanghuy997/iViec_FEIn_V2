@@ -5,7 +5,7 @@ import {
   API_GET_RECRUITMENT_BY_ID,
   API_UPDATE_RECRUITMENT_DRAFT,
   API_UPDATE_RECRUITMENT_OFFICIAL,
-  API_CREATE_APPLICANT_RECRUITMENT,
+  API_CREATE_APPLICANT_RECRUITMENT, API_CLOSE_RECRUITMENT, API_REMOVE_RECRUITMENT,
 } from '@/routes/api'
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -20,6 +20,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data
       }),
+      providesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
     }),
     getRecruitmentById: builder.query({
       query: (params) => ({
@@ -60,21 +61,34 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'RECRUITMENT', id: arg.id }]
     }),
+    // đóng tin
+    closeRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_CLOSE_RECRUITMENT,
+        method: 'PATCH',
+        data
+      }),
+      invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
+    }),
+    // xóa tin
+    deleteRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_REMOVE_RECRUITMENT,
+        method: 'PATCH',
+        data
+      }),
+      invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
+    }),
   }),
 })
 
 export const {
   useGetRecruitmentByIdQuery,
-  useGetListJobsMutation,
-  // get list recruitment
-  useGetListRecruitmentsQuery,
-  useLazyGetListRecruitmentsQuery,
-  // get list recruitment by organization
-  useGetRecruitmentByOrganizationIdQuery,
-  useLazyGetRecruitmentByOrganizationIdQuery,
   useCreateApplicantRecruitmentMutation,
   useLazyGetRecruitmentsQuery,
   useCreateRecruitmentMutation,
   useUpdateRecruitmentOfficialMutation,
   useUpdateRecruitmentDraftMutation,
+  useCloseRecruitmentMutation,
+  useDeleteRecruitmentMutation,
 } = RecruitmentSlice;

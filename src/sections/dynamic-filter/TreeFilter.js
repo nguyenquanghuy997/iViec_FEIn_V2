@@ -1,96 +1,24 @@
 import React, {memo, useMemo, useState} from "react";
-import {Box, FormHelperText, InputAdornment, Stack, Typography} from "@mui/material";
+import {FormHelperText, Stack} from "@mui/material";
 import {Controller, useFormContext} from "react-hook-form";
-import Iconify from "@/components/Iconify";
 import {convertFlatDataToTree} from "@/utils/function";
-import {LabelStyle, SearchInputStyle, SelectFieldStyle, TextFieldStyle, useStyles,} from '@/components/hook-form/style';
+import {
+    ChipSelectStyle,
+    InputProps,
+    LabelStyle,
+    MenuProps,
+    Placeholder,
+    SearchInputStyle,
+    SelectFieldStyle,
+    TextFieldStyle,
+    useStyles,
+} from '@/components/hook-form/style';
 import {isEmpty} from "lodash";
 import {CollapseIcon, ExpandIcon} from "@/assets/ArrowIcon";
 import {searchTree} from "@/sections/organization/helper/DFSSearchTree";
-import {TreeItem, TreeView, useTreeItem} from "@mui/lab";
-import {styled} from "@mui/styles";
+import {TreeItem, useTreeItem} from "@mui/lab";
 import ChipDS from "@/components/DesignSystem/ChipDS";
-
-export const Placeholder = (placeholder) => {
-    return <Typography variant="body2" sx={{color: '#8A94A5', fontSize: 14, fontWeight: 400}}>{placeholder}</Typography>
-}
-
-export const MenuProps = {
-    PaperProps: {
-        style: {maxHeight: 330},
-    },
-    disableAutoFocusItem: true,
-    MenuListProps: {
-        disableListWrap: true,
-    },
-};
-
-export const InputProps = {
-    startAdornment: (
-        <InputAdornment position="start">
-            <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
-        </InputAdornment>
-    )
-}
-
-export const BoxLabelStyle = styled(Box)(({theme}) => ({
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    padding: theme.spacing(0, 1.5),
-    height: '44px',
-    borderBottom: '1px solid #E7E9ED',
-    "&.MuiTreeItem-content": {
-        "& .MuiTreeItem-label": {
-            "& .selected-icon": {
-                display: "none",
-            }
-        },
-        "&.Mui-selected .MuiTreeItem-label": {
-            fontWeight: 600,
-            "& .selected-icon": {
-                display: "block",
-            }
-        },
-    },
-    "& .MuiTreeItem-iconContainer": {
-        minWidth: 24,
-        minHeight: 24,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-}));
-
-export const LabelTextStyle = styled(Typography)(({theme}) => ({
-    marginLeft: theme.spacing(1),
-    fontSize: 14,
-    color: '#172B4D',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-}));
-
-export const TreeViewStyle = styled(TreeView)(({theme}) => ({
-    "&.tree-item": {
-        "& .MuiCollapse-root": {
-            margin: 0,
-            "& .MuiTreeItem-root": {
-                paddingLeft: theme.spacing(2),
-            }
-        },
-        "& .MuiTreeItem-content": {
-            "&:hover": {
-                backgroundColor: 'transparent !important',
-            },
-            "&.Mui-selected": {
-                backgroundColor: 'transparent !important',
-            }
-        }
-    }
-}));
+import {BoxLabelStyle, LabelTextStyle, TreeViewStyle} from "@/sections/dynamic-filter/style";
 
 export const CustomContent = React.forwardRef(function CustomContent(props, ref) {
     const {classes, label, nodeId, icon: iconProp, expansionIcon, displayIcon} = props;
@@ -178,7 +106,7 @@ const renderChipsSelect = (options, value, onDelete) => {
             {options?.filter(option => value?.map(String)?.includes(option?.id))?.map((item, index) => {
                 return <ChipDS
                     key={index}
-                    sx={{padding: '5px 8px', color: '#455570', fontSize: 12, fontWeight: 500, mt: 2.5, ml: 0.5,}}
+                    sx={{...ChipSelectStyle, my: 1}}
                     label={item?.name}
                     size="small"
                     variant="filled"
