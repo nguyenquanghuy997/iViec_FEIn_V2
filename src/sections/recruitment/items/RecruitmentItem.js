@@ -33,6 +33,7 @@ import {handleExportExcel} from "@/sections/recruitment/helper/excel";
 import {AlertIcon, UnCheckedSwitchIcon} from "@/sections/organization/component/Icon";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {useSnackbar} from "notistack";
+import RecruitmentPreview from "@/sections/recruitment/modals/RecruitmentPreview";
 
 const defaultValues = {
   searchKey: "",
@@ -46,7 +47,7 @@ export const RecruitmentItem = () => {
   // modal redux
   const dispatch = useDispatch();
   const toggleModalState = useSelector((state) => state.modalReducer.openState);
-  const {openClose, openDelete} = toggleModalState;
+  const {openClose, openDelete, openPreview} = toggleModalState;
 
   const handleOpenModalState = (data) => dispatch(modalSlice.actions.openStateModal(data));
   const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
@@ -799,6 +800,10 @@ export const RecruitmentItem = () => {
                 }}
             />
         }
+        <RecruitmentPreview
+            open={openPreview}
+            onClose={handleCloseModal}
+        />
         <BottomNavModal
             data={itemSelected}
             onClose={toggleDrawer(false)}
@@ -823,7 +828,7 @@ export const RecruitmentItem = () => {
               {
                 key: 'preview',
                 title: 'Xem tin tuyển dụng',
-                onClick: () => alert('Xem tin tuyển dụng'),
+                onClick: () => handleOpenModalState({ openPreview: true }),
                 color: 'default',
                 startIcon: <ExpandPreviewIcon />,
                 sx: { padding: '8px 12px' }
