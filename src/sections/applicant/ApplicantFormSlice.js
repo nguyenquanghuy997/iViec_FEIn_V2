@@ -71,7 +71,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         params,
       }),
     }),
-    getRecruitmentPipelineStatesByRecruitment1: builder.query({
+    getRecruitmentPipelineStatesByRecruitment2: builder.query({
       query: (id) => ({
         url: `${API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT}?RecruitmentId=${id}`,
         method: "GET",
@@ -84,7 +84,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         data
       }),
     }),
-    getRecruitmentPipelineStatesByRecruitment2: builder.query({
+    getRecruitmentPipelineStatesByRecruitment1: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
         method: "GET",
