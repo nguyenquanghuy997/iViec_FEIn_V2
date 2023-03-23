@@ -56,7 +56,7 @@ export default function InterviewSchedule() {
       </CardContent>
 
       {type.map((item) => (
-        <>
+        <Box key={item.id}>
           <CardContent
             sx={{
               display: "flex",
@@ -117,7 +117,7 @@ export default function InterviewSchedule() {
             </Box>
           </CardContent>
           <Divider />
-        </>
+        </Box>
       ))}
     </Card>
   );

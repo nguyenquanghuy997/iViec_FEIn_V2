@@ -16,19 +16,19 @@ const ActiveSwitch = styled(Switch)(({}) => ({
   },
 }));
 
-const HeaderCard = ({ text }) => {
+const HeaderCard = ({ text, onOpen }) => {
   return (
     <Box
       sx={{
         background: "white",
         mt: 3,
-        pt: 2.5,
+        py: 2.5,
         px: 5,
         display: "flex",
         justifyContent: "space-between",
       }}
     >
-      <Typography sx={{ m: "auto 0" }}>{text}</Typography>
+      <Typography sx={{ m: "auto 0" , fontSize:16, fontWeight:600}}>{text}</Typography>
       <Box>
         <FormControlLabel
           control={<ActiveSwitch defaultChecked />}
@@ -43,10 +43,11 @@ const HeaderCard = ({ text }) => {
             ml:2,
             fontWeight:500
           }}
-          // onClick={toggleDrawer(true)}
+          onClick={onOpen}
         >
           {"Chỉnh sửa "}
         </Button>
+       
       </Box>
     </Box>
   );

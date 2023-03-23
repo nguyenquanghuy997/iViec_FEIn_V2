@@ -12,24 +12,10 @@ import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const CreateCalendar = ({ open, onClose, onOpen }) => {
   const [values, setValues] = useState("1");
-  const handleChange = ( newValue) => {
-    setValues(newValue);
-  };
-
-  const [addCalendar] = useAddCalendarMutation();
-  const BoxInnerStyle = styled("Box")(({ theme }) => ({
-    [theme.breakpoints.up("xl")]: {
-      width: "1500px",
-    },
-    [theme.breakpoints.up("2k")]: {
-      width: "100%",
-    },
-  }));
-
   const defaultValues = {
     name: "",
     recruitmentId: "",
@@ -43,6 +29,33 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     isSendMailApplicant: false,
     bookingCalendarGroups: [],
   };
+
+  const methods = useForm({
+    // resolver: yupResolver(CalendarSchema),
+    defaultValues,
+  });
+
+  const {
+    setError,
+    watch,
+    handleSubmit,
+    formState: {},
+  } = methods;
+
+  const wacthStep = watch("recruitmentId");
+  const handleChange = (newValue) => {
+    setValues(newValue);
+  };
+
+  const [addCalendar] = useAddCalendarMutation();
+  const BoxInnerStyle = styled("Box")(({ theme }) => ({
+    [theme.breakpoints.up("xl")]: {
+      width: "1500px",
+    },
+    [theme.breakpoints.up("2k")]: {
+      width: "100%",
+    },
+  }));
 
   // const CalendarSchema = Yup.object().shape({
   //   name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
@@ -67,29 +80,12 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   //     })
   //   ),
   // });
-  const methods = useForm({
-    // resolver: yupResolver(CalendarSchema),
-    defaultValues,
-  });
 
-  const {
-    control,
-    setError,
-    watch,
-    handleSubmit,
-    formState: {},
-  } = methods;
-  const wacthStep = watch('recruitmentId')
-  console.log('ha',wacthStep)
-  const { } = useFieldArray({
-    control,
-    name: "bookingCalendarGroups",
-  });
+  // const {} = useFieldArray({
+  //   control,
+  //   name: "bookingCalendarGroups",
+  // });
 
-  // const pressHide = () => {
-  // setData(null);
-  //   setShow(false);
-  // };
   function toHHMMSS(num) {
     var sec_num = parseInt(num * 60, 10); // don't forget the second param
     var hours = Math.floor(sec_num / 3600);
@@ -191,7 +187,11 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         <Box>
           <Grid container border="1px solid #E7E9ED">
             <Grid item xs={12} md={6} borderRight="1px solid #E7E9ED">
-              <FormInterview handleChange={handleChange} value={values} wacthStep={wacthStep}/>
+              <FormInterview
+                handleChange={handleChange}
+                value={values}
+                wacthStep={wacthStep}
+              />
             </Grid>
             <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
               <ListCandidate value={values} defaultValues={defaultValues} />

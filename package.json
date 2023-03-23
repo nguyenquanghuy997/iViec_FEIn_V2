@@ -92,6 +92,7 @@
     "react-easy-crop": "^4.7.3",
     "react-hook-form": "^7.32.2",
     "react-i18next": "^11.17.3",
+    "react-icons": "^4.8.0",
     "react-image-lightbox": "^5.1.4",
     "react-images-uploading": "^3.1.7",
     "react-lazy-load-image-component": "^1.5.4",
@@ -106,6 +107,7 @@
     "socket.io-client": "^4.5.1",
     "stylis": "^4.1.0",
     "stylis-plugin-rtl": "^2.1.1",
+    "swiper": "^9.1.1",
     "xlsx": "^0.18.5",
     "xlsx-js-style": "^1.2.0",
     "yup": "^0.32.11"

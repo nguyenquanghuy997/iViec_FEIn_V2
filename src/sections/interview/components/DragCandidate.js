@@ -10,19 +10,18 @@ import { Button, Typography, Box, Card, Collapse } from "@mui/material";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { TimePicker } from "antd";
 // import dayjs from "dayjs";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function DragCandidate({ data, onDelete }) {
   const [characters, setCharacters] = useState([]);
   const [checked, setChecked] = useState(false);
-  
-  useEffect(() => {
-    setCharacters([]);
-  }, [data]);
+  console.log("daaa", { data, characters });
+
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
+
   function handleOnDragEnd(result) {
     if (!result.destination) return;
 

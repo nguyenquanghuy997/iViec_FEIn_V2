@@ -70,6 +70,7 @@ export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPass
 export const API_USER_INVITE_SET_PASSWORD = "/identity/Identity/UserInvitedSetPassword"; //new
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken"; //new
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup"; // lấy danh sách application theo role groups
+
 // Common
 
 //Ứng viên
@@ -108,6 +109,11 @@ export const API_GET_ALL_USER_BY_ORGANIZATION = "/organization/Organization/GetA
 export const API_INVITE_USER = "/organization/OrganizationUserInvite/CreateOrganizationUserInvites";
 export const API_USER_CONFIRM_INVITE = "/identity/Identity/UserInvitedActive";
 export const API_GET_LIST_USER_INVITE = "/organization/OrganizationUserInvite/GetOrganizationUserInvites";
+export const API_UPDATE_ORGANIZATION_HUMAN = '/organization/OrganizationHuman/UpdateOrganizationHuman'
+export const API_UPDATE_ORGANIZATION_BUSINESS = 'organization/OrganizationBusiness/UpdateOrganizationBusiness'
+export const API_UPDATE_ORGANIZATION_PIPELINE ='organization/OrganizationProfilePipeline/UpdateOrganizationProfilePipelines'
+export const API_UPDATE_ORGANIZATION_ENDING = 'organization/Organization/UpdateOrganization'
+
 //Role
 export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group

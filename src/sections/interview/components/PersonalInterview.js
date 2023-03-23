@@ -3,7 +3,7 @@ import { RHFTextField, RHFCheckbox } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { LabelStyle } from "@/components/hook-form/style";
 import { Label } from "@/components/hook-form/style";
-import { useGetRecruitmentPipelineStatesByRecruitmentQuery } from "@/sections/applicant/ApplicantFormSlice";
+import { useGetRecruitmentPipelineStatesByRecruitment1Query } from "@/sections/applicant/ApplicantFormSlice";
 import { useGetRecruitmentByOrganizationIdQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
 import {
@@ -17,16 +17,20 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 const PersonalInterview = ({ wacthStep }) => {
+  const { control } = useFormContext();
   const {
     data: { items: ListRecruitmentByOrganization = [] } = {},
     isLoading: isLoadingRecruitment,
   } = useGetRecruitmentByOrganizationIdQuery();
-  if (isLoadingRecruitment) return null;
-  const { data: { items: ListStep = [] } = {} } =
-    useGetRecruitmentPipelineStatesByRecruitmentQuery(wacthStep);
-  console.log("step", ListStep);
 
-  const { control } = useFormContext();
+
+
+  const { data: { items: ListStep = [] } = {}, isLoading: isLoadingStep } =
+    useGetRecruitmentPipelineStatesByRecruitment1Query(wacthStep);
+
+    
+  if ((isLoadingRecruitment, isLoadingStep)) return null;
+
   const options = [
     {
       id: 0,
@@ -52,12 +56,11 @@ const PersonalInterview = ({ wacthStep }) => {
       name: "Mẫu đánh giá thực tập sinh IT",
     },
   ];
-
-  const onChange = () => {};
-
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
+
+  console.log("testtuyet", { wacthStep, ListStep });
 
   return (
     <Stack spacing={3}>
@@ -82,7 +85,6 @@ const PersonalInterview = ({ wacthStep }) => {
               label: i.name,
               name: i.name,
             }))}
-            onChange={onChange}
             name="recruitmentId"
             multiple={false}
             required
