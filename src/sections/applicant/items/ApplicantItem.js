@@ -65,6 +65,7 @@ export const ApplicantItem = () => {
   const columns = useMemo(() => {
     return [
       {
+        dataIndex: "id",
         title: "STT",
         key: "index",
         align: "center",

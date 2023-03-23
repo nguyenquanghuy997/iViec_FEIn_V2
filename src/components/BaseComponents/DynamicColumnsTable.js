@@ -9,6 +9,7 @@ import { makeStyles } from "@mui/styles";
 import { Checkbox, Menu, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import ReactDragListView from "react-drag-listview";
+import { isEmpty } from "lodash";
 
 const DynamicColumnsTable = (props) => {
   const {
@@ -16,7 +17,6 @@ const DynamicColumnsTable = (props) => {
     source,
     loading,
     ColumnData,
-    menuItemText,
     UpdateListColumn,
     settingName,
     filter,
@@ -29,7 +29,7 @@ const DynamicColumnsTable = (props) => {
     selectedRowKeys,
     setSelectedRowKeys,
     itemSelected,
-    setItemSelected
+    setItemSelected,
   } = props;
 
   const [columnsTable, setColumnsTable] = useState([]);
@@ -71,6 +71,11 @@ const DynamicColumnsTable = (props) => {
         onClose={() => setVisibleMenuSettings(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        sx={{
+          "& .MuiPaper-root": {
+            minWidth: "400px !important",
+          },
+        }}
       >
         <FormProvider methods={{}}>
           <View
@@ -79,7 +84,7 @@ const DynamicColumnsTable = (props) => {
               flexDirection: "unset",
               alignItems: "center",
               justifyContent: "space-between",
-              padding: "22px 24px",
+              padding: "16px 24px",
             }}
           >
             <div style={{ color: "#172B4D", fontWeight: 600 }}>Quản lý cột</div>
@@ -99,38 +104,35 @@ const DynamicColumnsTable = (props) => {
           </View>
           <Divider />
           <Menu style={{ overflowY: "auto", maxHeight: "600px" }}>
-            {ColumnData &&
-              Object.keys(ColumnData).map((key, index) => {
-                if (key == "id") {
-                  return;
-                }
-                if (key == "name" || key == "id" || key == "phoneNumber") {
-                  return (
-                    <Menu.Item key={index + 1}>
-                      <Checkbox
-                        id={key}
-                        onChange={onChange}
-                        defaultChecked={ColumnData[key]}
-                        disabled
-                      >
-                        {menuItemText[key]}
-                      </Checkbox>
-                    </Menu.Item>
-                  );
-                } else {
-                  return (
-                    <Menu.Item key={index + 1}>
-                      <Checkbox
-                        id={key}
-                        onChange={onChange}
-                        defaultChecked={ColumnData[key]}
-                      >
-                        {menuItemText[key]}
-                      </Checkbox>
-                    </Menu.Item>
-                  );
-                }
-              })}
+            {ColumnData && columns.map((p, index) => {
+              if(isEmpty(p?.fixed)){
+                return (
+                  <Menu.Item key={index + 1}>
+                    <Checkbox
+                      id={index}
+                      onChange={onChange}
+                      defaultChecked={ColumnData[p?.dataIndex]}
+                      disabled
+                    >
+                      {p?.title}
+                    </Checkbox>
+                  </Menu.Item>
+                  )
+              } else{
+                return (
+                  <Menu.Item key={index + 1}>
+                    <Checkbox
+                      id={index}
+                      onChange={onChange}
+                      defaultChecked={ColumnData[p?.dataIndex]}
+                    >
+                      {p?.title}
+                    </Checkbox>
+                  </Menu.Item>
+                );
+              }
+            }
+          )}
           </Menu>
           <DialogActions
             sx={{
@@ -265,7 +267,9 @@ const DynamicColumnsTable = (props) => {
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    setItemSelected(source?.items.filter(item => newSelectedRowKeys.includes(item.id)))
+    setItemSelected(
+      source?.items.filter((item) => newSelectedRowKeys.includes(item.id))
+    );
   };
   const rowSelection = {
     selectedRowKeys,
@@ -274,7 +278,7 @@ const DynamicColumnsTable = (props) => {
   const onTableRowClick = (record) => {
     const selectedKey = record.id;
     const selectedKeys = [...selectedRowKeys];
-    const selectedList = itemSelected ? [...itemSelected]:[];
+    const selectedList = itemSelected ? [...itemSelected] : [];
 
     const index = selectedKeys.indexOf(selectedKey);
     if (index === -1) {
@@ -306,8 +310,7 @@ const DynamicColumnsTable = (props) => {
       }
     }
     setSelectedRowKeys(selectedKeys);
-    itemSelected ? setItemSelected(selectedList) : ""
-    
+    itemSelected ? setItemSelected(selectedList) : "";
   };
 
   const onRow = (record) => {
