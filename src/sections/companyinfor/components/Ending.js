@@ -1,12 +1,13 @@
 import HeaderCard from "../HeaderCard";
+import { useGetCompanyInfoQuery } from "../companyInforSlice";
+import EditorEnding from "./EditorEnding";
+import CloseIcon from "@/assets/CloseIcon";
+import { Drawer, Box, Divider, List, Typography, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-import { Drawer, Box,Divider, List, Typography, Button } from "@mui/material";
-import CloseIcon from "@/assets/CloseIcon";
-import EditorEnding from "./EditorEnding";
-
 
 const Ending = () => {
+  const { data: Data } = useGetCompanyInfoQuery();
   const [open, setOpen] = useState();
   const handleClose = () => {
     setOpen(false);
@@ -25,14 +26,6 @@ const Ending = () => {
       padding: "24px 96px",
     },
 
-    "& cite": {
-      fontStyle: "italic",
-      fontWeight: 500,
-      fontSize: 14,
-      paddingTop: "10px",
-      display: "flex",
-      justifyContent: "flex-end",
-    },
     "& blockquote:before": {
       content: '" ,, "',
       // fontFamily: themeFont.typography.fontFamily,
@@ -73,10 +66,34 @@ const Ending = () => {
       </List>
       <Divider />
       <div>
-        <EditorEnding onClose={handleClose}/>
+        <EditorEnding data={Data} onClose={handleClose} />
       </div>
     </Box>
   );
+
+  const renderItem = (value, main) => {
+    return (
+      <div style={{ flex: main ? undefined : 1 }}>
+        {String(value).startsWith("<") ? (
+          <p dangerouslySetInnerHTML={{ __html: value }} />
+        ) : (
+          <span
+            style={{
+              display: "flex",
+              fontSize: 14,
+              lineHeight: 24 / 16,
+              color: "#172B4D",
+              overflow: "hidden",
+              whiteSpace: "nowrap" /* Don't forget this one */,
+              textOverflow: "ellipsis",
+            }}
+          >
+            {value}
+          </span>
+        )}
+      </div>
+    );
+  };
   return (
     <>
       <HeaderCard
@@ -97,22 +114,7 @@ const Ending = () => {
       )}
       <PlaceholderStyle>
         <div className="content">
-          <blockquote>
-            Là thành viên thuộc Tập đoàn giáo dục hàng đầu Việt Nam, Atlantic
-            Group hiện là một trong những nhà cung cấp dịch vụ giáo dục và du
-            học có uy tín và được khách hàng yêu mến tại Việt Nam và Khu vực.
-            <br />
-            <br />
-            Thành lập ngày 31/01/1997, khởi nguồn từ Trung tâm Dịch vụ giáo dục
-            do 4 thành viên sáng lập cùng sản phẩm du học đầu tiên của Việt Nam
-            mang tên “Trí tuệ Việt Nam – TTVN”, sản phẩm được coi là đặt nền
-            móng cho sự phát triển của giáo dục tại Việt Nam. Sau 22 năm hoạt
-            động, có hơn 15000 nhân viên chính thức với gần 200 văn phòng giao
-            dịch tại 59 tỉnh thành thuộc gần 90 chi nhánh
-          </blockquote>
-          <cite>
-            Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic Group)
-          </cite>
+          <blockquote>{renderItem(Data?.conclusion)}</blockquote>
         </div>
       </PlaceholderStyle>
     </>

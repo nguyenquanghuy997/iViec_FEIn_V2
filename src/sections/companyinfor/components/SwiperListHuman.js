@@ -40,39 +40,6 @@ export const SliderStyle = styled("div")(({}) => ({
   },
 }));
 export default function SwiperListHuman({ data }) {
-  const slides = [];
-
-  for (let i = 0; i < 5; i++) {
-    slides.push(
-      <SwiperSlide key={`slide-${i}`} style={{ listStyle: "none" }}>
-        <Box>
-          <img
-            src={
-              "https://i.pinimg.com/236x/7c/ec/9b/7cec9b3ce82bd81f11aec198115adc5a.jpg"
-            }
-            alt="image"
-            style={{ height: "254px" }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 600,
-              fontSize: 16,
-              display: "flex",
-              justifyContent: "center",
-              mt: 2,
-            }}
-          >
-            Nguyễn thu thủy
-          </Typography>
-          <Typography
-            sx={{ fontSize: 14, display: "flex", justifyContent: "center" }}
-          >
-            Trưởng phòng vận hành
-          </Typography>
-        </Box>
-      </SwiperSlide>
-    );
-  }
 
   return (
     <SliderStyle>

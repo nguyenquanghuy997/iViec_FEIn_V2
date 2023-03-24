@@ -9,6 +9,7 @@ import {
   useGetCompanyInfoQuery,
   useUpdateCompanyBusinessMutation,
   useUploadImageCompanyMutation,
+  useAddOrganizationBusinessMutation,
 } from "@/sections/companyinfor/companyInforSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
@@ -22,6 +23,8 @@ const InputStyle = { width: "100%", minHeight: 40, background: "white" };
 
 const EditBusinessArea = ({ onClose }) => {
   const { data: Data } = useGetCompanyInfoQuery();
+  const isEditMode = !!Data?.organizationBusiness?.id;
+  const [addOrganizationBusiness] = useAddOrganizationBusinessMutation();
   const [updateCompanyBusiness] = useUpdateCompanyBusinessMutation();
   const [uploadImage] = useUploadImageCompanyMutation();
   const { enqueueSnackbar } = useSnackbar();
@@ -39,7 +42,8 @@ const EditBusinessArea = ({ onClose }) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const defaultValues = {};
+  const defaultValues = {
+  };
 
   const ProfileSchema = Yup.object().shape({
     businessPhoto: Yup.string(),
@@ -57,11 +61,12 @@ const EditBusinessArea = ({ onClose }) => {
   });
 
   const {
-    setError,
+    // setValue,
+    // setError,
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting, isValid },
+    formState: { isSubmitting, isValid },
   } = methods;
 
   const { fields, append } = useFieldArray({
@@ -70,34 +75,44 @@ const EditBusinessArea = ({ onClose }) => {
   });
 
   const onSubmit = async (d) => {
+    console.log('d data', d)
     const bgRes = await uploadImage({
       File: imageBg,
       OrganizationId: Data?.id,
     });
-    try {
-      const res = {
-        id: Data?.id,
-        businessPhoto: bgRes.data,
-        organizationBusinessDatas: d.organizationBusinessDatas,
-      };
+
+    const res = {
+      organizationId: isEditMode ? Data?.organizationBusiness?.id : Data?.id,
+      businessPhoto: bgRes.data,
+      organizationBusinessDatas: d.organizationBusinessDatas
+    };
+  
+    if (isEditMode) {
       try {
         await updateCompanyBusiness(res).unwrap();
         enqueueSnackbar("Chỉnh sửa Lĩnh vực công ty thành công!", {
           autoHideDuration: 2000,
         });
         onClose();
-        // location.reload()
       } catch (err) {
-        enqueueSnackbar(errors.afterSubmit?.message, {
+        enqueueSnackbar("Thực hiện thất bại!", {
           autoHideDuration: 1000,
           variant: "error",
         });
       }
-    } catch (err) {
-      const message =
-        err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
-      setError("afterSubmit", { ...err, message });
-      enqueueSnackbar(errors.afterSubmit?.message);
+    } else {
+      try {
+        await addOrganizationBusiness(res).unwrap();
+        enqueueSnackbar("Thêm Lĩnh vực công ty mới thành công!", {
+          autoHideDuration: 2000,
+        });
+        onClose();
+      } catch (err) {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      }
     }
   };
 
@@ -114,7 +129,7 @@ const EditBusinessArea = ({ onClose }) => {
           <Box>
             <EditUpload
               image={bg}
-              ref={{ ...register('businessPhoto')}}
+              ref={{ ...register("businessPhoto") }}
               imageHandler={handleImage}
               style={{
                 width: "100%",

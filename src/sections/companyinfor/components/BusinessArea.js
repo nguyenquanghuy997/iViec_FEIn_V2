@@ -1,7 +1,11 @@
 import HeaderCard from "../HeaderCard";
+import { useGetCompanyInfoQuery } from "../companyInforSlice";
+import EditBusinessArea from "./EditBusinessArea";
+import CloseIcon from "@/assets/CloseIcon";
 import { Typography, Drawer, List, Button, Box, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
+import { useState } from "react";
 import SwiperCore, {
   Navigation,
   Pagination,
@@ -10,9 +14,7 @@ import SwiperCore, {
 } from "swiper/core";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
-import { useState } from "react";
-import CloseIcon from "@/assets/CloseIcon";
-import EditBusinessArea from "./EditBusinessArea";
+
 SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
 
 export const SliderStyle = styled("div")(({}) => ({
@@ -31,7 +33,7 @@ export const SliderStyle = styled("div")(({}) => ({
 }));
 
 const BusinessArea = () => {
-  const slides = [];
+  const { data: Data } = useGetCompanyInfoQuery();
   const [open, setOpen] = useState();
   const handleClose = () => {
     setOpen(false);
@@ -53,7 +55,7 @@ const BusinessArea = () => {
         }}
       >
         <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-        Chỉnh sửa Lĩnh vực kinh doanh
+          Chỉnh sửa Lĩnh vực kinh doanh
         </Typography>
         <Button
           onClick={handleClose}
@@ -68,39 +70,11 @@ const BusinessArea = () => {
       </List>
       <Divider />
       <div>
-        <EditBusinessArea onClose={handleClose}/>
+        <EditBusinessArea onClose={handleClose} />
       </div>
     </Box>
   );
-  for (let i = 0; i < 5; i++) {
-    slides.push(
-      <SwiperSlide key={`slide-${i}`} style={{ listStyle: "none" }}>
-        <div
-          className="slide"
-          style={{
-            height: "170px",
-            // background: "#364d79",
-            overflow: "hidden",
-          }}
-        >
-          <hr
-            style={{
-              border: "3px solid #FF9800",
-              width: "40px",
-              borderRadius: "6px",
-              marginBottom: "8px",
-            }}
-          />
-          <p style={{ fontWeight: 700, fontSize: 16, marginBottom: "12px" }}>
-            Chuyển đổi số
-          </p>
-          <p style={{ fontWeight: 500, fontSize: 14 }}>
-            Giúp 1000+ công ty xây dựng phần mềm đáp ứng các nghiệp vụ phức tạp
-          </p>
-        </div>
-      </SwiperSlide>
-    );
-  }
+
   return (
     <>
       <HeaderCard
@@ -124,8 +98,8 @@ const BusinessArea = () => {
           color: "white",
           width: "100%",
           height: "302px",
-          backgroundImage: 'url("http://i.imgur.com/2tiJEnP.png")',
-          backgroundsize: "cover",
+          backgroundImage: `url(http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto})`,
+          // backgroundsize: "cover",
           padding: "36px 40px",
         }}
       >
@@ -146,7 +120,44 @@ const BusinessArea = () => {
             // navigation
             pagination
           >
-            {slides}
+            {Data?.organizationBusiness?.organizationBusinessDatas.map(
+              (item, index) => (
+                <SwiperSlide
+                  key={`slide-${index}`}
+                  style={{ listStyle: "none" }}
+                >
+                  <div
+                    className="slide"
+                    style={{
+                      height: "170px",
+                      // background: "#364d79",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <hr
+                      style={{
+                        border: "3px solid #FF9800",
+                        width: "40px",
+                        borderRadius: "6px",
+                        marginBottom: "8px",
+                      }}
+                    />
+                    <p
+                      style={{
+                        fontWeight: 700,
+                        fontSize: 16,
+                        marginBottom: "12px",
+                      }}
+                    >
+                      {item?.name}
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 14 }}>
+                      {item?.description}
+                    </p>
+                  </div>
+                </SwiperSlide>
+              )
+            )}
           </Swiper>
         </SliderStyle>
       </div>

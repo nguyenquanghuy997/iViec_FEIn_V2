@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Box, List,Drawer, Typography, Button, Divider } from "@mui/material";
 import CloseIcon from "@/assets/CloseIcon";
 import EditHirePipeline from "./EditHirePipeline";
+import { useGetCompanyInfoQuery } from "../companyInforSlice";
 
 const HireProcess = () => {
+  const { data: Data } = useGetCompanyInfoQuery();
    const [open, setOpen] = useState();
   const handleClose = () => {
     setOpen(false);
@@ -75,7 +77,7 @@ const HireProcess = () => {
       </List>
       <Divider />
       <div>
-        <EditHirePipeline onClose={handleClose}/>
+        <EditHirePipeline data ={Data} onClose={handleClose}/>
       </div>
     </Box>
   );

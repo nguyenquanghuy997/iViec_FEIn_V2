@@ -1,3 +1,4 @@
+import { useUpdateCompanyEndingMutation } from "../companyInforSlice";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { LoadingButton } from "@mui/lab";
 import { InputLabel, Stack } from "@mui/material";
@@ -5,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useUpdateCompanyEndingMutation } from "../companyInforSlice";
+
 const Editor = dynamic(() => import("../edit/editor"), {
   ssr: false,
 });
@@ -14,20 +15,8 @@ const EditorEnding = ({ data, onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [description, setDescription] = useState(null);
   const defaultValues = { ...data?.organizationInformation };
-  const [ updateEnding] = useUpdateCompanyEndingMutation()
+  const [updateEnding] = useUpdateCompanyEndingMutation();
   // const ProfileSchema = Yup.object().shape({
-  //   provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
-  //   districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
-  //   address: Yup.string().required("Chưa nhập Địa chỉ"),
-  //   email: Yup.string()
-  //     .email("Email không đúng định dạng")
-  //     .matches(CHECK_EMAIL, "Email không đúng định dạng")
-  //     .required("Email không được bỏ trống"),
-  //   phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
-  //   jobCategoryIds: Yup.array()
-  //     .min(1, "Ngành nghề không được bỏ trống")
-  //     .max(3, "Chọn tối đa 3 ngành nghê"),
-  //   organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
   //   description: Yup.string(),
   //   avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
   //   coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
@@ -48,9 +37,8 @@ const EditorEnding = ({ data, onClose }) => {
   const onSubmit = async (d) => {
     try {
       const res = {
-        id: data?.organizationInformation?.id,
-
-        description: d.description,
+        organizationId: data?.id,
+        conclusion: d?.conclusion,
       };
       try {
         await updateEnding(res).unwrap();
@@ -76,15 +64,15 @@ const EditorEnding = ({ data, onClose }) => {
   useEffect(() => {
     if (!data) return;
     setDescription(data.description);
-    setValue("description", data.description);
+    setValue("conclusion", data.description);
   }, [JSON.stringify(data)]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Controller
-        name="text"
+        name="conclusion"
         render={() => (
-          <Stack sx={{ px:3, py:2 }}>
+          <Stack sx={{ px: 3, py: 2 }}>
             <InputLabel
               sx={{
                 color: "#5C6A82",
@@ -100,11 +88,11 @@ const EditorEnding = ({ data, onClose }) => {
               data={description}
               onChange={(_, e) => {
                 const text = e.getData();
-                setValue("description", text);
+                setValue("conclusion", text);
               }}
             />
             <RHFTextField
-              name={"introduce"}
+              name={"conclusion"}
               variant={"standard"}
               sx={{ display: "none" }}
             />

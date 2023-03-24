@@ -18,7 +18,7 @@ import * as Yup from "yup";
 
 const InputStyle = { width: "100%", minHeight: 40, background: "white" };
 
-const EditHumanCompany = ({ onClose }) => {
+const EditHumanCompany = ({onClose }) => {
   const { data: Data } = useGetCompanyInfoQuery();
   const [updateCompanyHuman] = useUpdateCompanyHumanMutation();
   const [uploadImage] = useUploadImageCompanyMutation();

@@ -113,7 +113,7 @@ export const API_UPDATE_ORGANIZATION_HUMAN = '/organization/OrganizationHuman/Up
 export const API_UPDATE_ORGANIZATION_BUSINESS = 'organization/OrganizationBusiness/UpdateOrganizationBusiness'
 export const API_UPDATE_ORGANIZATION_PIPELINE ='organization/OrganizationProfilePipeline/UpdateOrganizationProfilePipelines'
 export const API_UPDATE_ORGANIZATION_ENDING = 'organization/Organization/UpdateOrganization'
-
+export const API_ADD_ORGANIZATION_BUSINESS='organization/OrganizationBusiness/CreateOrganizationBusiness'
 //Role
 export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
