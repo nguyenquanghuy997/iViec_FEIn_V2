@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 // mui
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
@@ -31,6 +31,10 @@ import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
 import {RecruitmentWorkingForm} from "@/utils/enum";
 import {useGetJobPositionByIdQuery} from "@/sections/jobtype";
+import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
+import {Typography} from "@mui/material";
+import {STYLE_CONSTANT as style} from "@/theme/palette";
+import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 
 const RecruitmentCreateContent = ({Recruitment}) => {
   const router = useRouter();
@@ -44,6 +48,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   const [isOpenSaveDraft, setIsOpenSaveDraft] = useState(false);
   const [isOpenSubmitApprove, setIsOpenSubmitApprove] = useState(false);
   const [isOpenAlertBack, setIsOpenAlertBack] = useState(false);
+  const [isOpenPreview, setIsOpenPreview] = useState(false);
 
   const defaultValues = useMemo(() => {
     return {
@@ -221,34 +226,34 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       return;
     }
     const body = {
-      id: data.id,
-      name: data.name,
-      organizationId: data.organizationId,
-      description: data.description,
-      benefit: data.benefit,
-      requirement: data.requirement,
-      numberPosition: data.numberPosition,
-      minSalary: data.minSalary,
-      maxSalary: data.maxSalary,
-      salaryDisplayType: data.salaryDisplayType,
-      sex: data.sex,
-      startDate: data.startDate,
-      endDate: data.endDate,
-      address: data.address,
-      workingLanguageId: data.workingLanguageId,
-      coOwnerIds: data.coOwnerIds.map(item => item.value),
-      tags: data.tags,
-      jobPositionId: data.jobPositionId,
-      ownerId: data.ownerId,
-      workExperience: data.workExperience,
-      currencyUnit: data.currencyUnit || 0,
-      candidateLevelId: data.candidateLevelId,
-      organizationPipelineId: data.organizationPipelineId,
-      isAutomaticStepChange: data.isAutomaticStepChange,
-      recruitmentCouncilIds: data.recruitmentCouncilIds.map(item => item.value),
-      recruitmentJobCategoryIds: data.recruitmentJobCategoryIds.map(item => item.value),
-      recruitmentAddressIds: data.recruitmentAddressIds.map(item => item.value),
-      recruitmentWorkingForms: data.recruitmentWorkingForms.map(item => Number(item.value)),
+      id: data?.id,
+      name: data?.name,
+      organizationId: data?.organizationId,
+      description: data?.description,
+      benefit: data?.benefit,
+      requirement: data?.requirement,
+      numberPosition: data?.numberPosition,
+      minSalary: data?.minSalary,
+      maxSalary: data?.maxSalary,
+      salaryDisplayType: data?.salaryDisplayType,
+      sex: data?.sex,
+      startDate: data?.startDate,
+      endDate: data?.endDate,
+      address: data?.address,
+      workingLanguageId: data?.workingLanguageId,
+      coOwnerIds: data?.coOwnerIds?.map(item => item.value),
+      tags: data?.tags,
+      jobPositionId: data?.jobPositionId,
+      ownerId: data?.ownerId,
+      workExperience: data?.workExperience,
+      currencyUnit: data?.currencyUnit || 0,
+      candidateLevelId: data?.candidateLevelId,
+      organizationPipelineId: data?.organizationPipelineId,
+      isAutomaticStepChange: data?.isAutomaticStepChange,
+      recruitmentCouncilIds: data?.recruitmentCouncilIds.map(item => item.value),
+      recruitmentJobCategoryIds: data?.recruitmentJobCategoryIds.map(item => item.value),
+      recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
+      recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
       recruitmentCreationType: isOpenSaveDraft ? 0 : 1,
     }
     if (data?.id) {
@@ -311,6 +316,14 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     }
   }
 
+  const handleOpenPreview = () => {
+    setIsOpenPreview(true);
+  }
+
+  const handleClosePreview = () => {
+    setIsOpenPreview(false);
+  }
+
   return (
       <View>
         <JobCreateHeader
@@ -321,6 +334,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
             watchName={watchNameDebounce}
             processStatus={Recruitment?.processStatus}
             title={!isEmpty(Recruitment) ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng'}
+            onOpenPreview={handleOpenPreview}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <TabContext value={valueTab}>
@@ -355,27 +369,37 @@ const RecruitmentCreateContent = ({Recruitment}) => {
           </TabContext>
         </FormProvider>
         {
-            isOpenSaveDraft && <RecruitmentCreateConfirmModal
-                isOpen={isOpenSaveDraft}
+            isOpenSaveDraft && <ConfirmModal
+                open={isOpenSaveDraft}
                 onClose={() => setIsOpenSaveDraft(false)}
-                title={"Lưu nháp tin tuyển dụng"}
-                subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
                 icon={<DraftIcon height={45} width={50}/>}
-                buttonTitle={"Lưu nháp"}
-                handleSubmit={handleSubmit}
+                title={<Typography sx={{textAlign: 'center', width: '100%', fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD, color: style.COLOR_PRIMARY, marginTop: 2,}}>Lưu nháp tin tuyển dụng</Typography>}
+                subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
+                data={watchAllFields}
                 onSubmit={onSubmit}
+                btnCancelProps={{
+                  title: 'Hủy',
+                }}
+                btnConfirmProps={{
+                  title: 'Xác nhận'
+                }}
             />
         }
         {
-            isOpenSubmitApprove && <RecruitmentCreateConfirmModal
-                isOpen={isOpenSubmitApprove}
+            isOpenSubmitApprove && <ConfirmModal
+                open={isOpenSubmitApprove}
                 onClose={() => setIsOpenSubmitApprove(false)}
-                title={"Gửi phê duyệt tin tuyển dụng"}
-                subtitle={"Bạn có chắc chắn muốn gửi phê duyệt tin tuyển dụng này?"}
                 icon={<SendIcon/>}
-                buttonTitle={"Gửi phê duyệt"}
-                handleSubmit={handleSubmit}
+                title={<Typography sx={{textAlign: 'center', width: '100%', fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD, color: style.COLOR_PRIMARY, marginTop: 2}}>Gửi phê duyệt tin tuyển dụng</Typography>}
+                subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
+                data={watchAllFields}
                 onSubmit={onSubmit}
+                btnCancelProps={{
+                  title: 'Hủy',
+                }}
+                btnConfirmProps={{
+                  title: 'Gửi phê duyệt'
+                }}
             />
         }
         {
@@ -386,6 +410,13 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                 subtitle={"Các thao tác trước đó sẽ không được lưu, Bạn có chắc chắn muốn trở lại?"}
                 icon={<OrangeAlertIcon/>}
                 buttonTitle={"Trở lại"}
+            />
+        }
+        {
+            isOpenPreview && <RecruitmentPreview
+                onClose={handleClosePreview}
+                data={watchAllFields}
+                open={isOpenPreview}
             />
         }
       </View>

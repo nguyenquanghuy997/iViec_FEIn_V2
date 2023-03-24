@@ -9,6 +9,7 @@ import {
 } from "@/sections/recruitment-create/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import CloseIcon from "@/assets/CloseIcon";
+import {isEmpty} from "lodash";
 
 const MuiDialogTitle = ({ children, onClose, ...other }) => {
   return (
@@ -52,7 +53,11 @@ const ConfirmModal = (
   const {title: btnTitleConfirm, ...otherConfirm} = btnConfirmProps;
 
   const handleSubmit = (data) => {
-    onSubmit(data);
+    if (!isEmpty(data)) {
+      onSubmit(data);
+    } else {
+      onSubmit();
+    }
   }
 
   return (

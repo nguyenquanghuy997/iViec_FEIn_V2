@@ -98,6 +98,8 @@ export const API_LIST_JOBS = "/api/recruitment/Recruitment/GetRecruitments"; //n
 export const API_GET_ORGANIZATION = "/organization/Organization/GetOrganization";
 export const API_GET_ORGANIZATION_WITH_CHILD = "/organization/Organization/GetOrganizationsLessDataWithChild"; // lấy danh sách đơn vị để đổ dữ liệu dạng cây
 export const API_GET_ORGANIZATION_DETAIL_BY_ID = "/organization/Organization/GetOrganizationDetailById"; // lấy chi tiết thông tin đơn vị
+export const API_GET_ORGANIZATION_DETAIL_BY_SLUG = "/organization/Organization/GetOrganizationBySlug"; // lấy chi tiết thông tin đơn vị
+export const API_GET_ORGANIZATION_PREVIEW = "/organization/Organization/GetOrganizationPreview"; // lấy chi tiết thông tin đơn vị
 export const API_CREATE_CHILD_ORGANIZATION = "/organization/Organization/CreateChildOrganization"; // tạo đơn vị
 export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganizationData"; // cập nhật thông tin đơn vị
 export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganizationById"; // xóa đơn vị
@@ -209,6 +211,7 @@ export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrga
 // API Application page
 // recruitment tin tuyển dụng
 export const API_GET_RECRUITMENT_BY_ID = "/recruitment/Recruitment/GetRecruitment"; // get recruitment by id
+export const API_GET_RECRUITMENT_BY_SLUG = "/recruitment/Recruitment/GetRecruitmentBySlug"; // get recruitment by slug
 export const API_GET_LIST_RECRUITMENT = "/recruitment/Recruitment/GetRecruitments"; // get all recruitment
 export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/GetRecruitmentByOrganizationId" // new - get recruitment by organization
 export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - create recruitment
