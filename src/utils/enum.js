@@ -163,3 +163,26 @@ export const RecruitmentWorkingForm = (item) => {
       return "Khác";
   }
 };
+
+export const OrganizationSize = (item) => {
+  switch (item) {
+    case 0:
+      return "Dưới 10 nhân sự";
+    case 1:
+      return "10-49 nhân sự";
+    case 2:
+      return "50-99 nhân sự";
+    case 3:
+      return "100-499 nhân sự";
+    case 4:
+      return "500-999 nhân sự";
+    case 5:
+      return "1000-4999 nhân sự";
+    case 6:
+      return "5000-9999 nhân sự";
+    case 7:
+      return "Trên 10000 nhân sự";
+    default:
+      return  "Khác";
+  }
+};

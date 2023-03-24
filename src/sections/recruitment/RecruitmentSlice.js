@@ -5,7 +5,7 @@ import {
   API_GET_RECRUITMENT_BY_ID,
   API_UPDATE_RECRUITMENT_DRAFT,
   API_UPDATE_RECRUITMENT_OFFICIAL,
-  API_CREATE_APPLICANT_RECRUITMENT, API_CLOSE_RECRUITMENT, API_REMOVE_RECRUITMENT,
+  API_CREATE_APPLICANT_RECRUITMENT, API_CLOSE_RECRUITMENT, API_REMOVE_RECRUITMENT, API_GET_RECRUITMENT_BY_SLUG,
 } from '@/routes/api'
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -30,6 +30,15 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: 'RECRUITMENT', id }],
     }),
+    // Lấy việc làm theo slug
+    getRecruitmentBySlug: builder.query({
+      query: (slug) => ({
+        url: API_GET_RECRUITMENT_BY_SLUG + '?Slug=' + slug,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'RECRUITMENT', id: 'SLUG' }],
+    }),
+
     createRecruitment: builder.mutation({
       query: (data) => ({
         url: API_CREATE_RECRUITMENT,
@@ -84,6 +93,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetRecruitmentByIdQuery,
+  useGetRecruitmentBySlugQuery,
   useCreateApplicantRecruitmentMutation,
   useLazyGetRecruitmentsQuery,
   useCreateRecruitmentMutation,
