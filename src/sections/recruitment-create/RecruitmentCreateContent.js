@@ -8,7 +8,6 @@ import Content from "@/components/BaseComponents/Content";
 import JobCreateHeader from "@/sections/recruitment-create/component/header/RecruitmentCreateHeader";
 import JobCreateSubHeader from "@/sections/recruitment-create/component/header/RecruitmentCreateSubHeader";
 import {BoxFlex} from "@/sections/emailform/style";
-import RecruitmentCreateConfirmModal from "@/sections/recruitment-create/component/modal/RecruitmentCreateConfirmModal";
 import {DraftIcon, OrangeAlertIcon, SendIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
 import RecruitmentInformation from '@/sections/recruitment-create/component/other/RecruitmentInformation';
 import RecruitmentPipeLine from '@/sections/recruitment-create/component/other/RecruitmentPipeLine';
@@ -31,10 +30,10 @@ import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
 import {RecruitmentWorkingForm} from "@/utils/enum";
 import {useGetJobPositionByIdQuery} from "@/sections/jobtype";
-import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
 import {Typography} from "@mui/material";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
+import RecruitmentPreviewCreate from "@/sections/recruitment-create/component/other/RecruitmentPreviewCreate";
 
 const RecruitmentCreateContent = ({Recruitment}) => {
   const router = useRouter();
@@ -403,19 +402,49 @@ const RecruitmentCreateContent = ({Recruitment}) => {
             />
         }
         {
-            isOpenAlertBack && <RecruitmentCreateConfirmModal
-                isOpen={isOpenAlertBack}
+            isOpenAlertBack && <ConfirmModal
+                open={isOpenAlertBack}
                 onClose={() => setIsOpenAlertBack(false)}
-                title={"Trở về danh sách tin tuyển dụng"}
+                icon={<OrangeAlertIcon />}
+                title={<Typography sx={{textAlign: 'center', width: '100%', fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD, color: style.COLOR_MAIN, marginTop: 2}}>Trở về danh sách tin tuyển dụng</Typography>}
                 subtitle={"Các thao tác trước đó sẽ không được lưu, Bạn có chắc chắn muốn trở lại?"}
-                icon={<OrangeAlertIcon/>}
-                buttonTitle={"Trở lại"}
+                data={watchAllFields}
+                onSubmit={() => setIsOpenAlertBack(false)}
+                btnCancelProps={{
+                  title: 'Hủy',
+                }}
+                btnConfirmProps={{
+                  title: 'Trở lại'
+                }}
             />
         }
         {
-            isOpenPreview && <RecruitmentPreview
+            isOpenPreview && <RecruitmentPreviewCreate
                 onClose={handleClosePreview}
-                data={watchAllFields}
+                data={{
+                  // header
+                  name: watchAllFields?.name,
+                  organizationId: watchAllFields?.organizationId,
+                  // summary
+                  numberPosition: watchAllFields?.numberPosition,
+                  address: watchAllFields?.address,
+                  recruitmentJobCategories: watchAllFields?.recruitmentJobCategoryIds?.map(item => ({
+                    name: item?.label,
+                    jobCategoryId: item?.value
+                  })),
+                  recruitmentWorkingForms: watchAllFields?.recruitmentWorkingForms?.map(item => ({
+                    workingForm: item?.value,
+                    id: item?.value
+                  })),
+                  salaryDisplayType: watchAllFields?.salaryDisplayType,
+                  minSalary: watchAllFields?.minSalary,
+                  maxSalary: watchAllFields?.maxSalary,
+                  currencyUnit: watchAllFields?.currencyUnit,
+                  // description
+                  description: watchAllFields?.description,
+                  requirement: watchAllFields?.requirement,
+                  benefit: watchAllFields?.benefit,
+                }}
                 open={isOpenPreview}
             />
         }

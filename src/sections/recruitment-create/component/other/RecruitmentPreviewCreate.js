@@ -8,7 +8,6 @@ import PreviewJobHeader from "@/sections/recruitment/modals/preview/PreviewJobHe
 import PreviewJobCompanyIntro from "@/sections/recruitment/modals/preview/PreviewJobCompanyIntro";
 import PreviewJobFunction from "@/sections/recruitment/modals/preview/PreviewJobFunction";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import {useGetRecruitmentBySlugQuery} from "@/sections/recruitment";
 import {useGetOrganizationPreviewQuery} from "@/sections/organization/override/OverrideOrganizationSlice";
 
 const links = [
@@ -22,9 +21,8 @@ const links = [
   },
 ];
 
-const RecruitmentPreview = ({data, open, onClose}) => {
-  const { data: Recruitment = {}, isLoading } = useGetRecruitmentBySlugQuery(data?.slug, { skip: !data?.slug })
-  const { data: Organization = {} } = useGetOrganizationPreviewQuery(data?.organizationId, { skip: !data?.organizationId})
+const RecruitmentPreviewCreate = ({data, open, onClose}) => {
+  const { data: Organization = {}, isLoading } = useGetOrganizationPreviewQuery(data?.organizationId, { skip: !data?.organizationId})
 
   if(isLoading) return null;
 
@@ -69,13 +67,13 @@ const RecruitmentPreview = ({data, open, onClose}) => {
         {/*  content  */}
         <Grid container sx={{background: '#EDEDED'}}>
           <Content>
-            <Breadcrumbs links={[...links, {name: Recruitment?.name}]} sx={{ mt: 0 }} />
-            <PreviewJobHeader Recruitment={Recruitment} Organization={Organization} />
+            <Breadcrumbs links={[...links, {name: data?.name}]} sx={{ mt: 0 }} />
+            <PreviewJobHeader Recruitment={data} Organization={Organization} />
             <Grid container>
               <Grid item md={8}>
                 <JobDescriptionBox className="job-description-box">
                   {/* Preview Job Header */}
-                  <PreviewJobDescription Recruitment={Recruitment}/>
+                  <PreviewJobDescription Recruitment={data}/>
                   <PreviewJobFunction />
                 </JobDescriptionBox>
               </Grid>
@@ -92,4 +90,4 @@ const RecruitmentPreview = ({data, open, onClose}) => {
       </Drawer>
   )
 }
-export default RecruitmentPreview;
+export default RecruitmentPreviewCreate;
