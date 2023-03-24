@@ -33,7 +33,7 @@ import {handleExportExcel} from "@/sections/recruitment/helper/excel";
 import {AlertIcon, UnCheckedSwitchIcon} from "@/sections/organization/component/Icon";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {useSnackbar} from "notistack";
-import RecruitmentPreview from "@/sections/recruitment/modals/RecruitmentPreview";
+import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
 
 const defaultValues = {
   searchKey: "",
@@ -800,10 +800,11 @@ export const RecruitmentItem = () => {
                 }}
             />
         }
-        <RecruitmentPreview
+        { openPreview && <RecruitmentPreview
+            data={itemSelected[0]}
             open={openPreview}
             onClose={handleCloseModal}
-        />
+        />}
         <BottomNavModal
             data={itemSelected}
             onClose={toggleDrawer(false)}

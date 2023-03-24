@@ -82,7 +82,7 @@ const MuiButton = ({title, variant, size, color, startIcon, endIcon, sx, loading
 }
 
 MuiButton.propTypes = {
-  title: PropTypes.oneOf([PropTypes.string, PropTypes.node, PropTypes.element]),
+  title: PropTypes.any,
   color: PropTypes.oneOf(['primary', 'secondary', 'default', 'basic', 'success', 'error', 'warning']),
   variant: PropTypes.oneOf(['contained', 'outlined']),
   size: PropTypes.oneOf(['small', 'medium', 'large']),

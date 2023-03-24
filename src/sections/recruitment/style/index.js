@@ -21,6 +21,7 @@ const JobLogo = styled(Box)(({}) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        marginRight: 24
     }
 }));
 
@@ -30,7 +31,10 @@ const JobTitleBox = styled(Box)(({theme}) => ({
             flex: 1,
             fontSize: pxToRem(18),
             color: style.COLOR_TEXT_BLACK,
-            mb: 6,
+            marginBottom: 6,
+            "&:hover": {
+                color: "#F77A0C"
+            }
         },
         "& .job-company": {
             fontSize: pxToRem(14),
@@ -47,7 +51,7 @@ const JobTitleBox = styled(Box)(({theme}) => ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 padding: '6px 10px',
-                mr: theme.spacing(1)
+                marginRight: theme.spacing(1)
             }
         }
     }
@@ -55,6 +59,7 @@ const JobTitleBox = styled(Box)(({theme}) => ({
 
 const JobFunction = styled(Box)(({}) => ({
     "&.job-function": {
+        width: '100%',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -69,6 +74,7 @@ const JobRemainTime = styled(Box)(({}) => ({
         fontWeight: style.FONT_NORMAL,
         lineHeight: '20px',
         textAlign: 'right',
+        marginTop: 12,
         "& strong": {
             color: style.COLOR_TEXT_BLACK,
             fontWeight: style.FONT_MEDIUM,
@@ -79,7 +85,7 @@ const JobRemainTime = styled(Box)(({}) => ({
 const JobDescriptionBox = styled(Box)(({theme}) => ({
     "&.job-description-box": {
         width: '100%',
-        mb: theme.spacing(2),
+        marginBottom: theme.spacing(2),
         backgroundColor: style.BG_WHITE,
         borderRadius: theme.spacing(0.5),
         padding: theme.spacing(3),
@@ -121,6 +127,21 @@ const JobSummary = styled(Box)(({}) => ({
 }));
 
 // right content
+const JobCompanyIntro = styled(Box)(({}) => ({
+    "&.job-company-intro": {
+        width: '100%',
+        border: '1px solid #CCD4DC',
+        backgroundColor: '#FFF',
+        borderRadius: 0.5,
+        overFlow: 'auto',
+        "& .poster": {
+            width: '100%',
+            height: '126px',
+            imageRendering: 'pixelated',
+            objectFit: 'cover'
+        }
+    }
+}));
 
 const CompanyIntro = styled(Box)(({}) => ({
     "&.company-intro": {
@@ -129,7 +150,7 @@ const CompanyIntro = styled(Box)(({}) => ({
         "& .company-name": {
             display: 'flex',
             alignItems: 'center',
-            mb: 4,
+            marginBottom: 4,
             width: '100%',
             "& .job-logo": {
                 width: 48,
@@ -137,26 +158,24 @@ const CompanyIntro = styled(Box)(({}) => ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginRight: 24,
             },
-            "& p": {
-                fontSize: pxToRem(16),
-                fontWeight: style.FONT_SEMIBOLD,
-                textAlign: 'center',
-                lineHeight: '24px',
-                color: style.COLOR_TEXT_BLACK,
-            }
         },
-        "& p": {
+        "& .typoTitle": {
             fontSize: pxToRem(16),
             fontWeight: style.FONT_SEMIBOLD,
             lineHeight: '24px',
             color: style.COLOR_TEXT_BLACK,
-            "&.typoTitle": {
-                lineHeight: '26px',
-            },
-            "&.typoContent": {
-                fontWeight: style.FONT_NORMAL,
-                whiteSpace: 'pre-line'
+            marginBottom: 8
+        },
+        "& .typoContent": {
+            fontSize: pxToRem(14),
+            fontWeight: style.FONT_NORMAL,
+            lineHeight: '24px',
+            color: style.COLOR_TEXT_BLACK,
+            whiteSpace: 'pre-line',
+            "& p": {
+                marginBottom: 8
             }
         }
     }
@@ -170,5 +189,6 @@ export {
     JobRemainTime,
     JobDescriptionBox,
     JobSummary,
+    JobCompanyIntro,
     CompanyIntro,
 }

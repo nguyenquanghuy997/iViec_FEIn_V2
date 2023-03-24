@@ -7,12 +7,13 @@ import Stack from "@mui/material/Stack";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
 import {PATH_DASHBOARD} from "@/routes/paths";
 import Iconify from "@/components/Iconify";
-import {ButtonDraftStyle, JobTitleStyle} from "@/sections/recruitment-create/style";
+import {JobTitleStyle} from "@/sections/recruitment-create/style";
 import {DraftIcon, PreviewIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
 import {BoxFlex} from "@/sections/emailform/style";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
-const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, watchName}) => {
+const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, watchName, onOpenPreview}) => {
     // processStatus
     return (
         <HeadingBar style={{marginBottom: '28px', position: 'fixed', top: '64px'}}>
@@ -33,24 +34,47 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ti
                         </JobTitleStyle>
                     </Box>
                 </Stack>
-                <Box>
-                    <ButtonDraftStyle
-                        className="button-draft"
-                        startIcon={<DraftIcon/>}
+                <BoxFlex>
+                    <MuiButton
+                        title="Lưu nháp"
+                        color="default"
                         onClick={() => setIsOpenSaveDraft(true)}
                         disabled={!watchName}
-                    >Lưu nháp</ButtonDraftStyle>
-                    <ButtonDraftStyle
-                        className="button-draft"
-                        startIcon={<PreviewIcon/>}
-                    >Xem trước</ButtonDraftStyle>
-                    <ButtonDraftStyle
-                        className="button-draft"
-                        startIcon={<Iconify icon="majesticons:send"/>}
-                        onClick={() => setIsOpenSubmitApprove(true)}
-                        disabled={!errors}
-                    >Gửi phê duyệt</ButtonDraftStyle>
-                </Box>
+                        startIcon={<DraftIcon/>}
+                        sx={{
+                            fontWeight: 500,
+                            "&.Mui-disabled": {
+                                color: "#8a94a5",
+                                backgroundColor: "#d0d4db",
+                            }
+                        }}
+                    />
+                    <MuiButton
+                        title="Xem trước"
+                        color="default"
+                        onClick={onOpenPreview}
+                        startIcon={<PreviewIcon />}
+                        sx={{
+                            fontWeight: 500,
+                            ml: 1.5
+                        }}
+                    />
+                  <MuiButton
+                      title="Gửi phê duyệt"
+                      color="default"
+                      onClick={() => setIsOpenSubmitApprove(true)}
+                      disabled={!errors}
+                      startIcon={<Iconify icon="majesticons:send"/>}
+                      sx={{
+                        fontWeight: 500,
+                        ml: 1.5,
+                        "&.Mui-disabled": {
+                          color: "#8a94a5",
+                          backgroundColor: "#d0d4db",
+                        }
+                      }}
+                  />
+                </BoxFlex>
             </BoxFlex>
         </HeadingBar>
     )

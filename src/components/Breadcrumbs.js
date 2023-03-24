@@ -1,97 +1,60 @@
-// next
-import NextLink from 'next/link'
+import {Breadcrumbs as MuiBreadcrumbs, Link, Typography,} from "@mui/material";
+import {styled} from '@mui/material/styles';
+import PropTypes from "prop-types";
+import NextLink from "next/link";
+import {pxToRem} from "@/utils/getFontValue";
+import {STYLE_CONSTANT as style} from "@/theme/palette";
 
-// @mui
-import {
-  Box,
-  Link,
-  Breadcrumbs as MUIBreadcrumbs,
-  Typography,
-} from '@mui/material'
+const BreadcrumbsJobs = styled(MuiBreadcrumbs)(() => ({
+  fontStyle: "normal",
+  fontWeight: 500,
+  fontSize: pxToRem(14),
+  lineHeight: "20px",
+  margin: "24px 0",
+  "li p": {
+    fontStyle: "normal",
+    fontWeight: 500,
+    fontSize: pxToRem(14),
+    lineHeight: "20px",
+  },
+  "& .MuiBreadcrumbs-separator": {
+    margin: "0 4px",
+  },
+}));
 
-import PropTypes from 'prop-types'
+const handleClick = (event) => {
+  event.preventDefault();
+};
+
+const Breadcrumbs = ({ links = [], ...other }) => {
+  return (
+      <div role="presentation" onClick={handleClick}>
+        <BreadcrumbsJobs aria-label="breadcrumb" {...other}>
+          {links.map((link, index) => {
+            if (index === links.length - 1) {
+              return <Typography key={index} color={style.COLOR_MAIN}>{link.name}</Typography>
+            }
+
+            return (
+                <NextLink key={index} href={link.href}>
+                  <Link color={style.COLOR_TEXT_PRIMARY} style={{cursor: "pointer"}}>
+                    {link.name}
+                  </Link>
+                </NextLink>
+            )
+          })}
+        </BreadcrumbsJobs>
+      </div>
+  );
+};
+
+export default Breadcrumbs;
 
 Breadcrumbs.propTypes = {
-  activeLast: PropTypes.bool,
-  links: PropTypes.array.isRequired,
-}
-
-export default function Breadcrumbs({ links, activeLast = false, ...other }) {
-  const currentLink = links[links.length - 1].name
-
-  const listDefault = links.map((link) => (
-    <LinkItem key={link.name} link={link} />
-  ))
-
-  const listActiveLast = links.map((link) => (
-    <div key={link.name}>
-      {link.name !== currentLink ? (
-        <LinkItem link={link} />
-      ) : (
-        <Typography
-          variant='body2'
-          sx={{
-            maxWidth: 260,
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            color: 'text.disabled',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {currentLink}
-        </Typography>
-      )}
-    </div>
-  ))
-
-  return (
-    <MUIBreadcrumbs
-      separator={
-        <Box
-          component='span'
-          sx={{
-            width: 4,
-            height: 4,
-            borderRadius: '50%',
-            bgcolor: 'text.disabled',
-          }}
-        />
+  link: PropTypes.array[
+      {
+        name: PropTypes.string,
+        href: PropTypes.string,
       }
-      {...other}
-    >
-      {activeLast ? listDefault : listActiveLast}
-    </MUIBreadcrumbs>
-  )
-}
-
-LinkItem.propTypes = {
-  link: PropTypes.shape({
-    href: PropTypes.string,
-    icon: PropTypes.any,
-    name: PropTypes.string,
-  }),
-}
-
-function LinkItem({ link }) {
-  const { href = '', name, icon } = link
-  return (
-    <NextLink href={href} passHref>
-      <Link
-        key={name}
-        variant='body2'
-        sx={{
-          lineHeight: 2,
-          display: 'flex',
-          alignItems: 'center',
-          color: 'text.primary',
-          '& > div': { display: 'inherit' },
-        }}
-      >
-        {icon && (
-          <Box sx={{ mr: 1, '& svg': { width: 20, height: 20 } }}>{icon}</Box>
-        )}
-        {name}
-      </Link>
-    </NextLink>
-  )
-}
+      ],
+};
