@@ -42,7 +42,7 @@ const CardUserFormItemTitleStyle = styled(Box)(({theme}) => ({
   }
 }));
 
-const CardUserFormItemContentStyle = styled(Typography)(({}) => ({
+const CardUserFormItemContentStyle = styled(Typography)(() => ({
   '&.card-user-item-content-text': {
     color: style.COLOR_TEXT_BLACK,
     fontSize: style.FONT_13,

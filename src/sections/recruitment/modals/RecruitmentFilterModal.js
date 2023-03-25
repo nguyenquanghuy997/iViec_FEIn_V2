@@ -62,7 +62,6 @@ function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
       } else setValue(item, defaultValues[item])
     }
   }, [query])
-  console.log(query)
 
   const handleCloseModal = async () => {
     onClose();
@@ -70,9 +69,6 @@ function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
       pathname: router.pathname,
       query: {}
     }, undefined, { shallow: true })
-    Object.entries(query).forEach(([key, value]) => {
-      console.log(key, value)
-    })
   }
 
   const handleScroll = (e) => {

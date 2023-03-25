@@ -76,7 +76,6 @@ const ApplicantTransferRecruitmentModal = ({
     });
   const [tranfer] = useAddApplicantRecruitmentMutation();
   const handleTranfer = handleSubmit(async () => {
-    debugger
     var resultId = items.filter((p) => p.pipelineStateType == 3)[0]?.id;
     if (valueChecked == 2) {
       setShowConfirmMultiple(false);

@@ -32,7 +32,6 @@ const PersonalInterview = ({ watch }) => {
  if(isLoadingRecruitment) return null
   const { data: { items: ListStep = [] } = {} } =
     useGetRecruitmentPipelineStatesByRecruitment2Query(watch);
-  console.log("step", ListStep);
   const defaultValues = {
     name: "",
   };
@@ -44,7 +43,7 @@ const PersonalInterview = ({ watch }) => {
   });
 
   const {
-    formState: {},
+    formState: { isSubmitting },
   } = methods;
   // const onSubmit = async () => {};
 
@@ -79,6 +78,8 @@ const PersonalInterview = ({ watch }) => {
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
+
+  if(isSubmitting) return <div>Loading...</div>
 
   return (
     <Stack spacing={3}>

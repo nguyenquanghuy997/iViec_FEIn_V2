@@ -180,7 +180,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
       </Grid>
     );
   };
-  const HeadingFixed = styled("div")(({}) => ({
+  const HeadingFixed = styled("div")(() => ({
     top: HEADER.DASHBOARD_DESKTOP_HEIGHT,
     width: "100%",
     boxShadow:

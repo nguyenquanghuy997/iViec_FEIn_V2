@@ -71,8 +71,8 @@ export default function UploadAvatarApplicant({type, fileList = [], setFileList,
         setFileList(info.fileList);
       }
     },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
+    onDrop() {
+      
     },
   };
   return (

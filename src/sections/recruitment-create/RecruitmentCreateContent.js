@@ -326,9 +326,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   const handleClosePreview = () => {
     setIsOpenPreview(false);
   }
-
-  console.log(errors)
-
+  
   return (
       <View>
         <JobCreateHeader

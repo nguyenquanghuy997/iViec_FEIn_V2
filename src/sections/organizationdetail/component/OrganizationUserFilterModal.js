@@ -47,9 +47,6 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
       pathname: router.pathname,
       query: {}
     }, undefined, { shallow: true })
-    Object.entries(query).forEach(([key, value]) => {
-      console.log(key, value)
-    })
   }
 
   // options select

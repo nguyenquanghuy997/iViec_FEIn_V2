@@ -10,7 +10,6 @@ import React, { useState } from "react";
 export const ApplicantPreviewCV = ({data}) => {
   const [value, setValue] = useState("2");
   const handleChange = (event, newValue) => {
-    console.log(event)
     setValue(newValue);
   };
   return (

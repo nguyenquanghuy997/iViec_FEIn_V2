@@ -89,7 +89,6 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   };
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
-    console.log(e);
     if (e.pipelineStates == 0) {
       setErrorStage("Chưa thêm bước tuyển dụng");
     } else {

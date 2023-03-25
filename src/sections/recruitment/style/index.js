@@ -14,7 +14,7 @@ const JobDetailHeader = styled(Box)(({theme}) => ({
     }
 }));
 
-const JobLogo = styled(Box)(({}) => ({
+const JobLogo = styled(Box)(() => ({
     "&.job-logo": {
         width: '48px',
         height: '48px',
@@ -57,7 +57,7 @@ const JobTitleBox = styled(Box)(({theme}) => ({
     }
 }));
 
-const JobFunction = styled(Box)(({}) => ({
+const JobFunction = styled(Box)(() => ({
     "&.job-function": {
         width: '100%',
         display: 'flex',
@@ -67,7 +67,7 @@ const JobFunction = styled(Box)(({}) => ({
     }
 }));
 
-const JobRemainTime = styled(Box)(({}) => ({
+const JobRemainTime = styled(Box)(() => ({
     "&.job-remainTime": {
         fontSize: pxToRem(12),
         color: style.COLOR_TEXT_PRIMARY,
@@ -109,7 +109,7 @@ const JobDescriptionBox = styled(Box)(({theme}) => ({
     }
 }));
 
-const JobSummary = styled(Box)(({}) => ({
+const JobSummary = styled(Box)(() => ({
     "&.job-summary": {
         '& .title-summary': {
             color: style.COLOR_TEXT_SECONDARY,
@@ -127,7 +127,7 @@ const JobSummary = styled(Box)(({}) => ({
 }));
 
 // right content
-const JobCompanyIntro = styled(Box)(({}) => ({
+const JobCompanyIntro = styled(Box)(() => ({
     "&.job-company-intro": {
         width: '100%',
         border: '1px solid #CCD4DC',
@@ -143,7 +143,7 @@ const JobCompanyIntro = styled(Box)(({}) => ({
     }
 }));
 
-const CompanyIntro = styled(Box)(({}) => ({
+const CompanyIntro = styled(Box)(() => ({
     "&.company-intro": {
         padding: 20,
         width: '100%',

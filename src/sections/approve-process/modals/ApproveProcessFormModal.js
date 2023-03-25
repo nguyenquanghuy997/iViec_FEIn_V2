@@ -48,7 +48,7 @@ const ButtonStyle = {
   padding: '8px 12px'
 }
 
-const ButtonAddInviteStyle = styled(Button)(({}) => ({
+const ButtonAddInviteStyle = styled(Button)(() => ({
   "&.button-add-invite": {
     ...ButtonStyle,
     backgroundColor: '#FDFDFD',

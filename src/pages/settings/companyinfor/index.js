@@ -43,7 +43,7 @@ export default function Setting() {
 export async function getStaticProps() {
   return {
     props: {
-      roles: getRolesByPage(PAGES.Industry),
+      roles: getRolesByPage(PAGES.CompanyInfor),
     },
   };
 }

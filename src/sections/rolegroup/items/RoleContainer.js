@@ -11,7 +11,7 @@ import {
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
 import {
-  useGetAllFilterPipelineMutation,
+  // useGetAllFilterPipelineMutation,
   useGetRoleGroupListQuery,
 } from "@/sections/rolegroup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -29,9 +29,8 @@ const defaultValues = {
 export const RoleContainer = () => {
   const router = useRouter();
   const { query, isReady } = router;
-  const { data } = useGetRoleGroupListQuery();
-  const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
-  console.log(Data);
+  const { data, isLoading } = useGetRoleGroupListQuery();
+  // const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [open, setOpen] = useState(false);

@@ -90,7 +90,6 @@ const ApplicantBottomNav = ({
   };
   const [reject, setReject] = useState(false);
   const [rejectid, setRejectid] = useState();
-  console.log("rejectid", rejectid);
   return (
     <Drawer
       anchor={"bottom"}

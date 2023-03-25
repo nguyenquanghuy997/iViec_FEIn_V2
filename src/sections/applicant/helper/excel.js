@@ -7,7 +7,6 @@ const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sh
 const fileExtension = ".xlsx";
 
 export const handleExportExcel = (dataFormat) => {
-  debugger
   const ws = XLSX.utils.json_to_sheet(dataFormat, {cellStyles: true});
   let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO']
   let columnWidth = [5, 20, 15, 10, 20, 15, 20, 12, 12, 15, 20, 22, 15, 15, 16, 10, 28, 28, 25, 20, 20, 25, 20, 25, 20, 10, 18, 20, 20, 20, 20, 25, 26, 25, 26, 25, 26, 25, 26, 25, 26];

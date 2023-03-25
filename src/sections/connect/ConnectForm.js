@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form";
 // import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 
-const ActiveSwitch = styled(Switch)(({}) => ({
+const ActiveSwitch = styled(Switch)(() => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
     color: "#388E3C",
   },

@@ -37,7 +37,6 @@ const DynamicColumnsTable = (props) => {
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
       if (fromIndex > 3) {
-        console.log(`dragged from ${fromIndex} to ${toIndex}`);
         const newColumns = [...columns];
         const item = newColumns.splice(fromIndex, 1)[0];
         newColumns.splice(toIndex, 0, item);

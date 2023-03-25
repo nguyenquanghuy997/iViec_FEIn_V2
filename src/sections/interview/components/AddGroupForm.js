@@ -58,7 +58,7 @@ const AddGroupForm = ({ open, onClose }) => {
     formState: { errors },
   } = methods;
   const onSubmit = () => {
-    console.log("hihidhiad");
+    
   };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

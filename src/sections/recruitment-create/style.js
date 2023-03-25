@@ -3,7 +3,7 @@ import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Ty
 import Tab from "@mui/material/Tab";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 
-const JobTitleStyle = styled(Typography)(({}) => ({
+const JobTitleStyle = styled(Typography)(() => ({
   "&.job-title": {
     fontSize: style.FONT_XL,
     fontWeight: style.FONT_SEMIBOLD,
@@ -55,12 +55,12 @@ const TabStyle = styled(Tab)(({theme}) => ({
 }));
 
 // create
-const BoxWrapperStyle = styled(Box)(({}) => ({
+const BoxWrapperStyle = styled(Box)(() => ({
   width: style.WIDTH_FULL,
   borderRadius: 6,
 }))
 
-const BoxInnerStyle = styled(Box)(({}) => ({
+const BoxInnerStyle = styled(Box)(() => ({
   backgroundColor: style.BG_WHITE,
   boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
   maxWidth: '844px',
@@ -133,7 +133,7 @@ const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
   }
 }))
 
-const ButtonCancelStyle = styled(Button)(({}) => ({
+const ButtonCancelStyle = styled(Button)(() => ({
   "&.button-cancel": {
     fontSize: 14,
     fontWeight: 600,

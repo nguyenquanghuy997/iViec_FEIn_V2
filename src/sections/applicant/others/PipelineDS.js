@@ -9,7 +9,7 @@ import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import * as React from "react";
 
-const ColorlibConnector = styled(StepConnector)(({}) => ({
+const ColorlibConnector = styled(StepConnector)(() => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
     left: "calc(-50% + 30px)",

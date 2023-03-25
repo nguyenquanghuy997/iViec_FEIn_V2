@@ -43,7 +43,7 @@ const Simple = ({ deviceType }) => {
   return (
     <Carousel
       ssr
-      partialVisbile
+      partialVisible
       deviceType={deviceType}
       itemClass="image-item"
       responsive={responsive}

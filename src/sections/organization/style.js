@@ -2,7 +2,7 @@ import {makeStyles, styled} from "@mui/styles";
 import {Box, Button, Checkbox} from '@mui/material';
 import {TreeItem, TreeView} from "@mui/lab";
 
-const useStyles = makeStyles(({}) => ({
+const useStyles = makeStyles(() => ({
   label: {
     "&:before": {
       display: 'none',

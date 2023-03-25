@@ -46,7 +46,6 @@ const SwitchForm = ({ name, handleChange, style, ...other }) => {
           name={name}
           control={control}
           render={({ field }) => {
-            console.log(field);
             return (
               <GreenSwitch
                 {...field}

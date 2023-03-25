@@ -41,7 +41,7 @@ const ButtonStyle = {
     padding: '8px 12px'
 }
 
-const ButtonInviteStyle = styled(Button)(({}) => ({
+const ButtonInviteStyle = styled(Button)(() => ({
     "&.button-invite": {
         ...ButtonStyle,
         color: '#FDFDFD',
@@ -53,7 +53,7 @@ const ButtonInviteStyle = styled(Button)(({}) => ({
     }
 }));
 
-export const ButtonCancelStyle = styled(Button)(({}) => ({
+export const ButtonCancelStyle = styled(Button)(() => ({
     "&.button-cancel": {
         ...ButtonStyle,
         color: '#455570',
@@ -65,7 +65,7 @@ export const ButtonCancelStyle = styled(Button)(({}) => ({
     }
 }));
 
-const ButtonAddInviteStyle = styled(Button)(({}) => ({
+const ButtonAddInviteStyle = styled(Button)(() => ({
     "&.button-add-invite": {
         ...ButtonStyle,
         backgroundColor: '#FDFDFD',
@@ -157,11 +157,11 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
             });
             setIsOpenInviteForm(false)
         } catch (e) {
-            console.log(e);
             enqueueSnackbar("Mời người dùng không thành công!", {
                 autoHideDuration: 1000,
                 variant: 'error',
             });
+            throw e;
         }
     };
 
