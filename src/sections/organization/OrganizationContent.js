@@ -10,7 +10,6 @@ import {convertFlatDataToTree, convertViToEn} from "@/utils/function";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
 import OrganizationBottomNav from "@/sections/organization/component/OrganizationBottomNav";
-import {ButtonInviteListStyle, ButtonInviteStyle} from "@/sections/organization/style";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
 import InputFilter from "@/sections/dynamic-filter/InputFilter";
 import {filterBy} from "@/sections/organization/helper/DFSSearchTree";
@@ -22,6 +21,8 @@ import {CrownIcon} from "@/sections/organization/component/Icon";
 import OrganizationConfirmMultipleModal from "@/sections/organization/component/OrganizationConfirmMultipleModal";
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
 import OrganizationListUserInviteModal from "@/sections/organization/component/OrganizationListUserInviteModal";
+import MuiButton from '@/components/BaseComponents/MuiButton';
+import { AddIcon } from '@/assets/ActionIcon';
 
 const OrganizationContent = () => {
   // selected
@@ -125,16 +126,20 @@ const OrganizationContent = () => {
             </Stack>
           </Stack>
           <Stack flexDirection="row" alignItems="center">
-            <ButtonInviteListStyle
-                className='button-invite-list'
-                startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
-                onClick={() => setIsOpenListUserInvite(true)}
-            >Danh sách mời</ButtonInviteListStyle>
-            <ButtonInviteStyle
-                className="button-invite"
-                startIcon={<Iconify icon="material-symbols:add"/>}
-                onClick={() => setIsOpenInviteForm(true)}
-            >Mời người dùng</ButtonInviteStyle>
+            <MuiButton 
+              title={"Danh sách mời"}
+              color={"default"}
+              onClick={() => setIsOpenListUserInvite(true)}
+              startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
+              sx={{ fontWeight: 550, marginRight: 1 }}
+            />
+            <MuiButton 
+              title={"Mời người dùng"}
+              color={"primary"}
+              onClick={() => setIsOpenInviteForm(true)}
+              startIcon={<AddIcon />}
+              sx={{ fontWeight: 550 }}
+            />
           </Stack>
         </Stack>
         <Box sx={{mb: 3, mt: 0}}>

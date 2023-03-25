@@ -1,17 +1,80 @@
 import React from 'react';
-import {Box, DialogTitle, Divider, IconButton} from "@mui/material";
 import {
-  DialogActionsStyle,
-  DialogContentStyle,
-  DialogContentTextStyle,
-  DialogStyle,
-  TitleAlertStyle
-} from "@/sections/recruitment-create/style";
+    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    IconButton,
+    Typography
+} from "@mui/material";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import CloseIcon from "@/assets/CloseIcon";
 import {isEmpty} from "lodash";
+import {styled} from "@mui/styles";
 
-const MuiDialogTitle = ({ children, onClose, ...other }) => {
+// style
+export const DialogStyle = styled(Dialog)(({theme, minHeight = '288px', minWidth = '600px', maxWidth = '600px'}) => ({
+    "& .dialog-confirm": {
+        boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+        borderRadius: '6px',
+        backgroundColor: "#FDFDFD",
+        minHeight: minHeight,
+        minWidth: minWidth,
+    },
+    "& .MuiDialog-container": {
+        "& .MuiPaper-root": {
+            padding: theme.spacing(0, 2),
+            borderRadius: '6px',
+            width: "100%",
+            maxWidth: maxWidth || minWidth,
+            top: -200
+        },
+    },
+}))
+
+export const DialogContentStyle = styled(DialogContent)(({theme}) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    marginTop: theme.spacing(3)
+}))
+
+export const DialogActionsStyle = styled(DialogActions)(({theme}) => ({
+    borderTop: '1px solid #E7E9ED',
+    marginTop: theme.spacing(1)
+}))
+
+export const TitleAlertStyle = styled(Typography)(({theme, fontSize = 16, fontWeight = 600, color = '#E53935'}) => ({
+    textAlign: 'center',
+    width: '100%',
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    color: color,
+    padding: theme.spacing(0)
+}))
+
+export const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
+    textAlign: 'center',
+    width: '100%',
+    fontSize: '14px',
+    fontWeight: 400,
+    display: 'block',
+    marginTop: theme.spacing(2),
+    "& strong": {
+        fontWeight: 600,
+        marginLeft: theme.spacing(0.5)
+    },
+    "& span": {
+        fontWeight: 600,
+        marginLeft: theme.spacing(0.5)
+    }
+}))
+
+export const MuiDialogTitle = ({ children, onClose, ...other }) => {
   return (
       <DialogTitle id="customized-dialog-title" sx={{m: 0, px: 3, py: 2}} {...other}>
         {children}

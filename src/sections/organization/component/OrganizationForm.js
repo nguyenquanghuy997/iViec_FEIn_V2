@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
-import {ButtonCancelStyle} from "@/sections/applicant/style";
 import Iconify from "@/components/Iconify";
-import {ButtonDS} from "@/components/DesignSystem";
 import Scrollbar from "@/components/Scrollbar";
 import {useForm} from "react-hook-form";
 import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
@@ -15,7 +13,12 @@ import {convertViToEn} from "@/utils/function";
 import {isEmpty, pick} from 'lodash';
 import {useSnackbar} from "notistack";
 import {LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
-import {useUpdateOrganizationMutation, useCreateChildOrganizationMutation, useGetOrganizationByIdQuery} from "@/sections/organization/override/OverrideOrganizationSlice";
+import {
+  useCreateChildOrganizationMutation,
+  useGetOrganizationByIdQuery,
+  useUpdateOrganizationMutation
+} from "@/sections/organization/override/OverrideOrganizationSlice";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
 const InputStyle = {
   minHeight: 44,
@@ -62,8 +65,6 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
     code: Yup.string().nullable().required("Mã đơn vị không được bỏ trống").max(20, "Mã đơn vị tối đa 20 ký tự"),
     email: Yup.string().nullable().email('Email không đúng định dạng').required("Email không được bỏ trống"),
     phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
-    provinceId: Yup.string().nullable().required("Tỉnh/Thành phố không được bỏ trống"),
-    districtId: Yup.string().nullable().required("Quận/Huyện không được bỏ trống"),
     address: Yup.string().nullable().max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
   });
 
@@ -83,7 +84,6 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
 
   useEffect(()=>{
     if (organization && actionType === 1) {
-      // methods.reset(organization);
       for(let i in defaultValues) {
         methods.setValue(i, organization[i]);
       }
@@ -112,15 +112,16 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
     } else {
       try {
         const dataSubmit = pick(body, ['id', 'name', 'code', 'email', 'phoneNumber', 'provinceId', 'districtId', 'address']);
+        const { name, code, phoneNumber, email, provinceId, districtId, address} = dataSubmit;
         await updateOrganization({
           organizationId: organization?.id,
-          name: dataSubmit.name,
-          code: dataSubmit.code,
-          phoneNumber: dataSubmit.phoneNumber,
-          email: dataSubmit.email,
-          provinceId: dataSubmit.provinceId,
-          districtId: dataSubmit.districtId,
-          address: dataSubmit.address,
+          name,
+          code,
+          phoneNumber,
+          email,
+          provinceId,
+          districtId,
+          address
         }).unwrap();
         enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
         onClose();
@@ -147,6 +148,14 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
               },
               onScroll: handleScroll
             }}
+            componentsProps={{
+              backdrop: {
+                sx: {
+                  background: 'transparent !important',
+                  boxShadow: 'none !important'
+                }
+              }
+            }}
         >
           <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -158,8 +167,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
               </OrganizationFromHeadStyle>
               <Divider/>
               {/* content form */}
-
-              <Box sx={{py: 2, px: 2, mt: 8}}>
+              <Box sx={{py: 2, px: 2, my: 8}}>
                 {!isEmpty(parentNode) && <>
                   <LabelStyle required={true}>
                     Trực thuộc
@@ -221,7 +229,6 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                         name="provinceId"
                         placeholder="Chọn Tỉnh/Thành phố"
                         title="Tỉnh/Thành phố"
-                        isRequired
                     />
                   </div>
                   <div style={{...SelectStyle}}>
@@ -239,7 +246,6 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                         disabled={!watchProvinceId}
                         placeholder="Chọn Quận/Huyện"
                         title="Quận/Huyện"
-                        isRequired
                     />
                   </div>
                 </Stack>
@@ -256,13 +262,18 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
 
               <OrganizationFromFooterStyle className="organization-form-footer">
                 <Stack flexDirection="row">
-                  <ButtonDS
+                  <MuiButton
                       type="submit"
                       loading={isSubmitting}
-                      variant="contained"
-                      tittle="Lưu"
+                      title="Lưu"
+                      sx={{ px: 2, py: 1, minWidth: 24 }}
                   />
-                  <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
+                  <MuiButton
+                    title={"Hủy"}
+                    onClick={onClose}
+                    color={"basic"}
+                    sx={{ color: '#455570', fontWeight: 600, ml: 1 }}
+                  />
                 </Stack>
               </OrganizationFromFooterStyle>
             </FormProvider>

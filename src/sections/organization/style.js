@@ -1,14 +1,6 @@
-import {makeStyles, styled} from "@mui/styles";
+import {styled} from "@mui/styles";
 import {Box, Button, Checkbox} from '@mui/material';
 import {TreeItem, TreeView} from "@mui/lab";
-
-const useStyles = makeStyles(() => ({
-  label: {
-    "&:before": {
-      display: 'none',
-    },
-  }
-}));
 
 const CheckboxStyle = styled(Checkbox)(({theme}) => ({
   '&.MuiCheckbox-root': {
@@ -200,49 +192,12 @@ const OrganizationFromFooterStyle = styled(Box)(({theme}) => ({
   }
 }));
 
-const ButtonInviteListStyle = styled(Button)(({theme}) => ({
-  '&.button-invite-list': {
-    padding: theme.spacing(1, 1.5),
-    backgroundColor: '#F2F4F5',
-    color: '#455570',
-    borderRadius: 6,
-    minHeight: '36px',
-    fontSize: 14,
-    fontWeight: 500,
-    marginRight: theme.spacing(1),
-    "&:hover": {
-      backgroundColor: '#F2F4F5',
-      color: '#455570',
-    },
-  }
-}));
-
-const ButtonInviteStyle = styled(Button)(({theme}) => ({
-  '&.button-invite': {
-    padding: theme.spacing(1, 1.5),
-    backgroundColor: '#1976D2',
-    borderRadius: 6,
-    color: "#FDFDFD",
-    minHeight: '36px',
-    fontSize: 14,
-    fontWeight: 500,
-    marginLeft: theme.spacing(1),
-    "&:hover": {
-      backgroundColor: '#1976D2',
-      color: "#FDFDFD",
-    },
-  }
-}));
-
 export {
-  useStyles,
   CheckboxStyle,
   TreeItemStyle,
   TreeViewStyle,
   ButtonTreeStyle,
   OrganizationFromHeadStyle,
   OrganizationFromFooterStyle,
-  ButtonInviteStyle,
-  ButtonInviteListStyle
 }
 

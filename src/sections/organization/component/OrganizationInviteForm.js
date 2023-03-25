@@ -1,13 +1,10 @@
 import React, {memo, useState} from "react";
-import {Box, Button, Dialog, DialogActions, DialogContent, Divider, Tab, Tabs, Typography} from "@mui/material";
-import Iconify from "@/components/Iconify";
-import {styled} from "@mui/styles";
+import {Box, DialogContent, Divider, Tab, Tabs, Typography} from "@mui/material";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
 import {useFieldArray, useForm} from "react-hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {useGetRoleGroupQuery} from "@/sections/organization/OrganizationSlice";
-import OrganizationDialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
-import {DeleteIcon} from "@/assets/ActionIcon";
+import {AddIcon, DeleteIcon} from "@/assets/ActionIcon";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import TreeMultiSelect from "@/sections/organization/component/TreeSelectMultiple";
@@ -17,66 +14,8 @@ import {
     useInviteUserMutation
 } from "@/sections/organization/override/OverrideOrganizationSlice";
 import OrganizationUserInviteCard from "@/sections/organization/component/OrganizationUserInviteCard";
-
-export const DialogStyle = styled(Dialog)(({theme}) => ({
-    "& .dialog-invite": {
-        boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-        backgroundColor: "#FDFDFD",
-        padding: theme.spacing(2),
-    },
-    "& .MuiDialog-container": {
-        "& .MuiPaper-root": {
-            borderRadius: '6px',
-            width: "100%",
-            maxWidth: '1000px !important',
-        },
-    },
-}))
-
-const ButtonStyle = {
-    fontSize: 14,
-    fontWeight: 600,
-    minWidth: '56px',
-    borderRadius: 6,
-    padding: '8px 12px'
-}
-
-const ButtonInviteStyle = styled(Button)(() => ({
-    "&.button-invite": {
-        ...ButtonStyle,
-        color: '#FDFDFD',
-        backgroundColor: '#1976D2',
-        ":hover": {
-            color: '#FDFDFD',
-            backgroundColor: '#1976D2',
-        }
-    }
-}));
-
-export const ButtonCancelStyle = styled(Button)(() => ({
-    "&.button-cancel": {
-        ...ButtonStyle,
-        color: '#455570',
-        backgroundColor: '#FDFDFD',
-        ":hover": {
-            color: '#455570',
-            backgroundColor: '#FDFDFD',
-        }
-    }
-}));
-
-const ButtonAddInviteStyle = styled(Button)(() => ({
-    "&.button-add-invite": {
-        ...ButtonStyle,
-        backgroundColor: '#FDFDFD',
-        minWidth: '150px',
-        color: '#1976D2',
-        ":hover": {
-            color: '#455570',
-            backgroundColor: '#FDFDFD',
-        }
-    }
-}));
+import {DialogActionsStyle, DialogStyle, MuiDialogTitle} from "@/components/BaseComponents/ConfirmModal";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -104,6 +43,10 @@ function a11yProps(index) {
 
 const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenInviteForm}) => {
     const [valueTab, setValueTab] = useState(0);
+
+    const onClose = () => {
+        setIsOpenInviteForm(false);
+    }
 
     const handleChange = (event, newValue) => {
         setValueTab(newValue);
@@ -172,16 +115,17 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
     return (
         <DialogStyle
             open={isOpenInviteForm}
-            onClose={() => setIsOpenInviteForm(false)}
+            onClose={onClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-            className="dialog-invite"
+            className="dialog-confirm"
+            maxWidth={'1000px'}
         >
-            <OrganizationDialogTitle onClose={() => setIsOpenInviteForm(false)}>
+            <MuiDialogTitle onClose={onClose}>
                 <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
                     Mời người dùng
                 </Typography>
-            </OrganizationDialogTitle>
+            </MuiDialogTitle>
             <Divider/>
             <Box sx={{padding: 3}}>
                 <Tabs
@@ -338,27 +282,26 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                     </Box>
                                 );
                             })}
-                            <ButtonAddInviteStyle
+                            <MuiButton
                                 variant="outlined"
-                                className='button-add-invite'
-                                onClick={() => {
-                                    append({...defaultValues})
-                                }}
-                                disabled={!isValid}
-                                startIcon={<Iconify icon="material-symbols:add"/>}>
-                                Thêm lời mời
-                            </ButtonAddInviteStyle>
+                                title={"Thêm lời mời"}
+                                startIcon={<AddIcon />}
+                                onClick={() => append({ ...defaultValues })}
+                            />
                         </Box>
                     </DialogContent>
-                    <DialogActions sx={{padding: 2}}>
-                        <ButtonCancelStyle
-                            onClick={() => setIsOpenInviteForm(false)}
-                            className="button-cancel">Hủy</ButtonCancelStyle>
-                        <ButtonInviteStyle
-                            type="submit"
+                    <DialogActionsStyle sx={{padding: 2}}>
+                        <MuiButton
+                            title={"Hủy"}
+                            color={"default"}
+                            onClick={onClose}
+                        />
+                        <MuiButton
+                            title={"Gửi lời mời"}
                             disabled={!isValid || fields.length === 0}
-                            className="button-invite">Gửi lời mời</ButtonInviteStyle>
-                    </DialogActions>
+                            type={"submit"}
+                        />
+                    </DialogActionsStyle>
                 </FormProvider>
             </TabPanel>
             <TabPanel value={valueTab} index={1}><DialogContent sx={{
