@@ -10,11 +10,11 @@ import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/Org
 import {useGetJobCategoriesQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
 import {useGetAllJobTypeQuery} from "@/sections/jobtype";
 import {
-  LIST_CURRENCY_TYPE,
-  LIST_EXPERIENCE_NUMBER,
-  LIST_GENDER,
-  LIST_RECRUITMENT_SALARY_DISPLAY_TYPE,
-  LIST_RECRUITMENT_WORKING_FORM
+    LIST_CURRENCY_TYPE,
+    LIST_EXPERIENCE_NUMBER,
+    LIST_GENDER_RECRUITMENT,
+    LIST_RECRUITMENT_SALARY_DISPLAY_TYPE,
+    LIST_RECRUITMENT_WORKING_FORM
 } from "@/utils/formatString";
 import {useGetListCandidateLevelsQuery, useGetListLanguagesQuery} from "@/redux/slice/masterDataSlice";
 import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
@@ -34,6 +34,7 @@ const RecruitmentInformation = (
       recruitmentAddressIds,
       recruitmentJobCategoryIds,
       recruitmentWorkingForms,
+      recruitmentWorkingLanguages,
     }
 ) => {
   const {data: {items: ListOrganization = []} = {}, isLoading: loadingOrganization} = useGetOrganizationsDataWithChildQuery();
@@ -162,14 +163,6 @@ const RecruitmentInformation = (
                   />
                 </div>
                 <div style={{flex: 1, marginLeft: 8}}>
-                  {/*<RHFTextField*/}
-                  {/*    name="numberPosition"*/}
-                  {/*    title="Số lượng cần tuyển"*/}
-                  {/*    placeholder="Nhập số lượng cần tuyển"*/}
-                  {/*    isRequired*/}
-                  {/*    fullWidth*/}
-                  {/*    type="number"*/}
-                  {/*/>*/}
                   <InputNumberFormatFilter
                       name="numberPosition"
                       title="Số lượng cần tuyển"
@@ -188,17 +181,25 @@ const RecruitmentInformation = (
                       placeholder="Chọn giới tính"
                       fullWidth
                       isRequired
-                      options={LIST_GENDER}
+                      options={LIST_GENDER_RECRUITMENT}
                   />
                 </div>
                 <div style={{flex: 1, marginLeft: 8}}>
-                  <RHFDropdown
-                      name="workingLanguageId"
+                  <RHFAutocomplete
+                      name="recruitmentLanguageIds"
                       title="Ngôn ngữ làm việc"
                       placeholder="Chọn ngôn ngữ"
                       fullWidth
-                      options={ListLanguage}
+                      multiple
+                      options={ListLanguage.map(i => ({
+                          value: i.id,
+                          label: i.name
+                      }))}
                       isRequired
+                      disabledOption={recruitmentWorkingLanguages?.length === 3}
+                      AutocompleteProps={{
+                          disableCloseOnSelect: true
+                      }}
                   />
                 </div>
               </Box>

@@ -859,19 +859,9 @@ export const RecruitmentItem = () => {
               {
                 key: 'copy',
                 onClick: () => router.push({
-                  pathname: PATH_DASHBOARD.recruitment.copy,
+                  pathname: PATH_DASHBOARD.recruitment.copy(itemSelected[0]?.id),
                   query: {
-                    name: itemSelected[0]?.name,
-                    recruitmentAddressIds: itemSelected[0]?.recruitmentAddresses,
-                    organizationId: itemSelected[0]?.organizationId,
-                    jobPositionId: itemSelected[0]?.jobPosition?.id,
-                    address: itemSelected[0]?.address,
-                    recruitmentJobCategoryIds: itemSelected[0]?.recruitmentJobCategories.map(item => item.jobCategoryId),
-                    recruitmentWorkingForms: itemSelected[0]?.recruitmentWorkingForms.map(item => item.workingForm),
-                    workExperience: itemSelected[0]?.workExperience,
-                    numberPosition: itemSelected[0]?.numberPosition,
-                    sex: itemSelected[0]?.sex,
-                    workingLanguageId: itemSelected[0]?.workingLanguageId,
+                    type: 'copy',
                   }
                 }),
                 color: 'basic',
