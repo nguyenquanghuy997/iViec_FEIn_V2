@@ -30,7 +30,6 @@ UploadMultiFile.propTypes = {
 export default function UploadMultiFile({
   // error,
   showPreview = false,
-  files,
   // onUpload,
   onRemove,
   // onRemoveAll,
@@ -38,7 +37,6 @@ export default function UploadMultiFile({
   sx,
   ...other
 }) {
-  console.log("🚀 ~ file: UploadMultiFileCustom.js:42 ~ files:", files);
   const {
     getRootProps,
     acceptedFiles,
@@ -49,10 +47,6 @@ export default function UploadMultiFile({
   } = useDropzone({
     ...other,
   });
-  console.log(
-    "🚀 ~ file: UploadMultiFileCustom.js:53 ~ acceptedFiles:",
-    acceptedFiles
-  );
 
   return (
     <Box sx={{ width: "100%", ...sx }}>

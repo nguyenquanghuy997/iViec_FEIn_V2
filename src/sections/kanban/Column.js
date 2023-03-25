@@ -41,7 +41,7 @@ const Column = ({ droppableId, column }) => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
+              // justifyContent: "center",
               justifyContent: "space-between",
             }}
           >

@@ -256,7 +256,7 @@ export const QuestionAddModal = ({  show, setShow }) => {
                     // onDrop={handleDrop}
                     // onRemove={handleRemove}
                     // onRemoveAll={handleRemoveAll}
-                    onUpload={() => console.log("ON UPLOAD")}
+                    // onUpload={() => console.log("ON UPLOAD")}
                   />
                 </View>
 

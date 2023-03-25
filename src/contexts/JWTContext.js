@@ -1,6 +1,5 @@
 import { DOMAIN_SERVER_API } from "@/config";
 import { API_LOGIN, API_USER_INFO } from "@/routes/api";
-import { useLazyGetCurrentUserQuery } from "@/sections/auth/authSlice";
 // utils
 import { _postApi } from "@/utils/axios";
 import { setRefreshToken, setRememberMe, setSession } from "@/utils/jwt";
@@ -59,28 +58,28 @@ AuthProvider.propTypes = {
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [getCurrentUser, { data: user }] = useLazyGetCurrentUserQuery();
-
   useEffect(() => {
     const initialize = async () => {
       try {
         const accessToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : "";
         if (accessToken) {
+          const user = await getUserInfoByToken(accessToken);
           setSession(accessToken);
+
           dispatch({
             type: "INITIALIZE",
             payload: {
               isAuthenticated: true,
-              user: user,
+              user,
             },
           });
+
         } else {
           dispatch({
             type: "INITIALIZE",
             payload: {
               isAuthenticated: false,
-              user: user,
+              user: null,
             },
           });
         }
@@ -98,6 +97,24 @@ function AuthProvider({ children }) {
     initialize();
   }, []);
 
+  const getUserInfoByToken = async (token) => {
+    const config = {
+      method: "get",
+      url: DOMAIN_SERVER_API + API_USER_INFO,
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+
+    try {
+      const user = await axios(config);
+      return user.data;
+    } catch (err) {
+      return null;
+    }
+  }
+
+
   const login = async (email, password, remember) => {
 
     var data = JSON.stringify({
@@ -106,49 +123,16 @@ function AuthProvider({ children }) {
       "userLoginType":1
     });
     const response = await _postApi(API_LOGIN, data);
-    
-    //     var myHeaders = new Headers();
-    // myHeaders.append("accept", "application/json");
-    // myHeaders.append("Content-Type", "application/json-patch+json");
+    const userData = await getUserInfoByToken(response.token);
 
-    // var raw = JSON.stringify({
-    //   "userName": "quy.vu.0101@gmail.com",
-    //   "password": "Abcd@2021"
-    // });
-
-    // var requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: raw,
-    //   redirect: 'follow'
-    // };
-
-    // fetch("http://103.176.149.158:5001/api/identity/Identity/Login", requestOptions)
-    //   .then(response => response.text())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
-
-    var config = {
-      method: "get",
-      url: DOMAIN_SERVER_API + API_USER_INFO,
-      headers: {
-        Authorization: "Bearer " + response.token,
-      },
-    };
-
-    const user = await axios(config);
-    const userData = user?.data?.Data;
     setRememberMe(remember);
     setSession(response.token);
-    //set access_token to Cookie
-    // let expires = new Date()
-    // expires.setTime(expires.getTime() + (response.expires_in * 1000))
-    // setCookie('access_token', response.access_token, { path: '/',  expires})
+    setRefreshToken(response.refreshToken);
 
     dispatch({
       type: "LOGIN",
       payload: {
-        userData,
+        user: userData,
       },
     });
   };
@@ -157,8 +141,6 @@ function AuthProvider({ children }) {
     setRememberMe(null);
     setRefreshToken(null);
     setSession(null);
-    //delete access_token to Cookie
-    // removeCookie('access_token', { path: '/'})
 
     dispatch({ type: "LOGOUT" });
   };
@@ -166,33 +148,6 @@ function AuthProvider({ children }) {
   const register = async () => {
     // TODO
   };
-
-  // const getUserInfo = async (accessToken) => {
-  //   const decoded = jwtDecode(accessToken);
-  //   const {
-  //     email,
-  //     name: displayName = "",
-  //     Role: { id: roleId, name: role } = {},
-  //     Team = {},
-  //     id: userId,
-  //     linkAvatar,
-  //   } = await _getApi(`${API_USER_INFO}/${decoded.userId}`);
-  //   const { id: teamId, name: team } = Team || {};
-
-  //   // return {
-  //   //   email,
-  //   //   displayName,
-  //   //   role,
-  //   //   roleId,
-  //   //   userId,
-  //   //   linkAvatar,
-  //   //   team,
-  //   //   teamId,
-  //   // }
-  //   // return {
-  //   //   decoded,
-  //   // };
-  // };
 
   return (
     <AuthContext.Provider

@@ -2,7 +2,7 @@ import {useChangePasswordWithTokenMutation} from "../authSlice";
 import {STYLE_CONSTANT} from "../register/constants";
 import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
-import errorMessages from "@/utils/errorMessages";
+import {errorMessages} from "@/utils/errorMessages";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoadingButton} from "@mui/lab";
 import {Alert, IconButton, InputAdornment, Stack, Typography} from "@mui/material";

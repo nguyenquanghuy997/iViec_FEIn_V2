@@ -32,11 +32,10 @@ import MenuIcon from "@/assets/interview/MenuIcon";
 import DateIcon from "@/assets/interview/DateIcon";
 import { useRouter } from "next/router";
 import {useGetRecruitmentByIdQuery} from "@/sections/recruitment";
-function RecruitmentPreviewItem({}) {
+function RecruitmentPreviewItem() {
   const router = useRouter();
   const RecruitmentId = router.query.slug;
   const { data: RecruitmentData } = useGetRecruitmentByIdQuery({ Id: RecruitmentId })
-  console.log('RecruitmentData',RecruitmentData)
   const defaultValues = {
     name: "",
   };
@@ -44,7 +43,6 @@ function RecruitmentPreviewItem({}) {
     defaultValues,
   });
 
-  // console.log('Recruitment',RecruitmentData)
   const recruitment = {
     organizationId: "01000000-ac12-0242-b3cd-08db10c50f70",
     organizationSlug: null,

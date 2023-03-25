@@ -130,7 +130,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title, showUploadFile})
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
+    return data;
   }
 
   return (

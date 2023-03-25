@@ -121,7 +121,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
     }),
     getRecruitmentPipelineStatesByRecruitment: builder.query({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
-        console.log('data',_arg)
         const listPipeline = await fetchWithBQ({
           url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
           method: "GET",

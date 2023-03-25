@@ -48,7 +48,7 @@ const TitleStyle = styled(Typography)(({theme}) => ({
   }
 }));
 
-const SubTitleStyle = styled(Typography)(({}) => ({
+const SubTitleStyle = styled(Typography)(() => ({
   '&.form-subtitle': {
     color: '#455570',
     fontSize: 14,

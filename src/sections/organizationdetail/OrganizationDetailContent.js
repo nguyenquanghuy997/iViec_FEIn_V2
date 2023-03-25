@@ -104,7 +104,7 @@ const OrganizationDetailContent = () => {
   const toggleConfirm = useSelector((state) => state.modalReducer.openConfirm);
   const toggleActive = useSelector((state) => state.modalReducer.openActive);
   const item = useSelector((state) => state.modalReducer.data);
-  const selectedData = useSelector((state) => state.modalReducer.selectedData);
+  // const selectedData = useSelector((state) => state.modalReducer.selectedData);
 
   const handleOpenConfirm = (data) => dispatch(modalSlice.actions.confirmModal(data));
   const handleOpenActive = (data) => dispatch(modalSlice.actions.activeModal(data));
@@ -156,7 +156,7 @@ const OrganizationDetailContent = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data)
+    return data;
   };
 
   const handleSelected = (data, index) => {
@@ -179,15 +179,12 @@ const OrganizationDetailContent = () => {
   };
 
   const handleDelete = (data) => {
-    console.log(data)
+    return data;
   }
 
   const handleActive = (data) => {
-    console.log(data)
+    return data;
   }
-
-  console.log(item)
-  console.log(selectedData)
 
   if (isLoading || loadingUser || loadingOrganization) return null;
 

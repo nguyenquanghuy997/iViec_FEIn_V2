@@ -37,15 +37,10 @@ const UserActivePage = () => {
       if (parseInt(SetPassword) === 0 && USER_NAME && OTPCode) {
         try {
 
-         await confirmEmail({ email: decodeURI(USER_NAME), token: decodeURI(OTPCode) }).unwrap(
-         (res)=> console.log('res',res)
-         );
+         await confirmEmail({ email: decodeURI(USER_NAME), token: decodeURI(OTPCode) }).unwrap();
           setStatusActiveUser(true);
         } catch (error) {
-          // const message =error.code
-          console.log('error.status',error.status =='AUE_05')
           if(error.status =='AUE_05'){
-
             setStatusActiveUser(true);
           }
           else{

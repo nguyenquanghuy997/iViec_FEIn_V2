@@ -2,7 +2,7 @@ import {Paper} from "@mui/material";
 import {makeStyles, styled} from "@mui/styles";
 import { STYLE_CONSTANT as style } from '@/theme/palette'
 
-const useStyles = makeStyles(({}) => ({
+const useStyles = makeStyles(() => ({
     input: {
         border: '1px solid red',
         "&:focus": {

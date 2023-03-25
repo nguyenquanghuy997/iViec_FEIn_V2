@@ -103,11 +103,11 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
         });
         onClose();
       } catch (err) {
-        console.log(err)
         enqueueSnackbar("Thêm đơn vị không thành công!", {
           autoHideDuration: 1000,
           variant: 'error',
         });
+        throw err;
       }
     } else {
       try {
@@ -125,11 +125,11 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
         enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
         onClose();
       } catch (err) {
-        console.log(err)
         enqueueSnackbar("Chỉnh sửa đơn vị không thành công!", {
           autoHideDuration: 1000,
           variant: 'error',
         });
+        throw err;
       }
     }
   }

@@ -16,7 +16,6 @@ export default function
     headers: {Authorization: token},
     onChange(info) {
       const {status} = info.file;
-      console.log(status);
       if (status !== 'uploading') {
         setFileList(info.fileList);
       }
@@ -26,8 +25,8 @@ export default function
         setFileList(info.fileList);
       }
     },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
+    onDrop() {
+      
     },
   };
 

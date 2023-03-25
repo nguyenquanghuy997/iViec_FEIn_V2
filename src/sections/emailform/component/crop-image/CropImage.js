@@ -28,10 +28,9 @@ export default function CropImage({ data, handleSubmit }) {
     const formData = new FormData();
     try {
       formData.append("avatar", croppedImage);
-      console.log("formData", formData);
       await uploadImage({ formData }).unwrap();
     } catch (error) {
-      console.log(error);
+      return error;
     }
   };
 

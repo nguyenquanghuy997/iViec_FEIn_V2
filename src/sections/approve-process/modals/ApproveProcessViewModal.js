@@ -144,7 +144,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                         </Typography>
                       </Grid>
                       <Grid item container direction="row">
-                        {(item?.approvalProcessLevelDetails).filter(x => x && x.processLevelDetailPersonInCharges).map((itemRole) => {
+                        {item?.approvalProcessLevelDetails.filter(x => x && x.processLevelDetailPersonInCharges).map((itemRole) => {
                           return itemRole?.processLevelDetailPersonInCharges.map((itemUser) => {
                             return (
                               <LightTooltip

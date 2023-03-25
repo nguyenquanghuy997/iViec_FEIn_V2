@@ -29,10 +29,9 @@ const FileUpload = ({ limit, multiple, name }) => {
         field.onChange(newFile[0]);
       }
 
-      var file = e.target.files[0];
+      // var file = e.target.files[0];
       const reader = new FileReader();
-      var url = reader.readAsDataURL(file);
-      console.log(url);
+      // var url = reader.readAsDataURL(file);
       reader.onloadend = () => setSelectedFile([reader.result]);
     },
     [field, fileList, limit, multiple, singleFile]

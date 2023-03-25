@@ -51,7 +51,6 @@ export default function Recruitment() {
   });
   const {
     handleSubmit,
-    formState: {},
   } = methods;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -102,7 +101,6 @@ export default function Recruitment() {
   const RecruitmentId = router.query.slug;
   const { data: RecruitmentData } = useGetRecruitmentByIdQuery({ Id: RecruitmentId })
   const { data: ColumnData } = useGetRecruitmentPipelineStatesByRecruitmentQuery(RecruitmentId);
-  console.log('ColumnData',ColumnData)
   const [ChangeToNextState] = useUpdateApplicantRecruitmentToNextStateMutation();
   const onDragEnd = async(result, columns, setColumns) => {
     setResultNew(result)
@@ -116,9 +114,7 @@ export default function Recruitment() {
       const destItems = [...destColumn.items];
       const [removed] = sourceItems.splice(source.index, 1);
       destItems.splice(destination.index, 0, removed);
-      let applicantId
-      console.log('result.draggableId',result.draggableId)
-      console.log('destColumn',destColumn)
+      let applicantId;
       sourceColumn.items.map((item)=>{
         if(item.id==result.draggableId)
          applicantId=item.applicantId
@@ -135,9 +131,7 @@ export default function Recruitment() {
       else{
         
         // disable offer
-        if(destColumn.pipelineStateType==4){
-
-        }
+        if(destColumn.pipelineStateType==4){ /* empty */ }
         else{
         //
         let body ={
@@ -183,7 +177,6 @@ export default function Recruitment() {
   }, [ColumnData])
   const windowWidth = useRef(window.innerWidth);
   const windowHeight = useRef(window.innerHeight);
-  console.log('columns',columns,windowWidth)
   return (
     <Page title={"Chi tiết tin"}>
      

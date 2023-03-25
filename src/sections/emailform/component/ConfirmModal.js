@@ -55,7 +55,7 @@ const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
   }
 }))
 
-const ButtonCancelStyle = styled(Button)(({}) => ({
+const ButtonCancelStyle = styled(Button)(() => ({
   "&.button-cancel": {
     fontSize: 14,
     fontWeight: 600,
@@ -68,7 +68,7 @@ const ButtonCancelStyle = styled(Button)(({}) => ({
     }
   }
 }));
-const ButtonDeleteStyle = styled(Button)(({}) => ({
+const ButtonDeleteStyle = styled(Button)(() => ({
   "&.button-delete": {
     fontSize: 14,
     fontWeight: 600,

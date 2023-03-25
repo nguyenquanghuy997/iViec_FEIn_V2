@@ -26,7 +26,6 @@ const UserInviteActivePage = () => {
                     setStatusActiveUser(true);
                 } catch (error) {
                     setStatusActiveUser(false);
-                    console.log('error.status', error)
                 }
             }
         }

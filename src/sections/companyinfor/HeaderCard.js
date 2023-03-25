@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/styles";
 
-const ActiveSwitch = styled(Switch)(({}) => ({
+const ActiveSwitch = styled(Switch)(() => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
     color: "#388E3C",
   },

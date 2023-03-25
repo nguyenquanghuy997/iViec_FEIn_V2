@@ -47,6 +47,8 @@ import ThemeProvider from '@/theme'
 // utils
 import { getSettings } from '@/utils/getSettings'
 import './style.css'
+import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 
 MyApp.propTypes = {
   Component: PropTypes.func,
@@ -59,14 +61,20 @@ export default function MyApp(props) {
 
   const getLayout = Component.getLayout ?? ((pageProps, page) => page)
 
+  const router = useRouter()
+
+  useMemo(() => {
+    router.prefetch = async () => { }
+  }, [router])
+
   return (
     <>
       <Head>
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
-      <ReduxProvider store={store}>
-        <AuthProvider>
+      <AuthProvider>
+        <ReduxProvider store={store}>
           <RoleProvider>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <CollapseDrawerProvider>
@@ -92,8 +100,8 @@ export default function MyApp(props) {
               </CollapseDrawerProvider>
             </LocalizationProvider>
           </RoleProvider>
-        </AuthProvider>
-      </ReduxProvider>
+        </ReduxProvider>
+      </AuthProvider>
     </>
   )
 }

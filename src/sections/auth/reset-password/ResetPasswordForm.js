@@ -1,7 +1,7 @@
 import { ButtonDS } from "@/components/DesignSystem";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { useForgotPasswordMutation } from "@/sections/auth/authSlice";
-import errorMessages from "@/utils/errorMessages";
+import {errorMessages} from "@/utils/errorMessages";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Stack, Alert } from "@mui/material";
 import { useRouter } from "next/router";

@@ -21,7 +21,6 @@ export default function CompanyInfor() {
   };
   const { data: { items: JobCategoryList = [] } = {} } =
     useGetJobCategoriesQuery();
-  console.log(JobCategoryList);
   const methods = useForm({
     mode: "all",
     resolver: yupResolver(ProfileSchema),
@@ -163,8 +162,9 @@ export default function CompanyInfor() {
                   links={[
                     {
                       name: "CÔNG NGHỆ THÔNG TIN",
+                      href: '#'
                     },
-                    { name: "BẤT ĐỘNG SẢN" },
+                    { name: "BẤT ĐỘNG SẢN",  href: '#' },
                   ]}
                 />
               </Typography>

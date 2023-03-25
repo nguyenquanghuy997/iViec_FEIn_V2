@@ -1,7 +1,6 @@
 import {Button, Box, Typography} from "@mui/material";
-import {makeStyles, styled} from "@mui/styles";
+import {styled} from "@mui/styles";
 
-const useStyles = makeStyles(({}) => ({}));
 const ButtonFilterStyle = styled(Button)(({theme}) => ({
     marginLeft: `${theme.spacing(1)} !important`,
     backgroundColor: "#F3F4F6 !important",
@@ -76,7 +75,6 @@ const ApplicantModalFooterStyle = styled(Box)(({theme}) => ({
 
 
 export {
-    useStyles,
     ButtonFilterStyle,
     HelperTextTypography,
     ApplicantModalHeadStyle,

@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const CreateCalendar = ({ open, onClose, onOpen }) => {
   const [values, setValues] = useState("1");
@@ -73,18 +73,11 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   });
 
   const {
-    control,
     setError,
     watch,
     handleSubmit,
-    formState: {},
   } = methods;
   const wacthStep = watch('recruitmentId')
-  console.log('ha',wacthStep)
-  const { } = useFieldArray({
-    control,
-    name: "bookingCalendarGroups",
-  });
 
   // const pressHide = () => {
   // setData(null);

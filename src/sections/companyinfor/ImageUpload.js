@@ -7,14 +7,12 @@ const ImageUploadCard = ({ name }) => {
   const { control } = useFormContext();
 
   const [mainState, setMainState] = useState("initial");
-  const [imageUploaded, setImageUploaded] = useState(0);
+  const [, setImageUploaded] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
-  console.log(imageUploaded)
   const handleUploadClick = (event) => {
-    var file = event.target.files[0];
+    // var file = event.target.files[0];
     const reader = new FileReader();
-    var url = reader.readAsDataURL(file);
-    console.log(url);
+    // var url = reader.readAsDataURL(file);
     reader.onloadend = () => setSelectedFile([reader.result]);
 
     setMainState("uploaded");

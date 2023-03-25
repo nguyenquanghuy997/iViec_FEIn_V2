@@ -51,10 +51,6 @@ export default function MultiFilePreviewCustom({
           const { key, name, size, path } = getFileData(file, index);
 
           if (showPreview) {
-            console.log(
-              "🚀 ~ file: MultiFilePreviewCustom.js:56 ~ {files?.map ~ showPreview:",
-              showPreview
-            );
             return (
               <ListItem
                 key={key}
