@@ -858,7 +858,12 @@ export const RecruitmentItem = () => {
               },
               {
                 key: 'copy',
-                onClick: () => handleOpenModalState({ openClose: true }),
+                onClick: () => router.push({
+                  pathname: PATH_DASHBOARD.recruitment.copy(itemSelected[0]?.id),
+                  query: {
+                    type: 'copy',
+                  }
+                }),
                 color: 'basic',
                 icon: <CopyIcon />,
               },

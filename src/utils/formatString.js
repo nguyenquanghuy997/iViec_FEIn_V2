@@ -49,6 +49,13 @@ export const LIST_GENDER = [
     {value: 2, name: "Khác", label: "Khác"},
 ]
 
+export const LIST_GENDER_RECRUITMENT = [
+    {value: 0, name: "Nam", label: "Nam"},
+    {value: 1, name: "Nữ", label: "Nữ"},
+    {value: 2, name: "Khác", label: "Khác"},
+    {value: 3, name: "Không yêu cầu", label: "Không yêu cầu"},
+]
+
 export const LIST_EXPERIENCE_NUMBER = [
   {value: 0, name: "Chưa có kinh nghiệm", label: "Chưa có kinh nghiệm"},
   {value: 1, name: "Dưới 1 năm", label: "Dưới 1 năm"},

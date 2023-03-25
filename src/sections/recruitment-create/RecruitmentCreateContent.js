@@ -37,6 +37,7 @@ import RecruitmentPreviewCreate from "@/sections/recruitment-create/component/ot
 
 const RecruitmentCreateContent = ({Recruitment}) => {
   const router = useRouter();
+  const { query } = router;
   const {enqueueSnackbar} = useSnackbar();
   const {data: OrganizationOfUser = {}} = useGetOrganizationInfoQuery();
   const [createRecruitment] = useCreateRecruitmentMutation();
@@ -65,7 +66,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       startDate: null,
       endDate: null,
       address: '',
-      workingLanguageId: '',
+      recruitmentLanguageIds: [],
       coOwnerIds: [],
       tags: [],
       jobPositionId: '',
@@ -90,11 +91,11 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     recruitmentAddressIds: Yup.array().nullable().min(1, "Khu vực đăng tin không được bỏ trống").max(3, "Chọn tối đa 3 khu vực đăng tin"),
     candidateLevelId: Yup.string().required("Chức danh không được bỏ trống"),
     workExperience: Yup.string().required("Số năm kinh nghiệm không được bỏ trống"),
-    recruitmentJobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghề"),
-    recruitmentWorkingForms: Yup.array().min(1, "Hình thức làm việc không được bỏ trống").max(3, "Chọn tối đa 3 hình thức làm việc"),
+    recruitmentJobCategoryIds: Yup.array().nullable().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghề"),
+    recruitmentWorkingForms: Yup.array().nullable().min(1, "Hình thức làm việc không được bỏ trống").max(3, "Chọn tối đa 3 hình thức làm việc"),
     numberPosition: Yup.number().min(1, 'Số lượng nhân viên cần tuyển tối thiểu là 1').transform(value => (isNaN(value) ? undefined : value)).max(9999, 'Số lượng nhân viên cần tuyển tối đa 9999').required("Số lượng nhân viên cần tuyển không được bỏ trống"),
     sex: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Giới tính không được bỏ trống'),
-    workingLanguageId: Yup.string().required('Ngôn ngữ làm việc không được bỏ trống'),
+    recruitmentLanguageIds: Yup.array().nullable().min(1, "Ngôn ngữ làm việc không được bỏ trống").max(3, "Chọn tối đa 3 ngôn ngữ làm việc"),
     // date
     startDate: Yup
         .date()
@@ -165,6 +166,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   const watchRecruitmentAddressIds = useWatch({ control, name: 'recruitmentAddressIds' });
   const watchRecruitmentJobCategoryIds = useWatch({ control, name: 'recruitmentJobCategoryIds' });
   const watchRecruitmentWorkingForms = useWatch({ control, name: 'recruitmentWorkingForms' });
+  const watchRecruitmentWorkingLanguages = useWatch({ control, name: 'recruitmentLanguageIds' });
   const watchStartDate = useWatch({ control, name: 'startDate' });
 
   const { data: JobPosition = {} } = useGetJobPositionByIdQuery({ Id: watchJobPositionId }, { skip: !watchJobPositionId })
@@ -191,6 +193,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
         setValue('jobPositionId', Recruitment?.jobPosition?.id)
         setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({ ...item, value: item?.councilUserId, label: item.email || item.councilName })))
         setValue('coOwnerIds', Recruitment?.coOwners?.map(item => ({ ...item, value: item?.id, label: item.email || item.name })))
+        setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({ ...item, value: item?.id, label: item?.name })))
         setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
         setValue('currencyUnit', Recruitment?.currencyUnit);
       }
@@ -232,14 +235,14 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       benefit: data?.benefit,
       requirement: data?.requirement,
       numberPosition: data?.numberPosition,
-      minSalary: data?.minSalary,
-      maxSalary: data?.maxSalary,
+      minSalary: data?.minSalary || null,
+      maxSalary: data?.maxSalary || null,
       salaryDisplayType: data?.salaryDisplayType,
       sex: data?.sex,
       startDate: data?.startDate,
       endDate: data?.endDate,
       address: data?.address,
-      workingLanguageId: data?.workingLanguageId,
+      recruitmentLanguageIds: data?.recruitmentLanguageIds?.map(item => item.value),
       coOwnerIds: data?.coOwnerIds?.map(item => item.value),
       tags: data?.tags,
       jobPositionId: data?.jobPositionId,
@@ -255,7 +258,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
       recruitmentCreationType: isOpenSaveDraft ? 0 : 1,
     }
-    if (data?.id) {
+    if (data?.id && !query?.type) {
       if(data.recruitmentCreationType === 0) {
         try {
           await updateRecruitmentDraft(cleanObject({
@@ -296,6 +299,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       try {
         await createRecruitment(cleanObject({
           ...body,
+          id: null,
           recruitmentCreationType: isOpenSaveDraft ? 0 : 1
         })).unwrap();
         setIsOpenSubmitApprove(false);
@@ -323,6 +327,8 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     setIsOpenPreview(false);
   }
 
+  console.log(errors)
+
   return (
       <View>
         <JobCreateHeader
@@ -332,7 +338,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
             errors={isValid}
             watchName={watchNameDebounce}
             processStatus={Recruitment?.processStatus}
-            title={!isEmpty(Recruitment) ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng'}
+            title={!isEmpty(Recruitment) && !query?.type ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng'}
             onOpenPreview={handleOpenPreview}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -351,6 +357,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                         recruitmentAddressIds={watchRecruitmentAddressIds}
                         recruitmentJobCategoryIds={watchRecruitmentJobCategoryIds}
                         recruitmentWorkingForms={watchRecruitmentWorkingForms}
+                        recruitmentWorkingLanguages={watchRecruitmentWorkingLanguages}
                     />
                   </BoxFlex>
                 </TabPanel>
