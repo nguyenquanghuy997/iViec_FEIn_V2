@@ -18,6 +18,7 @@ const responsive = {
     paritialVisibilityGutter: 30,
   },
 };
+
 const images = [
   "https://i.pinimg.com/236x/7c/ec/9b/7cec9b3ce82bd81f11aec198115adc5a.jpg",
   "https://i.pinimg.com/236x/64/40/08/6440082d2f15ab68355f9af1f8e3ca7b.jpg",
@@ -37,9 +38,7 @@ const images = [
   "https://images.unsplash.com/photo-1550064824-8f993041ffd3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
 ];
 
-// Because this is an inframe, so the SSR mode doesn't not do well here.
-// It will work on real devices.
-const Simple = ({ deviceType }) => {
+const Slider = ({ deviceType }) => {
   return (
     <Carousel
       ssr
@@ -51,11 +50,7 @@ const Simple = ({ deviceType }) => {
       {images.slice(0, 5).map((image) => {
         return (
           <Box>
-            <img
-              src={image}
-              alt="image"
-              style={{ height: "254px"}}
-            />
+            <img src={`${image}`} alt="image" style={{ height: "254px" }} />
             <Typography
               sx={{
                 fontWeight: 600,
@@ -79,4 +74,4 @@ const Simple = ({ deviceType }) => {
   );
 };
 
-export default Simple;
+export default Slider;

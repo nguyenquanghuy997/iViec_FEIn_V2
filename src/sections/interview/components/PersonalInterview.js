@@ -3,11 +3,9 @@ import { RHFTextField, RHFCheckbox } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { LabelStyle } from "@/components/hook-form/style";
 import { Label } from "@/components/hook-form/style";
-import { useGetRecruitmentPipelineStatesByRecruitment2Query } from "@/sections/applicant/ApplicantFormSlice";
+import { useGetRecruitmentPipelineStatesByRecruitment1Query } from "@/sections/applicant/ApplicantFormSlice";
 import { useGetRecruitmentByOrganizationIdQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
-// import { useGetListJobsMutation } from "@/sections/job/jobSlice";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Stack,
@@ -16,36 +14,22 @@ import {
   TextField,
 } from "@mui/material";
 import React from "react";
-import { useForm } from "react-hook-form";
 import { Controller, useFormContext } from "react-hook-form";
-import * as Yup from "yup";
 
-const PersonalInterview = ({ watch }) => {
-  const ConnectSchema = Yup.object().shape({
-    name: Yup.string().required("Nhập tên buổi phỏng vấn"),
-  });
-
+const PersonalInterview = ({ wacthStep }) => {
+  const { control } = useFormContext();
   const {
     data: { items: ListRecruitmentByOrganization = [] } = {},
     isLoading: isLoadingRecruitment,
   } = useGetRecruitmentByOrganizationIdQuery();
- if(isLoadingRecruitment) return null
-  const { data: { items: ListStep = [] } = {} } =
-    useGetRecruitmentPipelineStatesByRecruitment2Query(watch);
-  const defaultValues = {
-    name: "",
-  };
-  const { control } = useFormContext();
 
-  const methods = useForm({
-    resolver: yupResolver(ConnectSchema),
-    defaultValues,
-  });
 
-  const {
-    formState: { isSubmitting },
-  } = methods;
-  // const onSubmit = async () => {};
+
+  const { data: { items: ListStep = [] } = {}, isLoading: isLoadingStep } =
+    useGetRecruitmentPipelineStatesByRecruitment1Query(wacthStep);
+
+    
+  if ((isLoadingRecruitment, isLoadingStep)) return null;
 
   const options = [
     {
@@ -72,14 +56,11 @@ const PersonalInterview = ({ watch }) => {
       name: "Mẫu đánh giá thực tập sinh IT",
     },
   ];
-
-  const onChange = () => {};
-
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
 
-  if(isSubmitting) return <div>Loading...</div>
+  // console.log("testtuyet", { wacthStep, ListStep });
 
   return (
     <Stack spacing={3}>
@@ -104,7 +85,6 @@ const PersonalInterview = ({ watch }) => {
               label: i.name,
               name: i.name,
             }))}
-            onChange={onChange}
             name="recruitmentId"
             multiple={false}
             required

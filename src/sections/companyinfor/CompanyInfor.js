@@ -5,7 +5,7 @@ import { SIZE } from "./config";
 import DrawerEdit from "./edit/DrawerEdit";
 import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
 import { useGetCompanyInfoQuery } from "@/sections/companyinfor/companyInforSlice";
-import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
+// import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Typography, Divider } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
@@ -19,8 +19,8 @@ export default function CompanyInfor() {
   const defaultValues = {
     avatar: Data?.avatar,
   };
-  const { data: { items: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
+  // const { data: { items: JobCategoryList = [] } = {} } =
+  //   useGetJobCategoriesQuery();
   const methods = useForm({
     mode: "all",
     resolver: yupResolver(ProfileSchema),
@@ -102,14 +102,6 @@ export default function CompanyInfor() {
     );
   };
 
-  // const getBase64 = (file) =>
-  //   new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-
   return (
     <FormProvider {...methods}>
       <CropImageBG data={Data?.organizationInformation?.coverPhoto} />
@@ -182,12 +174,14 @@ export default function CompanyInfor() {
           )}
           {renderText("Email :", Data?.organizationInformation?.email || "")}
           {renderText(
-            "Ngành nghề :",
-            JobCategoryList?.filter(() =>
-              Data?.organizationInformation?.jobCategories?.includes(
-                (item) => item.jobCategoryId
-              )
-            ).map((item) => item?.name)
+            "Ngành nghề :",''
+            // JobCategoryList.filter((item) =>
+            //   item.id.includes(
+            //     Data?.organizationInformation?.jobCategories.map(
+            //       (item) => item.jobCategoryId
+            //     )
+            //   )
+            // )
           )}
           {renderText(
             "Quy mô :",
