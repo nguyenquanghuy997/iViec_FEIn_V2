@@ -1,12 +1,11 @@
 import React from "react";
 import {get, isEmpty} from 'lodash'
-import {Box, Button, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
-import {ButtonDS} from "@/components/DesignSystem";
-import {ButtonCancelStyle} from "@/sections/applicant/style";
 import {useGetOrganizationByIdQuery} from "@/sections/organization/OrganizationSlice";
 import {useRouter} from "next/router";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
 const renderInfoOrganization = (key, value) => {
   return (
@@ -74,19 +73,27 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
               )}
             {renderInfoOrganization('Trực thuộc', get(organization, 'parentOrganizationName') && get(organization, 'parentOrganizationName'))}
             {renderInfoOrganization('Đơn vị trực thuộc', get(organization, 'subsidiaryNames')?.map((sub, index, arr) => index < arr.length - 1 ? `${sub}, ` : `${sub}`))}
-            <Button
-                variant="contained"
-                sx={{py: '12px', textTransform: 'none', width: '100%', backgroundColor: '#1976D2', borderRadius: 0.75}}
-                endIcon={<Iconify icon='material-symbols:arrow-right'/>}
-                onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
-            >
-              Danh sách người dùng
-            </Button>
+            <MuiButton
+              title={"Danh sách người dùng"}
+              onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
+              endIcon={<Iconify icon='material-symbols:arrow-right'/>}
+              sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
+            />
           </Box>
           <OrganizationFromFooterStyle className="organization-form-footer">
             <Stack flexDirection="row">
-              <ButtonDS variant="contained" tittle="Chỉnh sửa" onClick={() => handleOpenFormWithCurrentNode(organization)} />
-              <ButtonCancelStyle onClick={onClose}>Đóng</ButtonCancelStyle>
+              <MuiButton
+                  type="button"
+                  title="Chỉnh sửa"
+                  onClick={() => handleOpenFormWithCurrentNode(organization)}
+                  sx={{ px: 2, py: 1, minWidth: 24 }}
+              />
+              <MuiButton
+                  title={"Đóng"}
+                  onClick={onClose}
+                  color={"basic"}
+                  sx={{ color: '#455570', fontWeight: 600, ml: 1 }}
+              />
             </Stack>
             <IconButton>
               <Iconify icon="ci:trash-full" onClick={() => handleShowDelete(organization)} />

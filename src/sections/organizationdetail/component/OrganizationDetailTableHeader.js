@@ -3,8 +3,9 @@ import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
 import {ButtonFilterStyle} from "@/sections/applicant/style";
 import {InputAdornment, Stack} from "@mui/material";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import {AddIcon} from "@/assets/ActionIcon";
 import React from "react";
-import {ButtonInviteListStyle, ButtonInviteStyle} from "@/sections/organization/style";
 
 const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit, setIsOpenInviteForm}) => {
   return (
@@ -48,16 +49,20 @@ const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, han
             </ButtonFilterStyle>
           </View>
           <Stack flexDirection="row" alignItems="center">
-            <ButtonInviteListStyle
-                className='button-invite-list'
-                startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
-                onClick={() => setIsOpenInviteForm(true)}
-            >Danh sách mời</ButtonInviteListStyle>
-            <ButtonInviteStyle
-                className="button-invite"
-                startIcon={<Iconify icon="material-symbols:add"/>}
-                onClick={() => setIsOpenInviteForm(true)}
-            >Mời người dùng</ButtonInviteStyle>
+              <MuiButton
+                  title={"Danh sách mời"}
+                  color={"default"}
+                  onClick={() => setIsOpenInviteForm(true)}
+                  startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
+                  sx={{ fontWeight: 550, marginRight: 1 }}
+              />
+              <MuiButton
+                  title={"Mời người dùng"}
+                  color={"primary"}
+                  onClick={() => setIsOpenInviteForm(true)}
+                  startIcon={<AddIcon />}
+                  sx={{ fontWeight: 550 }}
+              />
           </Stack>
         </Stack>
       </>

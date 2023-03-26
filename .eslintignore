@@ -8,4 +8,8 @@ build
 .husky
 .vscode
 .gitignore
+<<<<<<< HEAD
 commitlint.config.js
+=======
+commitlint.config.js
+>>>>>>> 5031fc4b52336972fa9250711d2af90d478e59a8

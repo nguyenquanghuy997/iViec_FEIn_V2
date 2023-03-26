@@ -4,7 +4,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 
-const MuiButton = ({title, variant, size, color, startIcon, endIcon, sx, loading, ...props}) => {
+const MuiButton = ({title, type, variant, size, color, startIcon, endIcon, sx, loading, ...props}) => {
   const theme = createTheme({
     palette: {
       primary: {
@@ -47,7 +47,7 @@ const MuiButton = ({title, variant, size, color, startIcon, endIcon, sx, loading
     height: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    textAlign: 'center',
     fontSize: style.FONT_SM,
     fontWeight: style.FONT_MEDIUM,
     boxShadow: 'none',
@@ -68,6 +68,7 @@ const MuiButton = ({title, variant, size, color, startIcon, endIcon, sx, loading
         <LoadingButton
             loading={loading}
             variant={variant}
+            type={type}
             size={size}
             startIcon={startIcon}
             endIcon={endIcon}
@@ -83,6 +84,7 @@ const MuiButton = ({title, variant, size, color, startIcon, endIcon, sx, loading
 
 MuiButton.propTypes = {
   title: PropTypes.any,
+  type: PropTypes.oneOf(['button', 'submit', 'reset']),
   color: PropTypes.oneOf(['primary', 'secondary', 'default', 'basic', 'success', 'error', 'warning']),
   variant: PropTypes.oneOf(['contained', 'outlined']),
   size: PropTypes.oneOf(['small', 'medium', 'large']),
@@ -93,11 +95,12 @@ MuiButton.propTypes = {
 
 MuiButton.defaultProps = {
   title: "",
+  type: 'button',
   color: "primary",
   size: "medium",
   variant: "contained",
-  startIcon: "",
-  endIcon: "",
+  startIcon: null,
+  endIcon: null,
   loading: false
 };
 
