@@ -222,6 +222,7 @@ export const RoleContainer = () => {
           nodata="Hiện chưa có quy trình tuyển dụng nào"
           setPaginationSize={setPaginationSize}
           setPage={setPage}
+          paginationSize={20}
           filter={
             <RolegroupHeader
               methods={methods}

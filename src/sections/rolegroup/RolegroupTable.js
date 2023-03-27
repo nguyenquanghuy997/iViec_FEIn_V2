@@ -1,9 +1,9 @@
 import { useGetRoleListQuery } from "../rolegroup/RoleGroupSlice";
+import { TYPES } from "./config";
 import React, { useState } from "react";
 import { useController } from "react-hook-form";
 
 const Checkboxes = ({ options, control, name }) => {
-  
   const { field } = useController({
     control,
     name,
@@ -12,9 +12,18 @@ const Checkboxes = ({ options, control, name }) => {
   return (
     <>
       {options?.map((option, index) => (
-        <div className="box-check" style={{display:'flex', justifyContent:'space-between' ,borderTop: "0.5px solid rgba(145, 158, 171, 0.24)"}}>
-          {/* {TYPE.map((role)=>(role?.actions[option?.name]?.name)).filter((item) => item != undefined)} */}
-          {option?.name}
+        <div
+          className="box-check"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            borderTop: "0.5px solid rgba(145, 158, 171, 0.24)",
+          }}
+        >
+          {TYPES.map((role) => role?.actions[option?.name]?.name).filter(
+            (item) => item != ""
+          )}
+
           <input
             onChange={(e) => {
               const valueCopy = [...value];
@@ -26,7 +35,7 @@ const Checkboxes = ({ options, control, name }) => {
             type="checkbox"
             checked={value.includes(option.id)}
             value={option.id}
-            style={{width:'18px'}}
+            style={{ width: "18px" }}
           />
         </div>
       ))}
@@ -37,7 +46,6 @@ const Checkboxes = ({ options, control, name }) => {
 export default function PipelineTable({ control }) {
   const { data } = useGetRoleListQuery();
   const options = data?.items;
-
   return (
     <div>
       <section>

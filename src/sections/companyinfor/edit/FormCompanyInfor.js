@@ -15,13 +15,7 @@ import {
 } from "@/sections/companyinfor/companyInforSlice";
 import { LIST_ORGANIZATION_SIZE } from "@/utils/formatString";
 import { LoadingButton } from "@mui/lab";
-import {
-  Box,
-  Divider,
-  InputLabel,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, InputLabel, Stack, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
@@ -86,7 +80,6 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
   const { data: { items: JobCategoryList = [] } = {} } =
     useGetJobCategoriesQuery();
-
   const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
     useLazyGetProvinceQuery();
   const [getDistrictByProvinceId, { data: { items: DistrictList = [] } = {} }] =
@@ -147,7 +140,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
           enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
             autoHideDuration: 2000,
           });
-          onClose()
+          onClose();
           // location.reload()
         } catch (err) {
           enqueueSnackbar(errors.afterSubmit?.message, {
@@ -171,16 +164,14 @@ const FormCompanyInfor = ({ data, onClose }) => {
   //     obj.push(<FileUpload />);
   //     i++;
   //   }
-
   useEffect(() => {
     if (!data) return;
+    refAvatar.current = data.organizationInformation.avatar;
+    refBackground.current = data.organizationInformation.coverPhoto;
+    setDescription(data.organizationInformation.description);
 
-    refAvatar.current = data.avatar;
-    refBackground.current = data.coverPhoto;
-
-    setDescription(data.description);
-
-    setValue("description", data.description);
+    setValue("jobCategoryIds", data.organizationInformation.jobCategoryIds);
+    setValue("organizationSize", data.organizationInformation.organizationSize);
   }, [JSON.stringify(data)]);
 
   return (

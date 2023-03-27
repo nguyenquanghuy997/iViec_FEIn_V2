@@ -1,21 +1,23 @@
-export const CANDIDATE = "Ứng viên";
-export const EMPLOY_NEWS = "Tin tuyển dụng";
+export const CANDIDATE = "Quản lý ứng viên";
+export const EMPLOY_NEWS = "Quản lý tin tuyển dụng";
+export const CAMPAIGN = "Quản lý tin tuyển dụng";
 export const INTERVIEW_SCHEDULE = "Lịch phỏng vấn";
 export const CANDIDATE_STORE = "Kho ứng viên";
-export const REPORT = "Báo cáo";
-export const COMPANY_INFO = "Thông tin công ty";
-export const OGANIZE_USER = "Cơ cấu tổ chức và người dùng";
-export const ROLE = "Vai trò";
-export const POSITION = "Vị trí công việc";
-export const TEMPLATE = "Mẫu đánh giá";
-export const OFFER_TEMPLATE = "Mẫu thư mời nhận việc";
-export const RECRUIT_PROCESS = "Quy trình tuyển dụng";
-export const APPROVE_PROCESS = "Quy trình phê duyệt";
-export const COMPETITION = "Thi tuyển";
-export const AUTOMAIL = "Email tự động";
-export const CONNECT = "Kết nối";
+export const REPORT = "Thiết lập báo cáo";
+export const COMPANY_INFO = "Thiết lập công ty";
+export const OGANIZE_USER = "Thiết lập tổ chức và người dùng";
+export const POSITION = "Thiết lập vị trí công việc";
+export const ROLE = "Thiết lập vai trò";
+export const TEMPLATE = "Thiết lập mẫu đánh giá";
+export const RECRUIT_PROCESS = "Thiết lập quy trình tuyển dụng";
+export const APPROVE_PROCESS = "Thiết lập quy trình phê duyệt";
+export const COMPETITION = "Thiết lập đề thi";
+export const OFFER_TEMPLATE = "Thiết lập mẫu thư mời nhận việc";
+export const AUTOMAIL = "Thiết lập email tự động";
+export const CONNECT = "Thiết lập kết nối nguồn tuyển dụng";
+export const NOTIFICATION = "Thiết lập thông báo (Tạm ẩn)";
 
-export const TYPE = [
+export const TYPES = [
   {
     name: CANDIDATE,
     actions: {

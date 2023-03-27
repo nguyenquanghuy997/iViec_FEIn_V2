@@ -170,7 +170,7 @@ export default function CompanyInfor() {
           <Divider />
           {renderText(
             "Số điện thoại :",
-            `0${Data?.organizationInformation?.phoneNumber}` || ""
+            `${Data?.organizationInformation?.phoneNumber}` || ""
           )}
           {renderText("Email :", Data?.organizationInformation?.email || "")}
           {renderText(

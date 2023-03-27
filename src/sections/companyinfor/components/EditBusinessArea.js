@@ -15,7 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Stack } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -61,7 +61,7 @@ const EditBusinessArea = ({ onClose }) => {
   });
 
   const {
-    // setValue,
+    setValue,
     // setError,
     register,
     handleSubmit,
@@ -119,6 +119,12 @@ const EditBusinessArea = ({ onClose }) => {
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
+
+  useEffect(() => {
+    if (!Data) return;
+    setValue("organizationBusinessDatas", Data?.organizationBusiness.organizationBusinessDatas);
+  }, [JSON.stringify(Data)]);
+  
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* {!!errors.afterSubmit && (
