@@ -259,7 +259,7 @@ function RecruitmentPreviewItem() {
   const {themeStretch} = useSettings();
 
   const [openGroup, setOpenGroup] = useState(false);
-  const [modelApplication, setModelApplication] = useState({id: undefined, stage: undefined, recruitmentId: recruitmentId});
+  const [modelApplication, setModelApplication] = useState({id: undefined, stage: undefined, recruitmentId: recruitmentId, recruitmentTitle: RecruitmentData?.name});
 
   const handleCloseGroup = () => {
     setOpenGroup(false);

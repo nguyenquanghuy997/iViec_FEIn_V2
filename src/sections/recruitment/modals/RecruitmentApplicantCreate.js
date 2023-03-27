@@ -7,7 +7,7 @@ import {ViewModel} from "@/utils/cssStyles";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Avatar, CircularProgress, Divider, Grid, Modal, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {FormProvider, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
@@ -49,6 +49,7 @@ const defaultValues = {
     address: undefined
   }
 };
+const FileViewer = React.lazy(() => import('react-file-viewer'));
 
 export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isEditMode = !!data?.id;
@@ -61,21 +62,22 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isLoading = isEditMode && !preview.id;
     // form
     const Schema = Yup.object().shape({
-      recruitmentId: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
+      recruitmentId: Yup.string(),
+      recruitmentTitle: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
       recruitmentPipelineStageId: Yup.string(),
       fullName: Yup.string().max(50, "Họ tên không quá 50 ký tự").required("Chưa nhập họ tên"),
       portraitImage: Yup.string(),
       email: Yup.string().email("Email cần nhập đúng định dạng").required("Chưa nhập email"),
       phoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
-      weight: Yup.number(),
-      height: Yup.number(),
+      weight: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      height: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       cvFile: Yup.string(),
-      yearOfExperience: Yup.number(),
+      yearOfExperience: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       experience: Yup.string(),
-      identityNumber: Yup.number(),
+      identityNumber: Yup.string(),
       education: Yup.string(),
-      sex: Yup.number(),
-      maritalStatus: Yup.number(),
+      sex: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      maritalStatus: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       homeTower: Yup.object().shape({
         address: Yup.string()
       }),
@@ -97,6 +99,11 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
       handleSubmit,
       formState: {isSubmitting},
     } = methods;
+
+    // if (typeof window !== "undefined") {
+    //   lng = localStorage.getItem("i18nextLng") || defaultLang.value;
+    // }
+
 
     const pressHide = () => {
       setAvatar(undefined);
@@ -143,6 +150,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
       if (!show) return;
       reset();
       setValue("recruitmentId", data.recruitmentId);
+      setValue("recruitmentTitle", data.recruitmentTitle);
       setValue("recruitmentPipelineStageId", data.stage);
     }, [show]);
 
@@ -209,20 +217,20 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
             </View>
             <Divider/>
             {/* body */}
-            <View style={{minWidth: "600px", height: "100%", overflowY: "auto"}}>
+            <View style={{minWidth: "600px", maxWidth: "1200px", height: "100%", overflowY: "auto"}}>
               {isLoading ? (
                 <View flex="true" contentcenter="true">
                   <CircularProgress/>
                 </View>
               ) : (
-                <Grid container>
+                <Grid container flexDirection={"row"} wrap={"nowrap"}>
                   <Grid container flexDirection={"column"}>
                     <Grid item p={3}>
                       <Grid mb={3}>
                         <RHFTextField
                           title={"Tin tuyển dụng"}
                           isRequired={true}
-                          name={"recruitmentId"}
+                          name={"recruitmentTitle"}
                           disabled
                           placeholder="Nhập tên tin tuyển dụng"
                         />
@@ -381,18 +389,16 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {/*<Divider orientation={"vertical"}/>*/}
-                  {/*<Grid>*/}
-                  {/*  <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">*/}
-                  {/*    <div style={{height: "720px"}}>*/}
-                  {/*      <Viewer*/}
-                  {/*        fileUrl={"http://infolab.stanford.edu/pub/papers/google.pdf"}*/}
-                  {/*      />*/}
-                  {/*    </div>*/}
-                  {/*  </Worker>*/}
-                  {/*</Grid>*/}
+                  <Divider orientation={"vertical"}/>
+                  <Grid sx={{width: "600px"}}>
+                    <Suspense fallback={<div></div>}>
+                      <FileViewer
+                        sx={{overFlow: "unset"}}
+                        fileType={"pdf"}
+                        filePath={"http://103.176.149.158:5001/api/File/GetFile?filePath=01000000-ac12-0242-f753-08db28ea47cb%2F40c69d1a-e235-44fc-9618-acf7eaa11b51.pdf"}/>
+                    </Suspense>
+                  </Grid>
                 </Grid>
-
               )}
             </View>
 
