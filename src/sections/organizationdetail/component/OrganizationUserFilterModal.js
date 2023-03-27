@@ -1,20 +1,15 @@
 import {memo, useEffect} from "react";
 import Scrollbar from "@/components/Scrollbar";
-import {Box, ClickAwayListener, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
-import {ButtonDS} from "@/components/DesignSystem";
 import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
 import {isArray} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
 import {LIST_STATUS} from "@/utils/formatString";
 import {useRouter} from "next/router";
-import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
-  ButtonCancelStyle,
-  HelperTextTypography
-} from "@/sections/applicant/style";
+import {ApplicantModalFooterStyle, ApplicantModalHeadStyle} from "@/sections/applicant/style";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
 function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
 
@@ -52,16 +47,10 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
   // options select
 
   return (
-      <ClickAwayListener
-          mouseEvent="onMouseDown"
-          touchEvent="onTouchStart"
-          onClickAway={() => isOpen && onClose()}
-      >
       <Drawer
           open={isOpen}
           onClose={onClose}
           anchor="right"
-          variant="persistent"
           PaperProps={{
             sx: {
               width: {xs: 1, sm: 560, md: 400},
@@ -71,6 +60,14 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
               height: 'calc(100% - 64px)',
               top: '64px',
               right: 0,
+            }
+          }}
+          componentsProps={{
+            backdrop: {
+              sx: {
+                background: 'transparent !important',
+                boxShadow: 'none !important'
+              }
             }
           }}
       >
@@ -86,35 +83,40 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
             </ApplicantModalHeadStyle>
             <Divider/>
             <Box sx={{py: 2, mt: 0}}>
-              <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
-              <Stack sx={{pb: 3, px: 2}}>
+              <Stack sx={{pb: 6, px: 2}}>
                 <DynamicFilterForm
                     columns={columns}
                     options={{
                       isActive: LIST_STATUS,
                     }}
                 />
-
               </Stack>
             </Box>
-
-            <Divider/>
             <ApplicantModalFooterStyle>
               <Stack flexDirection="row">
-                <ButtonDS
-                    type="submit"
-                    loading={isSubmitting}
-                    variant="contained"
-                    tittle="Áp dụng"
-                    onClick={handleSubmit(onSubmit)}
+                <MuiButton
+                  type="submit"
+                  loading={isSubmitting}
+                  title="Áp dụng"
+                  onClick={handleSubmit(onSubmit)}
                 />
-                <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
+                <MuiButton
+                    type="submit"
+                    color={"basic"}
+                    title="Hủy"
+                    onClick={handleCloseModal}
+                    sx={{
+                        "&:hover": {
+                            backgroundColor: 'transparent',
+                            boxShadow: 'none'
+                        }
+                    }}
+                />
               </Stack>
             </ApplicantModalFooterStyle>
           </FormProvider>
         </Scrollbar>
       </Drawer>
-      </ClickAwayListener>
   );
 }
 
