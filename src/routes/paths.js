@@ -110,7 +110,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, "recruitment"),
     create: path(ROOTS_DASHBOARD, "recruitment/create"),
     update: (id) => path(ROOTS_DASHBOARD, `recruitment/update/${id}`),
-    copy: (id) => path(ROOTS_DASHBOARD, `recruitment/copy/${id}`),
+    copy: path(ROOTS_DASHBOARD, `recruitment/copy`),
     view: (id) => path(ROOTS_DASHBOARD, `recruitment/${id}`),
   },
   company: {
