@@ -1,21 +1,20 @@
-import { useGetAllExamQuery } from "../PipelineFormSlice";
 import {
   ButtonDS,
-  SelectAutoCompleteDS,
   TextAreaDS,
 } from "@/components/DesignSystem";
 import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import Iconify from "@/components/Iconify";
 import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
-import { FormHelperText, Modal } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
 import { ButtonIcon } from "@/utils/cssStyles";
-import Iconify from "@/components/Iconify";
+import { LoadingButton } from "@mui/lab";
+import { Modal } from "@mui/material";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const defaultValuess = {
   des: "",
@@ -32,7 +31,7 @@ export const PipelineAddModal = ({
   // form
   const ProfileSchema = Yup.object().shape({
     // stageType: Yup.string().required("Chưa chọn bước"),
-    des: Yup.string().required("Chưa nhập mô tả"),
+    stageType: Yup.string().required("Chưa chọn bước tuyển dụng"),
   });
   const methodss = useForm({
     defaultValuess,
@@ -48,24 +47,15 @@ export const PipelineAddModal = ({
   const pressHide = () => {
     setShow(false);
   };
-  const [error, setError] = useState(false);
-  const [errorExam, setErrorExam] = useState(false);
 
   const pressSave = handleSubmit(async (d) => {
     const data = {
-      stageType: selectedStatge,
-      exam: selectedExam,
+      stageType: d.stageType,
       des: d.des,
     };
-    if (selectedStatge == "") {
-      setError(true);
-    }
-    if (selectedStatge == "" && selectedExam == null) {
-      setErrorExam(true);
-    } else {
       onSubmit?.(data);
       pressHide();
-    }
+    
   });
   const pressDelete = () => {
     onDelete?.();
@@ -76,27 +66,16 @@ export const PipelineAddModal = ({
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
-  const { data: { items: ListExam } = [] } = useGetAllExamQuery({
-    IsActive: true,
-  });
-  const [selectedStatge, setSelectedStatge] = useState("");
-  const [selectedExam, setSelectedExam] = useState("");
+
   const LIST_PIPELINE_STAGE = [
     { id: "0", value: "0", name: "Thi tuyển" },
     { id: "1", value: "1", name: "Phỏng vấn" },
   ];
-  const onChangeStage = (e) => {
-    setSelectedStatge(e.target.value);
-    setSelectedExam("");
-  };
-  const onChangeExam = (e) => {
-    setSelectedExam(e.target.value);
-  };
+
   useEffect(() => {
-      setSelectedStatge(""), setSelectedExam(""), setValue("des", "");
-      return;
-  
-  }, [setSelectedStatge,setSelectedExam , setValue]);
+    setValue("stageType", ""), setValue("des", "");
+    return;
+  }, [setValue]);
   return (
     <Modal
       open={show}
@@ -113,59 +92,33 @@ export const PipelineAddModal = ({
                 </Text>
 
                 <ButtonIcon
-              sx={{
-                textTransform: "none",
-              }}
-              onClick={pressHide}
-              icon={
-                <Iconify
-                  icon={"ic:baseline-close"}
-                  width={20}
-                  height={20}
-                  color="#5C6A82"
+                  sx={{
+                    textTransform: "none",
+                  }}
+                  onClick={pressHide}
+                  icon={
+                    <Iconify
+                      icon={"ic:baseline-close"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
+                    />
+                  }
                 />
-              }
-            />
               </View>
               <View mb={24}>
                 {renderTitle("Loại bước", true)}
-                <SelectAutoCompleteDS
-                  selectedOption={selectedStatge}
-                  setSelectedOption={setSelectedStatge}
-                  onChange={onChangeStage}
-                  data={LIST_PIPELINE_STAGE}
+                <RHFDropdown
+                  options={LIST_PIPELINE_STAGE.map(i => ({
+                    id: i.id,
+                    value: i.id,
+                    name: i.name,
+                  }))}
+                  name="stageType"
                   placeholder="Chọn loại bước"
-                  name={"stageType"}
-                />
-                {error && (
-                  <FormHelperText
-                    error
-                    sx={{ px: 2, marginLeft: 0, textTransform: "capitalize" }}
-                  >
-                    Chưa chọn loại bước tuyển dụng
-                  </FormHelperText>
-                )}
+                  allowClear={true}
+              />
               </View>
-              {selectedStatge?.id == 0 && (
-                <View mb={24}>
-                  {renderTitle("Đề thi", true)}
-                  <SelectAutoCompleteDS
-                    selectedOption={selectedExam}
-                    setSelectedOption={setSelectedExam}
-                    onChange={onChangeExam}
-                    data={ListExam}
-                    placeholder="Chọn đề thi"
-                  />
-                  {errorExam && (
-                    <FormHelperText
-                      error
-                      sx={{ px: 2, marginLeft: 0, textTransform: "capitalize" }}
-                    >
-                      Chưa chọn đề thi
-                    </FormHelperText>
-                  )}
-                </View>
-              )}
               <View mb={24}>
                 {renderTitle("Mô tả", true)}
 

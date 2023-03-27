@@ -333,6 +333,7 @@ const RecruitmentInformation = (
                   name="jobPositionId"
                   title="Vị trí công việc có sẵn"
                   placeholder="Chọn vị trí công việc có sẵn"
+                  allowClear={true}
               />
             </Box>
             <Box sx={{px: 4, py: 0}}>
