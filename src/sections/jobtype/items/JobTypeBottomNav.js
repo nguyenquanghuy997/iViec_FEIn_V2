@@ -1,3 +1,5 @@
+import { useGetJobPositionByIdQuery } from "../jobTypeSlice";
+import { JobTypeFormModal } from "../modals";
 import JobTypeActiveModal from "../modals/JobTypeActiveModal";
 import Content from "@/components/BaseComponents/Content";
 import Iconify from "@/components/Iconify";
@@ -6,22 +8,11 @@ import {
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
 import { ButtonIcon } from "@/utils/cssStyles";
-import {
-  Box,
-  Divider,
-  Drawer,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useGetJobPositionByIdQuery } from "../jobTypeSlice";
+import JobTypeDeleteModal from "../modals/JobTypeDeleteModal";
 
-const JobTypeBottomNav = ({
-  selectedList,
-  open,
-  onClose,
-  setselectedList,
-}) => {
+const JobTypeBottomNav = ({ selectedList, open, onClose, setselectedList, itemSelected }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
 
@@ -61,7 +52,8 @@ const JobTypeBottomNav = ({
           <Stack flexDirection="row" alignItems="center">
             {selectedList.length === 1 && (
               <>
-                {jobType?.isActivated && jobType?.recruitmentAppliedCount == 0 ? (
+                {jobType?.isActivated &&
+                itemSelected[0]?.numberOfRecruitmentApplied == 0 ? (
                   <>
                     <ButtonIcon
                       onClick={() => handleShowConfirmMultiple("status")}
@@ -79,7 +71,7 @@ const JobTypeBottomNav = ({
                   </>
                 ) : (
                   <>
-                   <ButtonIcon
+                    <ButtonIcon
                       onClick={() => handleShowConfirmMultiple("status")}
                       sx={{
                         backgroundColor: "unset !important",
@@ -94,34 +86,38 @@ const JobTypeBottomNav = ({
                     </Typography>
                   </>
                 )}
-                <ButtonIcon
-                sx={{
-                  marginLeft:"16px"
-                }}
-                  onClick={() => handleShowConfirmMultiple("approve")}
-                  icon={
-                    <Iconify
-                      icon={"ri:edit-2-fill"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
+                {itemSelected[0]?.numberOfRecruitmentApplied == 0 && (
+                  <>
+                    <ButtonIcon
+                      sx={{
+                        marginLeft: "16px",
+                      }}
+                      onClick={() => handleShowConfirmMultiple("edit")}
+                      icon={
+                        <Iconify
+                          icon={"ri:edit-2-fill"}
+                          width={20}
+                          height={20}
+                          color="#5C6A82"
+                        />
+                      }
                     />
-                  }
-                />
-                 <ButtonIcon
-                  sx={{
-                    marginLeft:"16px"
-                  }}
-                  onClick={onClose}
-                  icon={
-                    <Iconify
-                      icon={"material-symbols:delete-outline-rounded"}
-                      width={20}
-                      height={20}
-                      color="#D32F2F"
+                    <ButtonIcon
+                      sx={{
+                        marginLeft: "16px",
+                      }}
+                      onClick={() => handleShowConfirmMultiple("delete")}
+                      icon={
+                        <Iconify
+                          icon={"material-symbols:delete-outline-rounded"}
+                          width={20}
+                          height={20}
+                          color="#D32F2F"
+                        />
+                      }
                     />
-                  }
-                />
+                  </>
+                )}
               </>
             )}
           </Stack>
@@ -156,6 +152,23 @@ const JobTypeBottomNav = ({
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
           ids={selectedList}
+          onClose={onCloseModel}
+          isActivated={jobType?.isActivated}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple.includes("edit") && (
+        <JobTypeFormModal
+          show={showConfirmMultiple}
+          setShow={setShowConfirmMultiple}
+          onClose={onCloseModel}
+          data={jobType}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple.includes("delete") && (
+        <JobTypeDeleteModal
+          showConfirmMultiple={showConfirmMultiple}
+          setShowConfirmMultiple={setShowConfirmMultiple}
+          jobTypeIds={selectedList}
           onClose={onCloseModel}
           isActivated={jobType?.isActivated}
         />

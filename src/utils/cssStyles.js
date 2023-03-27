@@ -130,7 +130,7 @@ export const DialogContentTextModelStyle = styled(DialogContentText)(({ theme })
     fontWeight: 700,
     display: "block",
     color:"#455570",
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
     "& .subtitle-name": {
       fontWeight: 600,
     },

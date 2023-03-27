@@ -29,7 +29,7 @@ const JobTypeActiveModal = ({
     try {
       const data = {
         ids: ids,
-        isActivated: !isActivated,
+        isActive: !isActivated,
       };
       await status(data).unwrap();
       enqueueSnackbar("Chuyển trạng thái thành công !");
@@ -63,14 +63,14 @@ const JobTypeActiveModal = ({
                 style={{ margin: "0 auto" }}
               />
               <TitleModelStyle className="title" style={{ color: "#1976D2" }}>
-                Bật trạng thái hoạt động cho quy trình tuyển dụng
+                Bật trạng thái hoạt động cho vị trí công việc
               </TitleModelStyle>
               <DialogContentTextModelStyle
                 id="alert-dialog-description"
                 className="subtite"
                 style={{ fontWeight: 400 }}
               >
-                Bạn có chắc chắn muốn bật hoạt động cho quy trình tuyển dụng ?
+                Bạn có chắc chắn muốn bật hoạt động cho vị trí công việc ?
               </DialogContentTextModelStyle>
               <Divider />
             </>
@@ -82,14 +82,14 @@ const JobTypeActiveModal = ({
                 style={{ margin: "0 auto" }}
               />
               <TitleModelStyle className="title" style={{ color: "#455570" }}>
-                Tắt trạng thái hoạt động cho quy trình tuyển dụng
+                Tắt trạng thái hoạt động cho vị trí công việc
               </TitleModelStyle>
               <DialogContentTextModelStyle
                 id="alert-dialog-description"
                 className="subtite"
                 style={{ fontWeight: 400 }}
               >
-                Bạn có chắc chắn muốn tắt hoạt động cho quy trình tuyển dụng ?
+                Bạn có chắc chắn muốn tắt hoạt động cho vị trí công việc ?
               </DialogContentTextModelStyle>
               <Divider />
             </>

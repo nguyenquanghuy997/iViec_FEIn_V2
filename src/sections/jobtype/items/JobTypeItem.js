@@ -232,9 +232,6 @@ export const JobTypeItem = () => {
     );
     handleCloseFilterForm();
   };
-  const refreshData = () => {
-    getAllFilter().unwrap();
-  };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
@@ -269,12 +266,9 @@ export const JobTypeItem = () => {
           filter={
             <JobTypeHeader
               methods={methods}
-              isOpen={isOpen}
               onSubmit={onSubmitSearch}
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}
-              onCloseFilterForm={handleCloseFilterForm}
-              onRefreshData={refreshData}
             />
           }
         />
@@ -293,7 +287,6 @@ export const JobTypeItem = () => {
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
-          onRefreshData={refreshData}
         />
       )}
     </View>

@@ -1,62 +1,87 @@
-import { ImgConfirm } from "../others";
-import { Text, View } from "@/components/FlexStyled";
-import { Modal } from "@mui/material";
+import { useDeleteJobTypeMutation } from "../jobTypeSlice";
+import { ButtonDS } from "@/components/DesignSystem";
+import Iconify from "@/components/Iconify";
+import {
+  ButtonCancel,
+  DialogContentTextModelStyle,
+  DialogModelStyle,
+  TitleModelStyle,
+} from "@/utils/cssStyles";
+import { DialogActions, DialogContent, Divider } from "@mui/material";
+import { useSnackbar } from "notistack";
+import React from "react";
 
-export const JobTypeDeleteModal = ({
-  showDelete,
-  setShowDelete,
-  data,
-  pressDelete,
+const JobTypeDeleteModal = ({
+  showConfirmMultiple,
+  setShowConfirmMultiple,
+  jobTypeIds,
+  onClose,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const [deletejob] = useDeleteJobTypeMutation();
+
+  const handleChangeStatus = async () => {
+    try {
+      await deletejob({"ids":jobTypeIds}).unwrap();
+      enqueueSnackbar("Thực hiện thành công !");
+      onClose();
+    } catch (err) {
+      enqueueSnackbar("Thực hiện thất bại !", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
+  };
   return (
-    <Modal
-      open={showDelete}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-      onBackdropClick={() => setShowDelete(false)}
+    <DialogModelStyle
+      open={showConfirmMultiple}
+      onClose={() => setShowConfirmMultiple(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
     >
-      <View contentCenter p={16} width={416} borderRadius={8} bgColor={"#fff"}>
-        <ImgConfirm />
-
-        <Text centerAlign mt={24} mb={12} fontSize={20} fontWeight={"700"}>
-          {"Xác nhận xóa vị trí công việc"}
-        </Text>
-
-        <Text
-          centerAlign
-          mb={16}
-          fontSize={16}
-          lineHeight={24 / 16}
-          fontWeight={"500"}
+      <DialogContent
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <Iconify
+          icon={"mdi:alert-circle-outline"}
+          width={60}
+          height={60}
+          color="#E53935"
+        />
+        <TitleModelStyle className="title" style={{ color: "#E53935" }}>
+          Xác nhận xóa vị trí công việc
+        </TitleModelStyle>
+        <DialogContentTextModelStyle
+          id="alert-dialog-description"
+          className="subtite"
+          style={{ fontWeight: 400 }}
         >
-          {`Bạn có muốn xóa ${data.Description} không?`}
-        </Text>
+          Bạn có chắc chắn muốn xóa vị trí công việc?
+        </DialogContentTextModelStyle>
+        <Divider />
+      </DialogContent>
+      <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
+        <ButtonCancel tittle="Hủy" onClick={onClose} />
 
-        <View
-          contentCenter
-          width={"100%"}
-          mb={10}
-          height={42}
-          borderRadius={8}
-          bgColor={"#E82E25"}
-          onPress={pressDelete}
-        >
-          <Text color={"#fff"} fontSize={15} fontWeight={"700"}>
-            {"Xác nhận"}
-          </Text>
-        </View>
-
-        <View
-          contentCenter
-          width={"100%"}
-          height={42}
-          borderRadius={8}
-          onPress={() => setShowDelete(false)}
-        >
-          <Text fontSize={15} fontWeight={"700"}>
-            {"Hủy"}
-          </Text>
-        </View>
-      </View>
-    </Modal>
+        <ButtonDS
+          tittle="Xóa"
+          onClick={handleChangeStatus}
+          sx={{
+            color: "#FDFDFD",
+            backgroundColor: "#D32F2F",
+            "&:hover": {
+              backgroundColor: "#E53935",
+            },
+          }}
+        />
+      </DialogActions>
+    </DialogModelStyle>
   );
 };
+
+export default React.memo(JobTypeDeleteModal);
