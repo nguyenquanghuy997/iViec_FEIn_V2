@@ -119,7 +119,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
             className="dialog-confirm"
-            maxWidth={'1000px'}
+            maxWidth={"1000px"}
         >
             <MuiDialogTitle onClose={onClose}>
                 <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
@@ -293,8 +293,14 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                     <DialogActionsStyle sx={{padding: 2}}>
                         <MuiButton
                             title={"Hủy"}
-                            color={"default"}
+                            color={"basic"}
                             onClick={onClose}
+                            sx={{
+                                "&:hover": {
+                                    boxShadow: 'none',
+                                    backgroundColor: 'transparent'
+                                }
+                            }}
                         />
                         <MuiButton
                             title={"Gửi lời mời"}

@@ -30,7 +30,6 @@ export const DialogStyle = styled(Dialog)(({theme, minHeight = '288px', minWidth
             borderRadius: '6px',
             width: "100%",
             maxWidth: maxWidth || minWidth,
-            top: -200
         },
     },
 }))

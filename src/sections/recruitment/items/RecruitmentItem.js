@@ -859,8 +859,9 @@ export const RecruitmentItem = () => {
               {
                 key: 'copy',
                 onClick: () => router.push({
-                  pathname: PATH_DASHBOARD.recruitment.copy(itemSelected[0]?.id),
+                  pathname: PATH_DASHBOARD.recruitment.copy,
                   query: {
+                    source: itemSelected[0]?.id,
                     type: 'copy',
                   }
                 }),
