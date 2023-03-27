@@ -10,7 +10,6 @@ import {
 } from "@/sections/applicant";
 import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
-import PipelineBottomNav from "@/sections/pipeline/items/PipelineBottomNav";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,6 +17,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import JobTypeBottomNav from "./JobTypeBottomNav";
 
 const defaultValues = {
   searchKey: "",
@@ -236,6 +236,7 @@ export const JobTypeItem = () => {
     getAllFilter().unwrap();
   };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [itemSelected, setItemSelected] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -263,6 +264,8 @@ export const JobTypeItem = () => {
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
           nodata="Hiện chưa có vị trí công việc nào"
           isSetting={true}
+          itemSelected={itemSelected}
+            setItemSelected={setItemSelected}
           filter={
             <JobTypeHeader
               methods={methods}
@@ -275,12 +278,13 @@ export const JobTypeItem = () => {
             />
           }
         />
-        <PipelineBottomNav
+        <JobTypeBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
           setselectedList={setSelectedRowKeys}
+          itemSelected={itemSelected}
         />
       </Content>
       {isOpen && (

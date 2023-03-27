@@ -196,7 +196,7 @@ export const API_DELETE_REVIEW_FORM = "ReviewForm/DeleteReviewForm";
 // Vị trí công việc
 export const API_GET_PAGING_JOBTYPE = "recruitment/JobPosition/GetJobPositions";//new
 export const API_GET_DETAIL_JOB_POSITION = "/recruitment/JobPosition/GetJobPosition";//new
-export const API_UPDATE_STATUS_JOBTYPE = "JobType/UpdateJobTypeStatus";
+export const API_UPDATE_STATUS_JOBTYPE = "recruitment/JobPosition/SetJobPositionsActivated";
 export const API_GET_PREVIEW_JOBTYPE = "JobType/GetJobTypeById";
 export const API_DELETE_JOBTYPE = "JobType/DeleteJobTypeById";
 export const API_ADD_JOBTYPE = "/recruitment/JobPosition/CreateJobPosition";

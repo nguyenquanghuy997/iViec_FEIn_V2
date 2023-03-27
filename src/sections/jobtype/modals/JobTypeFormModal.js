@@ -1,8 +1,10 @@
 import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
 import { View, Text } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
+import RHFTinyEditor from "@/components/editor/RHFTinyEditor";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
 import {
   useAddJobTypeMutation,
   useGetPreviewJobTypeMutation,
@@ -11,16 +13,11 @@ import {
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CircularProgress, Divider, Modal } from "@mui/material";
-import dynamic from "next/dynamic";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { ButtonCancelStyle } from "@/sections/applicant/style";
 
-const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
-  ssr: false,
-});
 
 const defaultValues = {
   name: "",
@@ -31,10 +28,6 @@ const defaultValues = {
 };
 export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
   const isEditMode = !!data?.id;
-
-  const [description, setDescription] = useState(null);
-  const [requirement, setRequirement] = useState(null);
-  const [benefit, setBenefit] = useState(null);
 
   // api
   const [addForm] = useAddJobTypeMutation();
@@ -117,11 +110,6 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
     }
   });
 
-  // render
-  const renderTitle = (title, required) => {
-    return <Label required={required}>{title}</Label>;
-  };
-
   // effect
   useEffect(() => {
     if (!show) {
@@ -131,10 +119,6 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
       setValue("requirement", "");
       setValue("benefit", "");
       setValue("isActivated", true);
-
-      setDescription(null);
-      setRequirement(null);
-      setBenefit(null);
       return;
     }
 
@@ -150,10 +134,6 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
     setValue("requirement", preview.requirement);
     setValue("benefit", preview.benefit);
     setValue("isActivated", !!preview.isActivated);
-
-    setDescription(preview.description);
-    setRequirement(preview.requirement);
-    setBenefit(preview.benefit);
   }, [isEditMode, preview.id]);
   const isActivated = methods.watch("isActivated");
   return (
@@ -211,11 +191,10 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
               {/* code & name */}
 
               <View mb={24}>
-                {renderTitle("Tên vị trí công việc", true)}
-
+                <Label required>Tên vị trí công việc</Label>
                 <RHFTextField
                   name={"name"}
-                  placeholder="Nhập vị trí công việc"
+                  placeholder="Nhập tên vị trí công việc"
                 />
               </View>
 
@@ -224,94 +203,26 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
 
               {/* des */}
               <View mt={28}>
-                {renderTitle("Mô tả công việc")}
-                <Editor
-                  data={description}
-                  onChange={(_, e) => {
-                    const text = e.getData();
-                    setValue("description", text);
-                  }}
-                  config={{
-                    toolbar: [
-                      "bold",
-                      "|",
-                      "italic",
-                      "|",
-                      "underline",
-                      "|",
-                      "link",
-                      "|",
-                      "bulletedList",
-                      "|",
-                      "numberedList",
-                      "|",
-                      "alignment",
-                      "|",
-                    ],
-                  }}
+                <Label>Mô tả công việc</Label>
+                <RHFTinyEditor
+                  name="description"
+                  placeholder="Nhập mô tả công việc..."
                 />
               </View>
 
               {/* require */}
               <View mt={28}>
-                {renderTitle("Yêu cầu công việc")}
-
-                <Editor
-                  data={requirement}
-                  onChange={(_, e) => {
-                    const text = e.getData();
-                    setValue("requirement", text);
-                  }}
-                  config={{
-                    toolbar: [
-                      "bold",
-                      "|",
-                      "italic",
-                      "|",
-                      "underline",
-                      "|",
-                      "link",
-                      "|",
-                      "bulletedList",
-                      "|",
-                      "numberedList",
-                      "|",
-                      "alignment",
-                      "|",
-                    ],
-                  }}
+                <Label>Yêu cầu công việc</Label>
+                <RHFTinyEditor
+                  name="requirement"
+                  placeholder="Nhập yêu cầu công việc..."
                 />
               </View>
 
               {/* benefit */}
               <View mt={28}>
-                {renderTitle("Quyền lợi")}
-
-                <Editor
-                  data={benefit}
-                  onChange={(_, e) => {
-                    const text = e.getData();
-                    setValue("benefit", text);
-                  }}
-                  config={{
-                    toolbar: [
-                      "bold",
-                      "|",
-                      "italic",
-                      "|",
-                      "underline",
-                      "|",
-                      "link",
-                      "|",
-                      "bulletedList",
-                      "|",
-                      "numberedList",
-                      "|",
-                      "alignment",
-                      "|",
-                    ],
-                  }}
-                />
+                <Label>Quyền lợi</Label>
+                <RHFTinyEditor name="benefit" placeholder="Nhập quyền lợi..." />
               </View>
             </View>
           )}
@@ -330,7 +241,7 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
               onClick={pressSave}
             />
             <View width={8} />
-             <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
+            <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
             <View width={8} />
             <View flex="true" />
 
