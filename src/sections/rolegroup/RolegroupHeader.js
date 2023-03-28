@@ -83,6 +83,7 @@ const RolegroupHeader = ({
               lineHeight: 20 / 15,
               marginLeft: 8,
               color: "white",
+              textTransform:'none'
             }}
           >
             {"Thêm vai trò"}

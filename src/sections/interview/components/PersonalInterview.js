@@ -4,7 +4,6 @@ import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { LabelStyle } from "@/components/hook-form/style";
 import { Label } from "@/components/hook-form/style";
 import { useGetRecruitmentPipelineStatesByRecruitment1Query } from "@/sections/applicant/ApplicantFormSlice";
-import { useGetRecruitmentByOrganizationIdQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
 import {
   Box,
@@ -18,18 +17,15 @@ import { Controller, useFormContext } from "react-hook-form";
 
 const PersonalInterview = ({ wacthStep }) => {
   const { control } = useFormContext();
-  const {
-    data: { items: ListRecruitmentByOrganization = [] } = {},
-    isLoading: isLoadingRecruitment,
-  } = useGetRecruitmentByOrganizationIdQuery();
-
-
+  // const {
+  //   data: { items: ListRecruitmentByOrganization = [] } = {},
+  //   isLoading: isLoadingRecruitment,
+  // } = useGetRecruitmentByOrganizationIdQuery();
 
   const { data: { items: ListStep = [] } = {}, isLoading: isLoadingStep } =
     useGetRecruitmentPipelineStatesByRecruitment1Query(wacthStep);
 
-    
-  if ((isLoadingRecruitment, isLoadingStep)) return null;
+  if ( isLoadingStep) return null;
 
   const options = [
     {
@@ -80,7 +76,7 @@ const PersonalInterview = ({ wacthStep }) => {
             Tin tuyển dụng <span style={{ color: "red" }}>*</span>
           </Typography>
           <RHFDropdown
-            options={ListRecruitmentByOrganization?.map((i) => ({
+            options={options3?.map((i) => ({
               value: i.id,
               label: i.name,
               name: i.name,

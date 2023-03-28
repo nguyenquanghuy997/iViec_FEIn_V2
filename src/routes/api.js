@@ -121,6 +121,7 @@ export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
 export const API_GET_LIST_ROLE_GROUP = "/identity/RoleGroup/GetRoleGroups"; // lấy danh sách role
 export const API_ADD_ROLE_GROUP = "/identity/RoleGroup/CreateRoleGroup"
+export const API_UPDATE_ROLE_GROUP = '/identity/RoleGroup/UpdateRoleGroup'
 export const API_REMOVE_ROLE_GROUP ='/Identity/RoleGroup/RemoveRoleGroups'
 
 

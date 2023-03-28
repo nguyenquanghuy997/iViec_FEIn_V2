@@ -63,8 +63,7 @@ const EditorEnding = ({ data, onClose }) => {
 
   useEffect(() => {
     if (!data) return;
-    setDescription(data.description);
-    setValue("conclusion", data.description);
+    setDescription(data.conclusion);
   }, [JSON.stringify(data)]);
 
   return (
