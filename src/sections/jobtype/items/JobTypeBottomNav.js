@@ -50,7 +50,6 @@ const JobTypeBottomNav = ({
       }
     return true;
   }
-  console.log(checkSameApply(itemApply));
   return (
     <Drawer
       anchor={"bottom"}
