@@ -17,7 +17,7 @@ CreateRecruitment.getLayout = function getLayout({roles = []}, page) {
     return <Layout roles={roles}>{page}</Layout>
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
     return {
         props: {
             roles: getRolesByPage(PAGES.Jobs),
@@ -29,7 +29,7 @@ export default function CreateRecruitment() {
     const router = useRouter();
     const {query} = router;
 
-    const { data: Recruitment = {}, isLoading } = useGetRecruitmentByIdQuery({ Id: query.id })
+    const { data: Recruitment = {}, isLoading } = useGetRecruitmentByIdQuery({ Id: query.source }, { skip: !query.source })
 
     if (isLoading) return <div>Loading...</div>
 

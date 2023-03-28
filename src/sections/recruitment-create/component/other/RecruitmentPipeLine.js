@@ -11,11 +11,24 @@ import {useGetAllPipelineByOrganizationQuery, useGetAllStepOfPipelineQuery} from
 import {PipelineStateType} from "@/utils/formatString";
 import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
+import {useGetAllExaminationQuery} from "@/sections/exam/ExamSlice";
+import {useOpenPopup} from "@/sections/recruitment-create/hooks/useOpenPopup";
+import ExaminationForm from "@/sections/recruitment-create/component/other/ExaminationForm";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
 const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) => {
 
-  const {data: {items: ListPipeline = []} = {}, isLoading} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
-  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}, isLoading: loadingPipe} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
+  const { open, setOpen } = useOpenPopup();
+
+  const {
+    data: {items: ListPipeline = []} = {},
+    isLoading
+  } = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
+  const {
+    data: {organizationPipelineStates: ListStepPipeline = []} = {},
+    isLoading: loadingPipe
+  } = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
+  const {data: {items: ListExamination = []} = {}} = useGetAllExaminationQuery();
 
   const router = useRouter();
 
@@ -56,11 +69,17 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
 
               <Box sx={{mt: 1}}>
                 {ListStepPipeline?.map((item, index) => {
-                  return <RecruitmentPipelineCard
-                      key={index}
-                      icon={PipelineStateType(item?.pipelineStateType).icon}
-                      title={PipelineStateType(item?.pipelineStateType).title}
-                      subtitle={PipelineStateType(item?.pipelineStateType).subtitle}/>
+                  return (
+                      <RecruitmentPipelineCard
+                          key={index}
+                          pipelineStateType={item?.pipelineStateType}
+                          icon={PipelineStateType(item?.pipelineStateType).icon}
+                          title={PipelineStateType(item?.pipelineStateType).title}
+                          subtitle={PipelineStateType(item?.pipelineStateType, item.description).subtitle}
+                          moreTitle={item?.pipelineStateType === 1 && "Chưa chọn đề thi"}
+                          onOpen={setOpen}
+                      />
+                  )
                 })}
               </Box>
 
@@ -91,6 +110,25 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
             />
           </RightNoteText>
         </Box>
+        <ExaminationForm
+          open={open}
+          onClose={() => setOpen(false)}
+          options={ListExamination}
+          header={<Typography sx={{ color: '#172B4D', fontSize: 16, fontWeight: 600 }}>Chọn đề thi</Typography>}
+          actions={
+            <>
+              <MuiButton
+                title={"Hủy"}
+                color={'basic'}
+                onClick={() => setOpen(false)}
+              />
+              <MuiButton
+                  title={"Lưu"}
+                  onClick={() => setOpen(false)}
+              />
+            </>
+          }
+        />
       </BoxWrapperStyle>
   )
 }
