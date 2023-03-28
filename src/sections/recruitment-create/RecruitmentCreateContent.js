@@ -80,6 +80,12 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       recruitmentJobCategoryIds: [],
       recruitmentAddressIds: [],
       recruitmentWorkingForms: [],
+      organizationPipelineStateDatas: [
+        {
+          organizationPipelineStateId: "",
+          examinationId: ""
+        }
+      ]
     }
   }, [OrganizationOfUser])
 
@@ -97,17 +103,8 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     sex: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Giới tính không được bỏ trống'),
     recruitmentLanguageIds: Yup.array().nullable().min(1, "Ngôn ngữ làm việc không được bỏ trống").max(3, "Chọn tối đa 3 ngôn ngữ làm việc"),
     // date
-    startDate: Yup
-        .date()
-        .typeError("Ngày bắt đầu không đúng định dạng")
-        .transform(value => (!value ? new Date().toISOString() : value))
-        .required('Ngày bắt đầu không được bỏ trống'),
-    endDate: Yup
-        .date()
-        .transform(value => (!value ? new Date().toISOString() : value))
-        .typeError("Ngày kết thúc không đúng định dạng")
-        .min(Yup.ref('startDate'), "Ngày kết thúc phải lớn hơn ngày bắt đầu")
-        .required('Ngày kết thúc không được bỏ trống'),
+    startDate: Yup.date().typeError("Ngày bắt đầu không đúng định dạng").transform(value => (!value ? new Date().toISOString() : value)).required('Ngày bắt đầu không được bỏ trống'),
+    endDate: Yup.date().transform(value => (!value ? new Date().toISOString() : value)).typeError("Ngày kết thúc không đúng định dạng").min(Yup.ref('startDate'), "Ngày kết thúc phải lớn hơn ngày bắt đầu").required('Ngày kết thúc không được bỏ trống'),
     // detail description
     description: Yup.string().required("Mô tả công việc không được bỏ trống"),
     requirement: Yup.string().required("Yêu cầu công việc không được bỏ trống"),
