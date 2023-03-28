@@ -27,7 +27,7 @@ export default function RHFAutocomplete(
         name,
         options = [],
         title = '',
-        disabledOption,
+        disabledOption = 3,
         multiple = false,
         isRequired = false,
         showAvatar = false,
@@ -80,7 +80,7 @@ export default function RHFAutocomplete(
             PaperComponent={CustomPaper}
             disableCloseOnSelect
             renderOption={(props, option, {selected}) => (
-                <MenuItem {...props} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} disabled={disabledOption}>
+                <MenuItem {...props} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} disabled={disabledOption && field.value?.length >= disabledOption}>
                   <div>
                     {showCheckbox && (
                         <Checkbox

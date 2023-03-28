@@ -2,7 +2,6 @@ import Iconify from "@/components/Iconify";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import {
   Autocomplete,
-  FormHelperText,
   Input,
   InputAdornment,
   InputLabel,
@@ -199,12 +198,6 @@ const LabelStyle = styled(InputLabel)(({ theme }) => ({
   fontWeight: style.FONT_MEDIUM,
   marginBottom: theme.spacing(1),
 }));
-const FormHelperTextStyle = styled(FormHelperText)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  marginLeft: 0,
-  fontSize: style.FONT_XS,
-  color: style.COLOR_TEXT_DANGER,
-}));
 const Label = styled(InputLabel)(({ theme }) => ({
   fontSize: style.FONT_SM,
   color: style.COLOR_TEXT_BLACK,
@@ -250,17 +243,6 @@ const MenuItemStyle = {
     height: 0,
     visibility: "hidden",
   },
-};
-
-const InputLabelStyle = {
-  fontSize: style.FONT_SM,
-  color: style.COLOR_TEXT_SECONDARY,
-  fontWeight: style.FONT_MEDIUM,
-  marginBottom: 1,
-};
-const InputLabelErrorStyle = {
-  color: style.COLOR_TEXT_DANGER,
-  marginLeft: 0,
 };
 
 const Placeholder = (placeholder) => {
@@ -316,14 +298,11 @@ export {
   InputStyle,
   LabelStyle,
   Label,
-  FormHelperTextStyle,
   TextFieldStyle,
   SelectFieldStyle,
   AutocompleteFieldStyle,
   SearchInputStyle,
   MenuItemStyle,
-  InputLabelStyle,
-  InputLabelErrorStyle,
   Placeholder,
   MenuProps,
   InputProps,

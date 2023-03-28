@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import {CHECK_EMAIL} from '@/utils/regex'
+import {LabelStyle} from "@/components/hook-form/style";
 
 export default function ResetPasswordForm({ setStatusResetPass }) {
   const router = useRouter();
@@ -59,11 +60,10 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
         <Stack sx={{ mb: 5 }}>
+          <LabelStyle required={true}>Email đăng nhập</LabelStyle>
           <RHFTextField
             name="email"
-            title="Email đăng nhập"
             placeholder="Nhập Email muốn khôi phục mật khẩu"
-            isRequired
             sx={{width: 440, minHeight: 44}}
           />
         </Stack>
