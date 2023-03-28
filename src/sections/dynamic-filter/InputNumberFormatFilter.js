@@ -2,6 +2,7 @@ import React from 'react'
 import { NumericFormat } from 'react-number-format';
 import {LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
 import {Controller, useFormContext} from "react-hook-form";
+import {Box} from "@mui/material";
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
     props,
     ref,
@@ -37,9 +38,12 @@ const InputNumberFormatFilter = ({ name, title, isRequired, variant= 'standard',
           render={({ field, fieldState: { error } }) => (
               <>
                 {title && (
-                    <LabelStyle required={isRequired}>
-                      {title}
-                    </LabelStyle>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <LabelStyle required={isRequired}>
+                        {title}
+                      </LabelStyle>
+                      {other.otherTitle}
+                    </Box>
                 )}
                 <TextFieldStyle
                     {...field}

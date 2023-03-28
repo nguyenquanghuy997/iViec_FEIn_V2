@@ -97,42 +97,42 @@ export const LIST_RECRUITMENT_SALARY_DISPLAY_TYPE = [
   {value: 2, name: "Mức lương chi tiết", label: "Mức lương chi tiết"},
 ]
 
-export const PipelineStateType = (item) => {
+export const PipelineStateType = (item, description = '') => {
   switch (item) {
     case 0:
       return {
         title: "Ứng tuyển",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <ApplyJobIcon />
       }
     case 1:
       return {
         title: "Thi tuyển",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <AssessmentIcon />
       }
     case 2:
       return {
         title: "Phỏng vấn",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <InterviewIcon />
       }
     case 3:
       return {
         title: "Kết quả",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <ResultIcon />
       }
     case 4:
       return {
         title: "Mời nhận việc",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <OfferIcon />
       }
     default:
       return {
         title: "Ứng tuyển",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <ApplyJobIcon />
       }
   }
