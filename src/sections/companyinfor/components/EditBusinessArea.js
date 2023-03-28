@@ -1,5 +1,5 @@
 import EditUpload from "../edit/EditUpload";
-import MenuIcon from "@/assets/MenuIcon";
+import MenuIcon from "@/assets/interview/MenuIcon";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import { TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/DesignSystem/FlexStyled";
