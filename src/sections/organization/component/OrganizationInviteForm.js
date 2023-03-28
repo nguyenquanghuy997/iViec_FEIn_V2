@@ -87,7 +87,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
     } = methods;
 
     const {fields, append, remove} = useFieldArray({
-        control,
+       control,
         name: "invite"
     });
 

@@ -3,17 +3,23 @@ import FormModal from "@/components/BaseComponents/FormModal";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {useGetAllExaminationQuery} from "@/sections/exam/ExamSlice";
+const ExaminationForm = ({open, onClose, ...props}) => {
 
-const ExaminationForm = ({open, onClose, options, ...props}) => {
+  const {data: {items: ListExamination = []} = {}} = useGetAllExaminationQuery();
+
   return (
       <FormModal open={open} onClose={onClose} maxWidth={'600px'} {...props}>
         <Box sx={{width: '100%'}}>
           <RHFDropdown
               title="Đề thi"
               name="examinationId"
-              isRequired
               fullWidth
-              options={options}
+              options={ListExamination.map(item => ({
+                id: item.id,
+                value: item.id,
+                name: item.name,
+              }))}
               placeholder={"Chọn đề thi"}
           />
         </Box>
@@ -33,7 +39,6 @@ const ExaminationForm = ({open, onClose, options, ...props}) => {
                 </Typography>
               }
               placeholder="Nhập số ngày"
-              isRequired
               fullWidth
               InputProps={{
                 endAdornment: (
