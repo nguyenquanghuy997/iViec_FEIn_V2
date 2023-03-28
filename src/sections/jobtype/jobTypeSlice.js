@@ -22,6 +22,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
         url: `${API_GET_PAGING_JOBTYPE}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
       }),
+      providesTags:["JobPosition"],
     }),
     getJobPositionById: builder.query({
       query: (params) => ({
@@ -29,6 +30,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params
       }),
+      providesTags:["JobPosition"],
     }),
 
     // filter người tạo
@@ -59,9 +61,10 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
     deleteJobType: builder.mutation({
       query: (data) => ({
         url: API_DELETE_JOBTYPE,
-        method: "POST",
-        data: qs.stringify(data),
+        method: "DELETE",
+        data: data
       }),
+      invalidatesTags: ["JobPosition"],
     }),
     addJobType: builder.mutation({
       query: (data) => ({
@@ -69,13 +72,15 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data: data,
       }),
+      invalidatesTags: ["JobPosition"],
     }),
     updateJobType: builder.mutation({
       query: (data) => ({
-        url: API_UPDATE_JOBTYPE,
-        method: "POST",
-        data: data,
+        url: `${API_UPDATE_JOBTYPE}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
       }),
+      invalidatesTags: ["JobPosition"],
     }),
   }),
 });

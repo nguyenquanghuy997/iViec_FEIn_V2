@@ -7,12 +7,11 @@ import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import {
   useAddJobTypeMutation,
-  useGetPreviewJobTypeMutation,
   useUpdateJobTypeMutation,
 } from "@/sections/jobtype";
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CircularProgress, Divider, Modal } from "@mui/material";
+import { Divider, Modal } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -26,15 +25,12 @@ const defaultValues = {
   benefit: "",
   isActivated: true,
 };
-export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
+export const JobTypeFormModal = ({ data, show, onClose }) => {
   const isEditMode = !!data?.id;
 
   // api
   const [addForm] = useAddJobTypeMutation();
   const [updateForm] = useUpdateJobTypeMutation();
-  const [getPreview, { data: { Data: preview = {} } = {} }] =
-    useGetPreviewJobTypeMutation();
-  const isLoading = isEditMode && !preview.id;
 
   // form
   const Schema = Yup.object().shape({
@@ -51,28 +47,24 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
     formState: { isSubmitting },
   } = methods;
 
-  // action
-  const pressHide = () => {
-    setShow(false);
-  };
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
-    const body = {
+    const param = {
       id: isEditMode ? data.id : 0,
-      name: e.name,
-      description: e.description,
-      requirement: e.requirement,
-      benefit: e.benefit,
-      isActivated: e.isActivated ? 1 : 0,
+      body:{
+        name: e.name,
+        description: e.description,
+        requirement: e.requirement,
+        benefit: e.benefit,
+        isActivated: e.isActivated ? 1 : 0,}
     };
     if (isEditMode) {
       try {
-        await updateForm(body).unwrap();
+        await updateForm(param).unwrap();
         enqueueSnackbar("Thực hiện thành công!", {
           autoHideDuration: 2000,
         });
-        pressHide();
-        onRefreshData();
+        onClose();
       } catch (err) {
         if (err.status === "JPE_05") {
           enqueueSnackbar("Vị trí công việc đã tồn tại!", {
@@ -88,12 +80,11 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
       }
     } else {
       try {
-        await addForm(body).unwrap();
+        await addForm(param.body).unwrap();
         enqueueSnackbar("Thực hiện thành công!", {
           autoHideDuration: 1000,
         });
-        pressHide();
-        onRefreshData();
+        onClose();
       } catch (err) {
         if (err.status === "JPE_05") {
           enqueueSnackbar("Vị trí công việc đã tồn tại!", {
@@ -121,26 +112,22 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
       setValue("isActivated", true);
       return;
     }
-
-    if (!isEditMode) return;
-
-    getPreview({ id: data.id }).unwrap();
   }, [show]);
 
   useEffect(() => {
-    if (!preview.id) return;
-    setValue("name", preview.name);
-    setValue("description", preview.description);
-    setValue("requirement", preview.requirement);
-    setValue("benefit", preview.benefit);
-    setValue("isActivated", !!preview.isActivated);
-  }, [isEditMode, preview.id]);
+    if (!isEditMode) return;
+    setValue("name", data?.name);
+    setValue("description", data?.description);
+    setValue("requirement", data?.requirement);
+    setValue("benefit", data?.benefit);
+    setValue("isActivated", !!data?.isActivated);
+  }, [isEditMode]);
   const isActivated = methods.watch("isActivated");
   return (
     <FormProvider methods={methods}>
       <Modal
         open={show}
-        onClose={pressHide}
+        onClose={onClose}
         sx={{ display: "flex", justifyContent: "flex-end" }}
       >
         <ViewModel>
@@ -169,7 +156,7 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
                 padding: "12px",
                 minWidth: "unset",
               }}
-              onClick={pressHide}
+              onClick={onClose}
               icon={
                 <Iconify
                   icon={"mi:close"}
@@ -182,11 +169,7 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
           </View>
           <Divider />
           {/* body */}
-          {isLoading ? (
-            <View flex="true" contentcenter="true">
-              <CircularProgress />
-            </View>
-          ) : (
+
             <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
               {/* code & name */}
 
@@ -225,7 +208,6 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
                 <RHFTinyEditor name="benefit" placeholder="Nhập quyền lợi..." />
               </View>
             </View>
-          )}
           {/* footer */}
           <View
             flexrow="true"
@@ -241,16 +223,14 @@ export const JobTypeFormModal = ({ data, show, setShow, onRefreshData }) => {
               onClick={pressSave}
             />
             <View width={8} />
-            <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
+            <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
             <View width={8} />
             <View flex="true" />
 
-            {isLoading ? null : (
               <SwitchStatusDS
                 name={"isActivated"}
                 label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
               />
-            )}
           </View>
         </ViewModel>
       </Modal>
