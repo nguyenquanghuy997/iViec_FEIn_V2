@@ -11,7 +11,7 @@ import React, {Suspense, useEffect, useState} from "react";
 import {FormProvider, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {phoneRegExp} from "@/utils/function";
+import {getExtension, phoneRegExp} from "@/utils/function";
 import UploadAvatarApplicant from "@/components/upload/UploadAvatarApplicant";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES} from "@/utils/formatString";
@@ -83,7 +83,8 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
       }),
       livingAddress: Yup.object().shape({
         address: Yup.string()
-      })
+      }),
+      rawApplicantSkills: Yup.string(),
     });
 
     const methods = useForm({
@@ -106,6 +107,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
 
 
     const pressHide = () => {
+      reset();
       setAvatar(undefined);
       setCV(undefined);
       setData(data => ({...data, stage: null}));
@@ -120,7 +122,6 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 2000,
           });
-          location.reload()
           pressHide();
         } catch (err) {
           enqueueSnackbar("Thực hiện thất bại!", {
@@ -134,7 +135,6 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 1000,
           });
-          location.reload()
           pressHide();
         } catch (err) {
           enqueueSnackbar("Thực hiện thất bại!", {
@@ -148,15 +148,29 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     // effect
     useEffect(() => {
       if (!show) return;
-      reset();
       setValue("recruitmentId", data.recruitmentId);
       setValue("recruitmentTitle", data.recruitmentTitle);
-      setValue("recruitmentPipelineStageId", data.stage);
+      setValue("RecruitmentPipelineStateId", data.stage);
     }, [show]);
 
     useEffect(() => {
       if (!data?.id) return;
-      setValue("name", preview.name);
+      setValue("fullName", preview.fullName);
+      setValue("portraitImage", preview.portraitImage);
+      setValue("phoneNumber", preview.phoneNumber);
+      setValue("email", preview.email);
+      setValue("weight", preview.weight);
+      setValue("height", preview.height);
+      setValue("cvFile", preview.cvFile);
+      setValue("yearOfExperience", preview.yearOfExperience);
+      setValue("experience", preview.experience);
+      setValue("identityNumber", preview.identityNumber);
+      setValue("education", preview.education);
+      setValue("sex", preview.sex);
+      setValue("maritalStatus", preview.maritalStatus);
+      setValue("homeTower.address", preview.homeTower?.address);
+      setValue("livingAddress.address", preview.livingAddress?.address);
+      setValue("rawApplicantSkills", preview.rawApplicantSkills);
     }, [isEditMode, data, preview]);
 
     useEffect(() => {
@@ -224,7 +238,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                 </View>
               ) : (
                 <Grid container flexDirection={"row"} wrap={"nowrap"}>
-                  <Grid container flexDirection={"column"}>
+                  <Grid container sx={{width: "600px"}} flexDirection={"column"}>
                     <Grid item p={3}>
                       <Grid mb={3}>
                         <RHFTextField
@@ -389,15 +403,21 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Divider orientation={"vertical"}/>
-                  <Grid sx={{width: "600px"}}>
-                    <Suspense fallback={<div></div>}>
-                      <FileViewer
-                        sx={{overFlow: "unset"}}
-                        fileType={"pdf"}
-                        filePath={"http://103.176.149.158:5001/api/File/GetFile?filePath=01000000-ac12-0242-f753-08db28ea47cb%2F40c69d1a-e235-44fc-9618-acf7eaa11b51.pdf"}/>
-                    </Suspense>
-                  </Grid>
+                  {watch('cvFile') && <>
+                    <Divider orientation={"vertical"}/>
+                    <Grid sx={{
+                      minWidth: "580px",
+                      "& .pg-viewer-wrapper": {
+                        overflowY: 'auto'
+                      },
+                    }}>
+                      <Suspense fallback={<div></div>}>
+                        <FileViewer
+                          fileType={getExtension(watch('cvFile'))}
+                          filePath={"http://103.176.149.158:5001/api/File/GetFile?filePath=" + watch('cvFile')}/>
+                      </Suspense>
+                    </Grid>
+                  </>}
                 </Grid>
               )}
             </View>
