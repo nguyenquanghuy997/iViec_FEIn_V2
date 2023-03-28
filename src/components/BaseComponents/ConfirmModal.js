@@ -17,22 +17,23 @@ import {styled} from "@mui/styles";
 
 // style
 export const DialogStyle = styled(Dialog)(({theme, minHeight = '288px', minWidth = '600px', maxWidth = '600px'}) => ({
-  "& .dialog-confirm": {
-    boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-    borderRadius: theme.spacing(0.75),
-    backgroundColor: "#FDFDFD",
-    minHeight: minHeight,
-    minWidth: minWidth,
-  },
-  "& .MuiDialog-container": {
-    "& .MuiPaper-root": {
-      borderRadius: theme.spacing(0.75),
-      width: "100%",
-      maxWidth: maxWidth || minWidth,
-      top: -200
+    "& .dialog-confirm": {
+        boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+        borderRadius: '6px',
+        backgroundColor: "#FDFDFD",
+        minHeight: minHeight,
+        minWidth: minWidth,
     },
-  },
-}))
+    "& .MuiDialog-container": {
+        "& .MuiPaper-root": {
+            padding: theme.spacing(0, 2),
+            borderRadius: '6px',
+            width: "100%",
+            maxWidth: maxWidth || minWidth,
+        },
+    },
+  })
+);
 
 export const DialogContentStyle = styled(DialogContent)(({theme}) => ({
   display: 'flex',
