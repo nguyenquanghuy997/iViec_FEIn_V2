@@ -1,6 +1,7 @@
 import { useGetJobPositionByIdQuery } from "../jobTypeSlice";
 import { JobTypeFormModal } from "../modals";
 import JobTypeActiveModal from "../modals/JobTypeActiveModal";
+import JobTypeDeleteModal from "../modals/JobTypeDeleteModal";
 import Content from "@/components/BaseComponents/Content";
 import Iconify from "@/components/Iconify";
 import {
@@ -8,11 +9,17 @@ import {
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
 import { ButtonIcon } from "@/utils/cssStyles";
+import { checkSameValue } from "@/utils/formatString";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
-import JobTypeDeleteModal from "../modals/JobTypeDeleteModal";
 
-const JobTypeBottomNav = ({ selectedList, open, onClose, setselectedList, itemSelected }) => {
+const JobTypeBottomNav = ({
+  selectedList,
+  open,
+  onClose,
+  setselectedList,
+  itemSelected,
+}) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
 
@@ -33,6 +40,17 @@ const JobTypeBottomNav = ({ selectedList, open, onClose, setselectedList, itemSe
     setShowConfirmMultiple(true);
   };
 
+  let item = itemSelected.map((p) => p.isActivated);
+  let itemApply = itemSelected.map((p) => p.numberOfRecruitmentApplied);
+  function checkSameApply(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != 0 && arr[i]  !== arr[0] ) {
+          return false;
+        }
+      }
+    return true;
+  }
+  console.log(checkSameApply(itemApply));
   return (
     <Drawer
       anchor={"bottom"}
@@ -50,10 +68,9 @@ const JobTypeBottomNav = ({ selectedList, open, onClose, setselectedList, itemSe
           }}
         >
           <Stack flexDirection="row" alignItems="center">
-            {selectedList.length === 1 && (
+            {checkSameValue(item) && (
               <>
-                {jobType?.isActivated &&
-                itemSelected[0]?.numberOfRecruitmentApplied == 0 ? (
+                {item.includes(true) ? (
                   <>
                     <ButtonIcon
                       onClick={() => handleShowConfirmMultiple("status")}
@@ -86,39 +103,39 @@ const JobTypeBottomNav = ({ selectedList, open, onClose, setselectedList, itemSe
                     </Typography>
                   </>
                 )}
-                {itemSelected[0]?.numberOfRecruitmentApplied == 0 && (
-                  <>
-                    <ButtonIcon
-                      sx={{
-                        marginLeft: "16px",
-                      }}
-                      onClick={() => handleShowConfirmMultiple("edit")}
-                      icon={
-                        <Iconify
-                          icon={"ri:edit-2-fill"}
-                          width={20}
-                          height={20}
-                          color="#5C6A82"
-                        />
-                      }
-                    />
-                    <ButtonIcon
-                      sx={{
-                        marginLeft: "16px",
-                      }}
-                      onClick={() => handleShowConfirmMultiple("delete")}
-                      icon={
-                        <Iconify
-                          icon={"material-symbols:delete-outline-rounded"}
-                          width={20}
-                          height={20}
-                          color="#D32F2F"
-                        />
-                      }
-                    />
-                  </>
-                )}
               </>
+            )}
+            {itemSelected[0]?.numberOfRecruitmentApplied == 0 && (
+              <ButtonIcon
+                sx={{
+                  marginLeft: "16px",
+                }}
+                onClick={() => handleShowConfirmMultiple("edit")}
+                icon={
+                  <Iconify
+                    icon={"ri:edit-2-fill"}
+                    width={20}
+                    height={20}
+                    color="#5C6A82"
+                  />
+                }
+              />
+            )}
+            {checkSameApply(itemApply) && (
+              <ButtonIcon
+                sx={{
+                  marginLeft: "16px",
+                }}
+                onClick={() => handleShowConfirmMultiple("delete")}
+                icon={
+                  <Iconify
+                    icon={"material-symbols:delete-outline-rounded"}
+                    width={20}
+                    height={20}
+                    color="#D32F2F"
+                  />
+                }
+              />
             )}
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -153,7 +170,7 @@ const JobTypeBottomNav = ({ selectedList, open, onClose, setselectedList, itemSe
           setShowConfirmMultiple={setShowConfirmMultiple}
           ids={selectedList}
           onClose={onCloseModel}
-          isActivated={jobType?.isActivated}
+          isActivated={item[0]}
         />
       )}
       {showConfirmMultiple && typeConfirmMultiple.includes("edit") && (

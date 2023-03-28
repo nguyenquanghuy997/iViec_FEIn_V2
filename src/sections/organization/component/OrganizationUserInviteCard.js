@@ -41,7 +41,7 @@ const OrganizationUserInviteCard = (
                     </Stack>
                 </CardUserFormItemTitleStyle>
                 <Typography sx={{color: style.COLOR_SUCCESS, fontSize: style.FONT_XS, fontWeight: style.FONT_MEDIUM}}>
-                    {!item.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}
+                    {!item.isActive ? 'Đang hoạt động' : 'Không hoạt động'}
                 </Typography>
             </BoxFlex>
             <BoxFlex>
