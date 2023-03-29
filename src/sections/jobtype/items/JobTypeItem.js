@@ -270,6 +270,7 @@ export const JobTypeItem = () => {
           onOpenForm={toggleDrawer(true)}
           setselectedList={setSelectedRowKeys}
           itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
         />
       </Content>
       {isOpen && (

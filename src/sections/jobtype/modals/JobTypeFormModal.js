@@ -13,7 +13,7 @@ import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Divider, Modal } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -31,7 +31,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
   // api
   const [addForm] = useAddJobTypeMutation();
   const [updateForm] = useUpdateJobTypeMutation();
-
+  const [isDisabled, setIsDisabled] = useState(false);
   // form
   const Schema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tên vị trí công việc"),
@@ -49,6 +49,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
+    setIsDisabled(true);
     const param = {
       id: isEditMode ? data.id : 0,
       body:{
@@ -56,7 +57,8 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
         description: e.description,
         requirement: e.requirement,
         benefit: e.benefit,
-        isActivated: e.isActivated ? 1 : 0,}
+        isActivated: e.isActivated ? 1 : 0
+      }
     };
     if (isEditMode) {
       try {
@@ -66,6 +68,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
         });
         onClose();
       } catch (err) {
+        setIsDisabled(false);
         if (err.status === "JPE_05") {
           enqueueSnackbar("Vị trí công việc đã tồn tại!", {
             autoHideDuration: 1000,
@@ -86,6 +89,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
         });
         onClose();
       } catch (err) {
+        setIsDisabled(false);
         if (err.status === "JPE_05") {
           enqueueSnackbar("Vị trí công việc đã tồn tại!", {
             autoHideDuration: 1000,
@@ -104,12 +108,8 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
   // effect
   useEffect(() => {
     if (!show) {
-      reset();
-      setValue("name", "");
-      setValue("description", "");
-      setValue("requirement", "");
-      setValue("benefit", "");
-      setValue("isActivated", true);
+      reset(defaultValues);
+      setIsDisabled(false);
       return;
     }
   }, [show]);
@@ -178,6 +178,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
                 <RHFTextField
                   name={"name"}
                   placeholder="Nhập tên vị trí công việc"
+                  maxLength={150}
                 />
               </View>
 
@@ -221,6 +222,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
               variant="contained"
               tittle={isEditMode ? "Lưu" : "Thêm"}
               onClick={pressSave}
+              isDisabled={isDisabled}
             />
             <View width={8} />
             <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>

@@ -1,3 +1,4 @@
+import { useAddPipelineMutation } from "../PipelineFormSlice";
 import { PipelineDraggableItem } from "../items";
 import { PipelineAddModal } from "./PipelineAddModal";
 import {
@@ -11,21 +12,14 @@ import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
-import {
-  useUpdateJobTypeMutation,
-} from "@/sections/jobtype";
+import { useUpdateJobTypeMutation } from "@/sections/jobtype";
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Divider,
-  FormHelperText,
-  Modal,
-} from "@mui/material";
+import { Divider, FormHelperText, Modal } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { useAddPipelineMutation } from "../PipelineFormSlice";
 
 const defaultValues = {
   name: "",
@@ -33,7 +27,7 @@ const defaultValues = {
   pipelineStates: [],
   isActivated: true,
 };
-export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
+export const PipelineFormModal = ({ data, show, onClose }) => {
   const isEditMode = !!data?.id;
 
   // api
@@ -49,19 +43,21 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     resolver: yupResolver(Schema),
   });
   const {
-    // reset,
+    reset,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
   // state
   const [listForm, setListForm] = useState([]);
-
+  const [isDisabled, setIsDisabled] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [errorStage, setErrorStage] = useState("");
   const [editItemData, setEditItemData] = useState({});
   const [editItemIndex, setEditItemIndex] = useState(-1);
   const pressAdd = () => {
+    setEditItemData({});
+    setEditItemIndex(-1);
     setShowForm(true);
   };
 
@@ -76,29 +72,25 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
   const onEditForm = (item, index) => {
     setEditItemIndex(index);
     setEditItemData(item);
-    pressAdd();
+    setShowForm(true);
   };
 
   const onDeleteForm = (index) => {
     setListForm((l) => [...l].filter((_item, _index) => index !== _index));
   };
 
-  // action
-  const pressHide = () => {
-    setShow(false);
-  };
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
     if (e.pipelineStates == 0) {
       setErrorStage("Chưa thêm bước tuyển dụng");
     } else {
+      setIsDisabled(true);
       const body = {
         id: isEditMode ? data.id : "",
         name: e.name,
         description: e.description,
         pipelineStates: e.pipelineStates.map((i) => ({
           state: i.stageType.id,
-          examinationId: i.exam.id,
           description: i.des,
         })),
         isActivated: e.isActivated ? 1 : 0,
@@ -107,22 +99,15 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
         try {
           await updateForm(body).unwrap();
           enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
+            autoHideDuration: 1000,
           });
-          pressHide();
-          onRefreshData();
+          onClose();
         } catch (err) {
-          if (err.status === "JPE_05") {
-            enqueueSnackbar("Vị trí công việc đã tồn tại!", {
-              autoHideDuration: 1000,
-              variant: "error",
-            });
-          } else {
-            enqueueSnackbar("Thực hiện thất bại!", {
-              autoHideDuration: 1000,
-              variant: "error",
-            });
-          }
+          setIsDisabled(false);
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
         }
       } else {
         try {
@@ -130,20 +115,13 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 1000,
           });
-          pressHide();
-          onRefreshData();
+          onClose();
         } catch (err) {
-          if (err.status === "JPE_05") {
-            enqueueSnackbar("Vị trí công việc đã tồn tại!", {
-              autoHideDuration: 1000,
-              variant: "error",
-            });
-          } else {
-            enqueueSnackbar("Thực hiện thất bại!", {
-              autoHideDuration: 1000,
-              variant: "error",
-            });
-          }
+          setIsDisabled(false);
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
         }
       }
     }
@@ -164,18 +142,18 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
       />
     );
   };
+  // effect
+  useEffect(() => {
+    if (!show) {
+      reset(defaultValues);
+      setIsDisabled(false);
+      setListForm([]);
+      setErrorStage("");
+      return;
+    }
+  }, [show]);
 
   useEffect(() => {
-    // if (!show) {
-    //   reset();
-    //   setValue("name", "");
-    //   setValue("isDefault", false);
-    //   setValue("isActive", true);
-    //   setListForm([]);
-    //   setShowForm(false);
-    //   return;
-    // }
-
     if (!isEditMode) return;
 
     setValue("name", data.name);
@@ -184,7 +162,6 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     setListForm(
       data.pipelineStates?.map?.((i) => ({
         state: i.stageType.id,
-        examinationId: i.exam.id,
         description: i.des,
       })) || []
     );
@@ -198,7 +175,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
     <FormProvider methods={methods}>
       <Modal
         open={show}
-        onClose={pressHide}
+        onClose={onClose}
         sx={{ display: "flex", justifyContent: "flex-end" }}
       >
         <ViewModel>
@@ -227,7 +204,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
                 padding: "12px",
                 minWidth: "unset",
               }}
-              onClick={pressHide}
+              onClick={onClose}
               icon={
                 <Iconify
                   icon={"mi:close"}
@@ -249,7 +226,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
               <RHFTextField
                 name={"name"}
                 placeholder="Nhập tên quy trình tuyển dụng"
-                maxLength={150}
+                maxLength={50}
               />
             </View>
             <View mb={24}>
@@ -266,7 +243,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
             {/* dept */}
             <View pv={24}>
               {renderTitle("Bước tuyển dụng", true)}
-              <FormHelperText error sx={{ mt: 0, mb:1}}>
+              <FormHelperText error sx={{ mt: 0, mb: 1 }}>
                 {errorStage && errorStage}
               </FormHelperText>
               <PipelineDraggableItem
@@ -342,9 +319,10 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
               variant="contained"
               tittle={isEditMode ? "Sửa" : "Thêm"}
               onClick={pressSave}
+              isDisabled={isDisabled}
             />
             <View width={8} />
-            <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
+            <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
             <View width={8} />
             <View flex="true" />
 
@@ -356,13 +334,14 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
         </ViewModel>
       </Modal>
       {/* modal */}
-      <PipelineAddModal
-        show={showForm}
-        editData={editItemData}
-        setShow={setShowForm}
-        onSubmit={onAddForm}
-        onDelete={() => onDeleteForm(editItemIndex)}
-      />
+      {showForm && (
+        <PipelineAddModal
+          show={showForm}
+          editData={editItemData}
+          setShow={setShowForm}
+          onSubmit={onAddForm}
+        />
+      )}
     </FormProvider>
   );
 };

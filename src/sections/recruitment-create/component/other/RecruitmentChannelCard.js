@@ -7,27 +7,16 @@ import CardMedia from '@mui/material/CardMedia';
 import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import {alpha, styled} from "@mui/material/styles";
 import {Controller, useFormContext} from "react-hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {RHFCheckbox} from "@/components/hook-form";
 // style
 import {BoxFlex} from "@/sections/emailform/style";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
+import { GreenSwitch } from "@/utils/cssStyles";
 
-const GreenSwitch = styled(Switch)(({theme}) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C",
-    "&:hover": {
-      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
-    },
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
+
 
 const SwitchForm = ({name, handleChange, style, checked, ...other}) => {
   const {control} = useFormContext();

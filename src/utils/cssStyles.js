@@ -1,5 +1,5 @@
 import { ButtonDS } from "@/components/DesignSystem";
-import { Box, Dialog, DialogContentText } from "@mui/material";
+import { Box, Dialog, DialogContentText, Switch } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import { Typography } from "antd";
@@ -169,4 +169,15 @@ export const FooterPreviewStyle  = styled(Box)(({theme}) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   }
+}));
+export const GreenSwitch = styled(Switch)(({theme}) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: "#388E3C",
+    "&:hover": {
+      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: "#388E3C",
+  },
 }));

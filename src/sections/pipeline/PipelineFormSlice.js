@@ -13,31 +13,20 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 const PipelineFormSlice = apiWithTag.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({  
-    //Danh sách vị trí
-    // getAllPipeline: builder.query({
-    //   query: (params) => {
-    //     const defaultParams = { PageSize: 20 };
-    //     return {
-    //       url: API_GET_ALL_PIPELINE,
-    //       method: "GET",
-    //       params: {...defaultParams, ...params},
-    //     }
-    //   },
-    // }),
     getAllPipeline: builder.query({
       query: (params) => ({
-        url: API_GET_ALL_PIPELINE,
+        url: `${API_GET_ALL_PIPELINE}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
-        params
       }),
+      providesTags:["GetAllPipeline"],
     }),
-
     getPipelineById: builder.query({
       query: (params) => ({
         url: API_GET_PIPELINE_BY_ID,
         method: 'GET',
         params
       }),
+      providesTags:["GetAllPipeline"],
     }),
 
     getAllPipelineByOrganization: builder.query({
@@ -90,26 +79,29 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data: data,
       }),
+      invalidatesTags: ["GetAllPipeline"],
     }),
     updatePipeline: builder.mutation({
       query: (data) => ({
-        url: API_UPDATE_PIPELINE,
-        method: "POST",
-        data: qs.stringify(data),
+        url: `${API_UPDATE_PIPELINE}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
       }),
+      invalidatesTags: ["GetAllPipeline"],
     }),
     deletePipeline: builder.mutation({
       query: (data) => ({
         url: API_DELETE_PIPELINE,
-        method: "POST",
-        data: qs.stringify(data),
+        method: "DELETE",
+        data: data
       }),
+      invalidatesTags: ["GetAllPipeline"],
     }),
   }),
 });
 
 export const {
-  useLazyGetAllPipelineQuery,
+  useGetAllPipelineQuery,
   useGetPipelineByIdQuery,
   useGetAllPipelineByOrganizationQuery,
   useGetAllStepOfPipelineQuery,

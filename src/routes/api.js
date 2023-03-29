@@ -213,7 +213,7 @@ export const API_GET_ALL_PIPELINE_BY_ORGANIZATION = "/organization/OrganizationP
 export const API_SET_ORGANIZATION_PIPELINE_ACTIVE = "/organization/OrganizationPipeline/SetOrganizationPipelinesActive"; // bật tắt trạng thái hoạt động
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
-export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipeline";//new
+export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipelines";//new
 
 // API Application page
 // recruitment tin tuyển dụng

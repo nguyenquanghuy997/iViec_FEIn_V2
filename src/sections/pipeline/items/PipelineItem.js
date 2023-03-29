@@ -1,4 +1,4 @@
-import { useLazyGetAllPipelineQuery } from "../PipelineFormSlice";
+import { useGetAllPipelineQuery } from "../PipelineFormSlice";
 import PipelineHeader from "../PipelineHeader";
 import PipelineFilterModal from "../modals/PipelineFilterModal";
 import PipelineBottomNav from "./PipelineBottomNav";
@@ -7,18 +7,19 @@ import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import { filterSlice } from "@/redux/common/filterSlice";
+import { useDispatch, useSelector } from "@/redux/store";
 import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
 import { PipelineStateType, Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { cleanObject } from "@/utils/function";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as Yup from "yup";
 
 const defaultValues = {
   searchKey: "",
@@ -26,30 +27,44 @@ const defaultValues = {
 
 export const PipelineItem = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { query, isReady } = router;
-  // api get list
+  const toggleFormFilter = useSelector((state) => state.filterReducer.openForm);
+  const dataFilter = useSelector((state) => state.filterReducer.data);
+  const handleOpenFilterForm = () =>
+    dispatch(filterSlice.actions.openFilterModal());
+  const handleCloseFilterForm = () =>
+    dispatch(filterSlice.actions.closeModal());
+  const handleSetDataFilter = (data) =>
+    dispatch(filterSlice.actions.setAllDataFilter(data));
+  const handleClearDataFilter = () =>
+    dispatch(filterSlice.actions.clearDataFilter());
 
-  const [getAllFilter, { data: Data = [], isLoading }] =
-    useLazyGetAllPipelineQuery();
+  useEffect(() => {
+    if (!isReady) return;
+    handleClearDataFilter();
+  }, [isReady, query]);
+
+  const { data: Data, isLoading } = useGetAllPipelineQuery(
+    JSON.stringify(cleanObject(dataFilter))
+  );
   // api get list Column
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
+
   const handleChangePagination = (pageIndex, pageSize) => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
-    if (query) {
-      getAllFilter({
-        ...queryParams,
-        pageSize: pageSize,
-        pageIndex: pageIndex,
-      }).unwrap();
-    } else {
-      getAllFilter({ pageSize: pageSize, pageIndex: pageIndex }).unwrap();
-    }
+    handleSetDataFilter({
+      ...dataFilter,
+      pageSize: pageSize,
+      pageIndex: pageIndex,
+    });
   };
+
   const columns = [
     {
       title: "STT",
@@ -71,6 +86,8 @@ export const PipelineItem = () => {
       name: "organizationPipelineStates",
       type: "select",
       label: "Bước tuyển dụng",
+      multiple: true,
+      placeholder: "Chọn một hoặc nhiều bước",
       render: (_, { organizationPipelineStates }) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           {organizationPipelineStates?.map((p, index) => {
@@ -90,13 +107,14 @@ export const PipelineItem = () => {
                   >
                     {PipelineStateType(p?.pipelineStateType)}
 
-                    {index < organizationPipelineStates.length - 1 && index < 4 && (
-                      <Iconify
-                        width={16}
-                        height={16}
-                        icon="ic:round-keyboard-arrow-right"
-                      />
-                    )}
+                    {index < organizationPipelineStates.length - 1 &&
+                      index < 4 && (
+                        <Iconify
+                          width={16}
+                          height={16}
+                          icon="ic:round-keyboard-arrow-right"
+                        />
+                      )}
                   </span>
                 );
               } else {
@@ -109,7 +127,7 @@ export const PipelineItem = () => {
                       borderRadius: "4px",
                       color: "#5C6A82",
                       border: "none",
-                      marginLeft:"8px"
+                      marginLeft: "8px",
                     }}
                   >
                     +{indexplus}
@@ -202,98 +220,36 @@ export const PipelineItem = () => {
     await UpdateListColumnApplicants(data);
   };
 
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
   const methods = useForm({
     mode: "onChange",
-    defaultValues: useMemo(
-      () =>
-        query.searchKey
-          ? { ...defaultValues, searchKey: query.searchKey }
-          : { ...defaultValues },
-      [query.searchKey]
-    ),
-    // defaultValues: {...defaultValues, searchKey: query.searchKey},
-    resolver: yupResolver(Schema),
+    defaultValues,
   });
-
   const { handleSubmit } = methods;
-  const queryParams = {
-    searchKey: query.searchKey,
-    isActivated: query.isActivated ? query.isActivated : null,
-    createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-    createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-    creatorIds:
-      query.creatorIds && typeof query.creatorIds === "string"
-        ? query.creatorIds
-        : query.creatorIds && query.creatorIds,
-    pageSize: paginationSize,
-    pageIndex: page,
-  };
-  useEffect(() => {
-    if (!isReady) return;
 
-    if (query) {
-      getAllFilter(queryParams).unwrap();
-    } else {
-      getAllFilter({ pageSize: paginationSize, pageIndex: page }).unwrap();
-    }
-  }, [isReady, query]);
-
-  // open filter form
-  const [isOpen, setIsOpen] = useState(false);
-
-  // filter modal
-  const handleOpenFilterForm = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseFilterForm = () => {
-    setIsOpen(false);
+  const onSubmit = async (data) => {
+    const body = {
+      ...data,
+      createdTimeFrom: data.createdTimeFrom
+        ? new Date(data.createdTimeFrom).toISOString()
+        : null,
+      createdTimeTo: data.createdTimeTo
+        ? new Date(data.createdTimeTo).toISOString()
+        : null,
+    };
+    handleSetDataFilter(body);
+    handleCloseFilterForm();
   };
 
   const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
-
-  const onSubmit = async (data) => {
-    const body = { ...data, searchKey: data.searchKey };
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...body,
-          createdTimeFrom: data.createdTimeFrom
-            ? new Date(data.createdTimeFrom).toISOString()
-            : null,
-          createdTimeTo: data.createdTimeTo
-            ? new Date(data.createdTimeTo).toISOString()
-            : null,
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
-    handleCloseFilterForm();
-  };
-  const refreshData = () => {
-    getAllFilter().unwrap();
+    handleSetDataFilter({ searchKey: data.searchKey });
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [itemSelected, setItemSelected] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
-    setSelectedRowKeys([]);
+    setItemSelected([]);
     event.currentTarget.getElementsByClassName(
       "css-28xiqa"
     )[0].style.paddingBottom = null;
@@ -316,33 +272,32 @@ export const PipelineItem = () => {
           scroll={{ x: 1618 }}
           isSetting={true}
           nodata="Hiện chưa có quy trình tuyển dụng nào"
+          itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
           filter={
             <PipelineHeader
               methods={methods}
-              isOpen={isOpen}
               onSubmit={onSubmitSearch}
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}
-              onCloseFilterForm={handleCloseFilterForm}
-              onRefreshData={refreshData}
             />
           }
         />
         <PipelineBottomNav
-          open={selectedRowKeys?.length > 0}
+          open={itemSelected?.length > 0}
           onClose={toggleDrawer(false)}
-          selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
+          itemSelected={itemSelected || []}
+          setItemSelected={setItemSelected}
           setselectedList={setSelectedRowKeys}
         />
       </Content>
-      {isOpen && (
+      {toggleFormFilter && (
         <PipelineFilterModal
           columns={columns}
-          isOpen={isOpen}
+          isOpen={toggleFormFilter}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
-          onRefreshData={refreshData}
         />
       )}
     </View>

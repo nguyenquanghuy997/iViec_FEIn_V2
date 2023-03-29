@@ -19,6 +19,7 @@ const JobTypeBottomNav = ({
   onClose,
   setselectedList,
   itemSelected,
+  setItemSelected
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
@@ -26,6 +27,7 @@ const JobTypeBottomNav = ({
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
     setselectedList([]);
+    setItemSelected([]);
   };
 
   const { data: jobType } = useGetJobPositionByIdQuery(
@@ -44,7 +46,7 @@ const JobTypeBottomNav = ({
   let itemApply = itemSelected.map((p) => p.numberOfRecruitmentApplied);
   function checkSameApply(arr) {
       for (let i = 0; i < arr.length; i++) {
-        if (arr[i] != 0 && arr[i]  !== arr[0] ) {
+        if (arr[i] > 0) {
           return false;
         }
       }
@@ -104,7 +106,7 @@ const JobTypeBottomNav = ({
                 )}
               </>
             )}
-            {itemSelected[0]?.numberOfRecruitmentApplied == 0 && (
+            {itemSelected.length === 1 && itemSelected[0]?.numberOfRecruitmentApplied == 0 && (
               <ButtonIcon
                 sx={{
                   marginLeft: "16px",
@@ -189,35 +191,6 @@ const JobTypeBottomNav = ({
           isActivated={jobType?.isActivated}
         />
       )}
-      {/* {showConfirmMultiple && typeConfirmMultiple.includes("approve") && (
-        <RecruitmentAdConfirmMultipleModal
-          showConfirmMultiple={showConfirmMultiple}
-          setShowConfirmMultiple={setShowConfirmMultiple}
-          recruitmentIds={selectedList}
-          onClose={onCloseModel}
-        />
-      )}
-      {showConfirmMultiple && typeConfirmMultiple.includes("reject") && (
-        <RecruitmentAdRejectModal
-          showConfirmMultiple={showConfirmMultiple}
-          setShowConfirmMultiple={setShowConfirmMultiple}
-          recruitmentId={selectedList[0]}
-          onClose={onCloseModel}
-        />
-      )}
-      {showConfirmMultiple && typeConfirmMultiple.includes("preview") && (
-        // <RecruitmentAdRejectModal
-        //   showConfirmMultiple={showConfirmMultiple}
-        //   setShowConfirmMultiple={setShowConfirmMultiple}
-        //   recruitmentId={selectedList[0]}
-        //   setselectedList={setselectedList}
-        // />
-        <RecruitmentAdPreviewModal
-          showConfirmMultiple={showConfirmMultiple}
-          setShowConfirmMultiple={setShowConfirmMultiple}
-          onClose={onCloseModel}
-        />
-      )} */}
     </Drawer>
   );
 };

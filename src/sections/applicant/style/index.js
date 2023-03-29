@@ -43,7 +43,7 @@ const HelperTextTypography = styled(Typography)(({theme}) => ({
     color: "#8A94A5"
 }));
 
-const ApplicantModalHeadStyle = styled(Box)(({theme}) => ({
+const FilterModalHeadStyle = styled(Box)(({theme}) => ({
     position: "sticky",
     top: 0,
     right: 0,
@@ -58,7 +58,7 @@ const ApplicantModalHeadStyle = styled(Box)(({theme}) => ({
     justifyContent: 'space-between',
 }));
 
-const ApplicantModalFooterStyle = styled(Box)(({theme}) => ({
+const FilterModalFooterStyle = styled(Box)(({theme}) => ({
     position: "fixed",
     bottom: 0,
     right: 0,
@@ -77,8 +77,8 @@ const ApplicantModalFooterStyle = styled(Box)(({theme}) => ({
 export {
     ButtonFilterStyle,
     HelperTextTypography,
-    ApplicantModalHeadStyle,
-    ApplicantModalFooterStyle,
+    FilterModalHeadStyle,
+    FilterModalFooterStyle,
     ButtonCancelStyle,
     ButtonSaveStyle
 };
