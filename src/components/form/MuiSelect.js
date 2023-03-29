@@ -21,6 +21,7 @@ import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 import {ChipSelectStyle} from "@/components/hook-form/style";
 import ChipDS from "@/components/DesignSystem/ChipDS";
 import CloseIcon from "@/assets/CloseIcon";
+import {AvatarDS} from "@/components/DesignSystem";
 
 const MuiSelect = forwardRef((
     {
@@ -44,6 +45,7 @@ const MuiSelect = forwardRef((
         onDelete,
         allowClear = false,
         onClearValue,
+        showAvatar,
         ...selectProps
     }, ref) => {
     const theme = useTheme();
@@ -398,6 +400,10 @@ const MuiSelect = forwardRef((
                         value={option.value}
                         onClick={() => handleClickItem(option.value)}
                     >
+                        {showAvatar && <AvatarDS
+                            sx={{height: "20px", width: "20px", borderRadius: "100px", fontSize: "10px"}}
+                            name={option.label}
+                        />}
                         <ListItemText primary={option.label} sx={{ mr: '8px' }} />
                         {multiple ? (
                             <Checkbox checked={value.includes(option.value)} icon={<CheckboxIconDefault />} checkedIcon={<CheckboxIconChecked/>} />

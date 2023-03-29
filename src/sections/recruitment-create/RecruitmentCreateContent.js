@@ -157,10 +157,6 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   const watchJobPositionId = useWatch({control, name: 'jobPositionId'});
 
   // validate
-  const watchRecruitmentAddressIds = useWatch({control, name: 'recruitmentAddressIds'});
-  const watchRecruitmentJobCategoryIds = useWatch({control, name: 'recruitmentJobCategoryIds'});
-  const watchRecruitmentWorkingForms = useWatch({control, name: 'recruitmentWorkingForms'});
-  const watchRecruitmentWorkingLanguages = useWatch({control, name: 'recruitmentLanguageIds'});
   const watchStartDate = useWatch({control, name: 'startDate'});
 
   const watchOrganizationPipelineStateDatas = useWatch({control, name: 'organizationPipelineStateDatas'});
@@ -230,7 +226,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     setValue('expiredTime', '');
   }
 
-  const [valueTab, setValueTab] = useState(errors.organizationPipelineId ? '2' : '2');
+  const [valueTab, setValueTab] = useState(errors.organizationPipelineId ? '2' : '1');
   const handleChange = (event, newValue) => {
     setValueTab(newValue);
   };
@@ -372,10 +368,6 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                         organizationId={watchOrganization}
                         salaryDisplayType={watchSalaryDisplayType}
                         currencyUnit={watchCurrencyType}
-                        recruitmentAddressIds={watchRecruitmentAddressIds}
-                        recruitmentJobCategoryIds={watchRecruitmentJobCategoryIds}
-                        recruitmentWorkingForms={watchRecruitmentWorkingForms}
-                        recruitmentWorkingLanguages={watchRecruitmentWorkingLanguages}
                     />
                   </BoxFlex>
                 </TabPanel>
