@@ -211,15 +211,15 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
           {/* footer */}
           <View
             flexrow="true"
-            pv={12}
-            ph={16}
+            pv={16}
+            ph={24}
             boxshadow={"inset 0px 1px 0px #EBECF4"}
           >
             <ButtonDS
               type="submit"
               loading={isSubmitting}
               variant="contained"
-              tittle={isEditMode ? "Sửa" : "Thêm"}
+              tittle={isEditMode ? "Lưu" : "Thêm"}
               onClick={pressSave}
             />
             <View width={8} />
@@ -229,7 +229,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
 
               <SwitchStatusDS
                 name={"isActivated"}
-                label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+                label={isActivated ? "Đang hoạt động" : "Không hoạt động"}
               />
           </View>
         </ViewModel>

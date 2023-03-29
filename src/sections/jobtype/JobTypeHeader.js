@@ -26,7 +26,7 @@ const JobTypeHeader = ({
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <RHFTextField
               name="searchKey"
-              placeholder="Tìm kiếm quy trình tuyển dụng"
+              placeholder="Tìm kiếm vị trí công việc"
               sx={{
                 minWidth: "360px",
                 height: "36px",
