@@ -1,17 +1,11 @@
-import {forwardRef, useImperativeHandle, useRef} from "react";
+import {forwardRef} from "react";
 import PropTypes from 'prop-types';
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {InputAdornment, TextField} from "@mui/material";
+import {LabelStyle} from "@/components/hook-form/style";
 
 const MuiTextField = forwardRef((props, ref) => {
-    const { type, label, value, variant, startIcon, endIcon, onChange, height = 44, multiline = false, sx, ...other } = props;
-    const _textField = useRef();
-    const _inputRef = useRef();
-
-    useImperativeHandle(ref, () => ({
-        _inputRef: _inputRef.current,
-        ..._inputRef.current
-    }));
+    const { type, label, title, isRequired, value, variant, startIcon, endIcon, onChange, height = 44, multiline = false, sx, ...other } = props;
 
     const sxProps = {
         "& .MuiInput-root": {
@@ -79,9 +73,9 @@ const MuiTextField = forwardRef((props, ref) => {
 
     return (
         <>
+            {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
             <TextField
-                ref={_textField}
-                inputRef={_inputRef}
+                ref={ref}
                 {...inputProps}
                 {...other}
                 InputProps={{ ...InputProps, disableUnderline: true, }}

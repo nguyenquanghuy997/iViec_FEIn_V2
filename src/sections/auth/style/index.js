@@ -21,7 +21,8 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
         width: '100%',
         border: '1px solid #D0D4DB',
         borderTop: theme.spacing(0),
-        borderRadius: '0 !important'
+        borderRadius: '0 !important',
+        backgroundColor: '#FDFDFD'
     },
     "& .MuiAutocomplete-listbox": {
         padding: 0,

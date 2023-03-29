@@ -16,14 +16,10 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 import {isEmpty} from "lodash";
-// import {useRef} from "react";
 
 const RecruitmentPipeLine = ({examinationFormValue, setValue, watchOrganization, watchOrganizationPipelineId, onClearDataExaminationForm, onSetValuePipelineExamination}) => {
   const dispatch = useDispatch();
   const router = useRouter();
-
-  // const examSelectRef = useRef(null);
-  // const expiredTimeRef = useRef(null);
 
   const toggleOpenFormExamination = useSelector((state) => state.modalReducer.openForm);
   const item = useSelector((state) => state.modalReducer.data);
