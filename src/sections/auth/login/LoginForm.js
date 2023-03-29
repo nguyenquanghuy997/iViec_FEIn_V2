@@ -9,7 +9,7 @@ import useAuth from "@/hooks/useAuth";
 import {PATH_AUTH} from "@/routes/paths";
 // form
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Alert, IconButton, InputAdornment, Link, Stack, Typography,} from "@mui/material";
+import {Alert, IconButton, Link, Stack, Typography,} from "@mui/material";
 import NextLink from "next/link";
 import {useSnackbar} from "notistack";
 import {useState} from "react";

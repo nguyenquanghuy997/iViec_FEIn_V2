@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useState, useEffect, useMemo, useRef, forwardRef, useImperativeHandle } from "react";
 import {
     Select,
     OutlinedInput,
@@ -9,7 +9,7 @@ import {
     InputAdornment,
     useTheme,
     Box,
-    CircularProgress,
+    CircularProgress, IconButton,
 } from "@mui/material";
 import PropTypes from 'prop-types';
 import { RiCheckLine } from 'react-icons/ri';
@@ -17,6 +17,10 @@ import { pxToRem } from "@/utils/getFontValue";
 import axiosInstance from "@/utils/axios";
 import {SearchIcon} from "@/assets/SearchIcon";
 import { convertViToEn } from "@/utils/function";
+import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
+import {ChipSelectStyle} from "@/components/hook-form/style";
+import ChipDS from "@/components/DesignSystem/ChipDS";
+import CloseIcon from "@/assets/CloseIcon";
 
 const MuiSelect = forwardRef((
     {
@@ -37,6 +41,9 @@ const MuiSelect = forwardRef((
         search = true,
         renderSelected,
         onClose,
+        onDelete,
+        allowClear = false,
+        onClearValue,
         ...selectProps
     }, ref) => {
     const theme = useTheme();
@@ -171,7 +178,7 @@ const MuiSelect = forwardRef((
         return selectedItem ? selectedItem.label : val;
     }
 
-    const renderValue = (selected) => {
+    const renderValue = (selected, onDelete) => {
         if (
             (!multiple && (typeof selected === 'undefined' || selected === null || selected === ''))
             || (multiple && selected.length < 1)
@@ -192,7 +199,18 @@ const MuiSelect = forwardRef((
 
         return (
             <span className="selected-value">
-        {selected.map(val => getLabel(val)).join(', ')}
+                {
+                    selected.map((val, index) => (
+                        <ChipDS
+                            label={getLabel(val)}
+                            key={index}
+                            deleteIcon={<CloseIcon onMouseDown={(event) => event.stopPropagation()}/>}
+                            sx={{...ChipSelectStyle}}
+                            variant="filled"
+                            onDelete={() => onDelete(val)}
+                        />
+                    ))
+                }
       </span>
         );
     }
@@ -201,7 +219,7 @@ const MuiSelect = forwardRef((
 
     const selectSx = {
         width: '100%',
-        height: height,
+        minHeight: height,
         fontSize: pxToRem(14),
         borderRadius: '6px',
         '.placeholder': {
@@ -216,13 +234,12 @@ const MuiSelect = forwardRef((
             color: theme.palette.text.sub,
         },
         '.MuiSelect-select .selected-value': {
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: 'inline-block',
+            display: 'inline-flex',
+            flexWrap: 'wrap',
             padding: '0px 6px',
         },
         '.MuiSelect-select': {
-            padding: '8px 16px',
+            padding: '8px',
         },
         ...sx,
     };
@@ -291,13 +308,13 @@ const MuiSelect = forwardRef((
             displayEmpty={true}
             renderValue={(selected) => {
                 return (
-                    <Box display="flex" alignItems="center">
+                    <Box display="flex" alignItems="center" flexWrap="wrap">
                         {startIcon && (
                             <div className="select-icon" style={{ marginRight: 8 }}>
                                 {startIcon}
                             </div>
                         )}
-                        {renderValue(selected)}
+                        {renderValue(selected, onDelete)}
                     </Box>
                 )
             }}
@@ -307,13 +324,33 @@ const MuiSelect = forwardRef((
                 },
                 sx: dropdownSx,
             }}
+            endAdornment={
+                allowClear && (
+                    <InputAdornment position={"end"}>
+                        <IconButton size={"small"} sx={{ visibility: value ? "visible" : "hidden" }} onClick={() => onClearValue(name, "")}>
+                            <CloseIcon />
+                        </IconButton>
+                    </InputAdornment>
+                )
+            }
             onOpen={() => setOpen(true)}
             onClose={(e) => {
                 setOpen(false);
+                setTimeout(() => {
+                    setFilters({
+                        ...filters,
+                        SearchKey: ''
+                    })
+                }, 500)
                 if (onClose) onClose(e, value);
             }}
             open={open}
-            sx={selectSx}
+            sx={{
+                ...selectSx,
+                "& .MuiSelect-iconOutlined": {
+                    display: allowClear && value ? "none" : "",
+                }
+            }}
             {...selectProps}
         >
 
@@ -363,10 +400,10 @@ const MuiSelect = forwardRef((
                     >
                         <ListItemText primary={option.label} sx={{ mr: '8px' }} />
                         {multiple ? (
-                            <Checkbox checked={value.includes(option.value)} />
+                            <Checkbox checked={value.includes(option.value)} icon={<CheckboxIconDefault />} checkedIcon={<CheckboxIconChecked/>} />
                         ) : (
                             value === option.value && (
-                                <RiCheckLine size={20} />
+                                <RiCheckLine color="#1976D2" size={20} />
                             )
                         )}
                     </MenuItem>
