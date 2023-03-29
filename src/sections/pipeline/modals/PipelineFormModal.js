@@ -350,7 +350,7 @@ export const PipelineFormModal = ({ data, show, setShow, onRefreshData }) => {
 
             <SwitchStatusDS
               name={"isActivated"}
-              label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+              label={isActivated ? "Đang hoạt động" : "Không hoạt động"}
             />
           </View>
         </ViewModel>
