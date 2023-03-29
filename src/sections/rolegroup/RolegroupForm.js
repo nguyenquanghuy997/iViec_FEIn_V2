@@ -39,8 +39,8 @@ const ActiveSwitch = styled(Switch)(() => ({
 const RolegroupForm = ({ onClose }) => {
   const { data: Data } = useGetRoleGroupListQuery();
   const isEditMode = !!Data?.items?.id;
-  // const [addRoleGroup] = useAddRoleGroupMutation();
-  // const [uploadRoleGroup] = useUpdateRolegroupMutation();
+  const [addRoleGroup] = useAddRoleGroupMutation();
+  const [uploadRoleGroup] = useUpdateRolegroupMutation();
   const { enqueueSnackbar } = useSnackbar();
 
   const RoleSchema = Yup.object().shape({
@@ -68,16 +68,17 @@ const RolegroupForm = ({ onClose }) => {
   // });
 
   const onSubmit = async (d) => {
+    // console.log('sđ',d)
     const res = {
-      id: isEditMode ? Data?.items?.id : Data?.id,
+      id: isEditMode ? Data?.items?.id : "",
       name: d?.name,
       description: d?.description,
-      organizationBusinessDatas: d.organizationBusinessDatas,
+      identityRoleIds: d?.identityRoleIds,
     };
 
     if (isEditMode) {
       try {
-        await useUpdateRolegroupMutation(res).unwrap();
+        await uploadRoleGroup(res).unwrap();
         enqueueSnackbar("Chỉnh sửa thành công!", {
           autoHideDuration: 2000,
         });
@@ -90,7 +91,7 @@ const RolegroupForm = ({ onClose }) => {
       }
     } else {
       try {
-        await useAddRoleGroupMutation(res).unwrap();
+        await addRoleGroup(res).unwrap();
         enqueueSnackbar("Thêm thành công!", {
           autoHideDuration: 2000,
         });
@@ -110,8 +111,8 @@ const RolegroupForm = ({ onClose }) => {
   useEffect(() => {
     if (!Data) return;
     setValue(
-      "organizationBusinessDatas"
-      // Data?.organizationBusiness.organizationBusinessDatas
+      "identityRoleIds"
+      // Data?.items?.identityRoleIds
     );
   }, [JSON.stringify(Data)]);
 
@@ -136,8 +137,7 @@ const RolegroupForm = ({ onClose }) => {
             {renderTitle("Mô tả")}
             <TextAreaDS
               maxLength={150}
-              placeholder="Nhập nội dung mô tả...
-              "
+              placeholder="Nhập nội dung mô tả..."
               name="description"
             />
           </View>

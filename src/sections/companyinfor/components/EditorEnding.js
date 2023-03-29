@@ -122,7 +122,11 @@ const EditorEnding = ({ data, onClose }) => {
         </LoadingButton>
         <div style={{ width: 8 }} />
 
-        <LoadingButton variant="text" sx={{ color: "#455570" }}>
+        <LoadingButton
+          variant="text"
+          sx={{ color: "#455570" }}
+          onClick={onClose}
+        >
           {"Hủy"}
         </LoadingButton>
       </div>
