@@ -23,6 +23,7 @@ import TreeSelectMultiple from "@/sections/organization/component/TreeSelectMult
 import {isEmpty} from "lodash";
 import {Currency} from "@/utils/enum";
 import React from "react";
+import {API_GET_PAGING_JOBTYPE} from "@/routes/api";
 
 const RecruitmentInformation = (
     {
@@ -324,6 +325,7 @@ const RecruitmentInformation = (
                     name: i.name,
                     label: i.name,
                   }))}
+                  remoteUrl={API_GET_PAGING_JOBTYPE}
                   name="jobPositionId"
                   placeholder="Chọn vị trí công việc có sẵn"
                   allowClear
@@ -392,6 +394,7 @@ const RecruitmentInformation = (
                     name="ownerId"
                     placeholder="Chọn 1 cán bộ"
                     fullWidth
+                    showAvatar
                 />
               </Box>
               <Box sx={{mb: 2}}>
