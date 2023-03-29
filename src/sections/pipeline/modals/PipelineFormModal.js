@@ -1,4 +1,7 @@
-import { useAddPipelineMutation } from "../PipelineFormSlice";
+import {
+  useAddPipelineMutation,
+  useUpdatePipelineMutation,
+} from "../PipelineFormSlice";
 import { PipelineDraggableItem } from "../items";
 import { PipelineAddModal } from "./PipelineAddModal";
 import {
@@ -12,8 +15,8 @@ import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
-import { useUpdateJobTypeMutation } from "@/sections/jobtype";
 import { ViewModel } from "@/utils/cssStyles";
+import { PipelineStateType } from "@/utils/enum";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Divider, FormHelperText, Modal } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -32,7 +35,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
 
   // api
   const [addForm] = useAddPipelineMutation();
-  const [updateForm] = useUpdateJobTypeMutation();
+  const [updateForm] = useUpdatePipelineMutation();
 
   // form
   const Schema = Yup.object().shape({
@@ -85,19 +88,21 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
       setErrorStage("Chưa thêm bước tuyển dụng");
     } else {
       setIsDisabled(true);
-      const body = {
+      const param = {
         id: isEditMode ? data.id : "",
-        name: e.name,
-        description: e.description,
-        pipelineStates: e.pipelineStates.map((i) => ({
-          state: i.stageType.id,
-          description: i.des,
-        })),
-        isActivated: e.isActivated ? 1 : 0,
+        body: {
+          name: e.name,
+          description: e.description,
+          pipelineStates: e.pipelineStates.map((i) => ({
+            state: i.stageType.id,
+            description: i.des,
+          })),
+          isActivated: e.isActivated ? 1 : 0,
+        },
       };
       if (isEditMode) {
         try {
-          await updateForm(body).unwrap();
+          await updateForm(param).unwrap();
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 1000,
           });
@@ -111,7 +116,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
         }
       } else {
         try {
-          await addForm(body).unwrap();
+          await addForm(param.body).unwrap();
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 1000,
           });
@@ -155,15 +160,22 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
 
   useEffect(() => {
     if (!isEditMode) return;
-
     setValue("name", data.name);
     setValue("description", data.description);
     setValue("isActivated", !!data.isActivated);
     setListForm(
-      data.pipelineStates?.map?.((i) => ({
-        state: i.stageType.id,
-        description: i.des,
-      })) || []
+      data.organizationPipelineStates
+        ?.filter((p) => p.pipelineStateType == 1 || p.pipelineStateType == 2)
+        .map(
+          (i) =>
+            i.pipelineStateType != 0 && {
+              stageType: {
+                id: i.pipelineStateType,
+                name: PipelineStateType(i.pipelineStateType),
+              },
+              des: i.description,
+            }
+        ) || []
     );
   }, []);
   useEffect(() => {
