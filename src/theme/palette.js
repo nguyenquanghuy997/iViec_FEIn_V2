@@ -125,7 +125,7 @@ const palette = {
       bgGray: '#F2F4F5',
       warning: '#E53935',
     },
-    background: { active: '#FFF3E0', paper: '#EDEDED', default: '#fff', neutral: GREY[200] },
+    background: { active: '#FFF3E0', paper: '#fff', default: '#fff', neutral: GREY[200] },
     action: { active: GREY[600], ...COMMON.action },
   },
   dark: {
@@ -144,7 +144,7 @@ const palette = {
       bgGray: '#F2F4F5',
       warning: '#E53935',
     },
-    background: { active: '#FFF3E0', paper: '#EDEDED', default: '#fff', neutral: GREY[200] },
+    background: { active: '#FFF3E0', paper: '#fff', default: '#fff', neutral: GREY[200] },
     action: { active: GREY[500], ...COMMON.action },
   },
 }
