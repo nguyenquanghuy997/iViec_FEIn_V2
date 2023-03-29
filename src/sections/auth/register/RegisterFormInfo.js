@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {RegisterFormSectionLabel} from ".";
 import {STYLE_CONSTANT} from "./constants";
 import Iconify from "@/components/Iconify";
-import {FormProvider, RHFAutocomplete, RHFCheckbox, RHFTextField,} from "@/components/hook-form";
-// hooks
+import {FormProvider, RHFAutocomplete, RHFCheckbox, RHFSelect, RHFTextField,} from "@/components/hook-form";
 import {PATH_AUTH} from "@/routes/paths";
 import {useRegisterMutation,} from "@/sections/auth/authSlice";
 import {
@@ -14,16 +13,14 @@ import {
 import {errorMessages} from "@/utils/errorMessages";
 import {LIST_ORGANIZATION_SIZE} from "@/utils/formatString";
 import {yupResolver} from "@hookform/resolvers/yup";
-// @mui
-import {LoadingButton} from "@mui/lab";
 import {Alert, Box, Divider, FormHelperText, IconButton, InputAdornment, Link, Stack, Typography,} from "@mui/material";
-// next
 import NextLink from "next/link";
 import {useRouter} from "next/router";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {CHECK_EMAIL} from '@/utils/regex'
+import {LabelStyle} from "@/components/hook-form/style";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
 const InputStyle = {width: 440, minHeight: 44};
 
@@ -76,7 +73,7 @@ function RegisterForm() {
         setError,
         handleSubmit,
         watch,
-        formState: {isSubmitting, errors},
+        formState: {isSubmitting, errors, isValid},
     } = methods;
 
     const watchHasEmailValue = watch("userName");
@@ -102,7 +99,7 @@ function RegisterForm() {
             const {status} = error;
             const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
             if (status === "AUE_06") {
-                setError('userName', {type: "custom", message: "Tài khoản chưa được kích hoạt"}, {shouldFocus: true})
+                setError('userName', {type: "custom", message: errorMessages[`${error.status}`]})
             } else setError("afterSubmit", {...error, message});
         }
     };
@@ -112,7 +109,7 @@ function RegisterForm() {
         else methods.resetField(field);
     };
 
-    const {data: {items: ProviceList = []} = {}} = useGetProvinceQuery();
+    const {data: {items: ProvinceList = []} = {}} = useGetProvinceQuery();
     const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: !watchProvinceId });
     const {data: {items: JobCategoryList = []} = {}} = useGetJobCategoriesQuery();
 
@@ -135,15 +132,14 @@ function RegisterForm() {
                     <Stack>
                         <Stack direction="row" justifyContent="space-between" sx={{mb: 2.5}}>
                             <Stack>
+                                <LabelStyle required={true}>Email đăng nhập</LabelStyle>
                                 <RHFTextField
                                     name="userName"
-                                    title="Email đăng nhập"
                                     placeholder="Bắt buộc"
-                                    isRequired
                                     style={{...InputStyle}}
                                     InputProps={{
                                         endAdornment: watchHasEmailValue && (
-                                            <InputAdornment position="end" sx={{mr: 1.5}}>
+                                            <InputAdornment position="end" sx={{mr: 1}}>
                                                 <IconButton edge="end" onClick={() => handleClearField("userName")}>
                                                     <Iconify icon="ic:baseline-highlight-off"/>
                                                 </IconButton>
@@ -155,19 +151,17 @@ function RegisterForm() {
                         </Stack>
                         <Stack direction="row" justifyContent="space-between">
                             <Stack>
+                                <LabelStyle required={true}>Mật khẩu</LabelStyle>
                                 <RHFTextField
                                     name="password"
-                                    title="Mật khẩu"
                                     placeholder="Bắt buộc"
-                                    isRequired
                                     type={showPassword ? "text" : "password"}
                                     style={{...InputStyle}}
                                     InputProps={{
                                         endAdornment: (
-                                            <InputAdornment position="end" sx={{mr: 1.5}}>
+                                            <InputAdornment position="end" sx={{mr: 1}}>
                                                 <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
-                                                    <Iconify
-                                                        icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
+                                                    <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
                                                 </IconButton>
                                             </InputAdornment>
                                         )
@@ -188,16 +182,15 @@ function RegisterForm() {
                                 )}
                             </Stack>
                             <Stack>
+                                <LabelStyle required={true}>Xác nhận lại mật khẩu</LabelStyle>
                                 <RHFTextField
                                     name="rePassword"
-                                    title="Xác nhận lại mật khẩu"
                                     placeholder="Bắt buộc"
-                                    isRequired
                                     type={showPassword ? "text" : "password"}
                                     style={{...InputStyle}}
                                     InputProps={{
                                         endAdornment: (
-                                            <InputAdornment position="end" sx={{mr: 1.5}}>
+                                            <InputAdornment position="end" sx={{mr: 1}}>
                                                 <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
                                                     <Iconify
                                                         icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
@@ -213,20 +206,18 @@ function RegisterForm() {
                     <Stack>
                         <Stack direction="row" justifyContent="space-between" sx={{mb: 2.5}}>
                             <Stack>
+                                <LabelStyle required={true}>Tên doanh nghiệp</LabelStyle>
                                 <RHFTextField
                                     name="organizationName"
                                     placeholder="Bắt buộc"
-                                    title="Tên doanh nghiệp"
-                                    isRequired
                                     style={{...InputStyle}}
                                 />
                             </Stack>
                             <Stack>
+                                <LabelStyle required={true}>Số điện thoại doanh nghiệp</LabelStyle>
                                 <RHFTextField
                                     name="organizationPhoneNumber"
-                                    isRequired
                                     placeholder="Bắt buộc"
-                                    title="Số điện thoại doanh nghiệp"
                                     style={{...InputStyle}}
                                 />
                             </Stack>
@@ -243,6 +234,7 @@ function RegisterForm() {
                                         label: `${i.name[0].toUpperCase()}${i.name.slice(1)}`,
                                         name: i?.name,
                                     }))}
+                                    disabledOption={3}
                                     name="jobCategoryIds"
                                     title="Ngành nghề"
                                     isRequired
@@ -252,7 +244,8 @@ function RegisterForm() {
                             </div>
 
                             <div style={{...InputStyle}}>
-                                <RHFDropdown
+                                <LabelStyle required={true}>Quy mô nhân sự</LabelStyle>
+                                <RHFSelect
                                     options={
                                         LIST_ORGANIZATION_SIZE.map((i) => ({
                                             value: i.value,
@@ -263,8 +256,6 @@ function RegisterForm() {
                                     style={{...InputStyle}}
                                     name="organizationSize"
                                     placeholder="Bắt buộc"
-                                    title="Quy mô nhân sự"
-                                    isRequired
                                 />
                             </div>
                         </Stack>
@@ -272,38 +263,34 @@ function RegisterForm() {
                         <Stack direction="row" justifyContent="space-between" sx={{mb: 2.5, mt: 2.5}}>
                             <Stack>
                                 <div style={{...InputStyle}}>
-                                    <RHFDropdown
+                                    <LabelStyle required={true}>Tỉnh/Thành phố</LabelStyle>
+                                    <RHFSelect
                                         options={
-                                            ProviceList.map((i) => ({
+                                            ProvinceList?.map((i) => ({
                                                 value: i.id,
                                                 label: i.name,
-                                                name: i.name,
                                             }))
                                         }
                                         style={{...InputStyle}}
                                         name="organizationProvinceId"
                                         placeholder="Bắt buộc"
-                                        title="Tỉnh/Thành phố"
-                                        isRequired
                                     />
                                 </div>
                             </Stack>
                             <Stack>
                                 <div style={{...InputStyle}}>
-                                    <RHFDropdown
+                                    <LabelStyle required={true}>Quận/Huyện</LabelStyle>
+                                    <RHFSelect
                                         options={
-                                            DistrictList.map((i) => ({
+                                            DistrictList?.map((i) => ({
                                                 value: i.id,
                                                 label: i.name,
-                                                name: i.name,
                                             }))
                                         }
                                         style={{...InputStyle}}
                                         name="organizationDistrictId"
-                                        disabled={!watchProvinceId}
                                         placeholder="Bắt buộc"
-                                        title="Quận/Huyện"
-                                        isRequired
+                                        disabled={!watchProvinceId}
                                     />
                                 </div>
                             </Stack>
@@ -312,10 +299,10 @@ function RegisterForm() {
                         <Stack direction="row" justifyContent="space-between" width={STYLE_CONSTANT.WIDTH_FULL}
                                sx={{mb: 2.5}}>
                             <Stack sx={{width: STYLE_CONSTANT.WIDTH_FULL}}>
+                                <LabelStyle>Địa chỉ chi tiết doanh nghiệp</LabelStyle>
                                 <RHFTextField
                                     name="organizationAddress"
                                     placeholder="Số nhà, tên đường, xã/phường..."
-                                    title="Địa chỉ chi tiết doanh nghiệp"
                                 />
                             </Stack>
                         </Stack>
@@ -360,20 +347,19 @@ function RegisterForm() {
                         </Stack>
                     </Stack>
                     <Stack sx={{mt: 2}}>
-                        <LoadingButton
-                            fullWidth
-                            size="large"
+                        <MuiButton
+                            disabled={!isValid}
+                            title={"Đăng ký"}
                             type="submit"
-                            variant="contained"
                             loading={isSubmitting}
                             sx={{
                                 backgroundColor: STYLE_CONSTANT.COLOR_PRIMARY,
                                 textTransform: "none",
                                 borderRadius: 0.75,
+                                fontSize: 16,
+                                fontWeight: 600
                             }}
-                        >
-                            Đăng ký
-                        </LoadingButton>
+                        />
                     </Stack>
                 </Stack>
             </FormProvider>

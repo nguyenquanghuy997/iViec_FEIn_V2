@@ -13,6 +13,7 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 })
 
 export const RecruitmentSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getRecruitments: builder.query({
       query: (data) => ({

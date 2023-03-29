@@ -75,9 +75,10 @@ const renderValue = (
     : Placeholder(placeholder);
 };
 
-function RHFDropdown({ name, ...props }) {
-  const { control, setValue } = useFormContext();
+const RHFDropdown = React.forwardRef((props, ref) => {
+  const {control, setValue} = useFormContext();
   const {
+    name,
     defaultValue,
     isRequired,
     title,
@@ -89,6 +90,7 @@ function RHFDropdown({ name, ...props }) {
     type = "text",
     ...other
   } = props;
+
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
@@ -96,7 +98,7 @@ function RHFDropdown({ name, ...props }) {
   useEffect(() => {
     if (searchText) {
       setFilterOptions(
-        options?.filter((option) => containsText(option.name, searchText))
+          options?.filter((option) => containsText(option.name, searchText))
       );
     } else {
       setFilterOptions(options);
@@ -104,73 +106,72 @@ function RHFDropdown({ name, ...props }) {
   }, [searchText, options]);
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      defaultValue={defaultValue || ""}
-      render={({ field, fieldState: { error } }) => (
-        
-        <Stack direction="column">
-          {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
-          <SelectFieldStyle
-            {...field}
-            value={field.value}
-            displayEmpty
-            disabled={disabled}
-            error={!!error}
-            onClose={() => setSearchText("")}
-            renderValue={() =>
-              renderValue(options, field.value, placeholder, keyObj)
-            }
-            MenuProps={{ ...MenuProps, classes: { paper: classes.paper } }}
-            sx={{
-              "& .MuiSelect-iconOutlined": {
-                display: field.value && allowClear == true ? "none" : "",
-                color: "#455570",
-                width: "20px",
-                height: "20px",
-              },
-            }}
-            endAdornment={
-              allowClear == true ? (
-                <IconButton
-                  sx={{ visibility: field.value ? "visible" : "hidden" }}
-                  onClick={() => setValue(field.name,"")}
-                >
-                  <Iconify
-                    icon={"ic:round-clear"}
-                    width={16}
-                    height={16}
-                    color="#5c6a82"
-                  />
-                </IconButton>
-              ) : (
-                ""
-              )
-            }
-            {...other}
-          >
-            <TextField
-              placeholder="Tìm kiếm..."
-              fullWidth
-              autoFocus
-              inputRef={(input) => {
-                if (input != null) {
-                  input.focus();
-                }
-              }}
-              InputProps={{ ...InputProps }}
-              sx={{ ...SearchInputStyle }}
-              onChange={(e) => setSearchText(e.target.value)}
-              onKeyDown={(e) => e.stopPropagation()}
-            />
-            {renderOptions(filterOptions, field.value, type)}
-          </SelectFieldStyle>
-          <HelperText errorText={error?.message} />
-        </Stack>
-      )}
-    />
+      <>
+        <Controller
+            name={name}
+            control={control}
+            defaultValue={defaultValue || ""}
+            render={({ field, fieldState: { error } }) => (
+                <Stack direction="column">
+                  {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
+                  <SelectFieldStyle
+                      ref={ref}
+                      {...field}
+                      displayEmpty
+                      disabled={disabled}
+                      error={!!error}
+                      onClose={() => setSearchText("")}
+                      renderValue={() => renderValue(options, field.value, placeholder, keyObj)}
+                      MenuProps={{ ...MenuProps, classes: { paper: classes.paper } }}
+                      sx={{
+                        "& .MuiSelect-iconOutlined": {
+                          display: field.value && allowClear == true ? "none" : "",
+                          color: "#455570",
+                          width: "20px",
+                          height: "20px",
+                        },
+                      }}
+                      endAdornment={
+                        allowClear == true ? (
+                            <IconButton
+                                sx={{ visibility: field.value ? "visible" : "hidden" }}
+                                onClick={() => setValue(field.name,"")}
+                            >
+                              <Iconify
+                                  icon={"ic:round-clear"}
+                                  width={16}
+                                  height={16}
+                                  color="#5c6a82"
+                              />
+                            </IconButton>
+                        ) : (
+                            ""
+                        )
+                      }
+                      {...other}
+                  >
+                    <TextField
+                        placeholder="Tìm kiếm..."
+                        fullWidth
+                        autoFocus
+                        inputRef={(input) => {
+                          if (input != null) {
+                            input.focus();
+                          }
+                        }}
+                        InputProps={{ ...InputProps }}
+                        sx={{ ...SearchInputStyle }}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={(e) => e.stopPropagation()}
+                    />
+                    {renderOptions(filterOptions, field.value, type)}
+                  </SelectFieldStyle>
+                  <HelperText errorText={error?.message} />
+                </Stack>
+            )}
+        />
+      </>
   );
-}
+});
 
 export default memo(RHFDropdown);

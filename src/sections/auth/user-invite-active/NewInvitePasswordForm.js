@@ -12,6 +12,7 @@ import {useState} from "react";
 import {useSnackbar} from "notistack";
 import {useRouter} from "next/router";
 import {PATH_AUTH} from "@/routes/paths";
+import {LabelStyle} from "@/components/hook-form/style";
 
 const InputStyle = {width: 440, minHeight: 44};
 
@@ -78,16 +79,15 @@ export default function NewInivtePasswordForm({token}) {
               <Alert severity="error">{errors.afterSubmit.message}</Alert>
           )}
           <Stack>
+              <LabelStyle required={true}>Mật khẩu</LabelStyle>
             <RHFTextField
                 name="password"
-                title="Mật khẩu"
                 placeholder="Bắt buộc"
-                isRequired
                 type={showPassword ? "text" : "password"}
                 style={{...InputStyle}}
                 InputProps={{
                   endAdornment: (
-                      <InputAdornment position="end" sx={{mr: 1.5}}>
+                      <InputAdornment position="end" sx={{mr: 1}}>
                         <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
                           <Iconify
                               icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
@@ -111,16 +111,15 @@ export default function NewInivtePasswordForm({token}) {
             )}
           </Stack>
           <Stack>
+              <LabelStyle required={true}>Xác nhận lại mật khẩu mới</LabelStyle>
             <RHFTextField
                 name="confirmPassword"
-                title="Xác nhận lại mật khẩu mới"
                 placeholder="Bắt buộc"
-                isRequired
                 type={showPassword ? "text" : "password"}
                 style={{...InputStyle}}
                 InputProps={{
                   endAdornment: (
-                      <InputAdornment position="end" sx={{mr: 1.5}}>
+                      <InputAdornment position="end" sx={{mr: 1}}>
                         <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
                           <Iconify
                               icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
