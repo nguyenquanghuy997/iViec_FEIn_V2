@@ -54,7 +54,7 @@ export const Status = (item) => {
     case true:
       return "Đang hoạt động";
     case false:
-      return "Ngừng hoạt động";
+      return "Không hoạt động";
   }
 };
 //Địa chỉ

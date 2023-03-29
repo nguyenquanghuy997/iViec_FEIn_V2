@@ -30,12 +30,13 @@ import {RecruitmentApplicantChooseStage} from "@/sections/recruitment/modals/Rec
 import {RecruitmentApplicantCreate} from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 import MenuIcon from "@/assets/interview/MenuIcon";
 import DateIcon from "@/assets/interview/DateIcon";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import {useGetRecruitmentByIdQuery} from "@/sections/recruitment";
+
 function RecruitmentPreviewItem() {
   const router = useRouter();
   const RecruitmentId = router.query.slug;
-  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({ Id: RecruitmentId })
+  const {data: RecruitmentData} = useGetRecruitmentByIdQuery({Id: RecruitmentId})
   const defaultValues = {
     name: "",
   };
@@ -259,14 +260,22 @@ function RecruitmentPreviewItem() {
   const {themeStretch} = useSettings();
 
   const [openGroup, setOpenGroup] = useState(false);
-  const [modelApplication, setModelApplication] = useState({id: undefined, stage: undefined, recruitmentId: recruitmentId});
-
+  const [modelApplication, setModelApplication] = useState({
+    id: undefined,
+    stage: undefined,
+    recruitmentId: recruitmentId,
+    recruitmentTitle: undefined
+  });
   const handleCloseGroup = () => {
     setOpenGroup(false);
   };
   const handleOpenGroup = () => {
     setOpenGroup(true);
   };
+
+  useEffect(() => {
+    setModelApplication({...modelApplication, recruitmentTitle: RecruitmentData?.name})
+  }, [RecruitmentData]);
 
   useEffect(() => {
     if (modelApplication && modelApplication.stage) setShowModelCreate(true);
@@ -387,38 +396,38 @@ function RecruitmentPreviewItem() {
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
                 <Box>
-                <ButtonGroup
-            disableElevation
-            variant="contained"
-            aria-label="Disabled elevation buttons"
-            sx={{ mx: 1, boxShadow: "none" }}
-          >
-            <Button
-              startIcon={<DateIcon />}
-              sx={{
-                background: "#1976D2",
-                borderRadius: "6px 0px 0px 6px",
-                height: "44px",
-                width: "52px",
-                "& .MuiButton-startIcon": { mr: 0 },
-              }}
-            />
-            <Button
-              variant="outlined"
-              startIcon={<MenuIcon />}
-              sx={{
-                borderColor: "#D0D4DB",
-                borderRadius: "0 6px 6px 0",
-                height: "44px",
-                width: "52px",
-                "&:hover": {
-                  background: "white",
-                  borderColor: "#D0D4DB",
-                },
-                "& .MuiButton-startIcon": { mr: 0 },
-              }}
-            />
-          </ButtonGroup>
+                  <ButtonGroup
+                    disableElevation
+                    variant="contained"
+                    aria-label="Disabled elevation buttons"
+                    sx={{mx: 1, boxShadow: "none"}}
+                  >
+                    <Button
+                      startIcon={<DateIcon/>}
+                      sx={{
+                        background: "#1976D2",
+                        borderRadius: "6px 0px 0px 6px",
+                        height: "44px",
+                        width: "52px",
+                        "& .MuiButton-startIcon": {mr: 0},
+                      }}
+                    />
+                    <Button
+                      variant="outlined"
+                      startIcon={<MenuIcon/>}
+                      sx={{
+                        borderColor: "#D0D4DB",
+                        borderRadius: "0 6px 6px 0",
+                        height: "44px",
+                        width: "52px",
+                        "&:hover": {
+                          background: "white",
+                          borderColor: "#D0D4DB",
+                        },
+                        "& .MuiButton-startIcon": {mr: 0},
+                      }}
+                    />
+                  </ButtonGroup>
                 </Box>
 
                 <FormProvider methods={methods}>
@@ -521,7 +530,7 @@ function RecruitmentPreviewItem() {
                     </Button>
                   </LightTooltip>
                 </ButtonGroup>
-                <RecruitmentApplicantChooseStage show={showDialogStage} setShow={setShowDialogStage}
+                <RecruitmentApplicantChooseStage data={RecruitmentData?.recruitmentPipeline?.recruitmentPipelineStates} show={showDialogStage} setShow={setShowDialogStage}
                                                  setStage={setModelApplication}/>
               </Stack>
             </BoxFlex>

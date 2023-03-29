@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   RiLock2Line, // RiDeleteBin5Fill
@@ -17,7 +17,7 @@ import * as Yup from "yup";
 
 const EditHirePipeline = ({ data, onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [infor,] = useState([
+  const [infor] = useState([
     {
       description: "",
       organizationProfilePipelineType: 0,
@@ -58,15 +58,13 @@ const EditHirePipeline = ({ data, onClose }) => {
   });
 
   const {
-    // setValue,
+    setValue,
     // setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (d) => {
-    // console.log(d);
-
     const res = {
       organizationId: data?.id,
       organizationProfilePipelines: d.organizationProfilePipelines.map(
@@ -78,7 +76,6 @@ const EditHirePipeline = ({ data, onClose }) => {
         }
       ),
     };
-    // console.log(res, "res");
     try {
       await updatePipeline(res).unwrap();
       enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
@@ -98,7 +95,13 @@ const EditHirePipeline = ({ data, onClose }) => {
     return <Label required={required}>{title}</Label>;
   };
   // const style = { color: "#E53935 ", fontSize: 15 };
-
+  useEffect(() => {
+    if (!data) return;
+    setValue(
+      "organizationProfilePipelines",
+      data?.organizationProfilePipelines.organizationProfilePipelines
+    );
+  }, [JSON.stringify(data)]);
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
@@ -146,7 +149,7 @@ const EditHirePipeline = ({ data, onClose }) => {
         </LoadingButton>
         <div style={{ width: 8 }} />
 
-        <LoadingButton variant="text" sx={{ color: "#455570" }}>
+        <LoadingButton variant="text" sx={{ color: "#455570" }} onClick={onClose}>
           {"Hủy"}
         </LoadingButton>
       </div>

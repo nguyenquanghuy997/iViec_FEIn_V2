@@ -14,18 +14,14 @@ import {
   useUpdateCompanyInfoMutation,
 } from "@/sections/companyinfor/companyInforSlice";
 import { LIST_ORGANIZATION_SIZE } from "@/utils/formatString";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import {
-  Box,
-  Divider,
-  InputLabel,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, InputLabel, Stack, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import * as Yup from "yup";
 
 const InputStyle = { width: 265, minHeight: 40 };
 const Editor = dynamic(() => import("./editor"), {
@@ -65,35 +61,33 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [description, setDescription] = useState(null);
   const defaultValues = { ...data?.organizationInformation };
-  // const ProfileSchema = Yup.object().shape({
-  //   provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
-  //   districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
-  //   address: Yup.string().required("Chưa nhập Địa chỉ"),
-  //   email: Yup.string()
-  //     .email("Email không đúng định dạng")
-  //     .matches(CHECK_EMAIL, "Email không đúng định dạng")
-  //     .required("Email không được bỏ trống"),
-  //   phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
-  //   jobCategoryIds: Yup.array()
-  //     .min(1, "Ngành nghề không được bỏ trống")
-  //     .max(3, "Chọn tối đa 3 ngành nghê"),
-  //   organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
-  //   description: Yup.string(),
-  //   avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-  //   coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-  // });
+  const ProfileSchema = Yup.object().shape({
+    provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
+    districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
+    address: Yup.string().required("Chưa nhập Địa chỉ"),
+    email: Yup.string()
+      .email("Email không đúng định dạng")
+      .required("Email không được bỏ trống"),
+    phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
+    jobCategoryIds: Yup.array()
+      .min(1, "Ngành nghề không được bỏ trống")
+      .max(3, "Chọn tối đa 3 ngành nghê"),
+    organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
+    description: Yup.string(),
+    // avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
+    // coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
+  });
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
   const { data: { items: JobCategoryList = [] } = {} } =
     useGetJobCategoriesQuery();
-
   const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
     useLazyGetProvinceQuery();
   const [getDistrictByProvinceId, { data: { items: DistrictList = [] } = {} }] =
     useLazyGetDistrictByProvinceIdQuery();
 
   const methods = useForm({
-    // resolver: yupResolver(ProfileSchema),
+    resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
 
@@ -147,7 +141,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
           enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
             autoHideDuration: 2000,
           });
-          onClose()
+          onClose();
           // location.reload()
         } catch (err) {
           enqueueSnackbar(errors.afterSubmit?.message, {
@@ -171,16 +165,14 @@ const FormCompanyInfor = ({ data, onClose }) => {
   //     obj.push(<FileUpload />);
   //     i++;
   //   }
-
   useEffect(() => {
     if (!data) return;
+    refAvatar.current = data.organizationInformation.avatar;
+    refBackground.current = data.organizationInformation.coverPhoto;
+    setDescription(data.organizationInformation.description);
 
-    refAvatar.current = data.avatar;
-    refBackground.current = data.coverPhoto;
-
-    setDescription(data.description);
-
-    setValue("description", data.description);
+    setValue("jobCategoryIds", data.organizationInformation.jobCategoryIds);
+    setValue("organizationSize", data.organizationInformation.organizationSize);
   }, [JSON.stringify(data)]);
 
   return (
@@ -437,7 +429,11 @@ const FormCompanyInfor = ({ data, onClose }) => {
         </LoadingButton>
         <div style={{ width: 8 }} />
 
-        <LoadingButton variant="text" sx={{ color: "#455570" }}>
+        <LoadingButton
+          variant="text"
+          sx={{ color: "#455570" }}
+          onClick={onClose}
+        >
           {"Hủy"}
         </LoadingButton>
       </div>

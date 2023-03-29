@@ -131,7 +131,7 @@ export const PipelineItem = () => {
       dataIndex: "isActivated",
       title: "Trạng thái",
       width: "180px",
-      name: "isActive",
+      name: "isActivated",
       type: "select",
       label: "Trạng thái",
       render: (item) => (
@@ -193,15 +193,6 @@ export const PipelineItem = () => {
     },
   ];
 
-  const menuItemText = {
-    name: "Vị trí công việc",
-    organizationName: "Đơn vị",
-    numberOfRecruitmentApplied: "Số tin áp dụng",
-    isActivated: "Trạng thái",
-    createdTime: "Ngày tạo",
-    creatorName: "Người tạo",
-  };
-
   const handleUpdateListColumnApplicants = async () => {
     var body = {
       recruitment: false,
@@ -231,7 +222,7 @@ export const PipelineItem = () => {
   const { handleSubmit } = methods;
   const queryParams = {
     searchKey: query.searchKey,
-    isActive: query.isActive ? query.isActive : null,
+    isActivated: query.isActivated ? query.isActivated : null,
     createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
     createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
     creatorIds:
@@ -320,7 +311,6 @@ export const PipelineItem = () => {
           source={Data}
           loading={isLoading}
           ColumnData={ColumnData}
-          menuItemText={menuItemText}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
           scroll={{ x: 1618 }}

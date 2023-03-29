@@ -16,14 +16,14 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 import {isEmpty} from "lodash";
-import {useRef} from "react";
+// import {useRef} from "react";
 
 const RecruitmentPipeLine = ({examinationFormValue, setValue, watchOrganization, watchOrganizationPipelineId, onClearDataExaminationForm, onSetValuePipelineExamination}) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const examSelectRef = useRef(null);
-  const expiredTimeRef = useRef(null);
+  // const examSelectRef = useRef(null);
+  // const expiredTimeRef = useRef(null);
 
   const toggleOpenFormExamination = useSelector((state) => state.modalReducer.openForm);
   const item = useSelector((state) => state.modalReducer.data);
@@ -43,7 +43,6 @@ const RecruitmentPipeLine = ({examinationFormValue, setValue, watchOrganization,
     isLoading: loadingPipe
   } = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
 
-    console.log(examSelectRef.current)
 
   if (isLoading || loadingPipe) return <div>Loading...</div>;
 

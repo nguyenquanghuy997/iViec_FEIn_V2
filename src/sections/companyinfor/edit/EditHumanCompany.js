@@ -1,4 +1,4 @@
-import MenuIcon from "@/assets/MenuIcon";
+import MenuIcon from "@/assets/interview/MenuIcon";
 import UploadImage from "@/assets/UploadImage";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import Image from "@/components/Image";
@@ -12,13 +12,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import {useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as Yup from "yup";
 
 const InputStyle = { width: "100%", minHeight: 40, background: "white" };
 
-const EditHumanCompany = ({onClose }) => {
+const EditHumanCompany = ({ onClose }) => {
   const { data: Data } = useGetCompanyInfoQuery();
   const [updateCompanyHuman] = useUpdateCompanyHumanMutation();
   const [uploadImage] = useUploadImageCompanyMutation();
@@ -57,8 +57,8 @@ const EditHumanCompany = ({onClose }) => {
   });
 
   const {
-
     setError,
+    setValue,
     register,
     handleSubmit,
     control,
@@ -114,6 +114,11 @@ const EditHumanCompany = ({onClose }) => {
       enqueueSnackbar(errors.afterSubmit?.message);
     }
   };
+
+  useEffect(() => {
+    if (!Data) return;
+    setValue("organizationHumans", Data?.organizationHumans);
+  }, [JSON.stringify(Data)]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -189,7 +194,7 @@ const EditHumanCompany = ({onClose }) => {
                     style={{ ...InputStyle }}
                   />
                 </Stack>
-                <Stack  sx={{ mb: 3 }}>
+                <Stack sx={{ mb: 3 }}>
                   <RHFTextField
                     name={`organizationHumans.${index}.description`}
                     title="Chức vụ"

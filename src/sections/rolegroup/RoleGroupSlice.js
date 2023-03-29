@@ -4,13 +4,13 @@ import {
   API_GET_LIST_ROLE_GROUP,
   API_GET_ALL_PIPELINE,
   API_ADD_ROLE_GROUP,
-  API_UPDATE_PIPELINE,
-  API_REMOVE_ROLE_GROUP
+  API_REMOVE_ROLE_GROUP,
+  API_UPDATE_ROLE_GROUP
 } from "@/routes/api";
 import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CompanyInfor"],
+  addTagTypes: ["RoleGroup"],
 });
 
 const PipelineFormSlice = apiWithTag.injectEndpoints({
@@ -23,10 +23,14 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
     }),
 
     getRoleGroupList: builder.query({
-      query: () => ({
-        url: API_GET_LIST_ROLE_GROUP,
-        method: "GET",
-      }),
+      query: (params) => {
+        const defaultParams = { pageIndex: 1, pageSize: 20 }
+        return {
+          url: API_GET_LIST_ROLE_GROUP,
+          method: "GET",
+          params: { ...defaultParams, ...params }
+        }
+      },
     }),
     getAllFilterPipeline: builder.mutation({
       query: () => ({
@@ -41,11 +45,11 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
         data: data,
       }),
     }),
-    updatePipeline: builder.mutation({
-      query: (data) => ({
-        url: API_UPDATE_PIPELINE,
-        method: "POST",
-        data: qs.stringify(data),
+    updateRolegroup: builder.mutation({
+      query: (res) => ({
+        url: `${API_UPDATE_ROLE_GROUP}/${res.id}`,
+        method: "PATCH",
+        data: res,
       }),
     }),
     deletePipeline: builder.mutation({
@@ -63,6 +67,6 @@ export const {
   useGetRoleGroupListQuery,
   useGetAllFilterPipelineMutation,
   useAddRoleGroupMutation,
-  useUpdatePipelineMutation,
+  useUpdateRolegroupMutation,
   useDeletePipelineMutation,
 } = PipelineFormSlice;

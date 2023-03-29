@@ -63,8 +63,7 @@ const EditorEnding = ({ data, onClose }) => {
 
   useEffect(() => {
     if (!data) return;
-    setDescription(data.description);
-    setValue("conclusion", data.description);
+    setDescription(data.conclusion);
   }, [JSON.stringify(data)]);
 
   return (
@@ -123,7 +122,11 @@ const EditorEnding = ({ data, onClose }) => {
         </LoadingButton>
         <div style={{ width: 8 }} />
 
-        <LoadingButton variant="text" sx={{ color: "#455570" }}>
+        <LoadingButton
+          variant="text"
+          sx={{ color: "#455570" }}
+          onClick={onClose}
+        >
           {"Hủy"}
         </LoadingButton>
       </div>
