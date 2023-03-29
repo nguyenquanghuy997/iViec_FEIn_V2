@@ -83,7 +83,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
     deleteRecruitment: builder.mutation({
       query: (data) => ({
         url: API_REMOVE_RECRUITMENT,
-        method: 'PATCH',
+        method: 'DELETE',
         data
       }),
       invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]

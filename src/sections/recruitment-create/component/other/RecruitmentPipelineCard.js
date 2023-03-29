@@ -34,7 +34,7 @@ const RecruitmentPipelineCard = ({title, subtitle, moreTitle, icon, pipelineStat
   const classes = useStyles();
   return (
       <BoxItemStyle className="card-pipeline-item">
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
           <Box>
             {icon}
           </Box>
@@ -65,7 +65,7 @@ const RecruitmentPipelineCard = ({title, subtitle, moreTitle, icon, pipelineStat
         </Box>
         {pipelineStateType === 1 && <MuiButton
             title="Chọn đề thi"
-            onClick={() => onOpen(true)}
+            onClick={onOpen}
             sx={{
               fontSize: style.FONT_SM,
               fontWeight: style.FONT_SEMIBOLD,
