@@ -26,6 +26,7 @@ const EditHumanCompany = ({ onClose }) => {
 
   const [imageFile, setImageFile] = useState([]);
   const [image, setImage] = useState([]);
+  // const [imageArray, setImageArray] = useState([]);
 
   const handleChange = (e) => {
     setImageFile([...imageFile, ...e.target.files]);
@@ -146,7 +147,11 @@ const EditHumanCompany = ({ onClose }) => {
               <Image
                 disabledEffect
                 visibleByDefault
-                src={image[index]?.uploaded_file}
+                src={
+                  Data?.organizationHumans[index]?.avatar
+                    ? `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationHumans[index]?.avatar}`
+                    : image[index]?.uploaded_file
+                }
                 id={index}
                 alt="image"
                 sx={{
@@ -171,11 +176,17 @@ const EditHumanCompany = ({ onClose }) => {
                   <Typography sx={{ ml: 1, fontSize: 14 }}>
                     Tải lên ảnh
                   </Typography>
+                  <input
+                    hidden
+                    accept="image/*"
+                    id="image"
+                    type="file"
+                    {...register(`organizationHumans.${index}.avatar`)}
+                    onChange={handleChange}
+                  />
                 </Button>
-                <input
-                  type="file"
-                  accept="image/*"
-                  {...register(`organizationHumans.${index}.avatar`)}
+                {/* <input
+                  
                   onChange={handleChange}
                   style={{
                     height: "36px",
@@ -184,7 +195,7 @@ const EditHumanCompany = ({ onClose }) => {
                     width: "150px",
                     cursor: "pointer",
                   }}
-                />
+                /> */}
                 <Stack sx={{ mb: 3 }}>
                   <RHFTextField
                     name={`organizationHumans.${index}.name`}

@@ -4,40 +4,43 @@ import { Divider } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import React, { useState } from "react";
-import CloseIcon from "../../../assets/CloseIcon";
+import { RiCloseFill } from "react-icons/ri";
 
-export default function DrawerEdit({dataForm}) {
+export default function DrawerEdit({ dataForm }) {
   const [open, setOpen] = useState(false);
-
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
-
-
   const list = () => (
     <Box
       sx={{ width: 600 }}
       role="presentation"
       // onKeyDown={toggleDrawer(false)}
     >
-      <List sx={{
-        display:'flex',
-        justifyContent:'space-between',
-        p:0
-      }}>
+      <List
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          p: 0,
+        }}
+      >
         <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
           Chỉnh sửa Thông tin công ty
         </Typography>
-        <Button onClick={toggleDrawer(false)} sx={{
-          '&:hover':{
-            background:'white'
-          }
-        }}><CloseIcon /></Button>
-
+        <Button
+          onClick={toggleDrawer(false)}
+          sx={{
+            "&:hover": {
+              background: "white",
+            },
+          }}
+        >
+          <RiCloseFill color="#455570" size={16} />
+        </Button>
       </List>
       <Divider />
-      <List sx={{ p:0}}>
-        <FormCompanyInfor data={dataForm} onClose={toggleDrawer(false)}/>
+      <List sx={{ p: 0 }}>
+        <FormCompanyInfor data={dataForm} onClose={toggleDrawer(false)} />
       </List>
     </Box>
   );
@@ -46,15 +49,11 @@ export default function DrawerEdit({dataForm}) {
     return (
       <Button
         style={{
+          marginTop: "40px",
           padding: "8px 12px 8px 14px",
           borderRadius: 4,
-          marginTop: '60px',
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
           background: "#F3F4F6",
-          textDecoration: "none",
-          alignSelf: "flex-end",
+          textTransform: "none",
           color: "#455570",
         }}
         onClick={toggleDrawer(true)}
@@ -66,10 +65,9 @@ export default function DrawerEdit({dataForm}) {
             lineHeight: 20 / 15,
             marginLeft: 6,
             color: "#455570",
-  
           }}
         >
-          {"Chỉnh sửa "}
+          Chỉnh sửa
         </span>
       </Button>
     );
@@ -89,24 +87,3 @@ export default function DrawerEdit({dataForm}) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

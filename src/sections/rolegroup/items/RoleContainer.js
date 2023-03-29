@@ -1,4 +1,5 @@
 import FilterModalRole from "../FilterModalRole";
+import RoleContainerBottomNav from "../RoleContainerBottomNav";
 import RolegroupHeader from "../RolegroupHeader";
 import DetailDrawer from "../modals/DetailDrawer";
 import Content from "@/components/BaseComponents/Content";
@@ -6,12 +7,13 @@ import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import TextMaxLine from "@/components/TextMaxLine";
+import { filterSlice } from "@/redux/common/filterSlice";
+import { useDispatch, useSelector } from "@/redux/store";
 import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
 import {
-  // useGetAllFilterPipelineMutation,
   useGetRoleGroupListQuery,
 } from "@/sections/rolegroup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -30,18 +32,35 @@ export const RoleContainer = () => {
   const router = useRouter();
   const { query, isReady } = router;
   const { data, isLoading } = useGetRoleGroupListQuery();
+  const dispatch = useDispatch();
   // const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
+  const dataFilter = useSelector((state) => state.filterReducer.data);
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
+  const handleSetDataFilter = (data) =>
+    dispatch(filterSlice.actions.setAllDataFilter(data));
+  const handleChangePagination = (pageIndex, pageSize) => {
+    setPaginationSize(pageSize);
+    setPage(pageIndex);
+    handleSetDataFilter({
+      ...dataFilter,
+      pageSize: pageSize,
+      pageIndex: pageIndex,
+    });
+  };
   const columns = [
     {
+      dataIndex: "id",
       title: "STT",
       key: "index",
-      render: (item, record, index) => (page - 1) * paginationSize + index + 1,
-      width: "60px",
+      align: "center",
+      render: ( index, page, paginationSize) => (
+        <>{(page - 1) * paginationSize + index + 1}</>
+      ),
+      width: "8%",
       fixed: "left",
     },
     {
@@ -67,10 +86,15 @@ export const RoleContainer = () => {
 
     {
       title: "Trạng thái",
-      key: "status",
-      render: () => (
-        <Typography sx={{ color: "#388E3C", fontSize: "12px" }}>
-          Đang hoạt động
+      key: "isActivated",
+      render: (item) => (
+        <Typography
+          sx={{
+            color: item?.isActivated ? "#388E3C" : "red",
+            fontSize: "12px",
+          }}
+        >
+          {item?.isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
         </Typography>
       ),
       width: "160px",
@@ -165,8 +189,6 @@ export const RoleContainer = () => {
 
   // open filter form
   const [isOpen, setIsOpen] = useState(false);
-
-  // filter modal
   const handleOpenFilterForm = () => {
     setIsOpen(true);
   };
@@ -206,11 +228,19 @@ export const RoleContainer = () => {
   //   );
   //   handleCloseFilterForm();
   // };
-
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [itemSelected, setItemSelected] = useState([]);
+  // const [showDelete, setShowDelete] = useState(false);
+  // const [showMultipleDelete, setShowMultipleDelete] = useState(false);
+  // const [actionTypeActive, setActionTypeActive] = useState(0) 
+  // const [actionType, setActionType] = useState(0)  
   return (
     <View>
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
+          page={page}
+          paginationSize={paginationSize}
+          handleChangePagination={handleChangePagination}
           columns={columns}
           source={data}
           loading={isLoading}
@@ -220,9 +250,10 @@ export const RoleContainer = () => {
           settingName={"DANH SÁCH VAI TRÒ"}
           isSetting={true}
           nodata="Hiện chưa có quy trình tuyển dụng nào"
-          setPaginationSize={setPaginationSize}
-          setPage={setPage}
-          paginationSize={20}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
+          itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
           filter={
             <RolegroupHeader
               methods={methods}
@@ -235,6 +266,22 @@ export const RoleContainer = () => {
           }
         />
       </Content>
+      {selectedRowKeys?.length > 0 && (
+        <RoleContainerBottomNav
+          open={selectedRowKeys?.length > 0}
+          onClose={() => setOpen(false)}
+          // setShowDelete={setShowDelete}
+          // setShowMultipleDelete={setShowMultipleDelete}
+          // setIsOpenActive={setIsOpenActive}
+          selectedList={selectedRowKeys || []}
+          // setActionType={setActionType}
+          // setActionTypeActive={setActionTypeActive}
+          // status={ListOrganization?.filter((item) => item.parentOrganizationId)
+          //   .filter((item) => selected.includes(item.id))
+          //   .every((item) => item.isActivated === true)}
+          onOpenForm={() => setOpen(true)}
+        />
+      )}
       {isOpen && (
         <FilterModalRole
           open={isOpen}

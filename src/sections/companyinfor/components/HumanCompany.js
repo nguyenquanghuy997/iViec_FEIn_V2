@@ -1,11 +1,14 @@
 import HeaderCard from "../HeaderCard";
+import { useGetCompanyInfoQuery } from "../companyInforSlice";
+import EditHumanCompany from "../edit/EditHumanCompany";
 import SwiperListHuman from "./SwiperListHuman";
 import CloseIcon from "@/assets/CloseIcon";
+import NoInformation from "@/assets/NoInformation";
 import { Box, Drawer, List, Typography, Button, Divider } from "@mui/material";
+// import { textAlign } from "@mui/system";
 import { useState } from "react";
 import "react-multi-carousel/lib/styles.css";
-import EditHumanCompany from "../edit/EditHumanCompany";
-import { useGetCompanyInfoQuery } from "../companyInforSlice";
+
 const HumanCompany = () => {
   const [open, setOpen] = useState();
   const handleClose = () => {
@@ -45,7 +48,7 @@ const HumanCompany = () => {
       </List>
       <Divider />
       <div>
-        <EditHumanCompany onClose ={handleClose}/>
+        <EditHumanCompany onClose={handleClose} />
       </div>
     </Box>
   );
@@ -57,20 +60,32 @@ const HumanCompany = () => {
         onClose={handleClose}
         onOpen={handleOpen}
       />
-      <Box
-        sx={{
-          px: 5,
-          pb: 3,
-          background: "white",
-          "& li.react-multi-carousel-item": {
-            maxWidth: "215px!important",
-            objectFit: "cover",
-            mr: 2,
-          },
-        }}
-      >
-        <SwiperListHuman data={Data}/>
-      </Box>
+      {Data ? (
+        <Box
+          sx={{
+            px: 5,
+            pb: 3,
+            background: "white",
+            "& li.react-multi-carousel-item": {
+              maxWidth: "215px!important",
+              objectFit: "cover",
+              mr: 2,
+            },
+          }}
+        >
+          <SwiperListHuman data={Data} />
+        </Box>
+      ) : (
+        <Box sx={{ bgcolor: "white" }}>
+          {" "}
+          <Box sx={{ display: "flex", justifyContent: "center", pt:4 }}>
+            <NoInformation />
+          </Box>
+          <Typography sx={{ textAlign: "center", pb:6 }}>
+            Hiện chưa có nội dung
+          </Typography>
+        </Box>
+      )}
       {open && (
         <Drawer
           anchor="right"

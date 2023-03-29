@@ -42,8 +42,7 @@ const EditBusinessArea = ({ onClose }) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const defaultValues = {
-  };
+  const defaultValues = {};
 
   const ProfileSchema = Yup.object().shape({
     businessPhoto: Yup.string(),
@@ -75,18 +74,17 @@ const EditBusinessArea = ({ onClose }) => {
   });
 
   const onSubmit = async (d) => {
-    // console.log('d data', d)
     const bgRes = await uploadImage({
-      File: imageBg,
       OrganizationId: Data?.id,
+      File: imageBg,
     });
 
     const res = {
       organizationId: isEditMode ? Data?.organizationBusiness?.id : Data?.id,
       businessPhoto: bgRes.data,
-      organizationBusinessDatas: d.organizationBusinessDatas
+      organizationBusinessDatas: d.organizationBusinessDatas,
     };
-  
+
     if (isEditMode) {
       try {
         await updateCompanyBusiness(res).unwrap();
@@ -122,9 +120,15 @@ const EditBusinessArea = ({ onClose }) => {
 
   useEffect(() => {
     if (!Data) return;
-    setValue("organizationBusinessDatas", Data?.organizationBusiness.organizationBusinessDatas);
+    setValue(
+      "organizationBusinessDatas",
+      Data?.organizationBusiness.organizationBusinessDatas
+    );
+    setBg(
+      `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto}`
+    );
   }, [JSON.stringify(Data)]);
-  
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* {!!errors.afterSubmit && (

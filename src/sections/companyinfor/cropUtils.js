@@ -34,7 +34,12 @@ async function getCroppedImg(imageSrc, pixelCrop) {
     Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
   );
 
-  return canvas.toDataURL("image/jpeg");
+  return new Promise((resolve) => {
+    canvas.toBlob((file) => {
+      resolve({ file: file, url: URL.createObjectURL(file) });
+    }, 'image/jpeg')
+  })
+  
 }
 
 export const cropImage = async (image, croppedAreaPixels, onError) => {

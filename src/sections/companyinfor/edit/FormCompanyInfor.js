@@ -19,7 +19,7 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Divider, InputLabel, Stack, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useSnackbar } from "notistack";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -29,9 +29,6 @@ const Editor = dynamic(() => import("./editor"), {
 });
 
 const FormCompanyInfor = ({ data, onClose }) => {
-  const refAvatar = useRef(null);
-  const refBackground = useRef(null);
-
   const [image, setImage] = useState(data?.organizationInformation.avatar);
   const [bg, setBg] = useState(data?.organizationInformation.coverPhoto);
   const [imageFile, setImageFile] = useState(null);
@@ -94,6 +91,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const {
     setValue,
     setError,
+    register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
@@ -167,12 +165,15 @@ const FormCompanyInfor = ({ data, onClose }) => {
   //   }
   useEffect(() => {
     if (!data) return;
-    refAvatar.current = data.organizationInformation.avatar;
-    refBackground.current = data.organizationInformation.coverPhoto;
     setDescription(data.organizationInformation.description);
-
     setValue("jobCategoryIds", data.organizationInformation.jobCategoryIds);
     setValue("organizationSize", data.organizationInformation.organizationSize);
+    setImage(
+      `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${data?.organizationInformation?.avatar}`
+    );
+    setBg(
+      `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${data?.organizationInformation?.coverPhoto}`
+    );
   }, [JSON.stringify(data)]);
 
   return (
@@ -216,7 +217,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
             <EditUpload
               image={image}
               imageHandler={imageHandler}
-              ref={refAvatar}
+              ref={{ ...register("avatar") }}
               type="avatar"
               style={{
                 width: 120,
@@ -235,7 +236,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
           <Box>
             <EditUpload
               image={bg}
-              ref={refBackground}
+              ref={{ ...register("coverPhoto") }}
               imageHandler={handleImage}
               style={{
                 width: "100%",

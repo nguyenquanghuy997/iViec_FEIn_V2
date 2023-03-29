@@ -1,5 +1,6 @@
 import { useGetRoleListQuery } from "../rolegroup/RoleGroupSlice";
 import { TYPES } from "./config";
+import { VietnameseField } from "./config";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,29 +15,21 @@ const Checkboxes = ({ options, control, name, dataFilter }) => {
     name,
   });
   const [value, setValue] = useState(field.value || []);
-
-//  console.log( options.filter( item => dataFilter.includes(item?.name)))
+  const displayField = options?.filter((item) =>
+    dataFilter.includes(item?.name)
+  );
   return (
     <>
-      {options?.map((option, index) => (
+      {displayField?.map((option, index) => (
         <div
           className="box-check"
           style={{
             justifyContent: "space-between",
             // borderTop: "0.5px solid rgba(145, 158, 171, 0.24)",
-            display: !dataFilter
-              .map((item) => item[option?.name])
-              .filter((item) => item != undefined).length
-              ? "none"
-              : "flex",
           }}
         >
           <TableCell sx={{ width: "200px" }}>
-            {/* {filter
-              .map((item) => item[option?.name])
-              .filter((item) => item != undefined)} */}
-
-
+            {VietnameseField(option?.name)}
           </TableCell>
           <TableCell>
             <input
@@ -63,27 +56,29 @@ const Checkboxes = ({ options, control, name, dataFilter }) => {
 export default function PipelineTable({ control, register }) {
   const { data } = useGetRoleListQuery();
   const options = data?.items;
-  
+
   return (
     <div>
       <Table sx={{ minWidth: 550 }} aria-label="spanning table">
         <TableHead>
           <TableRow>
-            <TableCell align="left">Nhóm chức năng</TableCell>
-            <TableCell align="left">Chức năng</TableCell>
-            <TableCell align="right">Checked</TableCell>
+            <TableCell align="left" sx={{display:'flex', justifyContent:'space-between'}}>
+              <span>Nhóm chức năng</span>
+              <span>Chức năng</span>
+              <span>checkbox</span>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {TYPES.map((item) => (
-            <div style={{ borderTop: "0.5px solid rgba(145, 158, 171, 0.24)" }}>
-              <TableRow>
-                <TableCell rowSpan={3} sx={{ width: "60%" }}>
+            <div>
+              <TableRow
+                style={{ borderTop: "0.5px solid rgba(145, 158, 171, 0.24)" }}
+              >
+                <TableCell rowSpan={5} sx={{ width: "250px" }}>
                   {item?.name}
                 </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableRow>
+                <TableCell>
                   <Checkboxes
                     dataFilter={item?.actions}
                     options={options}
@@ -91,7 +86,7 @@ export default function PipelineTable({ control, register }) {
                     register={register}
                     name="identityRoleIds"
                   />
-                </TableRow>
+                </TableCell>
               </TableRow>
             </div>
           ))}

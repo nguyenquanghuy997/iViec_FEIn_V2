@@ -2,6 +2,7 @@ import HeaderCard from "../HeaderCard";
 import { useGetCompanyInfoQuery } from "../companyInforSlice";
 import EditorEnding from "./EditorEnding";
 import CloseIcon from "@/assets/CloseIcon";
+import NoInformation from "@/assets/NoInformation";
 import { Drawer, Box, Divider, List, Typography, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
@@ -18,6 +19,7 @@ const Ending = () => {
   const PlaceholderStyle = styled("div")(() => ({
     background: "white",
     padding: "12px 96px",
+    height: 150,
     "& .content": {
       backgroundColor: "white",
       color: "#455570",
@@ -84,7 +86,7 @@ const Ending = () => {
               lineHeight: 24 / 16,
               color: "#172B4D",
               overflow: "hidden",
-              whiteSpace: "nowrap" /* Don't forget this one */,
+              whiteSpace: "nowrap",
               textOverflow: "ellipsis",
             }}
           >
@@ -112,11 +114,23 @@ const Ending = () => {
           {list("right")}
         </Drawer>
       )}
-      <PlaceholderStyle>
-        <div className="content">
-          <blockquote>{renderItem(Data?.conclusion)}</blockquote>
-        </div>
-      </PlaceholderStyle>
+      {Data?.conclusion ? (
+        <PlaceholderStyle>
+          <div className="content" style={{ height: 100 }}>
+            <blockquote>{renderItem(Data?.conclusion)}</blockquote>
+          </div>
+        </PlaceholderStyle>
+      ) : (
+        <Box sx={{ bgcolor: "white" }}>
+          {" "}
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
+            <NoInformation />
+          </Box>
+          <Typography sx={{ textAlign: "center", pb: 6 }}>
+            Hiện chưa có nội dung
+          </Typography>
+        </Box>
+      )}
     </>
   );
 };

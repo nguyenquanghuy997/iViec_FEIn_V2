@@ -4,37 +4,20 @@ import {
   useUpdateRolegroupMutation,
 } from "../rolegroup/RoleGroupSlice";
 import PipelineTable from "./RolegroupTable";
-import { TextAreaDS } from "@/components/DesignSystem";
+import { SwitchStatusDS, TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/DesignSystem/FlexStyled";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import {
-  Typography,
-  Stack,
-  Divider,
-  Switch,
-  FormControlLabel,
-  Box,
-  Alert,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Typography, Stack, Divider, Box, Alert } from "@mui/material";
+// import { styled } from "@mui/material/styles";
 import { useSnackbar } from "notistack";
 import { React, useEffect } from "react";
 import { useForm } from "react-hook-form";
-// import { useFieldArray } from "react-hook-form";
 import * as Yup from "yup";
 
 const InputStyle = { width: "100%", minHeight: 44 };
-const ActiveSwitch = styled(Switch)(() => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C",
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
 
 const RolegroupForm = ({ onClose }) => {
   const { data: Data } = useGetRoleGroupListQuery();
@@ -47,11 +30,13 @@ const RolegroupForm = ({ onClose }) => {
     name: Yup.string(),
     description: Yup.string(),
     identityRoleIds: Yup.array().min(1),
+    isActivated: Yup.bool(),
   });
 
   const methods = useForm({
     resolver: yupResolver(RoleSchema),
-    defaultValues: {},
+    defaultValues: {
+    },
   });
 
   const {
@@ -59,21 +44,17 @@ const RolegroupForm = ({ onClose }) => {
     handleSubmit,
     control,
     register,
+    watch,
     formState: { errors, isSubmitting },
   } = methods;
 
-  // const { fields, append } = useFieldArray({
-  //   control,
-  //   name: "identityRoleIds",
-  // });
-
   const onSubmit = async (d) => {
-    // console.log('sđ',d)
     const res = {
       id: isEditMode ? Data?.items?.id : "",
       name: d?.name,
       description: d?.description,
       identityRoleIds: d?.identityRoleIds,
+      isActivated: d?.isActivated,
     };
 
     if (isEditMode) {
@@ -92,7 +73,7 @@ const RolegroupForm = ({ onClose }) => {
     } else {
       try {
         await addRoleGroup(res).unwrap();
-        enqueueSnackbar("Thêm thành công!", {
+        enqueueSnackbar("Thêm mới vai trò thàng công!", {
           autoHideDuration: 2000,
         });
         onClose();
@@ -110,11 +91,9 @@ const RolegroupForm = ({ onClose }) => {
 
   useEffect(() => {
     if (!Data) return;
-    setValue(
-      "identityRoleIds"
-      // Data?.items?.identityRoleIds
-    );
-  }, [JSON.stringify(Data)]);
+    setValue("isAvailable", Data?.items.isAvailable);
+    setValue("identityRoleIds", Data?.items?.identityRoleIds);
+  }, [isEditMode, JSON.stringify(Data)]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -136,7 +115,7 @@ const RolegroupForm = ({ onClose }) => {
           <View mb={24}>
             {renderTitle("Mô tả")}
             <TextAreaDS
-              maxLength={150}
+              maxLength={255}
               placeholder="Nhập nội dung mô tả..."
               name="description"
             />
@@ -177,9 +156,12 @@ const RolegroupForm = ({ onClose }) => {
         >
           {"Hủy"}
         </LoadingButton>
-        <FormControlLabel
-          control={<ActiveSwitch defaultChecked />}
-          label="Đang hoạt động"
+        <SwitchStatusDS
+          name="isActivated"
+          disabled={!isEditMode}
+          label={
+            watch("isActivated") ? "Đang hoạt động" : "Không hoạt động"
+          }
         />
       </div>
     </FormProvider>
