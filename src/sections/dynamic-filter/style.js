@@ -7,8 +7,8 @@ export const BoxLabelStyle = styled(Box)(({theme}) => ({
   display: 'flex',
   alignItems: 'center',
   cursor: 'pointer',
-  padding: theme.spacing(0, 1.5),
-  height: '44px',
+  padding: theme.spacing(0, 2),
+  minHeight: '44px',
   borderBottom: '1px solid #E7E9ED',
   "&.MuiTreeItem-content": {
     "& .MuiTreeItem-label": {
@@ -24,8 +24,6 @@ export const BoxLabelStyle = styled(Box)(({theme}) => ({
     },
   },
   "& .MuiTreeItem-iconContainer": {
-    minWidth: 24,
-    minHeight: 24,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -44,6 +42,10 @@ export const LabelTextStyle = styled(Typography)(({theme}) => ({
 
 export const TreeViewStyle = styled(TreeView)(({theme}) => ({
   "&.tree-item": {
+    "& .MuiTreeItem-root": {
+      paddingTop: 0,
+      paddingBottom: 0
+    },
     "& .MuiCollapse-root": {
       margin: 0,
       "& .MuiTreeItem-root": {

@@ -19,7 +19,7 @@ import {useGetListCandidateLevelsQuery, useGetListLanguagesQuery} from "@/redux/
 import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
 import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 import RHFRecruitmentEditor from "@/sections/recruitment-create/component/form/RHRRecruitmentEditor";
-import TreeSelectMultiple from "@/sections/organization/component/TreeSelectMultiple";
+import TreeSelectMultiple from "@/components/hook-form/RHFTreeSelect";
 import {isEmpty} from "lodash";
 import {Currency} from "@/utils/enum";
 import React from "react";
