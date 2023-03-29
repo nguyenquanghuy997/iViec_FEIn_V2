@@ -1,100 +1,44 @@
-// section
-import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
-// @mui
-import { InputLabel, Stack, TextField } from "@mui/material";
-import PropTypes from "prop-types";
-// form
-import { Controller, useFormContext } from "react-hook-form";
-import {InputLabelStyle, InputLabelErrorStyle,} from './style';
+import {Controller, useFormContext} from "react-hook-form";
+import MuiSelect from "@/components/form/MuiSelect";
+import HelperText from "@/components/BaseComponents/HelperText";
 
-export default function RHFSelect({ name, children, ...props }) {
-  const { control } = useFormContext();
-  const {
-    hasLabel = true,
-    htmlFor,
-    required,
-    label,
-    placeholder,
-    sx,
-    multiple = false,
-  } = props;
+export default function RHFSelect({name, onChange, ...props}) {
+  const {control, reset} = useFormContext();
+  const handleDelete = (field, valueDelete) => {
+    const newOptions = field.value.filter(item => item !== valueDelete);
+    field.onChange(newOptions);
+  };
+
+  const handleClearValue = (name, value) => {
+    reset({ name: value });
+  }
+
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <Stack direction="column">
-          {hasLabel && (
-            <InputLabel
-              htmlFor={htmlFor || name}
-              required={required}
-              sx={
-                error
-                  ? { ...InputLabelStyle, ...InputLabelErrorStyle }
-                  : { ...InputLabelStyle }
-              }
-            >
-              {label}
-            </InputLabel>
-          )}
-          <TextField
-            {...field}
-            select
-            id={name}
-            fullWidth
-            SelectProps={{ native: true, multiple: multiple }}
-            error={!!error}
-            {...props}
-            helperText={error?.message}
-            label={null}
-            hiddenLabel
-            required={false}
-            sx={
-              sx
-                ? sx
-                : {
-                    "& .MuiSelect-select .notranslate::after": placeholder && {
-                      content: `"${placeholder || label}"`,
-                      color: STYLE_CONSTANT.COLOR_TEXT_GRAY,
-                      fontSize: STYLE_CONSTANT.FONT_SM,
-                    },
-                    ".MuiInputBase-root": {
-                      height: "44px",
-                      fontSize: STYLE_CONSTANT.FONT_SM,
-                      borderRadius: 0.75,
-                      width: STYLE_CONSTANT.WIDTH_FULL,
-                    },
-                    "& .MuiSelect-select": {
-                      borderRadius: 0.75,
-                    },
-                    ".MuiFormHelperText-root": {
-                      marginTop: 1,
-                      marginLeft: 0,
-                    },
-                  }
-            }
-          >
-            {children}
-          </TextField>
-        </Stack>
-      )}
-    />
-  );
+      <Controller
+          name={name}
+          control={control}
+          render={({field, fieldState: {error}}) => {
+            const {onChange: onFieldChange, ...otherField} = field;
+            return (
+                <>
+                  <MuiSelect
+                      onChange={e => {
+                        if (onChange) {
+                          onChange(e);
+                        }
+                        onFieldChange(e);
+                      }}
+                      {...otherField}
+                      error={!!error}
+                      sx={{width: '100%'}}
+                      onDelete={(item) => handleDelete(field, item)}
+                      onClearValue={handleClearValue}
+                      {...props}
+                  />
+                  {error?.message && <HelperText errorText={error.message}/>}
+                </>
+            )
+          }}
+      />
+  )
 }
-
-RHFSelect.propTypes = {
-  children: PropTypes.node,
-  name: PropTypes.string,
-  htmlFor: PropTypes.string,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  sx: PropTypes.oneOf([PropTypes.object, PropTypes.string]),
-};
-
-RHFSelect.defaultProps = {
-  htmlFor: "",
-  name: "",
-  label: "",
-  placeholder: "",
-  sx: null,
-};

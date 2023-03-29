@@ -90,6 +90,11 @@ function stringAvatar(name) {
   };
 }
 
+function getExtension(filename) {
+  if(!filename) return "";
+  return filename.split(".").pop();
+}
+
 const showIconByFileType = (fileType) => {
   let icon = null;
   switch (fileType) {
@@ -140,6 +145,7 @@ const cleanObject = (obj) => {
 }
 
 export {
+  getExtension,
   phoneRegExp,
   containsText,
   convertViToEn,

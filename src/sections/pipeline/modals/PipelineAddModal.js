@@ -1,5 +1,6 @@
 import {
   ButtonDS,
+  SelectAutoCompleteDS,
   TextAreaDS,
 } from "@/components/DesignSystem";
 import { View, Text } from "@/components/DesignSystem/FlexStyled";
@@ -9,12 +10,9 @@ import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { ButtonIcon } from "@/utils/cssStyles";
 import { LoadingButton } from "@mui/lab";
-import { Modal } from "@mui/material";
-import { useEffect } from "react";
+import { FormHelperText, Modal } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 const defaultValuess = {
   des: "",
@@ -29,13 +27,8 @@ export const PipelineAddModal = ({
 }) => {
   const isEdit = !!editData.name;
   // form
-  const ProfileSchema = Yup.object().shape({
-    // stageType: Yup.string().required("Chưa chọn bước"),
-    stageType: Yup.string().required("Chưa chọn bước tuyển dụng"),
-  });
   const methodss = useForm({
     defaultValuess,
-    resolver: yupResolver(ProfileSchema),
   });
 
   const {
@@ -47,14 +40,19 @@ export const PipelineAddModal = ({
   const pressHide = () => {
     setShow(false);
   };
-
+  const [error, setError] = useState(false);
   const pressSave = handleSubmit(async (d) => {
     const data = {
-      stageType: d.stageType,
+      stageType: selectedStatge,
       des: d.des,
     };
+    if (selectedStatge == "") {
+      setError(true);
+    } else{
       onSubmit?.(data);
       pressHide();
+    }
+     
     
   });
   const pressDelete = () => {
@@ -71,9 +69,12 @@ export const PipelineAddModal = ({
     { id: "0", value: "0", name: "Thi tuyển" },
     { id: "1", value: "1", name: "Phỏng vấn" },
   ];
-
+  const [selectedStatge, setSelectedStatge] = useState("");
+  const onChangeStage = (e) => {
+    setSelectedStatge(e.target.value);
+  };
   useEffect(() => {
-    setValue("stageType", ""), setValue("des", "");
+    setSelectedStatge(""), setValue("des", "");
     return;
   }, [setValue]);
   return (
@@ -108,19 +109,25 @@ export const PipelineAddModal = ({
               </View>
               <View mb={24}>
                 {renderTitle("Loại bước", true)}
-                <RHFDropdown
-                  options={LIST_PIPELINE_STAGE.map(i => ({
-                    id: i.id,
-                    value: i.id,
-                    name: i.name,
-                  }))}
-                  name="stageType"
+                <SelectAutoCompleteDS
+                  selectedOption={selectedStatge}
+                  setSelectedOption={setSelectedStatge}
+                  onChange={onChangeStage}
+                  data={LIST_PIPELINE_STAGE}
                   placeholder="Chọn loại bước"
-                  allowClear={true}
-              />
+                  name={"stageType"}
+                />
+                {error && (
+                  <FormHelperText
+                    error
+                    sx={{ px: 2, marginLeft: 0, textTransform: "capitalize" }}
+                  >
+                    Chưa chọn loại bước tuyển dụng
+                  </FormHelperText>
+                )}
               </View>
               <View mb={24}>
-                {renderTitle("Mô tả", true)}
+                {renderTitle("Mô tả")}
 
                 <TextAreaDS
                   initialValue=""

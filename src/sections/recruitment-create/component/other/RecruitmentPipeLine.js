@@ -11,14 +11,24 @@ import {useGetAllPipelineByOrganizationQuery, useGetAllStepOfPipelineQuery} from
 import {PipelineStateType} from "@/utils/formatString";
 import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
-import {useGetAllExaminationQuery} from "@/sections/exam/ExamSlice";
-import {useOpenPopup} from "@/sections/recruitment-create/hooks/useOpenPopup";
-import ExaminationForm from "@/sections/recruitment-create/component/other/ExaminationForm";
+import ExaminationForm from "@/sections/recruitment-create/component/form/ExaminationForm";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import {useDispatch, useSelector} from "@/redux/store";
+import {modalSlice} from "@/redux/common/modalSlice";
+import {isEmpty} from "lodash";
 
-const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) => {
+const RecruitmentPipeLine = ({examinationFormValue, setValue, watchOrganization, watchOrganizationPipelineId, onClearDataExaminationForm, onSetValuePipelineExamination}) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const { open, setOpen } = useOpenPopup();
+  const toggleOpenFormExamination = useSelector((state) => state.modalReducer.openForm);
+  const item = useSelector((state) => state.modalReducer.data);
+  const handleOpenFormExamination = (data) => {
+    setValue('examinationId', data?.examinationId ? data?.examinationId : '');
+    setValue('expiredTime', data?.expiredTime ? data?.expiredTime : '');
+    dispatch(modalSlice.actions.openModal(data));
+  };
+  const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
 
   const {
     data: {items: ListPipeline = []} = {},
@@ -28,16 +38,13 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
     data: {organizationPipelineStates: ListStepPipeline = []} = {},
     isLoading: loadingPipe
   } = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
-  const {data: {items: ListExamination = []} = {}} = useGetAllExaminationQuery();
 
-  const router = useRouter();
 
-  if (isLoading || loadingPipe) return null;
+  if (isLoading || loadingPipe) return <div>Loading...</div>;
 
   return (
       <BoxWrapperStyle className="wrapper">
-        <Box className="box-item"
-             sx={{width: style.WIDTH_FULL, backgroundColor: style.BG_TRANSPARENT, display: 'flex',}}>
+        <Box className="box-item" sx={{width: style.WIDTH_FULL, backgroundColor: style.BG_TRANSPARENT, display: 'flex',}}>
           <BoxInnerStyle>
             <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
             <Box sx={{px: 4, py: 3}}>
@@ -65,10 +72,13 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
                 </Typography>
                 <RHFCheckbox name='isAutomaticStepChange' label='Tự động chuyển bước'/>
               </BoxFlex>
-
-
               <Box sx={{mt: 1}}>
                 {ListStepPipeline?.map((item, index) => {
+                  const examinationData = examinationFormValue.find(i => i.id === item.id)
+                  const examinationValue = {
+                    ...examinationData,
+                    id: item.id,
+                  }
                   return (
                       <RecruitmentPipelineCard
                           key={index}
@@ -76,8 +86,8 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
                           icon={PipelineStateType(item?.pipelineStateType).icon}
                           title={PipelineStateType(item?.pipelineStateType).title}
                           subtitle={PipelineStateType(item?.pipelineStateType, item.description).subtitle}
-                          moreTitle={item?.pipelineStateType === 1 && "Chưa chọn đề thi"}
-                          onOpen={setOpen}
+                          moreTitle={item?.pipelineStateType === 1 ? !isEmpty(examinationData) ? examinationData?.examinationId?.examinationName : 'Chưa chọn đề thi' : ''}
+                          onOpen={() => handleOpenFormExamination(examinationValue)}
                       />
                   )
                 })}
@@ -110,25 +120,30 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
             />
           </RightNoteText>
         </Box>
-        <ExaminationForm
-          open={open}
-          onClose={() => setOpen(false)}
-          options={ListExamination}
-          header={<Typography sx={{ color: '#172B4D', fontSize: 16, fontWeight: 600 }}>Chọn đề thi</Typography>}
-          actions={
-            <>
-              <MuiButton
-                title={"Hủy"}
-                color={'basic'}
-                onClick={() => setOpen(false)}
-              />
-              <MuiButton
-                  title={"Lưu"}
-                  onClick={() => setOpen(false)}
-              />
-            </>
-          }
-        />
+        {toggleOpenFormExamination && (
+            <ExaminationForm
+                open={toggleOpenFormExamination}
+                onClose={handleCloseModal}
+                header={<Typography sx={{ color: '#172B4D', fontSize: 16, fontWeight: 600 }}>Chọn đề thi</Typography>}
+                actions={
+                  <>
+                    <MuiButton
+                        title={"Hủy"}
+                        color={'basic'}
+                        onClick={handleCloseModal}
+                    />
+                    <MuiButton
+                        title={"Lưu"}
+                        onClick={() => {
+                          handleCloseModal();
+                          onClearDataExaminationForm();
+                          onSetValuePipelineExamination(item);
+                        }}
+                    />
+                  </>
+                }
+            />
+        )}
       </BoxWrapperStyle>
   )
 }

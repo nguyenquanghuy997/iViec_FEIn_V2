@@ -1,4 +1,5 @@
 import JobTypeFilterModal from "../modals/JobTypeFilterModal";
+import JobTypeBottomNav from "./JobTypeBottomNav";
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import { AvatarDS } from "@/components/DesignSystem";
@@ -17,7 +18,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import JobTypeBottomNav from "./JobTypeBottomNav";
 
 const defaultValues = {
   searchKey: "",
@@ -34,12 +34,13 @@ export const JobTypeItem = () => {
   const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
-
   const columns = [
     {
       title: "STT",
       key: "index",
-      render: (item, record, index) => <>{index + 1}</>,
+      render: (item, record, index, page, paginationSize) => (
+        <>{(page - 1) * paginationSize + index + 1}</>
+      ),
       width: "60px",
       fixed: "left",
     },
@@ -89,7 +90,7 @@ export const JobTypeItem = () => {
       ],
     },
     {
-      dataIndex: "creatorName",
+      dataIndex: "creatorEmail",
       title: "Người tạo",
       width: "300px",
       name: "creatorIds",
@@ -115,15 +116,6 @@ export const JobTypeItem = () => {
       ),
     },
   ];
-
-  const menuItemText = {
-    name: "Vị trí công việc",
-    organizationName: "Đơn vị",
-    numberOfRecruitmentApplied: "Số tin áp dụng",
-    isActivated: "Trạng thái",
-    createdTime: "Ngày tạo",
-    creatorName: "Người tạo",
-  };
 
   const handleUpdateListColumnApplicants = async () => {
     var body = {
@@ -256,13 +248,12 @@ export const JobTypeItem = () => {
           source={Data}
           loading={isLoading}
           ColumnData={ColumnData}
-          menuItemText={menuItemText}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
           nodata="Hiện chưa có vị trí công việc nào"
           isSetting={true}
           itemSelected={itemSelected}
-            setItemSelected={setItemSelected}
+          setItemSelected={setItemSelected}
           filter={
             <JobTypeHeader
               methods={methods}

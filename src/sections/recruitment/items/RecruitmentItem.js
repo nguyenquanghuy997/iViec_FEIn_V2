@@ -657,6 +657,7 @@ export const RecruitmentItem = () => {
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
     setSelectedRowKeys([]);
+    setItemSelected([]);
     event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
   };
 

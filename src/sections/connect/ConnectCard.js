@@ -171,7 +171,7 @@ const DetailCard = ({ checked, accounts }) => {
             {isActive ? (
               <span style={{ color: "#388E3C" }}> Đã hoạt động</span>
             ) : (
-              <span style={{ color: "#8A94A5" }}>Ngừng hoạt động"</span>
+              <span style={{ color: "#8A94A5" }}>Không hoạt động"</span>
             )}
           </Typography>
           <Typography component="div" fontSize={"14px"} sx={{ mb: 3 }}>

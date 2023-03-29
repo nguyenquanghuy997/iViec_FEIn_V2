@@ -1,4 +1,4 @@
-import MenuIcon from "@/assets/MenuIcon";
+import MenuIcon from "@/assets/interview/MenuIcon";
 import UploadImage from "@/assets/UploadImage";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import Image from "@/components/Image";

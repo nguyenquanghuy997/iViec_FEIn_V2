@@ -2,7 +2,6 @@ import Iconify from "@/components/Iconify";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import {
   Autocomplete,
-  FormHelperText,
   Input,
   InputAdornment,
   InputLabel,
@@ -29,7 +28,7 @@ const useStyles = makeStyles(() => ({
       lineHeight: "20px",
       padding: "10px 16px",
       background: "#FDFDFD",
-      boxShadow: "inset 0px -1px 0px #E7E9ED",
+      // boxShadow: "inset 0px -1px 0px #E7E9ED",
       minHeight: '44px'
     },
     "& .MuiList-root": {
@@ -199,12 +198,6 @@ const LabelStyle = styled(InputLabel)(({ theme }) => ({
   fontWeight: style.FONT_MEDIUM,
   marginBottom: theme.spacing(1),
 }));
-const FormHelperTextStyle = styled(FormHelperText)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  marginLeft: 0,
-  fontSize: style.FONT_XS,
-  color: style.COLOR_TEXT_DANGER,
-}));
 const Label = styled(InputLabel)(({ theme }) => ({
   fontSize: style.FONT_SM,
   color: style.COLOR_TEXT_BLACK,
@@ -252,17 +245,6 @@ const MenuItemStyle = {
   },
 };
 
-const InputLabelStyle = {
-  fontSize: style.FONT_SM,
-  color: style.COLOR_TEXT_SECONDARY,
-  fontWeight: style.FONT_MEDIUM,
-  marginBottom: 1,
-};
-const InputLabelErrorStyle = {
-  color: style.COLOR_TEXT_DANGER,
-  marginLeft: 0,
-};
-
 const Placeholder = (placeholder) => {
   return (
     <Typography
@@ -308,7 +290,7 @@ const ChipSelectStyle = {
   fontWeight: style.FONT_MEDIUM,
   borderRadius: "4px",
   mr: 1,
-  my: 0.5,
+  mt: 0.5,
 };
 
 export {
@@ -316,14 +298,11 @@ export {
   InputStyle,
   LabelStyle,
   Label,
-  FormHelperTextStyle,
   TextFieldStyle,
   SelectFieldStyle,
   AutocompleteFieldStyle,
   SearchInputStyle,
   MenuItemStyle,
-  InputLabelStyle,
-  InputLabelErrorStyle,
   Placeholder,
   MenuProps,
   InputProps,

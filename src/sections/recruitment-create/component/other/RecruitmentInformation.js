@@ -2,27 +2,28 @@ import {Box, InputAdornment} from "@mui/material";
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-create/style";
 import DividerCard from "@/sections/recruitment-create/component/DividerCard";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
-import {RHFAutocomplete, RHFTextField} from "@/components/hook-form";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import {RHFAutocomplete, RHFSelect, RHFTextField} from "@/components/hook-form";
 import DateFilter from "@/sections/dynamic-filter/DateFilter";
 import {LabelStyle} from "@/components/hook-form/style";
 import {useGetOrganizationsDataWithChildQuery} from "@/sections/organization/OrganizationSlice";
 import {useGetJobCategoriesQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
 import {useGetAllJobTypeQuery} from "@/sections/jobtype";
 import {
-    LIST_CURRENCY_TYPE,
-    LIST_EXPERIENCE_NUMBER,
-    LIST_GENDER_RECRUITMENT,
-    LIST_RECRUITMENT_SALARY_DISPLAY_TYPE,
-    LIST_RECRUITMENT_WORKING_FORM
+  LIST_CURRENCY_TYPE,
+  LIST_EXPERIENCE_NUMBER,
+  LIST_GENDER_RECRUITMENT,
+  LIST_RECRUITMENT_SALARY_DISPLAY_TYPE,
+  LIST_RECRUITMENT_WORKING_FORM
 } from "@/utils/formatString";
 import {useGetListCandidateLevelsQuery, useGetListLanguagesQuery} from "@/redux/slice/masterDataSlice";
 import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
 import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 import RHFRecruitmentEditor from "@/sections/recruitment-create/component/form/RHRRecruitmentEditor";
-import TreeSelectMultiple from "@/sections/organization/component/TreeSelectMultiple";
+import TreeSelectMultiple from "@/components/hook-form/RHFTreeSelect";
 import {isEmpty} from "lodash";
 import {Currency} from "@/utils/enum";
+import React from "react";
+import {API_GET_PAGING_JOBTYPE} from "@/routes/api";
 
 const RecruitmentInformation = (
     {
@@ -31,10 +32,6 @@ const RecruitmentInformation = (
       organizationId,
       salaryDisplayType,
       currencyUnit,
-      recruitmentAddressIds,
-      recruitmentJobCategoryIds,
-      recruitmentWorkingForms,
-      recruitmentWorkingLanguages,
     }
 ) => {
   const {data: {items: ListOrganization = []} = {}, isLoading: loadingOrganization} = useGetOrganizationsDataWithChildQuery();
@@ -56,11 +53,10 @@ const RecruitmentInformation = (
             <Box sx={{px: 4, py: 3}}>
               {/* Tiêu đề tin tuyển dụng */}
               <Box sx={{mb: 2}}>
+                <LabelStyle required={true}>Tiêu đề tin tuyển dụng</LabelStyle>
                 <RHFTextField
                     name="name"
-                    title="Tiêu đề tin tuyển dụng"
                     placeholder="Nhập tiêu đề tin hiển thị tại trang việc làm..."
-                    isRequired
                     fullWidth
                 />
               </Box>
@@ -77,7 +73,8 @@ const RecruitmentInformation = (
                     fullWidth
                     multiple
                     isRequired
-                    disabledOption={recruitmentAddressIds?.length === 3}
+                    showCheckbox
+                    disabledOption={3}
                     AutocompleteProps={{
                       disableCloseOnSelect: true
                     }}
@@ -95,23 +92,21 @@ const RecruitmentInformation = (
                   />
                 </div>
                 <div style={{flex: 1, marginLeft: 8}}>
-                  <RHFDropdown
-                      options={ListCandidateLevels}
+                  <LabelStyle required>Chức danh</LabelStyle>
+                  <RHFSelect
+                      options={ListCandidateLevels.map(item => ({ value: item.id, label: item.name }))}
                       name="candidateLevelId"
-                      title="Chức danh"
                       placeholder="Chọn 1 chức danh"
-                      isRequired
                       fullWidth
                   />
                 </div>
               </Box>
               {/* Địa điểm làm việc */}
               <Box sx={{mb: 2}}>
+                <LabelStyle required>Địa điểm làm việc</LabelStyle>
                 <RHFTextField
                     name="address"
-                    title="Địa điểm làm việc"
                     placeholder="Ví dụ: Tầng 15, Tòa nhà FPT, Số 10 Phạm Văn Bạch, Cầu Giấy, Hà Nội"
-                    isRequired
                     fullWidth
                 />
               </Box>
@@ -128,7 +123,8 @@ const RecruitmentInformation = (
                     fullWidth
                     multiple
                     isRequired
-                    disabledOption={recruitmentJobCategoryIds?.length === 3}
+                    showCheckbox
+                    disabledOption={3}
                     AutocompleteProps={{
                       disableCloseOnSelect: true
                     }}
@@ -144,7 +140,8 @@ const RecruitmentInformation = (
                     fullWidth
                     multiple
                     isRequired
-                    disabledOption={recruitmentWorkingForms?.length === 3}
+                    showCheckbox
+                    disabledOption={3}
                     AutocompleteProps={{
                       disableCloseOnSelect: true
                     }}
@@ -153,11 +150,10 @@ const RecruitmentInformation = (
               {/* Số năm kinh nghiệm & Số lượng cần tuyển */}
               <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                 <div style={{flex: 1, marginRight: 8}}>
-                  <RHFDropdown
+                  <LabelStyle required>Số năm kinh nghiệm</LabelStyle>
+                  <RHFSelect
                       name="workExperience"
-                      title="Số năm kinh nghiệm"
                       placeholder="Chọn số năm kinh nghiệm yêu cầu"
-                      isRequired
                       fullWidth
                       options={LIST_EXPERIENCE_NUMBER}
                   />
@@ -175,12 +171,11 @@ const RecruitmentInformation = (
               {/* Giới tính & Ngôn ngữ làm việc */}
               <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                 <div style={{flex: 1, marginRight: 8}}>
-                  <RHFDropdown
+                  <LabelStyle required>Giới tính</LabelStyle>
+                  <RHFSelect
                       name="sex"
-                      title="Giới tính"
                       placeholder="Chọn giới tính"
                       fullWidth
-                      isRequired
                       options={LIST_GENDER_RECRUITMENT}
                   />
                 </div>
@@ -196,7 +191,8 @@ const RecruitmentInformation = (
                           label: i.name
                       }))}
                       isRequired
-                      disabledOption={recruitmentWorkingLanguages?.length === 3}
+                      showCheckbox
+                      disabledOption={3}
                       AutocompleteProps={{
                           disableCloseOnSelect: true
                       }}
@@ -253,23 +249,21 @@ const RecruitmentInformation = (
             <Box sx={{px: 4, py: 3}}>
               <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                 <div style={{flex: 1, marginRight: 8}}>
-                  <RHFDropdown
+                  <LabelStyle required>Cách hiển thị</LabelStyle>
+                  <RHFSelect
                       name="salaryDisplayType"
-                      title="Cách hiển thị"
                       placeholder="Chọn 1 cách hiển thị"
                       fullWidth
-                      isRequired
                       options={LIST_RECRUITMENT_SALARY_DISPLAY_TYPE}
                   />
                 </div>
                 {salaryDisplayType > 1 && (
                     <div style={{flex: 1, marginLeft: 8}}>
-                      <RHFDropdown
+                      <LabelStyle required>Loại tiền tệ</LabelStyle>
+                      <RHFSelect
                           name="currencyUnit"
-                          title="Loại tiền tệ"
                           placeholder="VNĐ"
                           fullWidth
-                          isRequired
                           options={LIST_CURRENCY_TYPE}
                       />
                     </div>
@@ -323,17 +317,18 @@ const RecruitmentInformation = (
           <BoxInnerStyle>
             <DividerCard title="MÔ TẢ CÔNG VIỆC"/>
             <Box sx={{px: 4, py: 3}}>
-              <RHFDropdown
+              <LabelStyle>Vị trí công việc có sẵn</LabelStyle>
+              <RHFSelect
                   options={ListJobType.map(i => ({
                     id: i.id,
                     value: i.id,
                     name: i.name,
                     label: i.name,
                   }))}
+                  remoteUrl={API_GET_PAGING_JOBTYPE}
                   name="jobPositionId"
-                  title="Vị trí công việc có sẵn"
                   placeholder="Chọn vị trí công việc có sẵn"
-                  allowClear={true}
+                  allowClear
               />
             </Box>
             <Box sx={{px: 4, py: 0}}>
@@ -389,19 +384,17 @@ const RecruitmentInformation = (
             }}>
               {/*Cán bộ tuyển dụng */}
               <Box sx={{mb: 2, width: '50%'}}>
-                <RHFDropdown
+                <LabelStyle required>Cán bộ tuyển dụng</LabelStyle>
+                <RHFSelect
                     options={ListUserFromOrganization?.map(item => ({
                       ...item,
                       label: item?.email || item?.lastName,
                       name: item?.lastName
                     }))}
                     name="ownerId"
-                    title="Cán bộ tuyển dụng"
                     placeholder="Chọn 1 cán bộ"
                     fullWidth
-                    isRequired
-                    keyObj={"email"}
-                    type={"avatar"}
+                    showAvatar
                 />
               </Box>
               <Box sx={{mb: 2}}>

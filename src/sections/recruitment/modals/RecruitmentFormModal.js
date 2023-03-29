@@ -337,7 +337,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
             {isLoading ? null : (
               <SwitchStatusDS
                 name={"isActivated"}
-                label={isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+                label={isActivated ? "Đang hoạt động" : "Không hoạt động"}
               />
             )}
           </View>

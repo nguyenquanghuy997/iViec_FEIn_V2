@@ -13,6 +13,7 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 })
 
 export const RecruitmentSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getRecruitments: builder.query({
       query: (data) => ({
@@ -83,7 +84,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
     deleteRecruitment: builder.mutation({
       query: (data) => ({
         url: API_REMOVE_RECRUITMENT,
-        method: 'PATCH',
+        method: 'DELETE',
         data
       }),
       invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]

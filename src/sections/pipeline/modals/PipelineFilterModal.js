@@ -29,7 +29,7 @@ function PipelineFilterModal({columns, isOpen, onClose, onSubmit}) {
   const router = useRouter();
   const { query } = router;
   const defaultValues = {
-    isActive: "",                                                               // Trạng thái         select
+    isActivated: "",                                                               // Trạng thái         select
     createdTimeFrom: null,                                                      // ngày tạo           date from - to
     createdTimeTo: null,
     creatorIds: [],                                                             // người tạo          select mul
@@ -127,7 +127,7 @@ function PipelineFilterModal({columns, isOpen, onClose, onSubmit}) {
                     columns={columns}
                     options={{
                       creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.email}`, item: `${i?.lastName} ${i?.firstName}`})), {id: "", value: "", name: "", item: ""}],
-                      isActive: LIST_STATUS,
+                      isActivated: LIST_STATUS,
                     }}
                 />
               </Stack>

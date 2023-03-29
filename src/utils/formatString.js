@@ -33,9 +33,9 @@ export const LIST_ORGANIZATION_SIZE = [
     {id: "LargeTenThousand", value: 7, name: "Trên 10000 nhân sự"},
 ];
 export const LIST_STATUS = [
-    {id: 0, value: 0, name: "Tất cả"},
-    {id: true, value: true, name: "Đang hoạt động"},
-    {id: false, value: false, name: "Ngừng hoạt động"},
+    {value: 0, name: "Tất cả"},
+    {value: 1, name: "Đang hoạt động"},
+    {value: 2, name: "Không hoạt động"},
 ]
 export const LIST_MARITAL_STATUSES = [
     {value: 0, name: "Độc thân", label: "Độc thân"},
@@ -76,6 +76,13 @@ export const LIST_STEP_RECRUITMENT = [
   {value: 5, name: "Kết quả - Cân nhắc"},
   {value: 6, name: "Kết quả - Loại"},
   {value: 7, name: "Mời nhận việc"},
+]
+
+export const LIST_PIPELINESTATE = [
+  {value: 0, name: "Ứng tuyển"},
+  {value: 1, name: "Thi tuyển"},
+  {value: 2, name: "Phỏng vấn"},
+  {value: 3, name: "Kết quả"}
 ]
 
 export const LIST_RECRUITMENT_WORKING_FORM = [
@@ -149,4 +156,12 @@ export function formatRemoteUrl(str) {
 
 export function formatBranchSize(data) {
     return LIST_BRANCH_SIZE.find((i) => i.id === data)?.name || "";
+}
+export function checkSameValue(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] !== arr[0]) {
+      return false;
+    }
+  }
+  return true;
 }

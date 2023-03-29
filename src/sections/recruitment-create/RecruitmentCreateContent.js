@@ -37,7 +37,7 @@ import RecruitmentPreviewCreate from "@/sections/recruitment-create/component/ot
 
 const RecruitmentCreateContent = ({Recruitment}) => {
   const router = useRouter();
-  const { query } = router;
+  const {query} = router;
   const {enqueueSnackbar} = useSnackbar();
   const {data: OrganizationOfUser = {}} = useGetOrganizationInfoQuery();
   const [createRecruitment] = useCreateRecruitmentMutation();
@@ -80,12 +80,9 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       recruitmentJobCategoryIds: [],
       recruitmentAddressIds: [],
       recruitmentWorkingForms: [],
-      organizationPipelineStateDatas: [
-        {
-          organizationPipelineStateId: "",
-          examinationId: ""
-        }
-      ]
+      organizationPipelineStateDatas: [],
+      examinationId: null,
+      expiredTime: ''
     }
   }, [OrganizationOfUser])
 
@@ -149,24 +146,26 @@ const RecruitmentCreateContent = ({Recruitment}) => {
 
   const {control, handleSubmit, setValue, reset, formState: {errors, isValid}} = methods;
 
-  const watchAllFields = useWatch({ control })
+  const watchAllFields = useWatch({control});
 
-  const watchName = useWatch({ control, name: 'name' });
+  const watchName = useWatch({control, name: 'name'});
   const watchNameDebounce = useDebounce(watchName, 500);
-  const watchOrganization = useWatch({ control, name: 'organizationId' });
-  const watchSalaryDisplayType = useWatch({ control, name: 'salaryDisplayType' });
-  const watchCurrencyType = useWatch({ control, name: 'currencyUnit' });
-  const watchOrganizationPipelineId = useWatch({ control, name: 'organizationPipelineId' });
-  const watchJobPositionId = useWatch({ control, name: 'jobPositionId' });
+  const watchOrganization = useWatch({control, name: 'organizationId'});
+  const watchSalaryDisplayType = useWatch({control, name: 'salaryDisplayType'});
+  const watchCurrencyType = useWatch({control, name: 'currencyUnit'});
+  const watchOrganizationPipelineId = useWatch({control, name: 'organizationPipelineId'});
+  const watchJobPositionId = useWatch({control, name: 'jobPositionId'});
 
   // validate
-  const watchRecruitmentAddressIds = useWatch({ control, name: 'recruitmentAddressIds' });
-  const watchRecruitmentJobCategoryIds = useWatch({ control, name: 'recruitmentJobCategoryIds' });
-  const watchRecruitmentWorkingForms = useWatch({ control, name: 'recruitmentWorkingForms' });
-  const watchRecruitmentWorkingLanguages = useWatch({ control, name: 'recruitmentLanguageIds' });
-  const watchStartDate = useWatch({ control, name: 'startDate' });
+  const watchStartDate = useWatch({control, name: 'startDate'});
 
-  const { data: JobPosition = {} } = useGetJobPositionByIdQuery({ Id: watchJobPositionId }, { skip: !watchJobPositionId })
+  const watchOrganizationPipelineStateDatas = useWatch({control, name: 'organizationPipelineStateDatas'});
+  const watchExaminationId = useWatch({control, name: 'examinationId'});
+  const watchExpiredTime = useWatch({control, name: 'expiredTime'});
+
+  const [organizationPipelineStateDatas, setOrganizationPipelineStateDatas] = useState(watchOrganizationPipelineStateDatas);
+
+  const {data: JobPosition = {}} = useGetJobPositionByIdQuery({Id: watchJobPositionId}, {skip: !watchJobPositionId})
 
   useEffect(() => {
     if (!isEmpty(JobPosition)) {
@@ -184,15 +183,16 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       for (let i in defaultValues) {
         setValue(i, Recruitment[i]);
         setValue('organizationId', Recruitment?.organizationId)
-        setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => ({ ...item, value: item?.provinceId, label: item?.provinceName })))
-        setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => ({ ...item, value: item?.jobCategoryId, label: item?.name })))
-        setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => ({ value: item?.workingForm, label: RecruitmentWorkingForm(item?.workingForm) })))
+        setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => ({...item, value: item?.provinceId, label: item?.provinceName})))
+        setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => ({...item, value: item?.jobCategoryId, label: item?.name})))
+        setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => ({value: item?.workingForm, label: RecruitmentWorkingForm(item?.workingForm)})))
         setValue('jobPositionId', Recruitment?.jobPosition?.id)
-        setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({ ...item, value: item?.councilUserId, label: item.email || item.councilName })))
-        setValue('coOwnerIds', Recruitment?.coOwners?.map(item => ({ ...item, value: item?.id, label: item.email || item.name })))
-        setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({ ...item, value: item?.id, label: item?.name })))
+        setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({...item, value: item?.councilUserId, label: item.email || item.councilName})))
+        setValue('coOwnerIds', Recruitment?.coOwners?.map(item => ({...item, value: item?.id, label: item.email || item.name})))
+        setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({...item, value: item?.id, label: item?.name})))
         setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
         setValue('currencyUnit', Recruitment?.currencyUnit);
+        setOrganizationPipelineStateDatas(Recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => ({...item, value: item?.id, label: item?.name})))
       }
     }
   }, [Recruitment])
@@ -210,6 +210,21 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       methods.resetField('maxSalary');
     }
   }, [watchSalaryDisplayType])
+
+  const handleSetValuePipelineExamination = (data) => {
+    const findIndex = organizationPipelineStateDatas?.map(item => item.id).indexOf(data.id);
+    if (findIndex !== -1) {
+      const organizationPipelineStateDatasNext = [...organizationPipelineStateDatas].map(i => i.id === data.id ? { ...data, examinationId: watchExaminationId, expiredTime: watchExpiredTime } : { ...i })
+      setOrganizationPipelineStateDatas(organizationPipelineStateDatasNext)
+    } else {
+      const organizationPipelineStateDatasNext = [...organizationPipelineStateDatas, { ...data, examinationId: watchExaminationId, expiredTime: watchExpiredTime }]
+      setOrganizationPipelineStateDatas(organizationPipelineStateDatasNext)
+    }
+  }
+  const handleClearDataExaminationForm = () => {
+    setValue('examinationId', '');
+    setValue('expiredTime', '');
+  }
 
   const [valueTab, setValueTab] = useState(errors.organizationPipelineId ? '2' : '1');
   const handleChange = (event, newValue) => {
@@ -254,9 +269,13 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
       recruitmentCreationType: isOpenSaveDraft ? 0 : 1,
+      organizationPipelineStateDatas: organizationPipelineStateDatas.map(item => ({
+        organizationPipelineStateId: item.id,
+        examinationId: item.examinationId?.examinationId
+      }))
     }
     if (data?.id && !query?.type) {
-      if(data.recruitmentCreationType === 0) {
+      if (data.recruitmentCreationType === 0) {
         try {
           await updateRecruitmentDraft(cleanObject({
             ...body,
@@ -323,7 +342,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   const handleClosePreview = () => {
     setIsOpenPreview(false);
   }
-  
+
   return (
       <View>
         <JobCreateHeader
@@ -349,10 +368,6 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                         organizationId={watchOrganization}
                         salaryDisplayType={watchSalaryDisplayType}
                         currencyUnit={watchCurrencyType}
-                        recruitmentAddressIds={watchRecruitmentAddressIds}
-                        recruitmentJobCategoryIds={watchRecruitmentJobCategoryIds}
-                        recruitmentWorkingForms={watchRecruitmentWorkingForms}
-                        recruitmentWorkingLanguages={watchRecruitmentWorkingLanguages}
                     />
                   </BoxFlex>
                 </TabPanel>
@@ -360,6 +375,10 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                   <RecruitmentPipeLine
                       watchOrganization={watchOrganization}
                       watchOrganizationPipelineId={watchOrganizationPipelineId}
+                      onSetValuePipelineExamination={handleSetValuePipelineExamination}
+                      onClearDataExaminationForm={handleClearDataExaminationForm}
+                      examinationFormValue={organizationPipelineStateDatas}
+                      setValue={setValue}
                   />
                 </TabPanel>
                 <TabPanel value="3">
@@ -374,7 +393,14 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                 open={isOpenSaveDraft}
                 onClose={() => setIsOpenSaveDraft(false)}
                 icon={<DraftIcon height={45} width={50}/>}
-                title={<Typography sx={{textAlign: 'center', width: '100%', fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD, color: style.COLOR_PRIMARY, marginTop: 2,}}>Lưu nháp tin tuyển dụng</Typography>}
+                title={<Typography sx={{
+                  textAlign: 'center',
+                  width: '100%',
+                  fontSize: style.FONT_BASE,
+                  fontWeight: style.FONT_SEMIBOLD,
+                  color: style.COLOR_PRIMARY,
+                  marginTop: 2,
+                }}>Lưu nháp tin tuyển dụng</Typography>}
                 subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
                 data={watchAllFields}
                 onSubmit={onSubmit}
@@ -391,7 +417,14 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                 open={isOpenSubmitApprove}
                 onClose={() => setIsOpenSubmitApprove(false)}
                 icon={<SendIcon/>}
-                title={<Typography sx={{textAlign: 'center', width: '100%', fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD, color: style.COLOR_PRIMARY, marginTop: 2}}>Gửi phê duyệt tin tuyển dụng</Typography>}
+                title={<Typography sx={{
+                  textAlign: 'center',
+                  width: '100%',
+                  fontSize: style.FONT_BASE,
+                  fontWeight: style.FONT_SEMIBOLD,
+                  color: style.COLOR_PRIMARY,
+                  marginTop: 2
+                }}>Gửi phê duyệt tin tuyển dụng</Typography>}
                 subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
                 data={watchAllFields}
                 onSubmit={onSubmit}
@@ -407,8 +440,15 @@ const RecruitmentCreateContent = ({Recruitment}) => {
             isOpenAlertBack && <ConfirmModal
                 open={isOpenAlertBack}
                 onClose={() => setIsOpenAlertBack(false)}
-                icon={<OrangeAlertIcon />}
-                title={<Typography sx={{textAlign: 'center', width: '100%', fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD, color: style.COLOR_MAIN, marginTop: 2}}>Trở về danh sách tin tuyển dụng</Typography>}
+                icon={<OrangeAlertIcon/>}
+                title={<Typography sx={{
+                  textAlign: 'center',
+                  width: '100%',
+                  fontSize: style.FONT_BASE,
+                  fontWeight: style.FONT_SEMIBOLD,
+                  color: style.COLOR_MAIN,
+                  marginTop: 2
+                }}>Trở về danh sách tin tuyển dụng</Typography>}
                 subtitle={"Các thao tác trước đó sẽ không được lưu, Bạn có chắc chắn muốn trở lại?"}
                 data={watchAllFields}
                 onSubmit={() => setIsOpenAlertBack(false)}
