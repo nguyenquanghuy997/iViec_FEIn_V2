@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
       lineHeight: "20px",
       padding: "10px 16px",
       background: "#FDFDFD",
-      boxShadow: "inset 0px -1px 0px #E7E9ED",
+      // boxShadow: "inset 0px -1px 0px #E7E9ED",
       minHeight: '44px'
     },
     "& .MuiList-root": {

@@ -1,21 +1,25 @@
-import React, {memo, useState} from "react";
-import {Box, DialogContent, Divider, Tab, Tabs, Typography} from "@mui/material";
-import {FormProvider, RHFTextField} from "@/components/hook-form";
+import React, {memo, useRef, useState} from "react";
+import {Box, DialogContent, Divider, IconButton, Tab, Tabs, Typography} from "@mui/material";
+import {FormProvider, RHFSelect, RHFTextField} from "@/components/hook-form";
 import {useFieldArray, useForm} from "react-hook-form";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {useGetRoleGroupQuery} from "@/sections/organization/OrganizationSlice";
 import {AddIcon, DeleteIcon} from "@/assets/ActionIcon";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
-import TreeMultiSelect from "@/sections/organization/component/TreeSelectMultiple";
+import RHFTreeSelect from "@/components/hook-form/RHFTreeSelect";
 import {useSnackbar} from "notistack";
 import {
-    useGetListInviteUserQuery,
-    useInviteUserMutation
+    useDeleteInviteUserMutation,
+    useInviteUserMutation,
+    useResendEmailMutation
 } from "@/sections/organization/override/OverrideOrganizationSlice";
-import OrganizationUserInviteCard from "@/sections/organization/component/OrganizationUserInviteCard";
-import {DialogActionsStyle, DialogStyle, MuiDialogTitle} from "@/components/BaseComponents/ConfirmModal";
+import ConfirmModal, {DialogActionsStyle, DialogStyle, MuiDialogTitle} from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import {LabelStyle} from "@/components/hook-form/style";
+import Iconify from "@/components/Iconify";
+import OrganizationInviteResultCard from "@/sections/organization/component/OrganizationInviteResultCard";
+import OrganizationUserInviteTab from "@/sections/organization/component/OrganizationUserInviteTab";
+import {AlertIcon, EmailInviteIcon} from "@/sections/organization/component/Icon";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -42,7 +46,17 @@ function a11yProps(index) {
 }
 
 const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenInviteForm}) => {
+
     const [valueTab, setValueTab] = useState(0);
+    const [isShowResult, setIsShowResult] = useState(false);
+    const [invitesResult, setInviteResult] = useState([])
+
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [openConfirmResend, setIsOpenConfirmResend] = useState(false);
+    const [itemConfirm, setItemConfirm] = useState({});
+
+    const dataSubmitRef = useRef();
+    const selectRef = useRef();
 
     const onClose = () => {
         setIsOpenInviteForm(false);
@@ -53,6 +67,8 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
     };
 
     const [inviteUser] = useInviteUserMutation();
+    const [deleteInviteUser] = useDeleteInviteUserMutation();
+    const [resendInviteUser] = useResendEmailMutation();
     const {enqueueSnackbar} = useSnackbar();
 
     const defaultValues = {
@@ -80,11 +96,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
         defaultValues,
     });
 
-    const {
-        handleSubmit,
-        control,
-        formState: {isValid}
-    } = methods;
+    const {handleSubmit, control, formState: {isValid}} = methods;
 
     const {fields, append, remove} = useFieldArray({
        control,
@@ -93,24 +105,74 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
 
     const onSubmit = async (data) => {
         const dataSubmit = data.invite;
+        dataSubmitRef.current = dataSubmit;
         try {
-            await inviteUser({organizationUserInvites: dataSubmit}).unwrap();
-            enqueueSnackbar("Mời người dùng thành công!", {
-                autoHideDuration: 1000
-            });
-            setIsOpenInviteForm(false)
+            const res = await inviteUser({organizationUserInvites: dataSubmit}).unwrap();
+            setInviteResult(res?.results)
+            setIsShowResult(true);
         } catch (e) {
             enqueueSnackbar("Mời người dùng không thành công!", {
                 autoHideDuration: 1000,
                 variant: 'error',
             });
+            setIsShowResult(true);
             throw e;
         }
     };
 
+    const handleOpenConfirmDelete = (data) => {
+        setOpenConfirmDelete(true)
+        setItemConfirm(data);
+    };
+    const handleCloseConfirmDelete = () => {
+        setOpenConfirmDelete(false);
+        setItemConfirm({});
+    };
+
+    const handleOpenConfirmResend = (data) => {
+        setIsOpenConfirmResend(true)
+        setItemConfirm(data);
+    };
+
+    const handleCloseConfirmResend = () => {
+        setIsOpenConfirmResend(false);
+        setItemConfirm({});
+    };
+
+    const handleDeleteConfirm = async (data) => {
+        try {
+            await deleteInviteUser({ id: data?.id })
+            handleCloseConfirmDelete();
+            enqueueSnackbar("Xóa lòi mời thành công!", {
+                autoHideDuration: 1000
+            });
+        } catch (e) {
+            enqueueSnackbar("Xóa lòi mời không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+                autoHideDuration: 1000,
+                variant: 'error',
+            });
+            console.log(e);
+        }
+    }
+
+    const handleResendEmailConfirm = async (data) => {
+        try {
+            await resendInviteUser({ id: data?.id })
+            handleCloseConfirmResend();
+            enqueueSnackbar("Gửi yêu cầu active tài khoản thành công!", {
+                autoHideDuration: 1000
+            });
+        } catch (e) {
+            enqueueSnackbar("Gửi yêu cầu active tài khoản không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+                autoHideDuration: 1000,
+                variant: 'error',
+            });
+            console.log(e);
+        }
+    }
+
     const {data: {items: ListRoleGroup = []} = {}, isLoading} = useGetRoleGroupQuery();
-    const {data: {items: ListUserInvite = []} = {}, isLoading: loadingUser} = useGetListInviteUserQuery();
-    if (isLoading || loadingUser) return null;
+    if (isLoading) return <div>loading...</div>;
 
     return (
         <DialogStyle
@@ -120,10 +182,14 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
             aria-describedby="alert-dialog-description"
             className="dialog-confirm"
             maxWidth={"1000px"}
+            scroll={"paper"}
         >
             <MuiDialogTitle onClose={onClose}>
+                {isShowResult && <IconButton edge="start" size={"small"} sx={{ mr: 2 }} onClick={() => setIsShowResult(false)}>
+                    <Iconify icon="material-symbols:arrow-back" />
+                </IconButton>}
                 <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
-                    Mời người dùng
+                    {isShowResult ? 'Kết quả' : 'Mời người dùng'}
                 </Typography>
             </MuiDialogTitle>
             <Divider/>
@@ -175,75 +241,130 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                 </Tabs>
             </Box>
             <TabPanel value={valueTab} index={0}>
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                    <DialogContent sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                        px: 3,
-                        py: 0
-                    }}>
-                        <Box className="box-content-wrapper" sx={{width: '100%'}}>
-                            {fields.map((item, index) => {
-                                return (
-                                    <Box key={item.id} sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        width: '100%',
-                                        backgroundColor: '#F2F4F5',
-                                        padding: 2,
-                                        mb: 2
-                                    }}>
-                                        <Box className="box-content-inner" sx={{flex: 1}}>
-                                            <Box
-                                                sx={{display: 'flex', justifyContent: 'space-between', mb: 2, flex: 1}}>
-                                                <Box sx={{minWidth: '276px'}}>
-                                                    <RHFTextField
-                                                        name={`invite.${index}.email`}
-                                                        isRequired
-                                                        title="Email"
-                                                        placeholder="Nhập email người được mời"
-                                                        sx={{
-                                                            minWidth: '276px',
-                                                            backgroundColor: '#FDFDFD',
-                                                            '& .MuiFormHelperText-root.Mui-error': {
-                                                                backgroundColor: '#F2F4F5',
-                                                                marginTop: 0,
-                                                                paddingTop: 1.5
-                                                            }
-                                                        }}
-                                                    />
-                                                </Box>
-                                                <Box sx={{minWidth: '276px'}}>
-                                                    <RHFTextField
-                                                        name={`invite.${index}.fullName`}
-                                                        isRequired
-                                                        title="Họ và tên"
-                                                        placeholder="Họ và tên người được mời"
-                                                        sx={{
-                                                            minWidth: '276px',
-                                                            backgroundColor: '#FDFDFD',
-                                                            '& .MuiFormHelperText-root.Mui-error': {
-                                                                backgroundColor: '#F2F4F5',
-                                                                marginTop: 0,
-                                                                paddingTop: 1.5
-                                                            }
-                                                        }}
-                                                    />
-                                                </Box>
-                                                <Box sx={{minWidth: '276px'}}>
-                                                    <RHFDropdown
-                                                        options={ListRoleGroup?.map(item => ({
-                                                            ...item,
-                                                            value: item?.id,
-                                                            label: item?.name
+                {
+                    isShowResult ? (
+                        <DialogContent sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            px: 3,
+                            py: 0
+                        }}>
+                            <Box className="box-content-wrapper" sx={{width: '100%'}}>
+                                {invitesResult?.map((item, index) => {
+                                    const userItem = dataSubmitRef.current?.find((field) => field.email === item?.email);
+                                    const roleGroup = ListRoleGroup.find(role => role.id === userItem.roleGroupId);
+                                    const organizations = ListOrganization.filter(organization => userItem?.organizationIds?.includes(organization?.id));
+                                    return (
+                                        <OrganizationInviteResultCard
+                                            key={index}
+                                            item={{
+                                                name: userItem?.fullName,
+                                                email: item?.email,
+                                                roleGroup: roleGroup?.name,
+                                                organizations,
+                                                status: item?.isSucceed || false
+                                            }}
+                                        />
+                                    )
+                                })}
+                            </Box>
+                        </DialogContent>
+                    ) : (
+                        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                            <DialogContent sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                                px: 3,
+                                py: 0
+                            }}>
+                                <Box className="box-content-wrapper" sx={{width: '100%'}}>
+                                    {fields.map((item, index) => {
+                                        return (
+                                            <Box key={item.id} sx={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                width: '100%',
+                                                backgroundColor: '#F2F4F5',
+                                                padding: 2,
+                                                mb: 2
+                                            }}>
+                                                <Box className="box-content-inner" sx={{flex: 1}}>
+                                                    <Box
+                                                        sx={{display: 'flex', justifyContent: 'space-between', mb: 2, flex: 1}}>
+                                                        <Box sx={{minWidth: '276px'}}>
+                                                            <RHFTextField
+                                                                name={`invite.${index}.email`}
+                                                                isRequired
+                                                                title="Email"
+                                                                placeholder="Nhập email người được mời"
+                                                                sx={{
+                                                                    minWidth: '276px',
+                                                                    backgroundColor: '#FDFDFD',
+                                                                    '& .MuiFormHelperText-root.Mui-error': {
+                                                                        backgroundColor: '#F2F4F5',
+                                                                        marginTop: 0,
+                                                                        paddingTop: 1
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                        <Box sx={{minWidth: '276px'}}>
+                                                            <RHFTextField
+                                                                name={`invite.${index}.fullName`}
+                                                                isRequired
+                                                                title="Họ và tên"
+                                                                placeholder="Họ và tên người được mời"
+                                                                sx={{
+                                                                    minWidth: '276px',
+                                                                    backgroundColor: '#FDFDFD',
+                                                                    '& .MuiFormHelperText-root.Mui-error': {
+                                                                        backgroundColor: '#F2F4F5',
+                                                                        marginTop: 0,
+                                                                        paddingTop: 1
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                        <Box sx={{minWidth: '276px'}}>
+                                                            <LabelStyle required>Vai trò</LabelStyle>
+                                                            <RHFSelect
+                                                                options={ListRoleGroup?.map(item => ({
+                                                                    ...item,
+                                                                    value: item?.id,
+                                                                    label: item?.name
+                                                                }))}
+                                                                ref={selectRef}
+                                                                name={`invite.${index}.roleGroupId`}
+                                                                placeholder="Chọn 1 vai trò"
+                                                                sx={{
+                                                                    minWidth: '276px',
+                                                                    backgroundColor: '#FDFDFD',
+                                                                    '& .MuiFormHelperText-root.Mui-error': {
+                                                                        backgroundColor: '#F2F4F5',
+                                                                        marginTop: 0,
+                                                                        paddingTop: 1
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </Box>
+                                                    <RHFTreeSelect
+                                                        options={ListOrganization.map(item => ({
+                                                            id: item.id,
+                                                            value: item.id,
+                                                            label: item.name,
+                                                            parentOrganizationId: item.parentOrganizationId
                                                         }))}
-                                                        name={`invite.${index}.roleGroupId`}
+                                                        name={`invite.${index}.organizationIds`}
                                                         isRequired
-                                                        title="Vai trò"
-                                                        placeholder="Chọn 1 vai trò"
+                                                        title="Đơn vị"
+                                                        multiple
+                                                        placeholder="Chọn 1 hoặc nhiều đơn vị"
                                                         sx={{
                                                             minWidth: '276px',
                                                             backgroundColor: '#FDFDFD',
@@ -255,60 +376,41 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                         }}
                                                     />
                                                 </Box>
+                                                <span style={{marginLeft: 16, display: 'block', padding: 8, cursor: 'pointer'}} onClick={() => remove(index)}>
+                                                    <DeleteIcon/>
+                                                </span>
                                             </Box>
-                                            <TreeMultiSelect
-                                                options={ListOrganization}
-                                                name={`invite.${index}.organizationIds`}
-                                                isRequired
-                                                title="Đơn vị"
-                                                multiple
-                                                placeholder="Chọn 1 hoặc nhiều đơn vị"
-                                                sx={{
-                                                    minWidth: '276px',
-                                                    backgroundColor: '#FDFDFD',
-                                                    '& .MuiFormHelperText-root.Mui-error': {
-                                                        backgroundColor: '#F2F4F5',
-                                                        marginTop: 0,
-                                                        paddingTop: 1.5
-                                                    }
-                                                }}
-                                            />
-                                        </Box>
-                                        <span
-                                            style={{marginLeft: 16, display: 'block', padding: 8, cursor: 'pointer'}}
-                                            onClick={() => remove(index)}
-                                        ><DeleteIcon/>
-                                    </span>
-                                    </Box>
-                                );
-                            })}
-                            <MuiButton
-                                variant="outlined"
-                                title={"Thêm lời mời"}
-                                startIcon={<AddIcon />}
-                                onClick={() => append({ ...defaultValues })}
-                            />
-                        </Box>
-                    </DialogContent>
-                    <DialogActionsStyle sx={{padding: 2}}>
-                        <MuiButton
-                            title={"Hủy"}
-                            color={"basic"}
-                            onClick={onClose}
-                            sx={{
-                                "&:hover": {
-                                    boxShadow: 'none',
-                                    backgroundColor: 'transparent'
-                                }
-                            }}
-                        />
-                        <MuiButton
-                            title={"Gửi lời mời"}
-                            disabled={!isValid || fields.length === 0}
-                            type={"submit"}
-                        />
-                    </DialogActionsStyle>
-                </FormProvider>
+                                        );
+                                    })}
+                                    <MuiButton
+                                        variant="outlined"
+                                        title={"Thêm lời mời"}
+                                        startIcon={<AddIcon />}
+                                        onClick={() => append({ ...defaultValues })}
+                                    />
+                                </Box>
+                            </DialogContent>
+                            <DialogActionsStyle sx={{padding: 2}}>
+                                <MuiButton
+                                    title={"Hủy"}
+                                    color={"basic"}
+                                    onClick={onClose}
+                                    sx={{
+                                        "&:hover": {
+                                            boxShadow: 'none',
+                                            backgroundColor: 'transparent'
+                                        }
+                                    }}
+                                />
+                                <MuiButton
+                                    title={"Gửi lời mời"}
+                                    disabled={!isValid || fields.length === 0}
+                                    type={"submit"}
+                                />
+                            </DialogActionsStyle>
+                        </FormProvider>
+                    )
+                }
             </TabPanel>
             <TabPanel value={valueTab} index={1}><DialogContent sx={{
                 display: 'flex',
@@ -318,20 +420,54 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                 px: 3,
                 py: 0
             }}>
-                <Box className="box-content-wrapper" sx={{width: '100%'}}>
-                    <Box sx={{width: '100%', padding: 2, mb: 2}}>
-                        {ListUserInvite.map((item, index) => {
-                            return (
-                                <OrganizationUserInviteCard
-                                    key={index}
-                                    item={item}
-                                />
-                            )
-                        })}
-                    </Box>
-                </Box>
+                <OrganizationUserInviteTab
+                    onOpenConfirmForm={handleOpenConfirmDelete}
+                    onOpenConfirmResend={handleOpenConfirmResend}
+                />
             </DialogContent>
             </TabPanel>
+            {
+                openConfirmDelete && (
+                    <ConfirmModal
+                        data={itemConfirm}
+                        title={"Xác nhận xóa lời mời"}
+                        icon={<AlertIcon />}
+                        subtitle={<>Bạn có chắc chắn muốn xóa lời mời tới<span>{itemConfirm?.email}</span>?</>}
+                        onClose={handleCloseConfirmDelete}
+                        open={openConfirmDelete}
+                        onSubmit={handleDeleteConfirm}
+                        btnConfirmProps={{
+                            title: 'Xóa',
+                            color: 'error'
+                        }}
+                        btnCancelProps={{
+                            title: 'Hủy'
+                        }}
+                    />
+                )
+            }
+            {
+                openConfirmResend && (
+                    <ConfirmModal
+                        data={itemConfirm}
+                        title={"Xác nhận gửi yêu cầu active tài khoản"}
+                        titleProps={{
+                            color: '#1976D2'
+                        }}
+                        icon={<EmailInviteIcon width={55} height={45} fill={"#1976D2"} />}
+                        subtitle={<>Bạn có chắc chắn muốn gửi yêu cầu active tài khoản tới<span>{itemConfirm?.email}</span>?</>}
+                        onClose={handleCloseConfirmResend}
+                        open={openConfirmResend}
+                        onSubmit={handleResendEmailConfirm}
+                        btnConfirmProps={{
+                            title: 'Gửi',
+                        }}
+                        btnCancelProps={{
+                            title: 'Hủy'
+                        }}
+                    />
+                )
+            }
         </DialogStyle>
     )
 }

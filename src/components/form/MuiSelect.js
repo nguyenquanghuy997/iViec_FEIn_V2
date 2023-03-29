@@ -78,7 +78,12 @@ const MuiSelect = forwardRef((
     const _timeoutFetch = useRef();
     const _selectRef = useRef();
 
-    useImperativeHandle(ref, () => (_selectRef.current));
+    useImperativeHandle(ref, () => {
+        return {
+            ..._selectRef.current,
+            getLabel: () => _selectRef.current?.['aria-label']
+        }
+    });
 
     useEffect(() => {
         if (!remoteUrl) {
@@ -163,6 +168,12 @@ const MuiSelect = forwardRef((
             }
             onChange(changedValue);
         }
+        setTimeout(() => {
+            setFilters({
+                ...filters,
+                SearchKey: ''
+            })
+        }, 500)
     }
 
     const getSelectedItem = (val) => {
@@ -352,6 +363,9 @@ const MuiSelect = forwardRef((
                 "& .MuiSelect-iconOutlined": {
                     display: allowClear && value ? "none" : "",
                 }
+            }}
+            inputProps={{
+                "aria-label": getLabel(value)
             }}
             {...selectProps}
         >
