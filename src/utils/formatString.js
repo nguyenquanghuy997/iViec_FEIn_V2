@@ -78,6 +78,13 @@ export const LIST_STEP_RECRUITMENT = [
   {value: 7, name: "Mời nhận việc"},
 ]
 
+export const LIST_PIPELINESTATE = [
+  {value: 0, name: "Ứng tuyển"},
+  {value: 1, name: "Thi tuyển"},
+  {value: 2, name: "Phỏng vấn"},
+  {value: 3, name: "Kết quả"}
+]
+
 export const LIST_RECRUITMENT_WORKING_FORM = [
   {value: 0, name: "Toàn thời gian", label: "Toàn thời gian"},
   {value: 1, name: "Bán thời gian", label: "Bán thời gian"},

@@ -7,11 +7,11 @@ import {ViewModel} from "@/utils/cssStyles";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Avatar, CircularProgress, Divider, Grid, Modal, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {FormProvider, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {phoneRegExp} from "@/utils/function";
+import {getExtension, phoneRegExp} from "@/utils/function";
 import UploadAvatarApplicant from "@/components/upload/UploadAvatarApplicant";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES} from "@/utils/formatString";
@@ -49,6 +49,7 @@ const defaultValues = {
     address: undefined
   }
 };
+const FileViewer = React.lazy(() => import('react-file-viewer'));
 
 export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isEditMode = !!data?.id;
@@ -61,27 +62,29 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isLoading = isEditMode && !preview.id;
     // form
     const Schema = Yup.object().shape({
-      recruitmentId: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
+      recruitmentId: Yup.string(),
+      recruitmentTitle: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
       recruitmentPipelineStageId: Yup.string(),
       fullName: Yup.string().max(50, "Họ tên không quá 50 ký tự").required("Chưa nhập họ tên"),
       portraitImage: Yup.string(),
       email: Yup.string().email("Email cần nhập đúng định dạng").required("Chưa nhập email"),
       phoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
-      weight: Yup.number(),
-      height: Yup.number(),
+      weight: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      height: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       cvFile: Yup.string(),
-      yearOfExperience: Yup.number(),
+      yearOfExperience: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       experience: Yup.string(),
-      identityNumber: Yup.number(),
+      identityNumber: Yup.string(),
       education: Yup.string(),
-      sex: Yup.number(),
-      maritalStatus: Yup.number(),
+      sex: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      maritalStatus: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       homeTower: Yup.object().shape({
         address: Yup.string()
       }),
       livingAddress: Yup.object().shape({
         address: Yup.string()
-      })
+      }),
+      rawApplicantSkills: Yup.string(),
     });
 
     const methods = useForm({
@@ -98,7 +101,13 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
       formState: {isSubmitting},
     } = methods;
 
+    // if (typeof window !== "undefined") {
+    //   lng = localStorage.getItem("i18nextLng") || defaultLang.value;
+    // }
+
+
     const pressHide = () => {
+      reset();
       setAvatar(undefined);
       setCV(undefined);
       setData(data => ({...data, stage: null}));
@@ -113,7 +122,6 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 2000,
           });
-          location.reload()
           pressHide();
         } catch (err) {
           enqueueSnackbar("Thực hiện thất bại!", {
@@ -127,7 +135,6 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 1000,
           });
-          location.reload()
           pressHide();
         } catch (err) {
           enqueueSnackbar("Thực hiện thất bại!", {
@@ -141,14 +148,29 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     // effect
     useEffect(() => {
       if (!show) return;
-      reset();
       setValue("recruitmentId", data.recruitmentId);
-      setValue("recruitmentPipelineStageId", data.stage);
+      setValue("recruitmentTitle", data.recruitmentTitle);
+      setValue("RecruitmentPipelineStateId", data.stage);
     }, [show]);
 
     useEffect(() => {
       if (!data?.id) return;
-      setValue("name", preview.name);
+      setValue("fullName", preview.fullName);
+      setValue("portraitImage", preview.portraitImage);
+      setValue("phoneNumber", preview.phoneNumber);
+      setValue("email", preview.email);
+      setValue("weight", preview.weight);
+      setValue("height", preview.height);
+      setValue("cvFile", preview.cvFile);
+      setValue("yearOfExperience", preview.yearOfExperience);
+      setValue("experience", preview.experience);
+      setValue("identityNumber", preview.identityNumber);
+      setValue("education", preview.education);
+      setValue("sex", preview.sex);
+      setValue("maritalStatus", preview.maritalStatus);
+      setValue("homeTower.address", preview.homeTower?.address);
+      setValue("livingAddress.address", preview.livingAddress?.address);
+      setValue("rawApplicantSkills", preview.rawApplicantSkills);
     }, [isEditMode, data, preview]);
 
     useEffect(() => {
@@ -209,20 +231,20 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
             </View>
             <Divider/>
             {/* body */}
-            <View style={{minWidth: "600px", height: "100%", overflowY: "auto"}}>
+            <View style={{minWidth: "600px", maxWidth: "1200px", height: "100%", overflowY: "auto"}}>
               {isLoading ? (
                 <View flex="true" contentcenter="true">
                   <CircularProgress/>
                 </View>
               ) : (
-                <Grid container>
-                  <Grid container flexDirection={"column"}>
+                <Grid container flexDirection={"row"} wrap={"nowrap"}>
+                  <Grid container sx={{width: "600px"}} flexDirection={"column"}>
                     <Grid item p={3}>
                       <Grid mb={3}>
                         <RHFTextField
                           title={"Tin tuyển dụng"}
                           isRequired={true}
-                          name={"recruitmentId"}
+                          name={"recruitmentTitle"}
                           disabled
                           placeholder="Nhập tên tin tuyển dụng"
                         />
@@ -381,18 +403,22 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {/*<Divider orientation={"vertical"}/>*/}
-                  {/*<Grid>*/}
-                  {/*  <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">*/}
-                  {/*    <div style={{height: "720px"}}>*/}
-                  {/*      <Viewer*/}
-                  {/*        fileUrl={"http://infolab.stanford.edu/pub/papers/google.pdf"}*/}
-                  {/*      />*/}
-                  {/*    </div>*/}
-                  {/*  </Worker>*/}
-                  {/*</Grid>*/}
+                  {watch('cvFile') && <>
+                    <Divider orientation={"vertical"}/>
+                    <Grid sx={{
+                      minWidth: "580px",
+                      "& .pg-viewer-wrapper": {
+                        overflowY: 'auto'
+                      },
+                    }}>
+                      <Suspense fallback={<div></div>}>
+                        <FileViewer
+                          fileType={getExtension(watch('cvFile'))}
+                          filePath={"http://103.176.149.158:5001/api/File/GetFile?filePath=" + watch('cvFile')}/>
+                      </Suspense>
+                    </Grid>
+                  </>}
                 </Grid>
-
               )}
             </View>
 

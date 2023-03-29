@@ -8,9 +8,7 @@ import Page from "@/components/Page";
 //import {JobTypeItem, useLazyGetAllJobTypeQuery} from "@/sections/jobtype";
 import PageWrapper from "@/components/PageWrapper";
 import {useGetAllApproveProcessQuery} from "@/sections/approve-process/ApproveProcessSlice";
-import {useEffect, useState} from "react";
-//import {useGetAllApproveProcessQuery} from "@/sections/approve-process/ApproveProcessSlice";
-
+import React, {useEffect, useState} from "react";
 ApproveProcess.getLayout = function getLayout({roles = []}, page) {
     return <SettingLayout roles={roles}>{page}</SettingLayout>;
 };
