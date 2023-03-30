@@ -4,6 +4,7 @@ import { TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/DesignSystem/FlexStyled";
 import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
+import { PipelineStateType } from "@/utils/enum";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Typography } from "@mui/material";
@@ -99,7 +100,7 @@ const EditHirePipeline = ({ data, onClose }) => {
     if (!data) return;
     setValue(
       "organizationProfilePipelines",
-      data?.organizationProfilePipelines.organizationProfilePipelines
+      data?.organizationProfilePipelines
     );
   }, [JSON.stringify(data)]);
   return (
@@ -111,7 +112,7 @@ const EditHirePipeline = ({ data, onClose }) => {
               <div style={{ display: "flex", alignItems: "center" }}>
                 <IconRole1 />
                 <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-                  {/* {PipelineStateType(issue?.organizationProfilePipelineType, 1)} */}
+                  {PipelineStateType(issue?.organizationProfilePipelineType)}
                 </Typography>
               </div>
               <RiLock2Line />
@@ -120,6 +121,7 @@ const EditHirePipeline = ({ data, onClose }) => {
             {renderTitle("Mô tả")}
             <TextAreaDS
               maxLength={150}
+              value={data?.organizationProfilePipelines[i].description}
               placeholder="Nhập nội dung mô tả bước tuyển dụng..."
               name={`organizationProfilePipelines.${i}.description`}
             />
@@ -149,7 +151,11 @@ const EditHirePipeline = ({ data, onClose }) => {
         </LoadingButton>
         <div style={{ width: 8 }} />
 
-        <LoadingButton variant="text" sx={{ color: "#455570" }} onClick={onClose}>
+        <LoadingButton
+          variant="text"
+          sx={{ color: "#455570" }}
+          onClick={onClose}
+        >
           {"Hủy"}
         </LoadingButton>
       </div>

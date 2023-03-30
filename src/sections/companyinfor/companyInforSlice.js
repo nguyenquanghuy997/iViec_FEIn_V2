@@ -88,6 +88,16 @@ export const companyServiceApi = createApi({
         params: { ProvinceId: provinceId },
       }),
     }),
+   
+    addOrganizationBusiness: builder.mutation({
+      query: (rest) => ({
+        url: API_ADD_ORGANIZATION_BUSINESS,
+        method: "POST",
+        data: rest,
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
+
     uploadImageCompany: builder.mutation({
       query: (rest) => ({
         url: API_UPLOAD_IMAGE,
@@ -99,15 +109,6 @@ export const companyServiceApi = createApi({
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
-    addOrganizationBusiness: builder.mutation({
-      query: (rest) => ({
-        url: API_ADD_ORGANIZATION_BUSINESS,
-        method: "POST",
-        data: rest,
-      }),
-      invalidatesTags: ["CompanyInfor"],
-    }),
-
     updateCompanyInfo: builder.mutation({
       query: (rest) => ({
         url: `${API_UPDATE_COMPANY_INFOR}/${rest.id}`,

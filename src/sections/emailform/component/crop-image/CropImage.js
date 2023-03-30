@@ -14,10 +14,10 @@ import React, { useState } from "react";
 import Cropper from "react-easy-crop";
 import ImageUploading from "react-images-uploading";
 import {Controller, useFormContext} from "react-hook-form";
-import UploadIcon from "@/assets/UploadIcon";
-import CloseIcon from "@/assets/CloseIcon";
-import SmallIcon from "@/assets/SmallIcon";
-import ResizeIcon from "@/assets/ResizeIcon";
+import UploadIcon from "public/assets/icons/company/UploadIcon";
+import CloseIcon from "public/assets/icons/candidate/CloseIcon";
+// import SmallIcon from "@/assets/SmallIcon";
+// import ResizeIcon from "@/assets/ResizeIcon";
 
 export default function CropImage({ data, handleSubmit }) {
   const [image, setImage] = useState("");
@@ -181,7 +181,7 @@ export default function CropImage({ data, handleSubmit }) {
                     sx={{ mb: 1, width: "210px" }}
                     alignItems="center"
                 >
-                  <SmallIcon />
+                  {/* <SmallIcon /> */}
                   <Slider
                       aria-label="Default"
                       valueLabelDisplay="auto"
@@ -210,7 +210,7 @@ export default function CropImage({ data, handleSubmit }) {
                         },
                       }}
                   />
-                  <ResizeIcon />
+                  {/* <ResizeIcon /> */}
                 </Stack>
                 <div>
                   <Button

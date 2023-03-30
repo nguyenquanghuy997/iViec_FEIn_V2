@@ -8,7 +8,7 @@ import React from "react";
 export default function DetailDrawer({ open, onClose, onOpen }) {
   const list = () => (
     <Box
-      sx={{ width: 600 }}
+      sx={{ width: "600px" }}
       role="presentation"
       // onKeyDown={toggleDrawer(false)}
     >
@@ -34,7 +34,36 @@ export default function DetailDrawer({ open, onClose, onOpen }) {
         </Button>
       </List>
       <Divider />
-      <Typography variant="h4">Nhân viên tuyển dụng</Typography>
+      <Typography variant="h4" sx={{ px: 3, pt: 3 }}>
+        Nhân viên tuyển dụng
+      </Typography>
+      <div style={{ padding: "24px" }}>
+        <span
+          style={{
+            fontSize: 14,
+            fontWeight: 400,
+            margin: "24px 16px 0 0",
+            color: "#5C6A82",
+            width: "160px",
+          }}
+        >
+          Mô tả
+        </span>
+
+        <span
+          style={{
+            fontSize: 14,
+            fontWeight: 500,
+            color: "#172B4D",
+           
+          }}
+        >
+          Lorem ipsum dolor sit amet consectetur. Sed ut enim vitae non eget
+          sociis congue. Orci tristique leo tempus velit tincidunt. Sit cum
+          molestie aenean ante. Condimentum lorem
+        </span>
+        <Divider />
+      </div>
     </Box>
   );
 

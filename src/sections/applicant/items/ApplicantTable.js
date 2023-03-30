@@ -96,7 +96,7 @@ export const ApplicantTable = ({ data, order, onRefreshData }) => {
   //         bgColor={Status ? "#29CB6A" : "#929292"}
   //       />
 
-  //       <Text>{Status ? "Đang hoạt động" : "Dừng hoạt động"}</Text>
+  //       <Text>{Status ? "Đang hoạt động" : "Không hoạt động"}</Text>
   //     </View>
   //   );
   // };

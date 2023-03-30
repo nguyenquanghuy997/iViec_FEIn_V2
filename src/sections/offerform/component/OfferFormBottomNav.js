@@ -55,7 +55,7 @@ function OfferFormBottomNav(props) {
               <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
                 <ActionSwitchUnCheckedIcon/>
               </IconButton>
-              <Typography variant="body2" sx={{color: '#5C6A82', fontSize: 13}}>Dừng hoạt động</Typography>
+              <Typography variant="body2" sx={{color: '#5C6A82', fontSize: 13}}>Không hoạt động</Typography>
             </>)}
           </>}
           {selectedList.length > 1 && <>
@@ -68,7 +68,7 @@ function OfferFormBottomNav(props) {
               <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
                 <ActionSwitchUnCheckedIcon/>
               </IconButton>
-              <Typography variant="body2" sx={{color: '#5C6A82', fontSize: 13}}>Dừng hoạt động</Typography>
+              <Typography variant="body2" sx={{color: '#5C6A82', fontSize: 13}}>Không hoạt động</Typography>
             </>)}
           </>}
           {selectedList.length === 1 && (<Box sx={{ml: 2}}>

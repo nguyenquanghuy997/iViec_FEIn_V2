@@ -217,7 +217,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                 </Stack>
                 <RHFSwitch
                     name="isActive"
-                    label={watchActive ? "Đang hoạt động" : "Dừng hoạt động"}
+                    label={watchActive ? "Đang hoạt động" : "Không hoạt động"}
                 />
               </OrganizationFromFooterStyle>
             </FormProvider>

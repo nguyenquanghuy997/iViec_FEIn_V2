@@ -1,14 +1,14 @@
-import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import { View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { Tooltip } from "@mui/material";
+import { Stack } from "@mui/system";
+
 export const PipelineDraggableItem = ({
   data,
   onPressEdit,
   onPressDelete,
   isDefault,
 }) => {
-
-
   const pressEdit = () => {
     onPressEdit?.();
   };
@@ -35,8 +35,8 @@ export const PipelineDraggableItem = ({
           />
         </View>
 
-        <View flex="true" mh={12} color="#455570">
-          <Text
+        <View flex="true" mh={12} color="#455570" width={"50%"}>
+          <div
             style={{
               fontSize: 13,
               fontWeight: 600,
@@ -45,35 +45,47 @@ export const PipelineDraggableItem = ({
             }}
           >
             {data?.stageType?.name}
-          </Text>
-          <Text style={{ fontSize: 12, color: "#455570" }}>{data?.des}</Text>
+          </div>
+
+          <div
+            style={{
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              fontSize: 12,
+              color: "#455570",
+            }}
+          >
+            {data?.des}
+          </div>
         </View>
 
         <View flexrow="false" atcenter="true">
-          <Tooltip title="Sửa" onClick={pressEdit} mr={12}>
-            <Iconify
-              icon={"ri:edit-2-fill"}
-              width={20}
-              height={20}
-              color="#5C6A82"
-            />
-            </Tooltip>
+          <Tooltip title="Sửa">
+            <Stack onClick={pressEdit} cursor="pointer">
+              <Iconify
+                icon={"ri:edit-2-fill"}
+                width={20}
+                height={20}
+                color="#5C6A82"
+              />
+            </Stack>
+          </Tooltip>
           <Iconify
             icon={"fluent:divider-short-16-filled"}
             width={20}
             height={20}
             color="#A2AAB7"
           />
-          <View ml={12} onclick={pressDelete}>
           <Tooltip title="Xóa">
-            <Iconify
-              icon={"material-symbols:delete-outline-rounded"}
-              width={20}
-              height={20}
-              color="#5C6A82"
-            />
-            </Tooltip>
-          </View>
+            <Stack onClick={pressDelete} cursor="pointer">
+              <Iconify
+                icon={"material-symbols:delete-outline-rounded"}
+                width={20}
+                height={20}
+                color="#5C6A82"
+              />
+            </Stack>
+          </Tooltip>
         </View>
       </View>
     );
@@ -98,7 +110,7 @@ export const PipelineDraggableItem = ({
           />
         </View>
         <View flex="true" ml={12} color="#455570">
-          <Text
+          <div
             style={{
               fontSize: 13,
               fontWeight: 600,
@@ -107,8 +119,8 @@ export const PipelineDraggableItem = ({
             }}
           >
             {data[0]?.name}
-          </Text>
-          <Text style={{ fontSize: 12, color: "#455570" }}>{data[0]?.des}</Text>
+          </div>
+          <div style={{ fontSize: 12, color: "#455570" }}>{data[0]?.des}</div>
         </View>
       </View>
     );

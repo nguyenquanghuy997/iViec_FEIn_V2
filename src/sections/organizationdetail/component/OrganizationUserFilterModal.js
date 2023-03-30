@@ -7,7 +7,7 @@ import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
 import {LIST_STATUS} from "@/utils/formatString";
 import {useRouter} from "next/router";
-import {ApplicantModalFooterStyle, ApplicantModalHeadStyle} from "@/sections/applicant/style";
+import {FilterModalFooterStyle, FilterModalHeadStyle} from "@/sections/applicant/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import OrganizationUserFilterForm from "@/sections/organizationdetail/component/OrganizationUserFilterForm";
@@ -15,7 +15,7 @@ import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 
 function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
   const router = useRouter();
-  const { query, asPath, isReady } = router;
+  const {query, asPath, isReady} = router;
   const defaultValues = {
     isActive: "",
     createdTimeFrom: null,
@@ -31,7 +31,7 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
     defaultValues,
   });
 
-  const { handleSubmit, setValue, formState: {isSubmitting} } = methods;
+  const {handleSubmit, setValue, formState: {isSubmitting}} = methods;
 
   useEffect(() => {
     for (let item in query) {
@@ -48,14 +48,14 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
     isReady && router.push({
       pathname: router.pathname,
       query: {},
-    }, asPath, { shallow: true })
+    }, asPath, {shallow: true})
   }
 
   const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery();
 
   if (isLoadingUser) return (
       <Box textAlign="center" my={1}>
-        <CircularProgress size={100} />
+        <CircularProgress size={100}/>
       </Box>
   )
 
@@ -86,33 +86,33 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
       >
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <ApplicantModalHeadStyle>
+            <FilterModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
-            </ApplicantModalHeadStyle>
+            </FilterModalHeadStyle>
             <Divider/>
             <Box sx={{py: 2, mt: 0}}>
               <Stack sx={{pb: 6, px: 2}}>
                 <OrganizationUserFilterForm
-                  columns={columns}
-                  options={{
-                    isActive: LIST_STATUS,
-                    creatorIds: ListUserFromOrganization
-                  }}
+                    columns={columns}
+                    options={{
+                      isActive: LIST_STATUS,
+                      creatorIds: ListUserFromOrganization
+                    }}
                 />
               </Stack>
             </Box>
-            <ApplicantModalFooterStyle>
+            <FilterModalFooterStyle>
               <Stack flexDirection="row">
                 <MuiButton
-                  type="submit"
-                  loading={isSubmitting}
-                  title="Áp dụng"
-                  onClick={handleSubmit(onSubmit)}
+                    type="submit"
+                    loading={isSubmitting}
+                    title="Áp dụng"
+                    onClick={handleSubmit(onSubmit)}
                 />
                 <MuiButton
                     type="submit"
@@ -120,10 +120,10 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
                     title="Hủy"
                     onClick={handleCloseModal}
                     sx={{
-                        "&:hover": {
-                            backgroundColor: 'transparent',
-                            boxShadow: 'none'
-                        }
+                      "&:hover": {
+                        backgroundColor: 'transparent',
+                        boxShadow: 'none'
+                      }
                     }}
                 />
               </Stack>
@@ -137,11 +137,11 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
                     />
                   }
               />
-            </ApplicantModalFooterStyle>
+            </FilterModalFooterStyle>
           </FormProvider>
         </Scrollbar>
       </Drawer>
-  );
+  )
 }
 
 export default memo(OrganizationUserFilterModal);

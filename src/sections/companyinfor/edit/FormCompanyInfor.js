@@ -19,21 +19,18 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Divider, InputLabel, Stack, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useSnackbar } from "notistack";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-const InputStyle = { width: 265, minHeight: 40 };
+const InputStyle = { width: "100%", minHeight: 40 };
 const Editor = dynamic(() => import("./editor"), {
   ssr: false,
 });
 
 const FormCompanyInfor = ({ data, onClose }) => {
-  const refAvatar = useRef(null);
-  const refBackground = useRef(null);
-
-  const [image, setImage] = useState(data?.organizationInformation.avatar);
-  const [bg, setBg] = useState(data?.organizationInformation.coverPhoto);
+  const [image, setImage] = useState(null);
+  const [bg, setBg] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imageBg, setImageBg] = useState(null);
   const imageHandler = (e) => {
@@ -94,6 +91,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const {
     setValue,
     setError,
+    register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
@@ -125,8 +123,8 @@ const FormCompanyInfor = ({ data, onClose }) => {
       if (imageRes) {
         const res = {
           id: data?.organizationInformation?.id,
-          avatar: imageRes?.data,
-          coverPhoto: bgRes?.data,
+          avatar: imageRes?.data || data?.organizationInformation?.avatar,
+          coverPhoto: bgRes?.data || data?.organizationInformation?.coverPhoto,
           provinceId: d.provinceId,
           districtId: d.districtId,
           address: d.address,
@@ -167,12 +165,15 @@ const FormCompanyInfor = ({ data, onClose }) => {
   //   }
   useEffect(() => {
     if (!data) return;
-    refAvatar.current = data.organizationInformation.avatar;
-    refBackground.current = data.organizationInformation.coverPhoto;
     setDescription(data.organizationInformation.description);
-
     setValue("jobCategoryIds", data.organizationInformation.jobCategoryIds);
     setValue("organizationSize", data.organizationInformation.organizationSize);
+    setImage(
+      `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${data?.organizationInformation?.avatar}`
+    );
+    setBg(
+      `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${data?.organizationInformation?.coverPhoto}`
+    );
   }, [JSON.stringify(data)]);
 
   return (
@@ -209,14 +210,14 @@ const FormCompanyInfor = ({ data, onClose }) => {
         </Box>
         <Stack>
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            Ảnh đại diện
+            Ảnh đại diện <span style={{ color: "#5C6A82" }}>(142x142px)</span>
           </Typography>
 
           <Box>
             <EditUpload
               image={image}
               imageHandler={imageHandler}
-              ref={refAvatar}
+              ref={{ ...register("avatar") }}
               type="avatar"
               style={{
                 width: 120,
@@ -230,12 +231,12 @@ const FormCompanyInfor = ({ data, onClose }) => {
         </Stack>
         <Stack sx={{ py: 3 }}>
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            Ảnh nền
+            Ảnh nền <span style={{ color: "#5C6A82" }}>(1372x249px)</span>
           </Typography>
           <Box>
             <EditUpload
               image={bg}
-              ref={refBackground}
+              ref={{ ...register("coverPhoto") }}
               imageHandler={handleImage}
               style={{
                 width: "100%",
@@ -249,7 +250,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
         <Divider />
         <Stack direction="row" justifyContent="space-between" sx={{ my: 2.5 }}>
           <Box sx={{ mb: 2, width: "100%", mr: "4%" }}>
-            <Typography sx={{ fontSize: 14 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
               Số điện thoại <span style={{ color: "red" }}> *</span>
             </Typography>
             <RHFTextField
@@ -260,7 +261,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
             />
           </Box>
           <Box sx={{ mb: 2, width: "100%" }}>
-            <Typography sx={{ fontSize: 14 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
               Email <span style={{ color: "red" }}> *</span>
             </Typography>
             <RHFTextField
@@ -291,9 +292,9 @@ const FormCompanyInfor = ({ data, onClose }) => {
             />
           </div>
         </Stack>
-        <Stack direction="row" justifyContent="space-between" sx={{ my: 2.5 }}>
+        <Stack direction="row" sx={{ my: 2.5, width: "50%" }}>
           <div style={{ ...InputStyle }}>
-            <Typography sx={{ fontSize: 14 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
               Quy mô nhân sự <span style={{ color: "red" }}> *</span>
             </Typography>
             <RHFDropdown
@@ -313,47 +314,40 @@ const FormCompanyInfor = ({ data, onClose }) => {
         <Divider />
 
         <Stack
-          direction="row"
-          justifyContent="space-between"
-          sx={{ mb: 2.5, mt: 2.5 }}
+        direction="row" justifyContent="space-between" sx={{ my: 2.5 }}
         >
-          <Stack>
-            <div style={{ ...InputStyle }}>
-              <Typography sx={{ fontSize: 14 }}>
-                Tỉnh/Thành phố <span style={{ color: "red" }}> *</span>
-              </Typography>
-              <RHFDropdown
-                options={ProviceList.map((i) => ({
-                  value: i.id,
-                  label: i.name,
-                  name: i.name,
-                }))}
-                name="provinceId"
-                multiple={false}
-                placeholder="Chọn Tỉnh/Thành phố"
-                required
-              />
-            </div>
+          <Stack sx={{ minHeight: "44px", width: "49%" }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              Tỉnh/Thành phố <span style={{ color: "red" }}> *</span>
+            </Typography>
+            <RHFDropdown
+              options={ProviceList.map((i) => ({
+                value: i.id,
+                label: i.name,
+                name: i.name,
+              }))}
+              name="provinceId"
+              multiple={false}
+              placeholder="Chọn Tỉnh/Thành phố"
+              required
+            />
           </Stack>
-          <Stack>
-            <div style={{ ...InputStyle }}>
-              <Typography sx={{ fontSize: 14 }}>
-                Quận/Huyện <span style={{ color: "red" }}> *</span>
-              </Typography>
-              <RHFDropdown
-                options={DistrictList.map((i) => ({
-                  value: i.id,
-                  label: i.name,
-                  name: i.name,
-                }))}
-                style={{ ...InputStyle }}
-                name="districtId"
-                multiple={false}
-                disabled={!watchProvinceId}
-                placeholder="Chọn Quận/Huyện"
-                required
-              />
-            </div>
+          <Stack sx={{ minHeight: "44px!important", width: "49%" }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              Quận/Huyện <span style={{ color: "red" }}> *</span>
+            </Typography>
+            <RHFDropdown
+              options={DistrictList.map((i) => ({
+                value: i.id,
+                label: i.name,
+                name: i.name,
+              }))}
+              name="districtId"
+              multiple={false}
+              disabled={!watchProvinceId}
+              placeholder="Chọn Quận/Huyện"
+              required
+            />
           </Stack>
         </Stack>
 

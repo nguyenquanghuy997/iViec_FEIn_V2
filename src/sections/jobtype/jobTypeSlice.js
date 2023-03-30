@@ -2,19 +2,21 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_ADD_JOBTYPE,
   API_DELETE_JOBTYPE,
-  API_GET_APPLICANT_USERS_ON_JOBTYPE, API_GET_DETAIL_JOB_POSITION,
+  API_GET_APPLICANT_USERS_ON_JOBTYPE, API_GET_COLUMN_JOBTYPE, API_GET_DETAIL_JOB_POSITION,
   API_GET_PAGING_JOBTYPE,
   API_GET_PREVIEW_JOBTYPE,
+  API_UPDATE_COLUMN_JOBTYPE,
   API_UPDATE_JOBTYPE,
   API_UPDATE_STATUS_JOBTYPE,
 } from "@/routes/api";
 import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["JobPosition", "Filter"],
+  addTagTypes: ["JobPosition", "GetColumn"],
 });
 
 const evaluationFormSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     //Danh sách vị trí
     getAllJobType: builder.query({
@@ -82,6 +84,22 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["JobPosition"],
     }),
+    //settings
+    getListColumns: builder.query({
+      query: () => ({
+        url: API_GET_COLUMN_JOBTYPE,
+        method: "GET",
+      }),
+      providesTags: ["GetColumn"],
+    }),
+    updateListColumns: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_COLUMN_JOBTYPE}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+      invalidatesTags: ["GetColumn"],
+    }),
   }),
 });
 
@@ -95,4 +113,6 @@ export const {
   useDeleteJobTypeMutation,
   useAddJobTypeMutation,
   useUpdateJobTypeMutation,
+  useGetListColumnsQuery,
+  useUpdateListColumnsMutation
 } = evaluationFormSlice;
