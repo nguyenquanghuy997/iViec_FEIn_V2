@@ -26,7 +26,7 @@ const MuiTextField = forwardRef((props, ref) => {
         width: '100%',
         maxWidth: '100%',
         "& .MuiInputBase-root": {
-            height: multiline ? 'auto' : height,
+            minHeight: multiline ? 'auto' : height,
         },
         '& .MuiInputBase-multiline': {
             padding: '4px 8px',

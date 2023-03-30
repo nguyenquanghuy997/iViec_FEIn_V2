@@ -25,6 +25,8 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import {DeleteIcon, EditIcon} from "@/assets/ActionIcon";
 import OrganizationDetailUserForm from "@/sections/organizationdetail/component/OrganizationDetailUserForm";
+import {API_GET_RECRUITMENT_BY_ORGANIZATION} from "@/routes/api";
+import {useRouter} from "next/router";
 
 const defaultValues = {
   searchKey: "",
@@ -76,12 +78,15 @@ const columns = [
     name: "applicationUserRoleGroups",
     label: "Vai trò",
     placeholder: "Chọn 1 hoặc nhiều vai trò",
+    remoteUrl: API_GET_RECRUITMENT_BY_ORGANIZATION,
     type: "select",
     multiple: true,
   },
 ];
 
 const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) => {
+  const router = useRouter();
+  const { asPath } = router;
   const dispatch = useDispatch();
 
   const [selected, setSelected] = useState([]);
@@ -137,8 +142,13 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
     return data;
   };
 
-  const onSubmit = async (data) => {
-    return data;
+  const onSubmit = (data) => {
+    return router.push({
+      pathname: router.pathname,
+      query: {
+        isActive: data.isActive
+      },
+    }, asPath, { shallow: true })
   };
 
   const handleSelected = (data) => {

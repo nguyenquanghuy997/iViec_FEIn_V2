@@ -1,8 +1,7 @@
-import {RHFCheckbox} from "@/components/hook-form";
-import {Box, Button, Divider, Typography} from "@mui/material";
+import {RHFCheckbox, RHFSelect} from "@/components/hook-form";
+import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-create/style";
 import DividerCard from "@/sections/recruitment-create/component/DividerCard";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
 import {BoxFlex} from "@/sections/emailform/style";
 import RecruitmentPipelineCard from "@/sections/recruitment-create/component/other/RecruitmentPipelineCard";
@@ -16,6 +15,8 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 import {isEmpty} from "lodash";
+import {LabelStyle} from "@/components/hook-form/style";
+import React from "react";
 
 const RecruitmentPipeLine = ({examinationFormValue, setValue, watchOrganization, watchOrganizationPipelineId, onClearDataExaminationForm, onSetValuePipelineExamination}) => {
   const dispatch = useDispatch();
@@ -30,17 +31,21 @@ const RecruitmentPipeLine = ({examinationFormValue, setValue, watchOrganization,
   };
   const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
 
-  const {
-    data: {items: ListPipeline = []} = {},
-    isLoading
-  } = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
-  const {
-    data: {organizationPipelineStates: ListStepPipeline = []} = {},
-    isLoading: loadingPipe
-  } = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
+  const {data: {items: ListPipeline = []} = {}, isLoading} = useGetAllPipelineByOrganizationQuery({OrganizationId: watchOrganization});
+  const {data: {organizationPipelineStates: ListStepPipeline = []} = {}, isLoading: loadingStep} = useGetAllStepOfPipelineQuery({Id: watchOrganizationPipelineId}, {skip: !watchOrganizationPipelineId});
 
 
-  if (isLoading || loadingPipe) return <div>Loading...</div>;
+  if (isLoading) return (
+      <Box textAlign="center" my={1}>
+        <CircularProgress size={48} />
+      </Box>
+  )
+
+  if (loadingStep) return (
+      <Box textAlign="center" my={1}>
+        <CircularProgress size={48} />
+      </Box>
+  )
 
   return (
       <BoxWrapperStyle className="wrapper">
@@ -48,11 +53,10 @@ const RecruitmentPipeLine = ({examinationFormValue, setValue, watchOrganization,
           <BoxInnerStyle>
             <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
             <Box sx={{px: 4, py: 3}}>
-              <RHFDropdown
+              <LabelStyle required>Quy trình tuyển dụng có sẵn</LabelStyle>
+              <RHFSelect
                   name="organizationPipelineId"
-                  title="Quy trình tuyển dụng có sẵn"
                   placeholder="Chọn 1 quy trình tuyển dụng"
-                  isRequired
                   fullWidth
                   options={ListPipeline.map(item => ({
                     id: item.id,

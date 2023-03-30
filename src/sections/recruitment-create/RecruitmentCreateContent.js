@@ -11,7 +11,6 @@ import {BoxFlex} from "@/sections/emailform/style";
 import {DraftIcon, OrangeAlertIcon, SendIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
 import RecruitmentInformation from '@/sections/recruitment-create/component/other/RecruitmentInformation';
 import RecruitmentPipeLine from '@/sections/recruitment-create/component/other/RecruitmentPipeLine';
-import RecruitmentChannel from '@/sections/recruitment-create/component/other/RecruitmentChannel';
 import {useForm, useWatch} from "react-hook-form";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -189,7 +188,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
         setValue('jobPositionId', Recruitment?.jobPosition?.id)
         setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({...item, value: item?.councilUserId, label: item.email || item.councilName})))
         setValue('coOwnerIds', Recruitment?.coOwners?.map(item => ({...item, value: item?.id, label: item.email || item.name})))
-        setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({...item, value: item?.id, label: item?.name})))
+        setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({...item, value: item?.languageId, label: item?.name})))
         setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
         setValue('currencyUnit', Recruitment?.currencyUnit);
         setOrganizationPipelineStateDatas(Recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => ({...item, value: item?.id, label: item?.name})))
@@ -381,9 +380,9 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                       setValue={setValue}
                   />
                 </TabPanel>
-                <TabPanel value="3">
-                  <RecruitmentChannel/>
-                </TabPanel>
+                {/*<TabPanel value="3">*/}
+                {/*  <RecruitmentChannel/>*/}
+                {/*</TabPanel>*/}
               </View>
             </Content>
           </TabContext>

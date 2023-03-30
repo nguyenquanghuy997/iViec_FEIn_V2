@@ -16,13 +16,12 @@ export const masterDataSlice = apiWithTag.injectEndpoints({
                     params: {...defaultParams, ...params}
                 }
             },
-            transformResponse: (response) => {
-                return response?.items.map(item => ({
-                    ...item,
-                    value: item.id,
-                    label: item.name,
-                }))
-            },
+            // transformResponse: (response) => {
+            //     return response?.items.map(item => ({
+            //         value: item.id,
+            //         label: item.name,
+            //     }))
+            // },
         }),
         getListCandidateLevels: builder.query({
             query: (params) => {
@@ -35,7 +34,6 @@ export const masterDataSlice = apiWithTag.injectEndpoints({
             },
             transformResponse: (response) => {
                 return response?.items.map(item => ({
-                    ...item,
                     value: item.id,
                     label: item.name,
                 }))
