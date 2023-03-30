@@ -36,6 +36,7 @@ export const SliderStyle = styled("div")(() => ({
 const BusinessArea = () => {
   const { data: Data } = useGetCompanyInfoQuery();
   const [open, setOpen] = useState();
+  const [seeData, setSeeData] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
@@ -126,8 +127,6 @@ const BusinessArea = () => {
                       className="slide"
                       style={{
                         height: "170px",
-                        // background: "#364d79",
-                        overflow: "hidden",
                       }}
                     >
                       <hr
@@ -147,9 +146,25 @@ const BusinessArea = () => {
                       >
                         {item?.name}
                       </p>
-                      <p style={{ fontWeight: 500, fontSize: 14, height:'76px', overflow:'hidden' }}>
+                      <p
+                        style={{
+                          fontWeight: 500,
+                          fontSize: 14,
+                          overflow: !seeData ? "hidden" : "visible",
+                          lineHeight: "1.5em",
+                          height: seeData ? "auto" : "3.6em",
+                        }}
+                      >
                         {item?.description}
                       </p>
+                      <button
+                        onClick={() => setSeeData(!seeData)}
+                        style={{ border: "none", background: "none" }}
+                      >
+                        <p style={{ fontSize: 14, fontWeight: 700, color:'white' }}>
+                          {seeData ? "Thu ngắn" : "... Xem thêm"}
+                        </p>
+                      </button>
                     </div>
                   </SwiperSlide>
                 )

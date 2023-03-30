@@ -1,5 +1,5 @@
-import MenuIcon from "@/assets/interview/MenuIcon";
 import UploadImage from "@/assets/UploadImage";
+import MenuIcon from "@/assets/interview/MenuIcon";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import Image from "@/components/Image";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
@@ -14,6 +14,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import * as Yup from "yup";
 
 const InputStyle = { width: "100%", minHeight: 40, background: "white" };
@@ -26,7 +27,6 @@ const EditHumanCompany = ({ onClose }) => {
 
   const [imageFile, setImageFile] = useState([]);
   const [image, setImage] = useState([]);
-  // const [imageArray, setImageArray] = useState([]);
 
   const handleChange = (e) => {
     setImageFile([...imageFile, ...e.target.files]);
@@ -66,14 +66,14 @@ const EditHumanCompany = ({ onClose }) => {
     formState: { errors, isSubmitting, isValid },
   } = methods;
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "organizationHumans",
   });
 
   const onSubmit = async (d) => {
     const formData = new FormData();
-    const listImage = d?.organizationHumans.map((item) => item.avatar["0"]);
+    const listImage = d?.organizationHumans.map((item) => item.avatar[0]);
     const promies = listImage.map((file) => {
       formData.append("avatar", file);
       return uploadImage({
@@ -119,6 +119,12 @@ const EditHumanCompany = ({ onClose }) => {
   useEffect(() => {
     if (!Data) return;
     setValue("organizationHumans", Data?.organizationHumans);
+    setImage(
+      Data?.organizationHumans.map(
+        (item) =>
+          `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.avatar}`
+      )
+    );
   }, [JSON.stringify(Data)]);
 
   return (
@@ -147,11 +153,7 @@ const EditHumanCompany = ({ onClose }) => {
               <Image
                 disabledEffect
                 visibleByDefault
-                src={
-                  Data?.organizationHumans[index]?.avatar
-                    ? `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationHumans[index]?.avatar}`
-                    : image[index]?.uploaded_file
-                }
+                src={image[index]?.uploaded_file}
                 id={index}
                 alt="image"
                 sx={{
@@ -161,41 +163,62 @@ const EditHumanCompany = ({ onClose }) => {
                   px: 2,
                 }}
               />
+
               <Box>
-                <Button
-                  sx={{
-                    textTransform: "none",
-                    border: "1px dashed #1976D2",
-                    height: 36,
-                    px: 2,
-                    mb: 4,
-                    cursor: "pointer",
-                  }}
-                >
-                  <UploadImage />
-                  <Typography sx={{ ml: 1, fontSize: 14 }}>
-                    Tải lên ảnh
-                  </Typography>
-                  <input
-                    hidden
-                    accept="image/*"
-                    id="image"
-                    type="file"
-                    {...register(`organizationHumans.${index}.avatar`)}
-                    onChange={handleChange}
+                <Box sx={{ display: "flex" }}>
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                      height: 36,
+                      mb: 3,
+                      cursor: "pointer",
+                      width: "350px",
+                      "&:hover": {
+                        background: "transparent",
+                      },
+                      "&:focus": {
+                        background: "transparent",
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        border: "1px dashed #1976D2",
+                        display: "flex",
+                        alignItems: "center",
+                        px: 2,
+                        py: 1,
+                        borderRadius: "4px",
+                        width: "160px",
+                      }}
+                    >
+                      <UploadImage />
+                      <Typography sx={{ ml: 1, fontSize: 14 }}>
+                        Tải lên ảnh
+                      </Typography>
+                    </Box>
+                    <input
+                      // hidden
+                      accept="image/*"
+                      id="image"
+                      type="file"
+                      {...register(`organizationHumans.${index}.avatar`)}
+                      onChange={handleChange}
+                      style={{
+                        // height: "36px",
+                        transform: "translateX(-120px)",
+                        opacity: 0,
+
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Button>
+                  <RiDeleteBin6Line
+                    color="#E53935"
+                    onClick={() => remove(index)}
+                    cursor="pointer"
                   />
-                </Button>
-                {/* <input
-                  
-                  onChange={handleChange}
-                  style={{
-                    height: "36px",
-                    transform: "translateX(-120px)",
-                    opacity: 0,
-                    width: "150px",
-                    cursor: "pointer",
-                  }}
-                /> */}
+                </Box>
                 <Stack sx={{ mb: 3 }}>
                   <RHFTextField
                     name={`organizationHumans.${index}.name`}
@@ -219,7 +242,7 @@ const EditHumanCompany = ({ onClose }) => {
         })}
         <Button
           variant="outlined"
-          sx={{ textTransform: "none", width: "95%", mx: 3, my: 3 }}
+          sx={{ textTransform: "none", width: "93%", mx: 3, mb: "100px" }}
           disabled={!isValid}
           onClick={() => {
             append({ ...defaultValues });

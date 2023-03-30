@@ -13,7 +13,7 @@ export default function DrawerEdit({ dataForm }) {
   };
   const list = () => (
     <Box
-      sx={{ width: 600 }}
+      sx={{ width: 800 }}
       role="presentation"
       // onKeyDown={toggleDrawer(false)}
     >
