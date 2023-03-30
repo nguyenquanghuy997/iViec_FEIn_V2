@@ -394,34 +394,6 @@ export const ApplicantItem = () => {
     ];
   }, [page, paginationSize]);
 
-  const menuItemText = {
-    name: "Họ và tên",
-    phoneNumber: "Số điện thoại",
-    dateOfBirth: "Ngày sinh",
-    email: "Email",
-    recruitment: "Tin tuyển dụng",
-    recruitmentPipelineState: "Bước tuyển dụng",
-    createdTime: "Ngày ứng tuyển",
-    organization: "Tổ chức",
-    jobSource: "Nguồn",
-    council: "Hội đồng",
-    creator: "Cán bộ tạo ứng viên",
-    education: "Học vấn",
-    applicantWorkingExperiences: "Kinh nghiệm làm việc",
-    jobCategory: "Ngành nghề",
-    yearOfExperience: "Số năm kinh nghiệm",
-    applicantSkills: "Kỹ năng",
-    identityNumber: "Số CCCD/CMND",
-    sex: "Giới tính",
-    maritalStatus: "Tình trạng hôn nhâ",
-    height: "Chiều cao",
-    weight: "Cân nặng",
-    expectedWorkingAddress: "Nơi làm việc mong muốn",
-    expectedSalary: "Mức lương mong muốn",
-    livingAddress: "Nơi ở hiện tại",
-    homeTower: "Quê quán",
-  };
-
   const handleUpdateListColumnApplicants = async () => {
     var body = {
       recruitment: false,
@@ -481,7 +453,6 @@ export const ApplicantItem = () => {
             source={Data}
             loading={isLoading}
             ColumnData={ColumnData}
-            menuItemText={menuItemText}
             UpdateListColumn={handleUpdateListColumnApplicants}
             settingName={"DANH SÁCH ỨNG VIÊN"}
             scroll={{ x: 6500 }}

@@ -4,8 +4,6 @@ import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material
 import PropTypes from "prop-types";
 import * as Yup from "yup";
 import {useForm, useWatch} from "react-hook-form";
-import {alpha, styled} from "@mui/material/styles";
-import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
@@ -13,8 +11,8 @@ import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
 import {
-    ApplicantModalFooterStyle,
-    ApplicantModalHeadStyle,
+    FilterModalFooterStyle,
+    FilterModalHeadStyle,
     ButtonCancelStyle,
     HelperTextTypography
 } from "@/sections/applicant/style";
@@ -31,18 +29,8 @@ import {
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, LIST_STEP_RECRUITMENT} from "@/utils/formatString";
 import {useGetRecruitmentByOrganizationIdQuery} from "@/sections/applicant/ApplicantFormSlice";
 import Scrollbar from "@/components/Scrollbar";
+import { GreenSwitch } from "@/utils/cssStyles";
 
-const GreenSwitch = styled(Switch)(({theme}) => ({
-    "& .MuiSwitch-switchBase.Mui-checked": {
-        color: "#388E3C",
-        "&:hover": {
-            backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
-        },
-    },
-    "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-        backgroundColor: "#388E3C",
-    },
-}));
 
 ApplicantFilterModal.propTypes = {
     columns: PropTypes.array, isOpen: PropTypes.bool, onClose: PropTypes.func, onSubmit: PropTypes.func,
@@ -341,14 +329,14 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
         >
             <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <ApplicantModalHeadStyle>
+                <FilterModalHeadStyle>
                     <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                         Bộ lọc
                     </Typography>
                     <IconButton size="small" onClick={onClose} sx={{mr: -1}}>
                         <Iconify icon="ic:baseline-close"/>
                     </IconButton>
-                </ApplicantModalHeadStyle>
+                </FilterModalHeadStyle>
                 <Divider/>
                 <Box sx={{py: 2, mt: 0}}>
                     <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
@@ -381,7 +369,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
                         />
                     </Stack>
                 </Box>
-                <ApplicantModalFooterStyle>
+                <FilterModalFooterStyle>
                     <Stack flexDirection="row">
                         <ButtonDS
                             type="submit"
@@ -402,7 +390,7 @@ function ApplicantFilterModal({columns, isOpen, onClose, onSubmit}) {
                             />
                         }
                     />
-                </ApplicantModalFooterStyle>
+                </FilterModalFooterStyle>
             </FormProvider>
             </Scrollbar>
         </Drawer>

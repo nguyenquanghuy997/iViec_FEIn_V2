@@ -1,9 +1,8 @@
 import InForIcon from "../../assets/InforIcon";
 import {FormProvider} from "@/components/hook-form";
 import {ConnectCardStyle} from "@/sections/connect/style";
-import {Box, Card, Divider, FormControlLabel, Grid, Switch, Tooltip, Typography} from "@mui/material";
+import {Box, Card, Divider, FormControlLabel, Grid, Tooltip, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import {alpha, styled} from "@mui/material/styles";
 import React, {useState} from "react";
 import {Controller, useForm, useFormContext} from "react-hook-form";
 import {DeleteIconGrey, EditIcon, PreviewIcon} from "@/assets/ActionIcon";
@@ -17,16 +16,8 @@ import {
   useDeleteApproveProcessMutation, useUpdateApproveProcessMutation
 } from "@/sections/approve-process/ApproveProcessSlice";
 import {useSnackbar} from "notistack";
+import { GreenSwitch } from "@/utils/cssStyles";
 
-const GreenSwitch = styled(Switch)(({theme}) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C", "&:hover": {
-      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
-    },
-  }, "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
 
 const SwitchForm = ({name, handleChange, style, value, ...other}) => {
   const {control} = useFormContext();

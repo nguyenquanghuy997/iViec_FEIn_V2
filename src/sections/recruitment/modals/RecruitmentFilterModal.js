@@ -12,8 +12,8 @@ import {FormProvider} from "@/components/hook-form";
 
 import {useRouter} from "next/router";
 import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
+  FilterModalFooterStyle,
+  FilterModalHeadStyle,
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
@@ -112,14 +112,14 @@ function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
       >
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <ApplicantModalHeadStyle>
+            <FilterModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
-            </ApplicantModalHeadStyle>
+            </FilterModalHeadStyle>
             <Box sx={{py: 2, mt: 0}}>
               <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
               <Stack sx={{pb: 3, px: 2}}>
@@ -136,7 +136,7 @@ function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
                 /> */}
               </Stack>
             </Box>
-            <ApplicantModalFooterStyle>
+            <FilterModalFooterStyle>
               <Stack flexDirection="row">
                 <ButtonDS
                     type="submit"
@@ -147,7 +147,7 @@ function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
                 />
                 <ButtonCancelStyle onClick={handleCloseModal}>Bỏ lọc</ButtonCancelStyle>
               </Stack>
-            </ApplicantModalFooterStyle>
+            </FilterModalFooterStyle>
           </FormProvider>
         </Scrollbar>
       </Drawer>

@@ -12,7 +12,6 @@ const PipelineHeader = ({
   onOpenFilterForm,
   onSubmit,
   handleSubmit,
-  onRefreshData
 }) => {
   const [showForm, setShowForm] = useState(false);
   return (
@@ -63,7 +62,7 @@ const PipelineHeader = ({
             textTransform: "none",
             boxShadow: "none",
           }}
-           onClick={() => setShowForm(true)}
+          onClick={() => setShowForm(true)}
           icon={
             <Iconify
               icon={"material-symbols:add"}
@@ -75,7 +74,7 @@ const PipelineHeader = ({
           }
         />
       </Stack>
-      <PipelineFormModal show={showForm} setShow={setShowForm} onRefreshData={onRefreshData}/>
+      <PipelineFormModal show={showForm} onClose={()=>setShowForm(false)}/>
     </>
   );
 };

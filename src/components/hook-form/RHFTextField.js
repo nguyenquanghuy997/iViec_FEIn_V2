@@ -5,6 +5,7 @@ import MuiTextField from "@/components/form/MuiTextField";
 function RHFTextField({
   name,
   beforeChange,
+  maxLength,
   ...other
 }) {
   const { control } = useFormContext();
@@ -23,6 +24,9 @@ function RHFTextField({
               {...field}
               error={!!error}
               helperText={error?.message}
+              inputProps={{
+                maxLength: maxLength,
+              }}
               {...other}
             />
           </>
