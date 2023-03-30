@@ -170,7 +170,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
           (i) =>
             i.pipelineStateType != 0 && {
               stageType: {
-                id: i.pipelineStateType,
+                id: i.pipelineStateType == 1 ? 0: 1,
                 name: PipelineStateType(i.pipelineStateType),
               },
               des: i.description,

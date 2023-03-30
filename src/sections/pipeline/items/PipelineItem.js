@@ -49,7 +49,7 @@ export const PipelineItem = () => {
     JSON.stringify(cleanObject(dataFilter))
   );
   // api get list Column
-  const { data: {items: ColumnData} } = useGetListColumnApplicantsQuery();
+  const { data: {items: ColumnData =[]}={} } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
