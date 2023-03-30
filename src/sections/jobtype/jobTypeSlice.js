@@ -98,7 +98,6 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      providesTags: ["UpdateColumn"],
       invalidatesTags: ["GetColumn"],
     }),
   }),

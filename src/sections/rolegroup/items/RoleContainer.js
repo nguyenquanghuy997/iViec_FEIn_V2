@@ -10,11 +10,8 @@ import TextMaxLine from "@/components/TextMaxLine";
 import { filterSlice } from "@/redux/common/filterSlice";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
-  useGetListColumnApplicantsQuery,
-  useUpdateListColumnApplicantsMutation,
-} from "@/sections/applicant";
-import {
-  useGetRoleGroupListQuery,
+  useGetListColumnsQuery,
+  useGetRoleGroupListQuery, useUpdateListColumnsMutation,
 } from "@/sections/rolegroup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Typography } from "@mui/material";
@@ -34,9 +31,9 @@ export const RoleContainer = () => {
   const { data, isLoading } = useGetRoleGroupListQuery();
   const dispatch = useDispatch();
   // const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
+  const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
   const dataFilter = useSelector((state) => state.filterReducer.data);
-  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+  const [updateListColumn] = useUpdateListColumnsMutation();
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
@@ -57,7 +54,7 @@ export const RoleContainer = () => {
       title: "STT",
       key: "index",
       align: "center",
-      render: ( index, page, paginationSize) => (
+      render: (item, record, index, page, paginationSize) => (
         <>{(page - 1) * paginationSize + index + 1}</>
       ),
       width: "8%",
@@ -130,24 +127,6 @@ export const RoleContainer = () => {
       ),
     },
   ];
-
-  const menuItemText = {
-    name: "Vị trí công việc",
-    organizationName: "Đơn vị",
-    numberOfRecruitmentApplied: "Số tin áp dụng",
-    isActivated: "Trạng thái",
-    createdTime: "Ngày tạo",
-    creatorName: "Người tạo",
-  };
-
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
 
   // form search
   const Schema = Yup.object().shape({
@@ -230,6 +209,8 @@ export const RoleContainer = () => {
   // };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
+  const [columnsTable, setColumnsTable] = useState([]);
+
   // const [showDelete, setShowDelete] = useState(false);
   // const [showMultipleDelete, setShowMultipleDelete] = useState(false);
   // const [actionTypeActive, setActionTypeActive] = useState(0) 
@@ -244,16 +225,17 @@ export const RoleContainer = () => {
           columns={columns}
           source={data}
           loading={isLoading}
-          ColumnData={ColumnData}
-          menuItemText={menuItemText}
-          UpdateListColumn={handleUpdateListColumnApplicants}
+          ColumnData={ColumnData[0]}
           settingName={"DANH SÁCH VAI TRÒ"}
           isSetting={true}
-          nodata="Hiện chưa có quy trình tuyển dụng nào"
+          nodata="Hiện chưa có vai trò"
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
+          UpdateListColumn={updateListColumn}
+          columnsTable={columnsTable}
+          setColumnsTable={setColumnsTable}
           filter={
             <RolegroupHeader
               methods={methods}

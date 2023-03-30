@@ -125,7 +125,8 @@ export const API_GET_LIST_ROLE_GROUP = "/identity/RoleGroup/GetRoleGroups"; // l
 export const API_ADD_ROLE_GROUP = "/identity/RoleGroup/CreateRoleGroup"
 export const API_UPDATE_ROLE_GROUP = '/identity/RoleGroup/UpdateRoleGroup'
 export const API_REMOVE_ROLE_GROUP ='/Identity/RoleGroup/RemoveRoleGroups'
-
+export const API_GET_COLUMN_ROLE = "/aggregator/OrganizationRoleVisible/GetOrganizationsRoleVisible";
+export const API_UPDATE_COLUMN_ROLE = "/aggregator/OrganizationPositionVisible/UpdateOrganizationRoleVisible";
 
 // Báo cáo
 
@@ -230,6 +231,9 @@ export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitmen
 export const API_UPDATE_RECRUITMENT_OFFICIAL = "/recruitment/Recruitment/UpdateRecruitment" // new - update recruitment official
 export const API_UPDATE_RECRUITMENT_DRAFT = "/recruitment/Recruitment/SetRecruitmentDraftOrOfficial" // new - update recruitment draft
 export const API_CREATE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/CreateApplicantRecruitment"
+export const API_GET_COLUMN_RECRUITMENT = "/aggregator/RecruitmentVisible/GetRecruitmentsVisible";
+export const API_UPDATE_COLUMN_RECRUITMENT = "/aggregator/RecruitmentVisible/UpdateARecruitmentVisible";
+
 // duyệt tin
 export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // list tin cần iviec duyệt
 export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments"; // phê duyệt nhiều tin

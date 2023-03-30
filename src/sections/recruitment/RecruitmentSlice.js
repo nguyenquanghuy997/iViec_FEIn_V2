@@ -5,11 +5,11 @@ import {
   API_GET_RECRUITMENT_BY_ID,
   API_UPDATE_RECRUITMENT_DRAFT,
   API_UPDATE_RECRUITMENT_OFFICIAL,
-  API_CREATE_APPLICANT_RECRUITMENT, API_CLOSE_RECRUITMENT, API_REMOVE_RECRUITMENT, API_GET_RECRUITMENT_BY_SLUG,
+  API_CREATE_APPLICANT_RECRUITMENT, API_CLOSE_RECRUITMENT, API_REMOVE_RECRUITMENT, API_GET_RECRUITMENT_BY_SLUG, API_GET_COLUMN_RECRUITMENT, API_UPDATE_COLUMN_RECRUITMENT,
 } from '@/routes/api'
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ['RECRUITMENT'],
+  addTagTypes: ['RECRUITMENT', 'GetColumn'],
 })
 
 export const RecruitmentSlice = apiWithTag.injectEndpoints({
@@ -89,6 +89,22 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
     }),
+    //settings
+    getListColumns: builder.query({
+      query: () => ({
+        url: API_GET_COLUMN_RECRUITMENT,
+        method: "GET",
+      }),
+      providesTags: ["GetColumn"],
+    }),
+    updateListColumns: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_COLUMN_RECRUITMENT}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+      invalidatesTags: ["GetColumn"],
+    }),
   }),
 })
 
@@ -102,4 +118,6 @@ export const {
   useUpdateRecruitmentDraftMutation,
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,
+  useGetListColumnsQuery,
+  useUpdateListColumnsMutation
 } = RecruitmentSlice;

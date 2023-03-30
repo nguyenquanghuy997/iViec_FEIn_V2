@@ -47,12 +47,11 @@ export const ApplicantItem = () => {
   });
 
   const { handleSubmit } = methods;
-
+  const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api get list
   const { data: Data, isLoading } = useGetAllFilterApplicantQuery(JSON.stringify(cleanObject(dataFilter)));
 
   // api get list Column
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
@@ -394,15 +393,6 @@ export const ApplicantItem = () => {
     ];
   }, [page, paginationSize]);
 
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
-
   const onSubmitSearch = async (data) => {
     handleSetDataFilter({ searchKey: data.searchKey });
   };
@@ -427,6 +417,7 @@ export const ApplicantItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
+  const [columnsTable, setColumnsTable] = useState([]);
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -450,12 +441,13 @@ export const ApplicantItem = () => {
             paginationSize={paginationSize}
             handleChangePagination={handleChangePagination}
             columns={columns}
+            columnsTable={columnsTable}
+            setColumnsTable={setColumnsTable}
             source={Data}
             loading={isLoading}
             ColumnData={ColumnData}
-            UpdateListColumn={handleUpdateListColumnApplicants}
+            UpdateListColumn={UpdateListColumnApplicants}
             settingName={"DANH SÁCH ỨNG VIÊN"}
-            scroll={{ x: 6500 }}
             nodata="Hiện chưa có ứng viên nào"
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
@@ -474,7 +466,7 @@ export const ApplicantItem = () => {
       </Content>
       {toggleFormFilter && (
         <ApplicantFilterModal
-          columns={columns}
+          columns={columnsTable}
           isOpen={toggleFormFilter}
           onClose={handleCloseFilterForm}
           onOpen={handleOpenFilterForm}

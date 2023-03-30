@@ -5,10 +5,7 @@ import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import {
-  useUpdateListColumnApplicantsMutation,
-} from "@/sections/applicant";
-import { useGetListColumnsQuery, useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
+import { useGetListColumnsQuery, useLazyGetAllJobTypeQuery, useUpdateListColumnsMutation } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -31,8 +28,9 @@ export const JobTypeItem = () => {
     useLazyGetAllJobTypeQuery();
   // api get list Column
   const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
+
   // api update list Column
-  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+  const [updateListColumn] = useUpdateListColumnsMutation();
   const columns = [
     {
       dataIndex: "organizationPositionVisibleId",
@@ -116,15 +114,6 @@ export const JobTypeItem = () => {
       ),
     },
   ];
-
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
 
   // form search
   const Schema = Yup.object().shape({
@@ -225,6 +214,7 @@ export const JobTypeItem = () => {
     handleCloseFilterForm();
   };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [columnsTable, setColumnsTable] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -248,7 +238,9 @@ export const JobTypeItem = () => {
           source={Data}
           loading={isLoading}
           ColumnData={ColumnData[0]}
-          UpdateListColumn={handleUpdateListColumnApplicants}
+          UpdateListColumn={updateListColumn}
+          columnsTable={columnsTable}
+          setColumnsTable={setColumnsTable}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
           nodata="Hiện chưa có vị trí công việc nào"
           isSetting={true}
@@ -275,7 +267,7 @@ export const JobTypeItem = () => {
       </Content>
       {isOpen && (
         <JobTypeFilterModal
-          columns={columns}
+          columns={columnsTable}
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}

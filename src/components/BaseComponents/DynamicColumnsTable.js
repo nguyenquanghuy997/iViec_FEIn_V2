@@ -25,7 +25,7 @@ const DynamicColumnsTable = (props) => {
     ColumnData,
     settingName,
     filter,
-    scroll,
+    UpdateListColumn,
     // style,
     nodata,
     page,
@@ -35,40 +35,46 @@ const DynamicColumnsTable = (props) => {
     setSelectedRowKeys,
     itemSelected,
     setItemSelected,
+    columnsTable,
+    setColumnsTable
   } = props;
 
-  const [columnsTable, setColumnsTable] = useState(
-    columns.filter((item) => {
-      return item.dataIndex != "fullName";
-    })
-  );
-  const [columnsCheck, setColumnsCheck] = useState([...columns]);
-
-  // const [columnsTable, setColumnsTable] = React.useState({
-  //   value: false,
-  //   checkedColumns: [],
-  //   columns: [...columns],
-  //   visibleColumns: [...columns],
-  // });
-
+  const [columnsVisible, setColumnsVisible] = useState();
+  const [valueChangeSetting, setValueChangeSetting] = useState();
+  
   useEffect(() => {
-    setColumnsTable(
-      columns.map((col) => {
-        const renderFunc = col.render;
-        if (renderFunc) {
-          col.render = (text, record, index) => {
-            return renderFunc(text, record, index, page, paginationSize);
-          };
-        }
-        return col;
-      })
-    );
-  }, [columns]);
-  // console.log("columns", columns);
-  // console.log("columnsTable", columnsTable);
-  // console.log("columnsCheck", columnsCheck);
-
-  // const [columnsTable, setColumnsTable] = useState([]);
+    if(ColumnData){
+      setColumnsVisible(ColumnData)
+      setColumnsTable(
+        columns.filter((item) =>  
+        { 
+          return ColumnData[item.dataIndex];
+        })
+        .map((col) => {
+          const renderFunc = col.render;
+          if (renderFunc) {
+            col.render = (text, record, index) => {
+              return renderFunc(text, record, index, page, paginationSize);
+            };
+          }
+          return col;
+        })
+      );
+    } else{
+      setColumnsTable(
+        columns.map((col) => {
+          const renderFunc = col.render;
+          if (renderFunc) {
+            col.render = (text, record, index) => {
+              return renderFunc(text, record, index, page, paginationSize);
+            };
+          }
+          return col;
+        })
+      );
+    }
+    
+  }, [ColumnData, columns]);
 
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
 
@@ -114,9 +120,8 @@ const DynamicColumnsTable = (props) => {
           <MenuList
             style={{ overflowY: "auto", maxHeight: "600px", padding: 16 }}
           >
-            {ColumnData &&
-              columnsCheck?.map((p, index) => {
-                // console.log("olumnData[p?.dataIndex]", ColumnData);
+            {columnsVisible &&
+              columns?.map((p, index) => {
                 if (!isEmpty(p?.fixed)) {
                   return (
                     <MenuItem key={index + 1} sx={{ padding: "2px 10px" }}>
@@ -132,7 +137,7 @@ const DynamicColumnsTable = (props) => {
                         control={
                           <Checkbox
                             defaultChecked={
-                              ColumnData[p?.dataIndex] ? true : false
+                              columnsVisible[p?.dataIndex] ? true : false
                             }
                             onChange={(e) => onChangeCheck(e)}
                             name={p.dataIndex?.toString()}
@@ -160,7 +165,7 @@ const DynamicColumnsTable = (props) => {
                         control={
                           <Checkbox
                             defaultChecked={
-                              ColumnData[p?.dataIndex] ? true : false
+                              columnsVisible[p?.dataIndex] ? true : false
                             }
                             onChange={(e) => onChangeCheck(e)}
                             name={p.dataIndex?.toString()}
@@ -199,40 +204,21 @@ const DynamicColumnsTable = (props) => {
   const showSetting = () => {
     setVisibleMenuSettings(true);
   };
+
   const onChangeCheck = (e) => {
-    let columns = columnsTable;
     const checked = e.target.checked;
     const targetId = e.target.name;
-    const updated = columns?.map((item) => {
-      return item.dataIndex === targetId ? { ...item, checked } : item;
-    });
-    setColumnsTable(updated);
-    setColumnsCheck(updated);
+    setValueChangeSetting({...valueChangeSetting, [targetId]:checked})
+    const visible = {...columnsVisible, [targetId]:checked}
+    setColumnsVisible(visible)
   };
 
   const handleUpdateListColumnApplicants = async () => {
-    const filtered = columnsTable.filter((item) => item.checked !== false);
-
+    const filtered = columns.filter((item) => columnsVisible[item.dataIndex]);
     setColumnsTable(filtered);
+    var data = { id: columnsVisible.id, body: valueChangeSetting };
 
-    //   let { columns } = columnsTable;
-    //   for(var i =0;i< columnsTable.checkedColumns.length; i++)
-    //   const filtered = columns.filter((item) =>
-    //   targetId === item.dataIndex ? checked : item.checked
-    // );
-
-    // var filtered = columnsTable;
-    // for (var i = 0; i < obname.length; i++){
-    //   filtered = filtered.filter((el) => {
-    //     debugger
-    //     if (checkedColumns?.[obname[i]] == false){
-    //       return el.dataIndex !== obname[i];
-    //     } else{
-    //       checkedColumns.push(e.target.id)
-    //     }
-    //   });
-    // }
-    // setColumnsTable(filtered);
+    await UpdateListColumn(data);
   };
 
   const useStyles = makeStyles(() => ({
@@ -250,9 +236,11 @@ const DynamicColumnsTable = (props) => {
         height: "72px",
         padding: "13px 8px",
         borderBottom: "2px solid #CCD4DC",
+        wordBreak: 'break-all'
       },
       "& .ant-table-tbody >tr >td": {
         padding: "13px 8px",
+        wordBreak: 'break-all'
       },
       "& .ant-pagination": {
         padding: "0 16px",
@@ -444,8 +432,7 @@ const DynamicColumnsTable = (props) => {
           }
           columns={[...columnsTable]}
           dataSource={source?.items}
-          scroll={scroll}
-          size="large"
+          scroll={{ x: 'max-content' }}
           loading={loading}
           className={classes.table}
           pagination={{

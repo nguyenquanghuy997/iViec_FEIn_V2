@@ -100,7 +100,7 @@ const JobTypeBottomNav = ({
                       variant="body2"
                       sx={{ color: "#5C6A82", fontSize: 13 }}
                     >
-                      Dừng hoạt động
+                      Không hoạt động
                     </Typography>
                   </>
                 )}

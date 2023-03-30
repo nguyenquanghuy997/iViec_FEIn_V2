@@ -25,6 +25,7 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getListApplicants: builder.query({
       query: (params) => ({
@@ -46,7 +47,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      providesTags: ["UpdateColumnApplicants"],
       invalidatesTags: ["GetColumnApplicants"],
     }),
     updateApplicant: builder.mutation({
@@ -55,8 +55,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      providesTags: ["UpdateColumnApplicants"],
-      invalidatesTags: ["GetColumnApplicants"],
     }),
     getApplicantById: builder.query({
       query: ({applicantId}) => ({
