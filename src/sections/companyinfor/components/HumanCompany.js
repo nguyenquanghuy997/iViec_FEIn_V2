@@ -59,8 +59,9 @@ const HumanCompany = () => {
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
+        data={Data}
       />
-      {Data ? (
+      {Data?.organizationHumans.length > 0 ? (
         <Box
           sx={{
             px: 5,
@@ -78,10 +79,10 @@ const HumanCompany = () => {
       ) : (
         <Box sx={{ bgcolor: "white" }}>
           {" "}
-          <Box sx={{ display: "flex", justifyContent: "center", pt:4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
             <NoInformation />
           </Box>
-          <Typography sx={{ textAlign: "center", pb:6 }}>
+          <Typography sx={{ textAlign: "center", pb: 6 }}>
             Hiện chưa có nội dung
           </Typography>
         </Box>

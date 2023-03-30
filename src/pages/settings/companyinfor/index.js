@@ -4,7 +4,7 @@ import SettingLayout from "@/layouts/setting";
 import { CompanyInfor } from "@/sections/companyinfor";
 import BusinessArea from "@/sections/companyinfor/components/BusinessArea";
 import Ending from "@/sections/companyinfor/components/Ending";
-import EnviromentWorkplace from "@/sections/companyinfor/components/EnviromentWorkplace";
+// import EnviromentWorkplace from "@/sections/companyinfor/components/EnviromentWorkplace";
 import HireProcess from "@/sections/companyinfor/components/HireProcess";
 import HumanCompany from "@/sections/companyinfor/components/HumanCompany";
 import { getRolesByPage } from "@/utils/role";
@@ -34,7 +34,7 @@ export default function Setting() {
       <CompanyInfor />
       <HumanCompany />
       <BusinessArea />
-      <EnviromentWorkplace />
+      {/* <EnviromentWorkplace /> */}
       <HireProcess />
       <Ending />
     </Page>

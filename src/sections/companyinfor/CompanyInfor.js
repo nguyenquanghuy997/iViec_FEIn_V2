@@ -2,18 +2,20 @@ import TickIcon from "../../assets/TickIcon";
 import CropImage from "./CropImage";
 import DrawerEdit from "./edit/DrawerEdit";
 import {
-  useGetCompanyInfoQuery,
-  // useGetJobCategoriesQuery,
+  useGetCompanyInfoQuery, // useGetJobCategoriesQuery,
 } from "@/sections/companyinfor/companyInforSlice";
 import { OrganizationSize } from "@/utils/enum";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Typography, Divider } from "@mui/material";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 import * as Yup from "yup";
 
 export default function CompanyInfor() {
   const { data: Data } = useGetCompanyInfoQuery();
+  const [seeData, setSeeData] = useState(false);
+
   const ProfileSchema = Yup.object().shape({
     avatar: Yup.string(),
   });
@@ -72,7 +74,14 @@ export default function CompanyInfor() {
         </span>
 
         {String(value).startsWith("<") ? (
-          <p dangerouslySetInnerHTML={{ __html: value }} />
+          <p
+            dangerouslySetInnerHTML={{ __html: value }}
+            style={{
+              overflow: !seeData ? "hidden" : "visible",
+              lineHeight: "1.2em",
+              height: seeData ? "auto" : "3.6em",
+            }}
+          />
         ) : (
           <span
             style={{
@@ -80,14 +89,19 @@ export default function CompanyInfor() {
               fontSize: 14,
               lineHeight: 24 / 16,
               color: "#172B4D",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
             }}
           >
             {value}
           </span>
         )}
+        <button
+          onClick={() => setSeeData(!seeData)}
+          style={{ border: "none", background: "white" }}
+        >
+          <p style={{ fontSize: 14, fontWeight: 700 }}>
+            {seeData ? "Thu ngắn" : "... Xem thêm"}
+          </p>
+        </button>
       </div>
     );
   };
