@@ -2,7 +2,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_PIPELINE,
   API_UPDATE_PIPELINE,
-  API_DELETE_PIPELINE, API_GET_ALL_PIPELINE_BY_ORGANIZATION, API_GET_ALL_RECRUITMENT_STEP_PIPELINE, API_ADD_PIPELINE, API_GET_EXAMINATION, API_GET_PIPELINE_BY_ID, API_SET_ORGANIZATION_PIPELINE_ACTIVE,
+  API_DELETE_PIPELINE, API_GET_ALL_PIPELINE_BY_ORGANIZATION, API_GET_ALL_RECRUITMENT_STEP_PIPELINE, API_ADD_PIPELINE, API_GET_EXAMINATION, API_GET_PIPELINE_BY_ID, API_SET_ORGANIZATION_PIPELINE_ACTIVE, API_GET_COLUMN_PIPELINE, API_UPDATE_COLUMN_PIPELINE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -96,6 +96,22 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
         data: data
       }),
       invalidatesTags: ["GetAllPipeline"],
+    }),
+    getListColumns: builder.query({
+      query: () => ({
+        url: API_GET_COLUMN_PIPELINE,
+        method: "GET",
+      }),
+      providesTags: ["GetColumn"],
+    }),
+    updateListColumnApplicants: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_COLUMN_PIPELINE}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+      providesTags: ["UpdateColumn"],
+      invalidatesTags: ["GetColumn"],
     }),
   }),
 });

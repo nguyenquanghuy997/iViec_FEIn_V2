@@ -6,10 +6,9 @@ import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import {
-  useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
+import { useGetListColumnsQuery, useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -31,11 +30,12 @@ export const JobTypeItem = () => {
   const [getAllFilter, { data: Data = [], isLoading }] =
     useLazyGetAllJobTypeQuery();
   // api get list Column
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
+  const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const columns = [
     {
+      dataIndex: "organizationPositionVisibleId",
       title: "STT",
       key: "index",
       render: (item, record, index, page, paginationSize) => (
@@ -247,7 +247,7 @@ export const JobTypeItem = () => {
           columns={columns}
           source={Data}
           loading={isLoading}
-          ColumnData={ColumnData}
+          ColumnData={ColumnData[0]}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
           nodata="Hiện chưa có vị trí công việc nào"

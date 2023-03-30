@@ -203,17 +203,20 @@ export const API_DELETE_JOBTYPE = "/recruitment/JobPosition/RemoveJobPositions";
 export const API_ADD_JOBTYPE = "/recruitment/JobPosition/CreateJobPosition";
 export const API_UPDATE_JOBTYPE = "/recruitment/JobPosition/UpdateJobPosition";
 export const API_GET_APPLICANT_USERS_ON_JOBTYPE = "/recruitment/JobPosition/GetApplicationUsersOnJobPosition";
+export const API_GET_COLUMN_JOBTYPE = "/aggregator/OrganizationPositionVisible/GetOrganizationPositionsVisible";//new
+export const API_UPDATE_COLUMN_JOBTYPE = "/aggregator/OrganizationPositionVisible/UpdateOrganizationPositionVisible";//new
 
 // Pipeline
 export const API_GET_ALL_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipelineFilter"; //new
 export const API_GET_PIPELINE_BY_ID = "/organization/OrganizationPipeline/GetOrganizationPipeline";
 export const API_GET_ALL_RECRUITMENT_STEP_PIPELINE = "/organization/OrganizationPipeline/GetOrganizationPipeline";
-
 export const API_GET_ALL_PIPELINE_BY_ORGANIZATION = "/organization/OrganizationPipeline/GetOrganizationPipelineByOrganization"; //new
 export const API_SET_ORGANIZATION_PIPELINE_ACTIVE = "/organization/OrganizationPipeline/SetOrganizationPipelinesActive"; // bật tắt trạng thái hoạt động
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/UpdateOrganizationPipeline";//new
 export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipelines";//new
+export const API_GET_COLUMN_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipelines";//new
+export const API_UPDATE_COLUMN_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipelines";//new
 
 // API Application page
 // recruitment tin tuyển dụng

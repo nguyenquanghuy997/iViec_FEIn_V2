@@ -4,12 +4,18 @@ import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import TextMaxLine from "@/components/TextMaxLine";
 import { ButtonCancel, ButtonIcon, DialogModel } from "@/utils/cssStyles";
-import { DialogActions, Divider } from "@mui/material";
+import {
+  Checkbox,
+  DialogActions,
+  Divider,
+  FormControlLabel,
+  MenuItem,
+  MenuList,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Checkbox, Menu, Table } from "antd";
-import React, { useState, useEffect } from "react";
-import ReactDragListView from "react-drag-listview";
+import { Table } from "antd";
 import { isEmpty } from "lodash";
+import React, { useState, useEffect } from "react";
 
 const DynamicColumnsTable = (props) => {
   const {
@@ -17,7 +23,6 @@ const DynamicColumnsTable = (props) => {
     source,
     loading,
     ColumnData,
-    UpdateListColumn,
     settingName,
     filter,
     scroll,
@@ -32,22 +37,19 @@ const DynamicColumnsTable = (props) => {
     setItemSelected,
   } = props;
 
-  const [columnsTable, setColumnsTable] = useState([]);
+  const [columnsTable, setColumnsTable] = useState(
+    columns.filter((item) => {
+      return item.dataIndex != "fullName";
+    })
+  );
+  const [columnsCheck, setColumnsCheck] = useState([...columns]);
 
-  const dragProps = {
-    onDragEnd(fromIndex, toIndex) {
-      if (fromIndex > 3) {
-        const newColumns = [...columns];
-        const item = newColumns.splice(fromIndex, 1)[0];
-        newColumns.splice(toIndex, 0, item);
-        setColumnsTable(newColumns);
-      }
-    },
-    nodeSelector: "th",
-  };
-
-  const [checkedColumns, setCheckedColumns] = useState([]);
-  const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
+  // const [columnsTable, setColumnsTable] = React.useState({
+  //   value: false,
+  //   checkedColumns: [],
+  //   columns: [...columns],
+  //   visibleColumns: [...columns],
+  // });
 
   useEffect(() => {
     setColumnsTable(
@@ -62,6 +64,13 @@ const DynamicColumnsTable = (props) => {
       })
     );
   }, [columns]);
+  // console.log("columns", columns);
+  // console.log("columnsTable", columnsTable);
+  // console.log("columnsCheck", columnsCheck);
+
+  // const [columnsTable, setColumnsTable] = useState([]);
+
+  const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
 
   const menu = (
     <>
@@ -102,37 +111,67 @@ const DynamicColumnsTable = (props) => {
             </div>
           </View>
           <Divider />
-          <Menu style={{ overflowY: "auto", maxHeight: "600px" }}>
-            {ColumnData && columns.map((p, index) => {
-              if(isEmpty(p?.fixed)){
-                return (
-                  <Menu.Item key={index + 1}>
-                    <Checkbox
-                      id={index}
-                      onChange={onChange}
-                      defaultChecked={ColumnData[p?.dataIndex]}
-                      disabled
-                    >
-                      {p?.title}
-                    </Checkbox>
-                  </Menu.Item>
-                  )
-              } else{
-                return (
-                  <Menu.Item key={index + 1}>
-                    <Checkbox
-                      id={index}
-                      onChange={onChange}
-                      defaultChecked={ColumnData[p?.dataIndex]}
-                    >
-                      {p?.title}
-                    </Checkbox>
-                  </Menu.Item>
-                );
-              }
-            }
-          )}
-          </Menu>
+          <MenuList
+            style={{ overflowY: "auto", maxHeight: "600px", padding: 16 }}
+          >
+            {ColumnData &&
+              columnsCheck?.map((p, index) => {
+                console.log("olumnData[p?.dataIndex]", ColumnData);
+                if (!isEmpty(p?.fixed)) {
+                  return (
+                    <MenuItem key={index + 1} sx={{ padding: "2px 10px" }}>
+                      <FormControlLabel
+                        label={p?.title}
+                        sx={{
+                          "& .MuiFormControlLabel-label": {
+                            color: "#172B4D",
+                            fontWeight: 400,
+                            fontSize: 14,
+                          },
+                        }}
+                        control={
+                          <Checkbox
+                            defaultChecked={
+                              ColumnData[p?.dataIndex] ? true : false
+                            }
+                            onChange={(e) => onChangeCheck(e)}
+                            name={p.dataIndex?.toString()}
+                            disabled
+                          />
+                        }
+                      />
+                    </MenuItem>
+                  );
+                } else {
+                  return (
+                    <MenuItem key={index + 1} sx={{ padding: "2px 10px" }}>
+                      <FormControlLabel
+                        label={p?.title}
+                        sx={{
+                          "& .MuiFormControlLabel-label": {
+                            color: "#172B4D",
+                            fontWeight: 400,
+                            fontSize: 14,
+                          },
+                          "& .MuiCheckbox-root:hover": {
+                            backgroundColor: "unset",
+                          },
+                        }}
+                        control={
+                          <Checkbox
+                            defaultChecked={
+                              ColumnData[p?.dataIndex] ? true : false
+                            }
+                            onChange={(e) => onChangeCheck(e)}
+                            name={p.dataIndex?.toString()}
+                          />
+                        }
+                      />
+                    </MenuItem>
+                  );
+                }
+              })}
+          </MenuList>
           <DialogActions
             sx={{
               borderTop: "1px solid #E7E9ED",
@@ -147,7 +186,7 @@ const DynamicColumnsTable = (props) => {
             <ButtonDS
               tittle="Áp dụng"
               onClick={() => {
-                UpdateListColumn();
+                handleUpdateListColumnApplicants();
                 setVisibleMenuSettings(false);
               }}
             />
@@ -156,28 +195,46 @@ const DynamicColumnsTable = (props) => {
       </DialogModel>
     </>
   );
+
   const showSetting = () => {
     setVisibleMenuSettings(true);
   };
-
-  const onChange = (e) => {
-    var checkedColumnsNew = checkedColumns;
-    if (e.target.checked) {
-      checkedColumnsNew = checkedColumns.filter((id) => {
-        return id !== e.target.id;
-      });
-    } else if (!e.target.checked) {
-      checkedColumnsNew.push(e.target.id);
-    }
-
-    var filtered = columnsTable;
-    for (var i = 0; i < checkedColumnsNew.length; i++)
-      filtered = filtered.filter((el) => {
-        return el.dataIndex !== checkedColumns[i];
-      });
-    setCheckedColumns(checkedColumnsNew);
-    setColumnsTable(filtered);
+  const onChangeCheck = (e) => {
+    let columns = columnsTable;
+    const checked = e.target.checked;
+    const targetId = e.target.name;
+    const updated = columns?.map((item) => {
+      return item.dataIndex === targetId ? { ...item, checked } : item;
+    });
+    setColumnsTable(updated);
+    setColumnsCheck(updated);
   };
+
+  const handleUpdateListColumnApplicants = async () => {
+    const filtered = columnsTable.filter((item) => item.checked !== false);
+
+    setColumnsTable(filtered);
+
+    //   let { columns } = columnsTable;
+    //   for(var i =0;i< columnsTable.checkedColumns.length; i++)
+    //   const filtered = columns.filter((item) =>
+    //   targetId === item.dataIndex ? checked : item.checked
+    // );
+
+    // var filtered = columnsTable;
+    // for (var i = 0; i < obname.length; i++){
+    //   filtered = filtered.filter((el) => {
+    //     debugger
+    //     if (checkedColumns?.[obname[i]] == false){
+    //       return el.dataIndex !== obname[i];
+    //     } else{
+    //       checkedColumns.push(e.target.id)
+    //     }
+    //   });
+    // }
+    // setColumnsTable(filtered);
+  };
+
   const useStyles = makeStyles(() => ({
     table: {
       "& .ant-table": {
@@ -234,6 +291,9 @@ const DynamicColumnsTable = (props) => {
       },
       "& .ant-pagination .ant-pagination-next button": {
         color: "#455570",
+      },
+      "& .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft": {
+        zIndex: 10000,
       },
       "& .ant-pagination .ant-pagination-item a:hover, .ant-pagination .ant-pagination-next:hover .ant-pagination-item-link":
         {
@@ -373,36 +433,32 @@ const DynamicColumnsTable = (props) => {
         </View>
       </View>
       <div className={classes.setting}>
-        <ReactDragListView.DragColumn {...dragProps}>
-          {filter}
-          <Table
-            locale={locale}
-            rowSelection={rowSelection}
-            onRow={onRow}
-            rowKey={(record) => record.id}
-            rowClassName={(record) =>
-              selectedRowKeys?.includes(record.id)
-                ? "ant-table-row-selected"
-                : ""
-            }
-            columns={[...columnsTable]}
-            dataSource={source?.items}
-            scroll={scroll}
-            size="large"
-            loading={loading}
-            className={classes.table}
-            pagination={{
-              onChange: handleChangePagination,
-              total: `${source?.totalRecord}`,
-              defaultPageSize: paginationSize,
-              showSizeChanger: true,
-              pageSizeOptions: ["10", "20", "30"],
-              locale: { items_per_page: "bản ghi trên trang" },
-              showTotal: (total, range) =>
-                `${range[1]} / ${source?.totalRecord} kết quả phù hợp`,
-            }}
-          />
-        </ReactDragListView.DragColumn>
+        {filter}
+        <Table
+          locale={locale}
+          rowSelection={rowSelection}
+          onRow={onRow}
+          rowKey={(record) => record.id}
+          rowClassName={(record) =>
+            selectedRowKeys?.includes(record.id) ? "ant-table-row-selected" : ""
+          }
+          columns={[...columnsTable]}
+          dataSource={source?.items}
+          scroll={scroll}
+          size="large"
+          loading={loading}
+          className={classes.table}
+          pagination={{
+            onChange: handleChangePagination,
+            total: `${source?.totalRecord}`,
+            defaultPageSize: paginationSize,
+            showSizeChanger: true,
+            pageSizeOptions: ["10", "20", "30"],
+            locale: { items_per_page: "bản ghi trên trang" },
+            showTotal: (total, range) =>
+              `${range[1]} / ${source?.totalRecord} kết quả phù hợp`,
+          }}
+        />
       </div>
       {visibleMenuSettings && <>{menu}</>}
     </View>

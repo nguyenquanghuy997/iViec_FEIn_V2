@@ -49,7 +49,7 @@ export const PipelineItem = () => {
     JSON.stringify(cleanObject(dataFilter))
   );
   // api get list Column
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
+  const { data: {items: ColumnData} } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
@@ -266,7 +266,7 @@ export const PipelineItem = () => {
           columns={columns}
           source={Data}
           loading={isLoading}
-          ColumnData={ColumnData}
+          ColumnData={ColumnData[0]}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
           scroll={{ x: 1618 }}
