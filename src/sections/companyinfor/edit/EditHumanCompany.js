@@ -1,6 +1,6 @@
 import UploadImage from "@/assets/UploadImage";
-import MenuIcon from "@/assets/interview/MenuIcon";
 import PlusIcon from "@/assets/interview/PlusIcon";
+import Iconify from "@/components/Iconify";
 import Image from "@/components/Image";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import {
@@ -29,6 +29,7 @@ const EditHumanCompany = ({ onClose }) => {
   const [image, setImage] = useState([]);
 
   const handleChange = (e) => {
+    
     setImageFile([...imageFile, ...e.target.files]);
     const id = e.target;
     const reader = new FileReader();
@@ -41,7 +42,7 @@ const EditHumanCompany = ({ onClose }) => {
   const defaultValues = {
     ...Data?.organizationHumans,
   };
-
+console.log('image', image)
   const ProfileSchema = Yup.object().shape({
     approvalProcessLevels: Yup.array().of(
       Yup.object().shape({
@@ -119,14 +120,15 @@ const EditHumanCompany = ({ onClose }) => {
   useEffect(() => {
     if (!Data) return;
     setValue("organizationHumans", Data?.organizationHumans);
-    setImage(
-      Data?.organizationHumans.map(
-        (item) =>
-          `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.avatar}`
-      )
-    );
+    var upload = [];
+    Data?.organizationHumans.map((item) => {
+      var itemm = {
+        uploaded_file: `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.avatar}`,
+      };
+      upload.push(itemm);
+    });
+    setImage(upload);
   }, [JSON.stringify(Data)]);
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* {!!errors.afterSubmit && (
@@ -143,17 +145,23 @@ const EditHumanCompany = ({ onClose }) => {
                 py: 2,
                 background: "#F2F4F5",
                 display: "flex",
+                borderRadius: "4px",
               }}
               key={item.id}
             >
               <Box sx={{ display: "flex", alignItems: "center", pr: 1 }}>
-                <MenuIcon />
+              <Iconify
+            icon={"fluent:re-order-dots-vertical-16-filled"}
+            width={20}
+            height={20}
+            color="#A2AAB7"
+          />
               </Box>
 
               <Image
                 disabledEffect
                 visibleByDefault
-                src={image[index]?.uploaded_file}
+                src={image[index]?.uploaded_file || '/assets/placeholder.png'}
                 id={index}
                 alt="image"
                 sx={{
@@ -164,55 +172,68 @@ const EditHumanCompany = ({ onClose }) => {
                 }}
               />
 
-              <Box>
-                <Box sx={{ display: "flex" }}>
-                  <Button
-                    sx={{
-                      textTransform: "none",
-                      height: 36,
-                      mb: 3,
-                      cursor: "pointer",
-                      width: "350px",
-                      "&:hover": {
-                        background: "transparent",
-                      },
-                      "&:focus": {
-                        background: "transparent",
-                      },
-                    }}
-                  >
-                    <Box
+              <Box width="60%">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "24px",
+                    marginTop: "12px",
+                  }}
+                >
+                  <Box>
+                    <Button
                       sx={{
+                        cursor: "pointer",
+                        borderRadius: "6px",
                         border: "1px dashed #1976D2",
-                        display: "flex",
-                        alignItems: "center",
-                        px: 2,
-                        py: 1,
-                        borderRadius: "4px",
-                        width: "160px",
+                        padding: "8px 12px",
+                        "&:hover": {
+                          background: "transparent",
+                        },
+                        "&:focus": {
+                          background: "transparent",
+                        },
                       }}
                     >
-                      <UploadImage />
-                      <Typography sx={{ ml: 1, fontSize: 14 }}>
-                        Tải lên ảnh
-                      </Typography>
-                    </Box>
-                    <input
-                      // hidden
-                      accept="image/*"
-                      id="image"
-                      type="file"
-                      {...register(`organizationHumans.${index}.avatar`)}
-                      onChange={handleChange}
-                      style={{
-                        // height: "36px",
-                        transform: "translateX(-120px)",
-                        opacity: 0,
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          textTransform: "initial",
+                        }}
+                      >
+                        <UploadImage />
+                        <Typography
+                          sx={{
+                            fontSize: 14,
+                            fontWeight: 600,
+                            color: "#1976D2",
+                            ml: "8px",
+                          }}
+                        >
+                          Tải lên ảnh
+                        </Typography>
+                      </Box>
+                      <input
+                        // hidden
+                        accept="image/*"
+                        id="image"
+                        type="file"
+                        {...register(`organizationHumans.${index}.avatar`)}
+                        onChange={handleChange}
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          height: "100%",
+                          opacity: 0,
+                          cursor: "pointer",
+                          width: "inherit",
+                        }}
+                      />
+                    </Button>
+                  </Box>
 
-                        cursor: "pointer",
-                      }}
-                    />
-                  </Button>
                   <RiDeleteBin6Line
                     color="#E53935"
                     onClick={() => remove(index)}
