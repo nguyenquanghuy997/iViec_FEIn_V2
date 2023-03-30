@@ -8,8 +8,8 @@ import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
 import {useRouter} from "next/router";
 import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
+  FilterModalFooterStyle,
+  FilterModalHeadStyle,
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
@@ -117,14 +117,14 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
           }}
       >
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <ApplicantModalHeadStyle>
+          <FilterModalHeadStyle>
             <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
               Bộ lọc
             </Typography>
             <IconButton size="small" onClick={onClose}>
               <Iconify icon="ic:baseline-close"/>
             </IconButton>
-          </ApplicantModalHeadStyle>
+          </FilterModalHeadStyle>
           <Divider/>
           <Box sx={{py: 2, mt: 0}}>
             <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ
@@ -142,7 +142,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
           </Box>
 
           <Divider/>
-          <ApplicantModalFooterStyle>
+          <FilterModalFooterStyle>
             <Stack flexDirection="row">
               <ButtonDS
                   type="submit"
@@ -153,7 +153,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
               />
               <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
             </Stack>
-          </ApplicantModalFooterStyle>
+          </FilterModalFooterStyle>
         </FormProvider>
       </Drawer>
   );

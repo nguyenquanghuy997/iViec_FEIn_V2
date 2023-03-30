@@ -8,7 +8,7 @@ import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
 import {LIST_STATUS} from "@/utils/formatString";
 import {useRouter} from "next/router";
-import {ApplicantModalFooterStyle, ApplicantModalHeadStyle} from "@/sections/applicant/style";
+import {FilterModalFooterStyle, FilterModalHeadStyle} from "@/sections/applicant/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 
 function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
@@ -73,14 +73,14 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
       >
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <ApplicantModalHeadStyle>
+            <FilterModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
-            </ApplicantModalHeadStyle>
+            </FilterModalHeadStyle>
             <Divider/>
             <Box sx={{py: 2, mt: 0}}>
               <Stack sx={{pb: 6, px: 2}}>
@@ -92,7 +92,7 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
                 />
               </Stack>
             </Box>
-            <ApplicantModalFooterStyle>
+            <FilterModalFooterStyle>
               <Stack flexDirection="row">
                 <MuiButton
                   type="submit"
@@ -113,7 +113,7 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
                     }}
                 />
               </Stack>
-            </ApplicantModalFooterStyle>
+            </FilterModalFooterStyle>
           </FormProvider>
         </Scrollbar>
       </Drawer>

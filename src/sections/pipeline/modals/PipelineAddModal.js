@@ -9,8 +9,7 @@ import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { ButtonIcon } from "@/utils/cssStyles";
-import { LoadingButton } from "@mui/lab";
-import { FormHelperText, Modal } from "@mui/material";
+import { Divider, FormHelperText, Modal } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -23,9 +22,8 @@ export const PipelineAddModal = ({
   setShow,
   editData,
   onSubmit,
-  onDelete,
 }) => {
-  const isEdit = !!editData.name;
+  const isEdit = !!editData.stageType?.name;
   // form
   const methodss = useForm({
     defaultValuess,
@@ -48,17 +46,11 @@ export const PipelineAddModal = ({
     };
     if (selectedStatge == "") {
       setError(true);
-    } else{
+    } else {
       onSubmit?.(data);
       pressHide();
     }
-     
-    
   });
-  const pressDelete = () => {
-    onDelete?.();
-    pressHide();
-  };
 
   // render
   const renderTitle = (title, required) => {
@@ -74,9 +66,13 @@ export const PipelineAddModal = ({
     setSelectedStatge(e.target.value);
   };
   useEffect(() => {
-    setSelectedStatge(""), setValue("des", "");
-    return;
-  }, [setValue]);
+    if (!isEdit) {
+      setSelectedStatge(""), setValue("des", "");
+      return;
+    } else {
+      setSelectedStatge(editData.stageType), setValue("des", editData.des);
+    }
+  }, []);
   return (
     <Modal
       open={show}
@@ -85,28 +81,26 @@ export const PipelineAddModal = ({
     >
       <>
         <FormProvider methods={methodss}>
-          <View hidden width={668} borderradius={8} bgcolor={"#fff"}>
-            <View p={24}>
-              <View flexrow="true" atcenter="true" mb={24}>
-                <Text flex fontsize={22} fontweight={"700"}>
-                  {isEdit ? "Sửa bước tuyển dụng" : "Thêm bước tuyển dụng"}
-                </Text>
+          <View hidden width={668} borderradius={8} bgcolor={"#FDFDFD"}>
+            <View flexrow="true" atcenter="true" pv={22} ph={24}>
+              <Text flex fontsize={16} fontweight={"700"}>
+                {isEdit ? "Sửa bước tuyển dụng" : "Thêm bước tuyển dụng"}
+              </Text>
 
-                <ButtonIcon
-                  sx={{
-                    textTransform: "none",
-                  }}
-                  onClick={pressHide}
-                  icon={
-                    <Iconify
-                      icon={"ic:baseline-close"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                    />
-                  }
-                />
-              </View>
+              <ButtonIcon
+                onClick={pressHide}
+                icon={
+                  <Iconify
+                    icon={"ic:baseline-close"}
+                    width={20}
+                    height={20}
+                    color="#455570"
+                  />
+                }
+              />
+            </View>
+            <Divider />
+            <View p={24}>
               <View mb={24}>
                 {renderTitle("Loại bước", true)}
                 <SelectAutoCompleteDS
@@ -137,28 +131,8 @@ export const PipelineAddModal = ({
                 />
               </View>
             </View>
-
-            <View
-              flexrow="true"
-              jcend="true"
-              pv={12}
-              ph={16}
-              bgcolor={"#F8F8F9"}
-              boxshadow={"inset 0px 1px 0px #EBECF4"}
-            >
-              {!!isEdit && (
-                <>
-                  <LoadingButton
-                    size="large"
-                    variant="text"
-                    color="error"
-                    onClick={pressDelete}
-                  >
-                    {"Xóa"}
-                  </LoadingButton>
-                  <View flex="true" />
-                </>
-              )}
+            <Divider />
+            <View flexrow="true" jcend="true" pv={16} ph={24}>
               <ButtonCancelStyle
                 sx={{ marginRight: "8px" }}
                 onClick={pressHide}
@@ -170,7 +144,7 @@ export const PipelineAddModal = ({
                 type="submit"
                 variant="contained"
                 loading={isSubmitting}
-                tittle={isEdit ? "Sửa" : "Thêm"}
+                tittle={isEdit ? "Lưu" : "Thêm"}
                 onClick={pressSave}
               />
             </View>

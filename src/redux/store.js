@@ -16,6 +16,7 @@ import {modalSlice} from "@/redux/common/modalSlice";
 import {companyServiceApi} from '@/sections/companyinfor/companyInforSlice'
 import {filterSlice} from "@/redux/common/filterSlice";
 import {applicantFilterSlice} from "@/redux/slice/applicantFilterSlice";
+import { pipelineFilterSlice } from './slice/pipelineFilterSlice'
 
 const store = configureStore({
   reducer: {
@@ -32,6 +33,7 @@ const store = configureStore({
     modalReducer: modalSlice.reducer,
     filterReducer: filterSlice.reducer,
     applicantFilterReducer: applicantFilterSlice.reducer,
+    pipelineFilterReducer: pipelineFilterSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
