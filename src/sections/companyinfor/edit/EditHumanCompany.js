@@ -42,7 +42,6 @@ const EditHumanCompany = ({ onClose }) => {
   const defaultValues = {
     ...Data?.organizationHumans,
   };
-console.log('image', image)
   const ProfileSchema = Yup.object().shape({
     approvalProcessLevels: Yup.array().of(
       Yup.object().shape({
