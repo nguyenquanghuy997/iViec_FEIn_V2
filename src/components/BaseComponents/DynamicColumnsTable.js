@@ -116,7 +116,7 @@ const DynamicColumnsTable = (props) => {
           >
             {ColumnData &&
               columnsCheck?.map((p, index) => {
-                console.log("olumnData[p?.dataIndex]", ColumnData);
+                // console.log("olumnData[p?.dataIndex]", ColumnData);
                 if (!isEmpty(p?.fixed)) {
                   return (
                     <MenuItem key={index + 1} sx={{ padding: "2px 10px" }}>
