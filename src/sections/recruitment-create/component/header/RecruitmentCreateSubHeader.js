@@ -38,10 +38,10 @@ const JobCreateHeader = ({handleChange}) => {
                   className="tab-item"
                   label={renderLabelTab('Quy trình tuyển dụng', 'Cài đặt quy trình tuyển dụng và các thiết lập tự động')}
                   value="2"/>
-              <TabStyle
-                  className="tab-item"
-                  label={renderLabelTab('Kênh tuyển dụng', 'Đăng tin tuyển dụng lên các Jobsite bên ngoài để quản lý tập trung')}
-                  value="3"/>
+              {/*<TabStyle*/}
+              {/*    className="tab-item"*/}
+              {/*    label={renderLabelTab('Kênh tuyển dụng', 'Đăng tin tuyển dụng lên các Jobsite bên ngoài để quản lý tập trung')}*/}
+              {/*    value="3"/>*/}
           </TabList>
       </HeadingBar>
   )

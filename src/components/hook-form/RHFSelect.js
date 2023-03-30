@@ -3,14 +3,14 @@ import MuiSelect from "@/components/form/MuiSelect";
 import HelperText from "@/components/BaseComponents/HelperText";
 
 export default function RHFSelect({name, onChange, ...props}) {
-  const {control, reset} = useFormContext();
+  const {control, setValue} = useFormContext();
   const handleDelete = (field, valueDelete) => {
     const newOptions = field.value.filter(item => item !== valueDelete);
     field.onChange(newOptions);
   };
 
   const handleClearValue = (name, value) => {
-    reset({ name: value });
+      setValue(name, value);
   }
 
   return (
@@ -22,6 +22,7 @@ export default function RHFSelect({name, onChange, ...props}) {
             return (
                 <>
                   <MuiSelect
+                      name={name}
                       onChange={e => {
                         if (onChange) {
                           onChange(e);

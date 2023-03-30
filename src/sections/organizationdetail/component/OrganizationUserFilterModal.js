@@ -1,8 +1,7 @@
-import {memo, useEffect} from "react";
+import React, {memo, useEffect, useState} from "react";
 import Scrollbar from "@/components/Scrollbar";
-import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, CircularProgress, Divider, Drawer, IconButton, Stack, Switch, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
 import {isArray} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
@@ -10,14 +9,22 @@ import {LIST_STATUS} from "@/utils/formatString";
 import {useRouter} from "next/router";
 import {ApplicantModalFooterStyle, ApplicantModalHeadStyle} from "@/sections/applicant/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import OrganizationUserFilterForm from "@/sections/organizationdetail/component/OrganizationUserFilterForm";
+import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 
 function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
-
   const router = useRouter();
-  const { query } = router;
+  const { query, asPath, isReady } = router;
   const defaultValues = {
     isActive: "",
+    createdTimeFrom: null,
+    createdTimeTo: null,
+    creatorIds: [],
+    applicationUserRoleGroups: [],
   };
+
+  const [checked, setChecked] = useState(false);
 
   const methods = useForm({
     mode: 'all',
@@ -36,15 +43,21 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
     }
   }, [query])
 
-  const handleCloseModal = async () => {
+  const handleCloseModal = () => {
     onClose();
-    await router.push({
+    isReady && router.push({
       pathname: router.pathname,
-      query: {}
-    }, undefined, { shallow: true })
+      query: {},
+    }, asPath, { shallow: true })
   }
 
-  // options select
+  const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery();
+
+  if (isLoadingUser) return (
+      <Box textAlign="center" my={1}>
+        <CircularProgress size={100} />
+      </Box>
+  )
 
   return (
       <Drawer
@@ -84,11 +97,12 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
             <Divider/>
             <Box sx={{py: 2, mt: 0}}>
               <Stack sx={{pb: 6, px: 2}}>
-                <DynamicFilterForm
-                    columns={columns}
-                    options={{
-                      isActive: LIST_STATUS,
-                    }}
+                <OrganizationUserFilterForm
+                  columns={columns}
+                  options={{
+                    isActive: LIST_STATUS,
+                    creatorIds: ListUserFromOrganization
+                  }}
                 />
               </Stack>
             </Box>
@@ -113,6 +127,16 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
                     }}
                 />
               </Stack>
+              <FormControlLabel
+                  label="Tự động"
+                  control={
+                    <Switch
+                        checked={checked}
+                        onChange={(e) => setChecked(e.target.checked)}
+                        inputProps={{"aria-label": "controlled"}}
+                    />
+                  }
+              />
             </ApplicantModalFooterStyle>
           </FormProvider>
         </Scrollbar>
