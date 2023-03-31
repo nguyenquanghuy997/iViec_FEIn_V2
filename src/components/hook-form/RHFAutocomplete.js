@@ -17,7 +17,7 @@ RHFAutocomplete.propTypes = {
   name: PropTypes.string, options: PropTypes.array, AutocompleteProps: PropTypes.object,
 };
 
-const CustomPaper = (props) => {
+export const CustomPaper = (props) => {
   return <PaperAutocompleteStyle className="paper-autocomplete" elevation={8} {...props} />;
 };
 

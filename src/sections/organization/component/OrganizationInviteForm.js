@@ -151,7 +151,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                 autoHideDuration: 1000,
                 variant: 'error',
             });
-            // console.log(e);
+            throw e;
         }
     }
 
@@ -167,7 +167,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                 autoHideDuration: 1000,
                 variant: 'error',
             });
-            // console.log(e);
+            throw e;
         }
     }
 

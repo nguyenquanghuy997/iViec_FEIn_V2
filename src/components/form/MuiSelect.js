@@ -1,30 +1,33 @@
-import React, { useState, useEffect, useMemo, useRef, forwardRef, useImperativeHandle } from "react";
+import React, {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from "react";
 import {
-    Select,
-    OutlinedInput,
+    Box,
     Checkbox,
+    CircularProgress,
+    IconButton,
+    InputAdornment,
     ListItemText,
     MenuItem,
+    OutlinedInput,
+    Select,
     TextField,
-    InputAdornment,
     useTheme,
-    Box,
-    CircularProgress, IconButton,
 } from "@mui/material";
 import PropTypes from 'prop-types';
-import { RiCheckLine } from 'react-icons/ri';
-import { pxToRem } from "@/utils/getFontValue";
+import {RiCheckLine} from 'react-icons/ri';
+import {pxToRem} from "@/utils/getFontValue";
 import axiosInstance from "@/utils/axios";
 import {SearchIcon} from "@/assets/SearchIcon";
-import { convertViToEn } from "@/utils/function";
+import {containsText} from "@/utils/function";
 import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 import {ChipSelectStyle} from "@/components/hook-form/style";
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import CloseIcon from "@/assets/CloseIcon";
 import {AvatarDS} from "@/components/DesignSystem";
+import {CloseIcon as RemoveIcon} from "@/theme/overrides/CustomIcons";
+import CloseIcon from '@/assets/CloseIcon';
 
 const MuiSelect = forwardRef((
     {
+        name,
         value: selectValue,
         selectedOptions = [],
         height = 44,
@@ -42,6 +45,7 @@ const MuiSelect = forwardRef((
         search = true,
         renderSelected,
         onClose,
+        resetOnClose = false,
         onDelete,
         allowClear = false,
         onClearValue,
@@ -77,6 +81,7 @@ const MuiSelect = forwardRef((
     const _timeoutSearch = useRef();
     const _timeoutFetch = useRef();
     const _selectRef = useRef();
+    const _lastPage = useRef(1);
 
     useImperativeHandle(ref, () => {
         return {
@@ -84,6 +89,11 @@ const MuiSelect = forwardRef((
             getLabel: () => _selectRef.current?.['aria-label']
         }
     });
+
+    useEffect(() => {
+        setFetchedOptions([]);
+    }, [remoteUrl]);
+
 
     useEffect(() => {
         if (!remoteUrl) {
@@ -95,7 +105,7 @@ const MuiSelect = forwardRef((
     }, [remoteUrl, open, filters]);
 
     const getFetchedOptions = async () => {
-        if (isFetching) {
+        if (isFetching || (_lastPage.current === filters.PageIndex && fetchedOptions.length > 0)) {
             return;
         }
         setIsFetching(true);
@@ -115,18 +125,13 @@ const MuiSelect = forwardRef((
             setIsFetching(false);
             setTotalPage(resTotalPage);
             setFetchedOptions(filters.PageIndex === 1 ? items : fetchedOptions.concat(items));
+            _lastPage.current = filters.PageIndex;
         }, 100);
     };
 
-    const containsText = (text, searchText) => {
-        text = convertViToEn(text);
-        searchText = convertViToEn(searchText);
-        return text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-    }
-
     const displayedOptions = useMemo(() => {
         if (remoteUrl) {
-            return fetchedOptions.map(item => ({ value: item.id, label: item.name }));
+            return fetchedOptions.map(item => ({ value: item.id, label: item.name || item.email || item.lastName }));
         }
         return options.filter((option) => containsText(option.label, filters.SearchKey));
     }, [filters.SearchKey, options, remoteUrl, fetchedOptions]);
@@ -180,7 +185,7 @@ const MuiSelect = forwardRef((
         let optionItem;
         if (remoteUrl) {
             optionItem = fetchedOptions.concat(selectedOptions).find(opt => opt.id === val);
-            return optionItem ? { value: optionItem.id, label: optionItem.name } : { value: val, label: val };
+            return optionItem ? { value: optionItem.id, label: optionItem.name || optionItem.email || optionItem.lastName } : { value: val, label: val };
         }
         optionItem = options.find(opt => opt.value === val);
         return optionItem || { value: val, label: val };
@@ -217,7 +222,7 @@ const MuiSelect = forwardRef((
                         <ChipDS
                             label={getLabel(val)}
                             key={index}
-                            deleteIcon={<CloseIcon onMouseDown={(event) => event.stopPropagation()}/>}
+                            deleteIcon={<RemoveIcon onMouseDown={(event) => event.stopPropagation()}/>}
                             sx={{...ChipSelectStyle}}
                             variant="filled"
                             onDelete={() => onDelete(val)}
@@ -264,9 +269,22 @@ const MuiSelect = forwardRef((
             paddingTop: 0,
             paddingBottom: 0,
             backgroundColor: '#fff',
-            '.select-list-options': {
+            '.list-options': {
                 maxHeight: 320,
                 overflow: 'auto',
+            },
+            "& ::-webkit-scrollbar": {
+                width: "4px",
+                borderRadius: '6px'
+            },
+            "& ::-webkit-scrollbar-track": {
+                background: "#EFF3F6"
+            },
+            "& ::-webkit-scrollbar-thumb": {
+                background: "#B9BFC9"
+            },
+            "& ::-webkit-scrollbar-thumb:hover": {
+                background: "#888"
             }
         },
         '.MuiPaper-root': {
@@ -349,12 +367,16 @@ const MuiSelect = forwardRef((
             onOpen={() => setOpen(true)}
             onClose={(e) => {
                 setOpen(false);
-                setTimeout(() => {
-                    setFilters({
-                        ...filters,
-                        SearchKey: ''
-                    })
-                }, 500)
+                if (resetOnClose) {
+                    setFetchedOptions([]);
+                    setTimeout(() => {
+                        setFilters({
+                            ...filters,
+                            PageIndex: 1,
+                            SearchKey: '',
+                        });
+                    }, 500);
+                }
                 if (onClose) onClose(e, value);
             }}
             open={open}
@@ -376,6 +398,7 @@ const MuiSelect = forwardRef((
                     autoFocus
                     placeholder={searchPlaceholder}
                     fullWidth
+                    defaultValue={filters.SearchKey}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -394,7 +417,7 @@ const MuiSelect = forwardRef((
             )}
 
             <div
-                className="select-list-options"
+                className="list-options"
                 onScroll={e => {
                     const isBottom = e.target.scrollHeight - e.target.scrollTop <= e.target.clientHeight + 5;
                     if (isBottom) {

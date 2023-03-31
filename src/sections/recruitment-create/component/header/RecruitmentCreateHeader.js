@@ -12,9 +12,11 @@ import {DraftIcon, PreviewIcon} from "@/sections/recruitment-create/component/ic
 import {BoxFlex} from "@/sections/emailform/style";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import {useWatch} from "react-hook-form";
 
-const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, watchName, onOpenPreview}) => {
+const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, title, errors, onOpenPreview}) => {
     // processStatus
+    const name = useWatch({ name: 'name' })
     return (
         <HeadingBar style={{marginBottom: '28px', position: 'fixed', top: '64px'}}>
             <BoxFlex>
@@ -39,7 +41,7 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ti
                         title="Lưu nháp"
                         color="default"
                         onClick={() => setIsOpenSaveDraft(true)}
-                        disabled={!watchName}
+                        disabled={!name}
                         startIcon={<DraftIcon/>}
                         sx={{
                             fontWeight: 500,
@@ -56,7 +58,7 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ti
                         startIcon={<PreviewIcon />}
                         sx={{
                             fontWeight: 500,
-                            ml: 1.5
+                            mx: 1.5,
                         }}
                     />
                   <MuiButton
@@ -67,7 +69,7 @@ const RecruitmentCreateHeader = ({setIsOpenSaveDraft, setIsOpenSubmitApprove, ti
                       startIcon={<Iconify icon="majesticons:send"/>}
                       sx={{
                         fontWeight: 500,
-                        ml: 1.5,
+                        marginLeft: 1.5,
                         "&.Mui-disabled": {
                           color: "#8a94a5",
                           backgroundColor: "#d0d4db",

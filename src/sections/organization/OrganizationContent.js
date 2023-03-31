@@ -20,7 +20,6 @@ import {
 import {CrownIcon} from "@/sections/organization/component/Icon";
 import OrganizationConfirmMultipleModal from "@/sections/organization/component/OrganizationConfirmMultipleModal";
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
-import OrganizationListUserInviteModal from "@/sections/organization/component/OrganizationListUserInviteModal";
 import MuiButton from '@/components/BaseComponents/MuiButton';
 import { AddIcon } from '@/assets/ActionIcon';
 
@@ -39,7 +38,6 @@ const OrganizationContent = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [showMultipleDelete, setShowMultipleDelete] = useState(false);
   const [isOpenInviteForm, setIsOpenInviteForm] = useState(false);
-  const [isOpenListUserInvite, setIsOpenListUserInvite] = useState(false);
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0)    // 1 active 0 inactive
 
@@ -129,7 +127,7 @@ const OrganizationContent = () => {
             <MuiButton 
               title={"Danh sách mời"}
               color={"default"}
-              onClick={() => setIsOpenListUserInvite(true)}
+              onClick={() => setIsOpenInviteForm(true)}
               startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
               sx={{ fontWeight: 550, marginRight: 1 }}
             />
@@ -245,10 +243,6 @@ const OrganizationContent = () => {
             isOpenInviteForm={isOpenInviteForm}
             setIsOpenInviteForm={setIsOpenInviteForm}
             ListOrganization={ListOrganization}
-        />}
-        {isOpenListUserInvite && <OrganizationListUserInviteModal
-            isOpenListUserInvite={isOpenListUserInvite}
-            setIsOpenListUserInvite={setIsOpenListUserInvite}
         />}
         {isOpenActive && <OrganizationActiveModal
             actionTypeActive={actionTypeActive}

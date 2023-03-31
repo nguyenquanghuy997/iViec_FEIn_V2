@@ -1,8 +1,7 @@
-import {memo} from "react";
 import FormHelperText from '@mui/material/FormHelperText';
 import {Controller, useFormContext} from 'react-hook-form';
 import {LabelStyle} from "@/components/hook-form/style";
-import RecruitmentEditor from '@/sections/recruitment-create/component/form/RecruitmentEditor';
+import Editor from '@/components/form/editor/Editor';
 
 const RHFRecruitmentEditor = ({ name, title, isRequired = false, ...other }) => {
   const {control} = useFormContext()
@@ -14,10 +13,10 @@ const RHFRecruitmentEditor = ({ name, title, isRequired = false, ...other }) => 
           render={({field, fieldState: {error}}) => (
               <>
                 {title && (<LabelStyle required={isRequired}>{title}</LabelStyle>)}
-                <RecruitmentEditor
+                <Editor
+                    {...field}
                     id={name}
-                    value={field.value}
-                    onChange={field.onChange}
+                    initialValue={field.value}
                     error={!!error}
                     helperText={
                       <FormHelperText error sx={{px: 0}}>
@@ -32,4 +31,4 @@ const RHFRecruitmentEditor = ({ name, title, isRequired = false, ...other }) => 
   )
 }
 
-export default memo(RHFRecruitmentEditor);
+export default RHFRecruitmentEditor;
