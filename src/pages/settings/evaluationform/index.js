@@ -2,11 +2,10 @@
 import Page from "@/components/Page";
 import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {
-  EvaluationItem,
-} from "@/sections/evaluationform";
+
 import { getRolesByPage } from "@/utils/role";
 import PageWrapper from "@/components/PageWrapper";
+import EvaluationItem from "@/sections/evaluationform/items/EvaluationItem";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
   return (
