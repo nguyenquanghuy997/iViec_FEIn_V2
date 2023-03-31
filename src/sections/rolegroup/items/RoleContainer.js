@@ -75,6 +75,7 @@ export const RoleContainer = () => {
       ),
     },
     {
+      dataIndex: "number",
       title: "Số nhân viên",
       key: "number",
       render: () => <>20</>,
@@ -82,6 +83,7 @@ export const RoleContainer = () => {
     },
 
     {
+      dataIndex: "isActivated",
       title: "Trạng thái",
       key: "isActivated",
       render: (item) => (
@@ -97,6 +99,7 @@ export const RoleContainer = () => {
       width: "160px",
     },
     {
+      dataIndex: "registerTime",
       title: "Ngày tạo",
       key: "registerTime",
       width: "120px",

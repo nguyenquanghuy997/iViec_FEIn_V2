@@ -15,6 +15,7 @@ import { cleanObject } from "@/utils/function";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 const defaultValues = {
@@ -60,151 +61,159 @@ export const PipelineItem = () => {
     });
   };
 
-  const columns = [
-    {
-      title: "STT",
-      key: "index",
-      render: (item, record, index) => (page - 1) * paginationSize + index + 1,
-      width: "60px",
-      fixed: "left",
-    },
-    {
-      dataIndex: "name",
-      title: "Quy trình tuyển dụng",
-      width: "240px",
-      fixed: "left",
-    },
-    {
-      dataIndex: "organizationPipelineStates",
-      title: "Bước tuyển dụng",
-      width: "400px",
-      name: "organizationPipelineStates",
-      type: "select",
-      label: "Bước tuyển dụng",
-      multiple: true,
-      placeholder: "Chọn một hoặc nhiều bước",
-      render: (_, { organizationPipelineStates }) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          {organizationPipelineStates?.map((p, index) => {
-            if (index < 6) {
-              if (index < 5) {
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      color: "#172B4D",
-                      fontWeight: 400,
-                      fontSize: 13,
-                      display: "flex",
-                      alignItems: "center",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {PipelineStateType(p?.pipelineStateType)}
+  const columns = useMemo(() => {
+    return [
+      {
+        title: "STT",
+        key: "index",
+        render: (item, record, index, page, paginationSize) => (
+          <>{(page - 1) * paginationSize + index + 1}</>
+        ),
+        width: "60px",
+        fixed: "left",
+      },
+      {
+        dataIndex: "name",
+        title: "Quy trình tuyển dụng",
+        width: "240px",
+        fixed: "left",
+        render: (item,record) => (
+          <>{record.isDefault == true ? 'Quy trình mặc định iVIEC':item}</>
+        ),
+      },
+      {
+        dataIndex: "organizationPipelineStates",
+        title: "Bước tuyển dụng",
+        width: "440px",
+        name: "organizationPipelineStates",
+        type: "select",
+        label: "Bước tuyển dụng",
+        multiple: true,
+        placeholder: "Chọn một hoặc nhiều bước",
+        render: (_, { organizationPipelineStates }) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {organizationPipelineStates?.map((p, index) => {
+              if (index < 6) {
+                if (index < 5) {
+                  return (
+                    <span
+                      key={index}
+                      style={{
+                        color: "#172B4D",
+                        fontWeight: 400,
+                        fontSize: 13,
+                        display: "flex",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {PipelineStateType(p?.pipelineStateType)}
 
-                    {index < organizationPipelineStates.length - 1 &&
-                      index < 4 && (
-                        <Iconify
-                          width={16}
-                          height={16}
-                          icon="ic:round-keyboard-arrow-right"
-                        />
-                      )}
-                  </span>
-                );
-              } else {
-                var indexplus = organizationPipelineStates.length - 5;
-                return (
-                  <Tag
-                    key={p}
-                    style={{
-                      background: "#EFF3F7",
-                      borderRadius: "4px",
-                      color: "#5C6A82",
-                      border: "none",
-                      marginLeft: "8px",
-                    }}
-                  >
-                    +{indexplus}
-                  </Tag>
-                );
+                      {index < organizationPipelineStates.length - 1 &&
+                        index < 4 && (
+                          <Iconify
+                            width={16}
+                            height={16}
+                            icon="ic:round-keyboard-arrow-right"
+                          />
+                        )}
+                    </span>
+                  );
+                } else {
+                  var indexplus = organizationPipelineStates.length - 5;
+                  return (
+                    <Tag
+                      key={p}
+                      style={{
+                        background: "#EFF3F7",
+                        borderRadius: "100px",
+                        color: "#172B4D",
+                        border: "none",
+                        marginLeft: "8px",
+                        fontWeight:500
+                      }}
+                    >
+                      +{indexplus}
+                    </Tag>
+                  );
+                }
               }
-            }
-          })}
-        </div>
-      ),
-    },
-    {
-      dataIndex: "recruitmentAppliedCount",
-      title: "Số tin áp dụng",
-      width: "160px",
-      align: "center",
-    },
-    {
-      dataIndex: "isActivated",
-      title: "Trạng thái",
-      width: "180px",
-      name: "isActivated",
-      type: "select",
-      label: "Trạng thái",
-      render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#455570" }}>
-          {Status(item)}
-        </span>
-      ),
-    },
-    {
-      dataIndex: "createdTime",
-      title: "Ngày tạo",
-      width: "180px",
-      type: "date",
-      label: "Ngày tạo",
-      name: "createdTime",
-      render: (date) => fDate(date),
-      items: [
-        {
-          name: "createdTimeFrom",
-          type: "date",
-          placeholder: "Chọn ngày",
-          startIcon: <span>Từ</span>,
-          endIcon: <Iconify icon="material-symbols:calendar-today" />,
-        },
-        {
-          name: "createdTimeTo",
-          type: "date",
-          placeholder: "Chọn ngày",
-          startIcon: <span>Đến</span>,
-          endIcon: <Iconify icon="material-symbols:calendar-today" />,
-        },
-      ],
-    },
-    {
-      dataIndex: "creatorName",
-      title: "Người tạo",
-      width: "300px",
-      name: "creatorIds",
-      label: "Người tạo",
-      placeholder: "Chọn 1 hoặc nhiều người",
-      type: "select",
-      multiple: true,
-      render: (item) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <AvatarDS
-            sx={{
-              height: "20px",
-              width: "20px",
-              borderRadius: "100px",
-              fontSize: "12px",
-            }}
-            name={item}
-          ></AvatarDS>
-          <span fontSize="14px" fontWeight="600" color="#172B4D">
-            {item}
+            })}
+          </div>
+        ),
+      },
+      {
+        dataIndex: "recruitmentAppliedCount",
+        title: "Số tin áp dụng",
+        width: "160px",
+        align: "center",
+      },
+      {
+        dataIndex: "isActivated",
+        title: "Trạng thái",
+        width: "180px",
+        name: "isActivated",
+        type: "select",
+        label: "Trạng thái",
+        render: (item) => (
+          <span style={{ color: item ? "#388E3C" : "#455570" }}>
+            {Status(item)}
           </span>
-        </div>
-      ),
-    },
-  ];
+        ),
+      },
+      {
+        dataIndex: "createdTime",
+        title: "Ngày tạo",
+        width: "180px",
+        type: "date",
+        label: "Ngày tạo",
+        name: "createdTime",
+        render: (date) => fDate(date),
+        items: [
+          {
+            name: "createdTimeFrom",
+            type: "date",
+            placeholder: "Chọn ngày",
+            startIcon: <span>Từ</span>,
+            endIcon: <Iconify icon="material-symbols:calendar-today" />,
+          },
+          {
+            name: "createdTimeTo",
+            type: "date",
+            placeholder: "Chọn ngày",
+            startIcon: <span>Đến</span>,
+            endIcon: <Iconify icon="material-symbols:calendar-today" />,
+          },
+        ],
+      },
+      {
+        dataIndex: "creatorName",
+        title: "Người tạo",
+        width: "300px",
+        name: "creatorIds",
+        label: "Người tạo",
+        placeholder: "Chọn 1 hoặc nhiều người",
+        type: "select",
+        multiple: true,
+        render: (item) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <AvatarDS
+              sx={{
+                height: "20px",
+                width: "20px",
+                borderRadius: "100px",
+                fontSize: "12px",
+              }}
+              name={item}
+            ></AvatarDS>
+            <span fontSize="14px" fontWeight="600" color="#172B4D">
+              {item}
+            </span>
+          </div>
+        ),
+      },
+    ];
+  }, [page, paginationSize]);
 
   const handleUpdateListColumnApplicants = async () => {
     var body = {

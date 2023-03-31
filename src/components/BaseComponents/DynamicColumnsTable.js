@@ -72,7 +72,7 @@ const DynamicColumnsTable = (props) => {
         })
       );
     }
-  }, []);
+  }, [ColumnData, columns]);
 
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
 
@@ -134,7 +134,7 @@ const DynamicColumnsTable = (props) => {
                         }}
                         control={
                           <Checkbox
-                            defaultChecked={
+                            checked={
                               columnsVisible[p?.dataIndex] ? true : false
                             }
                             onChange={(e) => onChangeCheck(e)}
@@ -162,7 +162,7 @@ const DynamicColumnsTable = (props) => {
                         }}
                         control={
                           <Checkbox
-                            defaultChecked={
+                            checked={
                               columnsVisible[p?.dataIndex] ? true : false
                             }
                             onChange={(e) => onChangeCheck(e)}

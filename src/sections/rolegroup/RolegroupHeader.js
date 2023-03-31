@@ -30,13 +30,23 @@ const RolegroupHeader = ({
             <RHFTextField
               name="searchKey"
               placeholder="Tìm kiếm quy trình tuyển dụng"
-              sx={{ minWidth: "510px" }}
+              sx={{
+                minWidth: "360px",
+                borderRadius: '6px',
+                background: '#F2F4F5',
+                height: "36px",
+                ".MuiInput-root": {
+                  height: "36px",
+                  minHeight: "36px",
+                  border:'none'
+                },
+              }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                  <InputAdornment position="start" sx={{ ml: 0.5, mr:0 }}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "text.disabled", width: 20, height: 20 }}
+                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
                     />
                   </InputAdornment>
                 ),
@@ -45,6 +55,7 @@ const RolegroupHeader = ({
           </FormProvider>
 
           <ButtonFilterStyle
+            style={{height:36}}
             onClick={onOpenFilterForm}
             startIcon={
               <Iconify

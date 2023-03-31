@@ -8,9 +8,10 @@ import OfferFormBottomNav from "@/sections/offerform/component/OfferFormBottomNa
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import OfferFormFilterHeader from "@/sections/offerform/component/OfferFormFilterHeader";
 import OfferFormFilterModal from "@/sections/offerform/component/OfferFormFilterModal";
 import OfferFormModal from "@/sections/offerform/component/OfferFormModal";
+import EvaluationFormHeader from '../EvaluationFormHeader';
+
 
 // data
 const data = [
@@ -177,13 +178,12 @@ const EvaluationItem = () => {
       <>
         <Box>
           <FormHeader
-              title="Mẫu email mời nhận việc"
-              subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
-              buttonTitle="Thêm mẫu email"
+              title="Mẫu đánh giá"
+              buttonTitle="Thêm mẫu đánh giá"
               showButton={false}
               onOpenForm={handleOpenForm}
           />
-          <OfferFormFilterHeader
+          <EvaluationFormHeader
               methods={methods}
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}

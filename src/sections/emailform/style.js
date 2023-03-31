@@ -39,20 +39,20 @@ const ButtonAddStyle = styled(Button)(({theme}) => ({
   }
 }));
 
-const TitleStyle = styled(Typography)(({theme}) => ({
+const TitleStyle = styled(Typography)(() => ({
   '&.form-title': {
     color: '#172B4D',
     fontSize: 20,
     fontWeight: 700,
-    marginBottom: theme.spacing(1)
   }
 }));
 
-const SubTitleStyle = styled(Typography)(() => ({
+const SubTitleStyle = styled(Typography)(({theme}) => ({
   '&.form-subtitle': {
     color: '#455570',
     fontSize: 14,
     fontWeight: 400,
+    marginTop: theme.spacing(1)
   }
 }));
 
