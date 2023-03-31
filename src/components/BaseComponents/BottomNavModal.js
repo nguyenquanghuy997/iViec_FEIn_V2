@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import {Box, Divider, Drawer, IconButton, Typography} from "@mui/material";
 import {BoxFlex} from "@/sections/emailform/style";
-// import CloseIcon from "@/assets/CloseIcon";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import Content from "@/components/BaseComponents/Content";
+import CloseIcon from "@/assets/CloseIcon";
 
 const ActionItem = ({title, icon, onClick, sx, ...other}) => {
   const sxProps = { mr: 2, ...sx }
@@ -41,7 +41,7 @@ const BottomNavModal = ({data, open, onClose, actions}) => {
               <Typography>Đã chọn: {Array.isArray(data) ? data.length : 1}</Typography>
               <Divider orientation="vertical" flexItem sx={{mx: 2, width: "2px", backgroundColor: "#E7E9ED"}}/>
               <IconButton size="medium" onClick={onClose}>
-                {/* <CloseIcon/> */}
+                 <CloseIcon />
               </IconButton>
             </BoxFlex>
           </BoxFlex>

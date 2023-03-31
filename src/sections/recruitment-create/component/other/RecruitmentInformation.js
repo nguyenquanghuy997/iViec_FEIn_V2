@@ -1,33 +1,19 @@
+import React, {memo} from 'react';
 import {Box} from "@mui/material";
 import {BoxWrapperStyle} from "@/sections/recruitment-create/style";
 import RightNoteText from "@/sections/recruitment-create/component/RightNoteText";
-import {useGetJobPositionByIdQuery} from "@/sections/jobtype";
-import React from "react";
 import Common from "@/sections/recruitment-create/component/other/information/Common";
 import Time from "@/sections/recruitment-create/component/other/information/Time";
 import Salary from "@/sections/recruitment-create/component/other/information/Salary";
 import Description from "@/sections/recruitment-create/component/other/information/Description";
 import Owner from "@/sections/recruitment-create/component/other/information/Owner";
 
-const RecruitmentInformation = (
-    {
-      recruitment,
-      startDate,
-      organizationId,
-      salaryDisplayType,
-      currencyUnit,
-    }
-) => {
-
-  const {data: selectedJobPosition = {}} = useGetJobPositionByIdQuery({
-    Id: recruitment?.jobPosition?.id,
-  }, { skip: !recruitment?.jobPosition?.id });
-
+const RecruitmentInformation = ({recruitment}) => {
   return (
       <BoxWrapperStyle className="wrapper">
         {/* THÔNG TIN CHUNG */}
         <Box className="box-item" sx={{width: '100%', backgroundColor: 'transparent', display: 'flex',}}>
-          <Common />
+          <Common recruitment={recruitment} />
           <RightNoteText
               title="Lưu ý:"
               texts={['Tiêu đề tin tuyển dụng chỉ bao gồm tên vị trí tuyển dụng và khu vực cần tuyển']}
@@ -36,19 +22,19 @@ const RecruitmentInformation = (
 
         {/* THỜI GIAN TUYỂN DỤNG */}
         <Box sx={{width: '100%', backgroundColor: 'transparent', display: 'flex',}}>
-          <Time Recruitment={recruitment} startDate={startDate} />
+          <Time recruitment={recruitment} />
           <RightNoteText />
         </Box>
 
         {/* MỨC LƯƠNG */}
         <Box sx={{width: '100%', backgroundColor: 'transparent', display: 'flex',}}>
-          <Salary currencyUnit={currencyUnit} salaryDisplayType={salaryDisplayType} />
+          <Salary recruitment={recruitment} />
           <RightNoteText />
         </Box>
 
         {/* MÔ TẢ CÔNG VIỆC */}
         <Box sx={{width: '100%', backgroundColor: 'transparent', display: 'flex',}}>
-          <Description selectedJobPosition={selectedJobPosition} />
+          <Description recruitment={recruitment} />
           <RightNoteText
               title="Lưu ý:"
               texts={[
@@ -60,7 +46,7 @@ const RecruitmentInformation = (
 
         {/* CÁN BỘ TUYỂN DỤNG VÀ HỘI ĐỒNG TUYỂN DỤNG */}
         <Box className="box-item" sx={{width: '100%', backgroundColor: 'transparent', display: 'flex'}}>
-          <Owner organizationId={organizationId} />
+          <Owner recruitment={recruitment} />
           <RightNoteText
               title="Lưu ý:"
               texts={[
@@ -73,4 +59,4 @@ const RecruitmentInformation = (
   )
 }
 
-export default RecruitmentInformation;
+export default memo(RecruitmentInformation);

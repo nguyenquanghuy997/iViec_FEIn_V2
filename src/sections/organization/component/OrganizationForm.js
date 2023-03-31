@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
-import {FormProvider, RHFTextField} from "@/components/hook-form";
+import {FormProvider, RHFSelect, RHFTextField} from "@/components/hook-form";
 import Iconify from "@/components/Iconify";
 import Scrollbar from "@/components/Scrollbar";
 import {useForm} from "react-hook-form";
 import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {useGetDistrictByProvinceIdQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -145,6 +144,10 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
               sx: {
                 width: {xs: 1, sm: 560, md: 600},
                 boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+                position: 'fixed',
+                height: 'calc(100% - 92px - 1px)',
+                top: '64px',
+                right: 0
               },
               onScroll: handleScroll
             }}
@@ -216,15 +219,8 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
 
                 <Stack direction="row" justifyContent="space-between" maxWidth={'552px'} mb={3}>
                   <div style={{...SelectStyle}}>
-                    <RHFDropdown
-                        options={
-                          [...ProvinceList, { id: '', value: "", name: "" }]?.map((i) => ({
-                            ...i,
-                            value: i.id,
-                            label: i.name,
-                            name: i.name,
-                          }))
-                        }
+                    <RHFSelect
+                        options={ProvinceList?.map((i) => ({value: i.id, label: i.name}))}
                         style={{...SelectStyle}}
                         name="provinceId"
                         placeholder="Chọn Tỉnh/Thành phố"
@@ -232,15 +228,8 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                     />
                   </div>
                   <div style={{...SelectStyle}}>
-                    <RHFDropdown
-                        options={
-                          [...DistrictList, { id: '', value: "", name: "" }]?.map((i) => ({
-                            ...i,
-                            value: i.id,
-                            label: i.name,
-                            name: i.name,
-                          }))
-                        }
+                    <RHFSelect
+                        options={DistrictList?.map((i) => ({value: i.id, label: i.name}))}
                         style={{...SelectStyle}}
                         name="districtId"
                         disabled={!watchProvinceId}

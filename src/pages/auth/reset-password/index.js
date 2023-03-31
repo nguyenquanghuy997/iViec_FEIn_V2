@@ -30,7 +30,7 @@ export default function ResetPassword() {
 
   const handleGoToPageByUrl = (url = "") => {
     if (!url) return;
-    router.push(url);
+    return router.push(url);
   };
 
   return (

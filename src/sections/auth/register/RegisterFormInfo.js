@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {RegisterFormSectionLabel} from ".";
 import {STYLE_CONSTANT} from "./constants";
 import Iconify from "@/components/Iconify";
-import {FormProvider, RHFAutocomplete, RHFCheckbox, RHFSelect, RHFTextField,} from "@/components/hook-form";
+import {FormProvider, RHFCheckbox, RHFSelect, RHFTextField,} from "@/components/hook-form";
 import {PATH_AUTH} from "@/routes/paths";
 import {useRegisterMutation,} from "@/sections/auth/authSlice";
 import {
@@ -21,6 +21,7 @@ import * as Yup from "yup";
 import {CHECK_EMAIL} from '@/utils/regex'
 import {LabelStyle} from "@/components/hook-form/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
 
 const InputStyle = {width: 440, minHeight: 44};
 
@@ -228,7 +229,7 @@ function RegisterForm() {
                             sx={{mb: 2.5}}
                         >
                             <div style={{...InputStyle}}>
-                                <RHFAutocomplete
+                                <RHFMuiAutocomplete
                                     options={JobCategoryList?.map((i) => ({
                                         value: i.id,
                                         label: `${i.name[0].toUpperCase()}${i.name.slice(1)}`,
