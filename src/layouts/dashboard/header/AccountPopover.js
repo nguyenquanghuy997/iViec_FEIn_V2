@@ -1,3 +1,4 @@
+import { AvatarDS } from "@/components/DesignSystem";
 import MenuPopover from "@/components/MenuPopover";
 // components
 import { DOMAIN_SERVER_API } from "@/config";
@@ -10,7 +11,6 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import styled from "@emotion/styled";
 // @mui
 import {
-  Avatar,
   Box,
   Divider,
   IconButton,
@@ -82,6 +82,9 @@ export default function AccountPopover() {
         sx={{
           p: 0,
           ...(open && {
+            '& .MuiBadge-root':{
+              marginRight: 0,
+            },
             "&:before": {
               zIndex: 1,
               content: "''",
@@ -95,16 +98,16 @@ export default function AccountPopover() {
         }}
       >
         {Object.keys(avatar.avatar).length === 0 ? (
-          <Avatar
-            sx={{ borderRadius: '10px' }}
+          <AvatarDS
+            sx={{ borderRadius: '10px',  marginRight:0 }}
             src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
-            alt={user?.displayName}
+            name={user?.firstName}
           />
         ) : (
-          <Avatar
-            sx={{ borderRadius: '10px' }}
-            src={`${DOMAIN_SERVER_API}/${avatar?.avatar}`}
-            alt={user?.displayName}
+          <AvatarDS
+            sx={{ borderRadius: '10px', marginRight:0 }}
+            name={user?.firstName}
+            alt={user?.firstName}
           />
         )}
       </IconButton>

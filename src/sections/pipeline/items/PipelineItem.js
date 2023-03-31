@@ -9,10 +9,6 @@ import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { filterSlice } from "@/redux/common/filterSlice";
 import { useDispatch, useSelector } from "@/redux/store";
-import {
-  useGetListColumnApplicantsQuery,
-  useUpdateListColumnApplicantsMutation,
-} from "@/sections/applicant";
 import { PipelineStateType, Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { cleanObject } from "@/utils/function";
@@ -49,9 +45,8 @@ export const PipelineItem = () => {
     JSON.stringify(cleanObject(dataFilter))
   );
   // api get list Column
-  const { data: {items: ColumnData =[]}={} } = useGetListColumnApplicantsQuery();
   // api update list Column
-  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+  const [UpdateListColumnApplicants] = [];
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
 
@@ -246,6 +241,7 @@ export const PipelineItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
+  const [columnsTable, setColumnsTable] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -266,10 +262,10 @@ export const PipelineItem = () => {
           columns={columns}
           source={Data}
           loading={isLoading}
-          ColumnData={ColumnData[0]}
+          columnsTable={columnsTable}
+          setColumnsTable={setColumnsTable}
           UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
-          scroll={{ x: 1618 }}
           isSetting={true}
           nodata="Hiện chưa có quy trình tuyển dụng nào"
           itemSelected={itemSelected}
