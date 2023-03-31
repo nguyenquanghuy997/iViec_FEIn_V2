@@ -1,25 +1,21 @@
 import {Box, InputAdornment, Typography} from "@mui/material";
 import FormModal from "@/components/BaseComponents/FormModal";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
-import { STYLE_CONSTANT as style } from "@/theme/palette";
-import {useGetAllExaminationQuery} from "@/sections/exam/ExamSlice";
-const ExaminationForm = ({open, onClose, ...props}) => {
+import {STYLE_CONSTANT as style} from "@/theme/palette";
+import {RHFSelect} from "@/components/hook-form";
+import {LabelStyle} from "@/components/hook-form/style";
+import {API_GET_EXAMINATION} from "@/routes/api";
 
-  const {data: {items: ListExamination = []} = {}} = useGetAllExaminationQuery();
+const ExaminationForm = ({open, onClose, ...props}) => {
 
   return (
       <FormModal open={open} onClose={onClose} maxWidth={'600px'} {...props}>
         <Box sx={{width: '100%'}}>
-          <RHFDropdown
-              title="Đề thi"
+          <LabelStyle required>Đề thi</LabelStyle>
+          <RHFSelect
               name="examinationId"
               fullWidth
-              options={ListExamination.map(item => ({
-                id: item.id,
-                value: item.id,
-                name: item.name,
-              }))}
+              remoteUrl={API_GET_EXAMINATION}
               placeholder={"Chọn đề thi"}
           />
         </Box>
@@ -27,6 +23,7 @@ const ExaminationForm = ({open, onClose, ...props}) => {
           <InputNumberFormatFilter
               name="expiredTime"
               title="Số ngày tồn tại đề thi"
+              isRequired
               otherTitle={
                 <Typography sx={{
                   fontSize: style.FONT_13,

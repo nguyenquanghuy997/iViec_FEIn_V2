@@ -15,13 +15,21 @@ const UserInviteActivePage = () => {
     const { email, 'code-active': codeActive } = router.query;
     const [confirmInviteActive] = useActiveInviteUserMutation();
 
+    const [, queryString = ""] = router.asPath.split("?");
+
+    const queryObj = queryString.split("&").reduce((prev, curr) => {
+        const [key, value] = curr.split("=");
+        prev.set(key, value);
+        return prev;
+    }, new Map());
+
     useEffect(() => {
         async function fetchConfirmInviteActive() {
             if (email && codeActive) {
                 try {
                     await confirmInviteActive({
-                        email: decodeURI(email),
-                        token: decodeURI(codeActive)
+                        email: decodeURI(queryObj.get('email')),
+                        token: decodeURI(queryObj.get('codeActive'))
                     }).unwrap();
                     setStatusActiveUser(true);
                 } catch (error) {
@@ -38,7 +46,7 @@ const UserInviteActivePage = () => {
                 <LogoHeader />
                 <Box sx={{ ...BoxWrapperStyle }}>
                     <Box >
-                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURI(email)} token={codeActive} />:  <UserActiveFailure />}
+                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURI(queryObj.get('email'))} token={decodeURI(queryObj.get('codeActive'))} />:  <UserActiveFailure />}
                     </Box>
                 </Box>
             </Page>

@@ -121,7 +121,6 @@ export const {
   useGetPipelineByIdQuery,
   useGetAllPipelineByOrganizationQuery,
   useGetAllStepOfPipelineQuery,
-  useGetAllExamQuery,
   useUpdateStatusPipelineMutation,
   useAddPipelineMutation,
   useUpdatePipelineMutation,

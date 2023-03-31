@@ -4,9 +4,20 @@ import {LabelStyle} from "@/components/hook-form/style";
 import DateFilter from "@/sections/dynamic-filter/DateFilter";
 import {isEmpty} from "lodash";
 import {BoxInnerStyle} from "@/sections/recruitment-create/style";
+import {useFormContext, useWatch} from "react-hook-form";
+import {useEffect} from "react";
 
-const Time = ({ Recruitment, startDate }) => {
-  return (
+const Time = ({ recruitment }) => {
+    const { setValue } = useFormContext();
+    const startDate = useWatch({name: 'startDate'});
+    useEffect(() => {
+        if (!isEmpty(recruitment)) {
+            setValue('startDate', recruitment?.startDate);
+            setValue('endDate', recruitment?.endDate);
+        }
+    }, [recruitment])
+
+    return (
       <BoxInnerStyle>
         <DividerCard title="THỜI GIAN TUYỂN DỤNG"/>
         <Box sx={{px: 4, py: 3}}>
@@ -18,7 +29,7 @@ const Time = ({ Recruitment, startDate }) => {
                   name='startDate'
                   placeholder='Chọn ngày'
                   DatePickerProps={{
-                    minDate: !isEmpty(Recruitment) ? startDate : new Date()
+                    minDate: !isEmpty(recruitment) ? startDate : new Date()
                   }}
               />
             </div>
@@ -28,7 +39,7 @@ const Time = ({ Recruitment, startDate }) => {
                   name='endDate'
                   placeholder='Chọn ngày'
                   DatePickerProps={{
-                    minDate: !isEmpty(Recruitment) ? startDate : new Date()
+                    minDate: !isEmpty(recruitment) ? startDate : new Date()
                   }}
               />
             </div>

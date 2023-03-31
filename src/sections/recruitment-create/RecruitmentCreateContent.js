@@ -1,17 +1,15 @@
-import React, {useEffect, useMemo, useState} from "react";
-// mui
+import {memo, useMemo, useState} from "react";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
-// component
 import {View} from "@/components/FlexStyled";
 import Content from "@/components/BaseComponents/Content";
 import JobCreateHeader from "@/sections/recruitment-create/component/header/RecruitmentCreateHeader";
 import JobCreateSubHeader from "@/sections/recruitment-create/component/header/RecruitmentCreateSubHeader";
 import {BoxFlex} from "@/sections/emailform/style";
-import {DraftIcon, OrangeAlertIcon, SendIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
+import {DraftIcon, SendIcon} from "@/sections/recruitment-create/component/icon/HeaderIcon";
 import RecruitmentInformation from '@/sections/recruitment-create/component/other/RecruitmentInformation';
 import RecruitmentPipeLine from '@/sections/recruitment-create/component/other/RecruitmentPipeLine';
-import {useForm, useWatch} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
@@ -22,13 +20,9 @@ import {
 } from "@/sections/recruitment";
 import {useSnackbar} from "notistack";
 import {isEmpty} from "lodash";
-import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
 import {cleanObject} from "@/utils/function";
-import {useDebounce} from "@/hooks/useDebounce";
 import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
-import {RecruitmentWorkingForm} from "@/utils/enum";
-import {useGetJobPositionByIdQuery} from "@/sections/jobtype";
 import {Typography} from "@mui/material";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
@@ -38,7 +32,6 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   const router = useRouter();
   const {query} = router;
   const {enqueueSnackbar} = useSnackbar();
-  const {data: OrganizationOfUser = {}} = useGetOrganizationInfoQuery();
   const [createRecruitment] = useCreateRecruitmentMutation();
   const [updateRecruitmentOfficial] = useUpdateRecruitmentOfficialMutation();
   const [updateRecruitmentDraft] = useUpdateRecruitmentDraftMutation();
@@ -46,14 +39,13 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   // modal
   const [isOpenSaveDraft, setIsOpenSaveDraft] = useState(false);
   const [isOpenSubmitApprove, setIsOpenSubmitApprove] = useState(false);
-  const [isOpenAlertBack, setIsOpenAlertBack] = useState(false);
   const [isOpenPreview, setIsOpenPreview] = useState(false);
 
   const defaultValues = useMemo(() => {
     return {
       id: "",
       name: '',
-      organizationId: OrganizationOfUser.id,
+      organizationId: '',
       description: '',
       benefit: '',
       requirement: '',
@@ -83,7 +75,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       examinationId: null,
       expiredTime: ''
     }
-  }, [OrganizationOfUser])
+  }, [])
 
   // yup & handle form
   const FormSchema = Yup.object().shape({
@@ -143,126 +135,42 @@ const RecruitmentCreateContent = ({Recruitment}) => {
     defaultValues,
   });
 
-  const {control, handleSubmit, setValue, reset, formState: {errors, isValid}} = methods;
+  const {handleSubmit, setValue, getValues, formState: {isValid}} = methods;
 
-  const watchAllFields = useWatch({control});
+  // const watchOrganizationPipelineStateDatas = useWatch({name: 'organizationPipelineStateDatas'});
+  // const watchExaminationId = useWatch({name: 'examinationId'});
+  // const watchExpiredTime = useWatch({name: 'expiredTime'});
 
-  const watchName = useWatch({control, name: 'name'});
-  const watchNameDebounce = useDebounce(watchName, 500);
-  const watchOrganization = useWatch({control, name: 'organizationId'});
-  const watchSalaryDisplayType = useWatch({control, name: 'salaryDisplayType'});
-  const watchCurrencyType = useWatch({control, name: 'currencyUnit'});
-  const watchOrganizationPipelineId = useWatch({control, name: 'organizationPipelineId'});
-  const watchJobPositionId = useWatch({control, name: 'jobPositionId'});
-
-  // validate
-  const watchStartDate = useWatch({control, name: 'startDate'});
-
-  const watchOrganizationPipelineStateDatas = useWatch({control, name: 'organizationPipelineStateDatas'});
-  const watchExaminationId = useWatch({control, name: 'examinationId'});
-  const watchExpiredTime = useWatch({control, name: 'expiredTime'});
-
-  const [organizationPipelineStateDatas, setOrganizationPipelineStateDatas] = useState(watchOrganizationPipelineStateDatas);
-
-  const {data: JobPosition = {}} = useGetJobPositionByIdQuery({Id: watchJobPositionId}, {skip: !watchJobPositionId})
-
-  useEffect(() => {
-    if (!isEmpty(JobPosition)) {
-      reset({
-        ...watchAllFields,
-        description: JobPosition?.description,
-        requirement: JobPosition?.requirement,
-        benefit: JobPosition?.benefit,
-      })
-    }
-  }, [JobPosition])
-
-  useEffect(() => {
-    if (!isEmpty(Recruitment)) {
-      for (let i in defaultValues) {
-        setValue(i, Recruitment[i]);
-        setValue('organizationId', Recruitment?.organizationId)
-        setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => ({...item, value: item?.provinceId, label: item?.provinceName})))
-        setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => ({...item, value: item?.jobCategoryId, label: item?.name})))
-        setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => ({value: item?.workingForm, label: RecruitmentWorkingForm(item?.workingForm)})))
-        setValue('jobPositionId', Recruitment?.jobPosition?.id)
-        setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({...item, value: item?.councilUserId, label: item.email || item.councilName})))
-        setValue('coOwnerIds', Recruitment?.coOwners?.map(item => ({...item, value: item?.id, label: item.email || item.name})))
-        setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({...item, value: item?.languageId, label: item?.name})))
-        setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
-        setValue('currencyUnit', Recruitment?.currencyUnit);
-        setOrganizationPipelineStateDatas(Recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => ({...item, value: item?.id, label: item?.name})))
-      }
-    }
-  }, [Recruitment])
-
-  useEffect(() => {
-    if (!isEmpty(OrganizationOfUser) && isEmpty(Recruitment)) {
-      setValue('organizationId', OrganizationOfUser.id);
-    }
-  }, [OrganizationOfUser, Recruitment])
-
-  useEffect(() => {
-    if (watchSalaryDisplayType) {
-      methods.resetField('currencyUnit');
-      methods.resetField('minSalary');
-      methods.resetField('maxSalary');
-    }
-  }, [watchSalaryDisplayType])
+  // const [organizationPipelineStateDatas, setOrganizationPipelineStateDatas] = useState(watchOrganizationPipelineStateDatas);
+  const [organizationPipelineStateDatas] = useState([]);
 
   const handleSetValuePipelineExamination = (data) => {
-    const findIndex = organizationPipelineStateDatas?.map(item => item.id).indexOf(data.id);
-    if (findIndex !== -1) {
-      const organizationPipelineStateDatasNext = [...organizationPipelineStateDatas].map(i => i.id === data.id ? { ...data, examinationId: watchExaminationId, expiredTime: watchExpiredTime } : { ...i })
-      setOrganizationPipelineStateDatas(organizationPipelineStateDatasNext)
-    } else {
-      const organizationPipelineStateDatasNext = [...organizationPipelineStateDatas, { ...data, examinationId: watchExaminationId, expiredTime: watchExpiredTime }]
-      setOrganizationPipelineStateDatas(organizationPipelineStateDatasNext)
-    }
+    return data;
+    // const findIndex = organizationPipelineStateDatas?.map(item => item.id).indexOf(data.id);
+    // if (findIndex !== -1) {
+    //   const organizationPipelineStateDatasNext = [...organizationPipelineStateDatas].map(i => i.id === data.id ? { ...data, examinationId: watchExaminationId, expiredTime: watchExpiredTime } : { ...i })
+    //   setOrganizationPipelineStateDatas(organizationPipelineStateDatasNext)
+    // } else {
+    //   const organizationPipelineStateDatasNext = [...organizationPipelineStateDatas, { ...data, examinationId: watchExaminationId, expiredTime: watchExpiredTime }]
+    //   setOrganizationPipelineStateDatas(organizationPipelineStateDatasNext)
+    // }
   }
   const handleClearDataExaminationForm = () => {
     setValue('examinationId', '');
     setValue('expiredTime', '');
   }
 
-  const [valueTab, setValueTab] = useState(errors.organizationPipelineId ? '2' : '1');
+  const [valueTab, setValueTab] = useState('2');
   const handleChange = (event, newValue) => {
     setValueTab(newValue);
   };
 
   const onSubmit = async (data) => {
-    if (!isEmpty(errors)) {
-      enqueueSnackbar(Object.entries(errors)[0]?.message, {
-        autoHideDuration: 1000,
-        variant: 'error',
-      });
-      return;
-    }
     const body = {
+      ...data,
       id: data?.id,
-      name: data?.name,
-      organizationId: data?.organizationId,
-      description: data?.description,
-      benefit: data?.benefit,
-      requirement: data?.requirement,
-      numberPosition: data?.numberPosition,
-      minSalary: data?.minSalary || null,
-      maxSalary: data?.maxSalary || null,
-      salaryDisplayType: data?.salaryDisplayType,
-      sex: data?.sex,
-      startDate: data?.startDate,
-      endDate: data?.endDate,
-      address: data?.address,
       recruitmentLanguageIds: data?.recruitmentLanguageIds?.map(item => item.value),
       coOwnerIds: data?.coOwnerIds?.map(item => item.value),
-      tags: data?.tags,
-      jobPositionId: data?.jobPositionId,
-      ownerId: data?.ownerId,
-      workExperience: data?.workExperience,
-      currencyUnit: data?.currencyUnit || 0,
-      candidateLevelId: data?.candidateLevelId,
-      organizationPipelineId: data?.organizationPipelineId,
-      isAutomaticStepChange: data?.isAutomaticStepChange,
       recruitmentCouncilIds: data?.recruitmentCouncilIds.map(item => item.value),
       recruitmentJobCategoryIds: data?.recruitmentJobCategoryIds.map(item => item.value),
       recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
@@ -270,7 +178,8 @@ const RecruitmentCreateContent = ({Recruitment}) => {
       recruitmentCreationType: isOpenSaveDraft ? 0 : 1,
       organizationPipelineStateDatas: organizationPipelineStateDatas.map(item => ({
         organizationPipelineStateId: item.id,
-        examinationId: item.examinationId?.examinationId
+        examinationId: item.examinationId?.examinationId,
+        examinationExpiredTime: item.examinationId?.expiredTime,
       }))
     }
     if (data?.id && !query?.type) {
@@ -321,7 +230,6 @@ const RecruitmentCreateContent = ({Recruitment}) => {
         enqueueSnackbar("Thêm tin tuyển dụng thành công!", {
           autoHideDuration: 1000
         });
-        reset(defaultValues);
         await router.push(PATH_DASHBOARD.recruitment.root);
       } catch (e) {
         enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
@@ -344,40 +252,31 @@ const RecruitmentCreateContent = ({Recruitment}) => {
 
   return (
       <View>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <JobCreateHeader
             setIsOpenSubmitApprove={setIsOpenSubmitApprove}
             setIsOpenSaveDraft={setIsOpenSaveDraft}
             style={{padding: '18px 0', boxShadow: 'none', borderBottom: '1px solid #E7E9ED'}}
             errors={isValid}
-            watchName={watchNameDebounce}
             processStatus={Recruitment?.processStatus}
             title={!isEmpty(Recruitment) && !query?.type ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng'}
             onOpenPreview={handleOpenPreview}
         />
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <TabContext value={valueTab}>
             <JobCreateSubHeader handleChange={handleChange}/>
             <Content>
               <View mt={'168px'}>
                 <TabPanel value="1">
                   <BoxFlex>
-                    <RecruitmentInformation
-                        recruitment={Recruitment}
-                        startDate={watchStartDate}
-                        organizationId={watchOrganization}
-                        salaryDisplayType={watchSalaryDisplayType}
-                        currencyUnit={watchCurrencyType}
-                    />
+                    <RecruitmentInformation recruitment={Recruitment}/>
                   </BoxFlex>
                 </TabPanel>
                 <TabPanel value="2">
                   <RecruitmentPipeLine
-                      watchOrganization={watchOrganization}
-                      watchOrganizationPipelineId={watchOrganizationPipelineId}
                       onSetValuePipelineExamination={handleSetValuePipelineExamination}
                       onClearDataExaminationForm={handleClearDataExaminationForm}
                       examinationFormValue={organizationPipelineStateDatas}
-                      setValue={setValue}
+                      recruitment={Recruitment}
                   />
                 </TabPanel>
                 {/*<TabPanel value="3">*/}
@@ -401,7 +300,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                   marginTop: 2,
                 }}>Lưu nháp tin tuyển dụng</Typography>}
                 subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
-                data={watchAllFields}
+                data={getValues()}
                 onSubmit={onSubmit}
                 btnCancelProps={{
                   title: 'Hủy',
@@ -425,7 +324,7 @@ const RecruitmentCreateContent = ({Recruitment}) => {
                   marginTop: 2
                 }}>Gửi phê duyệt tin tuyển dụng</Typography>}
                 subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
-                data={watchAllFields}
+                data={getValues()}
                 onSubmit={onSubmit}
                 btnCancelProps={{
                   title: 'Hủy',
@@ -436,55 +335,31 @@ const RecruitmentCreateContent = ({Recruitment}) => {
             />
         }
         {
-            isOpenAlertBack && <ConfirmModal
-                open={isOpenAlertBack}
-                onClose={() => setIsOpenAlertBack(false)}
-                icon={<OrangeAlertIcon/>}
-                title={<Typography sx={{
-                  textAlign: 'center',
-                  width: '100%',
-                  fontSize: style.FONT_BASE,
-                  fontWeight: style.FONT_SEMIBOLD,
-                  color: style.COLOR_MAIN,
-                  marginTop: 2
-                }}>Trở về danh sách tin tuyển dụng</Typography>}
-                subtitle={"Các thao tác trước đó sẽ không được lưu, Bạn có chắc chắn muốn trở lại?"}
-                data={watchAllFields}
-                onSubmit={() => setIsOpenAlertBack(false)}
-                btnCancelProps={{
-                  title: 'Hủy',
-                }}
-                btnConfirmProps={{
-                  title: 'Trở lại'
-                }}
-            />
-        }
-        {
             isOpenPreview && <RecruitmentPreviewCreate
                 onClose={handleClosePreview}
                 data={{
                   // header
-                  name: watchAllFields?.name,
-                  organizationId: watchAllFields?.organizationId,
+                  name: getValues('name'),
+                  organizationId: getValues('organizationId'),
                   // summary
-                  numberPosition: watchAllFields?.numberPosition,
-                  address: watchAllFields?.address,
-                  recruitmentJobCategories: watchAllFields?.recruitmentJobCategoryIds?.map(item => ({
+                  numberPosition: getValues('numberPosition'),
+                  address: getValues('address'),
+                  recruitmentJobCategories: getValues('recruitmentJobCategoryIds')?.map(item => ({
                     name: item?.label,
                     jobCategoryId: item?.value
                   })),
-                  recruitmentWorkingForms: watchAllFields?.recruitmentWorkingForms?.map(item => ({
+                  recruitmentWorkingForms: getValues('recruitmentWorkingForms')?.map(item => ({
                     workingForm: item?.value,
                     id: item?.value
                   })),
-                  salaryDisplayType: watchAllFields?.salaryDisplayType,
-                  minSalary: watchAllFields?.minSalary,
-                  maxSalary: watchAllFields?.maxSalary,
-                  currencyUnit: watchAllFields?.currencyUnit,
+                  salaryDisplayType: getValues('salaryDisplayType'),
+                  minSalary: getValues('minSalary'),
+                  maxSalary: getValues('maxSalary'),
+                  currencyUnit: getValues('currencyUnit'),
                   // description
-                  description: watchAllFields?.description,
-                  requirement: watchAllFields?.requirement,
-                  benefit: watchAllFields?.benefit,
+                  description: getValues('description'),
+                  requirement: getValues('requirement'),
+                  benefit: getValues('benefit'),
                 }}
                 open={isOpenPreview}
             />
@@ -493,4 +368,4 @@ const RecruitmentCreateContent = ({Recruitment}) => {
   )
 }
 
-export default RecruitmentCreateContent;
+export default memo(RecruitmentCreateContent);
