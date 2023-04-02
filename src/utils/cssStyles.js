@@ -1,8 +1,7 @@
 import { ButtonDS } from "@/components/DesignSystem";
-import { Box, Dialog, DialogContentText, Switch } from "@mui/material";
+import { Box, Dialog, DialogContentText, Switch, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
-import { Typography } from "antd";
 
 function getDirection(value = "bottom") {
   return {
@@ -180,4 +179,11 @@ export const GreenSwitch = styled(Switch)(({theme}) => ({
   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
     backgroundColor: "#388E3C",
   },
+}));
+
+export const TextElipsis = styled(Typography)(() => ({
+  textOverflow:'ellipsis',
+   whiteSpace:'nowrap',
+   overflow:'hidden',
+   width:'100%'
 }));

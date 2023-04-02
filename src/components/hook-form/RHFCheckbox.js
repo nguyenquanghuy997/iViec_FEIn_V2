@@ -29,7 +29,7 @@ export function RHFCheckbox({ name, labelPlacement, label, style, ...other }) {
               checkedIcon={<CheckboxIconChecked />}
               {...field}
               style={other.style}
-              checked={field.value}
+              checked={field.value ? true : false}
             />
           )}
         />

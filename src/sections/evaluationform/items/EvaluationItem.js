@@ -1,102 +1,133 @@
-import React, {useState} from 'react'
-import {Box} from "@mui/material";
+import EvaluationFormHeader from "../EvaluationFormHeader";
+import {
+  useDeleteReviewFormMutation,
+  useGetAllReviewFormQuery,
+  useUpdateStatusReviewFormMutation,
+} from "../evaluationFormSlice";
+import EvaluationFilterModal from "../modals/EvaluationFilterModal";
+import { EvaluationFormModal } from "../modals/EvaluationFormModal";
+import EvaluationItemBlock from "./EvaluationItemBlock";
+import ActiveModal from "@/components/BaseComponents/ActiveModal";
+import DeleteModal from "@/components/BaseComponents/DeleteModal";
 import FormHeader from "@/sections/emailform/component/FormHeader";
-import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
-import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
-import ActiveModal from "@/sections/emailform/component/ActiveModal";
-import OfferFormBottomNav from "@/sections/offerform/component/OfferFormBottomNav";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box } from "@mui/material";
+import { useSnackbar } from "notistack";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import OfferFormFilterModal from "@/sections/offerform/component/OfferFormFilterModal";
-import OfferFormModal from "@/sections/offerform/component/OfferFormModal";
-import EvaluationFormHeader from '../EvaluationFormHeader';
-
 
 // data
-const data = [
-  {
-    id: 1,
-    title: 'Mặc định',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: true,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 2,
-    title: 'Mẫu email mời nhận việc 1',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: true,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 3,
-    title: 'Mẫu email mời nhận việc 2',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: false,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 4,
-    title: 'Mẫu email mời nhận việc 3',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: false,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 5,
-    title: 'Mẫu email mời nhận việc 4',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: true,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 5,
-    title: 'Mẫu email mời nhận việc 5',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: false,
-    createdDate: '17/02/2023',
-  }
-]
+// const data = [
+//   {
+//     id: 1,
+//     title: "Mặc định",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: true,
+//     createdDate: "17/02/2023",
+//     reviewFormCriterias: [
+//       {
+//         name: "Ngoại hình",
+//         description: "Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn",
+//         isRequired: true,
+//       },
+//       {
+//         name: "Học vấn",
+//         description:
+//           "Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn",
+//         isRequired: true,
+//       },
+//       {
+//         name: "Kinh nghiệm làm việc",
+//         description:
+//           "Cao trên 1m70, Cao trên 1m70,Cao trên 1m70,Cao trên 1m70,",
+//         isRequired: false,
+//       },
+//       {
+//         name: "Kỹ năng",
+//         description: "Biết lập trình, biết nói",
+//         isRequired: false,
+//       },
+//       {
+//         name: "Thái độ",
+//         description: "ChĂM CHỈ, cần cù",
+//         isRequired: true,
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: "Mẫu email mời nhận việc 1",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: true,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 3,
+//     title: "Mẫu email mời nhận việc 2",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: false,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 4,
+//     title: "Mẫu email mời nhận việc 3",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: false,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 5,
+//     title: "Mẫu email mời nhận việc 4",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: true,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 5,
+//     title: "Mẫu email mời nhận việc 5",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: false,
+//     createdDate: "17/02/2023",
+//   },
+// ];
 
 const defaultValues = {
   searchKey: "",
 };
 const EvaluationItem = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  // const [Data] = useState([...data]);
+  const {data: {items: Data = []} = {}} = useGetAllReviewFormQuery();
+  const [status] = useUpdateStatusReviewFormMutation();
 
-  const [offerFormLIst] = useState([...data])
+  const [expands, setExpands] = useState(Array(Data.length).fill(false));
 
-  const [expands, setExpands] = useState(Array(offerFormLIst.length).fill(false));
-  const [selected, setSelected] = useState(Array(offerFormLIst.length).fill(false));
-  const [selectedValue, setSelectedValue] = useState(Array(offerFormLIst.length).fill({checked: false}));
+  // const [selected, setSelected] = useState(
+  //   Array(Data.length).fill(false)
+  // );
+  // const [selectedValue, setSelectedValue] = useState(
+  //   Array(Data.length).fill({ checked: false })
+  // );
 
   // modal
   const [item, setItem] = useState(null);
-  const [isOpenForm, setIsOpenForm] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [isOpenActive, setIsOpenActive] = useState(false);
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+  const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
 
-  // bottom nav modal
-  const [, setIsOpenBottomNav] = React.useState(false);
-  const [, setShowDelete] = useState(false);
-  const [, setShowMultipleDelete] = useState(false);
-  const [, setActionType] = useState(0)    // 0 add, 1 update
-  const [, setActionTypeActive] = useState(0)    // 1 active 0 inactive
-
-  const [isOpenFilter, setIsOpenFilter] = useState(false)
   const handleOpenFilterForm = () => {
     setIsOpenFilter(true);
-  }
-
+  };
   const handleCloseFilterForm = () => {
     setIsOpenFilter(false);
-  }
+  };
 
   // form search
   const Schema = Yup.object().shape({
@@ -105,153 +136,140 @@ const EvaluationItem = () => {
 
   const methods = useForm({
     mode: "onChange",
-    defaultValues: {...defaultValues},
+    defaultValues: { ...defaultValues },
     resolver: yupResolver(Schema),
   });
 
-  const {handleSubmit} = methods;
+  const { handleSubmit } = methods;
 
   // expand card item
   const handleChangeExpand = (index) => {
-    const expandsNext = [...expands].map((item, idx) => idx === index ? !item : item)
+    const expandsNext = [...expands].map((item, idx) =>
+      idx === index ? !item : item
+    );
     setExpands(expandsNext);
   };
+  // const handleSelected = (data, index) => {
+  //   const selectedNext = [...selected].map((i, idx) =>
+  //     idx === index ? !i : i
+  //   );
+  //   const selectedValueNext = [...selectedValue].map((i, idx) =>
+  //     idx === index
+  //       ? { ...i, checked: !i.checked }
+  //       : {
+  //           ...i,
+  //           checked: i.checked,
+  //         }
+  //   );
+  //   setSelected(selectedNext);
+  //   setSelectedValue(selectedValueNext);
+  // };
 
-  const handleSelected = (data, index) => {
-    const selectedNext = [...selected].map((i, idx) => idx === index ? !i : i)
-    const selectedValueNext = [...selectedValue].map((i, idx) => idx === index ? {...i, checked: !i.checked} : {
-      ...i,
-      checked: i.checked
-    })
-    setSelected(selectedNext);
-    setSelectedValue(selectedValueNext);
-  }
-
-  // handle delete
-  const handleOpenConfirm = (data) => {
-    setConfirmDelete(true);
+  const handleOpenModel = (data, type) => {
+    setTypeConfirmMultiple(type);
+    setShowConfirmMultiple(true);
     setItem(data);
-  }
-
-  const handleCloseConfirm = () => {
-    setConfirmDelete(false);
-    setItem(null);
-  }
-
-  const handleDelete = (data) => {
-    return data;
-  }
-
-  // handle active
-  const handleOpenActiveModal = (data) => {
-    setIsOpenActive(true);
-    setItem(data);
-  }
-
-  const handleCloseActiveModal = () => {
-    setIsOpenActive(false);
-    setItem(null);
-  }
-
-  const handleActive = (data) => {
-    return data;
-  }
-
-  // handle form (add & update)
-  const handleOpenForm = (data) => {
-    setItem(data)
-    setIsOpenForm(true);
-  }
-
-  const handleCloseForm = () => {
-    setIsOpenForm(false);
-    setItem(null)
-  }
-
-  // handle bottom nav
-  const handleCloseBottomNav = () => {
-    setIsOpenBottomNav(false);
-    setSelected([]);
   };
 
+  const handleCloseModel = () => {
+    setShowConfirmMultiple(false);
+    setItem(null);
+  };
+
+  const handleChangeStatus = async (item) => {
+    try {
+      const data = {
+        ids: [item.id],
+        isActive: !item.isActive,
+      };
+      await status(data).unwrap();
+      enqueueSnackbar("Chuyển trạng thái thành công !");
+      handleCloseModel();
+    } catch (err) {
+      enqueueSnackbar("Chuyển trạng thái thất bại !", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
+  };
+  const [deletes] = useDeleteReviewFormMutation();
+
+  const handleDelete = async (item) => {
+    try {
+      await deletes({ ids: [item?.id] }).unwrap();
+      enqueueSnackbar("Thực hiện thành công !");
+      handleCloseModel();
+    } catch (err) {
+      enqueueSnackbar("Thực hiện thất bại !", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
+  };
   return (
-      <>
-        <Box>
-          <FormHeader
-              title="Mẫu đánh giá"
-              buttonTitle="Thêm mẫu đánh giá"
-              showButton={false}
-              onOpenForm={handleOpenForm}
-          />
-          <EvaluationFormHeader
-              methods={methods}
-              handleSubmit={handleSubmit}
-              onOpenFilterForm={handleOpenFilterForm}
-              onCloseFilterForm={handleCloseFilterForm}
-              onOpenForm={handleOpenForm}
-          />
-          {data.map((column, index) => {
-            return <CardEmailFormItem
-                isCheckbox
-                key={index}
-                index={index}
-                item={column}
-                expanded={expands[index]}
-                checked={selectedValue[index].checked}
-                onChangeSelected={() => handleSelected(column, index)}
-                onChangeExpand={() => handleChangeExpand(index)}
-                onOpenConfirmDelete={handleOpenConfirm}
-                onOpenActiveModal={handleOpenActiveModal}
-                onOpenFormModal={handleOpenForm}
+    <>
+      <Box>
+        <FormHeader
+          title="Mẫu đánh giá"
+          buttonTitle="Thêm mẫu đánh giá"
+          showButton={false}
+        />
+        <EvaluationFormHeader
+          methods={methods}
+          handleSubmit={handleSubmit}
+          onOpenFilterForm={handleOpenFilterForm}
+          onCloseFilterForm={handleCloseFilterForm}
+          onOpenForm={handleOpenModel}
+        />
+        {Data.map((column, index) => {
+          return (
+            <EvaluationItemBlock
+              // isCheckbox
+              key={index}
+              index={index}
+              item={column}
+              expanded={expands[index]}
+              // checked={selectedValue[index].checked}
+              // onChangeSelected={() => handleSelected(column, index)}
+              onChangeExpand={() => handleChangeExpand(index)}
+              onOpenModel={handleOpenModel}
             />
-          })}
-        </Box>
-        {confirmDelete && <ConfirmModal
-            confirmDelete={confirmDelete}
-            onCloseConfirmDelete={handleCloseConfirm}
-            onSubmit={handleDelete}
-            title="Xác nhận xóa mẫu email mời nhận việc"
-            subtitle="Bạn có chắc chắn muốn xóa mẫu email"
-            item={item}
-        />}
-        {isOpenActive && <ActiveModal
-            isOpenActive={isOpenActive}
-            onCloseActiveModal={handleCloseActiveModal}
-            onSubmit={handleActive}
-            title={item.isActive ? "Tắt trạng thái hoạt động cho mẫu email mời nhận việc" : "Xác nhận xóa mẫu email mời nhận việc"}
-            subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt hoạt động cho mẫu email mời nhận việc" : "Bạn có chắc chắn muốn bật hoạt động cho mẫu email mời nhận việc"}
-            item={item}
-        />}
-        {isOpenForm && <OfferFormModal
-            isOpen={isOpenForm}
-            onClose={handleCloseForm}
-            item={item}
-            showUploadFile
-            title={item?.id ? 'Chỉnh sửa mẫu email mời nhận việc' : 'Thêm mới mẫu email mời nhận việc'}
-        />}
-        {
-            selected.some((i => i === true)) && <OfferFormBottomNav
-                item={data.find(i => i)}
-                open={selected?.length > 0}
-                onClose={handleCloseBottomNav}
-                setShowDelete={setShowDelete}
-                setShowMultipleDelete={setShowMultipleDelete}
-                setIsOpenActive={setIsOpenActive}
-                selectedList={selected.filter(i => i === true) || []}
-                onGetParentNode={setItem}
-                setActionType={setActionType}
-                setActionTypeActive={setActionTypeActive}
-                status={offerFormLIst?.filter(i => selectedValue.includes(i.id)).every(i => i.isActive === true)}
-                onOpenForm={handleOpenForm}
-            />
-        }
-        {isOpenFilter && <OfferFormFilterModal
-            isOpen={isOpenFilter}
-            onClose={handleCloseFilterForm}
-            onSubmit={handleCloseFilterForm}
-        />}
-      </>
-  )
-}
+          );
+        })}
+      </Box>
+      {showConfirmMultiple && typeConfirmMultiple?.includes("status") && (
+        <ActiveModal
+          showConfirmMultiple={showConfirmMultiple}
+          onClose={handleCloseModel}
+          isActivated={item.isActive}
+          title={"mẫu đánh giá"}
+          handleSave={() => handleChangeStatus(item)}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple?.includes("delete") && (
+        <DeleteModal
+          showConfirmMultiple={showConfirmMultiple}
+          onClose={handleCloseModel}
+          title={"mẫu đánh giá"}
+          handleSave={() => handleDelete(item)}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple?.includes("form") && (
+        <EvaluationFormModal
+          show={showConfirmMultiple}
+          onClose={handleCloseModel}
+          id={item?.id}
+        />
+      )}
+      {isOpenFilter && (
+        <EvaluationFilterModal
+          isOpen={isOpenFilter}
+          onClose={handleCloseFilterForm}
+          onSubmit={handleCloseFilterForm}
+        />
+      )}
+    </>
+  );
+};
 
 export default EvaluationItem;

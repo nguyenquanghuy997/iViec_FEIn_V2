@@ -26,8 +26,8 @@ export async function getStaticProps() {
 export default function Setting() {
 
   return (
-    <PageWrapper title={"Quy trình tuyển dụng"}>
-      <Page>
+    <PageWrapper>
+      <Page title={"Mẫu đánh giá"}>
         <EvaluationItem />
       </Page>
     </PageWrapper>

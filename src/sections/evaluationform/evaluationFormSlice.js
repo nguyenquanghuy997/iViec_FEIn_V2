@@ -3,29 +3,34 @@ import {
   API_ADD_REVIEW_FORM,
   API_DELETE_REVIEW_FORM,
   API_GET_ALL_REVIEW_FORM,
-  API_GET_ALL_REVIEW_FORM_OWNER,
+  API_GET_REVIEW_FORM_BY_ID,
   API_SET_DEFAULT_REVIEW_FORM,
   API_UPDATE_REVIEW_FORM,
+  API_UPDATE_STATUS_REVIEW_FORM,
 } from "@/routes/api";
 import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CompanyInfor"],
+  addTagTypes: ["ReviewForm"],
 });
 
 const evaluationFormSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
-    getAllReviewForm: builder.mutation({
-      query: (data) => ({
-        url: API_GET_ALL_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
-      }),
-    }),
-    getAllReviewFormOwner: builder.query({
-      query: () => ({
-        url: API_GET_ALL_REVIEW_FORM_OWNER,
+    //Danh sách
+    getAllReviewForm: builder.query({
+      query: (params) => ({
+        url: `${API_GET_ALL_REVIEW_FORM}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
+      }),
+      transformResponse: (response) => response,
+      providesTags:["ReviewForm"],
+    }),
+    getReviewFormById: builder.query({
+      query: (params) => ({
+        url: API_GET_REVIEW_FORM_BY_ID,
+        method: 'GET',
+        params
       }),
     }),
     setDefaultReviewForm: builder.mutation({
@@ -35,33 +40,45 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
         data: qs.stringify(data),
       }),
     }),
+    updateStatusReviewForm: builder.mutation({
+      query: (data) => ({
+        url: API_UPDATE_STATUS_REVIEW_FORM,
+        method: "PATCH",
+        data: data,
+      }),
+      invalidatesTags: ["ReviewForm"],
+    }),
     addReviewForm: builder.mutation({
       query: (data) => ({
         url: API_ADD_REVIEW_FORM,
         method: "POST",
-        data: qs.stringify(data),
+        data: data
       }),
+      invalidatesTags: ["ReviewForm"],
     }),
     updateReviewForm: builder.mutation({
       query: (data) => ({
-        url: API_UPDATE_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
+        url: `${API_UPDATE_REVIEW_FORM}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
       }),
+      invalidatesTags: ["ReviewForm"],
     }),
     deleteReviewForm: builder.mutation({
       query: (data) => ({
         url: API_DELETE_REVIEW_FORM,
-        method: "POST",
-        data: qs.stringify(data),
+        method: "DELETE",
+        data: data
       }),
+      invalidatesTags: ["ReviewForm"],
     }),
   }),
 });
 
 export const {
-  useGetAllReviewFormMutation,
-  useGetAllReviewFormOwnerQuery,
+  useGetAllReviewFormQuery,
+  useGetReviewFormByIdQuery,
+  useUpdateStatusReviewFormMutation,
   useSetDefaultReviewFormMutation,
   useAddReviewFormMutation,
   useUpdateReviewFormMutation,

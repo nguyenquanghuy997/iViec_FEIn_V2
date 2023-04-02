@@ -189,12 +189,11 @@ export const API_MASK_READ_NOTIFICATION =
 export const API_CHANGE_PASSWORD = "api/Users/ChangePassword";
 
 // Mẫu đánh giá
-export const API_GET_ALL_REVIEW_FORM = "ReviewForm/GetAllReviewForm";
-export const API_GET_ALL_REVIEW_FORM_OWNER =
-  "api/Users/GetUsersCreatedReviewForm";
-export const API_SET_DEFAULT_REVIEW_FORM = "ReviewForm/SetDefaultReviewForm";
-export const API_ADD_REVIEW_FORM = "ReviewForm/InsertReviewForm";
-export const API_UPDATE_REVIEW_FORM = "ReviewForm/UpdateReviewForm";
+export const API_GET_ALL_REVIEW_FORM = "/recruitment/ReviewForm/GetReviewForms";
+export const API_GET_REVIEW_FORM_BY_ID = "/recruitment/ReviewForm/GetReviewForm";
+export const API_UPDATE_STATUS_REVIEW_FORM = "/recruitment/ReviewForm/GetReviewForms";
+export const API_ADD_REVIEW_FORM = "/recruitment/ReviewForm/CreateReviewForm";
+export const API_UPDATE_REVIEW_FORM = "/recruitment/ReviewForm/UpdateReviewForm";
 export const API_DELETE_REVIEW_FORM = "ReviewForm/DeleteReviewForm";
 
 // Vị trí công việc
