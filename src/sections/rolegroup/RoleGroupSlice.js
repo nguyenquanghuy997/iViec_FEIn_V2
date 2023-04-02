@@ -91,10 +91,8 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 export const {
   useGetRoleListQuery,
   useGetRoleGroupListQuery,
-  useGetAllFilterPipelineMutation,
   useAddRoleGroupMutation,
   useUpdateRolegroupMutation,
-  useDeletePipelineMutation,
   useGetListColumnsQuery,
   useUpdateListColumnsMutation
 } = PipelineFormSlice;

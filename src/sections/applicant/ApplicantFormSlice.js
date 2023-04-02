@@ -212,19 +212,13 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetRecruitmentsQuery,
-  useGetListApplicantsQuery,
   useGetRecruitmentPipelineStatesByRecruitment1Query,
-  useGetRecruitmentPipelineStatesByRecruitment2Query,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
-  useLazyGetAllFilterApplicantQuery,
   useGetRecruitmentByOrganizationIdQuery,
-  // skills
   useGetSkillsQuery,
-  // job sources
   useGetAllJobSourcesQuery,
-  // user from organization
   useGetAllUserFromOrganizationQuery,
   useUpdateApplicantMutation,
   useLazyGetAllUserFromOrganizationQuery,
@@ -235,5 +229,6 @@ export const {
   useUpdateApplicantRecruitmentToNextStateMutation,
   useAddApplicantRecruitmentMutation,
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
-  useGetApplicantByPipelineStateIdQuery,
+  useAddApplicantFormMutation,
+  useUpdateApplicantFormMutation,
 } = ApplicantFormSlice;

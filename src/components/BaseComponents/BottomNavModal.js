@@ -6,7 +6,13 @@ import Content from "@/components/BaseComponents/Content";
 import CloseIcon from "@/assets/CloseIcon";
 
 const ActionItem = ({title, icon, onClick, sx, ...other}) => {
-  const sxProps = { mr: 2, ...sx }
+  const sxProps = {
+    mr: 2,
+    "&:hover": {
+      boxShadow: 'none',
+    },
+    ...sx
+  }
   if (icon) {
     return (
         <IconButton onClick={onClick} sx={{...sxProps}} {...other}>
@@ -15,7 +21,7 @@ const ActionItem = ({title, icon, onClick, sx, ...other}) => {
     )
   }
   return (
-      <MuiButton title={title} onClick={onClick} sx={{...sxProps}} {...other} />
+      <Box sx={{ mr: 0.75 }}><MuiButton title={title} onClick={onClick} sx={{...sxProps}} {...other} /></Box>
   )
 }
 

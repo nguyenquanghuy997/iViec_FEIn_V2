@@ -74,7 +74,7 @@ const DynamicColumnsTable = (props) => {
       );
     }
     
-  }, [ColumnData, columns]);
+  }, [ColumnData]);
 
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
 

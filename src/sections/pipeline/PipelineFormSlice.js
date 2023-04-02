@@ -2,7 +2,14 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_PIPELINE,
   API_UPDATE_PIPELINE,
-  API_DELETE_PIPELINE, API_GET_ALL_PIPELINE_BY_ORGANIZATION, API_GET_ALL_RECRUITMENT_STEP_PIPELINE, API_ADD_PIPELINE, API_GET_EXAMINATION, API_GET_PIPELINE_BY_ID, API_SET_ORGANIZATION_PIPELINE_ACTIVE, API_GET_COLUMN_PIPELINE, API_UPDATE_COLUMN_PIPELINE,
+  API_DELETE_PIPELINE,
+  API_GET_ALL_PIPELINE_BY_ORGANIZATION,
+  API_GET_ALL_RECRUITMENT_STEP_PIPELINE,
+  API_ADD_PIPELINE, API_GET_EXAMINATION,
+  API_GET_PIPELINE_BY_ID,
+  API_SET_ORGANIZATION_PIPELINE_ACTIVE,
+  API_GET_COLUMN_PIPELINE,
+  API_UPDATE_COLUMN_PIPELINE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -57,14 +64,6 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
         }
       },
     }),
-    // filter người tạo
-    // getApplicantUsersOnJobtype: builder.query({
-    //   query: (params) => ({
-    //     url: API_GET_APPLICANT_USERS_ON_JOBTYPE,
-    //     method: "GET",
-    //     params,
-    //   }),
-    // }),
     updateStatusPipeline: builder.mutation({
       query: (data) => ({
         url: API_SET_ORGANIZATION_PIPELINE_ACTIVE,
