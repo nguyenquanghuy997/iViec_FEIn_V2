@@ -2,7 +2,7 @@ import React, {memo, useEffect} from "react";
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import {isArray} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
