@@ -58,6 +58,13 @@ export default function CreateRecruitment() {
 
     const stateOpenForm = useSelector((state) => state.modalReducer.openState);
     const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
+
+    const [pipelineStateDatas, setPipelineStateDatas] = useState([]);
+
+    const handleSetPipelineStateDatas = (data) => {
+        setPipelineStateDatas(data);
+    }
+
     const handleOpenConfirm = (data) => {
         dispatch(modalSlice.actions.openStateModal(data));
     };
@@ -99,14 +106,6 @@ export default function CreateRecruitment() {
             recruitmentAddressIds: Recruitment?.recruitmentAddresses?.map(item => ({value: item?.provinceId, label: item?.provinceName})) || [],
             recruitmentWorkingForms: Recruitment?.recruitmentWorkingForms?.map(item => ({value: item?.workingForm, label: RecruitmentWorkingForm(item?.workingForm)})) || [],
             organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId || '',
-            organizationPipelineStateDatas: [],
-            // "organizationPipelineStateDatas": [
-            //     {
-            //         "organizationPipelineStateId": "string",
-            //         "examinationId": "string",
-            //         "examinationExpiredTime": "2023-04-02T03:00:04.811Z"
-            //     }
-            // ],
         }
     }, [Recruitment, defaultOrganization]);
 
@@ -125,7 +124,11 @@ export default function CreateRecruitment() {
         },
         {
             id: 'pipeline',
-            tab: <Pipeline recruitment={Recruitment}/>,
+            tab: <Pipeline
+                recruitment={Recruitment}
+                pipelineStateDatas={pipelineStateDatas}
+                onSetPipelineStateDatas={handleSetPipelineStateDatas}
+            />,
             title: 'Quy trình tuyển dụng',
         },
     ];
@@ -178,8 +181,8 @@ export default function CreateRecruitment() {
             recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
             recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
             recruitmentCreationType: openSaveDraft ? 0 : 1,
-            organizationPipelineStateDatas: data?.organizationPipelineStateDatas?.map(item => ({
-                organizationPipelineStateId: item.id,
+            organizationPipelineStateDatas: pipelineStateDatas?.map(item => ({
+                organizationPipelineStateId: item.organizationPipelineStateId,
                 examinationId: item.examinationId,
                 // examinationExpiredTime: Number(item.expiredTime),
                 examinationExpiredTime: '2023-04-02T03:00:04.811Z',
@@ -247,6 +250,7 @@ export default function CreateRecruitment() {
 
     return (
         <Page title='Đăng tin tuyển dụng'>
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container>
                 <Header
                     title={'Đăng tin tuyển dụng'}
@@ -256,7 +260,6 @@ export default function CreateRecruitment() {
                 <TabList handleSelected={handleSelected} selected={selected} />
             </Grid>
             <Content>
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <Grid container columnSpacing={3}>
                         <Grid item md={12} className="profile-content">
                             {display.map((d, index) =>
@@ -266,8 +269,8 @@ export default function CreateRecruitment() {
                             )}
                         </Grid>
                     </Grid>
-                </FormProvider>
             </Content>
+            </FormProvider>
             {
                 openSaveDraft && <ConfirmModal
                     open={openSaveDraft}

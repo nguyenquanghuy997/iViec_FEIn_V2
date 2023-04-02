@@ -1,5 +1,6 @@
 import NextLink from "next/link";
 import {Box, IconButton, Link, Stack} from "@mui/material";
+import {useWatch} from "react-hook-form";
 
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
@@ -13,6 +14,7 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {JobTitleStyle} from "@/sections/recruitment-form/style";
 
 const Header = ({title, errors, onOpenConfirm}) => {
+    const name = useWatch({ name: 'name' })
     return (
         <HeadingBar style={{
             position: 'fixed',
@@ -42,6 +44,7 @@ const Header = ({title, errors, onOpenConfirm}) => {
                     <MuiButton
                         title="Lưu nháp"
                         color="default"
+                        disabled={!name}
                         onClick={() => onOpenConfirm({ openSaveDraft: true })}
                         startIcon={<DraftIcon/>}
                         sx={{

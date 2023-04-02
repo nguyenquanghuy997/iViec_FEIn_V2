@@ -1,9 +1,10 @@
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import {Box, Grid, Typography} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useForm} from "react-hook-form";
 import {useSnackbar} from "notistack";
+import * as Yup from "yup";
 
 import Layout from '@/layouts'
 import Page from '@/components/Page'
@@ -35,7 +36,6 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 
 import {RecruitmentWorkingForm} from "@/utils/enum";
 import {cleanObject} from "@/utils/function";
-import {FormValidate} from "@/sections/recruitment-form/form/Validate";
 
 CloneRecruitment.getLayout = function getLayout({roles = []}, page) {
     return <Layout roles={roles}>{page}</Layout>
@@ -59,6 +59,13 @@ export default function CloneRecruitment() {
 
     const stateOpenForm = useSelector((state) => state.modalReducer.openState);
     const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
+
+    const [pipelineStateDatas, setPipelineStateDatas] = useState([]);
+
+    const handleSetPipelineStateDatas = (data) => {
+        setPipelineStateDatas(data);
+    }
+
     const handleOpenConfirm = (data) => {
         dispatch(modalSlice.actions.openStateModal(data));
     };
@@ -70,54 +77,80 @@ export default function CloneRecruitment() {
     const {data: defaultOrganization = {}} = useGetOrganizationInfoQuery();
     const {data: Recruitment = {}} = useGetRecruitmentByIdQuery({Id: query.source}, {skip: !query.source})
 
-    const defaultValues = useMemo(() => {
-        const {recruitmentLanguages = []} = Recruitment;
-        return {
-            id: Recruitment?.id,
-            name: Recruitment?.name || '',
-            organizationId: defaultOrganization?.id || Recruitment?.organizationId,
-            description: Recruitment?.description || '',
-            benefit: Recruitment?.benefit || '',
-            requirement: Recruitment?.requirement || '',
-            numberPosition: Recruitment?.numberPosition || '',
-            minSalary: Recruitment?.minSalary || '',
-            maxSalary: Recruitment?.maxSalary || '',
-            salaryDisplayType: Recruitment?.salaryDisplayType || 0,
-            sex: Recruitment?.sex || '',
-            startDate: Recruitment?.startDate || null,
-            endDate: Recruitment?.endDate || null,
-            address: Recruitment?.address || '',
-            recruitmentLanguageIds: recruitmentLanguages?.map(item => ({
-                value: item?.languageId,
-                label: item?.name
-            })) || [],
-            coOwnerIds: Recruitment?.coOwners?.map(item => ({value: item?.id, label: item.email || item.name})) || [],
-            tags: Recruitment?.tags || [],
-            jobPositionId: Recruitment?.jobPosition?.id || '',
-            ownerId: Recruitment?.ownerId || '',
-            workExperience: Recruitment?.workExperience || '',
-            currencyUnit: Recruitment?.currencyUnit || 0,
-            candidateLevelId: Recruitment?.candidateLevelId || '',
-            recruitmentCouncilIds: Recruitment?.recruitmentCouncils?.map(item => ({
-                value: item?.councilUserId,
-                label: item.email || item.councilName
-            })) || [],
-            recruitmentJobCategoryIds: Recruitment?.recruitmentJobCategories?.map(item => ({
-                value: item?.jobCategoryId,
-                label: item?.name
-            })) || [],
-            recruitmentAddressIds: Recruitment?.recruitmentAddresses?.map(item => ({
-                value: item?.provinceId,
-                label: item?.provinceName
-            })) || [],
-            recruitmentWorkingForms: Recruitment?.recruitmentWorkingForms?.map(item => ({
-                value: item?.workingForm,
-                label: RecruitmentWorkingForm(item?.workingForm)
-            })) || [],
-            organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId || '',
-            organizationPipelineStateDatas: [],
-        }
-    }, [Recruitment, defaultOrganization]);
+    const defaultValues = {
+        id: '',
+        name: '',
+        organizationId: defaultOrganization?.id,
+        description:'',
+        benefit: '',
+        requirement: '',
+        numberPosition: '',
+        minSalary: '',
+        maxSalary: '',
+        salaryDisplayType: '',
+        sex: '',
+        startDate: null,
+        endDate: null,
+        address: '',
+        recruitmentLanguageIds: [],
+        coOwnerIds: [],
+        tags: [],
+        jobPositionId: '',
+        ownerId: '',
+        workExperience: '',
+        currencyUnit: 0,
+        candidateLevelId: '',
+        recruitmentCouncilIds: [],
+        recruitmentJobCategoryIds: [],
+        recruitmentAddressIds: [],
+        recruitmentWorkingForms: [],
+        organizationPipelineId: '',
+    }
+
+    const FormValidate = Yup.object().shape({
+        name: Yup.string().required("Tiêu đề tin tuyển dụng không được bỏ trống").max(255, "Tiêu đề tin tuyển dụng tối đa 255 ký tự"),
+        address: Yup.string().required("Địa điểm làm việc không được bỏ trống").max(255, "Địa điểm làm việc tối đa 255 ký tự"),
+        recruitmentAddressIds: Yup.array().nullable().min(1, "Khu vực đăng tin không được bỏ trống").max(3, "Chọn tối đa 3 khu vực đăng tin"),
+        candidateLevelId: Yup.string().required("Chức danh không được bỏ trống"),
+        workExperience: Yup.string().required("Số năm kinh nghiệm không được bỏ trống"),
+        recruitmentJobCategoryIds: Yup.array().nullable().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghề"),
+        recruitmentWorkingForms: Yup.array().nullable().min(1, "Hình thức làm việc không được bỏ trống").max(3, "Chọn tối đa 3 hình thức làm việc"),
+        numberPosition: Yup.number().min(1, 'Số lượng nhân viên cần tuyển tối thiểu là 1').transform(value => (isNaN(value) ? undefined : value)).max(9999, 'Số lượng nhân viên cần tuyển tối đa 9999').required("Số lượng nhân viên cần tuyển không được bỏ trống"),
+        sex: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Giới tính không được bỏ trống'),
+        recruitmentLanguageIds: Yup.array().nullable().min(1, "Ngôn ngữ làm việc không được bỏ trống").max(3, "Chọn tối đa 3 ngôn ngữ làm việc"),
+        startDate: Yup.date().typeError("Ngày bắt đầu không đúng định dạng").transform(value => (!value ? new Date().toISOString() : value)).required('Ngày bắt đầu không được bỏ trống'),
+        endDate: Yup.date().transform(value => (!value ? new Date().toISOString() : value)).typeError("Ngày kết thúc không đúng định dạng").min(Yup.ref('startDate'), "Ngày kết thúc phải lớn hơn ngày bắt đầu").required('Ngày kết thúc không được bỏ trống'),
+        description: Yup.string().required("Mô tả công việc không được bỏ trống"),
+        requirement: Yup.string().required("Yêu cầu công việc không được bỏ trống"),
+        benefit: Yup.string().required("Quyền lợi không được bỏ trống"),
+        ownerId: Yup.string().required("Cán bộ tuyển dụng không được bỏ trống"),
+        organizationPipelineId: Yup.string().required("Quy trình tuyển dụng không được bỏ trống"),
+        salaryDisplayType: Yup.number().transform(value => (isNaN(value) ? undefined : value)).required('Cách hiển thị không được bỏ trống'),
+        currencyUnit: Yup.number()
+            .transform(value => (isNaN(value) ? undefined : value))
+            .when("salaryDisplayType", (salaryDisplayType, schema) => {
+                if (salaryDisplayType === 2)
+                    return schema.required("Loại tiền tệ không được bỏ trống")
+                return schema
+            }),
+        minSalary: Yup.number()
+            .min(1000000, 'Mức lương tối thiểu ít nhất 7 chữ số')
+            .transform(value => (isNaN(value) ? undefined : value))
+            .when("salaryDisplayType", (salaryDisplayType, schema) => {
+                if (salaryDisplayType === 2)
+                    return schema.required("Mức lương tối thiểu không được bỏ trống")
+                return schema
+            }),
+        maxSalary: Yup.number()
+            .min(1000000, 'Mức lương tối đa ít nhất 7 chữ số')
+            .transform(value => (isNaN(value) ? undefined : value))
+            .min(Yup.ref('minSalary'), 'Mức lương tối đa cần lớn hơn hoặc bằng mức lương tối thiểu')
+            .when("salaryDisplayType", (salaryDisplayType, schema) => {
+                if (salaryDisplayType === 2)
+                    return schema.required("Mức lương tối đa không được bỏ trống")
+                return schema
+            }),
+    });
 
     const methods = useForm({
         mode: 'all',
@@ -130,17 +163,17 @@ export default function CloneRecruitment() {
     useEffect(() => {
         for (let i in defaultValues) {
             setValue(i, Recruitment[i]);
-            setValue('organizationId', Recruitment?.organizationId)
+            setValue('organizationId', Recruitment?.organizationId || defaultOrganization?.id)
             setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => ({value: item?.provinceId, label: item?.provinceName})))
             setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => ({value: item?.jobCategoryId, label: item?.name})))
             setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => ({value: item?.workingForm, label: RecruitmentWorkingForm(item?.workingForm)})))
             setValue('jobPositionId', Recruitment?.jobPosition?.id)
             setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({value: item?.councilUserId, label: item.email || item.councilName})))
             setValue('coOwnerIds', Recruitment?.coOwners?.map(item => ({value: item?.id, label: item.email || item.name})))
-            setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({value: item?.id, label: item?.name})))
+            setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({value: item?.languageId, label: item?.name})))
             setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
             setValue('currencyUnit', Recruitment?.currencyUnit);
-            setValue('organizationPipelineStateDatas', Recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => (
+            setPipelineStateDatas(Recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => (
                 {
                     organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId,
                     expiredTime: item?.examinationExpiredTime,
@@ -148,9 +181,9 @@ export default function CloneRecruitment() {
                     examinationName: item?.examinationName,
                     pipelineStateType: item?.pipelineStateType,
                 }
-            )));
+            )))
         }
-    }, [Recruitment, setValue])
+    }, [Recruitment, defaultOrganization])
 
     const display = [
         {
@@ -159,7 +192,11 @@ export default function CloneRecruitment() {
         },
         {
             id: 'pipeline',
-            tab: <Pipeline recruitment={Recruitment}/>,
+            tab: <Pipeline
+                recruitment={Recruitment}
+                pipelineStateDatas={pipelineStateDatas}
+                onSetPipelineStateDatas={handleSetPipelineStateDatas}
+            />,
             title: 'Quy trình tuyển dụng',
         },
     ];
@@ -213,7 +250,7 @@ export default function CloneRecruitment() {
             recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
             recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
             recruitmentCreationType: openSaveDraft ? 0 : 1,
-            organizationPipelineStateDatas: data?.organizationPipelineStateDatas?.map(item => ({
+            organizationPipelineStateDatas: pipelineStateDatas?.map(item => ({
                 organizationPipelineStateId: item.organizationPipelineStateId,
                 examinationId: item.examinationId,
                 // examinationExpiredTime: Number(item.expiredTime),
@@ -282,6 +319,7 @@ export default function CloneRecruitment() {
 
     return (
         <Page title='Sao chép tin tuyển dụng'>
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container>
                 <Header
                     title={'Sao chép tin tuyển dụng'}
@@ -291,18 +329,18 @@ export default function CloneRecruitment() {
                 <TabList handleSelected={handleSelected} selected={selected}/>
             </Grid>
             <Content>
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                    <Grid container columnSpacing={3}>
-                        <Grid item md={12} className="profile-content">
-                            {display.map((d, index) =>
+                <Grid container columnSpacing={3}>
+                    <Grid item md={12} className="profile-content">
+                        {display.map((d, index) =>
                                 <TabDisplay value={selected} key={index} index={index} onSubmit={onSubmit}>
                                     {d.tab}
                                 </TabDisplay>
                             )}
                         </Grid>
                     </Grid>
-                </FormProvider>
+
             </Content>
+            </FormProvider>
             {
                 openSaveDraft && <ConfirmModal
                     open={openSaveDraft}
