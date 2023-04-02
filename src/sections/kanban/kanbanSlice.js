@@ -1,29 +1,17 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { format } from 'date-fns'
-import qs from 'query-string'
 
 import { DATE_YEAR_MONTH_DAY_FORMAT } from '@/config'
 import { apiSlice } from '@/redux/api/apiSlice'
+import { _deleteApi, _getApi, _patchApi, _postApi } from '@/utils/axios'
 import {
   API_ADD_CARD,
   API_ADMIN_CARDS,
   API_ASSIGNMENT,
-  API_LIST_ACTIVE_JOB,
-  API_LIST_CARD,
-  API_LIST_CLIENT,
-  API_LIST_COMMENT,
-  API_LIST_LABEL,
-  API_LIST_MEMBER,
-  API_LIST_UPDATE_HISTORY,
-  API_LIST_USER,
-  API_REMOVE_ASSIGNMENT,
-  API_SEARCH_CARD,
-  API_SEARCH_EMAIL,
-  API_SEARCH_PHONE,
+  API_LIST_CARD, API_REMOVE_ASSIGNMENT,
   API_V1_CARD,
-  API_V1_CARD_LABEL,
-} from '@/routes/api'
-import { _deleteApi, _getApi, _patchApi, _postApi } from '@/utils/axios'
+  API_V1_CARD_LABEL
+} from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ['Kanban', 'Comment'],
@@ -33,63 +21,67 @@ export const kanbanApiSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getLabel: builder.query({
       query: () => ({
-        url: API_LIST_LABEL,
+        url: '',
         method: 'GET',
       }),
     }),
     getClient: builder.query({
       query: () => ({
-        url: API_LIST_CLIENT,
+        url: '',
         method: 'GET',
       }),
     }),
     getMember: builder.query({
       query: () => ({
-        url: API_LIST_MEMBER,
+        url: '',
         method: 'GET',
       }),
     }),
     getActiveJobs: builder.query({
       query: () => ({
-        url: API_LIST_ACTIVE_JOB,
+        url: '',
         method: 'GET',
       }),
     }),
     searchPhone: builder.query({
       query: (queries = {}) => ({
-        url: `${API_SEARCH_PHONE}?${qs.stringify(queries)}`,
+        url: ``,
         method: 'GET',
+        params: queries
       }),
     }),
     searchEmail: builder.query({
       query: (queries = {}) => ({
-        url: `${API_SEARCH_EMAIL}?${qs.stringify(queries)}`,
+        url: ``,
         method: 'GET',
+        params: queries
       }),
     }),
     searchCards: builder.query({
       query: (queries = {}) => ({
-        url: `${API_SEARCH_CARD}?${qs.stringify(queries)}`,
+        url: ``,
         method: 'GET',
+        params: queries
       }),
     }),
     getUpdateHistory: builder.query({
       query: (data) => ({
-        url: `${API_LIST_UPDATE_HISTORY}`,
+        url: ``,
         method: 'POST',
         data,
       }),
     }),
     getListComment: builder.query({
       query: (cardId) => ({
-        url: `${API_LIST_COMMENT}/${cardId}/card`,
+        url: ``,
         method: 'GET',
+        params: { cardId }
       }),
       providesTags: ['Comment'],
     }),
     addComment: builder.mutation({
       query: (data) => ({
-        url: `${API_LIST_COMMENT}/${data.cardId}/card`,
+        url: ``,
         method: 'POST',
         data: { content: data.content },
       }),
@@ -97,7 +89,7 @@ export const kanbanApiSlice = apiWithTag.injectEndpoints({
     }),
     editComment: builder.mutation({
       query: (data) => ({
-        url: `${API_LIST_COMMENT}/${data.id}`,
+        url: ``,
         method: 'PATCH',
         data: { content: data.content },
       }),
@@ -105,26 +97,27 @@ export const kanbanApiSlice = apiWithTag.injectEndpoints({
     }),
     getUser: builder.query({
       query: () => ({
-        url: API_LIST_USER,
+        url: '',
         method: 'GET',
       }),
     }),
     getCardDetail: builder.mutation({
       query: (cardId) => ({
-        url: `${API_ADD_CARD}/${cardId}`,
+        url: ``,
         method: 'GET',
+        params: { cardId }
       }),
     }),
     updateLane: builder.mutation({
       query: (data) => ({
-        url: `${API_ADD_CARD}/${data.cardId}`,
+        url: ``,
         method: 'PATCH',
         data: { laneId: data.laneId },
       }),
     }),
     addCard: builder.mutation({
       query: (data) => ({
-        url: `${API_ADD_CARD}`,
+        url: ``,
         method: 'POST',
         data,
       }),
@@ -132,7 +125,7 @@ export const kanbanApiSlice = apiWithTag.injectEndpoints({
     }),
     updateCard: builder.mutation({
       query: (data) => ({
-        url: `${API_ADD_CARD}/${data.cardId}`,
+        url: ``,
         method: 'PATCH',
         data: data.reqData,
       }),
@@ -144,22 +137,7 @@ export const kanbanApiSlice = apiWithTag.injectEndpoints({
 })
 
 export const {
-  useGetClientQuery,
-  useGetLabelQuery,
-  useGetMemberQuery,
-  useSearchCardsQuery,
-  useGetUserQuery,
-  useSearchPhoneQuery,
-  useSearchEmailQuery,
-  useGetActiveJobsQuery,
-  useGetListCommentQuery,
-  useAddCommentMutation,
-  useEditCommentMutation,
-  useGetUpdateHistoryQuery,
   useGetCardDetailMutation,
-  useUpdateLaneMutation,
-  useAddCardMutation,
-  useUpdateCardMutation,
 } = kanbanApiSlice
 
 export const getBoard = createAsyncThunk('kanban/getBoard', async (data) => {

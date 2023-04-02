@@ -2,7 +2,9 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_ADD_JOBTYPE,
   API_DELETE_JOBTYPE,
-  API_GET_APPLICANT_USERS_ON_JOBTYPE, API_GET_COLUMN_JOBTYPE, API_GET_DETAIL_JOB_POSITION,
+  API_GET_APPLICANT_USERS_ON_JOBTYPE,
+  API_GET_COLUMN_JOBTYPE,
+  API_GET_DETAIL_JOB_POSITION,
   API_GET_PAGING_JOBTYPE,
   API_GET_PREVIEW_JOBTYPE,
   API_UPDATE_COLUMN_JOBTYPE,
@@ -104,12 +106,10 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
 });
 
 export const {
-  useGetAllJobTypeQuery,
   useGetJobPositionByIdQuery,
   useLazyGetAllJobTypeQuery,
   useLazyGetApplicantUsersOnJobtypeQuery,
   useUpdateStatusJobTypeMutation,
-  useGetPreviewJobTypeMutation,
   useDeleteJobTypeMutation,
   useAddJobTypeMutation,
   useUpdateJobTypeMutation,

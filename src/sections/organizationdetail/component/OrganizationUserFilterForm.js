@@ -1,11 +1,10 @@
 import React from 'react';
 import {Divider, InputAdornment, Stack, Typography} from "@mui/material";
-import DateFilter from "@/sections/dynamic-filter/DateFilter";
+import DateFilter from "@/components/dynamic-filter/DateFilter";
 import {RHFRadioGroup, RHFTextField} from "@/components/hook-form";
 import Iconify from "@/components/Iconify";
-import SelectFilter from "@/sections/dynamic-filter/SelectFilter";
-import InputNumberFormatFilter from "@/sections/dynamic-filter/InputNumberFormatFilter";
-
+import SelectFilter from "@/components/dynamic-filter/SelectFilter";
+import InputNumberFormatFilter from "@/components/dynamic-filter/InputNumberFormatFilter";
 
 export const TypographyStyle = {
     color: '#455570',
@@ -216,7 +215,18 @@ const OrganizationUserFilterForm = (props) => {
                         <Stack key={column.name}>
                             <Stack sx={{py: 2}}>
                                 <Typography variant="body1" sx={{...TypographyStyle}}>{column.label}</Typography>
-                              
+                                <SelectFilter
+                                    options={options[column.name]?.map((i) => ({
+                                        value: i.id ? i.id : i.value,
+                                        label: i.name,
+                                    }))}
+                                    allowClear={!column.multiple}
+                                    remoteUrl={column.remoteUrl}
+                                    name={column.name}
+                                    multiple={column.multiple}
+                                    disabled={disabled?.[column.name] || false}
+                                    placeholder={column.placeholder || "Tìm kiếm..."}
+                                />
                             </Stack>
                             <Divider/>
                         </Stack>

@@ -76,7 +76,6 @@ export const {
     useRegisterMutation,
     useLazyConfirmEmailQuery,
     useChangePasswordWithTokenMutation,
-    useLazyGetCurrentUserQuery,
     useGetApplicationByRoleGroupQuery,
     useUserInviteSetPasswordMutation
 } = authSlice;

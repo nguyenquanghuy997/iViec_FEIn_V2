@@ -3,7 +3,7 @@ import {
   AssessmentIcon,
   InterviewIcon, OfferIcon,
   ResultIcon
-} from "@/sections/recruitment-create/component/icon/PipelineIcon";
+} from "@/sections/recruitment-form/icon/PipelineIcon";
 
 export const LIST_BRANCH_SIZE = [
     {id: "Less10", value: "[0-9]", name: "Dưới 10"},

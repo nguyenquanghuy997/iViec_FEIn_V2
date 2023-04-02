@@ -1,13 +1,12 @@
 import { AvatarDS } from "@/components/DesignSystem";
 import MenuPopover from "@/components/MenuPopover";
 // components
-import { DOMAIN_SERVER_API } from "@/config";
+import {DOMAIN_SERVER_API} from "@/config";
 // hooks
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
 import useLocales from "@/hooks/useLocales";
-import { useSelector } from "@/redux/store";
-import { PATH_DASHBOARD } from "@/routes/paths";
+import {PATH_DASHBOARD} from "@/routes/paths";
 import styled from "@emotion/styled";
 // @mui
 import {
@@ -21,8 +20,8 @@ import {
 import { alpha } from "@mui/material/styles";
 // next
 import NextLink from "next/link";
-import { useSnackbar } from "notistack";
-import { useState } from "react";
+import {useSnackbar} from "notistack";
+import {useState} from "react";
 
 const TypographyStyle = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -54,7 +53,6 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
-  const avatar = useSelector((state) => state.avatar);
   const handleLogout = async () => {
     try {
       await logout();
@@ -97,7 +95,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        {Object.keys(avatar.avatar).length === 0 ? (
+        {Object.keys(user.linkAvatar).length === 0 ? (
           <AvatarDS
             sx={{ borderRadius: '10px',  marginRight:0 }}
             src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}

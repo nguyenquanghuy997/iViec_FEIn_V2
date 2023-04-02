@@ -4,7 +4,7 @@ import {Box, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import {isArray, isEmpty} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
