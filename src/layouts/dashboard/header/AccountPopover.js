@@ -95,19 +95,11 @@ export default function AccountPopover() {
           }),
         }}
       >
-        {Object.keys(user.linkAvatar).length === 0 ? (
-          <AvatarDS
+        <AvatarDS
             sx={{ borderRadius: '10px',  marginRight:0 }}
             src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
             name={user?.firstName}
           />
-        ) : (
-          <AvatarDS
-            sx={{ borderRadius: '10px', marginRight:0 }}
-            name={user?.firstName}
-            alt={user?.firstName}
-          />
-        )}
       </IconButton>
 
       <MenuPopover
