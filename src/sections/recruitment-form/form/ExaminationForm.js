@@ -57,6 +57,7 @@ const ExaminationForm = ({open, onClose, data, onSaveExamination, ...props}) => 
                         type={"submit"}
                         onClick={() => {
                             const dataSubmit = {
+                                index: data?.index,
                                 organizationPipelineStateId: data?.organizationPipelineStateId,
                                 examinationId: getValues('examinationId'),
                                 examinationName: selectedData?.name,

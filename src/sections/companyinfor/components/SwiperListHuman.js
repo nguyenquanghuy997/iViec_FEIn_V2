@@ -10,6 +10,7 @@ import SwiperCore, {
 } from "swiper/core";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
+import {DOMAIN_SERVER_API} from "@/config";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
 export const SliderStyle = styled("div")(() => ({
@@ -55,7 +56,7 @@ export default function SwiperListHuman({ data }) {
           <SwiperSlide key={`slide-${index}`} style={{ listStyle: "none" }}>
             <Box>
               <img
-                src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.avatar}`}
+                src={!item?.avatar ? '/assets/placeholder.png' : `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${item?.avatar}`}
                 alt="image"
                 style={{ height: "254px", objectFit: "cover" }}
               />
