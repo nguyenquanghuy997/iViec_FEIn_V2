@@ -84,6 +84,7 @@ const BusinessArea = () => {
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
+        name='isBusinessesVisible'
       />
       {open && (
         <Drawer

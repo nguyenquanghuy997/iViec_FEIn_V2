@@ -268,6 +268,7 @@ export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories"
 
 //ĐẶT LỊCH
 export const API_POST_BOOK_CALENDAR = 'applicant/BookingCalendar/CreateBookingCalendar'
+export const API_GET_REVIEW_FORM = '/recruitment/ReviewForm/GetReviewForms'
 // Thi tuyển
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID = "/examination/Examination/GetExamination";

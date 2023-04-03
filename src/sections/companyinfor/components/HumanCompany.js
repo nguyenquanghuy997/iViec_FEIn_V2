@@ -59,7 +59,7 @@ const HumanCompany = () => {
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
-        data={Data}
+        name='isHumansVisible'
       />
       {Data?.organizationHumans.length > 0 ? (
         <Box

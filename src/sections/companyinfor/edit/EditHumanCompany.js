@@ -8,14 +8,14 @@ import {
   useUpdateCompanyHumanMutation,
   useUploadImageCompanyMutation,
 } from "@/sections/companyinfor/companyInforSlice";
-import { yupResolver } from "@hookform/resolvers/yup";
+// import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 
 const InputStyle = { width: "100%", minHeight: 40, background: "white" };
 
@@ -29,7 +29,6 @@ const EditHumanCompany = ({ onClose }) => {
   const [image, setImage] = useState([]);
 
   const handleChange = (e) => {
-    
     setImageFile([...imageFile, ...e.target.files]);
     const id = e.target;
     const reader = new FileReader();
@@ -42,18 +41,18 @@ const EditHumanCompany = ({ onClose }) => {
   const defaultValues = {
     ...Data?.organizationHumans,
   };
-  const ProfileSchema = Yup.object().shape({
-    approvalProcessLevels: Yup.array().of(
-      Yup.object().shape({
-        avatar: Yup.string(),
-        name: Yup.string(),
-        description: Yup.string(),
-      })
-    ),
-  });
+  // const ProfileSchema = Yup.object().shape({
+  //   approvalProcessLevels: Yup.array().of(
+  //     Yup.object().shape({
+  //       avatar: Yup.string(),
+  //       name: Yup.string(),
+  //       description: Yup.string(),
+  //     })
+  //   ),
+  // });
 
   const methods = useForm({
-    resolver: yupResolver(ProfileSchema),
+    // resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
 
@@ -63,7 +62,7 @@ const EditHumanCompany = ({ onClose }) => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
   } = methods;
 
   const { fields, append, remove } = useFieldArray({
@@ -119,6 +118,14 @@ const EditHumanCompany = ({ onClose }) => {
   useEffect(() => {
     if (!Data) return;
     setValue("organizationHumans", Data?.organizationHumans);
+
+    // setImage(
+    //   Data?.organizationHumans.map(
+    //     (item) =>
+    //       `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.avatar}`
+    //   )
+    // );
+
     var upload = [];
     Data?.organizationHumans.map((item) => {
       var itemm = {
@@ -149,18 +156,17 @@ const EditHumanCompany = ({ onClose }) => {
               key={item.id}
             >
               <Box sx={{ display: "flex", alignItems: "center", pr: 1 }}>
-              <Iconify
-            icon={"fluent:re-order-dots-vertical-16-filled"}
-            width={20}
-            height={20}
-            color="#A2AAB7"
-          />
+                <Iconify
+                  icon={"fluent:re-order-dots-vertical-16-filled"}
+                  width={20}
+                  height={20}
+                  color="#A2AAB7"
+                />
               </Box>
-
               <Image
                 disabledEffect
                 visibleByDefault
-                src={image[index]?.uploaded_file || '/assets/placeholder.png'}
+                src={image[index]?.uploaded_file || "/assets/placeholder.png"}
                 id={index}
                 alt="image"
                 sx={{
@@ -288,7 +294,7 @@ const EditHumanCompany = ({ onClose }) => {
         <LoadingButton
           type="submit"
           variant="contained"
-          loading={isSubmitting}
+          // loading={isSubmitting}
           sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
         >
           {"Lưu"}

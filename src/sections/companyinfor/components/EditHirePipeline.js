@@ -121,7 +121,7 @@ const EditHirePipeline = ({ data, onClose }) => {
             {renderTitle("Mô tả")}
             <TextAreaDS
               maxLength={150}
-              value={data?.organizationProfilePipelines[i].description}
+              value={data?.organizationProfilePipelines[i]?.description}
               placeholder="Nhập nội dung mô tả bước tuyển dụng..."
               name={`organizationProfilePipelines.${i}.description`}
             />

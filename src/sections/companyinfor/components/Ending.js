@@ -18,8 +18,8 @@ const Ending = () => {
   };
   const PlaceholderStyle = styled("div")(() => ({
     background: "white",
-    padding: "12px 96px",
-    height: 150,
+    padding: "12px 96px 30px 96px",
+
     "& .content": {
       backgroundColor: "white",
       color: "#455570",
@@ -103,6 +103,7 @@ const Ending = () => {
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
+        name=''
       />
       {open && (
         <Drawer
@@ -116,7 +117,7 @@ const Ending = () => {
       )}
       {Data?.conclusion ? (
         <PlaceholderStyle>
-          <div className="content" style={{ height: 100 }}>
+          <div className="content" style={{}}>
             <blockquote>{renderItem(Data?.conclusion)}</blockquote>
           </div>
         </PlaceholderStyle>

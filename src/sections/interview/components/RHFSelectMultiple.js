@@ -1,7 +1,5 @@
 import DragCandidate from "./DragCandidate";
 import PlusIcon from "@/assets/interview/PlusIcon";
-// import { AvatarDS } from "@/components/DesignSystem";
-// import ChipDS from "@/components/DesignSystem/ChipDS";
 import Iconify from "@/components/Iconify";
 import {
   LabelStyle,
@@ -21,25 +19,9 @@ import {
   Stack,
   Typography,
   Button,
-  // FormControlLabel,
 } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-
-// const Placeholder = (placeholder) => {
-//   return (
-//     <Typography
-//       variant="body2"
-//       sx={{
-//         color: style.COLOR_TEXT_GRAY,
-//         fontSize: style.FONT_SM,
-//         fontWeight: style.FONT_NORMAL,
-//       }}
-//     >
-//       {placeholder}
-//     </Typography>
-//   );
-// };
 
 const MenuProps = {
   PaperProps: {
@@ -60,7 +42,6 @@ const InputProps = {
 };
 
 const renderOptions = (options) => {
-  // const { control } = useFormContext();
   return options?.map((variant, i) => {
     return (
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
@@ -113,7 +94,7 @@ const renderOptions = (options) => {
 
 const renderChipsSelect = (options, value) => {
   return (
-    <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
+    <Stack flexWrap="wrap" justifyContent="flex-start">
       <DragCandidate
         data={options?.filter((option) => value.includes(option?.value))}
       />

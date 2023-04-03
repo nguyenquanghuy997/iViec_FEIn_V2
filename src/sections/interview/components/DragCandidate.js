@@ -13,23 +13,22 @@ import { Button, Typography, Box, Card, Collapse } from "@mui/material";
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-function DragCandidate({ onDelete }) {
+function DragCandidate({ data, onDelete }) {
   const [characters, setCharacters] = useState([]);
   const [checked, setChecked] = useState(false);
+  const newArr = data.map((item) => item);
 
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
 
-  function handleOnDragEnd(result) {
+  const handleOnDragEnd = (result) => {
     if (!result.destination) return;
-
     const items = Array.from(characters);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
-    setCharacters(items);
-  }
+    setCharacters([...data, items]);
+  };
   const time = false;
 
   return (
@@ -42,7 +41,7 @@ function DragCandidate({ onDelete }) {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {characters.map(({ id, name, phone }, index) => {
+              {newArr.map(({ id, name, phone }, index) => {
                 return (
                   <Draggable key={id} draggableId={id} index={index}>
                     {(provided) => (
@@ -57,12 +56,11 @@ function DragCandidate({ onDelete }) {
                             padding: "16px",
                             marginBottom: "16px",
                             borderRadius: "6px ",
+                            width: "100%",
                           }}
                         >
                           <Card
                             sx={{
-                              dispaly: "flex",
-                              flexDirection: "row",
                               boxShadow: "none",
                               border: "none",
                               mb: 2,
@@ -76,7 +74,12 @@ function DragCandidate({ onDelete }) {
                                 justifyContent: "space-between",
                               }}
                             >
-                              <div style={{ display: "flex" }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
                                 <MenuListIcon />
                                 <Box sx={{ display: "flex", ml: 1 }}>
                                   <img
@@ -109,14 +112,13 @@ function DragCandidate({ onDelete }) {
                                   </div>
                                 </Box>
                               </div>
-                              <div style={{ display: "flex" }}>
-                                <Box
-                                  sx={{ mt: "2px", cursor: "pointer" }}
-                                  onClick={onDelete}
-                                >
-                                  <DeleteIcon />
-                                </Box>
-                              </div>
+
+                              <Box
+                                sx={{ mt: "2px", cursor: "pointer" }}
+                                onClick={onDelete}
+                              >
+                                <DeleteIcon />
+                              </Box>
                             </div>
                           </Card>
                           {checked ? (
@@ -242,11 +244,14 @@ function DragCandidate({ onDelete }) {
                                     sx={{
                                       m: "0 auto",
                                       textTransform: "none",
+
+                                      fontWeight: 400,
+                                      fontSize: 14,
+
                                       // display:{checked} ? "none" :'block'
                                     }}
                                     onClick={handleChange}
                                   >
-                                    {" "}
                                     Điều chỉnh ngày giờ phỏng vấn
                                   </Button>
                                 </Card>

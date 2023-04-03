@@ -58,6 +58,7 @@ const HireProcess = () => {
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
+        name='isProfilePipelineVisible'
       />
       {open && (
         <Drawer

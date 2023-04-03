@@ -1,32 +1,32 @@
 import { TextAreaDS } from "@/components/DesignSystem";
-import { RHFTextField, RHFCheckbox } from "@/components/hook-form";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import { RHFTextField, RHFCheckbox, RHFSelect } from "@/components/hook-form";
 import { LabelStyle } from "@/components/hook-form/style";
 import { Label } from "@/components/hook-form/style";
 import { useGetRecruitmentPipelineStatesByRecruitment1Query } from "@/sections/applicant/ApplicantFormSlice";
+import { useGetReviewFormQuery } from "@/sections/interview/InterviewSlice";
+import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
-import {
-  Box,
-  Stack,
-  Typography, // InputLabel,
-  // TextareaAutosize,
-  TextField,
-} from "@mui/material";
+import { Box, Stack, Typography, TextField } from "@mui/material";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-const PersonalInterview = ({ wacthStep }) => {
+const PersonalInterview = ({ watchStep, watchType }) => {
   const { control } = useFormContext();
-  // const {
-  //   data: { items: ListRecruitmentByOrganization = [] } = {},
-  //   isLoading: isLoadingRecruitment,
-  // } = useGetRecruitmentByOrganizationIdQuery();
-
+  const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
+    PageIndex: 1,
+    PageSize: 20,
+  });
   const { data: { items: ListStep = [] } = {}, isLoading: isLoadingStep } =
-    useGetRecruitmentPipelineStatesByRecruitment1Query(wacthStep);
+    useGetRecruitmentPipelineStatesByRecruitment1Query(
+      { RecruitmentId: watchStep },
+      {
+        skip: !watchStep,
+      }
+    );
 
-  if ( isLoadingStep) return null;
+  const { data: { items: DataForm = [] } = {} } = useGetReviewFormQuery();
 
+  if (isLoadingStep) return null;
   const options = [
     {
       id: 0,
@@ -38,26 +38,9 @@ const PersonalInterview = ({ wacthStep }) => {
     },
   ];
 
-  const options3 = [
-    {
-      id: "00001",
-      name: "Mẫu đánh giá lập trình viên junior",
-    },
-    {
-      id: "00002",
-      name: "Mẫu đánh giá lập trình viên senior",
-    },
-    {
-      id: "00003",
-      name: "Mẫu đánh giá thực tập sinh IT",
-    },
-  ];
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
-
-  // console.log("testtuyet", { wacthStep, ListStep });
-
   return (
     <Stack spacing={3}>
       <Stack>
@@ -72,11 +55,11 @@ const PersonalInterview = ({ wacthStep }) => {
 
       <Stack>
         <Box sx={{ mb: 2, width: "100%", height: 44 }}>
-          <Typography>
+          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
             Tin tuyển dụng <span style={{ color: "red" }}>*</span>
           </Typography>
-          <RHFDropdown
-            options={options3?.map((i) => ({
+          <RHFSelect
+            options={Data?.map((i) => ({
               value: i.id,
               label: i.name,
               name: i.name,
@@ -88,72 +71,77 @@ const PersonalInterview = ({ wacthStep }) => {
         </Box>
       </Stack>
 
-      <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
-        <Box sx={{ mb: 2, width: "50%", height: 44 }}>
-          <Typography>
-            Bước phỏng vấn <span style={{ color: "red" }}>*</span>
-          </Typography>
-          <RHFDropdown
-            options={ListStep.filter(
-              (item) => item.pipelineStateType == 3
-            )?.map((i) => ({
-              value: i.id,
-              label: PipelineStateType(i.pipelineStateType),
-              name: i.name,
-            }))}
-            name="recruitmentPipelineStateId"
-            multiple={false}
-            required
-          />
-        </Box>
-        <Box sx={{ mb: 2, width: "50%", height: 44 }}>
-          <Typography>
-            Hình thức phỏng vấn <span style={{ color: "red" }}>*</span>
-          </Typography>
-          <RHFDropdown
-            options={options.map((i) => ({
-              value: i.id,
-              label: i.name,
-              name: i.name,
-            }))}
-            name="interviewType"
-            multiple={false}
-            required
-          />
-        </Box>
-      </Stack>
+      {watchStep && (
+        <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
+          <Box sx={{ mb: 2, width: "50%", height: 44 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              Bước phỏng vấn <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <RHFSelect
+              options={ListStep.filter(
+                (item) => item.pipelineStateType == 2
+              )?.map((i) => ({
+                value: i.id,
+                label: PipelineStateType(i.pipelineStateType),
+                name: i.name,
+              }))}
+              name="recruitmentPipelineStateId"
+              multiple={false}
+              required
+            />
+          </Box>
+          <Box sx={{ mb: 2, width: "50%", height: 44 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              Hình thức phỏng vấn <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <RHFSelect
+              options={options.map((i) => ({
+                value: i.id,
+                label: i.name,
+                name: i.name,
+              }))}
+              name="interviewType"
+              multiple={false}
+              required
+            />
+          </Box>
+        </Stack>
+      )}
 
-      <Stack>
-        <Controller
-          name={"onlineInterviewAddress"}
-          control={control}
-          render={({ field, fieldState: { error } }) => {
-            return (
-              <>
-                <LabelStyle required={true}>Địa điểm</LabelStyle>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows="2"
-                  defaultValue="Default Value"
-                  placeholder="Nội dung"
-                  variant="outlined"
-                  {...field}
-                  value={field.value || ""}
-                  error={!!error}
-                  helperText={error?.message}
-                  sx={{
-                    "& textarea": {
-                      p: "0!important",
-                      fontSize: 14,
-                    },
-                  }}
-                />
-              </>
-            );
-          }}
-        />
-      </Stack>
+      {watchType === 1 && (
+        <Stack>
+          <Controller
+            name={"onlineInterviewAddress"}
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <>
+                  <LabelStyle required={true}>Địa điểm</LabelStyle>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows="2"
+                    defaultValue="Default Value"
+                    placeholder="Nội dung"
+                    variant="outlined"
+                    {...field}
+                    value={field.value || ""}
+                    error={!!error}
+                    helperText={error?.message}
+                    sx={{
+                      "& textarea": {
+                        p: "0!important",
+                        fontSize: 14,
+                      },
+                    }}
+                  />
+                </>
+              );
+            }}
+          />
+        </Stack>
+      )}
+
       <Stack>
         {renderTitle("Lưu ý cho ứng viên")}
         <TextAreaDS
@@ -174,21 +162,20 @@ const PersonalInterview = ({ wacthStep }) => {
       </Box>
       <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
         <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
-          <Typography>
-            Mẫu đánh giá<span style={{ color: "red" }}>*</span>
+          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+            Mẫu đánh giá
           </Typography>
-          <RHFDropdown
-            options={options3.map((i) => ({
+          <RHFSelect
+            options={DataForm.map((i) => ({
               value: i.id,
               label: i.name,
               name: i.name,
             }))}
             name="reviewFormId"
             multiple={false}
-            required
           />
 
-          <Typography
+          {/* <Typography
             sx={{
               fontSize: "12px",
               fontWeight: 600,
@@ -199,7 +186,7 @@ const PersonalInterview = ({ wacthStep }) => {
           >
             {" "}
             + Thêm nhanh mẫu đánh giá
-          </Typography>
+          </Typography> */}
         </Box>
       </Stack>
     </Stack>

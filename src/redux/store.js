@@ -14,6 +14,7 @@ import uploadAvatarReducer from '@/sections/user/account/uploadAvatarSlice'
 import {organizationServiceApi} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {modalSlice} from "@/redux/common/modalSlice";
 import {companyServiceApi} from '@/sections/companyinfor/companyInforSlice'
+import {calendarServiceApi} from '@/sections/interview/InterviewSlice'
 import {filterSlice} from "@/redux/common/filterSlice";
 import {applicantFilterSlice} from "@/redux/slice/applicantFilterSlice";
 import { pipelineFilterSlice } from './slice/pipelineFilterSlice'
@@ -23,6 +24,7 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     [organizationServiceApi.reducerPath]: organizationServiceApi.reducer,
     [companyServiceApi.reducerPath]: companyServiceApi.reducer,
+    [calendarServiceApi.reducerPath]:calendarServiceApi.reducer,
     avatar: uploadAvatarReducer,
     kanban: kanbanReducer,
     client: clientReducer,
@@ -41,7 +43,8 @@ const store = configureStore({
       immutableCheck: false,
     }).concat(apiSlice.middleware)
     .concat(organizationServiceApi.middleware)
-    .concat(companyServiceApi.middleware),
+    .concat(companyServiceApi.middleware)
+    .concat(calendarServiceApi.middleware),
 })
 
 const { dispatch } = store

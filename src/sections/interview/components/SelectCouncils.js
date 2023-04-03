@@ -43,7 +43,6 @@ const InputProps = {
 };
 
 const renderOptions = (options) => {
-  // const { control } = useFormContext();
   return options?.map((variant, i) => {
     return (
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
@@ -57,16 +56,10 @@ const renderOptions = (options) => {
             src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
           />
           <Box sx={{ ml: 1 }}>
-            <Typography sx={{ fontSize: 13 }}>{variant.mail}</Typography>
-            <Typography
-              sx={{
-                fontSize: 13,
-                fontWeight: 400,
-                color: "#5C6A82",
-              }}
-            >
-              {variant.position}
+            <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+              {variant.name}
             </Typography>
+            <Typography sx={{ fontSize: 13 }}>{variant.mail}</Typography>
           </Box>
         </Box>
         {/* <FormControlLabel
@@ -108,7 +101,7 @@ const renderChipsSelect = (
         ?.map((item) => (
           <Card
             sx={{
-              dispaly: "flex",
+              p: 2,
               background: "#F2F4F5",
               mb: 2,
               borderRadius: "6px",
@@ -116,48 +109,44 @@ const renderChipsSelect = (
           >
             <div
               style={{
-                display: "flex",
-                flexDirection: "row",
-                margin: "13px",
                 marginBottom: 0,
-              }}
-            >
-              <img
-                style={{
-                  width: 40,
-                  height: 40,
-                  marginRight: "16px",
-                  borderRadius: "11px",
-                }}
-                src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
-              />
-
-              <div style={{}}>
-                <Typography
-                  component="div"
-                  sx={{ fontSize: "13px", fontWeight: "600" }}
-                >
-                  {item?.name}
-                </Typography>
-                <Typography
-                  color="#455570"
-                  sx={{ fontSize: "12px", fontWeight: "400" }}
-                >
-                  {item?.mail}
-                </Typography>
-              </div>
-            </div>
-            <div
-              style={{
                 display: "flex",
                 justifyContent: "space-between",
-                padding: "12px",
               }}
             >
-              <Typography sx={{ fontSize: "13px", fontWeight: "500" }}>
-                {item?.position}
-              </Typography>
-              <DeleteIcon />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <img
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginRight: "16px",
+                    borderRadius: "11px",
+                  }}
+                  src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
+                />
+                <div>
+                  <Typography
+                    component="div"
+                    sx={{ fontSize: "13px", fontWeight: "600" }}
+                  >
+                    {item?.name}
+                  </Typography>
+                  <Typography
+                    color="#455570"
+                    sx={{ fontSize: "12px", fontWeight: "400" }}
+                  >
+                    {item?.mail}
+                  </Typography>
+                </div>
+              </div>
+              <Box sx={{ mt: "2px", cursor: "pointer" }}>
+                <DeleteIcon />
+              </Box>
             </div>
           </Card>
         ))}

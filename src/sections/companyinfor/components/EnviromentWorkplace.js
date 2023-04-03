@@ -81,6 +81,7 @@ const EnviromentWorkplace = () => {
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
+        name='isWorkingEnvironmentVisible'
       />
       {open && (
         <Drawer

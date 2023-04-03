@@ -1,15 +1,54 @@
-import { SwitchStatusDS } from "@/components/DesignSystem";
+import { useUpdateCompanyEndingMutation } from "./companyInforSlice";
+// import { SwitchStatusDS } from "@/components/DesignSystem";
 import { Box, Typography, Button } from "@mui/material";
+import { useSnackbar } from "notistack";
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-const HeaderCard = ({ data, text, onOpen }) => {
+const HeaderCard = ({ data, text, onOpen, }) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const [updateVisible] = useUpdateCompanyEndingMutation();
   const defaultValues = {};
   const methods = useForm({
     defaultValues,
   });
+  const {
+    // setValue,
+    setError,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
 
+  const onSubmit = async (d) => {
+    try {
+      const res = {
+        isHumansVisible:d?.isHumansVisible
+      };
+      try {
+        await updateVisible(res).unwrap();
+        enqueueSnackbar("Chỉnh sửa Lời kết công ty thành công!", {
+          autoHideDuration: 2000,
+        });
+      } catch (err) {
+        enqueueSnackbar(errors.afterSubmit?.message, {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      }
+    } catch (err) {
+      const message =
+        err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
+      setError("afterSubmit", { ...err, message });
+      enqueueSnackbar(errors.afterSubmit?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!data) return;
+    // setDescription(data.conclusion);
+  }, [JSON.stringify(data)]);
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...methods} onSubmit={handleSubmit(onSubmit)}>
       <Box
         sx={{
           background: "white",
@@ -23,11 +62,11 @@ const HeaderCard = ({ data, text, onOpen }) => {
         <Typography sx={{ m: "auto 0", fontSize: 16, fontWeight: 600 }}>
           {text}
         </Typography>
-        <Box sx={{display:'flex'}}>
-          <SwitchStatusDS
-            name={"isActivated"}
-            label={data?.isActivated ? "Hiển thị" : "Không hiển thị"}
-          />
+        <Box sx={{ display: "flex" }}>
+          {/* <SwitchStatusDS
+            name={name}
+            label={data ? "Hiển thị" : "Không hiển thị"}
+          /> */}
           <Button
             sx={{
               padding: "8px 12px 8px 14px",

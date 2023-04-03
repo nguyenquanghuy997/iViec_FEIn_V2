@@ -1,13 +1,39 @@
-import { apiSlice } from "@/redux/api/apiSlice";
-import {
-  API_POST_BOOK_CALENDAR
-} from "@/routes/api";
+import { DOMAIN_SERVER_API } from "@/config";
+import { API_POST_BOOK_CALENDAR, API_GET_REVIEW_FORM } from "@/routes/api";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import axios from "axios";
 
-const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CompanyInfor"],
-});
+const axiosBaseQuery =
+  () =>
+  async ({ url, method, data, params, headers }) => {
+    try {
+      const result = await axios({
+        baseURL: DOMAIN_SERVER_API,
+        url,
+        method,
+        data,
+        params,
+        headers: {
+          ...headers,
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      });
+      return { data: result.data };
+    } catch (axiosError) {
+      return {
+        error: {
+          status: axiosError?.response?.status || axiosError?.code,
+          data:
+            axiosError.response?.data || axiosError?.data || axiosError.message,
+        },
+      };
+    }
+  };
 
-const PipelineFormSlice = apiWithTag.injectEndpoints({
+export const calendarServiceApi = createApi({
+  reducerPath: "calendarServiceApi",
+  baseQuery: axiosBaseQuery(),
+  tagTypes: ["BookCalendar"],
   endpoints: (builder) => ({
     // getRoleList: builder.query({
     //   query: () => ({
@@ -28,12 +54,19 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
     //     method: "GET",
     //   }),
     // }),
+    getReviewForm: builder.query({
+      query: () => ({
+        url: API_GET_REVIEW_FORM,
+        method: "GET",
+      }),
+    }),
     addCalendar: builder.mutation({
       query: (data) => ({
         url: API_POST_BOOK_CALENDAR,
         method: "POST",
         data: data,
       }),
+      invalidatesTags: ["BookCalendar"],
     }),
     // updatePipeline: builder.mutation({
     //   query: (data) => ({
@@ -52,6 +85,5 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
   }),
 });
 
-export const {
- useAddCalendarMutation,
-} = PipelineFormSlice;
+export const { useAddCalendarMutation, useGetReviewFormQuery } =
+  calendarServiceApi;
