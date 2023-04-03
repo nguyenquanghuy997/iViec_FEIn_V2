@@ -17,7 +17,7 @@ import {
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import { convertFlatDataToTree } from "@/utils/function";
 import { useGetAllUserFromOrganizationQuery, useGetOrganizationsDataWithChildQuery } from "../RecruitmentAdSlice";
 

@@ -4,7 +4,7 @@ import {pxToRem} from "@/utils/getFontValue";
 import {SearchIcon} from "@/assets/SearchIcon";
 import {ChipSelectStyle} from "@/components/hook-form/style";
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import {BoxLabelStyle, LabelTextStyle, TreeViewStyle} from "@/sections/dynamic-filter/style";
+import {BoxLabelStyle, LabelTextStyle, TreeViewStyle} from "@/components/dynamic-filter/style";
 import {TreeItem, useTreeItem} from "@mui/lab";
 import {CollapseIcon, ExpandIcon} from "@/assets/ArrowIcon";
 import {searchTree} from "@/sections/organization/helper/DFSSearchTree";

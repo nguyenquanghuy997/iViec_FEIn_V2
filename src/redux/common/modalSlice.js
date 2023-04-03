@@ -29,7 +29,7 @@ export const modalSlice = createSlice({
                 ...state.openState,
                 ...action.payload
             };
-            state.data = {...state.data, ...action.payload};
+            state.data = {...state.data, ...action.payload.data};
         },
         activeModal: (state, action) => {
             state.openActive = true;

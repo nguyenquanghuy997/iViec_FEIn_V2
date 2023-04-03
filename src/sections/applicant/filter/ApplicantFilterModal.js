@@ -7,7 +7,7 @@ import {useForm, useWatch} from "react-hook-form";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {FormProvider} from "@/components/hook-form";
 import {

@@ -15,7 +15,7 @@ import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { RiDeleteBin6Line } from "react-icons/ri";
-// import * as Yup from "yup";
+import {DOMAIN_SERVER_API} from "@/config";
 
 const InputStyle = { width: "100%", minHeight: 40, background: "white" };
 
@@ -115,53 +115,33 @@ const EditHumanCompany = ({ onClose }) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!Data) return;
     setValue("organizationHumans", Data?.organizationHumans);
-
-    // setImage(
-    //   Data?.organizationHumans.map(
-    //     (item) =>
-    //       `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.avatar}`
-    //   )
-    // );
-
-    var upload = [];
+    const upload = [];
     Data?.organizationHumans.map((item) => {
-      var itemm = {
-        uploaded_file: `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.avatar}`,
-      };
-      upload.push(itemm);
+      upload.push({
+        uploaded_file: `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${item?.avatar}`,
+      });
     });
     setImage(upload);
   }, [JSON.stringify(Data)]);
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {/* {!!errors.afterSubmit && (
-            <Alert severity="error">{errors.afterSubmit?.message}</Alert>
-        )} */}
       <div>
         {fields.map((item, index) => {
           return (
             <Box
-              sx={{
-                mx: 3,
-                my: 3,
-                px: 3,
-                py: 2,
-                background: "#F2F4F5",
-                display: "flex",
-                borderRadius: "4px",
-              }}
+              sx={{mx: 3, my: 3, px: 3, py: 2, background: "#F2F4F5", display: "flex", borderRadius: "4px"}}
               key={item.id}
             >
               <Box sx={{ display: "flex", alignItems: "center", pr: 1 }}>
-                <Iconify
-                  icon={"fluent:re-order-dots-vertical-16-filled"}
-                  width={20}
-                  height={20}
-                  color="#A2AAB7"
-                />
+              <Iconify
+                icon={"fluent:re-order-dots-vertical-16-filled"}
+                width={20}
+                height={20}
+                color="#A2AAB7"
+              />
               </Box>
               <Image
                 disabledEffect
@@ -169,23 +149,11 @@ const EditHumanCompany = ({ onClose }) => {
                 src={image[index]?.uploaded_file || "/assets/placeholder.png"}
                 id={index}
                 alt="image"
-                sx={{
-                  display: "flex",
-                  width: "35%",
-                  height: 254,
-                  px: 2,
-                }}
+                sx={{display: "flex", width: "35%", height: 254, px: 2}}
               />
 
               <Box width="60%">
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: "24px",
-                    marginTop: "12px",
-                  }}
-                >
+                <Box sx={{display: "flex", justifyContent: "space-between", marginBottom: "24px", marginTop: "12px",}}>
                   <Box>
                     <Button
                       sx={{

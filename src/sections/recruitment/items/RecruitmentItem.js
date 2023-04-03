@@ -649,6 +649,8 @@ export const RecruitmentItem = () => {
       enqueueSnackbar("Đóng tin tuyển dụng thành công!", {
         autoHideDuration: 1000,
       });
+      setSelectedRowKeys([]);
+      setItemSelected([]);
       handleCloseModal();
     } catch (e) {
       enqueueSnackbar(
@@ -668,6 +670,8 @@ export const RecruitmentItem = () => {
       enqueueSnackbar("Xóa tin tuyển dụng thành công!", {
         autoHideDuration: 1000,
       });
+      setSelectedRowKeys([]);
+      setItemSelected([]);
       handleCloseModal();
     } catch (e) {
       enqueueSnackbar(

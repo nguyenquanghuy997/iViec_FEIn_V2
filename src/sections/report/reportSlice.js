@@ -1,22 +1,6 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ORGANIZATION,
-  API_REPORT_CANDIDATES_CONVENTATION_RATE,
-  API_REPORT_CANDIDATES_CONVENTATION_RATE_DETAIL,
-  API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT,
-  API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT_APPLICANT,
-  API_REPORT_CANDIDATES_OVERTIME,
-  API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT,
-  API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_APPLICANT,
-  API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_DETAIL,
-  API_REPORT_FOLLOW_RECRUITMENT,
-  API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT,
-  API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_APPLICANT,
-  API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_DETAIL,
-  API_REPORT_RECRUITMENT_RESULT,
-  API_REPORT_RECRUITMENT_RESULT_RECRUITMENT,
-  API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_APPLICANT,
-  API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_DETAIL,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -36,7 +20,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     // Báo cáo kết quả tuyển dụng
     reportRecurimentChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_RECRUITMENT_RESULT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -44,7 +28,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportRecurimentTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_RECRUITMENT_RESULT_RECRUITMENT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -52,7 +36,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportRecurimentItemChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_DETAIL,
+        url: '',
         method: "POST",
         data,
       }),
@@ -60,7 +44,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportRecurimentItemTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_RECRUITMENT_RESULT_RECRUITMENT_APPLICANT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -70,7 +54,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     // Báo cáo tỷ lệ chuyển đổi ứng viên
     reportConversionChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_CONVENTATION_RATE,
+        url: '',
         method: "POST",
         data,
       }),
@@ -78,7 +62,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportConversionTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -86,7 +70,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportConversionItemChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_CONVENTATION_RATE_DETAIL,
+        url: '',
         method: "POST",
         data,
       }),
@@ -94,7 +78,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportConversionItemTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_CONVENTATION_RATE_RECRUITMENT_APPLICANT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -104,7 +88,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     // Báo cáo ứng viên theo thời gian
     reportOverTimeChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_OVERTIME,
+        url: '',
         method: "POST",
         data,
       }),
@@ -112,7 +96,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportOverTimeTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -120,7 +104,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportOverTimeItemChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_DETAIL,
+        url: '',
         method: "POST",
         data,
       }),
@@ -128,7 +112,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportOverTimeItemTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_CANDIDATES_OVERTIME_RECRUITMENT_APPLICANT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -138,7 +122,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     // Báo cáo theo dõi tin tuyển dụng
     reportTrackingChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_FOLLOW_RECRUITMENT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -146,7 +130,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportTrackingTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT,
+        url: '',
         method: "POST",
         data,
       }),
@@ -154,7 +138,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportTrackingItemChart: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_DETAIL,
+        url: '',
         method: "POST",
         data,
       }),
@@ -162,7 +146,7 @@ export const reportSlice = apiWithTag.injectEndpoints({
     }),
     reportTrackingItemTable: builder.mutation({
       query: (data) => ({
-        url: API_REPORT_FOLLOW_RECRUITMENT_RECRUITMENT_APPLICANT,
+        url: '',
         method: "POST",
         data,
       }),

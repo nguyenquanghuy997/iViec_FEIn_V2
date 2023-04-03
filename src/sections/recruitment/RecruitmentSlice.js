@@ -120,5 +120,8 @@ export const {
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,
   useGetListColumnsQuery,
-  useUpdateListColumnsMutation
+  useUpdateListColumnsMutation,
+  useAddRecruitmentMutation,
+  useGetPreviewRecruitmentMutation,
+  useUpdateRecruitmentMutation,
 } = RecruitmentSlice;

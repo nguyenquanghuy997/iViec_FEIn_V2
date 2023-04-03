@@ -11,7 +11,7 @@ import OrganizationPreview from "@/sections/organization/component/OrganizationP
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
 import OrganizationBottomNav from "@/sections/organization/component/OrganizationBottomNav";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
-import InputFilter from "@/sections/dynamic-filter/InputFilter";
+import InputFilter from "@/components/dynamic-filter/InputFilter";
 import {filterBy} from "@/sections/organization/helper/DFSSearchTree";
 import {
   useGetAllAdminByOrganizationIdQuery,

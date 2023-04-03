@@ -11,7 +11,7 @@ import {
   ButtonCancelStyle,
   HelperTextTypography,
 } from "@/sections/applicant/style";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import { GreenSwitch } from "@/utils/cssStyles";
 import { LIST_PIPELINESTATE, LIST_STATUS } from "@/utils/formatString";
 import {
