@@ -35,7 +35,7 @@ const UserActivePage = () => {
                             label="Thiết lập mật khẩu mới"
                             sx={{textAlign: "left", mb: 5}}
                         />
-                        <NewPasswordForm userName={decodeURI(queryObj.get('USER_NAME'))} otpCode={decodeURI(queryObj.get('OTPCode'))}/>
+                        <NewPasswordForm userName={decodeURIComponent(queryObj.get('USER_NAME'))} otpCode={decodeURIComponent(queryObj.get('OTPCode'))}/>
                       </CardInfoBody>
                     </Stack>
                   </Box>

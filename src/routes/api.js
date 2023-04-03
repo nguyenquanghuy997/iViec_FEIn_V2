@@ -133,7 +133,7 @@ export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/R
 export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments";
 export const API_REJECT_RECRUITMENT = "/recruitment/Recruitment/RejectRecruitment";
 export const API_CLOSE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments";
-export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments";
+export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/RemoveRecruitments";
 export const API_GET_ADD_APPLICANT_TO_RECRUITMENT = "/applicant/ApplicantRecruitment/AddApplicantsToRecruitment";
 
 // Mẫu đánh giá
