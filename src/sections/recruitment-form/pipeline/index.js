@@ -1,3 +1,4 @@
+import {memo} from 'react';
 import {useRouter} from "next/router";
 import {useFormContext, useWatch} from "react-hook-form";
 import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
@@ -18,8 +19,9 @@ import {PATH_DASHBOARD} from "@/routes/paths";
 
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
+import {useEffect} from "react";
 
-const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStateDatas}) => {
+const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStateDatas, onSetHasExamination}) => {
     const router = useRouter();
     const {setValue} = useFormContext();
     const organizationId = useWatch({name: 'organizationId'});
@@ -38,6 +40,10 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
             } else {
                 const newValue = [...pipelineStateDatas, {...data, examinationName: data?.examinationName}]
                 onSetPipelineStateDatas(newValue);
+                onSetHasExamination({
+                    hasValue: true,
+                    size: newValue.length
+                });
             }
         } else {
             const findIndex = data?.index || 1;
@@ -47,6 +53,10 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
                 ...data,
             } : {...i})
             onSetPipelineStateDatas(newValue);
+            onSetHasExamination({
+                hasValue: true,
+                size: newValue.length
+            });
         }
     }
 
@@ -57,6 +67,15 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
     const {
         data: {organizationPipelineStates: ListStepPipeline = []} = {}
     } = useGetAllStepOfPipelineQuery({Id: organizationPipelineId}, {skip: !organizationPipelineId});
+
+    useEffect(() => {
+        if (ListStepPipeline?.filter(item => item.pipelineStateType === 1)?.length > 0) {
+            onSetHasExamination({
+                hasValue: true,
+                size: ListStepPipeline?.filter(item => item.pipelineStateType === 1)?.length
+            });
+        }
+    }, [ListStepPipeline])
 
     if (isLoading) return (
         <Box textAlign="center" my={1}>
@@ -70,8 +89,7 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
                 <Box className="box-item"
                      sx={{width: style.WIDTH_FULL, backgroundColor: style.BG_TRANSPARENT, display: 'flex',}}>
                     <BoxInnerStyle>
-                        <DividerCard title="QUY TRÌNH TUYỂN DỤNG"
-                                     sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
+                        <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
                         <Box sx={{px: 4, py: 3}}>
                             <LabelStyle required>Quy trình tuyển dụng có sẵn</LabelStyle>
                             <RHFSelect
@@ -102,7 +120,7 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
                             </Box>
                             <Box sx={{mt: 1}}>
                                 {ListStepPipeline?.map((item, index) => {
-                                    const examination = pipelineStateDatas?.find(pipeline => pipeline.organizationPipelineStateId === item.id);
+                                    const examination = pipelineStateDatas?.find(pipeline => pipeline?.organizationPipelineStateId === item?.id);
                                     return (
                                         <PipelineCard
                                             key={index}
@@ -167,4 +185,4 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
     )
 }
 
-export default RecruitmentPipeline;
+export default memo(RecruitmentPipeline);

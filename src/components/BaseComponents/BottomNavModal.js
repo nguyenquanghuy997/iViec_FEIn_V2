@@ -25,9 +25,9 @@ const ActionItem = ({title, icon, onClick, sx, ...other}) => {
   )
 }
 
-const BottomNavModal = ({data, open, onClose, actions}) => {
+const BottomNavModal = ({data, open, onClose, actions, ...props}) => {
   return (
-      <Drawer anchor={"bottom"} open={open} variant="persistent" onClose={onClose}>
+      <Drawer anchor={"bottom"} open={open} variant="persistent" onClose={onClose} {...props}>
         <Content>
           <BoxFlex>
             <BoxFlex justifyContent="flex-start">
@@ -46,7 +46,7 @@ const BottomNavModal = ({data, open, onClose, actions}) => {
             <BoxFlex justifyContent="flex-end">
               <Typography>Đã chọn: {Array.isArray(data) ? data.length : 1}</Typography>
               <Divider orientation="vertical" flexItem sx={{mx: 2, width: "2px", backgroundColor: "#E7E9ED"}}/>
-              <IconButton size="medium" onClick={onClose}>
+              <IconButton size="medium" onClick={onClose} sx={{backgroundColor: '#F3F4F6', borderRadius: '6px',}}>
                  <CloseIcon />
               </IconButton>
             </BoxFlex>
