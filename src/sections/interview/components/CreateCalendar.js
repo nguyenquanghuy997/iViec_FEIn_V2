@@ -14,7 +14,10 @@ import { useForm } from "react-hook-form";
 
 export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   [theme.breakpoints.up("xl")]: {
-    width: "1500px",
+    width: "2000px",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "1000px",
   },
   [theme.breakpoints.up("2k")]: {
     width: "100%",
@@ -68,7 +71,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     setError,
     watch,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const watchStep = watch("recruitmentId");
@@ -103,10 +106,10 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         // reviewFormId: d.reviewFormId,
         interviewType: d.interviewType,
         onlineInterviewAddress: d.onlineInterviewAddress,
-        note:d?.note,
+        note: d?.note,
         isSendMailCouncil: d.isSendMailApplicant,
         isSendMailApplicant: d.isSendMailApplicant,
-        // councilIds: d.councilIds,
+        councilIds: d.councilIds,
         bookingCalendarGroups: d?.bookingCalendarGroups.map((item) => {
           return {
             name: "person",
@@ -135,14 +138,25 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
           };
         }),
       };
-      // body = formatDataPush(body);
-      await addCalendar(body).unwrap();
-      enqueueSnackbar("Thực hiện thành công!", {
-        autoHideDuration: 1000,
-      });
-      // pressHide();
-    } catch (error) {
-      setError("afterSubmit", { ...error });
+
+      try {
+        await addCalendar(body).unwrap();
+        enqueueSnackbar("Đặt lịch thành công!", {
+          autoHideDuration: 2000,
+        });
+        onClose();
+        // location.reload()
+      } catch (err) {
+        enqueueSnackbar(errors.afterSubmit?.message, {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      }
+    } catch (err) {
+      const message =
+        err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
+      setError("afterSubmit", { ...err, message });
+      enqueueSnackbar(errors.afterSubmit?.message);
     }
   };
 
@@ -209,7 +223,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
               </Box>
             </Grid>
             <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
-              <ListCandidate watchStep={watchStep} watch={watchPipelineStep}/>
+              <ListCandidate watchStep={watchStep} watch={watchPipelineStep} />
             </Grid>
             <Grid item xs={5} md={3}>
               <InterviewCouncil watchStep={watchStep} />

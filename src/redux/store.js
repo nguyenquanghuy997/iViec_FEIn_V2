@@ -18,7 +18,7 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     [organizationServiceApi.reducerPath]: organizationServiceApi.reducer,
     [companyServiceApi.reducerPath]: companyServiceApi.reducer,
-    // [calendarServiceApi.reducerPath]:calendarServiceApi.reducer,
+    [calendarServiceApi.reducerPath]:calendarServiceApi.reducer,
     // avatar: uploadAvatarReducer,
     // kanban: kanbanReducer,
     // client: clientReducer,

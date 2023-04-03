@@ -1,5 +1,11 @@
 import { DOMAIN_SERVER_API } from "@/config";
-import { API_POST_BOOK_CALENDAR, API_GET_REVIEW_FORM,API_GET_APPLICANT } from "@/routes/api";
+import {
+  API_POST_BOOK_CALENDAR,
+  API_GET_REVIEW_FORM,
+  API_GET_APPLICANT,
+  API_GET_CALENDAR,
+  API_GET_CALENDAR_DETAIL,
+} from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
 
@@ -35,35 +41,28 @@ export const calendarServiceApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ["BookCalendar"],
   endpoints: (builder) => ({
-    // getRoleList: builder.query({
-    //   query: () => ({
-    //     url: API_GET_ROLE,
-    //     method: "GET",
-    //   }),
-    // }),
-
-    // getRoleGroupList: builder.query({
-    //   query: () => ({
-    //     url: API_GET_LIST_ROLE_GROUP,
-    //     method: "GET",
-    //   }),
-    // }),
-    // getAllFilterPipeline: builder.mutation({
-    //   query: () => ({
-    //     url: API_GET_ALL_PIPELINE,
-    //     method: "GET",
-    //   }),
-    // }),
     getApplicant: builder.query({
       query: (params) => ({
         url: API_GET_APPLICANT,
         method: "GET",
-        params
+        params,
+      }),
+    }),
+    getCalendar: builder.query({
+      query: () => ({
+        url: API_GET_CALENDAR,
+        method: "GET",
       }),
     }),
     getReviewForm: builder.query({
       query: () => ({
         url: API_GET_REVIEW_FORM,
+        method: "GET",
+      }),
+    }),
+    getDetailCalendars: builder.query({
+      query: (id) => ({
+        url: `${API_GET_CALENDAR_DETAIL}/${id}`,
         method: "GET",
       }),
     }),
@@ -92,5 +91,10 @@ export const calendarServiceApi = createApi({
   }),
 });
 
-export const { useAddCalendarMutation, useGetReviewFormQuery, useGetApplicantQuery } =
-  calendarServiceApi;
+export const {
+  useAddCalendarMutation,
+  useGetReviewFormQuery,
+  useGetApplicantQuery,
+  useGetCalendarQuery,
+  useGetDetailCalendarsQuery,
+} = calendarServiceApi;

@@ -66,6 +66,7 @@ const PersonalInterview = ({ watchStep, watchType }) => {
             }))}
             name="recruitmentId"
             multiple={false}
+            placeholder="Chọn tin tuyển dụng"
             required
           />
         </Box>
@@ -172,6 +173,7 @@ const PersonalInterview = ({ watchStep, watchType }) => {
               name: i.name,
             }))}
             name="reviewFormId"
+            placeholder="Chọn mẫu đánh giá"
             multiple={false}
           />
 

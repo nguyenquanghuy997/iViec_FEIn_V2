@@ -67,36 +67,26 @@ const renderOptions = (options) => {
             </Typography>
           </Box>
         </Box>
-        {/* <FormControlLabel
-          labelPlacement={variant.id}
-          control={
-            <Controller
-              name={"bookingCalendarGroups"}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <input
-                    {...field}
-                    value={variant.id}
-                    type="checkbox"
-                    // onChange={handleCheck}
-                  />
-                </>
-              )}
-            />
-          }
-        /> */}
       </MenuItem>
     );
   });
 };
 
-
 const renderChipsSelect = (options, value) => {
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
   return (
     <Stack flexWrap="wrap" justifyContent="flex-start">
       <DragCandidate
         data={options?.filter((option) => value.includes(option?.value))}
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
       />
     </Stack>
   );
@@ -115,19 +105,19 @@ function RHFSelectMultiple({ name, ...props }) {
     disabled,
     multiple,
   } = props;
-  const { remove } = useFieldArray({ control, name })
-  const [searchText, setSearchText] = useState("")
-  const [filterOptions, setFilterOptions] = useState([])
+  const { remove } = useFieldArray({ control, name });
+  const [searchText, setSearchText] = useState("");
+  const [filterOptions, setFilterOptions] = useState([]);
 
   useEffect(() => {
     if (searchText) {
       setFilterOptions(
         options?.filter((option) => containsText(option.name, searchText))
-      )
+      );
     } else {
-      setFilterOptions(options)
+      setFilterOptions(options);
     }
-  }, [searchText, options])
+  }, [searchText, options]);
 
   return (
     <Controller
@@ -162,7 +152,7 @@ function RHFSelectMultiple({ name, ...props }) {
                   >
                     Thêm ứng viên
                   </Button>
-                )
+                );
               }
               return (
                 <Button

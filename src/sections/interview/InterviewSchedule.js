@@ -1,31 +1,11 @@
+import { useGetCalendarQuery, useGetDetailCalendarsQuery} from "@/sections/interview/InterviewSlice";
 import { Divider, Typography, Box, Card, CardContent } from "@mui/material";
 import * as React from "react";
 
 export default function InterviewSchedule() {
-  const type = [
-    {
-      id: 1,
-      title: "Tiêu đề lịch phỏng vấn",
-      number: "15",
-      type: "Cá nhân",
-      form: "Onl",
-    },
-    {
-      id: 2,
-      title: "Phỏng vấn chuyên viên phân tích nghiệp vụ - vòng 2",
-      number: "15",
-      type: "Nhóm",
-      form: "Trực tiếp",
-      address: "Số 10, Phạm Văn Bạch, Dịch Vọng Hậu, Cầu Giấy, Hà Nội",
-    },
-    {
-      id: 3,
-      title: "Tiêu đề lịch phỏng vấn",
-      number: "15",
-      type: "Cá nhân",
-      form: "Onl",
-    },
-  ];
+  const { data: Data } = useGetCalendarQuery();
+  const { data: DetailCanlendar } = useGetDetailCalendarsQuery(Data?.items[0].id);
+  console.log("testst", DetailCanlendar);
   return (
     <Card sx={{ m: "140px 0", borderRadius: "6px", border: "none", p: 3 }}>
       <CardContent sx={{ display: "flex", p: 0 }}>
@@ -55,7 +35,7 @@ export default function InterviewSchedule() {
         </Typography>
       </CardContent>
 
-      {type.map((item) => (
+      {Data?.items.map((item) => (
         <Box key={item.id}>
           <CardContent
             sx={{
@@ -71,7 +51,7 @@ export default function InterviewSchedule() {
                 sx={{ fontSize: 13, fontWeight: 600 }}
                 color="#172B4D"
               >
-                {item.title}
+                {item.name}
               </Typography>
               <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
                 15:00 - 18:00
@@ -83,10 +63,7 @@ export default function InterviewSchedule() {
               <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
                 Số ứng viên
               </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {" "}
-                {item?.number}
-              </Typography>
+              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>3</Typography>
             </Box>
             <Divider orientation="vertical" variant="middle" flexItem />
             <Box sx={{ width: "15%", px: 3 }}>
@@ -94,7 +71,7 @@ export default function InterviewSchedule() {
                 Loại phỏng vấn
               </Typography>
               <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.type}
+                {item?.interviewType == 0 ? " Online" : "Trực tiếp"}
               </Typography>
             </Box>
             <Divider orientation="vertical" variant="middle" flexItem />
@@ -107,14 +84,18 @@ export default function InterviewSchedule() {
               </Typography>
             </Box>
             <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "30%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Địa chỉ
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.address}
-              </Typography>
-            </Box>
+            {item?.interviewType == 1 ? (
+              <Box sx={{ width: "30%", px: 3 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                  Địa chỉ
+                </Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                  {item?.onlineInterviewAddress}
+                </Typography>
+              </Box>
+            ) : (
+              ""
+            )}
           </CardContent>
           <Divider />
         </Box>

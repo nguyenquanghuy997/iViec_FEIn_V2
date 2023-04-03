@@ -2,25 +2,19 @@ import DeleteIcon from "@/assets/interview/DeleteIcon";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
 import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
-// import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
-// import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography, Box, Card, Collapse } from "@mui/material";
-// import { MobileTimePicker } from "@mui/x-date-pickers";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { TimePicker } from "antd";
-// import dayjs from "dayjs";
+import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-function DragCandidate({ data, onDelete }) {
+export const DragItem = styled("li")(() => ({
+  "&::marker": {
+    color: "white",
+  },
+}));
+function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
   const [characters, setCharacters] = useState([]);
-  const [checked, setChecked] = useState(false);
-  const newArr =(data || [])?.map((item) => item);
-
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
+  const newArr = (data || [])?.map((item) => item);
 
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
@@ -45,7 +39,7 @@ function DragCandidate({ data, onDelete }) {
                 return (
                   <Draggable key={id} draggableId={id} index={index}>
                     {(provided) => (
-                      <li
+                      <DragItem
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
@@ -121,7 +115,7 @@ function DragCandidate({ data, onDelete }) {
                               </Box>
                             </div>
                           </Card>
-                          {checked ? (
+                          {open ? (
                             <>
                               <Box sx={{ mb: 2, width: "100%" }}>
                                 <Typography>
@@ -139,7 +133,7 @@ function DragCandidate({ data, onDelete }) {
                               <Box sx={{ width: "100%" }}>
                                 <Box>
                                   <div>
-                                    <Collapse in={checked}>
+                                    <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
                                         <Typography>
                                           Giờ phỏng vấn{" "}
@@ -162,7 +156,7 @@ function DragCandidate({ data, onDelete }) {
                               <Box sx={{ width: "100%" }}>
                                 <Box>
                                   <div>
-                                    <Collapse in={checked}>
+                                    <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
                                         <Typography>
                                           Thời lượng phỏng vấn{" "}
@@ -193,13 +187,13 @@ function DragCandidate({ data, onDelete }) {
                                 }}
                               >
                                 <Button
-                                  onClick={() => setChecked(!checked)}
+                                  onClick={onClose}
                                   sx={{ color: "#172B4D" }}
                                 >
                                   Hủy
                                 </Button>
                                 <Button
-                                  type="submit"
+                                  onClick={onClose}
                                   variant="contained"
                                   sx={{ background: "#1976D2" }}
                                 >
@@ -230,7 +224,7 @@ function DragCandidate({ data, onDelete }) {
                             </Card>
                           ) : (
                             <>
-                              {checked ? (
+                              {open ? (
                                 ""
                               ) : (
                                 <Card
@@ -250,7 +244,7 @@ function DragCandidate({ data, onDelete }) {
 
                                       // display:{checked} ? "none" :'block'
                                     }}
-                                    onClick={handleChange}
+                                    onClick={onOpen}
                                   >
                                     Điều chỉnh ngày giờ phỏng vấn
                                   </Button>
@@ -259,7 +253,7 @@ function DragCandidate({ data, onDelete }) {
                             </>
                           )}
                         </div>
-                      </li>
+                      </DragItem>
                     )}
                   </Draggable>
                 );

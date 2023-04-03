@@ -6,12 +6,8 @@ import {
 } from "@mui/material";
 
 const ListCandidate = ({ watch }) => {
-  const { data: listApplicant } = useGetApplicantQuery(
-    { PipelineStateId: watch },
-    {
-      skip: !watch,
-    }
-  );
+  const res = useGetApplicantQuery({ PipelineStateId: watch }, {skip: !watch, });
+  const { data: { items } = { items: [] }} = res;
 
   return (
     <Box sx={{ p: 3 }}>
@@ -20,9 +16,9 @@ const ListCandidate = ({ watch }) => {
       </Typography>
       {watch && (
         <RHFSelectMultiple
-          options={listApplicant?.items?.map((i) => ({
-            id: i.id,
-            value: i.id,
+          options={items?.map((i) => ({
+            id: i.applicantId,
+            value: i.applicantId,
             label: i.fullName,
             phone: i.phoneNumber,
             name: i.fullName,
@@ -31,6 +27,8 @@ const ListCandidate = ({ watch }) => {
           fullWidth
           multiple
           isRequired
+          open={open}
+          
         />
       )}
     </Box>
