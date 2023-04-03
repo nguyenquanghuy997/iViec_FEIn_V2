@@ -16,7 +16,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 function DragCandidate({ data, onDelete }) {
   const [characters, setCharacters] = useState([]);
   const [checked, setChecked] = useState(false);
-  const newArr = data.map((item) => item);
+  const newArr =(data || [])?.map((item) => item);
 
   const handleChange = () => {
     setChecked((prev) => !prev);
@@ -148,7 +148,7 @@ function DragCandidate({ data, onDelete }) {
                                           </span>
                                         </Typography>
                                         <RHFTimePicker
-                                          name="time"
+                                          name={`bookingCalendarApplicants.${id}.interviewTime`}
                                           style={{
                                             width: "100%",
                                             background: "white",
@@ -178,7 +178,7 @@ function DragCandidate({ data, onDelete }) {
                                             background: "white",
                                             border: "8px",
                                           }}
-                                          name="interviewDuration"
+                                          name={`bookingCalendarApplicants.${id}.interviewDuration`}
                                           placeholder="Nhập số phút"
                                         />
                                       </Box>

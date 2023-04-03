@@ -1,5 +1,5 @@
 import { DOMAIN_SERVER_API } from "@/config";
-import { API_POST_BOOK_CALENDAR, API_GET_REVIEW_FORM } from "@/routes/api";
+import { API_POST_BOOK_CALENDAR, API_GET_REVIEW_FORM,API_GET_APPLICANT } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
 
@@ -54,6 +54,13 @@ export const calendarServiceApi = createApi({
     //     method: "GET",
     //   }),
     // }),
+    getApplicant: builder.query({
+      query: (params) => ({
+        url: API_GET_APPLICANT,
+        method: "GET",
+        params
+      }),
+    }),
     getReviewForm: builder.query({
       query: () => ({
         url: API_GET_REVIEW_FORM,
@@ -85,5 +92,5 @@ export const calendarServiceApi = createApi({
   }),
 });
 
-export const { useAddCalendarMutation, useGetReviewFormQuery } =
+export const { useAddCalendarMutation, useGetReviewFormQuery, useGetApplicantQuery } =
   calendarServiceApi;

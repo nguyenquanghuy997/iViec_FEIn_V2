@@ -72,6 +72,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   } = methods;
 
   const watchStep = watch("recruitmentId");
+  const watchPipelineStep = watch("recruitmentPipelineStateId");
   const watchInterviewType = watch("interviewType");
   const [addCalendar] = useAddCalendarMutation();
 
@@ -94,28 +95,47 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   };
   const { enqueueSnackbar } = useSnackbar();
   const onSubmit = async (d) => {
-    // console.log("dd", d);
+    console.log("dd", d);
+
     try {
       const body = {
         name: d.name,
         recruitmentId: d.recruitmentId,
         recruitmentPipelineStateId: d.recruitmentPipelineStateId,
-        reviewFormId: d.reviewFormId,
+        // reviewFormId: d.reviewFormId,
         interviewType: d.interviewType,
         onlineInterviewAddress: d.onlineInterviewAddress,
-        note: d.note,
+        note:d?.note,
         isSendMailCouncil: d.isSendMailApplicant,
         isSendMailApplicant: d.isSendMailApplicant,
-        councilIds: d.councilIds,
-        bookingCalendarGroups: {
-          name: "person",
-          interviewGroupType: 0,
-          applicantIds: d?.bookingCalendarGroups,
-          interviewTime: moment(
-            `${moment(d?.date).format("YYYY-MM-DD")}T${d?.time}`
-          ).format(),
-          interviewDuration: toHHMMSS(d?.interviewDuration),
-        },
+        // councilIds: d.councilIds,
+        bookingCalendarGroups: d?.bookingCalendarGroups.map((item, index) => {
+          return {
+            name: "person",
+            interviewGroupType: 0,
+            bookingCalendarApplicants: [
+              {
+                applicantId: item,
+                interviewTime: new Date(
+                  `${moment(d?.date).format("YYYY-MM-DD")} ${
+                    d?.bookingCalendarApplicants[item].interviewTime
+                  }`
+                ).toISOString(),
+                interviewDuration: toHHMMSS(
+                  d?.bookingCalendarApplicants[item].interviewDuration
+                ),
+              },
+            ],
+            interviewTime: new Date(
+              `${moment(d?.date).format("YYYY-MM-DD")} ${
+                d?.bookingCalendarApplicants[item].interviewTime
+              }`
+            ).toISOString(),
+            interviewDuration: toHHMMSS(
+              d?.bookingCalendarApplicants[item].interviewDuration
+            ),
+          };
+        }),
       };
       // body = formatDataPush(body);
       await addCalendar(body).unwrap();
@@ -191,14 +211,10 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
               </Box>
             </Grid>
             <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
-              <ListCandidate
-                watchStep={watchStep}
-
-              />
+              <ListCandidate watchStep={watchStep} watch={watchPipelineStep}/>
             </Grid>
             <Grid item xs={5} md={3}>
-              <InterviewCouncil 
-              watchStep={watchStep}/>
+              <InterviewCouncil watchStep={watchStep} />
             </Grid>
           </Grid>
         </Box>
