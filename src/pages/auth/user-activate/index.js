@@ -37,7 +37,7 @@ const UserActivePage = () => {
     async function fetchConfirmEmail() {
       if (Number(SetPassword) === 0 && USER_NAME && OTPCode) {
         try {
-          await confirmEmail({email: decodeURI(queryObj.get('USER_NAME')), token: decodeURI(queryObj.get('OTPCode'))}).unwrap();
+          await confirmEmail({email: decodeURIComponent(queryObj.get('USER_NAME')), token: decodeURIComponent(queryObj.get('OTPCode'))}).unwrap();
           setStatusActiveUser(true);
         } catch (error) {
           if (error.status == 'AUE_05') {
