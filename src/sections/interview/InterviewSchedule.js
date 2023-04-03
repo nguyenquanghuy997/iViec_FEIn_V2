@@ -1,11 +1,13 @@
-import { useGetCalendarQuery, useGetDetailCalendarsQuery} from "@/sections/interview/InterviewSlice";
+import { useGetCalendarQuery,
+  //  useGetDetailCalendarsQuery
+  } from "@/sections/interview/InterviewSlice";
 import { Divider, Typography, Box, Card, CardContent } from "@mui/material";
 import * as React from "react";
 
 export default function InterviewSchedule() {
   const { data: Data } = useGetCalendarQuery();
-  const { data: DetailCanlendar } = useGetDetailCalendarsQuery(Data?.items[0].id);
-  console.log("testst", DetailCanlendar);
+  // const { data: DetailCanlendar } = useGetDetailCalendarsQuery(Data?.items[0].id);
+
   return (
     <Card sx={{ m: "140px 0", borderRadius: "6px", border: "none", p: 3 }}>
       <CardContent sx={{ display: "flex", p: 0 }}>
