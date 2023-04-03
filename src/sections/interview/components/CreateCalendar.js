@@ -95,8 +95,6 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   };
   const { enqueueSnackbar } = useSnackbar();
   const onSubmit = async (d) => {
-    console.log("dd", d);
-
     try {
       const body = {
         name: d.name,
@@ -109,7 +107,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         isSendMailCouncil: d.isSendMailApplicant,
         isSendMailApplicant: d.isSendMailApplicant,
         // councilIds: d.councilIds,
-        bookingCalendarGroups: d?.bookingCalendarGroups.map((item, index) => {
+        bookingCalendarGroups: d?.bookingCalendarGroups.map((item) => {
           return {
             name: "person",
             interviewGroupType: 0,
