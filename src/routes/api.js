@@ -27,6 +27,7 @@ export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner";
 export const API_CONFIRM_EMAIL = "/identity/Identity/ConfirmEmail";
 export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword";
 export const API_USER_INVITE_SET_PASSWORD = "/identity/Identity/UserInvitedSetPassword";
+export const API_CHANGE_PASSWORD = "/identity/Identity/ChangePassword";
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken";
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup";
 

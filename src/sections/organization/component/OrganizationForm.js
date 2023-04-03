@@ -170,7 +170,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
               </OrganizationFromHeadStyle>
               <Divider/>
               {/* content form */}
-              <Box sx={{py: 2, px: 2, my: 8}}>
+              <Box sx={{py: 2, px: 2, mb: 8}}>
                 {!isEmpty(parentNode) && <>
                   <LabelStyle required={true}>
                     Trực thuộc
@@ -219,22 +219,26 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
 
                 <Stack direction="row" justifyContent="space-between" maxWidth={'552px'} mb={3}>
                   <div style={{...SelectStyle}}>
+                    <LabelStyle>
+                      Tỉnh/Thành phố
+                    </LabelStyle>
                     <RHFSelect
                         options={ProvinceList?.map((i) => ({value: i.id, label: i.name}))}
                         style={{...SelectStyle}}
                         name="provinceId"
                         placeholder="Chọn Tỉnh/Thành phố"
-                        title="Tỉnh/Thành phố"
                     />
                   </div>
                   <div style={{...SelectStyle}}>
+                    <LabelStyle>
+                      Quận/Huyện
+                    </LabelStyle>
                     <RHFSelect
                         options={DistrictList?.map((i) => ({value: i.id, label: i.name}))}
                         style={{...SelectStyle}}
                         name="districtId"
                         disabled={!watchProvinceId}
                         placeholder="Chọn Quận/Huyện"
-                        title="Quận/Huyện"
                     />
                   </div>
                 </Stack>

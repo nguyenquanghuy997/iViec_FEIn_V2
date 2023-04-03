@@ -29,7 +29,7 @@ const UserInviteActivePage = () => {
                 try {
                     await confirmInviteActive({
                         email: decodeURIComponent(queryObj.get('email')),
-                        token: decodeURIComponent(queryObj.get('codeActive'))
+                        token: decodeURIComponent(queryObj.get('code-active'))
                     }).unwrap();
                     setStatusActiveUser(true);
                 } catch (error) {
@@ -46,7 +46,7 @@ const UserInviteActivePage = () => {
                 <LogoHeader />
                 <Box sx={{ ...BoxWrapperStyle }}>
                     <Box >
-                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURIComponent(queryObj.get('email'))} token={decodeURIComponent(queryObj.get('codeActive'))} />:  <UserActiveFailure />}
+                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURIComponent(queryObj.get('email'))} token={decodeURIComponent(queryObj.get('code-active'))} />:  <UserActiveFailure />}
                     </Box>
                 </Box>
             </Page>

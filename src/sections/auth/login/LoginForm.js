@@ -135,7 +135,7 @@ export default function LoginForm() {
             <ButtonDS
                 width="440px"
                 size="large"
-                tittle="Đăng nhập"
+                tittle={<span>Đăng nhập</span>}
                 loading={isSubmitting}
                 type="submit"
             />
