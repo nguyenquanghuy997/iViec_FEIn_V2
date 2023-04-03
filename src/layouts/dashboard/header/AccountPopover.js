@@ -1,7 +1,7 @@
 import { AvatarDS } from "@/components/DesignSystem";
 import MenuPopover from "@/components/MenuPopover";
 // components
-import {DOMAIN_SERVER_API} from "@/config";
+// import {DOMAIN_SERVER_API} from "@/config";
 // hooks
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
@@ -97,7 +97,7 @@ export default function AccountPopover() {
       >
         <AvatarDS
             sx={{ borderRadius: '10px',  marginRight:0 }}
-            src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
+            // src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
             name={user?.firstName}
           />
       </IconButton>

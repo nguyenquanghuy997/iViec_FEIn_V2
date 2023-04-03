@@ -69,7 +69,7 @@ const EvaluationFormHeader = ({
 
         <ButtonDS
           tittle={"Thêm mẫu đánh giá"}
-          onClick={() => onOpenForm(null,"form")}
+          onClick={(e) => onOpenForm(e,null,"form")}
           icon={
             <Iconify
               icon={"material-symbols:add"}

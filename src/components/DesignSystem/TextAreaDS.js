@@ -7,33 +7,35 @@ import { Controller, useFormContext } from "react-hook-form";
 export default function TextAreaDS(props) {
   const { name, placeholder, maxLength } = props;
   const { TextArea } = Input;
-  const InputTextArea = styled(TextArea)`
-    .ant-input {
-      padding: 12px 16px 12px 12px;
-      font-weight: 400;
-      font-size: 14px;
-      color: #172b4d;
-    }
-    .ant-input:hover {
-      border-color: #a2aab7;
-      border-inline-end-width: 1.5px;
-    }
-    .ant-input:placeholder {
-      color: #8a94a5;
-    }
-    .ant-input:focus {
-      border-color: #1976d2;
-      border-inline-end-width: 1.5px;
-      box-shadow: unset;
-    }
-    .ant-input::-webkit-scrollbar {
-      width: 4px;
-    }
-    .ant-input::-webkit-scrollbar-thumb {
-      background: #b9bfc9;
-      border-radius: 30px;
-    }
-  `;
+
+  const InputTextArea = styled(TextArea)(() => ({
+    padding: "12px 16px",
+    fontWeight: 400,
+    fontSize: "14px",
+    color: "#172b4d",
+    fontFamily: "Inter",
+    "&.ant-input:hover": {
+      borderColor: "#a2aab7",
+      borderInlineEndWidth: "1.5px",
+    },
+    "&.ant-input::placeholder": {
+      color: "#A2AAB7",
+      fontWeight: 400,
+      fontSize: "14px",
+    },
+    "&.ant-input:focus": {
+      borderColor: "#1976d2",
+      borderInlineEndWidth: "1.5px",
+      boxShadow: "unset",
+    },
+    "&.ant-input::-webkit-scrollbar": {
+      width: "4px",
+    },
+    "&.ant-input::-webkit-scrollbar-thumb": {
+      background: "#b9bfc9",
+      borderRadius: "30px",
+    },
+  }));
   const { control } = useFormContext();
   return (
     <Controller
@@ -43,7 +45,7 @@ export default function TextAreaDS(props) {
         <>
           <FormLabel>
             <InputTextArea
-              showCount
+              // showCount={true}
               maxLength={maxLength}
               style={{
                 height: 120,

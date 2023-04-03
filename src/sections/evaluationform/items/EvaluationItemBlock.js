@@ -23,20 +23,20 @@ import React from "react";
 
 const EvaluationItemBlock = ({
   // isCheckbox,
-  expanded,
+  // expanded,
   // checked,
   // onChangeSelected,
-  onChangeExpand,
+  // onChangeExpand,
   index,
   item,
   onOpenModel,
 }) => {
   return (
-    <CardFormItemStyle className="card-item" expanded={expanded}>
+    <CardFormItemStyle className="card-item">
       <AccordionSummary
         expandIcon={
           <ButtonIcon
-            onClick={onChangeExpand}
+            // onClick={onChangeExpand}
             icon={
               <Iconify
                 icon="material-symbols:keyboard-arrow-down-sharp"
@@ -104,7 +104,7 @@ const EvaluationItemBlock = ({
           </BoxFlex>
           <BoxFlex>
             <ButtonIcon
-              onClick={() => onOpenModel(item, "status")}
+              onClick={(e) => onOpenModel(e,item, "status")}
               sx={{
                 backgroundColor: "unset !important",
                 cursor: "pointer",
@@ -119,7 +119,7 @@ const EvaluationItemBlock = ({
               }
             />
             <ButtonIcon
-              onClick={() => onOpenModel(item,'form')}
+              onClick={(e) => onOpenModel(e,item,'form')}
               sx={{
                 marginRight: "16px",
               }}
@@ -133,7 +133,7 @@ const EvaluationItemBlock = ({
               }
             />
             <ButtonIcon
-              onClick={() => onOpenModel(item, "delete")}
+              onClick={(e) => onOpenModel(e,item, "delete")}
               icon={
                 <Iconify
                   icon={"material-symbols:delete-outline-rounded"}

@@ -107,7 +107,7 @@ const EvaluationItem = () => {
   const {data: {items: Data = []} = {}} = useGetAllReviewFormQuery();
   const [status] = useUpdateStatusReviewFormMutation();
 
-  const [expands, setExpands] = useState(Array(Data.length).fill(false));
+  // const [expands, setExpands] = useState(Array(Data.length).fill(false));
 
   // const [selected, setSelected] = useState(
   //   Array(Data.length).fill(false)
@@ -143,12 +143,12 @@ const EvaluationItem = () => {
   const { handleSubmit } = methods;
 
   // expand card item
-  const handleChangeExpand = (index) => {
-    const expandsNext = [...expands].map((item, idx) =>
-      idx === index ? !item : item
-    );
-    setExpands(expandsNext);
-  };
+  // const handleChangeExpand = (index) => {
+  //   const expandsNext = [...expands].map((item, idx) =>
+  //     idx === index ? !item : item
+  //   );
+  //   setExpands(expandsNext);
+  // };
   // const handleSelected = (data, index) => {
   //   const selectedNext = [...selected].map((i, idx) =>
   //     idx === index ? !i : i
@@ -165,7 +165,8 @@ const EvaluationItem = () => {
   //   setSelectedValue(selectedValueNext);
   // };
 
-  const handleOpenModel = (data, type) => {
+  const handleOpenModel = (event, data, type) => {
+    event.stopPropagation();
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
     setItem(data);
@@ -228,10 +229,10 @@ const EvaluationItem = () => {
               key={index}
               index={index}
               item={column}
-              expanded={expands[index]}
+              // expanded={expands[index]}
               // checked={selectedValue[index].checked}
               // onChangeSelected={() => handleSelected(column, index)}
-              onChangeExpand={() => handleChangeExpand(index)}
+              // onChangeExpand={() => handleChangeExpand(index)}
               onOpenModel={handleOpenModel}
             />
           );

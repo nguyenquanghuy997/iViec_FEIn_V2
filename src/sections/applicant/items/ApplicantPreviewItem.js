@@ -4,29 +4,45 @@ import {
   useGetApplicantRecruitmentMutation,
   useGetRecruitmentsByApplicantQuery,
 } from "../ApplicantFormSlice";
-import {PipelineApplicant} from "../others";
-import {ApplicantPreviewCV} from "./ApplicantPreviewCV";
-import {ApplicantPreviewLog} from "./ApplicantPreviewLog";
-import {AvatarDS, ButtonDS, NavGoBack, SelectAutoCompleteDS,} from "@/components/DesignSystem";
+import { RejectApplicantModal } from "../modals";
+import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
+import { PipelineApplicant } from "../others";
+import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
+import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
+import {
+  AvatarDS,
+  ButtonDS,
+  NavGoBack,
+  SelectAutoCompleteDS,
+} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
+import { HEADER } from "@/config";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
-import {PATH_DASHBOARD} from "@/routes/paths";
-import {Box, Card, CardContent, Container, Divider, Grid, Stack, Typography,} from "@mui/material";
-import {styled} from "@mui/styles";
-import React, {useEffect, useState} from "react";
-import {HEADER} from "@/config";
-import {RejectApplicantModal} from "../modals";
+import { PATH_DASHBOARD } from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
+import {
+  Box,
+  Card,
+  CardContent,
+  Container,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/styles";
+import React, { useEffect, useState } from "react";
 
-function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
-  const {data: {items: options = []} = {}, isFetching} =
+function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
+  const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
       ApplicantId,
       OrganizationId,
     });
 
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
+  const [isOpenReview, setIsOpenReview] = useState(false);
 
   const HearderApplicant = () => {
     return (
@@ -45,7 +61,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
           }}
         >
           <AvatarDS
-            sx={{height: "60px", width: "60px", borderRadius: "14px"}}
+            sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
             src={
               "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
             }
@@ -68,7 +84,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
             </Typography>
             <Stack
               direction="row"
-              divider={<Divider orientation="vertical" flexItem/>}
+              divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
               color="#172B4D"
             >
@@ -130,7 +146,8 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
           <ButtonDS
             tittle={"Đánh giá"}
             type="submit"
-            isDisabled={true}
+            onClick={() => setIsOpenReview(true)}
+            // isDisabled={true}
             mr={2}
             sx={{
               color: "#8A94A5",
@@ -210,12 +227,12 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
     };
   }, []);
   const smDown = useResponsive("down", "sm");
-  const {themeStretch} = useSettings();
+  const { themeStretch } = useSettings();
 
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
-  const [fetchPipe, {data: pipelines = [], isSuccess}] =
+  const [fetchPipe, { data: pipelines = [], isSuccess }] =
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
-  const [fetchData, {data: logApplicant = [], isSuccess: isSuccessLog}] =
+  const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
   const [selectedOption, setSelectedOption] = useState();
   const [rejectApplicant, setRejectApplicant] = useState(false);
@@ -253,11 +270,11 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
   return (
     <div>
       <HeadingFixed>
-        <HearderApplicant setIsOpenSendOffer={setIsOpenSendOffer}/>
+        <HearderApplicant setIsOpenSendOffer={setIsOpenSendOffer} />
       </HeadingFixed>
       <Container
         maxWidth={themeStretch ? false : "xl"}
-        sx={{...(smDown && {padding: 0})}}
+        sx={{ ...(smDown && { padding: 0 }) }}
       >
         <NavGoBack
           link={PATH_DASHBOARD.dashboard}
@@ -286,7 +303,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                   padding="32px 24px"
                   borderBottom="1px solid #D0D4DB"
                 >
-                  <HearderApplicant/>
+                  <HearderApplicant />
                   <Grid marginTop={"32px"}>
                     <Grid>
                       {options ? (
@@ -298,11 +315,11 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                           data={options}
                           placeholder="Chọn tin tuyển dụng"
                           sx={{
-                            fontSize: '14px',
+                            fontSize: "14px",
                             background: "#F3F4F6",
                             fontWeight: 500,
                             "&.MuiOutlinedInput-root": {
-                              minHeight: '36px'
+                              minHeight: "36px",
                             },
                             "& .MuiOutlinedInput-notchedOutline": {
                               borderColor: "#F3F4F6",
@@ -327,12 +344,12 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                       minHeight="76px"
                     >
                       <Grid item md={10} container>
-                        <Grid sx={{width: "80%"}}>
+                        <Grid sx={{ width: "80%" }}>
                           {isSuccess ? (
-                            <PipelineApplicant steps={pipelines}/>
+                            <PipelineApplicant steps={pipelines} />
                           ) : null}
                         </Grid>
-                        <Grid sx={{display: "flex"}}>
+                        <Grid sx={{ display: "flex" }}>
                           <ButtonDS
                             tittle={"Chuyển bước"}
                             type="submit"
@@ -345,7 +362,6 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                               },
                               textTransform: "none",
                             }}
-
                             icon={
                               <Iconify
                                 icon={"ci:transfer"}
@@ -414,14 +430,15 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV data={data}/>
+                    <ApplicantPreviewCV data={data} />
                   </Grid>
                   <Grid item xs={5} md={5}>
-                    {isSuccessLog && <ApplicantPreviewLog
-                      dataLog={logApplicant}
-                      dataApplicant={data}
-                    />}
-
+                    {isSuccessLog && (
+                      <ApplicantPreviewLog
+                        dataLog={logApplicant}
+                        dataApplicant={data}
+                      />
+                    )}
                   </Grid>
                 </Grid>
               </CardContent>
@@ -436,14 +453,17 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
             </Card>
           </Grid>
         </Grid>
-        {
-          isOpenSendOffer && <ApplicantSendOfferModal
+        {isOpenSendOffer && (
+          <ApplicantSendOfferModal
             isOpen={isOpenSendOffer}
             onClose={() => setIsOpenSendOffer(false)}
             showUploadFile={true}
             title="Tạo thư mời nhận việc"
           />
-        }
+        )}
+        {isOpenReview && (
+          <ApplicantReviewModal show={isOpenReview} setShow={setIsOpenReview} />
+        )}
       </Container>
     </div>
   );
