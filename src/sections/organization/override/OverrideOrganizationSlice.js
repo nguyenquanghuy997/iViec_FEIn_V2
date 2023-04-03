@@ -175,8 +175,9 @@ export const organizationServiceApi = createApi({
     deleteInviteUser: build.mutation({
       query: (data) =>  {
         return {
-          url: `${API_DELETE_INVITE_USER}/${data?.id}`,
+          url: `${API_DELETE_INVITE_USER}`,
           method: 'DELETE',
+          data
         }
       },
       invalidatesTags: ['INVITE']

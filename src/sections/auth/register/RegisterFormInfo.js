@@ -353,6 +353,7 @@ function RegisterForm() {
                             title={"Đăng ký"}
                             type="submit"
                             loading={isSubmitting}
+                            loadingPosition="end"
                             sx={{
                                 backgroundColor: STYLE_CONSTANT.COLOR_PRIMARY,
                                 textTransform: "none",

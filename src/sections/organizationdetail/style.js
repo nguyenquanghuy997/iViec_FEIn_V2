@@ -16,7 +16,7 @@ const CardUserStyle = styled(Box)(({theme}) => ({
     border: '1px solid #E7E9ED',
     backgroundColor: '#FDFDFD',
     padding: theme.spacing(2.5, 3),
-    margin: theme.spacing(2, 0),
+    marginBottom: theme.spacing(2),
     borderRadius: 4,
   }
 }));

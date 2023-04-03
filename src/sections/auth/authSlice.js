@@ -5,7 +5,7 @@ import {
     API_CHANGE_PASSWORD_WITH_TOKEN,
     API_REGISTER,
     API_USER_INFO,
-    API_GET_APPLICATION_BY_ROLE_GROUP, API_USER_INVITE_SET_PASSWORD,
+    API_GET_APPLICATION_BY_ROLE_GROUP, API_USER_INVITE_SET_PASSWORD, API_CHANGE_PASSWORD,
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -52,6 +52,14 @@ export const authSlice = apiWithTag.injectEndpoints({
                 params: {Email: data.email, Token: data.token},
             }),
         }),
+        // CHANGE PASSWORD WITH CURRENT USER LOGIN
+        changePassword: builder.mutation({
+            query: (data) => ({
+                url: API_CHANGE_PASSWORD,
+                method: "POST",
+                data,
+            }),
+        }),
         // CHANGE PASSWORD WITH TOKEN
         changePasswordWithToken: builder.mutation({
             query: (data) => ({
@@ -75,6 +83,7 @@ export const {
     useForgotPasswordMutation,
     useRegisterMutation,
     useLazyConfirmEmailQuery,
+    useChangePasswordMutation,
     useChangePasswordWithTokenMutation,
     useGetApplicationByRoleGroupQuery,
     useUserInviteSetPasswordMutation

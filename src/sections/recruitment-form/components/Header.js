@@ -1,6 +1,5 @@
 import NextLink from "next/link";
 import {Box, IconButton, Link, Stack} from "@mui/material";
-import {useWatch} from "react-hook-form";
 
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
@@ -13,15 +12,14 @@ import {PATH_DASHBOARD} from "@/routes/paths";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {JobTitleStyle} from "@/sections/recruitment-form/style";
 
-const Header = ({title, errors, onOpenConfirm}) => {
-    const name = useWatch({ name: 'name' })
+const Header = ({title, errors, name, onOpenConfirm}) => {
     return (
         <HeadingBar style={{
             position: 'fixed',
             top: '64px',
             zIndex: 1001,
             boxShadow: 'none',
-            borderBottom: '1px solid #E7E9ED'
+            borderBottom: '1px solid #E7E9ED',
         }}>
             <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Stack flexDirection="row" alignItems="center">
