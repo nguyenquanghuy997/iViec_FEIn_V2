@@ -27,6 +27,7 @@ export const API_USER_INFO = "/identity/Identity/GetApplicationUserByOwner";
 export const API_CONFIRM_EMAIL = "/identity/Identity/ConfirmEmail";
 export const API_FORGET_PASSWORD = "/identity/Identity/ApplicationUserForgetPassword";
 export const API_USER_INVITE_SET_PASSWORD = "/identity/Identity/UserInvitedSetPassword";
+export const API_CHANGE_PASSWORD = "/identity/Identity/ChangePassword";
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken";
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup";
 
@@ -134,7 +135,7 @@ export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/R
 export const API_INTERNAL_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalApprovalRecruitments";
 export const API_REJECT_RECRUITMENT = "/recruitment/Recruitment/RejectRecruitment";
 export const API_CLOSE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments";
-export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitments";
+export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/RemoveRecruitments";
 export const API_GET_ADD_APPLICANT_TO_RECRUITMENT = "/applicant/ApplicantRecruitment/AddApplicantsToRecruitment";
 
 // Mẫu đánh giá

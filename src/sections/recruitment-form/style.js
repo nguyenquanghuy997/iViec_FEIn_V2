@@ -1,5 +1,5 @@
 import {styled} from "@mui/styles";
-import {Box, Typography} from "@mui/material";
+import {Box, Tab, Typography} from "@mui/material";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 
 const JobTitleStyle = styled(Typography)(() => ({
@@ -20,6 +20,7 @@ const BoxInnerStyle = styled(Box)(() => ({
   maxWidth: '844px',
   flex: 1
 }))
+
 const DividerCardStyle = styled(Box)(({theme}) => ({
   backgroundColor: '#455570',
   width: '844px',
@@ -27,9 +28,35 @@ const DividerCardStyle = styled(Box)(({theme}) => ({
   padding: theme.spacing(2, 3),
 }))
 
+
+const TabStyle = styled(Tab)(({theme}) => ({
+  "&.tab-item": {
+    textAlign: 'left',
+    maxWidth: style.WIDTH_FULL,
+    backgroundColor: style.BG_GRAY,
+    borderRadius: "6px",
+    "&.MuiTab-root": {
+      minHeight: '76px',
+      textTransform: 'unset',
+      padding: theme.spacing(2),
+      marginRight: '20px'
+    },
+    "&.Mui-selected": {
+      color: style.COLOR_WHITE,
+      backgroundColor: style.BG_PRIMARY,
+    },
+    "& .MuiTabs-indicator": {
+      display: "none",
+    },
+  }
+}));
+
+
+
 export {
   JobTitleStyle,
   DividerCardStyle,
   BoxWrapperStyle,
   BoxInnerStyle,
+  TabStyle
 }

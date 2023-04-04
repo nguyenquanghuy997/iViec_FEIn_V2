@@ -133,6 +133,7 @@ export default function NewPasswordForm({userName, otpCode}) {
                         size="large"
                         type="submit"
                         variant="contained"
+                        loadingPosition="end"
                         loading={isSubmitting}
                         sx={{
                             mt: 4,
@@ -141,7 +142,7 @@ export default function NewPasswordForm({userName, otpCode}) {
                             borderRadius: 0.75,
                         }}
                     >
-                        Xác nhận và đăng nhập
+                       <span>Xác nhận và đăng nhập</span>
                     </LoadingButton>
                 </Stack>
             </Stack>

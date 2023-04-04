@@ -28,8 +28,8 @@ const UserInviteActivePage = () => {
             if (email && codeActive) {
                 try {
                     await confirmInviteActive({
-                        email: decodeURI(queryObj.get('email')),
-                        token: decodeURI(queryObj.get('codeActive'))
+                        email: decodeURIComponent(queryObj.get('email')),
+                        token: decodeURIComponent(queryObj.get('code-active'))
                     }).unwrap();
                     setStatusActiveUser(true);
                 } catch (error) {
@@ -46,7 +46,7 @@ const UserInviteActivePage = () => {
                 <LogoHeader />
                 <Box sx={{ ...BoxWrapperStyle }}>
                     <Box >
-                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURI(queryObj.get('email'))} token={decodeURI(queryObj.get('codeActive'))} />:  <UserActiveFailure />}
+                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURIComponent(queryObj.get('email'))} token={decodeURIComponent(queryObj.get('code-active'))} />:  <UserActiveFailure />}
                     </Box>
                 </Box>
             </Page>

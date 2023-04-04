@@ -46,7 +46,6 @@ function a11yProps(index) {
 }
 
 const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenInviteForm}) => {
-
     const [valueTab, setValueTab] = useState(0);
     const [isShowResult, setIsShowResult] = useState(false);
     const [invitesResult, setInviteResult] = useState([])
@@ -128,20 +127,17 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
         setOpenConfirmDelete(false);
         setItemConfirm({});
     };
-
     const handleOpenConfirmResend = (data) => {
         setIsOpenConfirmResend(true)
         setItemConfirm(data);
     };
-
     const handleCloseConfirmResend = () => {
         setIsOpenConfirmResend(false);
         setItemConfirm({});
     };
-
     const handleDeleteConfirm = async (data) => {
         try {
-            await deleteInviteUser({ id: data?.id })
+            await deleteInviteUser({ ids: [data?.id]}).unwrap();
             handleCloseConfirmDelete();
             enqueueSnackbar("Xóa lòi mời thành công!", {
                 autoHideDuration: 1000
@@ -154,10 +150,9 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
             throw e;
         }
     }
-
     const handleResendEmailConfirm = async (data) => {
         try {
-            await resendInviteUser({ id: data?.id })
+            await resendInviteUser({ ids: [data?.id]}).unwrap();
             handleCloseConfirmResend();
             enqueueSnackbar("Gửi yêu cầu active tài khoản thành công!", {
                 autoHideDuration: 1000
@@ -193,7 +188,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                 </Typography>
             </MuiDialogTitle>
             <Divider/>
-            <Box sx={{padding: 3}}>
+            <Box sx={{px: 3, pt: 3, pb: 0}}>
                 <Tabs
                     value={valueTab}
                     onChange={handleChange}
@@ -385,6 +380,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                     <MuiButton
                                         variant="outlined"
                                         title={"Thêm lời mời"}
+                                        sx={{ mt: 3 }}
                                         startIcon={<AddIcon />}
                                         onClick={() => append({ ...defaultValues })}
                                     />

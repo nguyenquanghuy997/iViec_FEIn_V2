@@ -1,9 +1,11 @@
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {Box, Grid, Typography} from "@mui/material";
+import {Grid, Typography} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useForm} from "react-hook-form";
 import {useSnackbar} from "notistack";
+import {TabContext} from "@mui/lab";
+import TabPanel from "@mui/lab/TabPanel";
 
 import Layout from '@/layouts'
 import Page from '@/components/Page'
@@ -22,9 +24,10 @@ import {PAGES} from '@/config'
 import {getRolesByPage} from '@/utils/role'
 import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
 import {
-  useCreateRecruitmentMutation,
-  useGetRecruitmentByIdQuery, useUpdateRecruitmentDraftMutation,
-  useUpdateRecruitmentOfficialMutation
+    useCreateRecruitmentMutation,
+    useGetRecruitmentByIdQuery,
+    useUpdateRecruitmentDraftMutation,
+    useUpdateRecruitmentOfficialMutation
 } from "@/sections/recruitment";
 
 import {PATH_DASHBOARD} from "@/routes/paths";
@@ -53,11 +56,21 @@ export default function UpdateRecruitment() {
   const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
   const {query} = router;
-  const [selected, setSelected] = useState(0);
-  const _timeoutTab = useRef();
+  const [valueTab, setValueTab] = useState('0');
 
   const stateOpenForm = useSelector((state) => state.modalReducer.openState);
   const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
+
+  const [pipelineStateDatas, setPipelineStateDatas] = useState([]);
+  const [, setHasExamination] = useState({
+    hasValue: false,
+    size: 0,
+  });
+
+  const handleSetPipelineStateDatas = (data) => {
+    setPipelineStateDatas(data);
+  }
+
   const handleOpenConfirm = (data) => {
     dispatch(modalSlice.actions.openStateModal(data));
   };
@@ -67,41 +80,37 @@ export default function UpdateRecruitment() {
   const [updateRecruitmentOfficial] = useUpdateRecruitmentOfficialMutation();
   const [updateRecruitmentDraft] = useUpdateRecruitmentDraftMutation();
   const {data: defaultOrganization = {}} = useGetOrganizationInfoQuery();
-  const {data: Recruitment = {}} = useGetRecruitmentByIdQuery({ Id: query.id }, { skip: !query.id })
+  const {data: Recruitment = {}} = useGetRecruitmentByIdQuery({Id: query.id}, {skip: !query.id})
 
-  const defaultValues = useMemo(() => {
-    const { recruitmentLanguages = []} = Recruitment;
-    return {
-      id: Recruitment?.id,
-      name: Recruitment?.name || '',
-      organizationId: defaultOrganization?.id || Recruitment?.organizationId,
-      description: Recruitment?.description || '',
-      benefit: Recruitment?.benefit || '',
-      requirement: Recruitment?.requirement || '',
-      numberPosition: Recruitment?.numberPosition || '',
-      minSalary: Recruitment?.minSalary || '',
-      maxSalary: Recruitment?.maxSalary || '',
-      salaryDisplayType: Recruitment?.salaryDisplayType || 0,
-      sex: Recruitment?.sex || '',
-      startDate: Recruitment?.startDate || null,
-      endDate: Recruitment?.endDate || null,
-      address: Recruitment?.address || '',
-      recruitmentLanguageIds: recruitmentLanguages?.map(item => ({value: item?.languageId, label: item?.name})) || [],
-      coOwnerIds: Recruitment?.coOwners?.map(item => ({value: item?.id, label: item.email || item.name})) || [],
-      tags: Recruitment?.tags || [],
-      jobPositionId: Recruitment?.jobPosition?.id || '',
-      ownerId: Recruitment?.ownerId || '',
-      workExperience: Recruitment?.workExperience || '',
-      currencyUnit: Recruitment?.currencyUnit || 0,
-      candidateLevelId: Recruitment?.candidateLevelId || '',
-      recruitmentCouncilIds: Recruitment?.recruitmentCouncils?.map(item => ({value: item?.councilUserId, label: item.email || item.councilName})) || [],
-      recruitmentJobCategoryIds: Recruitment?.recruitmentJobCategories?.map(item => ({value: item?.jobCategoryId, label: item?.name})) || [],
-      recruitmentAddressIds: Recruitment?.recruitmentAddresses?.map(item => ({value: item?.provinceId, label: item?.provinceName})) || [],
-      recruitmentWorkingForms: Recruitment?.recruitmentWorkingForms?.map(item => ({value: item?.workingForm, label: RecruitmentWorkingForm(item?.workingForm)})) || [],
-      organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId || '',
-      organizationPipelineStateDatas: [],
-    }
-  }, [Recruitment, defaultOrganization]);
+  const defaultValues = {
+    id: '',
+    name: '',
+    organizationId: defaultOrganization?.id,
+    description: '',
+    benefit: '',
+    requirement: '',
+    numberPosition: '',
+    minSalary: '',
+    maxSalary: '',
+    salaryDisplayType: '',
+    sex: '',
+    startDate: null,
+    endDate: null,
+    address: '',
+    recruitmentLanguageIds: [],
+    coOwnerIds: [],
+    tags: [],
+    jobPositionId: '',
+    ownerId: '',
+    workExperience: '',
+    currencyUnit: 0,
+    candidateLevelId: '',
+    recruitmentCouncilIds: [],
+    recruitmentJobCategoryIds: [],
+    recruitmentAddressIds: [],
+    recruitmentWorkingForms: [],
+    organizationPipelineId: '',
+  }
 
   const methods = useForm({
     mode: 'all',
@@ -109,72 +118,51 @@ export default function UpdateRecruitment() {
     defaultValues: defaultValues,
   });
 
-  const {handleSubmit, getValues, setValue, formState: {isValid}} = methods;
+  const {handleSubmit, getValues, setValue, watch, formState: {isValid}} = methods;
+  const recruitmentName = watch('name');
 
   useEffect(() => {
     for (let i in defaultValues) {
       setValue(i, Recruitment[i]);
-      setValue('organizationId', Recruitment?.organizationId)
-      setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => ({value: item?.provinceId, label: item?.provinceName})))
-      setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => ({value: item?.jobCategoryId, label: item?.name})))
-      setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => ({value: item?.workingForm, label: RecruitmentWorkingForm(item?.workingForm)})))
+      setValue('organizationId', Recruitment?.organizationId || defaultOrganization?.id)
+      setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => ({
+        value: item?.provinceId,
+        label: item?.provinceName
+      })))
+      setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => ({
+        value: item?.jobCategoryId,
+        label: item?.name
+      })))
+      setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => ({
+        value: item?.workingForm,
+        label: RecruitmentWorkingForm(item?.workingForm)
+      })))
       setValue('jobPositionId', Recruitment?.jobPosition?.id)
-      setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({value: item?.councilUserId, label: item.email || item.councilName})))
+      setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => ({
+        value: item?.councilUserId,
+        label: item.email || item.councilName
+      })))
       setValue('coOwnerIds', Recruitment?.coOwners?.map(item => ({value: item?.id, label: item.email || item.name})))
-      setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({value: item?.id, label: item?.name})))
+      setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => ({
+        value: item?.languageId,
+        label: item?.name
+      })))
       setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
       setValue('currencyUnit', Recruitment?.currencyUnit);
-      setValue('organizationPipelineStateDatas', Recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => ({value: item?.id, label: item?.name})));
+      setPipelineStateDatas(Recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => (
+          {
+            organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId,
+            expiredTime: item?.examinationExpiredDays,
+            examinationId: item?.examinationId,
+            examinationName: item?.examinationName,
+            pipelineStateType: item?.pipelineStateType,
+          }
+      )))
     }
-  }, [Recruitment, setValue])
+  }, [Recruitment, defaultOrganization])
 
-  const display = [
-    {
-      tab: <Information recruitment={Recruitment}/>,
-      title: 'Thông tin tuyển dụng',
-    },
-    {
-      id: 'pipeline',
-      tab: <Pipeline recruitment={Recruitment}/>,
-      title: 'Quy trình tuyển dụng',
-    },
-  ];
-
-  const handleSelected = (index) => {
-    setSelected(index);
-
-    clearTimeout(_timeoutTab.current);
-    _timeoutTab.current = setTimeout(() => {
-      router.push({
-        pathname: PATH_DASHBOARD.recruitment.update(query.id),
-        hash: display[index].id || null,
-      }, undefined, { shallow: true });
-    }, 300);
-  };
-
-  useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-    let hash = window.location.hash;
-    if (!hash) {
-      return;
-    }
-    hash = hash.replace('#', '');
-    let index = display.findIndex(d => d.id === hash);
-    if (index < 0) {
-      index = 0;
-    }
-    handleSelected(index);
-  }, [router.isReady]);
-
-  const TabDisplay = (props) => {
-    const { children, value, index, ...other } = props;
-    return (
-        <Box role="tabDisplay" hidden={value !== index} {...other}>
-          {value === index && (children)}
-        </Box>
-    );
+  const handleSelected = (event, newValue) => {
+    setValueTab(newValue);
   };
 
   const onSubmit = async (data) => {
@@ -188,11 +176,10 @@ export default function UpdateRecruitment() {
       recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
       recruitmentCreationType: openSaveDraft ? 0 : 1,
-      organizationPipelineStateDatas: data?.organizationPipelineStateDatas?.map(item => ({
-        organizationPipelineStateId: item.id,
+      organizationPipelineStateDatas: pipelineStateDatas?.filter(item => item?.examinationId !== null)?.map(item => ({
+        organizationPipelineStateId: item.organizationPipelineStateId,
         examinationId: item.examinationId,
-        // examinationExpiredTime: Number(item.expiredTime),
-        examinationExpiredTime: '2023-04-02T03:00:04.811Z',
+        examinationExpiredDays: Number(item.expiredTime),
       }))
     }
     if (data?.id && !query?.type) {
@@ -262,22 +249,27 @@ export default function UpdateRecruitment() {
               title={'Cập nhật tin tuyển dụng'}
               onOpenConfirm={handleOpenConfirm}
               errors={isValid}
+              name={recruitmentName}
           />
-          <TabList handleSelected={handleSelected} selected={selected} />
         </Grid>
-        <Content>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container columnSpacing={3}>
-              <Grid item md={12} className="profile-content">
-                {display.map((d, index) =>
-                    <TabDisplay value={selected} key={index} index={index} onSubmit={onSubmit}>
-                      {d.tab}
-                    </TabDisplay>
-                )}
-              </Grid>
-            </Grid>
-          </FormProvider>
-        </Content>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <TabContext value={valueTab}>
+            <TabList handleSelected={handleSelected} selected={valueTab}/>
+            <Content>
+              <TabPanel value={'0'}>
+                <Information recruitment={Recruitment} />
+              </TabPanel>
+              <TabPanel value={'1'}>
+                <Pipeline
+                    recruitment={Recruitment}
+                    pipelineStateDatas={pipelineStateDatas}
+                    onSetPipelineStateDatas={handleSetPipelineStateDatas}
+                    onSetHasExamination={setHasExamination}
+                />
+              </TabPanel>
+            </Content>
+          </TabContext>
+        </FormProvider>
         {
             openSaveDraft && <ConfirmModal
                 open={openSaveDraft}

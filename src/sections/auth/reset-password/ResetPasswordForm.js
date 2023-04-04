@@ -73,6 +73,7 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
             size="large"
             tittle={"Khôi phục mật khẩu"}
             loading={isSubmitting}
+            loadingPosition="end"
             type="submit"
             sx={{ textTransform: "initial" }}
           />

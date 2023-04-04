@@ -1,40 +1,41 @@
-import {useUserInviteSetPasswordMutation} from "../authSlice";
+import {useChangePasswordMutation} from "../authSlice";
 import {STYLE_CONSTANT} from "../register/constants";
 import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
 import {errorMessages} from "@/utils/errorMessages";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoadingButton} from "@mui/lab";
-import {Alert, IconButton, InputAdornment, Stack, Typography} from "@mui/material";
+import {Alert, Divider, IconButton, InputAdornment, Stack, Typography} from "@mui/material";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
-import {useState} from "react";
-import {useSnackbar} from "notistack";
 import {useRouter} from "next/router";
-import {PATH_AUTH} from "@/routes/paths";
+import {useState} from "react";
 import {LabelStyle} from "@/components/hook-form/style";
 
 const InputStyle = {width: 440, minHeight: 44};
 
-export default function NewInivtePasswordForm({token}) {
-  const {enqueueSnackbar} = useSnackbar();
+export default function ChangePasswordForm() {
   const router = useRouter();
+  const [changePassword] = useChangePasswordMutation(); // result
 
-  const [changePasswordWithToken] = useUserInviteSetPasswordMutation(); // result
-
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordCurrent, setShowPasswordCurrent] = useState(false);
+  const [showPasswordNew, setShowPasswordNew] = useState(false);
 
   const VerifyCodeSchema = Yup.object().shape({
-    password: Yup.string()
+    currentPassword: Yup.string()
+        .required("Mật khẩu không được bỏ trống")
+        .min(6, "Mật khẩu cần tối thiểu 6 ký tự"),
+    newPassword: Yup.string()
         .required("Mật khẩu không được bỏ trống")
         .min(6, "Mật khẩu cần tối thiểu 6 ký tự"),
     confirmPassword: Yup.string()
         .required("Mật khẩu xác nhận không được bỏ trống")
-        .oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng"),
+        .oneOf([Yup.ref("newPassword"), null], "Mật khẩu xác nhận không đúng"),
   });
 
   const defaultValues = {
-    password: "",
+    currentPassword: "",
+    newPassword: "",
     confirmPassword: "",
   };
 
@@ -53,50 +54,64 @@ export default function NewInivtePasswordForm({token}) {
   const onSubmit = async (data) => {
     try {
       const body = {
-        token: token,
-        password: data.password,
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
       };
       await new Promise((resolve) => setTimeout(resolve, 500));
-      await changePasswordWithToken(body).unwrap();
-      await router.push(PATH_AUTH.login)
-      enqueueSnackbar("Cập nhật mật khẩu thành công!", {
-        autoHideDuration: 1000
-      });
+      await changePassword(body).unwrap();
+      await router.push(`?status=success`)
     } catch (error) {
-      const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
-      setError("afterSubmit", {...error, message});
-      enqueueSnackbar("Cập nhật mật khẩu không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
-        autoHideDuration: 1000,
-        variant: 'error',
-      });
+      const message = errorMessages[`${error.status}`] || 'Lỗi hệ thống'
+      const {status} = error;
+      if (status === "IDE_05") {
+        setError('currentPassword', {type: "custom", message: "Mật khẩu cũ không chính xác"})
+      } else setError("afterSubmit", {...error, message});
     }
   };
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3}>
-          {!!errors.afterSubmit && (
-              <Alert severity="error">{errors.afterSubmit.message}</Alert>
-          )}
+          {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           <Stack>
-              <LabelStyle required={true}>Mật khẩu</LabelStyle>
+            <LabelStyle required={true}>Mật khẩu cũ</LabelStyle>
             <RHFTextField
-                name="password"
+                name="currentPassword"
                 placeholder="Bắt buộc"
-                type={showPassword ? "text" : "password"}
+                type={showPasswordCurrent ? "text" : "password"}
                 style={{...InputStyle}}
                 InputProps={{
                   endAdornment: (
                       <InputAdornment position="end" sx={{mr: 1}}>
-                        <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
+                        <IconButton edge="end" onClick={() => setShowPasswordCurrent(!showPasswordCurrent)}>
                           <Iconify
-                              icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
+                              icon={showPasswordCurrent ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
                         </IconButton>
                       </InputAdornment>
                   ),
                 }}
             />
-            {!errors.password && (
+          </Stack>
+          <Divider/>
+          <Stack>
+            <LabelStyle required={true}>Mật khẩu mới</LabelStyle>
+            <RHFTextField
+                name="newPassword"
+                placeholder="Bắt buộc"
+                type={showPasswordNew ? "text" : "password"}
+                style={{...InputStyle}}
+                InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end" sx={{mr: 1}}>
+                        <IconButton edge="end" onClick={() => setShowPasswordNew(!showPasswordNew)}>
+                          <Iconify
+                              icon={showPasswordNew ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
+                        </IconButton>
+                      </InputAdornment>
+                  ),
+                }}
+            />
+            {!errors.newPassword && (
                 <Typography
                     variant="body1"
                     sx={{
@@ -106,23 +121,23 @@ export default function NewInivtePasswordForm({token}) {
                       mt: 1,
                     }}
                 >
-                  Mật khẩu cần tối thiểu 6 ký tự
+                  Mật khẩu yêu cầu tối thiểu 6 ký tự
                 </Typography>
             )}
           </Stack>
           <Stack>
-              <LabelStyle required={true}>Xác nhận lại mật khẩu mới</LabelStyle>
+            <LabelStyle required={true}>Xác nhận lại mật khẩu mới</LabelStyle>
             <RHFTextField
                 name="confirmPassword"
                 placeholder="Bắt buộc"
-                type={showPassword ? "text" : "password"}
+                type={showPasswordNew ? "text" : "password"}
                 style={{...InputStyle}}
                 InputProps={{
                   endAdornment: (
                       <InputAdornment position="end" sx={{mr: 1}}>
-                        <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
+                        <IconButton edge="end" onClick={() => setShowPasswordNew(!showPasswordNew)}>
                           <Iconify
-                              icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
+                              icon={showPasswordNew ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
                         </IconButton>
                       </InputAdornment>
                   ),
@@ -134,8 +149,8 @@ export default function NewInivtePasswordForm({token}) {
                 fullWidth
                 size="large"
                 type="submit"
-                variant="contained"
                 loadingPosition="end"
+                variant="contained"
                 loading={isSubmitting}
                 sx={{
                   mt: 4,
@@ -144,7 +159,7 @@ export default function NewInivtePasswordForm({token}) {
                   borderRadius: 0.75,
                 }}
             >
-              Xác nhận và đăng nhập
+              <span>Đổi mật khẩu</span>
             </LoadingButton>
           </Stack>
         </Stack>

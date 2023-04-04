@@ -12,14 +12,14 @@ import {PATH_DASHBOARD} from "@/routes/paths";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {JobTitleStyle} from "@/sections/recruitment-form/style";
 
-const Header = ({title, errors, onOpenConfirm}) => {
+const Header = ({title, errors, name, onOpenConfirm}) => {
     return (
         <HeadingBar style={{
             position: 'fixed',
             top: '64px',
             zIndex: 1001,
             boxShadow: 'none',
-            borderBottom: '1px solid #E7E9ED'
+            borderBottom: '1px solid #E7E9ED',
         }}>
             <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Stack flexDirection="row" alignItems="center">
@@ -42,6 +42,7 @@ const Header = ({title, errors, onOpenConfirm}) => {
                     <MuiButton
                         title="Lưu nháp"
                         color="default"
+                        disabled={!name}
                         onClick={() => onOpenConfirm({ openSaveDraft: true })}
                         startIcon={<DraftIcon/>}
                         sx={{

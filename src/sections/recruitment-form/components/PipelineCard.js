@@ -35,7 +35,7 @@ const BoxItemStyle = styled(Box)(({theme, borderColor = '#B9BFC9'}) => ({
     }
 }));
 
-const PipelineCard = ({item, onOpenFormExamination, examination}) => {
+const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
     const classes = useStyles();
 
     const {pipelineStateType} = item;
@@ -47,13 +47,14 @@ const PipelineCard = ({item, onOpenFormExamination, examination}) => {
             expiredTime: examination?.expiredTime || '',
             examinationId: examination?.examinationId || '',
             examinationName: examination?.examinationName || '',
+            index: index,
         });
     }
 
     return (
         <BoxItemStyle
             className="card-pipeline-item"
-            borderColor={isEmpty(examination) && pipelineStateType === 1 ? 'red' : '#B9BFC9'}
+            borderColor={isEmpty(examination?.examinationId) && pipelineStateType === 1 ? 'red' : '#B9BFC9'}
         >
             <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
                 <Box>
