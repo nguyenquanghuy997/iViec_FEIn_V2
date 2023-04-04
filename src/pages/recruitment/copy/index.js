@@ -113,8 +113,7 @@ export default function CloneRecruitment() {
     defaultValues: defaultValues,
   });
 
-  const {handleSubmit, getValues, setValue, watch, formState: {isValid}} = methods;
-  const recruitmentName = watch('name');
+  const {handleSubmit, getValues, setValue, formState: {isValid}} = methods;
 
   useEffect(() => {
     for (let i in defaultValues) {
@@ -294,7 +293,6 @@ export default function CloneRecruitment() {
               title={'Sao chép tin tuyển dụng'}
               onOpenConfirm={handleOpenConfirm}
               errors={isValid}
-              name={recruitmentName}
           />
           <TabList handleSelected={handleSelected} selected={selected}/>
         </Grid>

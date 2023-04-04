@@ -1,5 +1,5 @@
 import HeaderCard from "../HeaderCard";
-import {useGetCompanyInfoQuery} from "../companyInforSlice";
+import {useGetCompanyInfoQuery, useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import CloseIcon from "@/assets/CloseIcon";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
@@ -15,106 +15,106 @@ import React, {useState} from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import "swiper/swiper-bundle.css";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
+import {useSnackbar} from "notistack";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export const SliderStyle = styled("div")(() => ({
-  "& .swiper-pagination": {
-    display: "flex",
-    alignItems: "end",
-    marginLeft: "36px",
-    marginBottom: "30px",
-  },
-  "& .swiper-pagination-bullet": {
-    background: "white",
-  },
-  "& .swiper-pagination-bullet.swiper-pagination-bullet-active": {
-    background: "orange",
-    width: 24,
-    borderRadius: 8,
-  },
+    "& .swiper-pagination": {
+        display: "flex",
+        alignItems: "end",
+        marginLeft: "36px",
+        marginBottom: "30px",
+    },
+    "& .swiper-pagination-bullet": {
+        background: "white",
+    },
+    "& .swiper-pagination-bullet.swiper-pagination-bullet-active": {
+        background: "orange",
+        width: 24,
+        borderRadius: 8,
+    },
 }));
 
-const EnvironmentWorkplace = () => {
-  const {data: Data} = useGetCompanyInfoQuery();
-  const [open, setOpen] = useState();
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const list = () => (
-      <Box
-          sx={{width: 700}}
-          role="presentation"
-          // onKeyDown={toggleDrawer(false)}
-      >
-        <List
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              p: 0,
-            }}
-        >
-          <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
-            Chỉnh sửa Lĩnh vực kinh doanh
-          </Typography>
-          <Button
-              onClick={handleClose}
-              sx={{
-                "&:hover": {
-                  background: "white",
-                },
-              }}
-          >
-            <CloseIcon/>
-          </Button>
-        </List>
-        <Divider/>
-        <div>{/* <EditBusinessArea onClose={handleClose} /> */}</div>
-      </Box>
-  );
-  return (
-      <Box sx={{minHeight: '296px'}}>
-        <HeaderCard
-            text={"Môi trường làm việc"}
-            open={open}
-            onClose={handleClose}
-            onOpen={handleOpen}
-        />
-        {open && (
-            <Drawer
-                anchor="right"
-                open={open}
-                onClose={handleClose}
-                onOpen={handleOpen}
-            >
-              {list("right")}
-            </Drawer>
-        )}
-        <Box
-            sx={{
-              px: 12,
-              pb: 3,
-              background: "white",
-              width: "100%",
-            }}
-        >
-          {Data?.organizationWorkingEnvironments ? (
-              <SliderStyle>
-                <Swiper
-                    id="swiper"
-                    virtual
-                    slidesPerView={1}
-                    spaceBetween={50}
-                    pagination
+const EnvironmentWorkplace = ({ data }) => {
+    const {enqueueSnackbar} = useSnackbar();
+    const {data: Data} = useGetCompanyInfoQuery();
+    const [open, setOpen] = useState(false);
+
+    const [checked, setChecked] = useState(data?.isHumansVisible || true);
+    const [loading, setLoading] = useState(false);
+
+    const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleChangeChecked = async () => {
+        setLoading(true);
+        try {
+            await updateVisibleHuman({
+                organizationId: data?.id,
+                isHumansVisible: checked
+            }).unwrap();
+            enqueueSnackbar("Chỉnh sửa hiển thị thành công!", {
+                autoHideDuration: 1000
+            });
+            setChecked(!checked);
+            setLoading(false);
+        } catch (e) {
+            enqueueSnackbar("Chỉnh sửa hiển thị không thành công, vui lòng thử lại!", {
+                autoHideDuration: 1000,
+                variant: 'error',
+            });
+            setLoading(false);
+            return e;
+        }
+    }
+
+    if (loading) {
+        return (
+            <LoadingScreen/>
+        )
+    }
+
+    return (
+        <>
+            <Box sx={{minHeight: '296px'}}>
+                <HeaderCard
+                    text={"Môi trường làm việc"}
+                    open={open}
+                    onClose={handleClose}
+                    onOpen={handleOpen}
+                    handleChange={handleChangeChecked}
+                    checked={checked}
+                />
+                <Box
+                    sx={{
+                        px: 12,
+                        pb: 3,
+                        background: "white",
+                        width: "100%",
+                    }}
                 >
-                  {Data?.organizationBusiness?.organizationBusinessDatas.map(
-                      (item, index) => (
-                          <SwiperSlide
-                              key={`slide-${index}`}
-                              style={{listStyle: "none"}}
-                          >
-                            {/* <div
+                    {Data?.organizationWorkingEnvironments ? (
+                        <SliderStyle>
+                            <Swiper
+                                id="swiper"
+                                virtual
+                                slidesPerView={1}
+                                spaceBetween={50}
+                                pagination
+                            >
+                                {Data?.organizationBusiness?.organizationBusinessDatas.map(
+                                    (item, index) => (
+                                        <SwiperSlide
+                                            key={`slide-${index}`}
+                                            style={{listStyle: "none"}}
+                                        >
+                                            {/* <div
                       style={{
                         color: "white",
                         width: "100%",
@@ -156,20 +156,37 @@ const EnvironmentWorkplace = () => {
                             Số 6 Quang Trung, phường Trần Hưng Đạo, Quận Hoàn
                             Kiếm, Thành Phố Hà Nội, Việt Nam
                           </span>
-                        </div> 
+                        </div>
                       //</SwiperSlide>
                     //</SliderStyle></div> */}
 
-                          </SwiperSlide>
-                      )
-                  )}
-                </Swiper>
-              </SliderStyle>
-          ) : <EmptyValue text={"Hiện chưa nội dung Môi trường làm việc"}/>}
-          {/* <SwiperColumn/> */}
-        </Box>
-      </Box>
-  );
+                                        </SwiperSlide>
+                                    )
+                                )}
+                            </Swiper>
+                        </SliderStyle>
+                    ) : <EmptyValue text={"Hiện chưa nội dung Môi trường làm việc"}/>}
+                    {/* <SwiperColumn/> */}
+                </Box>
+            </Box>
+            {open && (
+                <Drawer anchor="right" open={open} onClose={handleClose} onOpen={handleOpen}>
+                    <Box sx={{width: 700}}>
+                        <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
+                            <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
+                                Chỉnh sửa Lĩnh vực kinh doanh
+                            </Typography>
+                            <Button onClick={handleClose} sx={{"&:hover": {background: "#FDFDFD"}}}>
+                                <CloseIcon/>
+                            </Button>
+                        </List>
+                        <Divider/>
+                        <div>{/* <EditBusinessArea onClose={handleClose} /> */}</div>
+                    </Box>
+                </Drawer>
+            )}
+        </>
+    );
 };
 
 export default EnvironmentWorkplace;

@@ -48,14 +48,6 @@ export const companyServiceApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ["CompanyInfor"],
   endpoints: (builder) => ({
-    // Thông tin công ty
-    // getBranchByUser: builder.query({
-    //   query: () => ({
-    //     url: API_GET_COMPANY_INFOR_BY_IDS,
-    //     method: "GET",
-    //   }),
-    //   providesTags: ["branch_by_user"],
-    // }),
     getCompanyInfo: builder.query({
       query: () => ({
         url: `${API_GET_COMPANY_INFOR}`,
@@ -88,7 +80,6 @@ export const companyServiceApi = createApi({
         params: { ProvinceId: provinceId },
       }),
     }),
-   
     addOrganizationBusiness: builder.mutation({
       query: (rest) => ({
         url: API_ADD_ORGANIZATION_BUSINESS,
@@ -97,7 +88,6 @@ export const companyServiceApi = createApi({
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
-
     uploadImageCompany: builder.mutation({
       query: (rest) => ({
         url: API_UPLOAD_IMAGE,
@@ -153,13 +143,10 @@ export const companyServiceApi = createApi({
 });
 
 export const {
-  // Thông tin công ty
   useGetCompanyInfoQuery,
   useGetJobCategoriesQuery,
   useGetProvinceQuery,
-  useLazyGetProvinceQuery,
   useGetDistrictByProvinceIdQuery,
-  useLazyGetDistrictByProvinceIdQuery,
   useUpdateCompanyInfoMutation,
   useUploadImageCompanyMutation,
   useUpdateCompanyHumanMutation,

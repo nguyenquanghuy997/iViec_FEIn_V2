@@ -118,8 +118,7 @@ export default function UpdateRecruitment() {
     defaultValues: defaultValues,
   });
 
-  const {handleSubmit, getValues, setValue, watch, formState: {isValid}} = methods;
-  const recruitmentName = watch('name');
+  const {handleSubmit, getValues, setValue, formState: {isValid}} = methods;
 
   useEffect(() => {
     for (let i in defaultValues) {
@@ -249,7 +248,6 @@ export default function UpdateRecruitment() {
               title={'Cập nhật tin tuyển dụng'}
               onOpenConfirm={handleOpenConfirm}
               errors={isValid}
-              name={recruitmentName}
           />
         </Grid>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
