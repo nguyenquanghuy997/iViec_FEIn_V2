@@ -1,17 +1,20 @@
-import { LoadingButton } from "@mui/lab";
+import PropTypes from 'prop-types';
+import { LoadingButton } from '@mui/lab';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as React from "react";
 
-export default function ButtonSystem({
-  loading,
+const ButtonSystem = ({
+  height = 44,
+  loading = false,
+  styles = {},
+  sx = {},
+  border = true,
   color,
   hoverColor,
-  icon,
-  text,
   variant,
   width,
-  
-}) {
+  children,
+  ...props
+}) => {
   const theme = createTheme({
     palette: {
       primary: {
@@ -38,6 +41,18 @@ export default function ButtonSystem({
         main: "#FBBD2B",
         contrastText: "#fff",
       },
+      default: {
+        main: '#F3F4F6',
+        contrastText: '#455570',
+      },
+      active: {
+        main: '#FFF3E0',
+        contrastText: '#F26A12',
+      },
+      successOpacity: {
+        main: '#E8F5E9',
+        contrastText: '#388E3C',
+      },
     },
   });
 
@@ -46,27 +61,49 @@ export default function ButtonSystem({
       <LoadingButton
         color={color}
         loading={loading}
-        loadingPosition="end"
         variant={variant}
-        startIcon={icon}
-        endIcon={icon}
-        sx={{ width: { width }, minHeight: "44px", borderRadius: "6px",
-        "&:hover": {
-          backgroundColor: { hoverColor },
-          // borderColor: '',
-          boxShadow: "none",
-        },
-        "&:active": {
-          boxShadow: "none",
-          // backgroundColor: '',
-          // borderColor: "#005cbf",
-        },
-        "&:focus": {
-          // boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-        },}}
+        sx={{
+          ...(width ? { width } : {}),
+          ...(!border && { border: 'none' }),
+          fontFamily: 'inherit',
+          boxShadow: 'none',
+          minHeight: height,
+          borderRadius: '6px',
+          lineHeight: 1.5,
+          textTransform: 'none',
+          fontWeight: 600,
+          px: 2,
+          "&:hover": {
+            backgroundColor: { hoverColor },
+            boxShadow: "none",
+            ...(!border && { border: 'none' }),
+          },
+          "&:active": {
+            boxShadow: "none",
+          },
+          ...styles,
+          ...sx,
+        }}
+        {...props}
       >
-        {text}
+        {children}
       </LoadingButton>
     </ThemeProvider>
   );
 }
+
+ButtonSystem.propTypes = {
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  loading: PropTypes.bool,
+  icon: PropTypes.node,
+  styles: PropTypes.object,
+  sx: PropTypes.object,
+  color: PropTypes.string,
+  hoverColor: PropTypes.string,
+  variant: PropTypes.string,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  children: PropTypes.node,
+  ...LoadingButton.propTypes
+}
+
+export default ButtonSystem;
