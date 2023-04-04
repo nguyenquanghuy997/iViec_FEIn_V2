@@ -5,13 +5,16 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import Content from "@/components/BaseComponents/Content";
 import CloseIcon from "@/assets/CloseIcon";
 
-const ActionItem = ({title, icon, onClick, sx, ...other}) => {
+const ActionItem = ({title, icon, onClick, sx, component, ...other}) => {
   const sxProps = {
     mr: 2,
     "&:hover": {
       boxShadow: 'none',
     },
     ...sx
+  }
+  if (component) {
+    return component;
   }
   if (icon) {
     return (
@@ -28,7 +31,7 @@ const ActionItem = ({title, icon, onClick, sx, ...other}) => {
 const BottomNavModal = ({data, open, onClose, actions}) => {
   return (
       <Drawer anchor={"bottom"} open={open} variant="persistent" onClose={onClose}>
-        <Content>
+        <Content sx={{ '&.MuiBox-root': { py: '20px' } }}>
           <BoxFlex>
             <BoxFlex justifyContent="flex-start">
               {
@@ -44,7 +47,7 @@ const BottomNavModal = ({data, open, onClose, actions}) => {
               }
             </BoxFlex>
             <BoxFlex justifyContent="flex-end">
-              <Typography>Đã chọn: {Array.isArray(data) ? data.length : 1}</Typography>
+              <Typography variant="textSize14500" color="#091E42">Đã chọn: {Array.isArray(data) ? data.length : 1}</Typography>
               <Divider orientation="vertical" flexItem sx={{mx: 2, width: "2px", backgroundColor: "#E7E9ED"}}/>
               <IconButton size="medium" onClick={onClose}>
                  <CloseIcon />

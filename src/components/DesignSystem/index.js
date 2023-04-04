@@ -6,4 +6,5 @@ export { default as TextAreaDS } from './TextAreaDS'
 export { default as NavGoBack } from './NavGoBack'
 export { default as SwitchDS } from './SwitchDS'
 export { default as SwitchStatusDS } from './SwitchStatusDS'
+export { default as Button } from './ButtonSystem';
 

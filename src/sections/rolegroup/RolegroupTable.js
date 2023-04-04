@@ -1,95 +1,197 @@
-import { useGetRoleListQuery } from "../rolegroup/RoleGroupSlice";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { TYPES } from "./config";
-import { VietnameseField } from "./config";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import React, { useState } from "react";
-import { useController } from "react-hook-form";
+import { getActionName } from "./config";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  FormControlLabel,
+  useTheme,
+} from '@mui/material';
+import { Controller } from 'react-hook-form';
+import Checkbox from "@/components/form/Checkbox";
 
-const Checkboxes = ({ options, control, name, dataFilter }) => {
-  const { field } = useController({
-    control,
-    name,
-  });
-  const [value, setValue] = useState(field.value || []);
-  const displayField = options?.filter((item) =>
-    dataFilter.includes(item?.name)
-  );
+export default function PipelineTable({
+  actions: initActions = [],
+  setValue,
+  control,
+}) {
+  const { palette } = useTheme();
+  const [actionsList, setActionsList] = useState([]);
+
+  const availableActions = useMemo(() => {
+    let aryActions = [];
+    TYPES.map(type => {
+      aryActions = aryActions.concat(type.actions);
+    });
+    return aryActions;
+  }, [TYPES]);
+
+  useEffect(() => {
+    if (initActions.length < 1) {
+      return;
+    }
+    setActionsList(initActions);
+  }, [initActions || null]);
+
+  const isCheckAll = useMemo(() => {
+    if (
+      actionsList.length > 0
+      && actionsList.length === availableActions.length
+      && !actionsList.some(ac => !availableActions.includes(ac))
+    ) {
+      return 'checked';
+    }
+    if (
+      actionsList.length !== availableActions.length
+      && actionsList.some(ac => availableActions.includes(ac))
+    ) {
+      return 'indeterminate';
+    }
+    return false;
+  }, [availableActions, actionsList]);
+
+  const handleChangeAction = (action) => {
+    let index = actionsList.indexOf(action);
+    if (index > -1) {
+      actionsList.splice(index, 1);
+    } else {
+      actionsList.push(action);
+    }
+    setActionsList([...actionsList]);
+    return actionsList;
+  }
+
+  const handleChangeActionGroup = (e, aryActions) => {
+    let checked = e.target.checked;
+    if (checked) {
+      aryActions.map(ac => {
+        if (!actionsList.includes(ac)) {
+          actionsList.push(ac);
+        }
+      });
+    } else {
+      aryActions.map(ac => {
+        let idx = actionsList.indexOf(ac);
+        if (idx > -1) {
+          actionsList.splice(idx, 1);
+        }
+      });
+    }
+    setActionsList([...actionsList]);
+    setValue('identityRoles', [...actionsList]);
+  }
+
+  const isCheckActionGroup = useCallback((aryActions) => {
+    let isChecked = true;
+    let isIndeterminate = false;
+    aryActions.map(ac => {
+      if (!actionsList.includes(ac)) {
+        isChecked = false;
+      } else {
+        isIndeterminate = true;
+      }
+    });
+
+    if (isChecked) {
+      return 'checked';
+    }
+    if (isIndeterminate) {
+      return 'indeterminate';
+    }
+    return false;
+  }, [actionsList]);
+
   return (
-    <>
-      {displayField?.map((option, index) => (
-        <div
-          className="box-check"
-          style={{
-            justifyContent: "space-between",
-            // borderTop: "0.5px solid rgba(145, 158, 171, 0.24)",
-          }}
-        >
-          <TableCell sx={{ width: "200px" }}>
-            {VietnameseField(option?.name)}
-          </TableCell>
-          <TableCell>
-            <input
-              onChange={(e) => {
-                const valueCopy = [...value];
-                valueCopy[index] = e.target.checked ? e.target.value : null;
-                field.onChange(valueCopy);
-                setValue(valueCopy);
-              }}
-              key={option.id}
-              type="checkbox"
-              // {...register("identityRoleIds")}
-              checked={value.includes(option.id)}
-              value={option.id}
-              style={{ width: "18px" }}
-            />
-          </TableCell>
-        </div>
-      ))}
-    </>
-  );
-};
-
-export default function PipelineTable({ control, register }) {
-  const { data } = useGetRoleListQuery();
-  const options = data?.items;
-
-  return (
-    <div>
-      <Table sx={{ minWidth: 550 }} aria-label="spanning table">
+    <div className="role-actions-table">
+      <Table sx={{ width: '100%' }} aria-label="spanning table">
         <TableHead>
           <TableRow>
-            <TableCell align="left" sx={{display:'flex', justifyContent:'space-between'}}>
+            <TableCell>
               <span>Nhóm chức năng</span>
+            </TableCell>
+
+            <TableCell>
               <span>Chức năng</span>
-              <span>checkbox</span>
+            </TableCell>
+
+            <TableCell align="right">
+              <Checkbox
+                checked={isCheckAll === 'checked'}
+                indeterminate={isCheckAll === 'indeterminate'}
+                onChange={e => {
+                  let checked = e.target.checked;
+                  if (checked) {
+                    setValue('identityRoles', availableActions);
+                    setActionsList(availableActions);
+                  } else {
+                    setValue('identityRoles', []);
+                    setActionsList([]);
+                  }
+                }}
+                sx={{ color: palette.text.placeholder }}
+              />
             </TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
-          {TYPES.map((item) => (
-            <div>
+          {TYPES.map((item, index) => {
+            let { actions: itemActions = [] } = item;
+            return itemActions.map((action, actionIndex) => (
               <TableRow
+                key={index + '_' + actionIndex}
                 style={{ borderTop: "0.5px solid rgba(145, 158, 171, 0.24)" }}
               >
-                <TableCell rowSpan={5} sx={{ width: "250px" }}>
-                  {item?.name}
-                </TableCell>
+                {actionIndex === 0 && (
+                  <TableCell rowSpan={itemActions.length}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={isCheckActionGroup(itemActions) === 'checked'}
+                          indeterminate={isCheckActionGroup(itemActions) === 'indeterminate'}
+                          onChange={(e) => {
+                            handleChangeActionGroup(e, itemActions);
+                          }}
+                          sx={{ color: palette.text.placeholder }}
+                        />
+                      }
+                      label={item.name}
+                    />
+                  </TableCell>
+                )}
+
                 <TableCell>
-                  <Checkboxes
-                    dataFilter={item?.actions}
-                    options={options}
-                    control={control}
-                    register={register}
-                    name="identityRoleIds"
+                  {getActionName(action)}
+                </TableCell>
+
+                <TableCell align="right">
+                  <FormControlLabel
+                    control={
+                      <Controller
+                        name={'identityRoles'}
+                        control={control}
+                        render={({ field }) => {
+                          let { onChange } = field;
+                          return (
+                            <Checkbox
+                              checked={actionsList.includes(action)}
+                              onChange={() => {
+                                onChange(handleChangeAction(action));
+                              }}
+                            />
+                          )
+                        }}
+                      />
+                    }
+                    sx={{ mr: 0 }}
                   />
                 </TableCell>
               </TableRow>
-            </div>
-          ))}
+            ))
+          })}
         </TableBody>
       </Table>
     </div>

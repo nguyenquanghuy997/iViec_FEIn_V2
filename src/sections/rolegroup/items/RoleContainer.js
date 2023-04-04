@@ -1,31 +1,48 @@
 import FilterModalRole from "../FilterModalRole";
-import RoleContainerBottomNav from "../RoleContainerBottomNav";
 import RolegroupHeader from "../RolegroupHeader";
-import DetailDrawer from "../modals/DetailDrawer";
+import RoleDrawer from '../modals/RoleDrawer';
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import { AvatarDS } from "@/components/DesignSystem";
-import { View } from "@/components/FlexStyled";
 import TextMaxLine from "@/components/TextMaxLine";
 import { filterSlice } from "@/redux/common/filterSlice";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
   useGetListColumnsQuery,
-  useGetRoleGroupListQuery, useUpdateListColumnsMutation,
+  useGetRoleGroupListQuery,
+  useUpdateListColumnsMutation,
+  useRemoveRoleGroupMutation,
+  useUpdateRolegroupMutation,
 } from "@/sections/rolegroup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Typography } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import BottomNavModal from '@/components/BaseComponents/BottomNavModal';
+import Switch from "@/components/form/Switch";
+import { useConfirmModal } from '@/components/modal';
+import {
+  RiEdit2Fill,
+  RiDeleteBin6Line,
+  RiToggleFill,
+  RiToggleLine,
+} from 'react-icons/ri';
+import { useSnackbar } from "notistack";
+import { getErrorMessage } from "@/utils/helper";
+
+import { RoleGroupStyle } from "../styles";
 
 const defaultValues = {
   searchKey: "",
 };
 
 export const RoleContainer = () => {
+  const { palette } = useTheme();
+  const { confirmModal } = useConfirmModal();
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { query, isReady } = router;
   const { data, isLoading } = useGetRoleGroupListQuery();
@@ -37,6 +54,11 @@ export const RoleContainer = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
+  const [editItem, setEditItem] = useState(null);
+
+  const [removeRoleGroup] = useRemoveRoleGroupMutation();
+  const [updateRoleGroup] = useUpdateRolegroupMutation();
+
   const handleSetDataFilter = (data) =>
     dispatch(filterSlice.actions.setAllDataFilter(data));
   const handleChangePagination = (pageIndex, pageSize) => {
@@ -65,10 +87,14 @@ export const RoleContainer = () => {
       title: "Vai trò",
       width: "220px",
       fixed: "left",
-      render: (item) => (
+      render: (item, record) => (
         <TextMaxLine
-          sx={{ width: 220, fontWeight: "normal", fontSize: 14 }}
-          onClick={() => setOpen(true)}
+          sx={{ width: 220, fontWeight: "normal", fontSize: 14, cursor: 'pointer' }}
+          onClick={(e) => {
+            setEditItem(record);
+            setOpen(true);
+            e.stopPropagation();
+          }}
         >
           {item}
         </TextMaxLine>
@@ -211,12 +237,83 @@ export const RoleContainer = () => {
   const [itemSelected, setItemSelected] = useState([]);
   const [columnsTable, setColumnsTable] = useState([]);
 
-  // const [showDelete, setShowDelete] = useState(false);
-  // const [showMultipleDelete, setShowMultipleDelete] = useState(false);
-  // const [actionTypeActive, setActionTypeActive] = useState(0) 
-  // const [actionType, setActionType] = useState(0)  
+  const handleConfirmDelete = () => {
+    if (itemSelected.length < 1) {
+      return;
+    }
+
+    confirmModal({
+      title: 'Xác nhận xóa vai trò',
+      confirmType: 'warning',
+      content: (
+        <Typography variant="body2" color={palette.text.sub}>
+          Bạn có chắc chắn muốn xóa {' '}
+          <strong>{getDeleteTitle()}</strong>?
+        </Typography>
+      ),
+      okText: 'Xóa',
+      onOk: async (close) => {
+        try {
+          await removeRoleGroup(itemSelected.map(it => it.id)).unwrap();
+          setItemSelected([]);
+          close();
+          enqueueSnackbar('Xóa vai trò thành công!');
+        } catch (err) {
+          console.log('Remove role group error: ', err);
+          enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
+        }
+      },
+    });
+  }
+
+  const getDeleteTitle = () => {
+    if (itemSelected.length < 1) {
+      return null;
+    }
+    if (itemSelected.length === 1) {
+      return itemSelected[0].name;
+    }
+    return itemSelected.length + ' vai trò đã chọn';
+  }
+
+  const handleChangeStatus = (isChecked) => {
+    if (itemSelected.length !== 1) { // TODO
+      return;
+    }
+
+    confirmModal({
+      title: isChecked ? 'Bật trạng thái hoạt động cho vai trò' : 'Tắt trạng thái hoạt động cho vai trò',
+      confirmType: 'info',
+      confirmIcon: isChecked ? <RiToggleFill size={55} color="#1976D2" />
+        : <RiToggleLine size={55} color="#455570" />,
+      content: (
+        <Typography variant="body2" color={palette.text.sub}>
+          Bạn chắc chắn muốn { isChecked ? 'bật' : 'tắt' } {' '}
+          trạng thái hoạt động cho vai trò <strong>{itemSelected[0].name}</strong>
+        </Typography>
+      ),
+      okText: isChecked ? 'Bật' : 'Tắt',
+      onOk: async (close) => {
+        try {
+          await updateRoleGroup({
+            id: itemSelected[0].id,
+            isActivated: isChecked,
+          }).unwrap();
+          close();
+          enqueueSnackbar((isChecked ? 'Bật' : 'Tắt') + ' trạng thái thành công!');
+        } catch (err) {
+          console.log('Change role status error: ', err);
+          enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
+        }
+      },
+      onCancel: () => {
+        
+      },
+    });
+  }
+
   return (
-    <View>
+    <RoleGroupStyle>
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
           page={page}
@@ -239,31 +336,54 @@ export const RoleContainer = () => {
           filter={
             <RolegroupHeader
               methods={methods}
-              isOpen={isOpen}
               onSubmit={onSubmitSearch}
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}
               onCloseFilterForm={handleCloseFilterForm}
+              onOpenAddForm={() => setOpen(true)}
             />
           }
         />
       </Content>
-      {selectedRowKeys?.length > 0 && (
-        <RoleContainerBottomNav
-          open={selectedRowKeys?.length > 0}
-          onClose={() => setOpen(false)}
-          // setShowDelete={setShowDelete}
-          // setShowMultipleDelete={setShowMultipleDelete}
-          // setIsOpenActive={setIsOpenActive}
-          selectedList={selectedRowKeys || []}
-          // setActionType={setActionType}
-          // setActionTypeActive={setActionTypeActive}
-          // status={ListOrganization?.filter((item) => item.parentOrganizationId)
-          //   .filter((item) => selected.includes(item.id))
-          //   .every((item) => item.isActivated === true)}
-          onOpenForm={() => setOpen(true)}
-        />
-      )}
+
+      <BottomNavModal
+        open={selectedRowKeys.length > 0}
+        onClose={() => {
+          setSelectedRowKeys([]);
+        }}
+        data={selectedRowKeys}
+        actions={[
+          {
+            component: (
+              <Switch
+                label="Đang hoạt động"
+                onClick={e => {
+                  handleChangeStatus(e.target.checked);
+                }}
+                disabled={selectedRowKeys.length > 1}
+              />
+            ),
+          },
+          {
+            icon: <RiEdit2Fill size={18} color={palette.text.secondary} />,
+            onClick: () => {
+              if (itemSelected.length > 1) {
+                return;
+              }
+              setEditItem(itemSelected[0]);
+              setOpen(true);
+            },
+            disabled: selectedRowKeys.length > 1,
+          },
+          {
+            icon: <RiDeleteBin6Line size={18} color={palette.text.warning} />,
+            onClick: () => {
+              handleConfirmDelete();
+            },
+          },
+        ]}
+      />
+
       {isOpen && (
         <FilterModalRole
           open={isOpen}
@@ -272,13 +392,14 @@ export const RoleContainer = () => {
         />
       )}
 
-      {open && (
-        <DetailDrawer
-          open={open}
-          onClose={() => setOpen(false)}
-          onOpen={() => setOpen(true)}
-        />
-      )}
-    </View>
+      <RoleDrawer 
+        open={open} 
+        onClose={() => {
+          setEditItem(null);
+          setOpen(false);
+        }}
+        selectedItem={editItem}
+      />
+    </RoleGroupStyle>
   );
 };
