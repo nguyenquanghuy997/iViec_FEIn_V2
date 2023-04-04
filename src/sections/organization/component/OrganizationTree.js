@@ -48,7 +48,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
             else if (Array.isArray(node.children)) {
                 for (let childNode of node.children) {
                     result = getNodeById(childNode, id, parentsPath);
-                    if (!!result) {
+                    if (result) {
                         parentsPath.push(node.id);
                         return result;
                     }

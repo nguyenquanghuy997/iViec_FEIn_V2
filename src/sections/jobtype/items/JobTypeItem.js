@@ -1,16 +1,12 @@
 import JobTypeFilterModal from "../modals/JobTypeFilterModal";
+import JobTypeBottomNav from "./JobTypeBottomNav";
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import {
-  useGetListColumnApplicantsQuery,
-  useUpdateListColumnApplicantsMutation,
-} from "@/sections/applicant";
-import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
+import { useGetListColumnsQuery, useLazyGetAllJobTypeQuery, useUpdateListColumnsMutation } from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
-import PipelineBottomNav from "@/sections/pipeline/items/PipelineBottomNav";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,15 +27,18 @@ export const JobTypeItem = () => {
   const [getAllFilter, { data: Data = [], isLoading }] =
     useLazyGetAllJobTypeQuery();
   // api get list Column
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
-  // api update list Column
-  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+  const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
 
+  // api update list Column
+  const [updateListColumn] = useUpdateListColumnsMutation();
   const columns = [
     {
+      dataIndex: "organizationPositionVisibleId",
       title: "STT",
       key: "index",
-      render: (item, record, index) => <>{index + 1}</>,
+      render: (item, record, index, page, paginationSize) => (
+        <>{(page - 1) * paginationSize + index + 1}</>
+      ),
       width: "60px",
       fixed: "left",
     },
@@ -89,7 +88,7 @@ export const JobTypeItem = () => {
       ],
     },
     {
-      dataIndex: "creatorName",
+      dataIndex: "creatorEmail",
       title: "Người tạo",
       width: "300px",
       name: "creatorIds",
@@ -115,24 +114,6 @@ export const JobTypeItem = () => {
       ),
     },
   ];
-
-  const menuItemText = {
-    name: "Vị trí công việc",
-    organizationName: "Đơn vị",
-    numberOfRecruitmentApplied: "Số tin áp dụng",
-    isActivated: "Trạng thái",
-    createdTime: "Ngày tạo",
-    creatorName: "Người tạo",
-  };
-
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
 
   // form search
   const Schema = Yup.object().shape({
@@ -232,10 +213,9 @@ export const JobTypeItem = () => {
     );
     handleCloseFilterForm();
   };
-  const refreshData = () => {
-    getAllFilter().unwrap();
-  };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [columnsTable, setColumnsTable] = useState([]);
+  const [itemSelected, setItemSelected] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -257,39 +237,40 @@ export const JobTypeItem = () => {
           columns={columns}
           source={Data}
           loading={isLoading}
-          ColumnData={ColumnData}
-          menuItemText={menuItemText}
-          UpdateListColumn={handleUpdateListColumnApplicants}
+          ColumnData={ColumnData[0]}
+          UpdateListColumn={updateListColumn}
+          columnsTable={columnsTable}
+          setColumnsTable={setColumnsTable}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
           nodata="Hiện chưa có vị trí công việc nào"
           isSetting={true}
+          itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
           filter={
             <JobTypeHeader
               methods={methods}
-              isOpen={isOpen}
               onSubmit={onSubmitSearch}
               handleSubmit={handleSubmit}
               onOpenFilterForm={handleOpenFilterForm}
-              onCloseFilterForm={handleCloseFilterForm}
-              onRefreshData={refreshData}
             />
           }
         />
-        <PipelineBottomNav
+        <JobTypeBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
           setselectedList={setSelectedRowKeys}
+          itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
         />
       </Content>
       {isOpen && (
         <JobTypeFilterModal
-          columns={columns}
+          columns={columnsTable}
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
-          onRefreshData={refreshData}
         />
       )}
     </View>

@@ -2,7 +2,7 @@ import {Paper} from "@mui/material";
 import {makeStyles, styled} from "@mui/styles";
 import { STYLE_CONSTANT as style } from '@/theme/palette'
 
-const useStyles = makeStyles(({}) => ({
+const useStyles = makeStyles(() => ({
     input: {
         border: '1px solid red',
         "&:focus": {
@@ -21,7 +21,8 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
         width: '100%',
         border: '1px solid #D0D4DB',
         borderTop: theme.spacing(0),
-        borderRadius: '0 !important'
+        borderRadius: '0 !important',
+        backgroundColor: '#FDFDFD'
     },
     "& .MuiAutocomplete-listbox": {
         padding: 0,

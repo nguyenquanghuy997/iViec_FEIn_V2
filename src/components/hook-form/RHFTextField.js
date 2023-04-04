@@ -1,31 +1,11 @@
-import { memo } from 'react';
-// @mui
-import { LabelStyle, TextFieldStyle } from "@/components/hook-form/style";
-import PropTypes from "prop-types";
-// form
-import { Controller, useFormContext } from "react-hook-form";
-
-RHFTextField.propTypes = {
-  name: PropTypes.string,
-  variant: PropTypes.string,
-  title: PropTypes.string,
-  isRequired: PropTypes.bool,
-};
-
-RHFTextField.defaultProps = {
-  variant: "standard",
-  title: "",
-  isRequired: false,
-};
+import {memo} from 'react';
+import {Controller, useFormContext} from "react-hook-form";
+import MuiTextField from "@/components/form/MuiTextField";
 
 function RHFTextField({
   name,
-  title,
-  isRequired,
-  variant,
   beforeChange,
   maxLength,
-  disabled,
   ...other
 }) {
   const { control } = useFormContext();
@@ -40,19 +20,14 @@ function RHFTextField({
         }
         return (
           <>
-            {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
-            <TextFieldStyle
+            <MuiTextField
               {...field}
-              value={field.value || ""}
               error={!!error}
-              disabled={disabled}
               helperText={error?.message}
-              variant={variant}
-              {...other}
-              InputProps={{ ...other.InputProps, disableUnderline: true }}
               inputProps={{
                 maxLength: maxLength,
               }}
+              {...other}
             />
           </>
         );

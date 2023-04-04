@@ -37,7 +37,6 @@ export const ApplicantAddModal = ({
   };
 
   const pressSave = handleSubmit((d) => {
-    debugger
     onSubmit?.(d);
     pressHide();
   });

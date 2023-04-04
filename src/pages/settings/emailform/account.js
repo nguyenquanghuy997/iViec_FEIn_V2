@@ -85,11 +85,11 @@ function Account() {
   };
 
   const handleDelete = (data) => {
-    console.log(data)
+    return data;
   }
 
   const handleActive = (data) => {
-    console.log(data)
+    return data;
   }
 
   return (

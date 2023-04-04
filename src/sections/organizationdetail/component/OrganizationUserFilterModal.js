@@ -1,35 +1,37 @@
-import {memo, useEffect} from "react";
+import React, {memo, useEffect, useState} from "react";
 import Scrollbar from "@/components/Scrollbar";
-import {Box, ClickAwayListener, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, CircularProgress, Divider, Drawer, IconButton, Stack, Switch, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
-import {ButtonDS} from "@/components/DesignSystem";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
 import {isArray} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
 import {LIST_STATUS} from "@/utils/formatString";
 import {useRouter} from "next/router";
-import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
-  ButtonCancelStyle,
-  HelperTextTypography
-} from "@/sections/applicant/style";
+import {FilterModalFooterStyle, FilterModalHeadStyle} from "@/sections/applicant/style";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import OrganizationUserFilterForm from "@/sections/organizationdetail/component/OrganizationUserFilterForm";
+import {useGetAllUserFromOrganizationQuery} from "@/sections/applicant";
 
 function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
-
   const router = useRouter();
-  const { query } = router;
+  const {query, asPath, isReady} = router;
   const defaultValues = {
     isActive: "",
+    createdTimeFrom: null,
+    createdTimeTo: null,
+    creatorIds: [],
+    applicationUserRoleGroups: [],
   };
+
+  const [checked, setChecked] = useState(false);
 
   const methods = useForm({
     mode: 'all',
     defaultValues,
   });
 
-  const { handleSubmit, setValue, formState: {isSubmitting} } = methods;
+  const {handleSubmit, setValue, formState: {isSubmitting}} = methods;
 
   useEffect(() => {
     for (let item in query) {
@@ -41,30 +43,27 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
     }
   }, [query])
 
-  const handleCloseModal = async () => {
+  const handleCloseModal = () => {
     onClose();
-    await router.push({
+    isReady && router.push({
       pathname: router.pathname,
-      query: {}
-    }, undefined, { shallow: true })
-    Object.entries(query).forEach(([key, value]) => {
-      console.log(key, value)
-    })
+      query: {},
+    }, asPath, {shallow: true})
   }
 
-  // options select
+  const {data: ListUserFromOrganization = [], isLoading: isLoadingUser} = useGetAllUserFromOrganizationQuery();
+
+  if (isLoadingUser) return (
+      <Box textAlign="center" my={1}>
+        <CircularProgress size={100}/>
+      </Box>
+  )
 
   return (
-      <ClickAwayListener
-          mouseEvent="onMouseDown"
-          touchEvent="onTouchStart"
-          onClickAway={() => isOpen && onClose()}
-      >
       <Drawer
           open={isOpen}
           onClose={onClose}
           anchor="right"
-          variant="persistent"
           PaperProps={{
             sx: {
               width: {xs: 1, sm: 560, md: 400},
@@ -76,49 +75,73 @@ function OrganizationUserFilterModal({columns, isOpen, onClose, onSubmit}) {
               right: 0,
             }
           }}
+          componentsProps={{
+            backdrop: {
+              sx: {
+                background: 'transparent !important',
+                boxShadow: 'none !important'
+              }
+            }
+          }}
       >
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <ApplicantModalHeadStyle>
+            <FilterModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
-            </ApplicantModalHeadStyle>
+            </FilterModalHeadStyle>
             <Divider/>
             <Box sx={{py: 2, mt: 0}}>
-              <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
-              <Stack sx={{pb: 3, px: 2}}>
-                <DynamicFilterForm
+              <Stack sx={{pb: 6, px: 2}}>
+                <OrganizationUserFilterForm
                     columns={columns}
                     options={{
                       isActive: LIST_STATUS,
+                      creatorIds: ListUserFromOrganization
                     }}
                 />
-
               </Stack>
             </Box>
-
-            <Divider/>
-            <ApplicantModalFooterStyle>
+            <FilterModalFooterStyle>
               <Stack flexDirection="row">
-                <ButtonDS
+                <MuiButton
                     type="submit"
                     loading={isSubmitting}
-                    variant="contained"
-                    tittle="Áp dụng"
+                    title="Áp dụng"
                     onClick={handleSubmit(onSubmit)}
                 />
-                <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
+                <MuiButton
+                    type="submit"
+                    color={"basic"}
+                    title="Hủy"
+                    onClick={handleCloseModal}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: 'transparent',
+                        boxShadow: 'none'
+                      }
+                    }}
+                />
               </Stack>
-            </ApplicantModalFooterStyle>
+              <FormControlLabel
+                  label="Tự động"
+                  control={
+                    <Switch
+                        checked={checked}
+                        onChange={(e) => setChecked(e.target.checked)}
+                        inputProps={{"aria-label": "controlled"}}
+                    />
+                  }
+              />
+            </FilterModalFooterStyle>
           </FormProvider>
         </Scrollbar>
       </Drawer>
-      </ClickAwayListener>
-  );
+  )
 }
 
 export default memo(OrganizationUserFilterModal);

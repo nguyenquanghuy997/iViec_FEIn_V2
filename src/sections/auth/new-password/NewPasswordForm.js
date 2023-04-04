@@ -2,7 +2,7 @@ import {useChangePasswordWithTokenMutation} from "../authSlice";
 import {STYLE_CONSTANT} from "../register/constants";
 import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
-import errorMessages from "@/utils/errorMessages";
+import {errorMessages} from "@/utils/errorMessages";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoadingButton} from "@mui/lab";
 import {Alert, IconButton, InputAdornment, Stack, Typography} from "@mui/material";
@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import {PATH_PAGE} from "@/routes/paths";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
+import {LabelStyle} from "@/components/hook-form/style";
 
 const InputStyle = {width: 440, minHeight: 44};
 
@@ -76,16 +77,15 @@ export default function NewPasswordForm({userName, otpCode}) {
                     <Alert severity="error">{errors.afterSubmit.message}</Alert>
                 )}
                 <Stack>
+                    <LabelStyle required={true}>Mật khẩu</LabelStyle>
                     <RHFTextField
                         name="password"
-                        title="Mật khẩu"
                         placeholder="Bắt buộc"
-                        isRequired
                         type={showPassword ? "text" : "password"}
                         style={{...InputStyle}}
                         InputProps={{
                             endAdornment: (
-                                <InputAdornment position="end" sx={{mr: 1.5}}>
+                                <InputAdornment position="end" sx={{mr: 1}}>
                                     <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
                                         <Iconify
                                             icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
@@ -109,16 +109,15 @@ export default function NewPasswordForm({userName, otpCode}) {
                     )}
                 </Stack>
                 <Stack>
+                    <LabelStyle required={true}>Xác nhận lại mật khẩu mới</LabelStyle>
                     <RHFTextField
                         name="confirmPassword"
-                        title="Xác nhận lại mật khẩu mới"
                         placeholder="Bắt buộc"
-                        isRequired
                         type={showPassword ? "text" : "password"}
                         style={{...InputStyle}}
                         InputProps={{
                             endAdornment: (
-                                <InputAdornment position="end" sx={{mr: 1.5}}>
+                                <InputAdornment position="end" sx={{mr: 1}}>
                                     <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
                                         <Iconify
                                             icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
@@ -134,6 +133,7 @@ export default function NewPasswordForm({userName, otpCode}) {
                         size="large"
                         type="submit"
                         variant="contained"
+                        loadingPosition="end"
                         loading={isSubmitting}
                         sx={{
                             mt: 4,
@@ -142,7 +142,7 @@ export default function NewPasswordForm({userName, otpCode}) {
                             borderRadius: 0.75,
                         }}
                     >
-                        Xác nhận và đăng nhập
+                       <span>Xác nhận và đăng nhập</span>
                     </LoadingButton>
                 </Stack>
             </Stack>

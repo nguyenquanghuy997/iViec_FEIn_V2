@@ -1,11 +1,20 @@
 import {
-  API_CREATE_CHILD_ORGANIZATION, API_DELETE_MULTIPLE_ORGANIZATION,
+  API_CREATE_CHILD_ORGANIZATION,
+  API_DELETE_INVITE_USER,
+  API_DELETE_MULTIPLE_ORGANIZATION,
   API_DELETE_ORGANIZATION,
   API_GET_ALL_ADMIN_ORGANIZATION,
-  API_GET_ALL_USER_BY_ORGANIZATION, API_GET_LIST_USER_INVITE,
+  API_GET_LIST_USER_INVITE,
   API_GET_ORGANIZATION_DETAIL_BY_ID,
-  API_GET_ORGANIZATION_WITH_CHILD, API_INVITE_USER, API_SET_ACTIVE_ORGANIZATION,
-  API_UPDATE_ORGANIZATION, API_USER_CONFIRM_INVITE
+  API_GET_ORGANIZATION_DETAIL_BY_SLUG,
+  API_GET_ORGANIZATION_PREVIEW,
+  API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_USER_FROM_ORGANIZATION,
+  API_INVITE_USER,
+  API_RESEND_INVITE_USER,
+  API_SET_ACTIVE_ORGANIZATION,
+  API_UPDATE_ORGANIZATION,
+  API_USER_CONFIRM_INVITE
 } from "@/routes/api";
 import {createApi} from '@reduxjs/toolkit/query/react'
 import axios from "axios";
@@ -38,7 +47,7 @@ const axiosBaseQuery = () => async ({url, method, data, params, headers}) => {
 export const organizationServiceApi = createApi({
   reducerPath: 'organizationServiceApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['Organization', 'OrganizationById'],
+  tagTypes: ['Organization', 'OrganizationById', "INVITE"],
   endpoints: (build) => ({
     getListOrganizationWithChild: build.query({
       query: () => ({
@@ -55,9 +64,21 @@ export const organizationServiceApi = createApi({
       }),
       providesTags: ['OrganizationById']
     }),
+    getOrganizationBySlug: build.query({
+      query: (slug) => ({
+        url: API_GET_ORGANIZATION_DETAIL_BY_SLUG + '?Slug=' + slug,
+        method: 'GET',
+      }),
+    }),
+    getOrganizationPreview: build.query({
+      query: (slug) => ({
+        url: API_GET_ORGANIZATION_PREVIEW + '?Id=' + slug,
+        method: 'GET',
+      }),
+    }),
     getAllApplicantUserOrganizationById: build.query({
       query: (params) => ({
-        url: API_GET_ALL_USER_BY_ORGANIZATION,
+        url: API_GET_USER_FROM_ORGANIZATION,
         method: 'GET',
         params
       }),
@@ -136,7 +157,30 @@ export const organizationServiceApi = createApi({
           method: 'GET',
           params: { ...defaultParams, ...params }
         }
-      }
+      },
+      providesTags: ['INVITE']
+    }),
+    // resend email
+    resendEmail: build.mutation({
+      query: (data) =>  {
+        return {
+          url: API_RESEND_INVITE_USER,
+          method: 'POST',
+          data
+        }
+      },
+      invalidatesTags: ['INVITE']
+    }),
+    // delete invite
+    deleteInviteUser: build.mutation({
+      query: (data) =>  {
+        return {
+          url: `${API_DELETE_INVITE_USER}`,
+          method: 'DELETE',
+          data
+        }
+      },
+      invalidatesTags: ['INVITE']
     }),
   }),
 })
@@ -146,6 +190,7 @@ export const {
   useCreateChildOrganizationMutation,
   useDeleteOrganizationMutation,
   useGetOrganizationByIdQuery,
+  useGetOrganizationPreviewQuery,
   useUpdateOrganizationMutation,
   useGetAllApplicantUserOrganizationByIdQuery,
   useGetAllAdminByOrganizationIdQuery,
@@ -154,4 +199,6 @@ export const {
   useInviteUserMutation,
   useActiveInviteUserMutation,
   useGetListInviteUserQuery,
+  useResendEmailMutation,
+  useDeleteInviteUserMutation,
 } = organizationServiceApi;

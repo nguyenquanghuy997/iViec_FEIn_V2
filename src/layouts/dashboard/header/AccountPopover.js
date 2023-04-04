@@ -1,29 +1,19 @@
 import MenuPopover from "@/components/MenuPopover";
 // components
-import { DOMAIN_SERVER_API } from "@/config";
+import {DOMAIN_SERVER_API} from "@/config";
 // hooks
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
 import useLocales from "@/hooks/useLocales";
-import { useSelector } from "@/redux/store";
-import { PATH_DASHBOARD } from "@/routes/paths";
-import { useLazyGetCurrentUserQuery } from "@/sections/auth/authSlice";
+import {PATH_DASHBOARD} from "@/routes/paths";
 import styled from "@emotion/styled";
 // @mui
-import {
-  Avatar,
-  Box,
-  Divider,
-  IconButton,
-  MenuItem,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import {Avatar, Box, Divider, IconButton, MenuItem, Stack, Typography,} from "@mui/material";
+import {alpha} from "@mui/material/styles";
 // next
 import NextLink from "next/link";
-import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import {useSnackbar} from "notistack";
+import {useState} from "react";
 
 const TypographyStyle = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -33,13 +23,7 @@ const TypographyStyle = styled(Typography)(({ theme }) => ({
 
 export default function AccountPopover() {
   const { translate } = useLocales();
-  const { logout } = useAuth();
-
-  const [getCurrentUser, { data: currentUser }] = useLazyGetCurrentUserQuery();
-
-  useEffect(() => {
-    getCurrentUser().unwrap();
-  }, [])
+  const { logout, user } = useAuth();
 
   const MENU_OPTIONS = [
     {
@@ -48,7 +32,7 @@ export default function AccountPopover() {
     },
     {
       label: "setting",
-      linkTo: PATH_DASHBOARD.profile.root + currentUser?.id,
+      linkTo: PATH_DASHBOARD.profile.root + user?.id,
     },
   ];
   const isMountedRef = useIsMountedRef();
@@ -61,7 +45,6 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
-  const avatar = useSelector((state) => state.avatar);
   const handleLogout = async () => {
     try {
       await logout();
@@ -78,10 +61,10 @@ export default function AccountPopover() {
     <>
       <Stack justifyContent="flex-end" sx={{ textAlign: 'right' }}>
         <TypographyStyle variant="subtitle2" noWrap sx={{ fontSize: 13, fontWeight: 700, color: '#E7E9ED' }}>
-          {currentUser && `${currentUser?.lastName||''} ${currentUser?.firstName}`}
+          {user && `${user?.lastName||''} ${user?.firstName}`}
         </TypographyStyle>
         <TypographyStyle variant="body2" sx={{ fontSize: 12, fontWeight: 400, color: '#E7E9ED' }} noWrap>
-          {currentUser && currentUser?.email}
+          {user && user?.email}
         </TypographyStyle>
       </Stack>
       <IconButton
@@ -101,19 +84,11 @@ export default function AccountPopover() {
           }),
         }}
       >
-        {Object.keys(avatar.avatar).length === 0 ? (
-          <Avatar
+        <Avatar
             sx={{ borderRadius: '10px' }}
-            src={`${DOMAIN_SERVER_API}/${currentUser?.linkAvatar}`}
-            alt={currentUser?.displayName}
-          />
-        ) : (
-          <Avatar
-            sx={{ borderRadius: '10px' }}
-            src={`${DOMAIN_SERVER_API}/${avatar?.avatar}`}
-            alt={currentUser?.displayName}
-          />
-        )}
+            src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
+            alt={user?.displayName}
+        />
       </IconButton>
 
       <MenuPopover
@@ -132,13 +107,13 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {currentUser && `${currentUser?.lastName || ""} ${currentUser?.firstName}`}
+            {user && `${user?.lastName || ""} ${user?.firstName}`}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {currentUser && currentUser?.email}
+            {user && user?.email}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {currentUser?.role}
+            {user?.role}
           </Typography>
         </Box>
 

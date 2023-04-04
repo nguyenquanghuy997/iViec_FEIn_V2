@@ -1,4 +1,3 @@
-import UserActiveSuccess from "@/sections/auth/user-activate/UserActiveSuccess";
 import {LogoHeader} from "@/components/BaseComponents";
 import Page from "@/components/Page";
 import GuestGuard from "@/guards/GuestGuard";
@@ -8,6 +7,7 @@ import {Box} from "@mui/material";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {useActiveInviteUserMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
+import UserInviteActiveSuccess from "@/sections/auth/user-invite-active/UserInviteActiveSuccess";
 
 const UserInviteActivePage = () => {
     const [statusActiveUser, setStatusActiveUser] = useState(false);
@@ -15,18 +15,25 @@ const UserInviteActivePage = () => {
     const { email, 'code-active': codeActive } = router.query;
     const [confirmInviteActive] = useActiveInviteUserMutation();
 
+    const [, queryString = ""] = router.asPath.split("?");
+
+    const queryObj = queryString.split("&").reduce((prev, curr) => {
+        const [key, value] = curr.split("=");
+        prev.set(key, value);
+        return prev;
+    }, new Map());
+
     useEffect(() => {
         async function fetchConfirmInviteActive() {
             if (email && codeActive) {
                 try {
                     await confirmInviteActive({
-                        email: decodeURI(email),
-                        token: decodeURI(codeActive)
+                        email: decodeURIComponent(queryObj.get('email')),
+                        token: decodeURIComponent(queryObj.get('code-active'))
                     }).unwrap();
                     setStatusActiveUser(true);
                 } catch (error) {
                     setStatusActiveUser(false);
-                    console.log('error.status', error)
                 }
             }
         }
@@ -39,7 +46,7 @@ const UserInviteActivePage = () => {
                 <LogoHeader />
                 <Box sx={{ ...BoxWrapperStyle }}>
                     <Box >
-                        {statusActiveUser? <UserActiveSuccess USER_NAME={decodeURI(email)} />:  <UserActiveFailure />}
+                        {statusActiveUser? <UserInviteActiveSuccess USER_NAME={decodeURIComponent(queryObj.get('email'))} token={decodeURIComponent(queryObj.get('code-active'))} />:  <UserActiveFailure />}
                     </Box>
                 </Box>
             </Page>

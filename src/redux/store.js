@@ -5,33 +5,22 @@ import {
 } from 'react-redux'
 
 import { apiSlice } from '@/redux/api/apiSlice'
-import salaryReducer from '@/sections/caculator/salarySlice'
-import candidateReducer from '@/sections/candidate/candidateSlice'
-import clientReducer from '@/sections/client/clientSlice'
-import jobDetailReducer from '@/sections/jobdetail/jobDetailSlice'
-import kanbanReducer from '@/sections/kanban/kanbanSlice'
-import uploadAvatarReducer from '@/sections/user/account/uploadAvatarSlice'
 import {organizationServiceApi} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {modalSlice} from "@/redux/common/modalSlice";
 import {companyServiceApi} from '@/sections/companyinfor/companyInforSlice'
 import {filterSlice} from "@/redux/common/filterSlice";
 import {applicantFilterSlice} from "@/redux/slice/applicantFilterSlice";
+import { pipelineFilterSlice } from './slice/pipelineFilterSlice'
 
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     [organizationServiceApi.reducerPath]: organizationServiceApi.reducer,
     [companyServiceApi.reducerPath]: companyServiceApi.reducer,
-    avatar: uploadAvatarReducer,
-    kanban: kanbanReducer,
-    client: clientReducer,
-    salary: salaryReducer,
-    candidates: candidateReducer,
-    jobs: jobDetailReducer,
-    applicant: jobDetailReducer,
     modalReducer: modalSlice.reducer,
     filterReducer: filterSlice.reducer,
     applicantFilterReducer: applicantFilterSlice.reducer,
+    pipelineFilterReducer: pipelineFilterSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

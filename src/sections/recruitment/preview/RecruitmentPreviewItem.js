@@ -28,8 +28,15 @@ import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
 import {DownloadLineIcon, ImportLinkIcon, TeamLineIcon} from "@/assets/ActionIcon";
 import {RecruitmentApplicantChooseStage} from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
 import {RecruitmentApplicantCreate} from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
+import MenuIcon from "@/assets/interview/MenuIcon";
+import DateIcon from "@/assets/interview/DateIcon";
+import {useRouter} from "next/router";
+import {useGetRecruitmentByIdQuery} from "@/sections/recruitment";
 
-function RecruitmentPreviewItem({}) {
+function RecruitmentPreviewItem() {
+  const router = useRouter();
+  const RecruitmentId = router.query.slug;
+  const {data: RecruitmentData} = useGetRecruitmentByIdQuery({Id: RecruitmentId})
   const defaultValues = {
     name: "",
   };
@@ -253,8 +260,12 @@ function RecruitmentPreviewItem({}) {
   const {themeStretch} = useSettings();
 
   const [openGroup, setOpenGroup] = useState(false);
-  const [modelApplication, setModelApplication] = useState({id: undefined, stage: undefined, recruitmentId: recruitmentId});
-
+  const [modelApplication, setModelApplication] = useState({
+    id: undefined,
+    stage: undefined,
+    recruitmentId: recruitmentId,
+    recruitmentTitle: undefined
+  });
   const handleCloseGroup = () => {
     setOpenGroup(false);
   };
@@ -263,7 +274,11 @@ function RecruitmentPreviewItem({}) {
   };
 
   useEffect(() => {
-    if (modelApplication.stage) setShowModelCreate(true);
+    setModelApplication({...modelApplication, recruitmentTitle: RecruitmentData?.name})
+  }, [RecruitmentData]);
+
+  useEffect(() => {
+    if (modelApplication && modelApplication.stage) setShowModelCreate(true);
   }, [showDialogStage]);
 
   return (
@@ -307,7 +322,7 @@ function RecruitmentPreviewItem({}) {
                   <NavGoBack
                     sx={{marginTop: 0, padding: 0}}
                     link={PATH_DASHBOARD.dashboard}
-                    name={"Nhân Viên Marketing Online - HCM"}
+                    name={RecruitmentData?.name}
                   ></NavGoBack>
                 </div>
               </Tooltip>
@@ -345,7 +360,7 @@ function RecruitmentPreviewItem({}) {
           </BoxFlex>
           <Box sx={{width: "100%", typography: "body1", mb: 3}}>
             <Box>
-              <TabList
+              {/* <TabList
                 onChange={handleChange}
                 aria-label="lab API tabs example"
                 sx={{
@@ -374,43 +389,45 @@ function RecruitmentPreviewItem({}) {
                   }}
                 />
                 <Tab label="Lịch phỏng vấn" value="2"/>
-              </TabList>
+              </TabList> */}
             </Box>
           </Box>
           {value === "1" ? (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
                 <Box>
-                  <TabList
-                    onChange={handleChange}
-                    aria-label="lab API tabs example"
-                    sx={{
-                      "& .MuiTab-root": {
-                        minHeight: "36px",
-                        textTransform: "unset",
-                        padding: "8px 12px",
-                      },
-                      "& .Mui-selected": {
-                        color: "white !important",
-                        backgroundColor: "#455570",
-                        borderRadius: "6px",
-                      },
-                      "& .MuiTabs-indicator": {
-                        display: "none",
-                      },
-                    }}
+                  <ButtonGroup
+                    disableElevation
+                    variant="contained"
+                    aria-label="Disabled elevation buttons"
+                    sx={{mx: 1, boxShadow: "none"}}
                   >
-                    <Tab
-                      label="Kanban"
-                      value="1"
+                    <Button
+                      startIcon={<DateIcon/>}
                       sx={{
-                        "&:not(:last-of-type)": {
-                          marginRight: "16px",
-                        },
+                        background: "#1976D2",
+                        borderRadius: "6px 0px 0px 6px",
+                        height: "44px",
+                        width: "52px",
+                        "& .MuiButton-startIcon": {mr: 0},
                       }}
                     />
-                    <Tab label="List" value=""/>
-                  </TabList>
+                    <Button
+                      variant="outlined"
+                      startIcon={<MenuIcon/>}
+                      sx={{
+                        borderColor: "#D0D4DB",
+                        borderRadius: "0 6px 6px 0",
+                        height: "44px",
+                        width: "52px",
+                        "&:hover": {
+                          background: "white",
+                          borderColor: "#D0D4DB",
+                        },
+                        "& .MuiButton-startIcon": {mr: 0},
+                      }}
+                    />
+                  </ButtonGroup>
                 </Box>
 
                 <FormProvider methods={methods}>
@@ -513,7 +530,7 @@ function RecruitmentPreviewItem({}) {
                     </Button>
                   </LightTooltip>
                 </ButtonGroup>
-                <RecruitmentApplicantChooseStage show={showDialogStage} setShow={setShowDialogStage}
+                <RecruitmentApplicantChooseStage data={RecruitmentData?.recruitmentPipeline?.recruitmentPipelineStates} show={showDialogStage} setShow={setShowDialogStage}
                                                  setStage={setModelApplication}/>
               </Stack>
             </BoxFlex>

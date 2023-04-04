@@ -5,13 +5,15 @@ import {
   API_GET_RECRUITMENT_BY_ID,
   API_UPDATE_RECRUITMENT_DRAFT,
   API_UPDATE_RECRUITMENT_OFFICIAL,
+  API_CREATE_APPLICANT_RECRUITMENT, API_CLOSE_RECRUITMENT, API_REMOVE_RECRUITMENT, API_GET_RECRUITMENT_BY_SLUG, API_GET_COLUMN_RECRUITMENT, API_UPDATE_COLUMN_RECRUITMENT,
 } from '@/routes/api'
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ['RECRUITMENT'],
+  addTagTypes: ['RECRUITMENT', 'GetColumn'],
 })
 
 export const RecruitmentSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getRecruitments: builder.query({
       query: (data) => ({
@@ -19,6 +21,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data
       }),
+      providesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
     }),
     getRecruitmentById: builder.query({
       query: (params) => ({
@@ -28,9 +31,26 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: 'RECRUITMENT', id }],
     }),
+    // Lấy việc làm theo slug
+    getRecruitmentBySlug: builder.query({
+      query: (slug) => ({
+        url: API_GET_RECRUITMENT_BY_SLUG + '?Slug=' + slug,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'RECRUITMENT', id: 'SLUG' }],
+    }),
+
     createRecruitment: builder.mutation({
       query: (data) => ({
         url: API_CREATE_RECRUITMENT,
+        method: 'POST',
+        data
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: 'RECRUITMENT', id: arg.recruitmentId }]
+    }),
+    createApplicantRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_CREATE_APPLICANT_RECRUITMENT,
         method: 'POST',
         data
       }),
@@ -51,20 +71,56 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'RECRUITMENT', id: arg.id }]
     }),
+    // đóng tin
+    closeRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_CLOSE_RECRUITMENT,
+        method: 'PATCH',
+        data
+      }),
+      invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
+    }),
+    // xóa tin
+    deleteRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_REMOVE_RECRUITMENT,
+        method: 'DELETE',
+        data
+      }),
+      invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
+    }),
+    //settings
+    getListColumns: builder.query({
+      query: () => ({
+        url: API_GET_COLUMN_RECRUITMENT,
+        method: "GET",
+      }),
+      providesTags: ["GetColumn"],
+    }),
+    updateListColumns: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_COLUMN_RECRUITMENT}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+      invalidatesTags: ["GetColumn"],
+    }),
   }),
 })
 
 export const {
   useGetRecruitmentByIdQuery,
-  useGetListJobsMutation,
-  // get list recruitment
-  useGetListRecruitmentsQuery,
-  useLazyGetListRecruitmentsQuery,
-  // get list recruitment by organization
-  useGetRecruitmentByOrganizationIdQuery,
-  useLazyGetRecruitmentByOrganizationIdQuery,
+  useGetRecruitmentBySlugQuery,
+  useCreateApplicantRecruitmentMutation,
   useLazyGetRecruitmentsQuery,
   useCreateRecruitmentMutation,
   useUpdateRecruitmentOfficialMutation,
   useUpdateRecruitmentDraftMutation,
+  useCloseRecruitmentMutation,
+  useDeleteRecruitmentMutation,
+  useGetListColumnsQuery,
+  useUpdateListColumnsMutation,
+  useAddRecruitmentMutation,
+  useGetPreviewRecruitmentMutation,
+  useUpdateRecruitmentMutation,
 } = RecruitmentSlice;

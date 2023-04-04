@@ -3,7 +3,7 @@ import {
   AssessmentIcon,
   InterviewIcon, OfferIcon,
   ResultIcon
-} from "@/sections/recruitment-create/component/icon/PipelineIcon";
+} from "@/sections/recruitment-form/icon/PipelineIcon";
 
 export const LIST_BRANCH_SIZE = [
     {id: "Less10", value: "[0-9]", name: "Dưới 10"},
@@ -35,7 +35,7 @@ export const LIST_ORGANIZATION_SIZE = [
 export const LIST_STATUS = [
     {value: 0, name: "Tất cả"},
     {value: 1, name: "Đang hoạt động"},
-    {value: 2, name: "Ngừng hoạt động"},
+    {value: 2, name: "Không hoạt động"},
 ]
 export const LIST_MARITAL_STATUSES = [
     {value: 0, name: "Độc thân", label: "Độc thân"},
@@ -49,14 +49,21 @@ export const LIST_GENDER = [
     {value: 2, name: "Khác", label: "Khác"},
 ]
 
+export const LIST_GENDER_RECRUITMENT = [
+    {value: 0, name: "Nam", label: "Nam"},
+    {value: 1, name: "Nữ", label: "Nữ"},
+    {value: 2, name: "Khác", label: "Khác"},
+    {value: 3, name: "Không yêu cầu", label: "Không yêu cầu"},
+]
+
 export const LIST_EXPERIENCE_NUMBER = [
   {value: 0, name: "Chưa có kinh nghiệm", label: "Chưa có kinh nghiệm"},
   {value: 1, name: "Dưới 1 năm", label: "Dưới 1 năm"},
   {value: 2, name: "1 - 2 năm", label: "1 - 2 năm"},
   {value: 3, name: "2 - 3 năm", label: "2 - 3 năm"},
   {value: 4, name: "3 - 5 năm", label: "3 - 5 năm"},
-  {value: 5, name: "5-7 năm", label: "5-7 năm"},
-  {value: 6, name: "5 - 10 năm", label: "5 - 10 năm"},
+  {value: 5, name: "5 - 7 năm", label: "5 - 7 năm"},
+  {value: 6, name: "7 - 10 năm", label: "7 - 10 năm"},
   {value: 7, name: "10 năm trở lên", label: "10 năm trở lên"},
 ]
 
@@ -69,6 +76,13 @@ export const LIST_STEP_RECRUITMENT = [
   {value: 5, name: "Kết quả - Cân nhắc"},
   {value: 6, name: "Kết quả - Loại"},
   {value: 7, name: "Mời nhận việc"},
+]
+
+export const LIST_PIPELINESTATE = [
+  {value: 0, name: "Ứng tuyển"},
+  {value: 1, name: "Thi tuyển"},
+  {value: 2, name: "Phỏng vấn"},
+  {value: 3, name: "Kết quả"}
 ]
 
 export const LIST_RECRUITMENT_WORKING_FORM = [
@@ -90,42 +104,42 @@ export const LIST_RECRUITMENT_SALARY_DISPLAY_TYPE = [
   {value: 2, name: "Mức lương chi tiết", label: "Mức lương chi tiết"},
 ]
 
-export const PipelineStateType = (item) => {
+export const PipelineStateType = (item, description = '') => {
   switch (item) {
     case 0:
       return {
         title: "Ứng tuyển",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <ApplyJobIcon />
       }
     case 1:
       return {
         title: "Thi tuyển",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <AssessmentIcon />
       }
     case 2:
       return {
         title: "Phỏng vấn",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <InterviewIcon />
       }
     case 3:
       return {
         title: "Kết quả",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <ResultIcon />
       }
     case 4:
       return {
         title: "Mời nhận việc",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <OfferIcon />
       }
     default:
       return {
         title: "Ứng tuyển",
-        subtitle: "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin",
+        subtitle: description,
         icon: <ApplyJobIcon />
       }
   }
@@ -142,4 +156,12 @@ export function formatRemoteUrl(str) {
 
 export function formatBranchSize(data) {
     return LIST_BRANCH_SIZE.find((i) => i.id === data)?.name || "";
+}
+export function checkSameValue(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] !== arr[0]) {
+      return false;
+    }
+  }
+  return true;
 }

@@ -5,7 +5,7 @@ import React from "react";
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const containsText = (text, searchText) => {
-  return convertViToEn(text).toLowerCase().indexOf(convertViToEn(searchText).toLowerCase()) > -1;
+  return convertViToEn(text)?.toLowerCase()?.indexOf(convertViToEn(searchText)?.toLowerCase()) > -1;
 };
 
 const convertViToEn = (str, removeSpecial = true) => {
@@ -90,6 +90,11 @@ function stringAvatar(name) {
   };
 }
 
+function getExtension(filename) {
+  if(!filename) return "";
+  return filename.split(".").pop();
+}
+
 const showIconByFileType = (fileType) => {
   let icon = null;
   switch (fileType) {
@@ -140,6 +145,7 @@ const cleanObject = (obj) => {
 }
 
 export {
+  getExtension,
   phoneRegExp,
   containsText,
   convertViToEn,

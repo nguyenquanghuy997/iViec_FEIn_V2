@@ -49,7 +49,6 @@ export const ApplicantFormModal = ({ data, show, setShow, onRefreshData }) => {
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  console.log("defaultValues", defaultValues);
   const {
     setValue,
     handleSubmit,

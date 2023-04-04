@@ -10,9 +10,8 @@ import {convertFlatDataToTree, convertViToEn} from "@/utils/function";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
 import OrganizationBottomNav from "@/sections/organization/component/OrganizationBottomNav";
-import {ButtonInviteListStyle, ButtonInviteStyle} from "@/sections/organization/style";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
-import InputFilter from "@/sections/dynamic-filter/InputFilter";
+import InputFilter from "@/components/dynamic-filter/InputFilter";
 import {filterBy} from "@/sections/organization/helper/DFSSearchTree";
 import {
   useGetAllAdminByOrganizationIdQuery,
@@ -21,7 +20,8 @@ import {
 import {CrownIcon} from "@/sections/organization/component/Icon";
 import OrganizationConfirmMultipleModal from "@/sections/organization/component/OrganizationConfirmMultipleModal";
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
-import OrganizationListUserInviteModal from "@/sections/organization/component/OrganizationListUserInviteModal";
+import MuiButton from '@/components/BaseComponents/MuiButton';
+import { AddIcon } from '@/assets/ActionIcon';
 
 const OrganizationContent = () => {
   // selected
@@ -38,7 +38,6 @@ const OrganizationContent = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [showMultipleDelete, setShowMultipleDelete] = useState(false);
   const [isOpenInviteForm, setIsOpenInviteForm] = useState(false);
-  const [isOpenListUserInvite, setIsOpenListUserInvite] = useState(false);
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0)    // 1 active 0 inactive
 
@@ -125,16 +124,20 @@ const OrganizationContent = () => {
             </Stack>
           </Stack>
           <Stack flexDirection="row" alignItems="center">
-            <ButtonInviteListStyle
-                className='button-invite-list'
-                startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
-                onClick={() => setIsOpenListUserInvite(true)}
-            >Danh sách mời</ButtonInviteListStyle>
-            <ButtonInviteStyle
-                className="button-invite"
-                startIcon={<Iconify icon="material-symbols:add"/>}
-                onClick={() => setIsOpenInviteForm(true)}
-            >Mời người dùng</ButtonInviteStyle>
+            <MuiButton 
+              title={"Danh sách mời"}
+              color={"default"}
+              onClick={() => setIsOpenInviteForm(true)}
+              startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
+              sx={{ fontWeight: 550, marginRight: 1 }}
+            />
+            <MuiButton 
+              title={"Mời người dùng"}
+              color={"primary"}
+              onClick={() => setIsOpenInviteForm(true)}
+              startIcon={<AddIcon />}
+              sx={{ fontWeight: 550 }}
+            />
           </Stack>
         </Stack>
         <Box sx={{mb: 3, mt: 0}}>
@@ -240,10 +243,6 @@ const OrganizationContent = () => {
             isOpenInviteForm={isOpenInviteForm}
             setIsOpenInviteForm={setIsOpenInviteForm}
             ListOrganization={ListOrganization}
-        />}
-        {isOpenListUserInvite && <OrganizationListUserInviteModal
-            isOpenListUserInvite={isOpenListUserInvite}
-            setIsOpenListUserInvite={setIsOpenListUserInvite}
         />}
         {isOpenActive && <OrganizationActiveModal
             actionTypeActive={actionTypeActive}

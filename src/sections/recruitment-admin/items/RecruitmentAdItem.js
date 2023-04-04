@@ -163,7 +163,7 @@ export const RecruitmentAdItem = () => {
   });
 
   const { handleSubmit } = methods;
-  const queryParams = {
+  let queryParams = {
     ...query,
     applicantSkillIds:
       query.applicantSkillIds && typeof query.applicantSkillIds === "string"
@@ -358,6 +358,7 @@ export const RecruitmentAdItem = () => {
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [columnsTable, setColumnsTable] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -382,7 +383,7 @@ export const RecruitmentAdItem = () => {
             page={page}
             paginationSize={paginationSize}
             handleChangePagination={handleChangePagination}
-            columns={[...columns]}
+            columns={columns}
             source={Data}
             loading={isLoading}
             ColumnData={ColumnData}
@@ -391,6 +392,8 @@ export const RecruitmentAdItem = () => {
             setSelectedRowKeys={setSelectedRowKeys}
             nodata="Hiện chưa có tin tuyển dụng nào"
             selectedRowKeys={selectedRowKeys}
+            columnsTable={columnsTable}
+            setColumnsTable={setColumnsTable}
           />
         </View>
         <RecruitmentAdBottomNav

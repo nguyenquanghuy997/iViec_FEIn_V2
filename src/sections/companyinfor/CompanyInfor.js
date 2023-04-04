@@ -1,39 +1,30 @@
 import TickIcon from "../../assets/TickIcon";
-import CropImageAva from "./CropImageAva";
-import CropImageBG from "./CropImageBG";
-import { SIZE } from "./config";
+import CropImage from "./CropImage";
 import DrawerEdit from "./edit/DrawerEdit";
-import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
-import { useGetCompanyInfoQuery } from "@/sections/companyinfor/companyInforSlice";
-import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
+import {
+  useGetCompanyInfoQuery, // useGetJobCategoriesQuery,
+} from "@/sections/companyinfor/companyInforSlice";
+import { OrganizationSize } from "@/utils/enum";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Typography, Divider } from "@mui/material";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 import * as Yup from "yup";
 
 export default function CompanyInfor() {
   const { data: Data } = useGetCompanyInfoQuery();
+  const [seeData, setSeeData] = useState(false);
+
   const ProfileSchema = Yup.object().shape({
     avatar: Yup.string(),
   });
-  const defaultValues = {
-    avatar: Data?.avatar,
-  };
-  const { data: { items: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
-  console.log(JobCategoryList);
+  const defaultValues = {};
   const methods = useForm({
     mode: "all",
     resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
-  const {
-    // setValue,
-    // setError,
-    handleSubmit,
-    // // watch,
-    // formState: { errors, isSubmitting },
-  } = methods;
 
   const renderText = (title, content) => {
     return (
@@ -83,7 +74,14 @@ export default function CompanyInfor() {
         </span>
 
         {String(value).startsWith("<") ? (
-          <p dangerouslySetInnerHTML={{ __html: value }} />
+          <p
+            dangerouslySetInnerHTML={{ __html: value }}
+            style={{
+              overflow: !seeData ? "hidden" : "visible",
+              lineHeight: "1.2em",
+              height: seeData ? "auto" : "3.6em",
+            }}
+          />
         ) : (
           <span
             style={{
@@ -91,50 +89,53 @@ export default function CompanyInfor() {
               fontSize: 14,
               lineHeight: 24 / 16,
               color: "#172B4D",
-              overflow: "hidden",
-              whiteSpace: "nowrap" /* Don't forget this one */,
-              textOverflow: "ellipsis",
             }}
           >
             {value}
           </span>
         )}
+        <button
+          onClick={() => setSeeData(!seeData)}
+          style={{ border: "none", background: "white" }}
+        >
+          <p style={{ fontSize: 14, fontWeight: 700 }}>
+            {seeData ? "Thu ngắn" : "... Xem thêm"}
+          </p>
+        </button>
       </div>
     );
   };
-
-  // const getBase64 = (file) =>
-  //   new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
+  // const { data: { items: JobCategoryList = [] } = {} } =
+  //   useGetJobCategoriesQuery();
 
   return (
     <FormProvider {...methods}>
-      <CropImageBG data={Data?.organizationInformation?.coverPhoto} />
+      <CropImage
+        data={Data?.organizationInformation?.coverPhoto}
+        size="cover"
+      />
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           paddingLeft: 40,
           paddingRight: 40,
-          marginTop: "-4%",
+          marginTop: "-2%",
           background: "white",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            // flexDirection: "row",
-            // alignItems: "flex-end",
-            // mb: "28px",
-          }}
-        >
-          <CropImageAva
-            data={Data?.organizationInformation?.avatar}
-            handleSubmit={handleSubmit}
+        <Box sx={{ display: "flex" }}>
+          {/* <CropImage data={Data?.organizationInformation?.avatar} /> */}
+
+          <img
+            src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationInformation?.avatar}`}
+            style={{
+              width: "130px",
+              height: "130px",
+              border: "3px solid white",
+              borderRadius: "50%",
+              zIndex: 1000,
+            }}
           />
 
           <Box
@@ -144,59 +145,68 @@ export default function CompanyInfor() {
               width: "100%",
             }}
           >
-            <Box sx={{ mt: 5 }}>
-              <Typography
-                sx={{
-                  fontSize: 18,
-                  fontWeight: "700",
-                  color: "#393B3E",
-                  ml: 2,
-                  mr: 1,
-                  mt: "18px",
-                }}
-              >
-                {Data?.name}
-                <span style={{ marginLeft: "0.6em" }}>
-                  <TickIcon />
+            <Typography
+              sx={{
+                fontSize: 18,
+                fontWeight: "700",
+                color: "#393B3E",
+                ml: 2,
+                mr: 1,
+                mt: Data?.organizationInformation?.coverPhoto ? 5 : 0,
+              }}
+            >
+              {Data?.name}
+              <span style={{ marginLeft: "0.6em" }}>
+                <TickIcon />
+              </span>
+              <Box sx={{ mb: 3, mt: 1 }}>
+                <span
+                  style={{
+                    marginRight: "1em",
+                    color: "#455570",
+                    fontSize: "12px",
+                  }}
+                >
+                  CÔNG NGHỆ THÔNG TIN
                 </span>
-                <HeaderBreadcrumbs
-                  links={[
-                    {
-                      name: "CÔNG NGHỆ THÔNG TIN",
-                    },
-                    { name: "BẤT ĐỘNG SẢN" },
-                  ]}
-                />
-              </Typography>
-            </Box>
+                <RiCheckboxBlankCircleFill size={5} color="#8A94A5" />
+                <span
+                  style={{
+                    marginLeft: "1em",
+                    color: "#455570",
+                    fontSize: "12px",
+                  }}
+                >
+                  BẤT ĐỘNG SẢN
+                </span>
+              </Box>
+            </Typography>
 
             <DrawerEdit dataForm={Data} />
           </Box>
         </Box>
 
-        <Box sx={{ ml: "135px", mb: 3 }}>
+        <Box sx={{ ml: "15%", mb: 3 }}>
           <Divider />
           {renderText(
             "Số điện thoại :",
-            `0${Data?.organizationInformation?.phoneNumber}` || ""
+            `${Data?.organizationInformation?.phoneNumber}` || ""
           )}
           {renderText("Email :", Data?.organizationInformation?.email || "")}
           {renderText(
             "Ngành nghề :",
-            JobCategoryList?.filter(
-              (item) =>
-                item.id ==
-                Data?.organizationInformation?.jobCategories?.map(
-                  (item) => item.jobCategoryId
-                )
-            ).map((item) => item?.name)
+            ""
+            // JobCategoryList.filter((item) =>
+            //   item.id.includes(
+            //     Data?.organizationInformation?.jobCategories.map(
+            //       (item) => item.jobCategoryId
+            //     )
+            //   )
+            // )
           )}
           {renderText(
             "Quy mô :",
-            SIZE.filter(
-              (item) =>
-                item.id == Data?.organizationInformation?.organizationSize
-            ).map((item) => item?.text)
+            OrganizationSize(Data?.organizationInformation?.organizationSize)
           )}
           {renderText(
             "Địa chỉ :",

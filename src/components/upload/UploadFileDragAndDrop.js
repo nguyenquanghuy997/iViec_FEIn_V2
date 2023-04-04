@@ -7,7 +7,7 @@ import {Upload} from "antd";
 const {Dragger} = Upload;
 
 export default function
-  UploadFileDragAndDrop({setFileList, maxFile, multiple, showUploadList, height = 80}) {
+  UploadFileDragAndDrop({setFileList, maxFile, multiple, showUploadList, height = 80, accept}) {
   const token = "Bearer " + localStorage.getItem("accessToken");
 
   const props = {
@@ -16,7 +16,6 @@ export default function
     headers: {Authorization: token},
     onChange(info) {
       const {status} = info.file;
-      console.log(status);
       if (status !== 'uploading') {
         setFileList(info.fileList);
       }
@@ -26,8 +25,8 @@ export default function
         setFileList(info.fileList);
       }
     },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
+    onDrop() {
+      
     },
   };
 
@@ -35,6 +34,7 @@ export default function
     <Dragger {...props}
              maxCount={maxFile}
              multiple={multiple}
+             accept={accept}
              showUploadList={showUploadList}
              height={height}
              style={{background: "white"}}>

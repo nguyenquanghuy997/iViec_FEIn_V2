@@ -9,7 +9,7 @@ import { NavVertical } from '@/components/nav-section'
 
 import { headerMenuConfig } from './NavConfig'
 
-const RootStyle = styled('div')(({ }) => ({
+const RootStyle = styled('div')(() => ({
     width: '100%',
     padding: 0,
 }))

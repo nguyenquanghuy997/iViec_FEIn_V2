@@ -1,84 +1,130 @@
-import IconRole1 from "../../../assets/IconRole1";
 import HeaderCard from "../HeaderCard";
-import { Typography, Box } from "@mui/material";
+import { useGetCompanyInfoQuery } from "../companyInforSlice";
+import EditHirePipeline from "./EditHirePipeline";
+import CloseIcon from "@/assets/CloseIcon";
+import IconRole1 from "@/assets/IconRole1";
+import NoInformation from "@/assets/NoInformation";
+import { PipelineStateType } from "@/utils/enum";
+import { Box, List, Drawer, Typography, Button, Divider } from "@mui/material";
+import { useState } from "react";
 
 const HireProcess = () => {
-  const steps = [
-    {
-      icon: <IconRole1 />,
-      order: 1,
-      name: "Ứng tuyển",
-      detail: "Ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin.",
-    },
-    {
-      icon: <IconRole1 />,
-      order: 2,
-      name: "Ứng tuyển",
-      detail: "Ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin.",
-    },
+  const { data: Data } = useGetCompanyInfoQuery();
+  const [open, setOpen] = useState();
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-    {
-      icon: <IconRole1 />,
-      order: 3,
-      name: "Ứng tuyển",
-      detail: "Ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin.",
-    },
-    {
-      icon: <IconRole1 />,
-      order: 4,
-      name: "Ứng tuyển",
-      detail: "Ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin.",
-    },
-    {
-      icon: <IconRole1 />,
-      order: 5,
-      name: "Ứng tuyển",
-      detail: "Ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin.",
-    },
-  ];
+  const list = () => (
+    <Box
+      sx={{ width: 700 }}
+      role="presentation"
+      // onKeyDown={toggleDrawer(false)}
+    >
+      <List
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          p: 0,
+        }}
+      >
+        <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
+          Chỉnh sửa Quy trình tuyển dụng
+        </Typography>
+        <Button
+          onClick={handleClose}
+          sx={{
+            "&:hover": {
+              background: "white",
+            },
+          }}
+        >
+          <CloseIcon />
+        </Button>
+      </List>
+      <Divider />
+      <div>
+        <EditHirePipeline data={Data} onClose={handleClose} />
+      </div>
+    </Box>
+  );
   return (
     <>
-      <HeaderCard text="Quy trình tuyển dụng" />
-      <Box sx={{ background: "white", py: 2, display: "flex", px: 5 }}>
-        {steps?.map((item) => (
-          <Box sx={{ minWidth: "200px" }}>
-            <div style={{display:'flex', justifyContent:'center'}}>{item.icon}</div>
-            <Typography
-              sx={{
-                fontSize: 28,
-                color: "#F77A0C",
-                display: "flex",
-                justifyContent: "center",
-              }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {item?.order}
-            </Typography>
-            <Typography
-              sx={{
-                mb: 1.5,
-                fontSize: 16,
-                fontWeight: 600,
-                display: "flex",
-                justifyContent: "center",
-              }}
-              color="#172B4D"
-            >
-              {item?.name}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              {item?.detail}
-            </Typography>
+      <HeaderCard
+        text="Quy trình tuyển dụng"
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+      />
+      {open && (
+        <Drawer
+          anchor="right"
+          open={open}
+          onClose={handleClose}
+          onOpen={handleOpen}
+        >
+          {list("right")}
+        </Drawer>
+      )}
+      {Data ? (
+        <Box sx={{ background: "white", py: 2, display: "flex", px: 5 }}>
+          {Data?.organizationProfilePipelines.map((item, index) => (
+            <Box sx={{ minWidth: "200px" }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                {<IconRole1 />}
+              </div>
+              <Typography
+                sx={{
+                  fontSize: 28,
+                  color: "#F77A0C",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {index + 1}
+              </Typography>
+              <Typography
+                sx={{
+                  mb: 1.5,
+                  fontSize: 16,
+                  fontWeight: 600,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                color="#172B4D"
+              >
+                {PipelineStateType(item?.type)}
+              </Typography>
+
+              <Typography
+                variant="body2"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  textAlign: "center",
+                }}
+              >
+                {item?.description}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      ) : (
+        <Box sx={{ bgcolor: "white" }}>
+          {" "}
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
+            <NoInformation />
           </Box>
-        ))}
-      </Box>
+          <Typography sx={{ textAlign: "center", pb: 6 }}>
+            Hiện chưa có nội dung
+          </Typography>
+        </Box>
+      )}
     </>
   );
 };

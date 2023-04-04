@@ -54,7 +54,7 @@ export const Status = (item) => {
     case true:
       return "Đang hoạt động";
     case false:
-      return "Ngừng hoạt động";
+      return "Không hoạt động";
   }
 };
 //Địa chỉ
@@ -114,11 +114,11 @@ export const RecruitmentProcessStatus = (item) => {
     case 4: //"MedusaReject":
       return "iVIEC từ chối";
     case 5: //"Recruiting":
-      return "Đang tuyển dụng";
+      return "Đang tuyển dụng";//DADTWJ LICHJ
     case 6: //"Calendared":
       return "Đã lên lịch";
     case 7: //"Expired":
-      return "Hết hạn";
+      return "Hết hạn";//DATWJH LICHJ
     case 8: //"Closed":
       return "Đóng";
   }
@@ -161,5 +161,28 @@ export const RecruitmentWorkingForm = (item) => {
       return "Linh động";
     case 5: //"Other":
       return "Khác";
+  }
+};
+
+export const OrganizationSize = (item) => {
+  switch (item) {
+    case 0:
+      return "Dưới 10 nhân sự";
+    case 1:
+      return "10-49 nhân sự";
+    case 2:
+      return "50-99 nhân sự";
+    case 3:
+      return "100-499 nhân sự";
+    case 4:
+      return "500-999 nhân sự";
+    case 5:
+      return "1000-4999 nhân sự";
+    case 6:
+      return "5000-9999 nhân sự";
+    case 7:
+      return "Trên 10000 nhân sự";
+    default:
+      return  "Khác";
   }
 };

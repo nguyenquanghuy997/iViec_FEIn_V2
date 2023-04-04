@@ -3,11 +3,12 @@ import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
 import { CompanyInfor } from "@/sections/companyinfor";
 import BusinessArea from "@/sections/companyinfor/components/BusinessArea";
+import Ending from "@/sections/companyinfor/components/Ending";
+// import EnviromentWorkplace from "@/sections/companyinfor/components/EnviromentWorkplace";
 import HireProcess from "@/sections/companyinfor/components/HireProcess";
 import HumanCompany from "@/sections/companyinfor/components/HumanCompany";
 import { getRolesByPage } from "@/utils/role";
 import { Box, Button, Typography } from "@mui/material";
-import Ending from "@/sections/companyinfor/components/Ending";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
   return <SettingLayout roles={roles}>{page}</SettingLayout>;
@@ -22,7 +23,7 @@ export default function Setting() {
           display: "flex",
           justifyContent: "space-between",
           py: 3,
-          pt: 0
+          pt: 0,
         }}
       >
         <Typography variant="h6" gutterBottom>
@@ -43,7 +44,7 @@ export default function Setting() {
 export async function getStaticProps() {
   return {
     props: {
-      roles: getRolesByPage(PAGES.Industry),
+      roles: getRolesByPage(PAGES.CompanyInfor),
     },
   };
 }

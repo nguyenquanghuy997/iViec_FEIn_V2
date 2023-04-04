@@ -6,7 +6,12 @@ import {
   API_GET_DISTRICT,
   API_GET_COMPANY_INFOR_BY_IDS,
   API_UPDATE_COMPANY_INFOR,
-  API_UPLOAD_IMAGE
+  API_UPLOAD_IMAGE,
+  API_UPDATE_ORGANIZATION_HUMAN,
+  API_UPDATE_ORGANIZATION_BUSINESS,
+  API_UPDATE_ORGANIZATION_PIPELINE,
+  API_UPDATE_ORGANIZATION_ENDING,
+  API_ADD_ORGANIZATION_BUSINESS,
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -83,14 +88,24 @@ export const companyServiceApi = createApi({
         params: { ProvinceId: provinceId },
       }),
     }),
+   
+    addOrganizationBusiness: builder.mutation({
+      query: (rest) => ({
+        url: API_ADD_ORGANIZATION_BUSINESS,
+        method: "POST",
+        data: rest,
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
+
     uploadImageCompany: builder.mutation({
       query: (rest) => ({
         url: API_UPLOAD_IMAGE,
         method: "POST",
         data: rest,
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
@@ -99,7 +114,38 @@ export const companyServiceApi = createApi({
         url: `${API_UPDATE_COMPANY_INFOR}/${rest.id}`,
         method: "PATCH",
         data: rest,
-   
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
+    updateCompanyHuman: builder.mutation({
+      query: (body) => ({
+        url: API_UPDATE_ORGANIZATION_HUMAN,
+        method: "PATCH",
+        data: body,
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
+    updateCompanyBusiness: builder.mutation({
+      query: (body) => ({
+        url: `${API_UPDATE_ORGANIZATION_BUSINESS}/${body.organizationId}`,
+        method: "PATCH",
+        data: body,
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
+    updateCompanyPipeline: builder.mutation({
+      query: (body) => ({
+        url: API_UPDATE_ORGANIZATION_PIPELINE,
+        method: "PATCH",
+        data: body,
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
+    updateCompanyEnding: builder.mutation({
+      query: (body) => ({
+        url: API_UPDATE_ORGANIZATION_ENDING,
+        method: "PATCH",
+        data: body,
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
@@ -116,4 +162,9 @@ export const {
   useLazyGetDistrictByProvinceIdQuery,
   useUpdateCompanyInfoMutation,
   useUploadImageCompanyMutation,
+  useUpdateCompanyHumanMutation,
+  useUpdateCompanyBusinessMutation,
+  useUpdateCompanyPipelineMutation,
+  useUpdateCompanyEndingMutation,
+  useAddOrganizationBusinessMutation
 } = companyServiceApi;

@@ -2,7 +2,14 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_PIPELINE,
   API_UPDATE_PIPELINE,
-  API_DELETE_PIPELINE, API_GET_ALL_PIPELINE_BY_ORGANIZATION, API_GET_ALL_RECRUITMENT_STEP_PIPELINE, API_ADD_PIPELINE, API_GET_EXAMINATION, API_GET_PIPELINE_BY_ID, API_SET_ORGANIZATION_PIPELINE_ACTIVE,
+  API_DELETE_PIPELINE,
+  API_GET_ALL_PIPELINE_BY_ORGANIZATION,
+  API_GET_ALL_RECRUITMENT_STEP_PIPELINE,
+  API_ADD_PIPELINE, API_GET_EXAMINATION,
+  API_GET_PIPELINE_BY_ID,
+  API_SET_ORGANIZATION_PIPELINE_ACTIVE,
+  API_GET_COLUMN_PIPELINE,
+  API_UPDATE_COLUMN_PIPELINE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -13,31 +20,20 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 const PipelineFormSlice = apiWithTag.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({  
-    //Danh sách vị trí
-    // getAllPipeline: builder.query({
-    //   query: (params) => {
-    //     const defaultParams = { PageSize: 20 };
-    //     return {
-    //       url: API_GET_ALL_PIPELINE,
-    //       method: "GET",
-    //       params: {...defaultParams, ...params},
-    //     }
-    //   },
-    // }),
     getAllPipeline: builder.query({
       query: (params) => ({
-        url: API_GET_ALL_PIPELINE,
+        url: `${API_GET_ALL_PIPELINE}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
-        params
       }),
+      providesTags:["GetAllPipeline"],
     }),
-
     getPipelineById: builder.query({
       query: (params) => ({
         url: API_GET_PIPELINE_BY_ID,
         method: 'GET',
         params
       }),
+      providesTags:["GetAllPipeline"],
     }),
 
     getAllPipelineByOrganization: builder.query({
@@ -68,14 +64,6 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
         }
       },
     }),
-    // filter người tạo
-    // getApplicantUsersOnJobtype: builder.query({
-    //   query: (params) => ({
-    //     url: API_GET_APPLICANT_USERS_ON_JOBTYPE,
-    //     method: "GET",
-    //     params,
-    //   }),
-    // }),
     updateStatusPipeline: builder.mutation({
       query: (data) => ({
         url: API_SET_ORGANIZATION_PIPELINE_ACTIVE,
@@ -90,30 +78,48 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data: data,
       }),
+      invalidatesTags: ["GetAllPipeline"],
     }),
     updatePipeline: builder.mutation({
       query: (data) => ({
-        url: API_UPDATE_PIPELINE,
-        method: "POST",
-        data: qs.stringify(data),
+        url: `${API_UPDATE_PIPELINE}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
       }),
+      invalidatesTags: ["GetAllPipeline"],
     }),
     deletePipeline: builder.mutation({
       query: (data) => ({
         url: API_DELETE_PIPELINE,
-        method: "POST",
-        data: qs.stringify(data),
+        method: "DELETE",
+        data: data
       }),
+      invalidatesTags: ["GetAllPipeline"],
+    }),
+    getListColumns: builder.query({
+      query: () => ({
+        url: API_GET_COLUMN_PIPELINE,
+        method: "GET",
+      }),
+      providesTags: ["GetColumn"],
+    }),
+    updateListColumnApplicants: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_COLUMN_PIPELINE}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+      providesTags: ["UpdateColumn"],
+      invalidatesTags: ["GetColumn"],
     }),
   }),
 });
 
 export const {
-  useLazyGetAllPipelineQuery,
+  useGetAllPipelineQuery,
   useGetPipelineByIdQuery,
   useGetAllPipelineByOrganizationQuery,
   useGetAllStepOfPipelineQuery,
-  useGetAllExamQuery,
   useUpdateStatusPipelineMutation,
   useAddPipelineMutation,
   useUpdatePipelineMutation,

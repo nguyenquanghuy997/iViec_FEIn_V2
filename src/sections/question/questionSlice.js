@@ -1,10 +1,4 @@
 import { apiSlice } from "@/redux/api/apiSlice";
-import {
-  API_GET_QUESTION,
-  API_GET_QUESTIONS,
-  API_CREATE_QUESTION,
-  API_PATCH_QUESTIONS,
-} from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({});
 
@@ -12,26 +6,27 @@ const questionSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getQuestionById: builder.query({
       query: ({ questionId }) => ({
-        url: `${API_GET_QUESTION}/${questionId}`,
+        url: ``,
         method: "GET",
+        params: { Id: questionId }
       }),
     }),
     getAllQuestion: builder.query({
       query: () => ({
-        url: API_GET_QUESTIONS,
+        url: '',
         method: "GET",
       }),
     }),
     createQuestion: builder.mutation({
       query: ({ data }) => ({
-        url: API_CREATE_QUESTION,
+        url: '',
         method: "POST",
         data: data,
       }),
     }),
     editQuestion: builder.query({
       query: ({ data }) => ({
-        url: API_PATCH_QUESTIONS,
+        url: '',
         method: "PATCH",
         data: data,
       }),

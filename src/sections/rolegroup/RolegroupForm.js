@@ -1,64 +1,99 @@
-import { useAddRoleGroupMutation } from "../rolegroup/RoleGroupSlice";
+import {
+  useAddRoleGroupMutation,
+  useGetRoleGroupListQuery,
+  useUpdateRolegroupMutation,
+} from "../rolegroup/RoleGroupSlice";
 import PipelineTable from "./RolegroupTable";
+import { SwitchStatusDS, TextAreaDS } from "@/components/DesignSystem";
+import { View } from "@/components/DesignSystem/FlexStyled";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
+import { Label } from "@/components/hook-form/style";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import {
-  Typography,
-  Stack,
-  Divider,
-  Switch,
-  FormControlLabel,
-  Box,
-  Alert,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Typography, Stack, Divider, Box, Alert } from "@mui/material";
+// import { styled } from "@mui/material/styles";
+import { useSnackbar } from "notistack";
 import { React, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 const InputStyle = { width: "100%", minHeight: 44 };
-const ActiveSwitch = styled(Switch)(({}) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C",
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
 
-const PipelineForm = ({ onClose }) => {
+const RolegroupForm = ({ onClose }) => {
+  const { data: Data } = useGetRoleGroupListQuery();
+  const isEditMode = !!Data?.items?.id;
   const [addRoleGroup] = useAddRoleGroupMutation();
+  const [uploadRoleGroup] = useUpdateRolegroupMutation();
+  const { enqueueSnackbar } = useSnackbar();
+
   const RoleSchema = Yup.object().shape({
     name: Yup.string(),
     description: Yup.string(),
-    // registerTime: Yup.date().transform(value => (!value ? new Date().toISOString() : value)).min(Yup.ref('createdTimeFrom')),
     identityRoleIds: Yup.array().min(1),
+    isActivated: Yup.bool(),
   });
 
   const methods = useForm({
     resolver: yupResolver(RoleSchema),
     defaultValues: {
-      identityRoleIds: ["a"],
     },
   });
+
   const {
+    setValue,
     handleSubmit,
     control,
     register,
-    formState: {errors, isSubmitting },
+    watch,
+    formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = (values) => {
-    addRoleGroup(values);
-    onClose();
+  const onSubmit = async (d) => {
+    const res = {
+      id: isEditMode ? Data?.items?.id : "",
+      name: d?.name,
+      description: d?.description,
+      identityRoleIds: d?.identityRoleIds,
+      isActivated: d?.isActivated,
+    };
+
+    if (isEditMode) {
+      try {
+        await uploadRoleGroup(res).unwrap();
+        enqueueSnackbar("Chỉnh sửa thành công!", {
+          autoHideDuration: 2000,
+        });
+        onClose();
+      } catch (err) {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      }
+    } else {
+      try {
+        await addRoleGroup(res).unwrap();
+        enqueueSnackbar("Thêm mới vai trò thàng công!", {
+          autoHideDuration: 2000,
+        });
+        onClose();
+      } catch (err) {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      }
+    }
+  };
+  const renderTitle = (title, required) => {
+    return <Label required={required}>{title}</Label>;
   };
 
   useEffect(() => {
-    if (isSubmitting) {
-      // reset();
-    }
-  }, [isSubmitting]);
+    if (!Data) return;
+    setValue("isAvailable", Data?.items.isAvailable);
+    setValue("identityRoleIds", Data?.items?.identityRoleIds);
+  }, [isEditMode, JSON.stringify(Data)]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -76,14 +111,15 @@ const PipelineForm = ({ onClose }) => {
           />
         </Stack>
 
-        <Stack sx={{ pb: 2 }}>
-          <RHFTextField
-            sx={{ ...InputStyle }}
-            name="description"
-            title="Mô tả"
-            placeholder="Nhập nội dung mô tả...
-          "
-          />
+        <Stack justifyContent="space-between" sx={{ mb: 3 }}>
+          <View mb={24}>
+            {renderTitle("Mô tả")}
+            <TextAreaDS
+              maxLength={255}
+              placeholder="Nhập nội dung mô tả..."
+              name="description"
+            />
+          </View>
         </Stack>
         <Divider />
         <Typography sx={{ py: 2, fontSize: "16px", fontWeight: 600 }}>
@@ -95,7 +131,6 @@ const PipelineForm = ({ onClose }) => {
         style={{
           display: "flex",
           flexDirection: "row",
-
           position: "fixed",
           bottom: 0,
           background: "#FDFDFD",
@@ -121,12 +156,15 @@ const PipelineForm = ({ onClose }) => {
         >
           {"Hủy"}
         </LoadingButton>
-        <FormControlLabel
-          control={<ActiveSwitch defaultChecked />}
-          label="Đang hoạt động"
+        <SwitchStatusDS
+          name="isActivated"
+          disabled={!isEditMode}
+          label={
+            watch("isActivated") ? "Đang hoạt động" : "Không hoạt động"
+          }
         />
       </div>
     </FormProvider>
   );
 };
-export default PipelineForm;
+export default RolegroupForm;

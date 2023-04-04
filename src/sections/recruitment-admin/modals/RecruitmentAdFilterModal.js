@@ -12,12 +12,12 @@ import {FormProvider} from "@/components/hook-form";
 
 import {useRouter} from "next/router";
 import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
+  FilterModalFooterStyle,
+  FilterModalHeadStyle,
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import { convertFlatDataToTree } from "@/utils/function";
 import { useGetAllUserFromOrganizationQuery, useGetOrganizationsDataWithChildQuery } from "../RecruitmentAdSlice";
 
@@ -65,7 +65,6 @@ function RecruitmentAdFilterModal({ columns, isOpen, onClose, onSubmit}) {
       } else setValue(item, defaultValues[item])
     }
   }, [query])
-  console.log(query)
 
   const handleCloseModal = async () => {
     onClose();
@@ -73,9 +72,6 @@ function RecruitmentAdFilterModal({ columns, isOpen, onClose, onSubmit}) {
       pathname: router.pathname,
       query: {}
     }, undefined, { shallow: true })
-    Object.entries(query).forEach(([key, value]) => {
-      console.log(key, value)
-    })
   }
 
   const handleScroll = (e) => {
@@ -108,14 +104,14 @@ const watchOrganizationIds = watch("organizationIds");
       >
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <ApplicantModalHeadStyle>
+            <FilterModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
-            </ApplicantModalHeadStyle>
+            </FilterModalHeadStyle>
             <Box sx={{py: 2, mt: 0}}>
               <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
               <Stack sx={{pb: 3, px: 2}}>
@@ -132,7 +128,7 @@ const watchOrganizationIds = watch("organizationIds");
                 />
               </Stack>
             </Box>
-            <ApplicantModalFooterStyle>
+            <FilterModalFooterStyle>
               <Stack flexDirection="row">
                 <ButtonDS
                     type="submit"
@@ -143,7 +139,7 @@ const watchOrganizationIds = watch("organizationIds");
                 />
                 <ButtonCancelStyle onClick={handleCloseModal}>Bỏ lọc</ButtonCancelStyle>
               </Stack>
-            </ApplicantModalFooterStyle>
+            </FilterModalFooterStyle>
           </FormProvider>
         </Scrollbar>
       </Drawer>

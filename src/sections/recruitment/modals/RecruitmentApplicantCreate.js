@@ -7,11 +7,11 @@ import {ViewModel} from "@/utils/cssStyles";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Avatar, CircularProgress, Divider, Grid, Modal, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {FormProvider, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {phoneRegExp} from "@/utils/function";
+import {getExtension, phoneRegExp} from "@/utils/function";
 import UploadAvatarApplicant from "@/components/upload/UploadAvatarApplicant";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES} from "@/utils/formatString";
@@ -22,6 +22,7 @@ import UploadFileDragAndDrop from "@/components/upload/UploadFileDragAndDrop";
 
 const defaultValues = {
   recruitmentId: undefined,
+  recruitmentPipelineStageId: undefined,
   fullName: undefined,
   portraitImage: undefined,
   cvFile: undefined,
@@ -39,8 +40,6 @@ const defaultValues = {
   maritalStatus: undefined,
   yearOfExperience: undefined,
   sex: undefined,
-  applicantSkillIds: [],
-  jobCategoryIds: [],
   academicLevelId: undefined,
   rawApplicantSkills: undefined,
   homeTower: {
@@ -50,6 +49,7 @@ const defaultValues = {
     address: undefined
   }
 };
+const FileViewer = React.lazy(() => import('react-file-viewer'));
 
 export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isEditMode = !!data?.id;
@@ -62,22 +62,29 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const isLoading = isEditMode && !preview.id;
     // form
     const Schema = Yup.object().shape({
-      RecruitmentId: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
-      FullName: Yup.string().required("Chưa nhập họ tên").max(50, "Họ tên không quá 50 ký tự"),
-      PortraitImage: Yup.string(),
-      DateOfBirth: undefined,
-      Email: Yup.string().required("Chưa nhập email").email("Email cần nhập đúng định dạng"),
-      PhoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
-      Weight: Yup.number(),
-      Height: Yup.number(),
-      CvFile: Yup.string(),
-      YearOfExperience: Yup.string(),
-      ApplicantSkillIds: [],
-      Experience: Yup.string(),
-      IdentityNumber: Yup.number(),
-      Education: Yup.string(),
-      Sex: Yup.string(),
-      MaritalStatus: Yup.string(),
+      recruitmentId: Yup.string(),
+      recruitmentTitle: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
+      recruitmentPipelineStageId: Yup.string(),
+      fullName: Yup.string().max(50, "Họ tên không quá 50 ký tự").required("Chưa nhập họ tên"),
+      portraitImage: Yup.string(),
+      email: Yup.string().email("Email cần nhập đúng định dạng").required("Chưa nhập email"),
+      phoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
+      weight: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      height: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      cvFile: Yup.string(),
+      yearOfExperience: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      experience: Yup.string(),
+      identityNumber: Yup.string(),
+      education: Yup.string(),
+      sex: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      maritalStatus: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+      homeTower: Yup.object().shape({
+        address: Yup.string()
+      }),
+      livingAddress: Yup.object().shape({
+        address: Yup.string()
+      }),
+      rawApplicantSkills: Yup.string(),
     });
 
     const methods = useForm({
@@ -94,20 +101,21 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
       formState: {isSubmitting},
     } = methods;
 
+    // if (typeof window !== "undefined") {
+    //   lng = localStorage.getItem("i18nextLng") || defaultLang.value;
+    // }
+
+
     const pressHide = () => {
-      setData(obj => ({...obj, stage: undefined}));
+      reset();
+      setAvatar(undefined);
+      setCV(undefined);
+      setData(data => ({...data, stage: null}));
       setShow(false);
     };
     const {enqueueSnackbar} = useSnackbar();
     const pressSave = handleSubmit(async (e) => {
-      let body = {
-        id: isEditMode ? data.id : 0,
-        name: e.name,
-        description: e.description,
-        isAvailable: e.isAvailable,
-        approvalProcessLevels: e.approvalProcessLevels
-      };
-
+      let body = e;
       if (isEditMode) {
         try {
           await updateForm(body).unwrap();
@@ -139,14 +147,30 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
 
     // effect
     useEffect(() => {
-      if (show) return;
-      reset();
+      if (!show) return;
       setValue("recruitmentId", data.recruitmentId);
+      setValue("recruitmentTitle", data.recruitmentTitle);
+      setValue("RecruitmentPipelineStateId", data.stage);
     }, [show]);
 
     useEffect(() => {
       if (!data?.id) return;
-      setValue("name", preview.name);
+      setValue("fullName", preview.fullName);
+      setValue("portraitImage", preview.portraitImage);
+      setValue("phoneNumber", preview.phoneNumber);
+      setValue("email", preview.email);
+      setValue("weight", preview.weight);
+      setValue("height", preview.height);
+      setValue("cvFile", preview.cvFile);
+      setValue("yearOfExperience", preview.yearOfExperience);
+      setValue("experience", preview.experience);
+      setValue("identityNumber", preview.identityNumber);
+      setValue("education", preview.education);
+      setValue("sex", preview.sex);
+      setValue("maritalStatus", preview.maritalStatus);
+      setValue("homeTower.address", preview.homeTower?.address);
+      setValue("livingAddress.address", preview.livingAddress?.address);
+      setValue("rawApplicantSkills", preview.rawApplicantSkills);
     }, [isEditMode, data, preview]);
 
     useEffect(() => {
@@ -160,8 +184,6 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
         setValue("cvFile", cv[0]?.response);
       }
     }, [cv]);
-
-    console.log(cv)
 
     return (
       <FormProvider {...methods}>
@@ -209,173 +231,193 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
             </View>
             <Divider/>
             {/* body */}
-            <View style={{minWidth: "600px", height: "100%", overflowY: "auto"}}>
+            <View style={{minWidth: "600px", maxWidth: "1200px", height: "100%", overflowY: "auto"}}>
               {isLoading ? (
                 <View flex="true" contentcenter="true">
                   <CircularProgress/>
                 </View>
               ) : (
-                <Grid container flexDirection={"column"}>
-                  <Grid item p={3}>
-                    <Grid mb={3}>
-                      <RHFTextField
-                        title={"Tin tuyển dụng"}
-                        isRequired={true}
-                        name={"recruitmentId"}
-                        disabled
-                        placeholder="Nhập tên tin tuyển dụng"
-                      />
-                    </Grid>
-                    <Grid mb={3}>
-                      <UploadFileDragAndDrop multiple={false} fileList={cv} setFileList={setCV}
-                                             maxFile={1}
-                                             showUploadList={false} height={120}/>
+                <Grid container flexDirection={"row"} wrap={"nowrap"}>
+                  <Grid container sx={{width: "600px"}} flexDirection={"column"}>
+                    <Grid item p={3}>
+                      <Grid mb={3}>
+                        <RHFTextField
+                          title={"Tin tuyển dụng"}
+                          isRequired={true}
+                          name={"recruitmentTitle"}
+                          disabled
+                          placeholder="Nhập tên tin tuyển dụng"
+                        />
+                      </Grid>
+                      <Grid mb={3}>
+                        <UploadFileDragAndDrop multiple={false} fileList={cv} setFileList={setCV}
+                                               maxFile={1}
+                                               showUploadList={false} height={120}/>
 
-                    </Grid>
-                    <Grid mb={3}>
-                      <Grid flexDirection={"row"} mb={3}>
-                        <Typography variant={"textSize14500"} color={"#172B4D"} mr={"3px"}>{"Ảnh đại diện"}</Typography>
-                        <Typography variant={"textSize14500"} color={"#5C6A82"}>(142x142px)</Typography>
                       </Grid>
-                      <Grid container alignItems={"center"}>
-                        <Grid item mr={3}>
-                          <Avatar sx={{width: 120, height: 120}}
-                                  src={DOMAIN_SERVER_API + "/File/GetFile?filePath=" + watch('portraitImage')}/>
+                      <Grid mb={3}>
+                        <Grid flexDirection={"row"} mb={3}>
+                          <Typography variant={"textSize14500"} color={"#172B4D"} mr={"3px"}>{"Ảnh đại diện"}</Typography>
+                          <Typography variant={"textSize14500"} color={"#5C6A82"}>(142x142px)</Typography>
                         </Grid>
-                        <UploadAvatarApplicant multiple={false} fileList={avatar} setFileList={setAvatar} maxFile={1}
-                                               showUploadList={false}/>
+                        <Grid container alignItems={"center"}>
+                          <Grid item mr={3}>
+                            <Avatar sx={{width: 120, height: 120}}
+                                    src={DOMAIN_SERVER_API + "/File/GetFile?filePath=" + watch('portraitImage')}/>
+                          </Grid>
+                          <UploadAvatarApplicant multiple={false} fileList={avatar} setFileList={setAvatar} maxFile={1}
+                                                 showUploadList={false} accept={"image/png, image/gif, image/jpeg"}/>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid mb={3}>
-                      <Label required={true}>{"Họ và tên"}</Label>
-                      <RHFTextField
-                        name={"fullName"}
-                        placeholder="Nhập họ và tên ứng viên"
-                      />
-                    </Grid>
-                    <Grid container flexDirection={"row"}>
-                      <Grid item xs={6} pr={"12px"}>
+                      <Grid mb={3}>
+                        <Label required={true}>{"Họ và tên"}</Label>
                         <RHFTextField
-                          title={"Số điện thoại"}
-                          isRequired={true}
-                          name={"FullName"}
-                          placeholder="Nhập số điện thoại ứng viên"
+                          name={"fullName"}
+                          placeholder="Nhập họ và tên ứng viên"
                         />
                       </Grid>
-                      <Grid item xs={6} pl={"12px"}>
-                        <RHFTextField
-                          title={"Email"}
-                          isRequired={true}
-                          name={"Email"}
-                          placeholder="Nhập email ứng viên"
-                        />
+                      <Grid container flexDirection={"row"}>
+                        <Grid item xs={6} pr={"12px"}>
+                          <RHFTextField
+                            title={"Số điện thoại"}
+                            isRequired={true}
+                            name={"phoneNumber"}
+                            placeholder="Nhập số điện thoại ứng viên"
+                          />
+                        </Grid>
+                        <Grid item xs={6} pl={"12px"}>
+                          <RHFTextField
+                            title={"Email"}
+                            isRequired={true}
+                            name={"email"}
+                            placeholder="Nhập email ứng viên"
+                          />
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
-                    <Typography variant={"subtitle2"} color={"#5C6A82"}>KINH NGHIỆM LÀM VIỆC VÀ HỌC VẤN</Typography>
-                  </Grid>
-                  <Grid item p={3}>
-                    <Grid mb={3} xs={6} pr={"12px"}>
-                      <RHFDropdown
-                        title={"Số năm kinh nghiệm"}
-                        options={LIST_EXPERIENCE_NUMBER}
-                        name={"yearOfExperience"}
-                        placeholder="Chọn số năm kinh nghiệm"
-                      />
+                    <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
+                      <Typography variant={"subtitle2"} color={"#5C6A82"}>KINH NGHIỆM LÀM VIỆC VÀ HỌC VẤN</Typography>
                     </Grid>
-                    <Grid mb={3}>
-                      <RHFTextField
-                        title={"Kỹ năng"}
-                        name={"rawApplicantSkills"}
-                        placeholder="Nhập 1 hoặc nhiều kỹ năng"
-                      />
-                    </Grid>
-                    <Grid mb={3}>
-                      <Label>Kinh nghiệm làm việc</Label>
-                      <TextAreaDS
-                        name={"experience"}
-                        placeholder="VD: Thời gian - Công ty - Vị trí công việc - Mô tả cụ thể..."
-                      />
-                    </Grid>
-                    <Grid mb={3}>
-                      <Label>Họ vấn</Label>
-                      <TextAreaDS
-                        name={"education"}
-                        placeholder="VD: Thời gian - Trình độ - Nơi đào tạo - Chuyên ngành..."
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
-                    <Typography variant={"subtitle2"} color={"#5C6A82"}>ĐỊA CHỈ</Typography>
-                  </Grid>
-                  <Grid item p={3}>
-                    <Grid mb={3}>
-                      <Label>Nơi ở hiện tại</Label>
-                      <TextAreaDS
-                        name={"education"}
-                        placeholder="VD: Số nhà, Tên đường, Xã/Phường, Quận/Huyện, Tỉnh/Thành..."
-                      />
-                    </Grid>
-                    <Grid mb={3}>
-                      <Label>Quê quán</Label>
-                      <TextAreaDS
-                        name={"education"}
-                        placeholder="VD: Số nhà, Tên đường, Xã/Phường, Quận/Huyện, Tỉnh/Thành..."
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
-                    <Typography variant={"subtitle2"} color={"#5C6A82"}>THÔNG TIN BỔ SUNG</Typography>
-                  </Grid>
-                  <Grid item p={3}>
-                    <Grid container mb={3} flexDirection={"row"}>
-                      <Grid item xs={6} pr={"12px"}>
+                    <Grid item p={3}>
+                      <Grid mb={3} xs={6} pr={"12px"}>
                         <RHFDropdown
-                          title={"Giới tính"}
-                          options={LIST_GENDER}
-                          name={"sex"}
-                          placeholder="Chọn giới tính"
+                          title={"Số năm kinh nghiệm"}
+                          options={LIST_EXPERIENCE_NUMBER}
+                          name={"yearOfExperience"}
+                          placeholder="Chọn số năm kinh nghiệm"
                         />
                       </Grid>
-                      <Grid item xs={6} pl={"12px"}>
-                        <RHFDropdown
-                          title={"Tình trạng hôn nhân"}
-                          options={LIST_MARITAL_STATUSES}
-                          name={"maritalStatus"}
-                          placeholder="Chọn tình trạng hồn nhân"
+                      <Grid mb={3}>
+                        <RHFTextField
+                          title={"Kỹ năng"}
+                          name={"rawApplicantSkills"}
+                          placeholder="Nhập 1 hoặc nhiều kỹ năng"
+                        />
+                      </Grid>
+                      <Grid mb={3}>
+                        <Label>Kinh nghiệm làm việc</Label>
+                        <TextAreaDS
+                          name={"experience"}
+                          placeholder="VD: Thời gian - Công ty - Vị trí công việc - Mô tả cụ thể..."
+                        />
+                      </Grid>
+                      <Grid mb={3}>
+                        <Label>Họ vấn</Label>
+                        <TextAreaDS
+                          name={"education"}
+                          placeholder="VD: Thời gian - Trình độ - Nơi đào tạo - Chuyên ngành..."
                         />
                       </Grid>
                     </Grid>
-                    <Grid container mb={3} flexDirection={"row"} alignItems={"center"}>
-                      <Grid item xs={6} pr={"12px"}>
-                        <RHFTextField
-                          title={"Căn cước công dân"}
-                          name={"identityNumber"}
-                          placeholder="Chọn giới tính"
-                        />
-                      </Grid>
-                      <Typography variant={"textSize12"} color={"#5C6A82"}
-                                  sx={{fontStyle: "italic", paddingLeft: "12px", paddingTop: "20px"}}>Có thể thay thế bằng
-                        số CMTND</Typography>
+                    <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
+                      <Typography variant={"subtitle2"} color={"#5C6A82"}>ĐỊA CHỈ</Typography>
                     </Grid>
-                    <Grid container mb={3} flexDirection={"row"}>
-                      <Grid item xs={6} pr={"12px"}>
-                        <RHFTextField
-                          title={"Chiều cao"}
-                          name={"height"}
-                          placeholder="Chọn chiều cao"
+                    <Grid item p={3}>
+                      <Grid mb={3}>
+                        <Label>Nơi ở hiện tại</Label>
+                        <TextAreaDS
+                          name={"livingAddress.address"}
+                          placeholder="VD: Số nhà, Tên đường, Xã/Phường, Quận/Huyện, Tỉnh/Thành..."
                         />
                       </Grid>
-                      <Grid item xs={6} pl={"12px"}>
-                        <RHFTextField
-                          title={"Cân nặng"}
-                          name={"weight"}
-                          placeholder="Chọn cân nặng"
+                      <Grid mb={3}>
+                        <Label>Quê quán</Label>
+                        <TextAreaDS
+                          name={"homeTower.address"}
+                          placeholder="VD: Số nhà, Tên đường, Xã/Phường, Quận/Huyện, Tỉnh/Thành..."
                         />
+                      </Grid>
+                    </Grid>
+                    <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
+                      <Typography variant={"subtitle2"} color={"#5C6A82"}>THÔNG TIN BỔ SUNG</Typography>
+                    </Grid>
+                    <Grid item p={3}>
+                      <Grid container mb={3} flexDirection={"row"}>
+                        <Grid item xs={6} pr={"12px"}>
+                          <RHFDropdown
+                            title={"Giới tính"}
+                            options={LIST_GENDER}
+                            name={"sex"}
+                            placeholder="Chọn giới tính"
+                          />
+                        </Grid>
+                        <Grid item xs={6} pl={"12px"}>
+                          <RHFDropdown
+                            title={"Tình trạng hôn nhân"}
+                            options={LIST_MARITAL_STATUSES}
+                            name={"maritalStatus"}
+                            placeholder="Chọn tình trạng hồn nhân"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container mb={3} flexDirection={"row"} alignItems={"center"}>
+                        <Grid item xs={6} pr={"12px"}>
+                          <RHFTextField
+                            title={"Căn cước công dân"}
+                            name={"identityNumber"}
+                            placeholder="Chọn giới tính"
+                          />
+                        </Grid>
+                        <Typography variant={"textSize12"} color={"#5C6A82"}
+                                    sx={{fontStyle: "italic", paddingLeft: "12px", paddingTop: "20px"}}>Có thể thay thế
+                          bằng
+                          số CMTND</Typography>
+                      </Grid>
+                      <Grid container mb={3} flexDirection={"row"}>
+                        <Grid item xs={6} pr={"12px"}>
+                          <RHFTextField
+                            title={"Chiều cao"}
+                            type={"number"}
+                            name={"height"}
+                            placeholder="Chọn chiều cao"
+                          />
+                        </Grid>
+                        <Grid item xs={6} pl={"12px"}>
+                          <RHFTextField
+                            title={"Cân nặng"}
+                            type={"number"}
+                            name={"weight"}
+                            placeholder="Chọn cân nặng"
+                          />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
+                  {watch('cvFile') && <>
+                    <Divider orientation={"vertical"}/>
+                    <Grid sx={{
+                      minWidth: "580px",
+                      "& .pg-viewer-wrapper": {
+                        overflowY: 'auto'
+                      },
+                    }}>
+                      <Suspense fallback={<div></div>}>
+                        <FileViewer
+                          fileType={getExtension(watch('cvFile'))}
+                          filePath={"http://103.176.149.158:5001/api/File/GetFile?filePath=" + watch('cvFile')}/>
+                      </Suspense>
+                    </Grid>
+                  </>}
                 </Grid>
               )}
             </View>

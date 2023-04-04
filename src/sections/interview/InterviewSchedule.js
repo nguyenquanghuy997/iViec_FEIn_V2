@@ -54,8 +54,9 @@ export default function InterviewSchedule() {
           Thứ 4, Ngày 07/03/2023 (Hôm nay)
         </Typography>
       </CardContent>
+
       {type.map((item) => (
-        <>
+        <Box key={item.id}>
           <CardContent
             sx={{
               display: "flex",
@@ -116,7 +117,7 @@ export default function InterviewSchedule() {
             </Box>
           </CardContent>
           <Divider />
-        </>
+        </Box>
       ))}
     </Card>
   );

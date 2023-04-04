@@ -48,7 +48,6 @@ export default function UploadMultiFile({
   } = useDropzone({
     ...other,
   });
-  console.log("🚀 ~ file: UploadMultiFile.js:51 ~ getRootProps:", getRootProps);
 
   return (
     <Box sx={{ width: "100%", ...sx }}>

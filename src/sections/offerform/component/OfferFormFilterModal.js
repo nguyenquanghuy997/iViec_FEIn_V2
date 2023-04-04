@@ -2,14 +2,14 @@ import React, {memo, useEffect} from "react";
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import {isArray} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
 import {useRouter} from "next/router";
 import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
+  FilterModalFooterStyle,
+  FilterModalHeadStyle,
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
@@ -96,9 +96,6 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
       pathname: router.pathname,
       query: {}
     }, undefined, {shallow: true})
-    Object.entries(query).forEach(([key, value]) => {
-      console.log(key, value)
-    })
   }
 
 
@@ -120,14 +117,14 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
           }}
       >
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <ApplicantModalHeadStyle>
+          <FilterModalHeadStyle>
             <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
               Bộ lọc
             </Typography>
             <IconButton size="small" onClick={onClose}>
               <Iconify icon="ic:baseline-close"/>
             </IconButton>
-          </ApplicantModalHeadStyle>
+          </FilterModalHeadStyle>
           <Divider/>
           <Box sx={{py: 2, mt: 0}}>
             <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ
@@ -137,7 +134,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
                   columns={columns}
                   options={{
                     isActive: LIST_STATUS,
-                    creatorIds: ListUserFromOrganization && [...ListUserFromOrganization?.map(i => ({...i, value: i?.id, name: `${i?.lastName || ""} ${i?.firstName}`})), {id: "", value: "", name: ""}],
+                    creatorIds: ListUserFromOrganization,
                   }}
               />
 
@@ -145,7 +142,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
           </Box>
 
           <Divider/>
-          <ApplicantModalFooterStyle>
+          <FilterModalFooterStyle>
             <Stack flexDirection="row">
               <ButtonDS
                   type="submit"
@@ -156,7 +153,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
               />
               <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
             </Stack>
-          </ApplicantModalFooterStyle>
+          </FilterModalFooterStyle>
         </FormProvider>
       </Drawer>
   );

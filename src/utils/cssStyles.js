@@ -1,5 +1,5 @@
 import { ButtonDS } from "@/components/DesignSystem";
-import { Box, Dialog, DialogContentText } from "@mui/material";
+import { Box, Dialog, DialogContentText, Switch } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import { Typography } from "antd";
@@ -55,14 +55,14 @@ export default function cssStyles(theme) {
   };
 }
 
-export const ViewModel = styled("div")(({}) => ({
+export const ViewModel = styled("div")(() => ({
   width: "42vw",
   background: "#fff",
   display: "flex",
   flexDirection: "column",
 }));
 
-export const ButtonIcon = styled(ButtonDS)(({}) => ({
+export const ButtonIcon = styled(ButtonDS)(() => ({
   padding: "8px",
   minWidth: "unset",
   backgroundColor: "#fff",
@@ -72,7 +72,7 @@ export const ButtonIcon = styled(ButtonDS)(({}) => ({
   },
   textTransform: "none",
 }));
-export const ButtonCancel = styled(ButtonDS)(({}) => ({
+export const ButtonCancel = styled(ButtonDS)(() => ({
     color: "#455570",
     backgroundColor: "transparent",
     borderRadius: 6,
@@ -81,7 +81,7 @@ export const ButtonCancel = styled(ButtonDS)(({}) => ({
       backgroundColor: "transparent",
     },
 }));
-export const ButtonGray = styled(ButtonDS)(({}) => ({
+export const ButtonGray = styled(ButtonDS)(() => ({
   color: "#455570",
   backgroundColor: "#F3F4F6",
   boxShadow: "none",
@@ -91,7 +91,7 @@ export const ButtonGray = styled(ButtonDS)(({}) => ({
   textTransform: "none",
 }));
 //Model
-export const TitleModelStyle = styled(Typography)(({ }) => ({
+export const TitleModelStyle = styled(Typography)(() => ({
   "&.title": {
     textAlign: "center",
     width: "100%",
@@ -101,7 +101,7 @@ export const TitleModelStyle = styled(Typography)(({ }) => ({
     marginTop: "12px",
   },
 }));
-export const DialogModelStyle = styled(Dialog)(({ }) => ({
+export const DialogModelStyle = styled(Dialog)(() => ({
   "& .MuiDialog-container": {
     "& .MuiPaper-root": {
       padding: 0,
@@ -112,7 +112,7 @@ export const DialogModelStyle = styled(Dialog)(({ }) => ({
     },
   },
 }));
-export const DialogModel = styled(Dialog)(({ }) => ({
+export const DialogModel = styled(Dialog)(() => ({
   "& .MuiDialog-container": {
     "& .MuiPaper-root": {
       padding: 0,
@@ -130,7 +130,7 @@ export const DialogContentTextModelStyle = styled(DialogContentText)(({ theme })
     fontWeight: 700,
     display: "block",
     color:"#455570",
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
     "& .subtitle-name": {
       fontWeight: 600,
     },
@@ -169,4 +169,15 @@ export const FooterPreviewStyle  = styled(Box)(({theme}) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   }
+}));
+export const GreenSwitch = styled(Switch)(({theme}) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: "#388E3C",
+    "&:hover": {
+      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: "#388E3C",
+  },
 }));

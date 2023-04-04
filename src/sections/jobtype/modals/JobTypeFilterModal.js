@@ -4,7 +4,7 @@ import {Box, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import {isArray, isEmpty} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
@@ -12,8 +12,8 @@ import {LIST_STATUS} from "@/utils/formatString";
 
 import {useRouter} from "next/router";
 import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
+  FilterModalFooterStyle,
+  FilterModalHeadStyle,
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
@@ -62,7 +62,6 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
       } else setValue(item, defaultValues[item])
     }
   }, [query])
-  console.log(query)
 
   const handleCloseModal = async () => {
     onClose();
@@ -70,9 +69,6 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
       pathname: router.pathname,
       query: {}
     }, undefined, { shallow: true })
-    Object.entries(query).forEach(([key, value]) => {
-      console.log(key, value)
-    })
   }
 
   const handleScroll = (e) => {
@@ -116,14 +112,14 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
       >
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <ApplicantModalHeadStyle>
+            <FilterModalHeadStyle>
               <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>
-            </ApplicantModalHeadStyle>
+            </FilterModalHeadStyle>
             <Box sx={{py: 2, mt: 0}}>
               <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu</HelperTextTypography>
               <Stack sx={{pb: 3, px: 2}}>
@@ -136,7 +132,7 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
                 />
               </Stack>
             </Box>
-            <ApplicantModalFooterStyle>
+            <FilterModalFooterStyle>
               <Stack flexDirection="row">
                 <ButtonDS
                     type="submit"
@@ -147,7 +143,7 @@ function JobTypeFilterModal({columns, isOpen, onClose, onSubmit}) {
                 />
                 <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
               </Stack>
-            </ApplicantModalFooterStyle>
+            </FilterModalFooterStyle>
           </FormProvider>
         </Scrollbar>
       </Drawer>

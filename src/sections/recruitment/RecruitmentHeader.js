@@ -2,15 +2,16 @@ import {useState} from "react";
 import {useRouter} from "next/router";
 import {get} from "lodash";
 import HeadingBar from "../../components/heading-bar/HeadingBar";
-import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
 import {InputAdornment, Stack} from "@mui/material";
-import {ButtonFilterStyle} from "@/sections/applicant/style";
 import {BoxFlex} from "@/sections/emailform/style";
-import {ButtonInviteStyle} from "@/sections/organization/style";
 import {PATH_DASHBOARD} from "@/routes/paths";
 import {useGetOrganizationQuery} from "@/sections/report/reportSlice";
 import OrganizationSettingModal from "@/sections/recruitment/modals/OrganizationSettingModal";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import {FilterIcon} from "@/assets/FilterIcon";
+import {AddIcon} from "@/assets/ActionIcon";
+import {SearchIcon} from "@/assets/SearchIcon";
 
 const RecruitmentHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit}) => {
   const router = useRouter();
@@ -38,20 +39,26 @@ const RecruitmentHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit}) 
                   InputProps={{
                     startAdornment: (
                         <InputAdornment position='start' sx={{ ml: 1.5 }}>
-                          <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }}/>
+                          <SearchIcon />
                         </InputAdornment>
                     ),
                   }}
               />
             </FormProvider>
-            <ButtonFilterStyle onClick={onOpenFilterForm} startIcon={<Iconify sx={{ height: '18px', width: '18px' }} icon="material-symbols:filter-alt-outline"/>}>
-              Bộ lọc
-            </ButtonFilterStyle>
+            <MuiButton
+                title="Bộ lọc"
+                color="default"
+                onClick={onOpenFilterForm}
+                startIcon={<FilterIcon />}
+                sx={{ fontWeight: 600, ml: 2 }}
+            />
           </Stack>
           <Stack flexDirection={"row"}>
-              <ButtonInviteStyle className="button-invite" startIcon={<Iconify icon="material-symbols:add"/>} onClick={handleCheckNavigate}>
-                  Đăng tin tuyển dụng
-              </ButtonInviteStyle>
+              <MuiButton
+                  title="Đăng tin tuyển dụng"
+                  startIcon={<AddIcon />}
+                  onClick={handleCheckNavigate}
+              />
           </Stack>
         </BoxFlex>
 

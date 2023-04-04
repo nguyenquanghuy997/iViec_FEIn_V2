@@ -1,37 +1,137 @@
 import HeaderCard from "../HeaderCard";
-import { Box } from "@mui/material";
-import { BoxContainer } from "./style";
+import { useGetCompanyInfoQuery } from "../companyInforSlice";
+import EditorEnding from "./EditorEnding";
+import CloseIcon from "@/assets/CloseIcon";
+import NoInformation from "@/assets/NoInformation";
+import { Drawer, Box, Divider, List, Typography, Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useState } from "react";
 
 const Ending = () => {
+  const { data: Data } = useGetCompanyInfoQuery();
+  const [open, setOpen] = useState();
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const PlaceholderStyle = styled("div")(() => ({
+    background: "white",
+    padding: "12px 96px",
+    height: 150,
+    "& .content": {
+      backgroundColor: "white",
+      color: "#455570",
+      background: "#F2F4F5",
+      position: "relative",
+      padding: "24px 96px",
+    },
+
+    "& blockquote:before": {
+      content: '" ,, "',
+      // fontFamily: themeFont.typography.fontFamily,
+      position: "absolute",
+      // content: "\f10d";
+      top: -100,
+      left: "20px",
+      fontSize: "128px",
+      color: "#A2AAB7",
+    },
+  }));
+  const list = () => (
+    <Box
+      sx={{ width: 700 }}
+      role="presentation"
+      // onKeyDown={toggleDrawer(false)}
+    >
+      <List
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          p: 0,
+        }}
+      >
+        <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
+          Chỉnh sửa Lời kết
+        </Typography>
+        <Button
+          onClick={handleClose}
+          sx={{
+            "&:hover": {
+              background: "white",
+            },
+          }}
+        >
+          <CloseIcon />
+        </Button>
+      </List>
+      <Divider />
+      <div>
+        <EditorEnding data={Data} onClose={handleClose} />
+      </div>
+    </Box>
+  );
+
+  const renderItem = (value, main) => {
+    return (
+      <div style={{ flex: main ? undefined : 1 }}>
+        {String(value).startsWith("<") ? (
+          <p dangerouslySetInnerHTML={{ __html: value }} />
+        ) : (
+          <span
+            style={{
+              display: "flex",
+              fontSize: 14,
+              lineHeight: 24 / 16,
+              color: "#172B4D",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {value}
+          </span>
+        )}
+      </div>
+    );
+  };
   return (
-    <BoxContainer>
-      <HeaderCard text="Lời kết" />
-      <Box sx={{ background: "white", py: 2, px: 5 }}>
-        <section class="notepaper" style={{background:'#F2F4F5'}}>
-          <div className="author-quote">
-            <div class="pull-left author-photo photo-a animated bounceInLeft"></div>
-            <div class="pull-right quote-content">
-              <div class="quote-text animated rotateInDownRight">
-                Là thành viên thuộc Tập đoàn giáo dục hàng đầu Việt Nam,
-                Atlantic Group hiện là một trong những nhà cung cấp dịch vụ giáo
-                dục và du học có uy tín và được khách hàng yêu mến tại Việt Nam
-                và Khu vực. Thành lập ngày 31/01/1997, khởi nguồn từ Trung tâm
-                Dịch vụ giáo dục do 4 thành viên sáng lập cùng sản phẩm du học
-                đầu tiên của Việt Nam mang tên “Trí tuệ Việt Nam – TTVN”, sản
-                phẩm được coi là đặt nền móng cho sự phát triển của giáo dục tại
-                Việt Nam. Sau 22 năm hoạt động, có hơn 15000 nhân viên chính
-                thức với gần 200 văn phòng giao dịch tại 59 tỉnh thành thuộc gần
-                90 chi nhánh.
-              </div>
-              <div class="quote-author animated lightSpeedIn">
-                Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic
-                Group)
-              </div>
-            </div>
+    <>
+      <HeaderCard
+        text="Lời kết"
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+      />
+      {open && (
+        <Drawer
+          anchor="right"
+          open={open}
+          onClose={handleClose}
+          onOpen={handleOpen}
+        >
+          {list("right")}
+        </Drawer>
+      )}
+      {Data?.conclusion ? (
+        <PlaceholderStyle>
+          <div className="content" style={{ height: 100 }}>
+            <blockquote>{renderItem(Data?.conclusion)}</blockquote>
           </div>
-        </section>
-      </Box>
-    </BoxContainer>
+        </PlaceholderStyle>
+      ) : (
+        <Box sx={{ bgcolor: "white" }}>
+          {" "}
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
+            <NoInformation />
+          </Box>
+          <Typography sx={{ textAlign: "center", pb: 6 }}>
+            Hiện chưa có nội dung
+          </Typography>
+        </Box>
+      )}
+    </>
   );
 };
 export default Ending;

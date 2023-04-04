@@ -138,7 +138,7 @@ const OfferFormContent = () => {
   }
 
   const handleDelete = (data) => {
-    console.log(data)
+    return data;
   }
 
   // handle active
@@ -153,7 +153,7 @@ const OfferFormContent = () => {
   }
 
   const handleActive = (data) => {
-    console.log(data)
+    return data;
   }
 
   // handle form (add & update)

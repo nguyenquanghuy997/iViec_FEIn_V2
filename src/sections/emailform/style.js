@@ -1,13 +1,26 @@
 import {styled} from "@mui/styles";
 import {Accordion, Box, Button, Typography} from "@mui/material";
 
-const BoxFlex = styled(Box)(({theme, alignItems = 'center', justifyContent = 'space-between', flexWrap = 'wrap'}) => ({
-  padding: theme.spacing(0),
-  display: 'flex',
-  alignItems: alignItems,
-  justifyContent: justifyContent,
-  flexWrap: flexWrap,
-}));
+const BoxFlex = styled(Box)((
+    {
+      theme,
+      alignItems = 'center',
+      justifyContent = 'space-between',
+      flexWrap = 'wrap',
+      flexDirection = 'row',
+      padding = theme.spacing(0),
+      margin = theme.spacing(0),
+    }) => {
+  return {
+    display: 'flex',
+    padding: padding,
+    margin: margin,
+    alignItems: alignItems,
+    justifyContent: justifyContent,
+    flexWrap: flexWrap,
+    flexDirection: flexDirection
+  }
+});
 
 const ButtonAddStyle = styled(Button)(({theme}) => ({
   '&.button-add': {
@@ -35,7 +48,7 @@ const TitleStyle = styled(Typography)(({theme}) => ({
   }
 }));
 
-const SubTitleStyle = styled(Typography)(({}) => ({
+const SubTitleStyle = styled(Typography)(() => ({
   '&.form-subtitle': {
     color: '#455570',
     fontSize: 14,

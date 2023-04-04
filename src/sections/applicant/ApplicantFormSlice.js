@@ -1,4 +1,4 @@
-import { apiSlice } from "@/redux/api/apiSlice";
+import {apiSlice} from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
   API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
@@ -13,15 +13,19 @@ import {
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
   API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
-  API_GET_RECRUITMENT_BY_ORGANIZATION,
-  API_GET_APPLICANT_BY_PIPELINESTETEID
+  API_GET_RECRUITMENT_BY_ORGANIZATION, 
+  API_UPDATE_APPLICANT,
+  API_GET_APPLICANT_BY_PIPELINESTETEID,
+  API_GET_LIST_RECRUITMENT,
+  API_GET_ADD_APPLICANT_TO_RECRUITMENT
 } from "@/routes/api";
 import {convertArrayToObject} from '@/utils/help'
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["GetColumnApplicants"],
+  addTagTypes: ["GetColumnApplicants", "GetListsApplicants"],
 });
 
 const ApplicantFormSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getListApplicants: builder.query({
       query: (params) => ({
@@ -43,11 +47,17 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      providesTags: ["UpdateColumnApplicants"],
       invalidatesTags: ["GetColumnApplicants"],
     }),
+    updateApplicant: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_APPLICANT}/${data.id}`,
+        method: "PATCH",
+        data: data.body,
+      }),
+    }),
     getApplicantById: builder.query({
-      query: ({ applicantId }) => ({
+      query: ({applicantId}) => ({
         url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
         method: "GET",
       }),
@@ -55,21 +65,34 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
     getRecruitmentsByApplicant: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENTS_BY_APPLICANT,
-        method: 'GET',
-        params
+        method: "GET",
+        params,
       }),
     }),
-    // getRecruitmentPipelineStatesByRecruitment: builder.query({
-    //   query: (params) => ({
-    //     url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
-    //     method: "GET",
-    //     params,
-    //   }),
-    //   // transformResponse: (response) => {
-    //   //   const presponseModified = convertArrayToObject(response.items, 'id');
-    //   //   return presponseModified;
-    //   // },
-    // }),
+    getRecruitmentPipelineStatesByRecruitment2: builder.query({
+      query: (id) => ({
+        url: `${API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT}?RecruitmentId=${id}`,
+        method: "GET",
+      }),
+    }),
+    getRecruitments: builder.query({
+      query: (data) => ({
+        url: API_GET_LIST_RECRUITMENT,
+        method: "POST",
+        data
+      }),
+    }),
+    getRecruitmentPipelineStatesByRecruitment1: builder.query({
+      query: (params) => ({
+        url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
+        method: "GET",
+        params,
+      }),
+      // transformResponse: (response) => {
+      //   const presponseModified = convertArrayToObject(response.items, 'id');
+      //   return presponseModified;
+      // },
+    }),
     getApplicantCurrentStateWithRecruitmentStates: builder.mutation({
       query: (params) => ({
         url: API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
@@ -96,7 +119,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
     }),
     getRecruitmentPipelineStatesByRecruitment: builder.query({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
-        console.log('data',_arg)
         const listPipeline = await fetchWithBQ({
           url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
           method: "GET",
@@ -128,8 +150,16 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data: data,
       }),
+      invalidatesTags: ["GetListsApplicants"],
     }),
-
+    addApplicantRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_GET_ADD_APPLICANT_TO_RECRUITMENT,
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: ["GetListsApplicants"],
+    }),
     // new
     // get all applicant with filter
     getAllFilterApplicant: builder.query({
@@ -138,12 +168,13 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data,
       }),
+      providesTags: ["GetListsApplicants"],
     }),
     getRecruitmentByOrganizationId: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_BY_ORGANIZATION,
-        method: 'GET',
-        params
+        method: "GET",
+        params,
       }),
     }),
     // get all skills
@@ -168,45 +199,36 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         params,
       }),
       transformResponse: (response) => {
-        return response?.items.map(item => ({
+        return response?.items.map((item) => ({
           ...item,
           value: item.id,
           name: item?.lastName,
           label: item?.lastName,
-        }))
+        }));
       },
     }),
   }),
 });
 
 export const {
+  useGetRecruitmentsQuery,
+  useGetRecruitmentPipelineStatesByRecruitment1Query,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
-  useLazyGetAllFilterApplicantQuery,
-  useLazyGetRecruitmentByOrganizationIdQuery,
-  // skills
+  useGetRecruitmentByOrganizationIdQuery,
   useGetSkillsQuery,
-  // job sources
   useGetAllJobSourcesQuery,
-  // user from organization
   useGetAllUserFromOrganizationQuery,
+  useUpdateApplicantMutation,
   useLazyGetAllUserFromOrganizationQuery,
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useUpdateApplicantRecruitmentToNextStateMutation,
+  useAddApplicantRecruitmentMutation,
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
-  useGetApplicantByPipelineStateIdQuery,
+  useAddApplicantFormMutation,
+  useUpdateApplicantFormMutation,
 } = ApplicantFormSlice;
-
-// export const getJobDetail = createAsyncThunk(
-//   'jobDetail/getJobDetail',
-//   async ({ jobId }) => {
-//     const url = `${API_LIST_JOBS}/${jobId}`
-//     const response = await _getApi(url)
-
-//     return response?.data?.success ? response.data : []
-//   }
-// )

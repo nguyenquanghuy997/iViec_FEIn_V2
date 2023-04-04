@@ -9,7 +9,7 @@ import useAuth from "@/hooks/useAuth";
 import {PATH_AUTH} from "@/routes/paths";
 // form
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Alert, IconButton, InputAdornment, Link, Stack, Typography,} from "@mui/material";
+import {Alert, IconButton, Link, Stack, Typography,} from "@mui/material";
 import NextLink from "next/link";
 import {useSnackbar} from "notistack";
 import {useState} from "react";
@@ -17,6 +17,7 @@ import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {errorMessages} from '@/utils/errorMessages'
 import {CHECK_EMAIL} from '@/utils/regex'
+import {LabelStyle} from "@/components/hook-form/style";
 // routes
 // import { PATH_AUTH } from '@/routes/paths'
 
@@ -62,9 +63,9 @@ export default function LoginForm() {
             const message = errorMessages[`${error.code}`] || 'Lỗi hệ thống'
             const {code} = error;
             if (code === "AUE_01") {
-                setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"}, {shouldFocus: true})
+                setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"})
             } else if (code === "IDE_12") {
-                setError('email', {type: "custom", message: "Email chưa được kích hoạt"}, {shouldFocus: true})
+                setError('email', {type: "custom", message: "Email chưa được kích hoạt"})
             } else if (code === "IDE_06") {
                 setError('password', {type: "custom", message: "Mật khẩu không chính xác"})
             } else setError("afterSubmit", {...error, message});
@@ -79,32 +80,24 @@ export default function LoginForm() {
                 )}
 
                 <Stack>
+                    <LabelStyle required={true}>Email đăng nhập</LabelStyle>
                     <RHFTextField
                         name="email"
-                        title="Email đăng nhập"
                         placeholder="Bắt buộc"
-                        isRequired
-                        sx={{width: 440, minHeight: 44}}
                     />
                 </Stack>
 
                 <Stack>
+                    <LabelStyle required={true}>Mật khẩu</LabelStyle>
                     <RHFTextField
-                        isRequired
-                        sx={{width: 440, minHeight: 44}}
                         name="password"
-                        title="Mật khẩu"
                         type={showPassword ? "text" : "password"}
                         placeholder="Bắt buộc"
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end" sx={{ mr: 1.5 }}>
-                                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                                        <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
+                        endIcon={
+                            <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
+                            </IconButton>
+                        }
                     />
                     {!errors.password && (
                         <Typography
@@ -142,7 +135,7 @@ export default function LoginForm() {
             <ButtonDS
                 width="440px"
                 size="large"
-                tittle="Đăng nhập"
+                tittle={<span>Đăng nhập</span>}
                 loading={isSubmitting}
                 type="submit"
             />

@@ -15,25 +15,14 @@ import {
   Tooltip,
   Avatar,
 } from "@mui/material";
-import { FormControlLabel, Switch } from "@mui/material";
+import { FormControlLabel } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { alpha, styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Controller, useFormContext } from "react-hook-form";
+import { GreenSwitch } from "@/utils/cssStyles";
 
-const GreenSwitch = styled(Switch)(({ theme }) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C",
-    "&:hover": {
-      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
-    },
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
 
 const SwitchForm = ({ name, handleChange, style, ...other }) => {
   const { control } = useFormContext();
@@ -46,7 +35,6 @@ const SwitchForm = ({ name, handleChange, style, ...other }) => {
           name={name}
           control={control}
           render={({ field }) => {
-            console.log(field);
             return (
               <GreenSwitch
                 {...field}
@@ -172,7 +160,7 @@ const DetailCard = ({ checked, accounts }) => {
             {isActive ? (
               <span style={{ color: "#388E3C" }}> Đã hoạt động</span>
             ) : (
-              <span style={{ color: "#8A94A5" }}>Ngừng hoạt động"</span>
+              <span style={{ color: "#8A94A5" }}>Không hoạt động"</span>
             )}
           </Typography>
           <Typography component="div" fontSize={"14px"} sx={{ mb: 3 }}>

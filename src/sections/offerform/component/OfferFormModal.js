@@ -47,7 +47,16 @@ const renderFileUploadItem = (file, index, removeFileUpload) => {
       <BoxItemFileStyle className="file-upload-item" key={index}>
         {showIconByFileType(fileType)}
         <Stack sx={{ mx: 1 }}>
-          <Typography sx={{ color: '#455570', fontSize: 13, fontWeight: 600 }}>{file.name}</Typography>
+          <Typography
+              sx={{
+                color: '#455570',
+                fontSize: 13,
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '125px',
+              }}>{file.name}</Typography>
           <Typography sx={{ color: '#455570', fontSize: 12, fontWeight: 400 }}>{calcFileSize(file.size)}</Typography>
         </Stack>
         <IconButton
@@ -120,7 +129,7 @@ const OfferFormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
+    return data;
   }
 
   return (

@@ -1,27 +1,51 @@
-// import RecruitmentFilterModal from "../modals/RecruitmentFilterModal";
-import { useLazyGetRecruitmentsQuery } from "../RecruitmentSlice";
+import {
+  useCloseRecruitmentMutation,
+  useDeleteRecruitmentMutation,
+  useGetListColumnsQuery,
+  useLazyGetRecruitmentsQuery,
+  useUpdateListColumnsMutation,
+} from "../RecruitmentSlice";
 import RecruitmentFilterModal from "../modals/RecruitmentFilterModal";
-import RecruitmentBottomNav from "./RecruitmentBottomNav";
+import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
+import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
+import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import RecruitmentHeader from "@/sections/recruitment/RecruitmentHeader";
+import { modalSlice } from "@/redux/common/modalSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import { PATH_DASHBOARD } from "@/routes/paths";
+import { ExcelIcon } from "@/sections/offerform/component/editor/Icon";
 import {
-  YearOfExperience,
-  RecruitmentWorkingForm,
+  AlertIcon,
+  UnCheckedSwitchIcon,
+} from "@/sections/organization/component/Icon";
+import RecruitmentHeader from "@/sections/recruitment/RecruitmentHeader";
+import { handleExportExcel } from "@/sections/recruitment/helper/excel";
+import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
+import {
+  CopyIcon,
+  ExpandPreviewIcon,
+  ForwardLightIcon,
+  SquareDarkIcon,
+} from "@/sections/recruitment/others/Icon";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {
   Currency,
   DivProcessStatus,
+  RecruitmentWorkingForm,
+  YearOfExperience,
 } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
 import { fDate } from "@/utils/formatTime";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Tooltip } from "@mui/material";
+import { Tooltip, Typography } from "@mui/material";
 import { Tag } from "antd";
-import { get } from "lodash";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
+import { useSnackbar } from "notistack";
+import React, { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -32,19 +56,35 @@ const defaultValues = {
 export const RecruitmentItem = () => {
   const router = useRouter();
   const { query, isReady } = router;
-  // api get list
+  const { enqueueSnackbar } = useSnackbar();
 
+  // modal redux
+  const dispatch = useDispatch();
+  const toggleModalState = useSelector((state) => state.modalReducer.openState);
+  const { openClose, openDelete, openPreview } = toggleModalState;
+
+  const handleOpenModalState = (data) =>
+    dispatch(modalSlice.actions.openStateModal(data));
+  const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
+
+  // delete & close recruitment
+  const [closeRecruitments] = useCloseRecruitmentMutation();
+  const [deleteRecruitments] = useDeleteRecruitmentMutation();
+
+  // api get list
   const [getAllFilter, { data: Data = {}, isLoading }] =
     useLazyGetRecruitmentsQuery();
   // api get list Column
-  const { data: ColumnData } = [];
+  const { data: { items: ColumnData = [] } = {} } = useGetListColumnsQuery();
+
   // api update list Column
-  const [UpdateListColumnApplicants] = [];
+  const [updateListColumn] = useUpdateListColumnsMutation();
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
   const columns = useMemo(() => {
     return [
       {
+        dataIndex: "id",
         title: "STT",
         key: "id",
         align: "center",
@@ -73,27 +113,31 @@ export const RecruitmentItem = () => {
         width: "200px",
       },
       {
-        dataIndex: ["processStatus", "rejectReason"],
+        dataIndex: "processStatus",
         title: "Trạng thái",
         width: "180px",
-        render: (text, row) => (
+        render: (text, record) => (
           <div style={{ display: "flex", alignItems: "center" }}>
-             { DivProcessStatus(get(row, "processStatus", ""))}
-            {get(row, "rejectReason", "") && (
-              <Tooltip title={get(row, "rejectReason", "")} placement="top" followCursor>
+            {DivProcessStatus(record?.processStatus)}
+            {record?.rejectReason && (
+              <Tooltip
+                title={record?.rejectReason}
+                placement="top"
+                followCursor
+              >
                 <div>
-                <Iconify
-                  icon={"mdi:question-mark-circle-outline"}
-                  width={20}
-                  height={20}
-                  color="#E53935"
-                  ml={1}
-                  style={{marginTop:'4px'}}
-                />
+                  <Iconify
+                    icon={"mdi:question-mark-circle-outline"}
+                    width={20}
+                    height={20}
+                    color="#E53935"
+                    ml={1}
+                    style={{ marginTop: "4px" }}
+                  />
                 </div>
               </Tooltip>
             )}
-         </div>
+          </div>
         ),
       },
       {
@@ -215,7 +259,7 @@ export const RecruitmentItem = () => {
         align: "center",
       },
       {
-        dataIndex: ["ownerName", "ownerEmail"],
+        dataIndex: "ownerEmail",
         title: "Cán bộ phụ trách",
         width: "220px",
         name: "ownerIds",
@@ -223,9 +267,9 @@ export const RecruitmentItem = () => {
         placeholder: "Chọn 1 hoặc nhiều người",
         // type: "select",
         multiple: true,
-        render: (text, row) => (
+        render: (text, record) => (
           <>
-            {get(row, "ownerEmail", "") && (
+            {record?.ownerEmail && (
               <div style={{ display: "flex", alignItems: "center" }}>
                 <AvatarDS
                   sx={{
@@ -234,10 +278,10 @@ export const RecruitmentItem = () => {
                     borderRadius: "100px",
                     fontSize: "10px",
                   }}
-                  name={get(row, "ownerName", "")}
+                  name={record?.ownerName}
                 ></AvatarDS>
                 <span fontSize="14px" fontWeight="600" color="#172B4D">
-                  {get(row, "ownerEmail", "")}
+                  {record?.ownerEmail}
                 </span>
               </div>
             )}
@@ -342,7 +386,7 @@ export const RecruitmentItem = () => {
         ),
       },
       {
-        dataIndex: ["minSalary", "maxSalary", "currencyUnit"],
+        dataIndex: "salary",
         title: "Mức lương",
         width: "216px",
         name: ["minSalary", "maxSalary"],
@@ -350,12 +394,10 @@ export const RecruitmentItem = () => {
         // type: "select",
         multiple: false,
         placeholder: "Chọn số năm kinh nghiệm",
-        render: (text, row) => (
+        render: (text, record) => (
           <>
-            {get(row, "minSalary", "") != 0
-              ? `${fCurrency(get(row, "minSalary", ""))} - ${fCurrency(
-                  get(row, "maxSalary", "")
-                )} ${Currency(get(row, "currencyUnit", ""))}`
+            {record?.minSalary != 0
+              ? `${fCurrency(record?.minSalary)} - ${fCurrency(record?.maxSalary)} ${Currency(record?.currencyUnit)}`
               : ""}
           </>
         ),
@@ -378,44 +420,6 @@ export const RecruitmentItem = () => {
       },
     ];
   }, [page, paginationSize]);
-
-  const menuItemText = {
-    name: "Họ và tên",
-    phoneNumber: "Số điện thoại",
-    dateOfBirth: "Ngày sinh",
-    email: "Email",
-    recruitment: "Tin tuyển dụng",
-    recruitmentPipelineState: "Bước tuyển dụng",
-    createdTime: "Ngày ứng tuyển",
-    organization: "Tổ chức",
-    jobSource: "Nguồn",
-    council: "Hội đồng",
-    creator: "Cán bộ tạo ứng viên",
-    education: "Học vấn",
-    applicantWorkingExperiences: "Kinh nghiệm làm việc",
-    jobCategory: "Ngành nghề",
-    yearOfExperience: "Số năm kinh nghiệm",
-    applicantSkills: "Kỹ năng",
-    identityNumber: "Số CCCD/CMND",
-    sex: "Giới tính",
-    maritalStatus: "Tình trạng hôn nhâ",
-    height: "Chiều cao",
-    weight: "Cân nặng",
-    expectedWorkingAddress: "Nơi làm việc mong muốn",
-    expectedSalary: "Mức lương mong muốn",
-    livingAddress: "Nơi ở hiện tại",
-    homeTower: "Quê quán",
-  };
-
-  // form search
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
 
   // form search
   const Schema = Yup.object().shape({
@@ -540,10 +544,7 @@ export const RecruitmentItem = () => {
             ...queryParams,
             pageSize: pageSize,
             pageIndex: pageIndex,
-          }).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
+          }).reduce((a, [k, v]) => (v == null ? a : ((a[k] = v), a)), {})
         )
       ).unwrap();
     } else {
@@ -631,13 +632,99 @@ export const RecruitmentItem = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const [itemSelected, setItemSelected] = useState([]);
+  const [columnsTable, setColumnsTable] = useState([]);
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
     setSelectedRowKeys([]);
-    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+    setItemSelected([]);
+    event.currentTarget.getElementsByClassName(
+      "css-6pqpl8"
+    )[0].style.paddingBottom = null;
   };
+
+  const handleCloseRecruitmentSubmit = async (data) => {
+    try {
+      await closeRecruitments({ ids: data }).unwrap();
+      enqueueSnackbar("Đóng tin tuyển dụng thành công!", {
+        autoHideDuration: 1000,
+      });
+      setSelectedRowKeys([]);
+      setItemSelected([]);
+      handleCloseModal();
+    } catch (e) {
+      enqueueSnackbar(
+        "Đóng tin tuyển dụng không thành công. Vui lòng kiểm tra và thử lại!",
+        {
+          autoHideDuration: 1000,
+          variant: "error",
+        }
+      );
+      throw e;
+    }
+  };
+
+  const handleDeleteRecruitmentSubmit = async (data) => {
+    try {
+      await deleteRecruitments({ ids: data }).unwrap();
+      enqueueSnackbar("Xóa tin tuyển dụng thành công!", {
+        autoHideDuration: 1000,
+      });
+      setSelectedRowKeys([]);
+      setItemSelected([]);
+      handleCloseModal();
+    } catch (e) {
+      enqueueSnackbar(
+        "Xóa tin tuyển dụng không thành công. Vui lòng kiểm tra và thử lại!",
+        {
+          autoHideDuration: 1000,
+          variant: "error",
+        }
+      );
+      throw e;
+    }
+  };
+
+  const listKeyActions = useMemo(() => {
+    const getKeysByStatus = (data) => {
+      if (data.length === 1) {
+        switch (data[0]?.processStatus) {
+          case 0:
+            return ["name", "preview", "edit", "copy", "delete"];
+          case 1:
+            return ["name", "preview", "edit", "copy", "delete"];
+          case 2:
+            return ["name", "detail", "preview", "edit", "copy", "delete"];
+          case 3:
+            return ["name", "preview", "edit", "copy", "delete"];
+          case 4:
+            return ["name", "detail", "preview", "excel", "copy", "delete"];
+          case 5:
+            return [
+              "name",
+              "detail",
+              "preview",
+              "close",
+              "edit",
+              "excel",
+              "copy",
+            ];
+          case 6:
+            return ["name", "detail", "preview", "close", "edit", "copy"];
+          case 7:
+            return ["name", "detail", "preview", "close", "copy"];
+          case 8:
+            return ["name", "detail", "preview", "copy"];
+          default:
+            return ["name", "detail"];
+        }
+      } else {
+        return ["close", "excel", "delete"];
+      }
+    };
+    return getKeysByStatus(itemSelected);
+  }, [itemSelected]);
 
   return (
     <View>
@@ -656,12 +743,13 @@ export const RecruitmentItem = () => {
             page={page}
             paginationSize={paginationSize}
             handleChangePagination={handleChangePagination}
-            columns={[...columns]}
+            columns={columns}
             source={Data}
             loading={isLoading}
-            ColumnData={ColumnData}
-            menuItemText={menuItemText}
-            UpdateListColumn={handleUpdateListColumnApplicants}
+            ColumnData={ColumnData[0]}
+            columnsTable={columnsTable}
+            setColumnsTable={setColumnsTable}
+            UpdateListColumn={updateListColumn}
             settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
             scroll={{ x: 3954 }}
             nodata="Hiện chưa có tin tuyển dụng nào"
@@ -671,23 +759,195 @@ export const RecruitmentItem = () => {
             setItemSelected={setItemSelected}
           />
         </View>
-        <RecruitmentBottomNav
-          open={selectedRowKeys?.length > 0}
-          onClose={toggleDrawer(false)}
-          selectedList={selectedRowKeys || []}
-          onOpenForm={toggleDrawer(true)}
-          itemSelected={itemSelected}
-        />
       </Content>
       {isOpen && (
         <RecruitmentFilterModal
-          columns={columns}
+          columns={columnsTable}
           isOpen={isOpen}
           onClose={handleCloseFilterForm}
           onSubmit={onSubmit}
           onRefreshData={refreshData}
         />
       )}
+      {openClose && (
+        <ConfirmModal
+          open={openClose}
+          onClose={handleCloseModal}
+          title={
+            <Typography
+              sx={{
+                textAlign: "center",
+                width: "100%",
+                fontSize: style.FONT_BASE,
+                fontWeight: style.FONT_SEMIBOLD,
+                color: style.COLOR_PRIMARY,
+                marginTop: 2,
+              }}
+            >
+              Xác nhận đóng tin tuyển dụng
+            </Typography>
+          }
+          icon={<UnCheckedSwitchIcon />}
+          subtitle={
+            selectedRowKeys.length > 1 ? (
+              <>
+                Bạn có chắc chắn muốn đóng {selectedRowKeys.length} tin tuyển
+                dụng?
+              </>
+            ) : (
+              <>
+                Bạn có chắc chắn muốn đóng tin tuyển dụng
+                <span className="subtitle-confirm-name">
+                  {itemSelected[0]?.name}
+                </span>{" "}
+                ?
+              </>
+            )
+          }
+          data={selectedRowKeys}
+          onSubmit={handleCloseRecruitmentSubmit}
+          btnCancelProps={{
+            title: "Hủy",
+          }}
+          btnConfirmProps={{
+            title: "Xác nhận",
+          }}
+        />
+      )}
+      {openDelete && (
+        <ConfirmModal
+          open={openDelete}
+          onClose={handleCloseModal}
+          icon={<AlertIcon />}
+          title={
+            <Typography
+              sx={{
+                textAlign: "center",
+                width: "100%",
+                fontSize: style.FONT_BASE,
+                fontWeight: style.FONT_SEMIBOLD,
+                color: style.COLOR_TEXT_DANGER,
+                marginTop: 2,
+              }}
+            >
+              Xác nhận xóa tin tuyển dụng
+            </Typography>
+          }
+          subtitle={
+            selectedRowKeys.length > 1 ? (
+              <>
+                Bạn có chắc chắn muốn xóa {selectedRowKeys.length} tin tuyển
+                dụng?
+              </>
+            ) : (
+              <>
+                Bạn có chắc chắn muốn xóa tin tuyển dụng
+                <span className="subtitle-confirm-name">
+                  {itemSelected[0]?.name}
+                </span>{" "}
+                ?
+              </>
+            )
+          }
+          data={selectedRowKeys}
+          onSubmit={handleDeleteRecruitmentSubmit}
+          btnCancelProps={{
+            title: "Hủy",
+          }}
+          btnConfirmProps={{
+            title: "Xác nhận",
+          }}
+        />
+      )}
+      {openPreview && (
+        <RecruitmentPreview
+          data={itemSelected[0]}
+          open={openPreview}
+          onClose={handleCloseModal}
+        />
+      )}
+      <BottomNavModal
+        data={itemSelected}
+        onClose={toggleDrawer(false)}
+        open={selectedRowKeys?.length > 0}
+        actions={[
+          {
+            key: "name",
+            type: "text",
+            title: (
+              <Typography
+                sx={{
+                  fontWeight: style.FONT_MEDIUM,
+                  fontSize: style.FONT_SM,
+                  marginRight: 2,
+                }}
+              >
+                {DivProcessStatus(itemSelected[0]?.processStatus)}
+              </Typography>
+            ),
+          },
+          {
+            key: "detail",
+            title: "Chi tiết",
+            onClick: () =>
+              router.push(PATH_DASHBOARD.recruitment.view(itemSelected[0]?.id)),
+            startIcon: <ForwardLightIcon />,
+            sx: { padding: "8px 12px" },
+          },
+          {
+            key: "preview",
+            title: "Xem tin tuyển dụng",
+            onClick: () => handleOpenModalState({ openPreview: true }),
+            color: "default",
+            startIcon: <ExpandPreviewIcon />,
+            sx: { padding: "8px 12px" },
+          },
+          {
+            key: "close",
+            title: "Đóng tin",
+            onClick: () => handleOpenModalState({ openClose: true }),
+            color: "default",
+            startIcon: <SquareDarkIcon />,
+            sx: {
+              padding: "8px 12px",
+            },
+          },
+          {
+            key: "edit",
+            onClick: () =>
+              router.push(
+                PATH_DASHBOARD.recruitment.update(itemSelected[0]?.id)
+              ),
+            color: "basic",
+            icon: <EditIcon />,
+          },
+          {
+            key: "excel",
+            onClick: () => handleExportExcel(itemSelected),
+            color: "basic",
+            icon: <ExcelIcon />,
+          },
+          {
+            key: "copy",
+            onClick: () =>
+              router.push({
+                pathname: PATH_DASHBOARD.recruitment.copy,
+                query: {
+                  source: itemSelected[0]?.id,
+                  type: "copy",
+                },
+              }),
+            color: "basic",
+            icon: <CopyIcon />,
+          },
+          {
+            key: "delete",
+            onClick: () => handleOpenModalState({ openDelete: true }),
+            color: "basic",
+            icon: <DeleteIcon />,
+          },
+        ].filter((item) => listKeyActions?.includes(item.key))}
+      />
     </View>
   );
 };
