@@ -199,7 +199,7 @@ export const ReviewForm = styled("div")(() => ({
     background: "#F2F4F5",
     borderRadius: "6px",
     padding: "16px",
-    marginBottom:'28px'
+    marginBottom: "28px",
   },
   "&.block-review .title": {
     fontWeight: 600,
@@ -215,28 +215,16 @@ export const ReviewForm = styled("div")(() => ({
     color: "#455570;",
     marginBottom: "16px",
   },
-  "&.block-review-result .pagination-review li": {
-    border: "1px solid #EBECF4",
-    borderBottom: "unset !important",
-  },
-  "&.block-review-result .pagination-review li:first-of-type": {
-    border: "1px solid #EBECF4",
-    borderBottom: "unset !important",
-  },
-  "&.block-review-result .pagination-review li:last-child": {
-    borderRadius: "0 4px 0 0",
-  },
-  "&.block-review-result .form-control[readonly]": {
-    border: "1px solid #EBECF4",
-    borderRadius: "0 0 4px 4px",
-  },
-  "& .pagination-review": {
-    display: "flex",
-    marginBottom: 0,
+  "& .MuiBox-root": {
+    width: "100%",
     marginTop: "16px",
   },
-
-  "& .pagination-review li": {
+  "& .ant-rate": {
+    width: "100%",
+    display: "flex",
+  },
+  "& .ant-rate li, & .pagination-review li": {
+    marginInlineEnd: "0 !important",
     display: "flex",
     cursor: "pointer",
     transition: "all 0.32s",
@@ -251,17 +239,47 @@ export const ReviewForm = styled("div")(() => ({
     lineHeight: "24px",
     background: "#fff",
   },
-
-  "& .pagination-review li:first-of-type": {
-    borderRadius: "8px 0 0 8px",
+  "& .ant-rate .ant-rate-star-second": {
+    color: "#393b3e",
+    fontWeight: "600",
+    fontSize: "14px",
   },
-
-  "& .pagination-review li:last-child": {
-    borderRadius: "0 8px 8px 0",
+  "& .ant-rate li:first-of-type, & .pagination-review li:first-of-type": {
+    borderRadius: "4px 0 0 4px",
   },
-  "& .pagination-review .active": {
-    background: "#01b6a7 !important",
-    color: "#ffffff !important",
-    border: "none !important",
+  "& .ant-rate li:last-child, & .pagination-review li:last-child": {
+    borderRadius: "0 4px 4px 0",
+  },
+  "& .ant-rate .ant-rate-star-full": {
+    background: "#1976D2 !important",
+    color: '#fff',
+    borderColor: '#1976D2'
+  },
+  "& .ant-rate .ant-rate-star >div:hover": {
+    transform: 'unset'
+  },
+  "& .ant-rate .ant-rate-star-full .ant-rate-star-second": {
+    color: '#fff'
+  },
+  "& .pagination-review": {
+    display: "flex",
+    marginBottom: 0,
+    marginTop: "16px",
+  },
+  "&.block-review-result .MuiBox-root": {
+    width: 'unset',
+    marginTop: 0,
+  },
+  "&.block-review-result .pagination-review li:hover": {
+    background: "#F2F4F5",
+  },
+  "&.block-review-result .pagination-review li": {
+    border: "1px solid #C9D9E0",
+  },
+  "&.block-review-result .pagination-review li:first-of-type": {
+    borderRadius: "4px 0 0 0",
+  },
+  "&.block-review-result .pagination-review li:last-child": {
+    borderRadius: "0 4px 0 0",
   },
 }));
