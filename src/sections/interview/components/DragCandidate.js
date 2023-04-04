@@ -1,4 +1,4 @@
-import DeleteIcon from "@/assets/interview/DeleteIcon";
+import {DeleteIcon} from "@/assets/ActionIcon";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
 import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
@@ -238,11 +238,8 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                     sx={{
                                       m: "0 auto",
                                       textTransform: "none",
-
                                       fontWeight: 400,
                                       fontSize: 14,
-
-                                      // display:{checked} ? "none" :'block'
                                     }}
                                     onClick={onOpen}
                                   >

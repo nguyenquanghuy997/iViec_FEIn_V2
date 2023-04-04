@@ -1,6 +1,7 @@
 import DragCandidate from "./DragCandidate";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
+import { RHFCheckbox } from "@/components/hook-form";
 import {
   LabelStyle,
   MenuItemStyle,
@@ -22,6 +23,7 @@ import {
 } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { RiEqualizerFill } from "react-icons/ri";
 
 const MenuProps = {
   PaperProps: {
@@ -80,8 +82,22 @@ const renderChipsSelect = (options, value) => {
   const handleOpen = () => {
     setOpen(true);
   };
+
   return (
     <Stack flexWrap="wrap" justifyContent="flex-start">
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems:'center',fontSize: 12 }}>
+        <RHFCheckbox
+          name="adjust"
+          label="Điều chỉnh hàng loạt"
+          style={{ fontSize: "12px" }}
+        />
+        <p>
+          <RiEqualizerFill color={"#1976D2"} size={'15'} />
+          Điều chỉnh
+        </p>
+
+      </Box>
+
       <DragCandidate
         data={options?.filter((option) => value.includes(option?.value))}
         open={open}
@@ -144,7 +160,7 @@ function RHFSelectMultiple({ name, ...props }) {
             multiple
             onClose={() => setSearchText("")}
             renderValue={(selected) => {
-              if (selected.length === 0) {
+              if (selected?.length === 0) {
                 return (
                   <Button
                     sx={{ width: "100%", textTransform: "none" }}

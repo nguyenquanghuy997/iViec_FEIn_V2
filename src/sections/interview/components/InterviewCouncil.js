@@ -3,7 +3,7 @@ import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice
 import { Typography, Box } from "@mui/material";
 import React from "react";
 
-const InterviewCouncil = ({ watchStep, action }) => {
+const InterviewCouncil = ({ item,watchStep, action }) => {
   const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
     PageSize: 20,
@@ -26,6 +26,7 @@ const InterviewCouncil = ({ watchStep, action }) => {
             // position: "Giám đốc tuyển dụng",
           }))}
           name="councilIds"
+          defaultItem ={item}
           action={action}
           fullWidth
           multiple

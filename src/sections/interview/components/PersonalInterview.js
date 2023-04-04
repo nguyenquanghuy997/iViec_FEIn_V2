@@ -10,7 +10,7 @@ import { Box, Stack, Typography, TextField } from "@mui/material";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-const PersonalInterview = ({ watchStep, watchType }) => {
+const PersonalInterview = ({ item, watchStep, watchType }) => {
   const { control } = useFormContext();
   const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
@@ -34,13 +34,14 @@ const PersonalInterview = ({ watchStep, watchType }) => {
     },
     {
       id: 1,
-      name: "Direct",
+      name: "Trực tiếp",
     },
   ];
 
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
+  const id = item?.recruitmentId;
   return (
     <Stack spacing={3}>
       <Stack>
@@ -54,22 +55,40 @@ const PersonalInterview = ({ watchStep, watchType }) => {
       </Stack>
 
       <Stack>
-        <Box sx={{ mb: 2, width: "100%", height: 44 }}>
-          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            Tin tuyển dụng <span style={{ color: "red" }}>*</span>
-          </Typography>
-          <RHFSelect
-            options={Data?.map((i) => ({
-              value: i.id,
-              label: i.name,
-              name: i.name,
-            }))}
-            name="recruitmentId"
-            multiple={false}
-            placeholder="Chọn tin tuyển dụng"
-            required
-          />
-        </Box>
+        {item ? (
+          <Box sx={{ mb: 3, width: "100%", height: 44 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500, mb: 1 }}>
+              Tin tuyển dụng <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <Box
+              sx={{
+                bgcolor: "#EFF3F6",
+                p: 2,
+                borderRadius: "6px",
+                fontSize: 14,
+              }}
+            >
+              {Data.filter((item) => item?.id.includes(id))[0]?.name}
+            </Box>
+          </Box>
+        ) : (
+          <Box sx={{ mb: 2, width: "100%", height: 44 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              Tin tuyển dụng <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <RHFSelect
+              options={Data?.map((i) => ({
+                value: i.id,
+                label: i.name,
+                name: i.name,
+              }))}
+              name="recruitmentId"
+              multiple={false}
+              placeholder="Chọn tin tuyển dụng"
+              required
+            />
+          </Box>
+        )}
       </Stack>
 
       {watchStep && (
@@ -146,7 +165,7 @@ const PersonalInterview = ({ watchStep, watchType }) => {
       <Stack>
         {renderTitle("Lưu ý cho ứng viên")}
         <TextAreaDS
-          maxLength={150}
+          maxLength={1000}
           placeholder="Nhập nội dung lưu ý..."
           name={"note"}
         />
@@ -162,34 +181,39 @@ const PersonalInterview = ({ watchStep, watchType }) => {
         />
       </Box>
       <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
-        <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
-          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            Mẫu đánh giá
-          </Typography>
-          <RHFSelect
-            options={DataForm.map((i) => ({
-              value: i.id,
-              label: i.name,
-              name: i.name,
-            }))}
-            name="reviewFormId"
-            placeholder="Chọn mẫu đánh giá"
-            multiple={false}
-          />
-
-          {/* <Typography
-            sx={{
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "#1976D2",
-              display: "flex",
-              justifyContent: "end",
-            }}
-          >
-            {" "}
-            + Thêm nhanh mẫu đánh giá
-          </Typography> */}
-        </Box>
+        {item?.reviewFormId ? (
+          <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500, mb: 1 }}>
+              Mẫu đánh giá
+            </Typography>
+            <Box
+              sx={{
+                bgcolor: "#EFF3F6",
+                p: 2,
+                borderRadius: "6px",
+                fontSize: 14,
+              }}
+            >
+              {item?.reviewFormId}
+            </Box>
+          </Box>
+        ) : (
+          <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              Mẫu đánh giá
+            </Typography>
+            <RHFSelect
+              options={DataForm.map((i) => ({
+                value: i.id,
+                label: i.name,
+                name: i.name,
+              }))}
+              name="reviewFormId"
+              placeholder="Chọn mẫu đánh giá"
+              multiple={false}
+            />
+          </Box>
+        )}
       </Stack>
     </Stack>
   );

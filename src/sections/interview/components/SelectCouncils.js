@@ -1,4 +1,4 @@
-import DeleteIcon from "@/assets/interview/DeleteIcon";
+import { DeleteIcon } from "@/assets/ActionIcon";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
 import {
@@ -62,25 +62,6 @@ const renderOptions = (options) => {
             <Typography sx={{ fontSize: 13 }}>{variant.mail}</Typography>
           </Box>
         </Box>
-        {/* <FormControlLabel
-          labelPlacement={variant.id}
-          control={
-            <Controller
-              name={"bookingCalendarGroups"}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <input
-                    {...field}
-                    value={variant.id}
-                    type="checkbox"
-                    // onChange={handleCheck}
-                  />
-                </>
-              )}
-            />
-          }
-        /> */}
       </MenuItem>
     );
   });
@@ -93,11 +74,8 @@ const renderChipsSelect = (
 ) => {
   return (
     <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-      {/* <DragCandidate
-        data={options?.filter((option) => value.includes(option?.value))}
-      /> */}
       {options
-        ?.filter((option) => value.includes(option?.value))
+        ?.filter((option) =>value.includes(option?.value))
         ?.map((item) => (
           <Card
             sx={{
@@ -134,7 +112,7 @@ const renderChipsSelect = (
                     component="div"
                     sx={{ fontSize: "13px", fontWeight: "600" }}
                   >
-                    {item?.name}
+                    {item?.name}hihihi
                   </Typography>
                   <Typography
                     color="#455570"
@@ -157,16 +135,8 @@ const renderChipsSelect = (
 function SelectCouncils({ name, ...props }) {
   const { control } = useFormContext();
   const classes = useStyles();
-  const {
-    defaultValue,
-    // placeholder,
-    // action,
-    isRequired,
-    title,
-    options,
-    disabled,
-    multiple,
-  } = props;
+  const { defaultValue, isRequired, title, options, disabled, multiple } =
+    props;
   const { remove } = useFieldArray({ control, name });
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
@@ -180,7 +150,6 @@ function SelectCouncils({ name, ...props }) {
       setFilterOptions(options);
     }
   }, [searchText, options]);
-
   return (
     <Controller
       name={name}
@@ -206,7 +175,7 @@ function SelectCouncils({ name, ...props }) {
             multiple
             onClose={() => setSearchText("")}
             renderValue={(selected) => {
-              if (selected.length === 0) {
+              if (selected?.length === 0) {
                 return (
                   <Button
                     sx={{ width: "100%", textTransform: "none" }}

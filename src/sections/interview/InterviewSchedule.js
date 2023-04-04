@@ -1,12 +1,37 @@
-import { useGetCalendarQuery,
-  //  useGetDetailCalendarsQuery
-  } from "@/sections/interview/InterviewSlice";
+import DetailDialog from "./edit/DetailDialog";
+import EditForm from "./edit/EditForm";
+import { EditIcon } from "@/assets/ActionIcon";
+import CloseIcon from "@/assets/CloseIcon";
+import { ButtonDS } from "@/components/DesignSystem";
+import {
+  useGetCalendarQuery, // useGetDetailCalendarsQuery,
+} from "@/sections/interview/InterviewSlice";
 import { Divider, Typography, Box, Card, CardContent } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 export default function InterviewSchedule() {
   const { data: Data } = useGetCalendarQuery();
-  // const { data: DetailCanlendar } = useGetDetailCalendarsQuery(Data?.items[0].id);
+  // const { data: DetailCanlendar } = useGetDetailCalendarsQuery(
+  //   Data?.items[0]?.id
+  // );
+  // console.log("faf", DetailCanlendar);
+  const check = false;
+  const [openForm, setOpenForm] = useState(false);
+  const [item, setItem] = useState({});
+  const [itemDialog, setItemDialog] = useState({});
+
+  const [openDialog, setOpenDialog] = useState(false);
+  
+  const handleClick = (data) => {
+    setOpenForm(true);
+    setItem(data);
+  }
+  const handleClickDialog = (data) => {
+    setOpenDialog(true);
+    setItemDialog(data);
+  }
+
+
 
   return (
     <Card sx={{ m: "140px 0", borderRadius: "6px", border: "none", p: 3 }}>
@@ -38,7 +63,11 @@ export default function InterviewSchedule() {
       </CardContent>
 
       {Data?.items.map((item) => (
-        <Box key={item.id}>
+        <>
+        <Box
+          key={item.id}
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
           <CardContent
             sx={{
               display: "flex",
@@ -47,6 +76,7 @@ export default function InterviewSchedule() {
               color: "text.secondary",
               px: 2,
             }}
+            onClick={() => handleClickDialog(item)}
           >
             <Box sx={{ width: "20%" }}>
               <Typography
@@ -59,7 +89,6 @@ export default function InterviewSchedule() {
                 15:00 - 18:00
               </Typography>
             </Box>
-
             <Divider orientation="vertical" variant="middle" flexItem />
             <Box sx={{ width: "15%", px: 3 }}>
               <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
@@ -73,7 +102,7 @@ export default function InterviewSchedule() {
                 Loại phỏng vấn
               </Typography>
               <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.interviewType == 0 ? " Online" : "Trực tiếp"}
+                {/* {item?.interviewType == 0 ? " Online" : "Trực tiếp"} */}
               </Typography>
             </Box>
             <Divider orientation="vertical" variant="middle" flexItem />
@@ -82,7 +111,7 @@ export default function InterviewSchedule() {
                 Hình thức
               </Typography>
               <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.form}
+                {item?.interviewType == 0 ? " Online" : "Trực tiếp"}
               </Typography>
             </Box>
             <Divider orientation="vertical" variant="middle" flexItem />
@@ -99,9 +128,54 @@ export default function InterviewSchedule() {
               ""
             )}
           </CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              width: check ? "150px" : "fit-content",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => handleClick(item)}
+            >
+              <EditIcon width={12} height={12} />
+            </div>
+            {check ? (
+              <ButtonDS
+                tittle="Tham gia"
+                sx={{
+                  bgcolor: "#388E3C",
+                  "&:hover": {
+                    backgroundColor: "#43A047 !important",
+                  },
+                }}
+              />
+            ) : (
+              ""
+            )}
+          </Box>
           <Divider />
         </Box>
+        </>
       ))}
+      {openForm && (
+          <EditForm
+            open={openForm}
+            item={item}
+            onClose={() => setOpenForm(false)}
+          />
+        )}
+      {openDialog && (
+        <DetailDialog
+          subheader={<CloseIcon />}
+          title="Chi tiết lịch phỏng vấn"
+          open={openDialog}
+          item={itemDialog}
+          onClose={()=> setOpenDialog(false)}
+        />
+      )}
     </Card>
   );
 }

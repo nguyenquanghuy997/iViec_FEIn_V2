@@ -1,8 +1,8 @@
 import CloseIcon from "../../../assets/CloseIcon";
-import { useAddCalendarMutation } from "../InterviewSlice";
-import InterviewCouncil from "./InterviewCouncil";
-import ListCandidate from "./ListCandidate";
-import PersonalInterview from "./PersonalInterview";
+import { useUpdateCalendarMutation } from "../InterviewSlice";
+import InterviewCouncil from "../components/InterviewCouncil";
+// import ListCandidate from "../components/ListCandidate";
+import PersonalInterview from "../components/PersonalInterview";
 import { FormProvider } from "@/components/hook-form";
 import { LoadingButton } from "@mui/lab";
 import { Box, List, Button, Typography, Grid, Drawer } from "@mui/material";
@@ -10,8 +10,9 @@ import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import React from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
+import { useGetDetailCalendarsQuery } from "../InterviewSlice";
 export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   [theme.breakpoints.up("xl")]: {
     width: "2000px",
@@ -24,20 +25,11 @@ export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   },
 }));
 
-const CreateCalendar = ({ open, onClose, onOpen }) => {
-  const defaultValues = {
-    name: "",
-    recruitmentId: "",
-    recruitmentPipelineStateId: "",
-    interviewType: "",
-    onlineInterviewAddress: "",
-    note: "",
-    councilIds: [],
-    reviewFormId: "",
-    isSendMailCouncil: false,
-    isSendMailApplicant: false,
-    bookingCalendarGroups: [],
-  };
+const EditForm = ({ item, open, onClose, onOpen }) => {
+  const { data: DetailData } = useGetDetailCalendarsQuery({
+    BookingCalendarId: item?.id,
+  });
+  const defaultValues = { ...DetailData };
   // const CalendarSchema = Yup.object().shape({
   //   name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
   //   recruitmentId: Yup.string().required(
@@ -61,7 +53,6 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   //     })
   //   ),
   // });
-
   const methods = useForm({
     // resolver: yupResolver(CalendarSchema),
     defaultValues,
@@ -69,15 +60,16 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
 
   const {
     setError,
+    setValue,
     watch,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
 
   const watchStep = watch("recruitmentId");
-  const watchPipelineStep = watch("recruitmentPipelineStateId");
+  // const watchPipelineStep = watch("recruitmentPipelineStateId");
   const watchInterviewType = watch("interviewType");
-  const [addCalendar] = useAddCalendarMutation();
+  const [updateCalendar] = useUpdateCalendarMutation();
 
   const toHHMMSS = (num) => {
     var sec_num = parseInt(num * 60, 10);
@@ -99,7 +91,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   const { enqueueSnackbar } = useSnackbar();
   const onSubmit = async (d) => {
     try {
-      const body = {
+      const res = {
         name: d.name,
         recruitmentId: d.recruitmentId,
         recruitmentPipelineStateId: d.recruitmentPipelineStateId,
@@ -110,14 +102,12 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         isSendMailCouncil: d.isSendMailApplicant,
         isSendMailApplicant: d.isSendMailApplicant,
         councilIds: d.councilIds,
-        bookingCalendarGroups: [
-          {
+        bookingCalendarGroups: d?.bookingCalendarGroups.map((item) => {
+          return {
             name: "person",
             interviewGroupType: 0,
-            interviewTime: '',
-            interviewDuration:'',
-            bookingCalendarApplicants: d?.bookingCalendarGroups.map((item) => {
-              return {
+            bookingCalendarApplicants: [
+              {
                 applicantId: item,
                 interviewTime: new Date(
                   `${moment(d?.date).format("YYYY-MM-DD")} ${
@@ -127,13 +117,22 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
                 interviewDuration: toHHMMSS(
                   d?.bookingCalendarApplicants[item].interviewDuration
                 ),
-              };
-            }),
-          },
-        ],
+              },
+            ],
+            interviewTime: new Date(
+              `${moment(d?.date).format("YYYY-MM-DD")} ${
+                d?.bookingCalendarApplicants[item].interviewTime
+              }`
+            ).toISOString(),
+            interviewDuration: toHHMMSS(
+              d?.bookingCalendarApplicants[item].interviewDuration
+            ),
+          };
+        }),
       };
+
       try {
-        await addCalendar(body).unwrap();
+        await updateCalendar(res).unwrap();
         enqueueSnackbar("Đặt lịch thành công!", {
           autoHideDuration: 2000,
         });
@@ -158,21 +157,19 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   //   else methods.resetField(field);
   // };
 
-  // useEffect(() => {
-  //   if (!data?.id) return;
-  //   let body = preview;
-  //   body = formatDataGet(body);
-  //   setValue("name", body.name);
-  //   setValue("recruitmentId", body.recruitmentId);
-  //   setValue("recruitmentPipelineStateId", body.recruitmentPipelineStateId);
-  //   setValue("onlineInterviewAddress", body.onlineInterviewAddress);
-  //   setValue("note", body.note);
-  //   setValue("councilIds", body.councilIds);
-  //   setValue("reviewFormId", body.reviewFormId);
-  //   setValue("isSendMailCouncil", body.isSendMailCouncil);
-  //   setValue("isSendMailApplicant", body.isSendMailApplicant);
-  //   setValue("bookingCalendarGroups", body.bookingCalendarGroups);
-  // }, [isEditMode, data, preview]);
+  useEffect(() => {
+    if (!item?.id) return;
+    setValue("name", item?.name);
+    // setValue("recruitmentId", body.recruitmentId);
+    // setValue("recruitmentPipelineStateId", body.recruitmentPipelineStateId);
+    // setValue("onlineInterviewAddress", body.onlineInterviewAddress);
+    // setValue("note", body.note);
+    // setValue("councilIds", body.councilIds);
+    // setValue("reviewFormId", body.reviewFormId);
+    // setValue("isSendMailCouncil", body.isSendMailCouncil);
+    // setValue("isSendMailApplicant", body.isSendMailApplicant);
+    // setValue("bookingCalendarGroups", body.bookingCalendarGroups);
+  }, [item]);
 
   const list = () => (
     <BoxInnerStyle>
@@ -185,7 +182,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
           }}
         >
           <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-            Đặt lịch phỏng vấn
+            Chỉnh sửa lịch phỏng vấn
           </Typography>
           <Button
             onClick={onClose}
@@ -210,16 +207,17 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
             >
               <Box sx={{ width: "100%", typography: "body1", mb: 3 }}>
                 <PersonalInterview
+                  item={item}
                   watchStep={watchStep}
                   watchType={watchInterviewType}
                 />
               </Box>
             </Grid>
-            <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
+            {/* <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
               <ListCandidate watchStep={watchStep} watch={watchPipelineStep} />
-            </Grid>
+            </Grid>*/}
             <Grid item xs={5} md={3}>
-              <InterviewCouncil watchStep={watchStep} />
+              <InterviewCouncil item={item?.bookingCalendarCouncils} watchStep={watchStep} />
             </Grid>
           </Grid>
         </Box>
@@ -244,7 +242,6 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
           >
             {"Lưu"}
           </LoadingButton>
-          <div style={{ width: 8 }} />
 
           <LoadingButton
             variant="text"
@@ -266,4 +263,4 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     </div>
   );
 };
-export default CreateCalendar;
+export default EditForm;
