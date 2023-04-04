@@ -66,7 +66,7 @@ const renderValue = (options = [], selected, onDelete, placeholder) => {
           label={options.find(option => option.value === item)?.name}
           key={index}
           deleteIcon={<CloseIcon onMouseDown={(event) => event.stopPropagation()}/>}
-          sx={{padding: '5px 8px', color: style.COLOR_TEXT_PRIMARY, fontSize: style.FONT_XS, fontWeight: style.FONT_MEDIUM, borderRadius: '4px', mr: 1, my: 0.5}}
+          sx={{padding: '5px 8px', color: '#172B4D', background: '#EFF3F7', fontSize: style.FONT_XS, fontWeight: style.FONT_MEDIUM, borderRadius: '4px', mr: 1, my: 0.5}}
           size="small"
           variant="filled"
           onDelete={() => onDelete(index)}

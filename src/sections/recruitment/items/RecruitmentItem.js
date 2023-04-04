@@ -59,6 +59,7 @@ export const RecruitmentItem = () => {
         title: "Tin tuyển dụng",
         fixed: "left",
         width: "300px",
+        render: (text) => <span style={{fontWeight: 500}}>{text}</span>,
       },
       {
         dataIndex: "jobPosition",

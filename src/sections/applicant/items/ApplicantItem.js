@@ -88,7 +88,7 @@ export const ApplicantItem = () => {
           >
             <TextMaxLine
               line={1}
-              sx={{ width: 160, fontWeight: "normal", fontSize: 14 }}
+              sx={{ width: 160, fontWeight: "500", fontSize: 14 }}
             >
               {text}
             </TextMaxLine>

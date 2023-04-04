@@ -75,7 +75,7 @@ const RecruitmentPipeLine = ({watchOrganization, watchOrganizationPipelineId}) =
           >
             <Button
                 variant="outlined"
-                sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}
+                sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4, fontWeight: 600}}
                 onClick={() => router.push(PATH_DASHBOARD.pipeline.root)}
             >
               Thiết lập quy trình tuyển dụng

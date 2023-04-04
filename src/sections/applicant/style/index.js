@@ -38,7 +38,7 @@ const ButtonSaveStyle = styled(Button)(({theme}) => ({
 
 const HelperTextTypography = styled(Typography)(({theme}) => ({
     padding: theme.spacing(0, 2),
-    fontSize: '13px',
+    fontSize: '13px !important',
     fontWeight: 400,
     fontStyle: 'italic',
     color: "#8A94A5"

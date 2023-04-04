@@ -93,6 +93,7 @@ const RecruitmentBottomNav = ({selectedList, itemSelected, open, onClose, onOpen
                         variant="contained"
                         tittle="Chi tiết"
                         sx={{
+                          fontWeight: '500',
                           marginRight: "16px",
                           textTransform: "none",
                           padding: "6px 11px",
@@ -115,6 +116,7 @@ const RecruitmentBottomNav = ({selectedList, itemSelected, open, onClose, onOpen
                         variant="contained"
                         tittle="Xem tin tuyển dụng"
                         sx={{
+                          fontWeight: '500',
                           color: "#455570",
                           backgroundColor: "#F3F4F6",
                           boxShadow: "none",
@@ -143,6 +145,7 @@ const RecruitmentBottomNav = ({selectedList, itemSelected, open, onClose, onOpen
                   variant="contained"
                   tittle="Đóng tin"
                   sx={{
+                    fontWeight: '500',
                     color: "#455570",
                     backgroundColor: "#F3F4F6",
                     boxShadow: "none",
@@ -156,10 +159,10 @@ const RecruitmentBottomNav = ({selectedList, itemSelected, open, onClose, onOpen
                   onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
                   icon={
                     <Iconify
-                        icon={"ri:file-copy-fill"}
+                        icon={"fluent-emoji-high-contrast:black-medium-small-square"}
                         width={20}
                         height={20}
-                        color="#5C6A82"
+                        color="#455570"
                         mr={1}
                     />
                   }
@@ -231,7 +234,7 @@ const RecruitmentBottomNav = ({selectedList, itemSelected, open, onClose, onOpen
               )}
             </Stack>
             <Box sx={{display: "flex", alignItems: "center"}}>
-              <Typography>Đã chọn: {selectedList.length}</Typography>
+              <Typography style={{fontSize: '0.875rem', color: '#091E42', fontWeight: 500}}>Đã chọn: {selectedList.length}</Typography>
               <Divider
                   orientation="vertical"
                   flexItem

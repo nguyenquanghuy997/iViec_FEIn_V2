@@ -18,10 +18,10 @@ const DateFilter = React.forwardRef((props, ref) => {
     },
     InputProps: {
       startAdornment: startIcon && (
-          <InputAdornment position='start' sx={{color: '#000'}}>{startIcon}</InputAdornment>
+          <InputAdornment position='start' style={{color: '#5C6A82'}}>{startIcon}</InputAdornment>
       ),
       endAdornment: endIcon && (
-          <InputAdornment position='end'>{endIcon}</InputAdornment>
+          <InputAdornment position='end' style={{color: '#5C6A82'}}>{endIcon}</InputAdornment>
       ),
     },
     ...DatePickerProps,

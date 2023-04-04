@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 const renderLabelTab = (title, subtitle) => {
     return (
         <Stack>
-            <Typography sx={{fontSize: 14, fontWeight: 700, textTransform: 'none'}}>{title}</Typography>
+            <Typography sx={{fontSize: 14, fontWeight: 700, textTransform: 'none', marginBottom: '0.25rem'}}>{title}</Typography>
             <Typography sx={{fontSize: 13, fontWeight: 500, textTransform: 'none'}}>{subtitle}</Typography>
         </Stack>
     )

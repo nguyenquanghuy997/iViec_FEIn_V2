@@ -14,6 +14,10 @@ export const TypographyStyle = {
   mb: 2
 }
 
+export const InputAdornmentStyle = {
+  color: '#5C6A82'
+}
+
 function compare(a) {
   if (a?.isTree){
     return -1;
@@ -101,12 +105,12 @@ const DynamicFilterForm = (props) => {
                                   type={item.type}
                                   InputProps={{
                                     startAdornment: item.startIcon && (
-                                        <InputAdornment position='start' sx={{ml: 1.5}}>
+                                        <InputAdornment position='start' sx={{ml: 1.5}} style={{...InputAdornmentStyle}}>
                                           {item.startIcon}
                                         </InputAdornment>
                                     ),
                                     endAdornment: item.endIcon && (
-                                        <InputAdornment position='end' sx={{mr: 1.5}}>
+                                        <InputAdornment position='end' sx={{mr: 1.5}} style={{...InputAdornmentStyle}}>
                                           {item.endIcon}
                                         </InputAdornment>
                                     )
@@ -130,7 +134,7 @@ const DynamicFilterForm = (props) => {
                         type={column.type || "text"}
                         InputProps={{
                           startAdornment: (
-                              <InputAdornment position='start' sx={{ml: 1.5}}>
+                              <InputAdornment position='start' sx={{ml: 1.5}} style={{...InputAdornmentStyle}}>
                                 <Iconify icon={'eva:search-fill'} sx={{color: 'text.disabled', width: 20, height: 20}}/>
                               </InputAdornment>
                           ),
@@ -158,12 +162,12 @@ const DynamicFilterForm = (props) => {
                                   type={item.type}
                                   InputProps={{
                                     startAdornment: item.startIcon && (
-                                        <InputAdornment position='start' sx={{ml: 1.5}}>
+                                        <InputAdornment position='start' sx={{ml: 1.5}} style={{...InputAdornmentStyle}}>
                                           {item.startIcon}
                                         </InputAdornment>
                                     ),
                                     endAdornment: item.endIcon && (
-                                        <InputAdornment position='end' sx={{mr: 1.5}}>
+                                        <InputAdornment position='end' sx={{mr: 1.5}} style={{...InputAdornmentStyle}}>
                                           {item.endIcon}
                                         </InputAdornment>
                                     )
@@ -187,7 +191,7 @@ const DynamicFilterForm = (props) => {
                         type={column.type || "text"}
                         InputProps={{
                           startAdornment: (
-                              <InputAdornment position='start' sx={{ml: 1.5}}>
+                              <InputAdornment position='start' sx={{ml: 1.5}} style={{...InputAdornmentStyle}}>
                                 <Iconify icon={'eva:search-fill'}
                                          sx={{color: 'text.disabled', width: 20, height: 20}}/>
                               </InputAdornment>
