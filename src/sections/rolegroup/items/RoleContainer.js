@@ -259,7 +259,6 @@ export const RoleContainer = () => {
           close();
           enqueueSnackbar('Xóa vai trò thành công!');
         } catch (err) {
-          console.log('Remove role group error: ', err);
           enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
         }
       },
@@ -302,7 +301,6 @@ export const RoleContainer = () => {
           close();
           enqueueSnackbar((isChecked ? 'Bật' : 'Tắt') + ' trạng thái thành công!');
         } catch (err) {
-          console.log('Change role status error: ', err);
           enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
         }
       },

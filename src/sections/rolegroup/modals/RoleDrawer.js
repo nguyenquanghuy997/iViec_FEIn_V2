@@ -41,7 +41,6 @@ export default function DrawerEdit({ selectedItem, onClose, ...props }) {
       onClose();
       enqueueSnackbar('Lưu vai trò thành công!');
     } catch (err) {
-      console.log('Save role group error: ', err);
       enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
     }
   };
