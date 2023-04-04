@@ -48,7 +48,7 @@ const JobTypeHeader = ({
             />
           </FormProvider>
           <ButtonFilterStyle
-            style={{ height: 36 }}
+            style={{ height: 36, fontSize: '14px', fontWeight: 500 }}
             onClick={onOpenFilterForm}
             startIcon={
               <Iconify

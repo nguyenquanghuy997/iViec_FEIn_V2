@@ -44,7 +44,7 @@ const BottomNavModal = ({data, open, onClose, actions, ...props}) => {
               }
             </BoxFlex>
             <BoxFlex justifyContent="flex-end">
-              <Typography>Đã chọn: {Array.isArray(data) ? data.length : 1}</Typography>
+              <Typography sx={{fontSize: 14, fontWeight: 500}}>Đã chọn: {Array.isArray(data) ? data.length : 1}</Typography>
               <Divider orientation="vertical" flexItem sx={{mx: 2, width: "2px", backgroundColor: "#E7E9ED"}}/>
               <IconButton size="medium" onClick={onClose} sx={{backgroundColor: '#F3F4F6', borderRadius: '6px',}}>
                  <CloseIcon />

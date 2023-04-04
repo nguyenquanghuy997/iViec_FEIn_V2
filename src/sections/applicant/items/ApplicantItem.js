@@ -1,6 +1,6 @@
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
-import {View} from "@/components/FlexStyled";
+import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import {
   useGetAllFilterApplicantQuery,
@@ -9,16 +9,16 @@ import {
 } from "@/sections/applicant";
 import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
 import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
-import {Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience,} from "@/utils/enum";
-import {fDate} from "@/utils/formatTime";
-import {Tag} from "antd";
-import {useRouter} from "next/router";
-import {useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "@/redux/store";
-import {filterSlice} from "@/redux/common/filterSlice";
-import {useEffect, useMemo, useState} from "react";
-import {cleanObject} from "@/utils/function";
-import {isEmpty} from "lodash";
+import { Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience, } from "@/utils/enum";
+import { fDate } from "@/utils/formatTime";
+import { Tag } from "antd";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "@/redux/store";
+import { filterSlice } from "@/redux/common/filterSlice";
+import { useEffect, useMemo, useState } from "react";
+import { cleanObject } from "@/utils/function";
+import { isEmpty } from "lodash";
 import ApplicantBottomNav from "./ApplicantBottomNav";
 
 const defaultValues = {
@@ -59,7 +59,7 @@ export const ApplicantItem = () => {
   const handleChangePagination = (pageIndex, pageSize) => {
     setPaginationSize(pageSize);
     setPage(pageIndex);
-    handleSetDataFilter({...dataFilter,pageSize: pageSize, pageIndex: pageIndex })
+    handleSetDataFilter({ ...dataFilter, pageSize: pageSize, pageIndex: pageIndex })
   };
   const columns = useMemo(() => {
     return [
@@ -79,6 +79,7 @@ export const ApplicantItem = () => {
         title: "Họ và tên",
         fixed: "left",
         width: "220px",
+        render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
       },
       {
         dataIndex: "phoneNumber",
@@ -112,7 +113,7 @@ export const ApplicantItem = () => {
         placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
         type: "select",
         multiple: true,
-        render: (item, record) => PipelineStateType(item, record?.pipelineStateResultType),
+        render: (item, record) => getStatusPipelineStateType(item, record?.pipelineStateResultType),
       },
       {
         dataIndex: "createdTime",
@@ -425,14 +426,38 @@ export const ApplicantItem = () => {
     setSelectedRowKeys([]);
     event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
   };
+
+  const getStatusPipelineStateType = (recruitmentPipelineState, pipelineStateResultType) => {
+    switch (recruitmentPipelineState) {
+      case 0:
+        return PipelineStateType(recruitmentPipelineState, pipelineStateResultType);
+      case 1:
+        return PipelineStateType(recruitmentPipelineState, pipelineStateResultType);
+      case 2:
+        return PipelineStateType(recruitmentPipelineState, pipelineStateResultType);
+      case 3:
+        switch (pipelineStateResultType) {
+          case 0:
+            return <span style={{ color: '#2E7D32' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+          case 1:
+            return <span style={{ color: '#F77A0C' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+          case 2:
+            return <span style={{ color: '#D32F2F' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+          default:
+            return <span style={{ color: '#2E7D32' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+        }
+
+    }
+  }
+
   return (
     <View>
       <ApplicantHeader
-          methods={methods}
-          onSubmit={onSubmitSearch}
-          handleSubmit={handleSubmit}
-          onOpenFilterForm={handleOpenFilterForm}
-          dataFilter={dataFilter}
+        methods={methods}
+        onSubmit={onSubmitSearch}
+        handleSubmit={handleSubmit}
+        onOpenFilterForm={handleOpenFilterForm}
+        dataFilter={dataFilter}
       />
       <Content>
         <View mt={!isEmpty(cleanObject(dataFilter)) ? 136 : 96}>

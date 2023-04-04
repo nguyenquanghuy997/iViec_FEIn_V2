@@ -60,8 +60,8 @@ export default function DrawerEdit({ dataForm }) {
       >
         <span
           style={{
-            fontSize: 15,
-            fontWeight: "600",
+            fontSize: 14,
+            fontWeight: "500",
             lineHeight: 20 / 15,
             marginLeft: 6,
             color: "#455570",

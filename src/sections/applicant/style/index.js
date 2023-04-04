@@ -7,7 +7,7 @@ const ButtonFilterStyle = styled(Button)(({theme}) => ({
     padding: "12px 16px 12px 16px !important",
     height: "44px",
     borderRadius: "6px !important",
-    color: '#455570 !important'
+    color: '#455570 !important',
 }));
 
 const ButtonCancelStyle = styled(Button)(({theme}) => ({
