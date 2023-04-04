@@ -1,14 +1,14 @@
 import HeaderCard from "../HeaderCard";
-import { useGetCompanyInfoQuery } from "../companyInforSlice";
+import {useGetCompanyInfoQuery} from "../companyInforSlice";
 import EditorEnding from "./EditorEnding";
 import CloseIcon from "@/assets/CloseIcon";
-import NoInformation from "@/assets/NoInformation";
-import { Drawer, Box, Divider, List, Typography, Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
+import {styled} from "@mui/material/styles";
+import {useState} from "react";
+import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 
 const Ending = () => {
-  const { data: Data } = useGetCompanyInfoQuery();
+  const {data: Data} = useGetCompanyInfoQuery();
   const [open, setOpen] = useState();
   const handleClose = () => {
     setOpen(false);
@@ -30,7 +30,6 @@ const Ending = () => {
 
     "& blockquote:before": {
       content: '" ,, "',
-      // fontFamily: themeFont.typography.fontFamily,
       position: "absolute",
       // content: "\f10d";
       top: -100,
@@ -40,98 +39,88 @@ const Ending = () => {
     },
   }));
   const list = () => (
-    <Box
-      sx={{ width: 700 }}
-      role="presentation"
-      // onKeyDown={toggleDrawer(false)}
-    >
-      <List
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          p: 0,
-        }}
+      <Box
+          sx={{width: 700}}
+          role="presentation"
+          // onKeyDown={toggleDrawer(false)}
       >
-        <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-          Chỉnh sửa Lời kết
-        </Typography>
-        <Button
-          onClick={handleClose}
-          sx={{
-            "&:hover": {
-              background: "white",
-            },
-          }}
+        <List
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              p: 0,
+            }}
         >
-          <CloseIcon />
-        </Button>
-      </List>
-      <Divider />
-      <div>
-        <EditorEnding data={Data} onClose={handleClose} />
-      </div>
-    </Box>
+          <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
+            Chỉnh sửa Lời kết
+          </Typography>
+          <Button
+              onClick={handleClose}
+              sx={{
+                "&:hover": {
+                  background: "white",
+                },
+              }}
+          >
+            <CloseIcon/>
+          </Button>
+        </List>
+        <Divider/>
+        <div>
+          <EditorEnding data={Data} onClose={handleClose}/>
+        </div>
+      </Box>
   );
 
   const renderItem = (value, main) => {
     return (
-      <div style={{ flex: main ? undefined : 1 }}>
-        {String(value).startsWith("<") ? (
-          <p dangerouslySetInnerHTML={{ __html: value }} />
-        ) : (
-          <span
-            style={{
-              display: "flex",
-              fontSize: 14,
-              lineHeight: 24 / 16,
-              color: "#172B4D",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
+        <div style={{flex: main ? undefined : 1}}>
+          {String(value).startsWith("<") ? (
+              <p dangerouslySetInnerHTML={{__html: value}}/>
+          ) : (
+              <span
+                  style={{
+                    display: "flex",
+                    fontSize: 14,
+                    lineHeight: 24 / 16,
+                    color: "#172B4D",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+              >
             {value}
           </span>
-        )}
-      </div>
+          )}
+        </div>
     );
   };
   return (
-    <>
-      <HeaderCard
-        text="Lời kết"
-        open={open}
-        onClose={handleClose}
-        onOpen={handleOpen}
-      />
-      {open && (
-        <Drawer
-          anchor="right"
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-        >
-          {list("right")}
-        </Drawer>
-      )}
-      {Data?.conclusion ? (
-        <PlaceholderStyle>
-          <div className="content" style={{ height: 100 }}>
-            <blockquote>{renderItem(Data?.conclusion)}</blockquote>
-          </div>
-        </PlaceholderStyle>
-      ) : (
-        <Box sx={{ bgcolor: "white" }}>
-          {" "}
-          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
-            <NoInformation />
-          </Box>
-          <Typography sx={{ textAlign: "center", pb: 6 }}>
-            Hiện chưa có nội dung
-          </Typography>
-        </Box>
-      )}
-    </>
+      <Box sx={{minHeight: '296px'}}>
+        <HeaderCard
+            text="Lời kết"
+            open={open}
+            onClose={handleClose}
+            onOpen={handleOpen}
+        />
+        {open && (
+            <Drawer
+                anchor="right"
+                open={open}
+                onClose={handleClose}
+                onOpen={handleOpen}
+            >
+              {list("right")}
+            </Drawer>
+        )}
+        {Data?.conclusion ? (
+            <PlaceholderStyle>
+              <div className="content" style={{height: 100}}>
+                <blockquote>{renderItem(Data?.conclusion)}</blockquote>
+              </div>
+            </PlaceholderStyle>
+        ) : <EmptyValue text={"Hiện chưa có nội dung Lời kết"} />}
+      </Box>
   );
 };
 export default Ending;

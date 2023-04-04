@@ -1,11 +1,9 @@
 import HeaderCard from "../HeaderCard";
-import { useGetCompanyInfoQuery } from "../companyInforSlice";
+import {useGetCompanyInfoQuery} from "../companyInforSlice";
 import CloseIcon from "@/assets/CloseIcon";
-import NoInformation from "@/assets/NoInformation";
-import { Typography, Drawer, List, Button, Box, Divider } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import React from "react";
-import { useState } from "react";
+import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
+import {styled} from "@mui/material/styles";
+import React, {useState} from "react";
 // import { RiFlagLine } from "react-icons/ri";
 // import "react-multi-carousel/lib/styles.css";
 // import SwiperCore, {
@@ -14,8 +12,9 @@ import { useState } from "react";
 //   Autoplay,
 //   Virtual,
 // } from "swiper/core";
-import { Swiper, SwiperSlide } from "swiper/react";
+import {Swiper, SwiperSlide} from "swiper/react";
 import "swiper/swiper-bundle.css";
+import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 
 export const SliderStyle = styled("div")(() => ({
   "& .swiper-pagination": {
@@ -34,8 +33,8 @@ export const SliderStyle = styled("div")(() => ({
   },
 }));
 
-const EnviromentWorkplace = () => {
-  const { data: Data } = useGetCompanyInfoQuery();
+const EnvironmentWorkplace = () => {
+  const {data: Data} = useGetCompanyInfoQuery();
   const [open, setOpen] = useState();
   const handleClose = () => {
     setOpen(false);
@@ -44,78 +43,78 @@ const EnviromentWorkplace = () => {
     setOpen(true);
   };
   const list = () => (
-    <Box
-      sx={{ width: 700 }}
-      role="presentation"
-      // onKeyDown={toggleDrawer(false)}
-    >
-      <List
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          p: 0,
-        }}
+      <Box
+          sx={{width: 700}}
+          role="presentation"
+          // onKeyDown={toggleDrawer(false)}
       >
-        <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-          Chỉnh sửa Lĩnh vực kinh doanh
-        </Typography>
-        <Button
-          onClick={handleClose}
-          sx={{
-            "&:hover": {
-              background: "white",
-            },
-          }}
+        <List
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              p: 0,
+            }}
         >
-          <CloseIcon />
-        </Button>
-      </List>
-      <Divider />
-      <div>{/* <EditBusinessArea onClose={handleClose} /> */}</div>
-    </Box>
+          <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
+            Chỉnh sửa Lĩnh vực kinh doanh
+          </Typography>
+          <Button
+              onClick={handleClose}
+              sx={{
+                "&:hover": {
+                  background: "white",
+                },
+              }}
+          >
+            <CloseIcon/>
+          </Button>
+        </List>
+        <Divider/>
+        <div>{/* <EditBusinessArea onClose={handleClose} /> */}</div>
+      </Box>
   );
   return (
-    <>
-      <HeaderCard
-        text={"Môi trường làm việc"}
-        open={open}
-        onClose={handleClose}
-        onOpen={handleOpen}
-      />
-      {open && (
-        <Drawer
-          anchor="right"
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-        >
-          {list("right")}
-        </Drawer>
-      )}
-      <Box
-        sx={{
-          px: 12,
-          pb: 3,
-          background: "white",
-          width: "100%",
-        }}
-      >
-        {Data?.organizationWorkingEnvironments ? (
-          <SliderStyle>
-            <Swiper
-              id="swiper"
-              virtual
-              slidesPerView={1}
-              spaceBetween={50}
-              pagination
+      <Box sx={{minHeight: '296px'}}>
+        <HeaderCard
+            text={"Môi trường làm việc"}
+            open={open}
+            onClose={handleClose}
+            onOpen={handleOpen}
+        />
+        {open && (
+            <Drawer
+                anchor="right"
+                open={open}
+                onClose={handleClose}
+                onOpen={handleOpen}
             >
-              {Data?.organizationBusiness?.organizationBusinessDatas.map(
-                (item, index) => (
-                  <SwiperSlide
-                    key={`slide-${index}`}
-                    style={{ listStyle: "none" }}
-                  >
-                    {/* <div
+              {list("right")}
+            </Drawer>
+        )}
+        <Box
+            sx={{
+              px: 12,
+              pb: 3,
+              background: "white",
+              width: "100%",
+            }}
+        >
+          {Data?.organizationWorkingEnvironments ? (
+              <SliderStyle>
+                <Swiper
+                    id="swiper"
+                    virtual
+                    slidesPerView={1}
+                    spaceBetween={50}
+                    pagination
+                >
+                  {Data?.organizationBusiness?.organizationBusinessDatas.map(
+                      (item, index) => (
+                          <SwiperSlide
+                              key={`slide-${index}`}
+                              style={{listStyle: "none"}}
+                          >
+                            {/* <div
                       style={{
                         color: "white",
                         width: "100%",
@@ -161,26 +160,16 @@ const EnviromentWorkplace = () => {
                       //</SwiperSlide>
                     //</SliderStyle></div> */}
 
-                  </SwiperSlide>
-                )
-              )}
-            </Swiper>
-          </SliderStyle>
-        ) : (
-          <Box sx={{ bgcolor: "white" }}>
-            {" "}
-            <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
-              <NoInformation />
-            </Box>
-            <Typography sx={{ textAlign: "center", pb: 6 }}>
-              Hiện chưa có nội dung
-            </Typography>
-          </Box>
-        )}
-        {/* <SwiperColumn/> */}
+                          </SwiperSlide>
+                      )
+                  )}
+                </Swiper>
+              </SliderStyle>
+          ) : <EmptyValue text={"Hiện chưa nội dung Môi trường làm việc"}/>}
+          {/* <SwiperColumn/> */}
+        </Box>
       </Box>
-    </>
   );
 };
 
-export default EnviromentWorkplace;
+export default EnvironmentWorkplace;

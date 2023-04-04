@@ -3,10 +3,10 @@ import { useGetCompanyInfoQuery } from "../companyInforSlice";
 import EditHirePipeline from "./EditHirePipeline";
 import CloseIcon from "@/assets/CloseIcon";
 import IconRole1 from "@/assets/IconRole1";
-import NoInformation from "@/assets/NoInformation";
 import { PipelineStateType } from "@/utils/enum";
 import { Box, List, Drawer, Typography, Button, Divider } from "@mui/material";
 import { useState } from "react";
+import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 
 const HireProcess = () => {
   const { data: Data } = useGetCompanyInfoQuery();
@@ -52,7 +52,7 @@ const HireProcess = () => {
     </Box>
   );
   return (
-    <>
+      <Box sx={{ minHeight: '296px' }}>
       <HeaderCard
         text="Quy trình tuyển dụng"
         open={open}
@@ -114,18 +114,8 @@ const HireProcess = () => {
             </Box>
           ))}
         </Box>
-      ) : (
-        <Box sx={{ bgcolor: "white" }}>
-          {" "}
-          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
-            <NoInformation />
-          </Box>
-          <Typography sx={{ textAlign: "center", pb: 6 }}>
-            Hiện chưa có nội dung
-          </Typography>
-        </Box>
-      )}
-    </>
+      ) : <EmptyValue text={"Hiện chưa có nội dung Con người công ty"} />}
+    </Box>
   );
 };
 export default HireProcess;

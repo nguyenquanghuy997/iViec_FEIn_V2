@@ -4,11 +4,12 @@ import SettingLayout from "@/layouts/setting";
 import { CompanyInfor } from "@/sections/companyinfor";
 import BusinessArea from "@/sections/companyinfor/components/BusinessArea";
 import Ending from "@/sections/companyinfor/components/Ending";
-// import EnviromentWorkplace from "@/sections/companyinfor/components/EnviromentWorkplace";
 import HireProcess from "@/sections/companyinfor/components/HireProcess";
 import HumanCompany from "@/sections/companyinfor/components/HumanCompany";
 import { getRolesByPage } from "@/utils/role";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import EnvironmentWorkplace from "@/sections/companyinfor/components/EnvironmentWorkplace";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
   return <SettingLayout roles={roles}>{page}</SettingLayout>;
@@ -29,12 +30,20 @@ export default function Setting() {
         <Typography variant="h6" gutterBottom>
           Thông tin công ty và cấu hình trang công ty
         </Typography>
-        <Button variant="outlined">Xem trang công ty</Button>
+        <Box>
+          <MuiButton
+              variant="outlined"
+              title={"Xem trang công ty"}
+              sx={{
+                fontWeight: 600
+              }}
+          />
+        </Box>
       </Box>
       <CompanyInfor />
       <HumanCompany />
       <BusinessArea />
-      {/* <EnviromentWorkplace /> */}
+      <EnvironmentWorkplace />
       <HireProcess />
       <Ending />
     </Page>

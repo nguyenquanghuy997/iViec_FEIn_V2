@@ -3,11 +3,10 @@ import { useGetCompanyInfoQuery } from "../companyInforSlice";
 import EditHumanCompany from "../edit/EditHumanCompany";
 import SwiperListHuman from "./SwiperListHuman";
 import CloseIcon from "@/assets/CloseIcon";
-import NoInformation from "@/assets/NoInformation";
 import { Box, Drawer, List, Typography, Button, Divider } from "@mui/material";
-// import { textAlign } from "@mui/system";
 import { useState } from "react";
 import "react-multi-carousel/lib/styles.css";
+import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 
 const HumanCompany = () => {
   const [open, setOpen] = useState();
@@ -53,7 +52,7 @@ const HumanCompany = () => {
     </Box>
   );
   return (
-    <>
+    <Box sx={{ minHeight: '296px' }}>
       <HeaderCard
         text={"Con người công ty"}
         open={open}
@@ -76,17 +75,7 @@ const HumanCompany = () => {
         >
           <SwiperListHuman data={Data} />
         </Box>
-      ) : (
-        <Box sx={{ bgcolor: "white" }}>
-          {" "}
-          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
-            <NoInformation />
-          </Box>
-          <Typography sx={{ textAlign: "center", pb: 6 }}>
-            Hiện chưa có nội dung
-          </Typography>
-        </Box>
-      )}
+      ) : <EmptyValue text={"Hiện chưa có nội dung Con người công ty"} />}
       {open && (
         <Drawer
           anchor="right"
@@ -97,7 +86,7 @@ const HumanCompany = () => {
           {list("right")}
         </Drawer>
       )}
-    </>
+    </Box>
   );
 };
 

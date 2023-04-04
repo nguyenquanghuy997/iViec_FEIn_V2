@@ -1,54 +1,34 @@
-
 import UploadImage from "@/assets/UploadImage";
 import Image from "@/components/Image";
-import { Box, Typography,Button } from "@mui/material";
+import { Box } from "@mui/material";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import {RiImageFill} from "react-icons/ri";
 import React from "react";
 
 const EditUpload = ({ style, type, ref,imageHandler ,image}) => {
   return (
     <div className="page">
       <div className="container">
-        <Box
-          sx={{
-            display: type === "avatar" ? "flex" : "block",
-            alignItems: type === "avatar" ? "center" : "-moz-initial",
-          }}
-        >
-          <Image
-            disabledEffect
-            visibleByDefault
-            src={image}
-            alt="image"
-            sx={{
-              ...style,
-            }}
-          />
-
-          <Button
-            sx={{
-              textTransform: "none",
-              border: "1px dashed #1976D2",
-              height: 36,
-              px: 2,
-              cursor: "pointer",
-            }}
-          >
-            <UploadImage />
-            <Typography sx={{ ml: 1, fontSize: 14 }}>Tải lên ảnh</Typography>
-          </Button>
-          <input
-            type="file"
-            accept="image/*"
-            name="image-upload"
-            id="input"
-            ref={ref}
-            onChange={imageHandler}
-            style={{
-              height: "36px",
-              transform: "translateX(-120px)",
-              opacity: 0,
-              cursor: "pointer",
-            }}
+        <Box sx={{display: type === "avatar" ? "flex" : "block", alignItems: type === "avatar" ? "center" : "-moz-initial"}}>
+          {
+            image ? <Image
+                disabledEffect
+                visibleByDefault
+                src={image}
+                alt="image"
+                sx={{...style}}
+            /> : (
+                <Box sx={{  display: 'flex', alignItems: 'center', justifyContent: 'center', ...style }}>
+                  <RiImageFill color={"#8A94A5"} size={'1.25em'}/>
+                </Box>
+            )
+          }
+          <MuiButton
+              title={<>Tải lên ảnh<input ref={ref} onChange={imageHandler} hidden name={"image-upload"} id="input" accept="image/*" multiple type="file" /></>}
+              variant={"outlined"}
+              startIcon={<UploadImage />}
+              sx={{border: "1px dashed #1976D2", height: 36}}
+              component="label"
           />
         </Box>
       </div>

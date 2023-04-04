@@ -28,11 +28,7 @@ import ImageUploading from "react-images-uploading";
 export default function CropImage({ data, size }) {
   const { data: Data } = useGetCompanyInfoQuery();
   const [image, setImage] = useState(croppedImage ? croppedImage : []);
-  const [croppedImage, setCroppedImage] = useState(
-    data
-      ? `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${data}`
-      : null
-  );
+  const [croppedImage, setCroppedImage] = useState(data ? `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${data}` : null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [uploadImg] = useUploadImageCompanyMutation();
@@ -45,10 +41,12 @@ export default function CropImage({ data, size }) {
         onChange={onChange}
         maxNumber={maxNumber}
         sx={{ position: "relative" }}
+        style={{ backgroundColor: 'red' }}
       >
         {({ onImageUpload, onImageUpdate }) =>
           size === "cover" ? (
             <Box
+                className={"box-image"}
               sx={{
                 width: "100%",
                 height: "185px",
@@ -67,13 +65,10 @@ export default function CropImage({ data, size }) {
               onClick={value ? onImageUpload : () => onImageUpdate(0)}
             >
               {data ? (
-                <img
-                  src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${data}`}
-                  alt="cover"
-                />
+                <img src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${data}`} alt="cover"/>
               ) : (
                 <Box sx={{ alignItems: "center" }}>
-                  <RiImageFill size={20} color="#8A94A5" />
+                  <RiImageFill size={24} color="#8A94A5" />
                 </Box>
               )}
             </Box>
@@ -91,11 +86,7 @@ export default function CropImage({ data, size }) {
                     opacity: 1,
                   },
                 }}
-                linkAvatar={
-                  data
-                    ? `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${data}`
-                    : null
-                }
+                linkAvatar={data ? `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${data}` : null}
                 onClick={value ? onImageUpload : () => onImageUpdate(0)}
               />
             </>
@@ -192,27 +183,11 @@ export default function CropImage({ data, size }) {
         >
           <Box>
             {size === "cover" ? (
-              <span
-                style={{
-                  fontSize: "16px",
-                  color: "#455570",
-                  fontWeight: 600,
-                  display: "inline",
-                  mr: 2,
-                }}
-              >
+              <span style={{fontSize: "16px", color: "#455570", fontWeight: 600, display: "inline", mr: 2,}}>
                 Thay ảnh bìa
               </span>
             ) : (
-              <span
-                style={{
-                  fontSize: "16px",
-                  color: "#455570",
-                  fontWeight: 600,
-                  display: "inline",
-                  mr: 2,
-                }}
-              >
+              <span style={{fontSize: "16px", color: "#455570", fontWeight: 600, display: "inline", mr: 2,}}>
                 Thay ảnh đại diện
               </span>
             )}
@@ -221,14 +196,7 @@ export default function CropImage({ data, size }) {
               <Button
                 variant="outlined"
                 component="label"
-                sx={{
-                  width: "fit-content",
-                  height: "30px",
-                  color: "#455570",
-                  borderColor: "#455570",
-                  fontSize: "12px",
-                  cursor: "pointer",
-                }}
+                sx={{width: "fit-content", height: "30px", color: "#455570", borderColor: "#455570", fontSize: "12px", cursor: "pointer",}}
                 startIcon={<RiUpload2Fill />}
               >
                 Tải lên
@@ -278,15 +246,8 @@ export default function CropImage({ data, size }) {
             />
           </div>
           <div className="controls" style={{ width: "100%" }}>
-            <Box
-              sx={{ p: 3, display: "flex", justifyContent: "space-between" }}
-            >
-              <Stack
-                spacing={2}
-                direction="row"
-                sx={{ mb: 1, width: "210px" }}
-                alignItems="center"
-              >
+            <Box sx={{ p: 3, display: "flex", justifyContent: "space-between" }}>
+              <Stack spacing={2} direction="row" sx={{ mb: 1, width: "210px" }} alignItems="center">
                 <RiImage2Fill size={22} />
                 <Slider
                   aria-label="Default"
@@ -319,20 +280,14 @@ export default function CropImage({ data, size }) {
                 <RiImage2Fill size={35} />
               </Stack>
               <div>
-                <Button
-                  variant="text"
-                  sx={{ color: "#455570" }}
-                  onClick={() => setDialogOpen(false)}
-                >
+                <Button variant="text" sx={{ color: "#455570" }} onClick={() => setDialogOpen(false)}>
                   Hủy
                 </Button>
 
                 <Button
                   variant="contained"
                   onClick={onSubmitImage}
-                  sx={{
-                    backgroundColor: "#1976D2",
-                  }}
+                  sx={{backgroundColor: "#1976D2",}}
                 >
                   Lưu
                 </Button>
@@ -345,7 +300,7 @@ export default function CropImage({ data, size }) {
   };
 
   return (
-    <div className="cropImage" style={{}}>
+    <Box className="cropImage" sx={{ backgroundColor: '#E7E9ED'}}>
       {croppedImage ? (
         <img
           src={croppedImage}
@@ -388,6 +343,6 @@ export default function CropImage({ data, size }) {
           minHeight: 300,
         }}
       />
-    </div>
+    </Box>
   );
 }
