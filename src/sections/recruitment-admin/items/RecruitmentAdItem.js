@@ -24,10 +24,6 @@ export const RecruitmentAdItem = () => {
 
   const [getAllFilter, { data: Data = {}, isLoading }] =
   useLazyGetRecruitmentAdQuery();
-  // api get list Column
-  const { data: ColumnData } = [];
-  // api update list Column
-  const [UpdateListColumnApplicants] = [];
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
   const columns = useMemo(() => {
@@ -133,18 +129,6 @@ export const RecruitmentAdItem = () => {
       },
     ];
   }, [page, paginationSize]);
-
-
-  // form search
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
-
   // form search
   const Schema = Yup.object().shape({
     search: Yup.string(),
@@ -386,8 +370,6 @@ export const RecruitmentAdItem = () => {
             columns={columns}
             source={Data}
             loading={isLoading}
-            ColumnData={ColumnData}
-            UpdateListColumn={handleUpdateListColumnApplicants}
             settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
             setSelectedRowKeys={setSelectedRowKeys}
             nodata="Hiện chưa có tin tuyển dụng nào"

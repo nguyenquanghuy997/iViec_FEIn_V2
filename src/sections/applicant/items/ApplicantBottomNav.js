@@ -193,7 +193,7 @@ const ApplicantBottomNav = ({
             />
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
               Đã chọn: {selectedList.length}
             </Typography>
             <Divider

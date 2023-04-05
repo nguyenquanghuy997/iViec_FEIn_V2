@@ -47,7 +47,7 @@ const BusinessArea = () => {
     <Box
       sx={{ width: 700 }}
       role="presentation"
-      // onKeyDown={toggleDrawer(false)}
+    // onKeyDown={toggleDrawer(false)}
     >
       <List
         sx={{
@@ -105,6 +105,8 @@ const BusinessArea = () => {
             backgroundImage: `url(http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto})`,
             // backgroundsize: "cover",
             padding: "36px 40px",
+            borderBottomLeftRadius: '4px',
+            borderBottomRightRadius: '4px',
           }}
         >
           <Typography variant="h4" sx={{ mb: "36px" }}>
@@ -162,7 +164,7 @@ const BusinessArea = () => {
                         onClick={() => setSeeData(!seeData)}
                         style={{ border: "none", background: "none" }}
                       >
-                        <p style={{ fontSize: 14, fontWeight: 700, color:'white' }}>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>
                           {seeData ? "Thu ngắn" : "... Xem thêm"}
                         </p>
                       </button>

@@ -118,6 +118,8 @@ export default function CompanyInfor() {
           paddingRight: 40,
           marginTop: "-2%",
           background: "white",
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '4px',
         }}
       >
         <Box sx={{ display: "flex" }}>

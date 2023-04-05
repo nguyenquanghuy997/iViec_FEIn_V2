@@ -63,7 +63,6 @@ export const TYPES = [
     name: COMPANY_INFO,
     actions: [
       "Administrator",
-      "Organization",
       "InviteInterviewCommittee",
       "ParticipateInterviewSchedule",
       "RemoveAccount",
@@ -142,97 +141,143 @@ export const TYPES = [
   // },
 ];
 
-export const VietnameseField = (item) => {
-  switch (item) {
-    case "ViewCandidate":
-      return "Xem ứng viên";
+export const getActionName = (action) => {
+  switch (action) {
     case "AddCandidate":
-      return "Chờ nội bộ phê duyệt";
-    case "EditCandidate":
-      return "Nội bộ từ chối";
-    case "RemoveCandidate":
-      return "Chờ iVIEC phê duyệt";
-    case "ShareCandidate":
-      return "iVIEC từ chối";
-    case "EvaluateCandidate":
-      return "Đang tuyển dụng";
-    case "ChangeCandidateStage":
-      return "Đã lên lịch";
-    case "ViewJob":
-      return "Hết hạn";
-    case "EditJob":
-      return "Đóng";
-    case "RemoveJob":
-      return "Xem ứng viên";
-    case "ExportJob":
-      return "Chờ nội bộ phê duyệt";
+      return "Thêm ứng viên";
+    case "AddCompanyExam":
+      return "Thêm đề thi công ty";
+    case "AddCompanyQuestion":
+      return "Thêm câu hỏi công ty";
+    case "AddConnect":
+      return "Thêm kết nối";
+    case "AddEditApprovalProcess":
+      return "Thêm/Sửa quy trình phê duyệt";
+    case "AddEditEmail":
+      return "Thêm/Sửa email";
+    case "AddEditEvaluationTemplate":
+      return "Thêm/Sửa mẫu đánh giá";
+    case "AddEditJobPosition":
+      return "Thêm/Sửa vị trí công việc";
+    case "AddEditOfferTemplate":
+      return "Thêm/Sửa mẫu Offer";
+    case "AddEditRecruitmentProcess":
+      return "Thêm/Sửa quy trình tuyển dụng";
+    case "AddEditRole":
+      return "Thêm/Sửa vai trò";
+    case "Administrator":
+      return "Quản trị viên";
     case "ApproveRejectJob":
-      return "Nội bộ từ chối";
-    case "ChangeStatus":
-      return "Chờ iVIEC phê duyệt";
-    case "CopyJob":
-      return "iVIEC từ chối";
-    case "ViewInterviewSchedule":
-      return "Đang tuyển dụng";
-    case "ScheduleInterview":
-      return "Đã lên lịch";
-    case "EditInterviewSchedule":
-      return "Hết hạn";
+      return "Từ chối phê duyệt tin tuyển dụng";
     case "CancelInterviewSchedule":
       return "Hủy lịch phỏng vấn";
-    case "ExportCandidate":
-      return "Nội bộ từ chối";
-    case "ImportCandidate":
-      return "Chờ iVIEC phê duyệt";
-    case "ReportIViecExam":
-      return "iVIEC từ chối";
-    case "ReportIViecQuestion":
-      return "Đang tuyển dụng";
-    case "Administrator":
-      return "Đã lên lịch";
-    case "Organization":
-      return "Hết hạn";
-    case "InviteInterviewCommittee":
-      return "Hủy lịch phỏng vấn";
-    case "ParticipateInterviewSchedule":
-      return "Đang tuyển dụng";
-    case "RemoveAccount":
-      return "Đã lên lịch";
-    case "ViewUser":
-      return "Hết hạn";
-    case "RemoveUser":
-      return "Hủy lịch phỏng vấn";
-    case "ViewUnit":
-      return "Nội bộ từ chối";
-    case "RemoveUnit":
-      return "Chờ iVIEC phê duyệt";
-    case "ViewRole":
-      return "iVIEC từ chối";
-    case "RemoveRole":
-      return "Đang tuyển dụng";
-    case "AddEditRole":
-      return "Đã lên lịch";
-    case "ViewJobPosition":
-      return "Hủy lịch phỏng vấn";
-    case "AddEditJobPosition":
-      return "Đang tuyển dụng";
-    case "RemoveJobPosition":
-      return "Đã lên lịch";
-    case "ViewEvaluationTemplate":
-      return "Hết hạn";
-    case "AddEditEvaluationTemplate":
-      return "Hủy lịch phỏng vấn";
-    case "RemoveEvaluationTemplate":
-      return "Nội bộ từ chối";
-    case "ViewOfferTemplate":
-      return "Chờ iVIEC phê duyệt";
-    case "AddEditOfferTemplate":
-      return "iVIEC từ chối";
-    case "RemoveOfferTemplate":
-      return "Đang tuyển dụng";
     case "CancelInvitation":
-      return "Đã lên lịch";
+      return "Hủy thư mời";
+    case "ChangeCandidateStage":
+      return "Chuyển bước ứng viên";
+    case "ChangeStatus":
+      return "Chuyển trạng thái ứng viên";
+    case "CopyExam":
+      return "Nhân bản đề thi";
+    case "CopyJob":
+      return "Nhân bản tin tuyển dụng";
+    case "CopyQuestion":
+      return "Nhân bản câu hỏi";
+    case "Disconnect":
+      return "Hủy kết nối";
+    case "EditCandidate":
+      return "Sửa ứng viên";
+    case "EditCompanyQuestion":
+      return "Sửa câu hỏi công ty";
+    case "EditInterviewSchedule":
+      return "Sửa lịch phỏng vấn";
+    case "EditJob":
+      return "Sửa tin tuyển dụng";
+    case "EditUser":
+      return "Sửa người dùng";
+    case "EvaluateCandidate":
+      return "Đánh giá ứng viên";
+    case "ExportCandidate":
+      return "Export ứng viên";
+    case "ExportJob":
+      return "Export tin tuyển dụng";
+    case "ImportCandidate":
+      return "Import ứng viên";
+    case "InviteInterviewCommittee":
+      return "Xác nhận lịch phỏng vấn";
+    case "ParticipateInterviewSchedule":
+      return "Tham gia phỏng vấn";
+    case "RemoveAccount":
+      return "Xóa tài khoản";
+    case "RemoveApprovalProcess":
+      return "Xóa quy trình phê duyệt";
+    case "RemoveCandidate":
+      return "Xóa ứng viên";
+    case "RemoveCompanyExam":
+      return "Xóa đề thi công ty";
+    case "RemoveCompanyQuestion":
+      return "Xóa câu hỏi công ty";
+    case "RemoveEmail":
+      return "Xóa email";
+    case "RemoveEvaluationTemplate":
+      return "Xóa mẫu đánh giá";
+    case "RemoveJob":
+      return "Xóa tin tuyển dụng";
+    case "RemoveJobPosition":
+      return "Xóa vị trí công việc";
+    case "RemoveOfferTemplate":
+      return "Xóa mẫu Offer";
+    case "RemoveRecruitmentProcess":
+      return "Xóa quy trình tuyển dụng";
+    case "RemoveRole":
+      return "Xóa vai trò";
+    case "RemoveUnit":
+      return "Xóa đơn vị tiền tệ";
+    case "RemoveUser":
+      return "Xóa người dùng";
+    case "ReportIViecExam":
+      return "Báo cáo đề thi";
+    case "ReportIViecQuestion":
+      return "Báo cáo câu hỏi";
+    case "ScheduleInterview":
+      return "Đặt lịch phỏng vấn";
     case "SendOfferMail":
-      return "Gửi mail yêu cầu ";
+      return "Gửi mail Offer";
+    case "ShareCandidate":
+      return "Chia sẻ ứng viên";
+    case "ViewApprovalProcess":
+      return "Xem quy trình phê duyệt";
+    case "ViewCandidate":
+      return "Xem ứng viên";
+    case "ViewCompanyExam":
+      return "Xem đề thi công ty";
+    case "ViewConnect":
+      return "Xem kết nối";
+    case "ViewEmail":
+      return "Xem email";
+    case "ViewEvaluationTemplate":
+      return "Xem mẫu đánh giá";
+    case "ViewExam":
+      return "Xem đề thi";
+    case "ViewInterviewSchedule":
+      return "Xem lịch phỏng vấn";
+    case "ViewJob":
+      return "Xem tin tuyển dụng";
+    case "ViewJobPosition":
+      return "Xem vị trí công việc";
+    case "ViewOfferTemplate":
+      return "Xem mẫu Offer";
+    case "ViewQuestion":
+      return "Xem câu hỏi";
+    case "ViewRecruitmentProcess":
+      return "Xem quy trình tuyển dụng";
+    case "ViewRole":
+      return "Xem vai trò";
+    case "ViewUnit":
+      return "Xem đơn vị tiền tệ";
+    case "ViewUser":
+      return "Xem người dùng";
+    default:
+      return action;
   }
-};
+}

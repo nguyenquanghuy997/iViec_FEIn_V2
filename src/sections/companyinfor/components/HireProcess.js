@@ -22,7 +22,7 @@ const HireProcess = () => {
     <Box
       sx={{ width: 700 }}
       role="presentation"
-      // onKeyDown={toggleDrawer(false)}
+    // onKeyDown={toggleDrawer(false)}
     >
       <List
         sx={{
@@ -71,8 +71,15 @@ const HireProcess = () => {
         </Drawer>
       )}
       {Data ? (
-        <Box sx={{ background: "white", py: 2, display: "flex", px: 5 }}>
-          {Data?.organizationProfilePipelines.map((item, index) => (
+        <Box sx={{
+          background: "white",
+          py: 2, display: "flex",
+          alignItems: 'center',
+          px: 5,
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '4px',
+        }}>
+          {Data?.organizationProfilePipelines.map((item, index) => (<>
             <Box sx={{ minWidth: "200px" }}>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 {<IconRole1 />}
@@ -113,10 +120,17 @@ const HireProcess = () => {
                 {item?.description}
               </Typography>
             </Box>
+            {index < Data?.organizationProfilePipelines?.length - 1 && <Divider orientation="vertical" variant="middle" style={{ height: '96px', alignSelf: 'center' }} flexItem />}
+          </>
+
           ))}
         </Box>
       ) : (
-        <Box sx={{ bgcolor: "white" }}>
+        <Box sx={{
+          bgcolor: "white",
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '4px',
+        }}>
           {" "}
           <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
             <NoInformation />
