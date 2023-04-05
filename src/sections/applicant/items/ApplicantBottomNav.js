@@ -133,8 +133,12 @@ const ApplicantBottomNav = ({
                   href={
                     "applicant/" +
                     itemSelected[0]?.applicantId +
-                    "?or=" +
-                    itemSelected[0]?.organizationId
+                    "?co=" +
+                    itemSelected[0]?.correlationId +
+                    "&&or=" +
+                    itemSelected[0]?.organizationId +
+                    "&&re=" +
+                    itemSelected[0]?.recruitmentId
                   }
                   icon={
                     <Iconify

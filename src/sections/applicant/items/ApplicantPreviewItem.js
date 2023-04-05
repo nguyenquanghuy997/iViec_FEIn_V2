@@ -1,5 +1,6 @@
 //import { RejectApplicantModal } from "../modals";
 import {
+  useGetApplicantByIdQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useGetApplicantReviewFormQuery,
@@ -35,10 +36,10 @@ import {
 import { styled } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 
-function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
+function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelationId, RecruitmentId }) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
-      ApplicantId,
+      ApplicantCorrelationId: ApplicantCorrelationId,
       OrganizationId,
     });
 
@@ -225,6 +226,9 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { themeStretch } = useSettings();
 
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
+  const { data: data } = useGetApplicantByIdQuery({
+    applicantId: ApplicantId,
+  });
   const [fetchPipe, { data: pipelines = [], isSuccess }] =
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
@@ -246,15 +250,16 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
 
   useEffect(() => {
     if (!isFetching) {
-      setSelectedOption(options[0]);
-      setOwnerName(options[0]?.ownerName?.trim());
+      const recruiment = options.filter(p=>p.id == RecruitmentId)
+      setSelectedOption(recruiment[0]);
+      setOwnerName(recruiment[0]?.ownerName?.trim());
       fetchPipe({
         ApplicantId,
-        RecruitmentId: options[0]?.id,
+        RecruitmentId: recruiment[0]?.id,
       }).unwrap();
       fetchData({
         ApplicantId,
-        RecruitmentId: options[0]?.id,
+        RecruitmentId: recruiment[0]?.id,
         IsWithdrawHistory: true,
       }).unwrap();
     }
