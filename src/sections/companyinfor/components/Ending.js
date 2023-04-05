@@ -19,7 +19,7 @@ const Ending = () => {
   const PlaceholderStyle = styled("div")(() => ({
     background: "white",
     padding: "12px 96px",
-    height: 150,
+    // height: 150,
     "& .content": {
       backgroundColor: "white",
       color: "#455570",
@@ -116,7 +116,7 @@ const Ending = () => {
       )}
       {Data?.conclusion ? (
         <PlaceholderStyle>
-          <div className="content" style={{ height: 100 }}>
+          <div className="content">
             <blockquote>{renderItem(Data?.conclusion)}</blockquote>
           </div>
         </PlaceholderStyle>

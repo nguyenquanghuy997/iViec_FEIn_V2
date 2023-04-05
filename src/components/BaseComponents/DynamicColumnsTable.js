@@ -240,6 +240,8 @@ const DynamicColumnsTable = (props) => {
       },
       "& .ant-table-tbody >tr >td": {
         padding: "13px 8px",
+        color: '#172B4D',
+        fontWeight: 400,
         wordBreak: 'break-all'
       },
       "& .ant-pagination": {

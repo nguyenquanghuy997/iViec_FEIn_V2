@@ -67,6 +67,7 @@ export default function SwiperListHuman({ data }) {
                   display: "flex",
                   justifyContent: "center",
                   mt: 2,
+                  mb: '4px'
                 }}
               >
                 {item?.name}
