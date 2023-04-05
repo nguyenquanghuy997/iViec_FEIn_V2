@@ -4,8 +4,8 @@ import {RiCloseFill} from "react-icons/ri";
 import {Box, Divider, IconButton, Typography} from "@mui/material";
 
 import FormCompanyInfor from "./FormCompanyInfor";
-export default function EditInformation({open, onClose, dataForm}) {
 
+export default function EditInformation({open, onClose, dataForm}) {
   return (
       <div>
         <Drawer

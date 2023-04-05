@@ -1,5 +1,5 @@
 import HeaderCard from "../HeaderCard";
-import {useGetCompanyInfoQuery, useUpdateCompanyEndingMutation} from "../companyInforSlice";
+import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import EditBusinessArea from "./EditBusinessArea";
 import CloseIcon from "@/assets/CloseIcon";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
@@ -11,6 +11,7 @@ import "swiper/swiper-bundle.css";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import LoadingScreen from "@/components/LoadingScreen";
 import {useSnackbar} from "notistack";
+import {isEmpty, get} from "lodash";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
 
@@ -31,10 +32,8 @@ export const SliderStyle = styled("div")(() => ({
 
 const BusinessArea = ({ data }) => {
     const {enqueueSnackbar} = useSnackbar();
-    const {data: Data} = useGetCompanyInfoQuery();
     const [open, setOpen] = useState();
-    const [seeData, setSeeData] = useState(false);
-    const [checked, setChecked] = useState(data?.isBusinessesVisible || true);
+    const [checked, setChecked] = useState(data?.isBusinessesVisible);
     const [loading, setLoading] = useState(false);
 
     const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
@@ -51,7 +50,7 @@ const BusinessArea = ({ data }) => {
         try {
             await updateVisibleHuman({
                 organizationId: data?.id,
-                isBusinessesVisible: checked
+                isBusinessesVisible: !checked
             }).unwrap();
             setChecked(!checked);
             enqueueSnackbar("Chỉnh sửa hiển thị thành công!", {
@@ -85,13 +84,13 @@ const BusinessArea = ({ data }) => {
                     handleChange={handleChangeChecked}
                     checked={checked}
                 />
-                {Data ? (
+                {!isEmpty(data) ? (
                     <Box
                         style={{
                             color: "white",
                             width: "100%",
-                            height: "302px",
-                            backgroundImage: `url(http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto})`,
+                            minHeight: "302px",
+                            backgroundImage: `url(http://103.176.149.158:5001/api/Image/GetImage?imagePath=${get(data, 'organizationBusiness.businessPhoto')})`,
                             padding: "36px 40px",
                         }}
                     >
@@ -100,22 +99,16 @@ const BusinessArea = ({ data }) => {
                         </Typography>
                         <SliderStyle>
                             <Swiper id="swiper" virtual slidesPerView={4} spaceBetween={50} pagination>
-                                {Data?.organizationBusiness?.organizationBusinessDatas.map(
-                                    (item, index) => (
+                                {get(data, 'organizationBusiness.organizationBusinessDatas').map((item, index) => (
                                         <SwiperSlide key={`slide-${index}`} style={{listStyle: "none"}}>
-                                            <div className="slide" style={{height: "170px"}}>
+                                            <div className="slide" style={{minHeight: "220px"}}>
                                                 <hr style={{border: "3px solid #FF9800", width: "40px", borderRadius: "6px", marginBottom: "8px"}}/>
                                                 <p style={{fontWeight: 700, fontSize: 16, marginBottom: "12px"}}>
-                                                    {item?.name}
+                                                    {get(item, 'name')}
                                                 </p>
-                                                <p style={{fontWeight: 500, fontSize: 14, overflow: !seeData ? "hidden" : "visible", lineHeight: "1.5em", height: seeData ? "auto" : "3.6em"}}>
-                                                    {item?.description}
+                                                <p style={{fontWeight: 500, fontSize: 14, marginBottom: "12px"}}>
+                                                    {get(item, 'description')}
                                                 </p>
-                                                <button onClick={() => setSeeData(!seeData)} style={{border: "none", background: "none"}}>
-                                                    <p style={{fontSize: 14, fontWeight: 700, color: 'white'}}>
-                                                        {seeData ? "Thu ngắn" : "... Xem thêm"}
-                                                    </p>
-                                                </button>
                                             </div>
                                         </SwiperSlide>
                                     )
@@ -127,7 +120,7 @@ const BusinessArea = ({ data }) => {
             </Box>
             {open && (
                 <Drawer anchor="right" open={open} onClose={handleClose} onOpen={handleOpen}>
-                    <Box sx={{width: 700}}>
+                    <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0,}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
                                 Chỉnh sửa Lĩnh vực kinh doanh
@@ -138,7 +131,7 @@ const BusinessArea = ({ data }) => {
                         </List>
                         <Divider/>
                         <div>
-                            <EditBusinessArea onClose={handleClose}/>
+                            <EditBusinessArea data={data} onClose={handleClose}/>
                         </div>
                     </Box>
                 </Drawer>

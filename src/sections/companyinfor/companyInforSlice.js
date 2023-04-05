@@ -97,7 +97,6 @@ export const companyServiceApi = createApi({
           "Content-Type": "multipart/form-data",
         },
       }),
-      invalidatesTags: ["CompanyInfor"],
     }),
     updateCompanyInfo: builder.mutation({
       query: (rest) => ({

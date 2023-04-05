@@ -19,7 +19,7 @@ const TextStyle = styled(Paragraph)`
   }
 `
 
-const ReadMoreText = ({text}) => {
+const ReadMoreText = ({text, rows = 3, ...props}) => {
 
   const [ellipsis, setEllipsis] = useState(true);
   const [counter, setCounter] = useState(0);
@@ -36,7 +36,7 @@ const ReadMoreText = ({text}) => {
 
   return (
       <div key={counter}>
-        <TextStyle ellipsis={ellipsis ? {rows: 2, expandable: true, symbol: 'Xem thêm', onExpand: handleExpand} : false}>
+        <TextStyle ellipsis={ellipsis ? {rows: rows, expandable: true, symbol: 'Xem thêm', onExpand: handleExpand} : false} {...props}>
           {text}
           {!ellipsis && <a className="ant-typography-expand" aria-label="Expand" onClick={handleClose}>Ẩn bớt</a>}
         </TextStyle>

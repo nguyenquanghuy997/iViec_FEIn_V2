@@ -1,5 +1,5 @@
 import HeaderCard from "../HeaderCard";
-import {useGetCompanyInfoQuery, useUpdateCompanyEndingMutation} from "../companyInforSlice";
+import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import EditorEnding from "./EditorEnding";
 import CloseIcon from "@/assets/CloseIcon";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
@@ -11,8 +11,9 @@ import LoadingScreen from "@/components/LoadingScreen";
 
 const PlaceholderStyle = styled("div")(() => ({
     background: "white",
-    padding: "12px 96px",
-    height: 150,
+    padding: "8px 96px 24px 96px",
+    minHeight: 150,
+    textAlign: 'justify',
     "& .content": {
         backgroundColor: "white",
         color: "#455570",
@@ -20,17 +21,16 @@ const PlaceholderStyle = styled("div")(() => ({
         position: "relative",
         padding: "24px 96px",
     },
-
     "& blockquote:before": {
         content: '" ,, "',
         position: "absolute",
-        // content: "\f10d";
         top: -100,
         left: "20px",
         fontSize: "128px",
         color: "#A2AAB7",
     },
 }));
+
 
 const renderItem = (value, main) => {
     return (
@@ -55,10 +55,9 @@ const renderItem = (value, main) => {
 const Ending = ({data}) => {
     const {enqueueSnackbar} = useSnackbar();
 
-    const {data: Data} = useGetCompanyInfoQuery();
     const [open, setOpen] = useState(false);
 
-    const [checked, setChecked] = useState(data?.isHumansVisible || true);
+    const [checked, setChecked] = useState(data?.isConclusionVisible);
     const [loading, setLoading] = useState(false);
 
     const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
@@ -75,7 +74,7 @@ const Ending = ({data}) => {
         try {
             await updateVisibleHuman({
                 organizationId: data?.id,
-                isHumansVisible: checked
+                isConclusionVisible: !checked
             }).unwrap();
             enqueueSnackbar("Chỉnh sửa hiển thị thành công!", {
                 autoHideDuration: 1000
@@ -109,10 +108,16 @@ const Ending = ({data}) => {
                     handleChange={handleChangeChecked}
                     checked={checked}
                 />
-                {Data?.conclusion ? (
-                    <PlaceholderStyle>
-                        <div className="content" style={{height: 100}}>
-                            <blockquote>{renderItem(Data?.conclusion)}</blockquote>
+                {data?.conclusion ? (
+                    <PlaceholderStyle style={{
+                        borderBottomLeftRadius: '4px',
+                        borderBottomRightRadius: '4px',
+                    }}>
+                        <div className="content" style={{
+                            borderRadius: '4px',
+                        }}>
+                            <blockquote>{renderItem(data?.conclusion)}</blockquote>
+                            <div style={{ textAlign: 'end' }}><strong>{data?.name}</strong></div>
                         </div>
                     </PlaceholderStyle>
                 ) : <EmptyValue text={"Hiện chưa có nội dung Lời kết"}/>}
@@ -134,7 +139,7 @@ const Ending = ({data}) => {
                             </Button>
                         </List>
                         <Divider/>
-                        <EditorEnding data={Data} onClose={handleClose}/>
+                        <EditorEnding data={data} onClose={handleClose}/>
                     </Box>
                 </Drawer>
             )}

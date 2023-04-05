@@ -1,8 +1,8 @@
-import {Box, Switch, Typography} from "@mui/material";
+import {Box, FormControlLabel, Switch, Typography} from "@mui/material";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import React from "react";
 
-const HeaderCard = ({data, text, onOpen, checked, handleChange}) => {
+const HeaderCard = ({text, onOpen, checked, handleChange}) => {
   return (
       <Box
           sx={{
@@ -18,10 +18,9 @@ const HeaderCard = ({data, text, onOpen, checked, handleChange}) => {
           {text}
         </Typography>
         <Box sx={{display: 'flex'}}>
-          <Switch
-              checked={checked}
-              onChange={handleChange}
-              label={data?.isActivated ? "Hiển thị" : "Không hiển thị"}
+          <FormControlLabel
+              control={<Switch checked={checked} onChange={handleChange}/>}
+              label={checked ? "Hiển thị" : "Không hiển thị"}
           />
           <Box>
             <MuiButton

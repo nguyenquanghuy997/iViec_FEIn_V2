@@ -1,20 +1,20 @@
 import { useUpdateCompanyPipelineMutation } from "../companyInforSlice";
-import IconRole1 from "@/assets/IconRole1";
 import { TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/DesignSystem/FlexStyled";
 import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { PipelineStateType } from "@/utils/enum";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
-  RiLock2Line, // RiDeleteBin5Fill
+  RiLock2Line,
 } from "react-icons/ri";
 import * as Yup from "yup";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import {renderIconByPipelineType} from "@/sections/companyinfor/components/HireProcess";
 
 const EditHirePipeline = ({ data, onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -60,7 +60,6 @@ const EditHirePipeline = ({ data, onClose }) => {
 
   const {
     setValue,
-    // setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
@@ -83,9 +82,7 @@ const EditHirePipeline = ({ data, onClose }) => {
         autoHideDuration: 2000,
       });
       onClose();
-      // location.reload()
     } catch (err) {
-      // console.log("reer", err);
       enqueueSnackbar(errors.afterSubmit?.message, {
         autoHideDuration: 1000,
         variant: "error",
@@ -110,7 +107,7 @@ const EditHirePipeline = ({ data, onClose }) => {
           <View key={i} mb={24} p={24} style={{ background: "#F2F4F5" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <IconRole1 />
+                {renderIconByPipelineType(issue?.organizationProfilePipelineType)}
                 <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
                   {PipelineStateType(issue?.organizationProfilePipelineType)}
                 </Typography>
@@ -129,35 +126,28 @@ const EditHirePipeline = ({ data, onClose }) => {
         ))}
       </View>
       <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          marginTop: 12,
-          position: "fixed",
-          bottom: 0,
-          background: "#FDFDFD",
-          width: "100%",
-          padding: "16px 24px",
-          border: "1px solid #EFF3F6",
-        }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            position: "fixed",
+            bottom: 0,
+            background: "#FDFDFD",
+            width: "100%",
+            padding: "16px 24px",
+            border: "1px solid #EFF3F6",
+            zIndex: 1001,
+          }}
       >
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-          sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
-        >
-          {"Lưu"}
-        </LoadingButton>
-        <div style={{ width: 8 }} />
-
-        <LoadingButton
-          variant="text"
-          sx={{ color: "#455570" }}
-          onClick={onClose}
-        >
-          {"Hủy"}
-        </LoadingButton>
+        <MuiButton
+            title={"Lưu"}
+            type="submit"
+            loading={isSubmitting}
+        />
+        <MuiButton
+            title={"Hủy"}
+            color={"basic"}
+            onClick={onClose}
+        />
       </div>
     </FormProvider>
   );

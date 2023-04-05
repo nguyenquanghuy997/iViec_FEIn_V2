@@ -1,5 +1,5 @@
 import HeaderCard from "../HeaderCard";
-import {useGetCompanyInfoQuery, useUpdateCompanyEndingMutation} from "../companyInforSlice";
+import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import CloseIcon from "@/assets/CloseIcon";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
@@ -37,10 +37,9 @@ export const SliderStyle = styled("div")(() => ({
 
 const EnvironmentWorkplace = ({ data }) => {
     const {enqueueSnackbar} = useSnackbar();
-    const {data: Data} = useGetCompanyInfoQuery();
     const [open, setOpen] = useState(false);
 
-    const [checked, setChecked] = useState(data?.isHumansVisible || true);
+    const [checked, setChecked] = useState(data?.isWorkingEnvironmentVisible);
     const [loading, setLoading] = useState(false);
 
     const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
@@ -57,7 +56,7 @@ const EnvironmentWorkplace = ({ data }) => {
         try {
             await updateVisibleHuman({
                 organizationId: data?.id,
-                isHumansVisible: checked
+                isWorkingEnvironmentVisible: !checked
             }).unwrap();
             enqueueSnackbar("Chỉnh sửa hiển thị thành công!", {
                 autoHideDuration: 1000
@@ -99,7 +98,7 @@ const EnvironmentWorkplace = ({ data }) => {
                         width: "100%",
                     }}
                 >
-                    {Data?.organizationWorkingEnvironments ? (
+                    {data?.organizationWorkingEnvironments ? (
                         <SliderStyle>
                             <Swiper
                                 id="swiper"
@@ -108,7 +107,7 @@ const EnvironmentWorkplace = ({ data }) => {
                                 spaceBetween={50}
                                 pagination
                             >
-                                {Data?.organizationBusiness?.organizationBusinessDatas.map(
+                                {data?.organizationBusiness?.organizationBusinessDatas.map(
                                     (item, index) => (
                                         <SwiperSlide
                                             key={`slide-${index}`}

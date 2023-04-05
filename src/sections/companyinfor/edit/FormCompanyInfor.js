@@ -1,27 +1,28 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, memo} from "react";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Divider, Stack, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
-import {get} from 'lodash';
+import {get, isEmpty} from 'lodash';
 
 import EditUpload from "./EditUpload";
 import {FormProvider, RHFSelect, RHFTextField,} from "@/components/hook-form";
-import RHFListImage from "@/components/hook-form/RHFListImage";
 import RHFTinyEditor from "@/components/editor/RHFTinyEditor";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 
 import {
   useGetDistrictByProvinceIdQuery,
+  useGetJobCategoriesQuery,
   useGetProvinceQuery,
+  useUpdateCompanyInfoMutation,
   useUploadImageCompanyMutation
 } from "@/sections/companyinfor/companyInforSlice";
-import {useGetJobCategoriesQuery, useUpdateCompanyInfoMutation,} from "@/sections/companyinfor/companyInforSlice";
 import {LIST_ORGANIZATION_SIZE} from "@/utils/formatString";
 import {LabelStyle} from "@/components/hook-form/style";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {DOMAIN_SERVER_API} from "@/config";
+import HelperText from "@/components/BaseComponents/HelperText";
 
 const InputStyle = {width: "100%", minHeight: 40};
 
@@ -60,22 +61,25 @@ const FormCompanyInfor = ({data, onClose}) => {
     organizationSize: '',
     provinceId: '',
     districtId: '',
+    address: '',
     description: ''
   };
   const ProfileSchema = Yup.object().shape({
     // avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
     // coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-    phoneNumber: Yup.number().required("Số điện thoại không được bỏ trống"),
+    phoneNumber: Yup.string().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
     email: Yup.string().email("Email không đúng định dạng").required("Email không được bỏ trống"),
     jobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghê"),
-    organizationSize: Yup.string().required("Quy mô nhân sự không được bỏ trống"),
+    organizationSize: Yup.number().required("Quy mô nhân sự không được bỏ trống"),
     provinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống"),
     districtId: Yup.string().required("Quận/Huyện không được bỏ trống"),
+    address: Yup.string().required("Địa chỉ không được bỏ trống"),
     description: Yup.string().required("Giới thiệu công ty không được bỏ trống"),
   });
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
   const methods = useForm({
+    mode: 'onSubmit',
     resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
@@ -94,45 +98,39 @@ const FormCompanyInfor = ({data, onClose}) => {
   const {data: {items: ProvinceList = []} = {}} = useGetProvinceQuery();
   const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(provinceId, {skip: !provinceId});
 
-  const onSubmit = async (d) => {
-
-    console.log(d)
-
-    const imageRes = await uploadImage({File: imageFile, OrganizationId: d?.id,});
-    const bgRes = await uploadImage({File: imageBg, OrganizationId: d.id,});
-
+  const onSubmit = async (formData) => {
+    const {address, avatar, coverPhoto, description, districtId, email, jobCategoryIds, organizationSize, phoneNumber, provinceId} = formData;
+    const imageRes = await uploadImage({File: imageFile, OrganizationId: data?.id,});
+    const bgRes = await uploadImage({File: imageBg, OrganizationId: data.id,});
+    if (isEmpty(get(data, 'organizationInformation.avatar')) && isEmpty(avatar) && isEmpty(imageRes)) {
+      setError("avatar", {type: "custom", message: 'Avatar không được bỏ trống'});
+    }
+    if (isEmpty(get(data, 'organizationInformation.coverPhoto')) && isEmpty(coverPhoto) && isEmpty(bgRes)) {
+      setError("coverPhoto", {type: "custom", message: 'Hình nền không được bỏ trống'});
+    }
     try {
-      if (imageRes) {
-        const res = {
-          id: get(data, 'organizationInformation.id'),
-          avatar: imageRes?.data || get(data, 'organizationInformation.avatar'),
-          coverPhoto: bgRes?.data || get(data, 'organizationInformation.coverPhoto'),
-          provinceId: d.provinceId,
-          districtId: d.districtId,
-          address: d.address,
-          email: d.email,
-          description: d.description,
-          phoneNumber: d.phoneNumber,
-          jobCategoryIds: d.jobCategoryIds?.map((item) => item?.value),
-          organizationSize: d.organizationSize,
-        };
-        try {
-          await updateCompanyInfo(res).unwrap();
-          enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
-            autoHideDuration: 2000,
-          });
-          onClose();
-        } catch (err) {
-          enqueueSnackbar(errors.afterSubmit?.message, {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
-        }
-      }
+      await updateCompanyInfo({
+        id: get(data, 'organizationInformation.id'),
+        avatar: get(data, 'organizationInformation.avatar'),
+        coverPhoto: get(data, 'organizationInformation.coverPhoto'),
+        provinceId: provinceId,
+        districtId: districtId,
+        address: address,
+        email: email,
+        description: description,
+        phoneNumber: phoneNumber,
+        jobCategoryIds: jobCategoryIds,
+        organizationSize: organizationSize,
+      }).unwrap();
+      enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
+        autoHideDuration: 2000,
+      });
+      onClose();
     } catch (err) {
-      const message = err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
-      setError("afterSubmit", {...err, message});
-      enqueueSnackbar(errors.afterSubmit?.message);
+      enqueueSnackbar(errors.afterSubmit?.message, {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
     }
   };
 
@@ -147,8 +145,14 @@ const FormCompanyInfor = ({data, onClose}) => {
     setValue("provinceId", get(data, 'organizationInformation.provinceId'));
     setValue("districtId", get(data, 'organizationInformation.districtId'));
     setValue("address", get(data, 'organizationInformation.address'));
-    setValue("description", get(data, 'conclusion'));
+    setValue("description", get(data, 'organizationInformation.description'));
   }, [JSON.stringify(data)]);
+
+  useEffect(() => {
+    if (get(data, 'organizationInformation.avatar') || !isEmpty(imageFile)) {
+      setError("avatar", null);
+    }
+  }, [data, imageFile])
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -159,7 +163,7 @@ const FormCompanyInfor = ({data, onClose}) => {
           overflow: "hidden",
           background: style.BG_WHITE,
           padding: 3,
-          mb: 4
+          mb: 8
         }}>
           <Box sx={{ mb: 3 }}>
             <Typography sx={{fontSize: style.FONT_XL, fontWeight: style.FONT_BOLD, color: style.COLOR_TEXT_BLACK}}>
@@ -169,7 +173,6 @@ const FormCompanyInfor = ({data, onClose}) => {
               Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email Support@iviec.com.vn
             </Typography>
           </Box>
-
           <Stack>
             <Typography sx={{fontSize: style.FONT_SM, fontWeight: style.FONT_MEDIUM, color: style.COLOR_TEXT_BLACK}}>
               Ảnh đại diện <span style={{color: style.COLOR_TEXT_SECONDARY}}>(142x142px)</span>
@@ -178,10 +181,11 @@ const FormCompanyInfor = ({data, onClose}) => {
               <EditUpload
                   image={image}
                   imageHandler={imageHandler}
-                  ref={{...register("avatar")}}
+                  ref={register("avatar", { required: true })}
                   type="avatar"
                   style={{width: 120, height: 120, borderRadius: '50%', backgroundColor: '#EFF3F6', marginTop: "16px", marginRight: "24px"}}
               />
+              {errors?.avatar?.message && <HelperText errorText={errors?.avatar?.message}/>}
             </Box>
           </Stack>
           <Stack sx={{py: 3}}>
@@ -191,7 +195,7 @@ const FormCompanyInfor = ({data, onClose}) => {
             <Box>
               <EditUpload
                   image={bg}
-                  ref={{...register("coverPhoto")}}
+                  ref={register("coverPhoto", { required: true })}
                   imageHandler={handleImage}
                   style={{width: "100%", height: 136, background: "#EFF3F7", margin: "16px 0 24px 0"}}
               />
@@ -279,9 +283,6 @@ const FormCompanyInfor = ({data, onClose}) => {
                 placeholder={"Nhập nội dung giới thiệu công ty..."}
             />
           </Box>
-
-          <RHFListImage name="organizationImages"/>
-          <Divider sx={{pt: 3}}/>
         </Box>
         <div
             style={{
@@ -305,11 +306,10 @@ const FormCompanyInfor = ({data, onClose}) => {
           <MuiButton
               title={"Hủy"}
               color={"basic"}
-              loading={isSubmitting}
               onClick={onClose}
           />
         </div>
       </FormProvider>
   );
 };
-export default FormCompanyInfor;
+export default memo(FormCompanyInfor);

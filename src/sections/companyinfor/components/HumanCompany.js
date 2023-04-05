@@ -1,25 +1,30 @@
-import React, {useState} from "react";
+import {useState, memo, useEffect} from "react";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
+import {useSnackbar} from "notistack";
 
 import HeaderCard from "../HeaderCard";
 import EditHumanCompany from "../edit/EditHumanCompany";
 import SwiperListHuman from "./SwiperListHuman";
 import CloseIcon from "@/assets/CloseIcon";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
+import LoadingScreen from "@/components/LoadingScreen";
+
+import {useUpdateCompanyEndingMutation} from "@/sections/companyinfor/companyInforSlice";
 
 import "react-multi-carousel/lib/styles.css";
-import {useUpdateCompanyEndingMutation} from "@/sections/companyinfor/companyInforSlice";
-import {useSnackbar} from "notistack";
-import LoadingScreen from "@/components/LoadingScreen";
 
 const HumanCompany = ({data}) => {
     const {enqueueSnackbar} = useSnackbar();
 
     const [open, setOpen] = useState(false);
-    const [checked, setChecked] = useState(data?.isHumansVisible || true);
+    const [checked, setChecked] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
+
+    useEffect(() => {
+        setChecked(data?.isHumansVisible)
+    }, [data])
 
     const handleClose = () => {
         setOpen(false);
@@ -33,7 +38,7 @@ const HumanCompany = ({data}) => {
         try {
             await updateVisibleHuman({
                 organizationId: data?.id,
-                isHumansVisible: checked
+                isHumansVisible: !checked
             }).unwrap();
             enqueueSnackbar("Chỉnh sửa hiển thị thành công!", {
                 autoHideDuration: 1000
@@ -90,7 +95,7 @@ const HumanCompany = ({data}) => {
                     onClose={handleClose}
                     onOpen={handleOpen}
                 >
-                    <Box sx={{width: 700}}>
+                    <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0,}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
                                 Chỉnh sửa Con người công ty
@@ -100,9 +105,7 @@ const HumanCompany = ({data}) => {
                             </Button>
                         </List>
                         <Divider/>
-                        <div>
-                            <EditHumanCompany onClose={handleClose}/>
-                        </div>
+                        <EditHumanCompany data={data} onClose={handleClose}/>
                     </Box>
                 </Drawer>
             )}
@@ -110,4 +113,4 @@ const HumanCompany = ({data}) => {
     );
 };
 
-export default HumanCompany;
+export default memo(HumanCompany);
