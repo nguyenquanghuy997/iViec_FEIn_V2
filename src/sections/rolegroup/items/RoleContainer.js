@@ -373,7 +373,7 @@ export const RoleContainer = () => {
           ...(showActionStatus ? [{
             component: (
               <Switch
-                label="Đang hoạt động"
+                label={selectedStatus ? 'Đang hoạt động' : 'Không hoạt động'}
                 checked={selectedStatus}
                 onClick={e => {
                   handleChangeStatus(e.target.checked);

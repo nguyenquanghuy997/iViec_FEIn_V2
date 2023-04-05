@@ -2,7 +2,6 @@
 import DashboardAppBar from "./header/AppBar";
 import NavbarVertical from "./navbar/NavbarVertical";
 import {HEADER, NAVBAR} from "@/config";
-import RoleBasedGuard from "@/guards/RoleBasedGuard";
 import useCollapseDrawer from "@/hooks/useCollapseDrawer";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
@@ -46,10 +45,10 @@ const MainStyle = styled("main", { shouldForwardProp: (prop) => prop !== "collap
 
 DashboardLayout.propTypes = {
   children: PropTypes.node.isRequired,
-  roles: PropTypes.arrayOf(PropTypes.string), // Example ['Admin', 'Leader']
+  permissions: PropTypes.arrayOf(PropTypes.string), // Example ['ViewJob', 'ViewCandidate']
 };
 
-export default function DashboardLayout({ roles, children }) {
+export default function DashboardLayout({ children }) {
   const { collapseClick, isCollapse } = useCollapseDrawer();
 
   const { themeLayout } = useSettings();
@@ -75,11 +74,7 @@ export default function DashboardLayout({ roles, children }) {
         )}
         <WrapperStyle>
           <MainStyle collapseClick={collapseClick}>
-            {!roles || !Array.isArray(roles) ? (
-              children
-            ) : (
-              <RoleBasedGuard roles={roles}>{children}</RoleBasedGuard>
-            )}
+            {children}
           </MainStyle>
           {/*<InstructionPopover />*/}
         </WrapperStyle>
@@ -100,11 +95,7 @@ export default function DashboardLayout({ roles, children }) {
       />
       <WrapperStyle>
         <MainStyle collapseClick={collapseClick}>
-          {!roles || !Array.isArray(roles) ? (
-            children
-          ) : (
-            <RoleBasedGuard roles={roles}>{children}</RoleBasedGuard>
-          )}
+          {children}
         </MainStyle>
         {/*<InstructionPopover />*/}
       </WrapperStyle>

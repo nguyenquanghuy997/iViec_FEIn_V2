@@ -34,6 +34,7 @@ const RolegroupForm = ({ role, ...methods }) => {
     for (let f in fieldValues) {
       setValue(f, fieldValues[f]);
     }
+    setValue('identityRoles', role.identityRoles?.map(ac => ac.name));
   }, [role]);
 
   return (

@@ -114,7 +114,7 @@ export default function PipelineTable({
               <span>Nhóm chức năng</span>
             </TableCell>
 
-            <TableCell>
+            <TableCell sx={{ width: '50%' }}>
               <span>Chức năng</span>
             </TableCell>
 
