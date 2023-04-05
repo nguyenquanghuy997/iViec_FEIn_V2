@@ -1,7 +1,7 @@
 import CloseIcon from "../../../assets/CloseIcon";
 import { useUpdateCalendarMutation } from "../InterviewSlice";
 import InterviewCouncil from "../components/InterviewCouncil";
-// import ListCandidate from "../components/ListCandidate";
+import ListCandidate from "../components/ListCandidate";
 import PersonalInterview from "../components/PersonalInterview";
 import { FormProvider } from "@/components/hook-form";
 import { LoadingButton } from "@mui/lab";
@@ -29,7 +29,7 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
   const { data: DetailData } = useGetDetailCalendarsQuery({
     BookingCalendarId: item?.id,
   });
-  const defaultValues = { ...DetailData };
+  const defaultValues = { ...item };
   // const CalendarSchema = Yup.object().shape({
   //   name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
   //   recruitmentId: Yup.string().required(
@@ -67,7 +67,7 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
   } = methods;
 
   const watchStep = watch("recruitmentId");
-  // const watchPipelineStep = watch("recruitmentPipelineStateId");
+  const watchPipelineStep = watch("recruitmentPipelineStateId");
   const watchInterviewType = watch("interviewType");
   const [updateCalendar] = useUpdateCalendarMutation();
 
@@ -213,11 +213,11 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
                 />
               </Box>
             </Grid>
-            {/* <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
-              <ListCandidate watchStep={watchStep} watch={watchPipelineStep} />
-            </Grid>*/}
+            <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
+              <ListCandidate isEditmode={true} item={DetailData?.bookingCalendarGroups[0].applicants} watchStep={watchStep} watch={watchPipelineStep} />
+            </Grid> 
             <Grid item xs={5} md={3}>
-              <InterviewCouncil item={item?.bookingCalendarCouncils} watchStep={watchStep} />
+              <InterviewCouncil item={DetailData?.bookingCalendarCouncils} watchStep={watchStep} />
             </Grid>
           </Grid>
         </Box>

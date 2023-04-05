@@ -160,6 +160,7 @@ export const API_GET_APPLICANT = 'applicant/ApplicantRecruitment/GetApplicantByP
 export const API_GET_CALENDAR ='applicant/BookingCalendar/GetBookingCalendars'
 export const API_GET_CALENDAR_DETAIL = 'applicant/BookingCalendar/GetBookingCalendar'
 export const API_UPDATE_CALENDAR = 'applicant/BookingCalendar/UpdateBookingCalendar'
+export const API_GET_APPLICANT_BY_PIPELINES_STATE= 'applicant/BookingCalendar/GetBookingApplicantsAvailableByPipelineState'
 // Thi tuyển
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID = "/examination/Examination/GetExamination";

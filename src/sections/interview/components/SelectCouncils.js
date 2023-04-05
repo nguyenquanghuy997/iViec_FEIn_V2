@@ -67,71 +67,6 @@ const renderOptions = (options) => {
   });
 };
 
-const renderChipsSelect = (
-  options,
-  value
-  // onDelete
-) => {
-  return (
-    <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-      {options
-        ?.filter((option) =>value.includes(option?.value))
-        ?.map((item) => (
-          <Card
-            sx={{
-              p: 2,
-              background: "#F2F4F5",
-              mb: 2,
-              borderRadius: "6px",
-            }}
-          >
-            <div
-              style={{
-                marginBottom: 0,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <img
-                  style={{
-                    width: 40,
-                    height: 40,
-                    marginRight: "16px",
-                    borderRadius: "11px",
-                  }}
-                  src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
-                />
-                <div>
-                  <Typography
-                    component="div"
-                    sx={{ fontSize: "13px", fontWeight: "600" }}
-                  >
-                    {item?.name}hihihi
-                  </Typography>
-                  <Typography
-                    color="#455570"
-                    sx={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    {item?.mail}
-                  </Typography>
-                </div>
-              </div>
-              <Box sx={{ mt: "2px", cursor: "pointer" }}>
-                <DeleteIcon />
-              </Box>
-            </div>
-          </Card>
-        ))}
-    </Stack>
-  );
-};
-
 function SelectCouncils({ name, ...props }) {
   const { control } = useFormContext();
   const classes = useStyles();
@@ -140,7 +75,70 @@ function SelectCouncils({ name, ...props }) {
   const { remove } = useFieldArray({ control, name });
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
+  const renderChipsSelect = (
+    options,
+    value
+  ) => {
+    return (
+      <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
 
+        {options
+          ?.filter((option) => value .includes(option?.value))
+          ?.map((item) => (
+            <Card
+              sx={{
+                p: 2,
+                background: "#F2F4F5",
+                mb: 2,
+                borderRadius: "6px",
+              }}
+            >
+              <div
+                style={{
+                  marginBottom: 0,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginRight: "16px",
+                      borderRadius: "11px",
+                    }}
+                    src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
+                  />
+                  <div>
+                    <Typography
+                      component="div"
+                      sx={{ fontSize: "13px", fontWeight: "600" }}
+                    >
+                      {item?.name}
+                    </Typography>
+                    <Typography
+                      color="#455570"
+                      sx={{ fontSize: "12px", fontWeight: "400" }}
+                    >
+                      {item?.mail}
+                    </Typography>
+                  </div>
+                </div>
+                <Box sx={{ mt: "2px", cursor: "pointer" }}>
+                  <DeleteIcon />
+                </Box>
+              </div>
+            </Card>
+          ))}
+      </Stack>
+    );
+  };
   useEffect(() => {
     if (searchText) {
       setFilterOptions(

@@ -1,4 +1,4 @@
-import {DeleteIcon} from "@/assets/ActionIcon";
+import { DeleteIcon } from "@/assets/ActionIcon";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
 import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
@@ -15,7 +15,6 @@ export const DragItem = styled("li")(() => ({
 function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
   const [characters, setCharacters] = useState([]);
   const newArr = (data || [])?.map((item) => item);
-
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
     const items = Array.from(characters);

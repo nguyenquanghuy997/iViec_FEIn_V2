@@ -1,12 +1,12 @@
 import RHFSelectMultiple from "./RHFSelectMultiple";
-import { useGetApplicantQuery } from "@/sections/interview/InterviewSlice";
+import { useGetApplicantByPipeLINEQuery } from "@/sections/interview/InterviewSlice";
 import {
   Box,
   Typography,
 } from "@mui/material";
 
-const ListCandidate = ({ watch }) => {
-  const res = useGetApplicantQuery({ PipelineStateId: watch }, {skip: !watch, });
+const ListCandidate = ({ item, watch,isEditmode }) => {
+  const res = useGetApplicantByPipeLINEQuery({ RecruitmentPipelineStateId: watch }, {skip: !watch, });
   const { data: { items } = { items: [] }} = res;
 
   return (
@@ -17,14 +17,16 @@ const ListCandidate = ({ watch }) => {
       {watch && (
         <RHFSelectMultiple
           options={items?.map((i) => ({
-            id: i.applicantId,
-            value: i.applicantId,
+            id: i.id,
+            value: i.id,
             label: i.fullName,
             phone: i.phoneNumber,
             name: i.fullName,
           }))}
           name="bookingCalendarGroups"
           fullWidth
+          isEditmode={isEditmode}
+          defaultItem ={item}
           multiple
           isRequired
           open={open}

@@ -6,6 +6,7 @@ import {
   API_GET_CALENDAR,
   API_GET_CALENDAR_DETAIL,
   API_UPDATE_CALENDAR,
+  API_GET_APPLICANT_BY_PIPELINES_STATE,
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -48,25 +49,38 @@ export const calendarServiceApi = createApi({
         method: "GET",
         params,
       }),
+      providesTags: ["BookCalendar"],
     }),
+  
     getCalendar: builder.query({
       query: () => ({
         url: API_GET_CALENDAR,
         method: "GET",
       }),
+      providesTags: ["BookCalendar"],
     }),
     getReviewForm: builder.query({
       query: () => ({
         url: API_GET_REVIEW_FORM,
         method: "GET",
       }),
+      providesTags: ["BookCalendar"],
     }),
     getDetailCalendars: builder.query({
       query: (params) => ({
         url: API_GET_CALENDAR_DETAIL,
         method: "GET",
-        params
+        params,
       }),
+      providesTags: ["BookCalendar"],
+    }),
+    getApplicantByPipeLINE: builder.query({
+      query: (params) => ({
+        url: API_GET_APPLICANT_BY_PIPELINES_STATE,
+        mehtod: "GET",
+        params,
+      }),
+      providesTags: ["BookCalendar"],
     }),
     addCalendar: builder.mutation({
       query: (data) => ({
@@ -81,6 +95,7 @@ export const calendarServiceApi = createApi({
         url: `${API_UPDATE_CALENDAR}/${res.id}`,
         method: "PATCH",
       }),
+      invalidatesTags: ["BookCalendar"],
     }),
     // deletePipeline: builder.mutation({
     //   query: (data) => ({
@@ -98,5 +113,6 @@ export const {
   useGetApplicantQuery,
   useGetCalendarQuery,
   useGetDetailCalendarsQuery,
+  useGetApplicantByPipeLINEQuery,
   useUpdateCalendarMutation,
 } = calendarServiceApi;
