@@ -1,5 +1,6 @@
 import { AvatarDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
+import { Label } from "@/components/hook-form/style";
 import {
   BoxFlex,
   CardFormItemContentStyle,
@@ -33,6 +34,7 @@ const EvaluationItemBlock = ({
 }) => {
   return (
     <CardFormItemStyle className="card-item">
+      {console.log("creatorEmail", item.creatorEmail)}
       <AccordionSummary
         expandIcon={
           <ButtonIcon
@@ -63,7 +65,7 @@ const EvaluationItemBlock = ({
             )} */}
             {item.name}
             <Typography className="card-item-subtitle" component="span">
-              (12 tin áp dụng)
+              ({item?.numOfRecruitment} tin áp dụng)
             </Typography>
           </CardFormItemTitleStyle>
           {item.isActive && (
@@ -73,7 +75,7 @@ const EvaluationItemBlock = ({
               Đang hoạt động
             </Typography>
           )}
-           {!item.isActive && (
+          {!item.isActive && (
             <Typography
               sx={{ color: "#5C6A82", fontSize: 12, fontWeight: 500, mr: 6 }}
             >
@@ -90,10 +92,12 @@ const EvaluationItemBlock = ({
                 borderRadius: "100px",
                 fontSize: "8px",
               }}
-              name={item.creatorEmail}
+              name={
+                item?.isInternalDefault == true ? "iVIEC" : item.creatorEmail
+              }
             />
             <CardFormItemContentStyle className="card-item-content-text">
-              {item.creatorEmail}
+              {item?.isInternalDefault == true ? "iVIEC" : item.creatorEmail}
               <Typography
                 component="span"
                 className="card-item-content-subtext"
@@ -103,46 +107,54 @@ const EvaluationItemBlock = ({
             </CardFormItemContentStyle>
           </BoxFlex>
           <BoxFlex>
-            <ButtonIcon
-              onClick={(e) => onOpenModel(e,item, "status")}
-              sx={{
-                backgroundColor: "unset !important",
-                cursor: "pointer",
-                padding: 0,
-              }}
-              icon={
-                item.isActive ? (
-                  <ActionSwitchCheckedIcon />
-                ) : (
-                  <ActionSwitchUnCheckedIcon />
-                )
-              }
-            />
-            <ButtonIcon
-              onClick={(e) => onOpenModel(e,item,'form')}
-              sx={{
-                marginRight: "16px",
-              }}
-              icon={
-                <Iconify
-                  icon={"ri:edit-2-fill"}
-                  width={16}
-                  height={16}
-                  color="#5C6A82"
+            {!item?.isInternalDefault && (
+              <>
+                <ButtonIcon
+                  onClick={(e) => onOpenModel(e, item, "status")}
+                  sx={{
+                    backgroundColor: "unset !important",
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                  icon={
+                    item.isActive ? (
+                      <ActionSwitchCheckedIcon />
+                    ) : (
+                      <ActionSwitchUnCheckedIcon />
+                    )
+                  }
                 />
-              }
-            />
-            <ButtonIcon
-              onClick={(e) => onOpenModel(e,item, "delete")}
-              icon={
-                <Iconify
-                  icon={"material-symbols:delete-outline-rounded"}
-                  width={16}
-                  height={16}
-                  color="#5C6A82"
-                />
-              }
-            />
+                {item?.numOfRecruitment == 0 && (
+                  <>
+                    <ButtonIcon
+                      onClick={(e) => onOpenModel(e, item, "form")}
+                      sx={{
+                        marginRight: "16px",
+                      }}
+                      icon={
+                        <Iconify
+                          icon={"ri:edit-2-fill"}
+                          width={16}
+                          height={16}
+                          color="#5C6A82"
+                        />
+                      }
+                    />
+                    <ButtonIcon
+                      onClick={(e) => onOpenModel(e, item, "delete")}
+                      icon={
+                        <Iconify
+                          icon={"material-symbols:delete-outline-rounded"}
+                          width={16}
+                          height={16}
+                          color="#5C6A82"
+                        />
+                      }
+                    />
+                  </>
+                )}
+              </>
+            )}
           </BoxFlex>
         </BoxFlex>
       </AccordionSummary>
@@ -164,14 +176,22 @@ const EvaluationItemBlock = ({
                   marginTop: 2,
                 }}
               >
-                <TextElipsis
-                  fontWeight={600}
-                  fontSize={13}
-                  marginBottom={0.5}
+                <Label
                   title={p?.name}
+                  required={p?.isRequired ? true : false}
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    marginBottom: "4px",
+                    color: "#172B4D",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    width: "100%",
+                  }}
                 >
                   {p?.name}
-                </TextElipsis>
+                </Label>
                 <TextElipsis
                   fontWeight={400}
                   fontSize={13}

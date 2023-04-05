@@ -99,10 +99,9 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
         id: isEditMode ? data.id : "",
         body: {
           name: e.name,
-          description: e.description,
+          // description: e.description,
           isActive: e.isActive ? true : false,
           isDefault: e.isDefault ? true : false,
-
           reviewFormCriterias: e.reviewFormCriterias.map((i) => ({
             name: i.name,
             description: i.des,

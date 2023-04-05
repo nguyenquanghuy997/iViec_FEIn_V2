@@ -7,9 +7,10 @@ import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
 import { ButtonIcon, ReviewForm } from "@/utils/cssStyles";
 // import { yupResolver } from "@hookform/resolvers/yup";
-import {  Divider, Modal } from "@mui/material";
+import {  Box, Divider, Modal } from "@mui/material";
+import { Rate } from "antd";
 // import { Rate } from "antd";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 // import * as Yup from "yup";
 
@@ -17,51 +18,61 @@ const defaultValuess = {
   name: "",
   des: "",
 };
-// const reviewFormCriterias = [
-//   {
-//     id: "2324",
-//     name: "Tiêu chí mặc định",
-//     description: "Mô tả tiêu chí mặc định",
-//     isRequired: true,
-//   },
-//   {
-//     id: "98d7",
-//     name: "fgfd",
-//     description: "fdgdf",
-//     isRequired: false,
-//   },
-// ];
+const reviewFormCriterias = [
+  {
+    id: "2324",
+    name: "Tiêu chí mặc định",
+    description: "Mô tả tiêu chí mặc định",
+    isRequired: true,
+  },
+  {
+    id: "98d7",
+    name: "fgfd",
+    description: "fdgdf",
+    isRequired: false,
+  },
+];
+
+
+
+const Point = ({
+  index,
+  value,
+  onChange,
+  setFormValue,
+}) => {
+  return (
+    <Box
+      sx={{
+        width: 200,
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <Rate
+        onChange={(p) => {
+          onChange(p);
+          setFormValue('applicantReviewCriterias.' + index + '.point', p);
+        }}
+        character={({ index }) => index + 1}
+        count={10}
+        value={value}
+      />
+    </Box>
+  );
+};
 
 export const ApplicantReviewModal = ({ show, setShow, data }) => {
-  // const Point = () => {
-  //   const [value, setValue] = React.useState();
+  const [points, setPoints] = useState({});
 
-  //   return (
-  //     <Box
-  //       sx={{
-  //         width: 200,
-  //         display: "flex",
-  //         alignItems: "center",
-  //       }}
-  //     >
-  //       <Rate
-  //         onChange={setValue}
-  //         character={({ index }) => index + 1}
-  //         count={10}
-  //         value={value}
-  //       />
-  //     </Box>
-  //   );
-  // };
   const isEdit = !!data?.name;
-  // form
-  // form
 
   const methodss = useForm({
     defaultValuess,
   });
 
   const {
+    register,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
@@ -77,7 +88,7 @@ export const ApplicantReviewModal = ({ show, setShow, data }) => {
     //   recruitmentId: "534543",
     //   applicantReviewCriterias: [
     //     {
-    //       reviewFormCriteriaId: "uuuu",
+    //       reviewFormCriteriaId: d.id,
     //       description: "string",
     //       point: 0,
     //     },
@@ -93,18 +104,11 @@ export const ApplicantReviewModal = ({ show, setShow, data }) => {
     // pressHide();
   });
 
-  useEffect(() => {
-    if (!isEdit) {
-      setValue("name", "");
-      setValue("isRequired", "");
-      setValue("des", "");
-      return;
-    } else {
-      setValue("name", data.name);
-      setValue("isRequired", data.isRequired);
-      setValue("des", data.des);
-    }
-  }, []);
+  // useEffect(() => {
+
+  //   setValue("applicantReviewCriterias", reviewFormCriterias?.map((i)=>({
+  //     reviewFormCriteriaId:i.id
+  //   })));
 
   return (
     <Modal
@@ -132,13 +136,19 @@ export const ApplicantReviewModal = ({ show, setShow, data }) => {
                 }
               />
             </View>
+            <input
+          type="hidden"
+          name="myHiddenInput"
+          value="My Hidden Value"
+          ref={register()}
+        />
             <Divider />
             <View
               style={{ overflowY: "auto", maxHeight: "600px", padding: 24 }}
             >
-              {/* {reviewFormCriterias.map((p, index) => {
+              {reviewFormCriterias.map((p, index) => {
                 return (
-                  <ReviewForm className="block-review">
+                  <ReviewForm className="block-review" key={index}>
                     <Label required={true} className="title" title="Tính cách">
                       {p?.name}
                     </Label>
@@ -149,15 +159,24 @@ export const ApplicantReviewModal = ({ show, setShow, data }) => {
                       <TextAreaDS
                         initialValue=""
                         placeholder="Nhập nội dung đánh giá..."
-                        name={`reviewFormCriterias.${index}.description`}
+                        name={`applicantReviewCriterias.${index}.description`}
                       />
                     </div>
-                    <RHFTextField name={`reviewFormCriterias.${index}.id`} value={p?.id} />
-                    <Point index={1} />
+                    <Point
+                      index={1}
+                      value={points[index]}
+                      setFormValue={setValue}
+                      onChange={val => {
+                        setPoints({
+                          ...points,
+                          [index]: val,
+                        })
+                      }}
+                    />
                     <span className="error"></span>
                   </ReviewForm>
                 );
-              })} */}
+              })}
 
               <ReviewForm
                 className="block-review block-review-result"

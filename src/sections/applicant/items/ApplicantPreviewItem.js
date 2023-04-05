@@ -2,6 +2,7 @@
 import {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
+  useGetApplicantReviewFormQuery,
   useGetRecruitmentsByApplicantQuery,
 } from "../ApplicantFormSlice";
 import { RejectApplicantModal } from "../modals";
@@ -122,16 +123,12 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
             tittle={"Đặt lịch phỏng vấn"}
             type="submit"
             sx={{
-              color: "#fdfdfd",
-              backgroundColor: "#1976D2",
-              boxShadow: "none",
               ":hover": {
                 backgroundColor: "#1565C0",
               },
               marginRight: "12px",
               fontSize: "14px",
               padding: "6px 12px",
-              textTransform: "none",
             }}
             icon={
               <Iconify
@@ -147,29 +144,27 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
             tittle={"Đánh giá"}
             type="submit"
             onClick={() => setIsOpenReview(true)}
-            // isDisabled={true}
+            isDisabled={reviewFormCriterias ? false : true}
             mr={2}
             sx={{
-              color: "#8A94A5",
-              backgroundColor: "#1976D2",
-              boxShadow: "none",
               ":hover": {
-                backgroundColor: "#01B6A7",
+                backgroundColor: "#1565C0",
               },
               marginRight: "12px",
-              textTransform: "none",
+              fontSize: "14px",
+              padding: "6px 12px",
             }}
             icon={
               <Iconify
                 icon={"ph:user-focus-fill"}
                 width={20}
                 height={20}
-                color="#8A94A5"
+                color={reviewFormCriterias ? "fff":"#8A94A5"}
                 mr={1}
               />
             }
           />
-          <ButtonDS
+          {/* <ButtonDS
             tittle={"Gửi offer"}
             type="button"
             // isDisabled={true}
@@ -192,7 +187,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                 mr={1}
               />
             }
-          />
+          /> */}
         </Grid>
       </Grid>
     );
@@ -234,6 +229,17 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
+
+  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
+    {
+      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      ApplicantId: ApplicantId,
+    },
+    { skip: pipelines && pipelines?.recruitmentPipelineStates?.filter(
+      (i) => i.id == pipelines.currentApplicantPipelineState && i.pipelineStateType == 3
+    ).length > 0 }
+  );
+
   const [selectedOption, setSelectedOption] = useState();
   const [rejectApplicant, setRejectApplicant] = useState(false);
   const [ownerName, setOwnerName] = useState();

@@ -23,7 +23,6 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
         url: `${API_GET_ALL_REVIEW_FORM}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
       }),
-      // transformResponse: (response) => response,
       providesTags:["ReviewForm"],
     }),
     getReviewFormById: builder.query({
@@ -32,6 +31,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
         method: 'GET',
         params
       }),
+      providesTags:["ReviewForm"],
     }),
     setDefaultReviewForm: builder.mutation({
       query: (data) => ({

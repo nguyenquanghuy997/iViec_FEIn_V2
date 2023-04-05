@@ -181,7 +181,7 @@ const EvaluationItem = () => {
     try {
       const data = {
         ids: [item.id],
-        isActive: !item.isActive,
+        isActivated: !item.isActive,
       };
       await status(data).unwrap();
       enqueueSnackbar("Chuyển trạng thái thành công !");
