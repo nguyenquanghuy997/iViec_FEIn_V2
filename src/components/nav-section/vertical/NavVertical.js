@@ -1,14 +1,7 @@
 import { memo, useMemo } from 'react'
-
-// @mui
 import { Stack } from '@mui/material'
-
 import PropTypes from 'prop-types'
-
-// hook
 import useRole from '@/hooks/useRole'
-
-//
 import { NavListRoot } from './NavList'
 
 const hideScrollbar = {
@@ -25,14 +18,15 @@ NavVertical.propTypes = {
 }
 
 function NavVertical({ navConfig }) {
-  const { checkAccessPermission } = useRole()
-  const navConfigBaseRole = useMemo(
-    () =>
-      navConfig.filter(({ items = [] }) =>
-        items.some(({ roles = [] }) => checkAccessPermission(roles))
-      ),
-    [checkAccessPermission, navConfig]
-  )
+  const { canAccess } = useRole()
+  const navConfigBaseRole = useMemo(() => {
+    return navConfig.map(group => {
+      return {
+        ...group,
+        items: group.items.filter(({ permissions = [] }) => canAccess(permissions)),
+      };
+    });
+  }, [navConfig]);
 
   return (
     <Stack

@@ -1,39 +1,35 @@
 import { createContext, useCallback } from 'react'
-
 import PropTypes from 'prop-types'
-
-// config
-import { ROLE } from '@/config'
-// hooks
 import useAuth from '@/hooks/useAuth'
 
 const RoleContext = createContext()
 
 const RoleProvider = ({ children }) => {
-  const { user } = useAuth()
-  const currentRole = user?.role || 'Admin' // Admin;
+  const { permissions } = useAuth();
 
-  const checkAccessPermission = useCallback(
-    (roles = []) => [].concat(roles).includes(currentRole),
-    [currentRole]
-  )
+  const canAccess = useCallback((action) => {
+    if (!action) {
+      return false;
+    }
 
-  const isDirectorRole = ROLE.DIRECTOR === currentRole
-  const isLeaderRole = ROLE.LEADER === currentRole
-  const isAdminRole = ROLE.ADMIN === currentRole
-  const isMemberRole = ROLE.MEMBER === currentRole
-  const isBlogerRole = ROLE.BLOGER === currentRole
+    if (!Array.isArray(action)) {
+      action = [action];
+    }
+
+    let hasPermiss = true;
+    action.map(ac => {
+      if (!permissions.includes(ac)) {
+        hasPermiss = false;
+      }
+    });
+
+    return hasPermiss;
+  }, [permissions]);
 
   return (
     <RoleContext.Provider
       value={{
-        checkAccessPermission,
-        isAdminRole,
-        isBlogerRole,
-        isDirectorRole,
-        isLeaderRole,
-        isMemberRole,
-        currentRole,
+        canAccess,
       }}
     >
       {children}

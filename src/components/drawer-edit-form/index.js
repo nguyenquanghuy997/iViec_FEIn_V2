@@ -35,7 +35,10 @@ export default function DrawerEditForm({
     formState: { isSubmitting, errors },
     handleSubmit,
     reset,
+    watch,
   } = methods;
+
+  const isActive = watch(statusField);
 
   const childrenWithProps = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
@@ -120,7 +123,7 @@ export default function DrawerEditForm({
 
           <SwitchStatusDS
             name={statusField}
-            label={'Đang hoạt động'}
+            label={isActive ? 'Đang hoạt động' : 'Không hoạt động'}
           />
         </Box>
       </FormProvider>
