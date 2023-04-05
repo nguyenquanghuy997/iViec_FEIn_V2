@@ -22,8 +22,7 @@ function stringToColor(string) {
 
 export default function AvatarDS(props) {
     const {src, sx, name, variant} = props;
-
-    function stringAvatar(name) {
+   function stringAvatar(name) {
         if (name) {
             return {
                 sx: {
@@ -54,7 +53,7 @@ export default function AvatarDS(props) {
             <Avatar
                 sx={{...sx}}
                 src={src}
-                {...stringAvatar(name)}
+                {...stringAvatar(name?.toUpperCase())}
             />
         </Badge>
     );

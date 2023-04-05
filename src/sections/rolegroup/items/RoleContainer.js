@@ -108,6 +108,7 @@ export const RoleContainer = () => {
     },
 
     {
+      dataIndex: "isActivated",
       title: "Trạng thái",
       key: "isActivated",
       render: (item) => (

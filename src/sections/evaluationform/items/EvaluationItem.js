@@ -1,147 +1,276 @@
-import Content from "@/components/BaseComponents/Content";
-import {View} from "@/components/FlexStyled";
-import EvaluationformHeader from "@/sections/evaluationform/EvaluationformHeader";
-import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
-// import {fDate} from "@/utils/formatTime";
-import {yupResolver} from "@hookform/resolvers/yup";
-// import {Tag} from "antd";
-import React, {useEffect, useState,useMemo} from "react";
-import {useForm} from "react-hook-form";
+import {
+  useDeleteReviewFormMutation,
+  useGetAllReviewFormQuery,
+  useUpdateStatusReviewFormMutation,
+} from "../evaluationFormSlice";
+import EvaluationFilterModal from "../modals/EvaluationFilterModal";
+import { EvaluationFormModal } from "../modals/EvaluationFormModal";
+import EvaluationItemBlock from "./EvaluationItemBlock";
+import ActiveModal from "@/components/BaseComponents/ActiveModal";
+import DeleteModal from "@/components/BaseComponents/DeleteModal";
+import FormHeader from "@/sections/emailform/component/FormHeader";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box } from "@mui/material";
+import { useSnackbar } from "notistack";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useRouter} from "next/router";
-// import {
-//     Address,
-//     MaritalStatus,
-//     Sex,
-//     YearOfExperience,
-//     PipelineStateType,
-//   } from "@/utils/enum";
+import EvaluationFormHeader from "../EvaluationformHeader";
+
+// data
+// const data = [
+//   {
+//     id: 1,
+//     title: "Mặc định",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: true,
+//     createdDate: "17/02/2023",
+//     reviewFormCriterias: [
+//       {
+//         name: "Ngoại hình",
+//         description: "Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn",
+//         isRequired: true,
+//       },
+//       {
+//         name: "Học vấn",
+//         description:
+//           "Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn",
+//         isRequired: true,
+//       },
+//       {
+//         name: "Kinh nghiệm làm việc",
+//         description:
+//           "Cao trên 1m70, Cao trên 1m70,Cao trên 1m70,Cao trên 1m70,",
+//         isRequired: false,
+//       },
+//       {
+//         name: "Kỹ năng",
+//         description: "Biết lập trình, biết nói",
+//         isRequired: false,
+//       },
+//       {
+//         name: "Thái độ",
+//         description: "ChĂM CHỈ, cần cù",
+//         isRequired: true,
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: "Mẫu email mời nhận việc 1",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: true,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 3,
+//     title: "Mẫu email mời nhận việc 2",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: false,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 4,
+//     title: "Mẫu email mời nhận việc 3",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: false,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 5,
+//     title: "Mẫu email mời nhận việc 4",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: true,
+//     createdDate: "17/02/2023",
+//   },
+//   {
+//     id: 5,
+//     title: "Mẫu email mời nhận việc 5",
+//     subtitle: "(Đã gửi 12)",
+//     user: "Đinh Tiến Thành",
+//     isActive: false,
+//     createdDate: "17/02/2023",
+//   },
+// ];
+
 const defaultValues = {
-    searchKey: "",
+  searchKey: "",
 };
+const EvaluationItem = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  // const [Data] = useState([...data]);
+  const {data: {items: Data = []} = {}} = useGetAllReviewFormQuery();
+  const [status] = useUpdateStatusReviewFormMutation();
 
-export const EvaluationItem = () => {
-    const router = useRouter();
-    const {query, isReady} = router;
-    // api get list
-    const columns = []
+  // const [expands, setExpands] = useState(Array(Data.length).fill(false));
 
+  // const [selected, setSelected] = useState(
+  //   Array(Data.length).fill(false)
+  // );
+  // const [selectedValue, setSelectedValue] = useState(
+  //   Array(Data.length).fill({ checked: false })
+  // );
 
-    // form search
-    const Schema = Yup.object().shape({
-        search: Yup.string(),
-    });
-    const methods = useForm({
-        mode: "onChange",
-        defaultValues: useMemo(() => query.searchKey ? { ...defaultValues, searchKey: query.searchKey } : { ...defaultValues },[query.searchKey]),
-        // defaultValues: {...defaultValues, searchKey: query.searchKey},
-        resolver: yupResolver(Schema),
-    });
+  // modal
+  const [item, setItem] = useState(null);
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+  const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
 
-    const {handleSubmit} = methods;
+  const handleOpenFilterForm = () => {
+    setIsOpenFilter(true);
+  };
+  const handleCloseFilterForm = () => {
+    setIsOpenFilter(false);
+  };
 
-    useEffect(() => {
-        if (!isReady) return;
-        // const queryParams = {
-        //     searchKey: query.searchKey,
-        //     applicantSkillIds: query.applicantSkillIds && typeof query.applicantSkillIds === 'string' ? [query.applicantSkillIds] : query.applicantSkillIds && query.applicantSkillIds,
-        //     expectSalaryFrom: query.expectSalaryFrom ? Number(query.expectSalaryFrom) : null,
-        //     expectSalaryTo: query.expectSalaryTo ? Number(query.expectSalaryTo) : null,
-        //     yearsOfExperience: query.yearsOfExperience ? [Number(query.yearsOfExperience)] : null,
-        //     sexs: query.sexs ? [Number(query.sexs)] : null,
-        //     weightFrom: query.weightFrom ? Number(query.weightFrom) : null,
-        //     weightTo: query.weightTo ? Number(query.weightTo) : null,
-        //     heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
-        //     heightTo: query.heightTo ? Number(query.heightTo) : null,
-        //     maritalStatuses: query.maritalStatuses ? [Number(query.maritalStatuses)] : null,
-        //     // educations: query.educations ? [query.educations] : null,
-        //     homeTowerProvinceIds: query.homeTowerProvinceIds ? [query.homeTowerProvinceIds] : null,
-        //     homeTowerDistrictIds: query.homeTowerDistrictIds ? [query.homeTowerDistrictIds] : null,
-        //     livingAddressProvinceIds: query.livingAddressProvinceIds ? [query.livingAddressProvinceIds] : null,
-        //     livingAddressDistrictIds: query.livingAddressDistrictIds ? [query.livingAddressDistrictIds] : null,
-        //     expectWorkingAddressProvinceIds: query.expectWorkingAddressProvinceIds && typeof query.expectWorkingAddressProvinceIds === 'string' ? [query.expectWorkingAddressProvinceIds] : query.expectWorkingAddressProvinceIds && query.expectWorkingAddressProvinceIds,
-        //     organizationIds: query.organizationIds && typeof query.organizationIds === 'string' ? [query.organizationIds] : query.organizationIds && query.organizationIds,
-        //     recruitmentIds: query.recruitmentIds && typeof query.recruitmentIds === 'string' ? [query.recruitmentIds] : query.recruitmentIds && query.recruitmentIds,
-        //     ownerIds: query.ownerIds && typeof query.ownerIds === 'string' ? [query.ownerIds] : query.ownerIds && query.ownerIds,
-        //     councilIds: query.councilIds && typeof query.councilIds === 'string' ? [query.councilIds] : query.councilIds && query.councilIds,
-        //     creatorIds: query.creatorIds && typeof query.creatorIds === 'string' ? [query.creatorIds] : query.creatorIds && query.creatorIds,
-        //     createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-        //     createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-        //     recruitmentPipelineStates: query.recruitmentPipelineStates
-        //     && typeof query.recruitmentPipelineStates === 'string'
-        //         ? [Number(query.recruitmentPipelineStates)]
-        //         : query.recruitmentPipelineStates && query.recruitmentPipelineStates?.map(pipe => Number(pipe)),
-        //     jobCategoryIds: query.jobCategoryIds && typeof query.jobCategoryIds === 'string' ? [query.jobCategoryIds] : query.jobCategoryIds && query.jobCategoryIds,
-        //     jobSourceIds: query.jobSourceIds && typeof query.jobSourceIds === 'string' ? [query.jobSourceIds] : query.jobSourceIds && query.jobSourceIds,
-        // };
-        if (query) {
-            // getAllFilterApplicant(JSON.stringify(queryParams)).unwrap();
-        } else {
-            // getAllFilterApplicant({}).unwrap();
-        }
-    }, [isReady, query]);
+  // form search
+  const Schema = Yup.object().shape({
+    search: Yup.string(),
+  });
 
-    // open filter form
-    const [isOpen, setIsOpen] = useState(false);
+  const methods = useForm({
+    mode: "onChange",
+    defaultValues: { ...defaultValues },
+    resolver: yupResolver(Schema),
+  });
 
-    // filter modal
-    const handleOpenFilterForm = () => {
-        setIsOpen(true);
-    };
+  const { handleSubmit } = methods;
 
-    const handleCloseFilterForm = () => {
-        setIsOpen(false);
-    };
+  // expand card item
+  // const handleChangeExpand = (index) => {
+  //   const expandsNext = [...expands].map((item, idx) =>
+  //     idx === index ? !item : item
+  //   );
+  //   setExpands(expandsNext);
+  // };
+  // const handleSelected = (data, index) => {
+  //   const selectedNext = [...selected].map((i, idx) =>
+  //     idx === index ? !i : i
+  //   );
+  //   const selectedValueNext = [...selectedValue].map((i, idx) =>
+  //     idx === index
+  //       ? { ...i, checked: !i.checked }
+  //       : {
+  //           ...i,
+  //           checked: i.checked,
+  //         }
+  //   );
+  //   setSelected(selectedNext);
+  //   setSelectedValue(selectedValueNext);
+  // };
 
-    const onSubmitSearch = async (data) => {
-        await router.push({
-            pathname: router.pathname,
-            query: {...query, searchKey: data.searchKey}
-        }, undefined, {shallow: true})
+  const handleOpenModel = (event, data, type) => {
+    event.stopPropagation();
+    setTypeConfirmMultiple(type);
+    setShowConfirmMultiple(true);
+    setItem(data);
+  };
+
+  const handleCloseModel = () => {
+    setShowConfirmMultiple(false);
+    setItem(null);
+  };
+
+  const handleChangeStatus = async (item) => {
+    try {
+      const data = {
+        ids: [item.id],
+        isActivated: !item.isActive,
+      };
+      await status(data).unwrap();
+      enqueueSnackbar("Chuyển trạng thái thành công !");
+      handleCloseModel();
+    } catch (err) {
+      enqueueSnackbar("Chuyển trạng thái thất bại !", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
     }
+  };
+  const [deletes] = useDeleteReviewFormMutation();
 
-    const onSubmit = async (data) => {
-        const body = {...data, searchKey: data.searchKey}
-        await router.push({
-            pathname: router.pathname,
-            query: {
-                ...body,
-                createdTimeFrom: data.createdTimeFrom ? new Date(data.createdTimeFrom).toISOString() : null,
-                createdTimeTo: data.createdTimeTo ? new Date(data.createdTimeTo).toISOString() : null,
-            }
-        }, undefined, {shallow: true})
-        handleCloseFilterForm();
-    };
-
-    return (
-        <View>
-
-            <Content>
-            <EvaluationformHeader
-                methods={methods}
-                isOpen={isOpen}
-                onSubmit={onSubmitSearch}
-                handleSubmit={handleSubmit}
-                onOpenFilterForm={handleOpenFilterForm}
-                onCloseFilterForm={handleCloseFilterForm}
+  const handleDelete = async (item) => {
+    try {
+      await deletes({ ids: [item?.id] }).unwrap();
+      enqueueSnackbar("Thực hiện thành công !");
+      handleCloseModel();
+    } catch (err) {
+      enqueueSnackbar("Thực hiện thất bại !", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
+  };
+  return (
+    <>
+      <Box>
+        <FormHeader
+          title="Mẫu đánh giá"
+          buttonTitle="Thêm mẫu đánh giá"
+          showButton={false}
+        />
+        <EvaluationFormHeader
+          methods={methods}
+          handleSubmit={handleSubmit}
+          onOpenFilterForm={handleOpenFilterForm}
+          onCloseFilterForm={handleCloseFilterForm}
+          onOpenForm={handleOpenModel}
+        />
+        {Data.map((column, index) => {
+          return (
+            <EvaluationItemBlock
+              // isCheckbox
+              key={index}
+              index={index}
+              item={column}
+              // expanded={expands[index]}
+              // checked={selectedValue[index].checked}
+              // onChangeSelected={() => handleSelected(column, index)}
+              // onChangeExpand={() => handleChangeExpand(index)}
+              onOpenModel={handleOpenModel}
             />
-            {/* <DynamicColumnsTable
-                    columns={columns}
-                     source={Data?.items}
-                     loading={isLoading}
-                     ColumnData={ColumnData}
-                     menuItemText={menuItemText}
-                     UpdateListColumn={handleUpdateListColumnApplicants}
-                     settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
-            /> */}
-               
-            </Content>
-            {isOpen && <ApplicantFilterModal
-                columns={columns}
-                isOpen={isOpen}
-                onClose={handleCloseFilterForm}
-                onSubmit={onSubmit}
-            />}
-        </View>
-    );
+          );
+        })}
+      </Box>
+      {showConfirmMultiple && typeConfirmMultiple?.includes("status") && (
+        <ActiveModal
+          showConfirmMultiple={showConfirmMultiple}
+          onClose={handleCloseModel}
+          isActivated={item.isActive}
+          title={"mẫu đánh giá"}
+          handleSave={() => handleChangeStatus(item)}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple?.includes("delete") && (
+        <DeleteModal
+          showConfirmMultiple={showConfirmMultiple}
+          onClose={handleCloseModel}
+          title={"mẫu đánh giá"}
+          handleSave={() => handleDelete(item)}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple?.includes("form") && (
+        <EvaluationFormModal
+          show={showConfirmMultiple}
+          onClose={handleCloseModel}
+          id={item?.id}
+        />
+      )}
+      {isOpenFilter && (
+        <EvaluationFilterModal
+          isOpen={isOpenFilter}
+          onClose={handleCloseFilterForm}
+          onSubmit={handleCloseFilterForm}
+        />
+      )}
+    </>
+  );
 };
+
+export default EvaluationItem;

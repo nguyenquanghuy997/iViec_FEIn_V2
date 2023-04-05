@@ -183,7 +183,7 @@ export const ApplicantItem = () => {
       },
       {
         title: "Học vấn",
-        dataIndex: ["academicLevel", "name"], // antd v4
+        dataIndex:'academicLevel', 
         key: "name",
         width: "120px",
         render: (text) => <Tag>{text}</Tag>,
