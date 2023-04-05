@@ -27,7 +27,7 @@ export const JobTypeItem = () => {
   const [getAllFilter, { data: Data = [], isLoading }] =
     useLazyGetAllJobTypeQuery();
   // api get list Column
-  const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
+  const { data: { items: ColumnData = [] } = {} } = useGetListColumnsQuery();
 
   // api update list Column
   const [updateListColumn] = useUpdateListColumnsMutation();
@@ -42,7 +42,12 @@ export const JobTypeItem = () => {
       width: "60px",
       fixed: "left",
     },
-    { dataIndex: "name", title: "Vị trí công việc", width: "240px" },
+    {
+      dataIndex: "name",
+      title: "Vị trí công việc",
+      width: "240px",
+      render: (name) => <span style={{fontWeight: 500}}>{name}</span>
+    },
     {
       dataIndex: "numberOfRecruitmentApplied",
       title: "Số tin áp dụng",

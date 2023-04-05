@@ -27,9 +27,17 @@ const PipelineHeader = ({
             <RHFTextField
               name="searchKey"
               placeholder="Tìm kiếm quy trình tuyển dụng"
-              sx={{ minWidth: "360px", height: '36px','.MuiInput-root':{
-                height: '36px', minHeight:"36px"
-              } }}
+              sx={{
+                minWidth: "360px",
+                height: '36px',
+                background: 'rgb(243, 244, 246)',
+                borderRadius: '6px',
+                '.MuiInput-root': {
+                  height: '36px',
+                  minHeight: "36px",
+                  border: 'none'
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start" sx={{ ml: 1.5 }}>
@@ -43,7 +51,10 @@ const PipelineHeader = ({
             />
           </FormProvider>
           <ButtonFilterStyle
-          style={{height:36}}
+            style={{
+              height: 36,
+              fontWeight: 500
+            }}
             onClick={onOpenFilterForm}
             startIcon={
               <Iconify
@@ -74,7 +85,7 @@ const PipelineHeader = ({
           }
         />
       </Stack>
-      <PipelineFormModal show={showForm} onClose={()=>setShowForm(false)}/>
+      <PipelineFormModal show={showForm} onClose={() => setShowForm(false)} />
     </>
   );
 };

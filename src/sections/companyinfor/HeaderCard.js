@@ -18,6 +18,8 @@ const HeaderCard = ({ data, text, onOpen }) => {
           px: 5,
           display: "flex",
           justifyContent: "space-between",
+          borderTopLeftRadius: '4px',
+          borderTopRightRadius: '4px',
         }}
       >
         <Typography sx={{ m: "auto 0", fontSize: 16, fontWeight: 600 }}>

@@ -23,7 +23,7 @@ const HumanCompany = () => {
     <Box
       sx={{ width: 700 }}
       role="presentation"
-      // onKeyDown={toggleDrawer(false)}
+    // onKeyDown={toggleDrawer(false)}
     >
       <List
         sx={{
@@ -67,6 +67,8 @@ const HumanCompany = () => {
             px: 5,
             pb: 3,
             background: "white",
+            borderBottomLeftRadius: '4px',
+            borderBottomRightRadius: '4px',
             "& li.react-multi-carousel-item": {
               maxWidth: "215px!important",
               objectFit: "cover",
@@ -77,7 +79,11 @@ const HumanCompany = () => {
           <SwiperListHuman data={Data} />
         </Box>
       ) : (
-        <Box sx={{ bgcolor: "white" }}>
+        <Box sx={{
+          bgcolor: "white",
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '4px',
+        }}>
           {" "}
           <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
             <NoInformation />

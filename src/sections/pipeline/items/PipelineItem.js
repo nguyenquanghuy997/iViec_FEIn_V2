@@ -49,11 +49,12 @@ export const PipelineItem = () => {
     JSON.stringify(cleanObject(dataFilter))
   );
   // api get list Column
-  const { data: {items: ColumnData =[]}={} } = useGetListColumnApplicantsQuery();
+  const { data: { items: ColumnData = [] } = {} } = useGetListColumnApplicantsQuery();
   // api update list Column
   const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
   const [page, setPage] = useState(1);
   const [paginationSize, setPaginationSize] = useState(10);
+  const [columnsTable, setColumnsTable] = useState([]);
 
   const handleChangePagination = (pageIndex, pageSize) => {
     setPaginationSize(pageSize);
@@ -78,6 +79,7 @@ export const PipelineItem = () => {
       title: "Quy trình tuyển dụng",
       width: "240px",
       fixed: "left",
+      render: (name) => <span style = {{fontWeight: 500}}>{name}</span>
     },
     {
       dataIndex: "organizationPipelineStates",
@@ -264,6 +266,8 @@ export const PipelineItem = () => {
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
           columns={columns}
+          columnsTable={columnsTable}
+          setColumnsTable={setColumnsTable}
           source={Data}
           loading={isLoading}
           ColumnData={ColumnData[0]}

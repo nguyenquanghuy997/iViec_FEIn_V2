@@ -30,9 +30,12 @@ const JobTypeHeader = ({
               sx={{
                 minWidth: "360px",
                 height: "36px",
+                background: '#F2F4F5',
+                borderRadius: '6px',
                 ".MuiInput-root": {
                   height: "36px",
                   minHeight: "36px",
+                  border: 'none',
                 },
               }}
               InputProps={{
@@ -82,7 +85,7 @@ const JobTypeHeader = ({
       <JobTypeFormModal
         show={showForm}
         setShow={setShowForm}
-        onClose={()=>setShowForm(false)}
+        onClose={() => setShowForm(false)}
       />
     </>
   );

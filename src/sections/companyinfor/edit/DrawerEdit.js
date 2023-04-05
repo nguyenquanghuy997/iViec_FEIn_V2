@@ -50,7 +50,7 @@ export default function DrawerEdit({ dataForm }) {
       <Button
         style={{
           marginTop: "40px",
-          padding: "8px 12px 8px 14px",
+          padding: "8px 12px 8px 12px",
           borderRadius: 4,
           background: "#F3F4F6",
           textTransform: "none",
@@ -63,7 +63,7 @@ export default function DrawerEdit({ dataForm }) {
             fontSize: 14,
             fontWeight: "500",
             lineHeight: 20 / 15,
-            marginLeft: 6,
+            // marginLeft: 6,
             color: "#455570",
           }}
         >
