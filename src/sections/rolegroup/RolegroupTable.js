@@ -31,6 +31,7 @@ export default function PipelineTable({
 
   useEffect(() => {
     if (initActions.length < 1) {
+      setActionsList([]);
       return;
     }
     setActionsList(initActions);

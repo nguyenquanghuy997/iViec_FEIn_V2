@@ -12,7 +12,7 @@ import {
   useGetRoleGroupListQuery,
   useUpdateListColumnsMutation,
   useRemoveRoleGroupMutation,
-  useUpdateRolegroupMutation,
+  useSetStatusRoleGroupMutation,
 } from "@/sections/rolegroup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Typography, useTheme } from "@mui/material";
@@ -57,7 +57,7 @@ export const RoleContainer = () => {
   const [editItem, setEditItem] = useState(null);
 
   const [removeRoleGroup] = useRemoveRoleGroupMutation();
-  const [updateRoleGroup] = useUpdateRolegroupMutation();
+  const [setStatusRoleGroup] = useSetStatusRoleGroupMutation();
 
   const handleSetDataFilter = (data) =>
     dispatch(filterSlice.actions.setAllDataFilter(data));
@@ -102,8 +102,8 @@ export const RoleContainer = () => {
     },
     {
       title: "Số nhân viên",
-      key: "number",
-      render: () => <>20</>,
+      key: "numOfPerson",
+      dataIndex: 'numOfPerson',
       width: "140px",
     },
 
@@ -124,14 +124,15 @@ export const RoleContainer = () => {
     },
     {
       title: "Ngày tạo",
-      key: "registerTime",
+      key: "createdTime",
+      dataIndex: 'createdTime',
       width: "120px",
-      render: (record) => (
-        <>{moment(record?.registerTime).format("DD/MM/YYYY")}</>
+      render: (time) => (
+        <>{time ? moment(time).format("DD/MM/YYYY") : null}</>
       ),
     },
     {
-      dataIndex: "creatorName",
+      dataIndex: "creatorFirstName",
       title: "Người tạo",
       width: "300px",
       multiple: true,
@@ -237,18 +238,40 @@ export const RoleContainer = () => {
   const [itemSelected, setItemSelected] = useState([]);
   const [columnsTable, setColumnsTable] = useState([]);
 
-  const handleConfirmDelete = () => {
+  const showActionStatus = useMemo(() => {
     if (itemSelected.length < 1) {
-      return;
+      return false;
+    }
+    if (itemSelected.length < 2) {
+      return true;
     }
 
+    let isShow = true;
+    let isActive = itemSelected[0].isActivated;
+    for (let i = 1; i < itemSelected.length; i++) {
+      if (itemSelected[i].isActivated !== isActive) {
+        isShow = false;
+        break;
+      }
+    }
+    return isShow;
+  }, [itemSelected]);
+
+  const selectedStatus = useMemo(() => {
+    if (itemSelected.length < 1) {
+      return true;
+    }
+    return itemSelected[0].isActivated;
+  }, [itemSelected]);
+
+  const handleConfirmDelete = () => {
     confirmModal({
       title: 'Xác nhận xóa vai trò',
       confirmType: 'warning',
       content: (
         <Typography variant="body2" color={palette.text.sub}>
           Bạn có chắc chắn muốn xóa {' '}
-          <strong>{getDeleteTitle()}</strong>?
+          <strong>{getConfirmItemTitle()}</strong>?
         </Typography>
       ),
       okText: 'Xóa',
@@ -265,7 +288,7 @@ export const RoleContainer = () => {
     });
   }
 
-  const getDeleteTitle = () => {
+  const getConfirmItemTitle = () => {
     if (itemSelected.length < 1) {
       return null;
     }
@@ -276,10 +299,6 @@ export const RoleContainer = () => {
   }
 
   const handleChangeStatus = (isChecked) => {
-    if (itemSelected.length !== 1) { // TODO
-      return;
-    }
-
     confirmModal({
       title: isChecked ? 'Bật trạng thái hoạt động cho vai trò' : 'Tắt trạng thái hoạt động cho vai trò',
       confirmType: 'info',
@@ -288,24 +307,23 @@ export const RoleContainer = () => {
       content: (
         <Typography variant="body2" color={palette.text.sub}>
           Bạn chắc chắn muốn { isChecked ? 'bật' : 'tắt' } {' '}
-          trạng thái hoạt động cho vai trò <strong>{itemSelected[0].name}</strong>
+          trạng thái hoạt động cho <strong>{getConfirmItemTitle()}</strong>?
         </Typography>
       ),
       okText: isChecked ? 'Bật' : 'Tắt',
       onOk: async (close) => {
         try {
-          await updateRoleGroup({
-            id: itemSelected[0].id,
-            isActivated: isChecked,
+          await setStatusRoleGroup({
+            Ids: itemSelected.map(it => it.id),
+            IsActive: isChecked,
           }).unwrap();
+
+          setItemSelected(itemSelected.map(it => ({ ...it, isActivated: isChecked })));
           close();
           enqueueSnackbar((isChecked ? 'Bật' : 'Tắt') + ' trạng thái thành công!');
         } catch (err) {
           enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
         }
-      },
-      onCancel: () => {
-        
       },
     });
   }
@@ -351,18 +369,18 @@ export const RoleContainer = () => {
         }}
         data={selectedRowKeys}
         actions={[
-          {
+          ...(showActionStatus ? [{
             component: (
               <Switch
                 label="Đang hoạt động"
+                checked={selectedStatus}
                 onClick={e => {
                   handleChangeStatus(e.target.checked);
                 }}
-                disabled={selectedRowKeys.length > 1}
               />
             ),
-          },
-          {
+          }] : []),
+          ...(itemSelected.length === 1 ? [{
             icon: <RiEdit2Fill size={18} color={palette.text.secondary} />,
             onClick: () => {
               if (itemSelected.length > 1) {
@@ -372,7 +390,7 @@ export const RoleContainer = () => {
               setOpen(true);
             },
             disabled: selectedRowKeys.length > 1,
-          },
+          }] : []),
           {
             icon: <RiDeleteBin6Line size={18} color={palette.text.warning} />,
             onClick: () => {

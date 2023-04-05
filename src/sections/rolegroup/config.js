@@ -63,7 +63,6 @@ export const TYPES = [
     name: COMPANY_INFO,
     actions: [
       "Administrator",
-      "Organization",
       "InviteInterviewCommittee",
       "ParticipateInterviewSchedule",
       "RemoveAccount",
