@@ -34,7 +34,6 @@ const EvaluationItemBlock = ({
 }) => {
   return (
     <CardFormItemStyle className="card-item">
-      {console.log("creatorEmail", item.creatorEmail)}
       <AccordionSummary
         expandIcon={
           <ButtonIcon
