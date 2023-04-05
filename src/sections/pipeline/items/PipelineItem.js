@@ -79,7 +79,7 @@ export const PipelineItem = () => {
         width: "240px",
         fixed: "left",
         render: (item,record) => (
-          <>{record.isDefault == true ? 'Quy trình mặc định iVIEC':item}</>
+          <span style={{fontWeight: 500}}>{record.isDefault == true ? 'Quy trình mặc định iVIEC':item}</span>
         ),
       },
       {
