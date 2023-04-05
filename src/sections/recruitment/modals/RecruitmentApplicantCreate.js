@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Avatar, CircularProgress, Divider, Grid, Modal, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import React, { Fragment, Suspense, useEffect, useState } from "react";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { getExtension, phoneRegExp } from "@/utils/function";
@@ -18,7 +18,8 @@ import { LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES } from "@/ut
 import {
   useCreateApplicantRecruitmentMutation,
   useGetApplicantRecruitmentQuery,
-  useUploadFileApplicantMutation, useUploadFileApplicantRecruitmentMutation
+  useUploadFileApplicantMutation,
+  useUploadFileApplicantRecruitmentMutation
 } from "@/sections/recruitment";
 import { ApplicantFormSlice, useGetApplicantByIdQuery, useUpdateApplicantMutation } from "@/sections/applicant";
 import UploadFileDragAndDrop from "@/components/upload/UploadFileDragAndDrop";
