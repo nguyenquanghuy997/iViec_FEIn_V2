@@ -56,7 +56,7 @@ export default function TextAreaDS(props) {
           </FormLabel>
 
           {error && (
-            <FormHelperText error sx={{ px: 2, textTransform: "capitalize" }}>
+            <FormHelperText error sx={{ px: 2 }}>
               {error?.message}
             </FormHelperText>
           )}
