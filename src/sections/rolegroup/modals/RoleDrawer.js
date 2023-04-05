@@ -1,56 +1,62 @@
-import CloseIcon from "../../../assets/CloseIcon";
+import { useMemo } from "react";
 import RolegroupForm from '../RolegroupForm'
-import { Box, Button, Typography } from "@mui/material";
-import { Divider } from "@mui/material";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import React from "react";
+import DrawerEditForm from "@/components/drawer-edit-form";
+import { useSnackbar } from "notistack";
+import { pick as _pick } from 'lodash';
+import { getErrorMessage } from "@/utils/helper";
 
-export default function DrawerEdit({ open, onClose, onOpen }) {
+import {
+  useGetRoleListQuery,
+  useSaveRoleGroupMutation,
+  useGetRoleDetailQuery,
+} from "../RoleGroupSlice";
 
-  const list = () => (
-    <Box
-      sx={{ width: 600 }}
-      role="presentation"
-      // onKeyDown={toggleDrawer(false)}
-    >
-      <List
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          p: 0,
-        }}
-      >
-        <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-          Thêm mới vai trò
-        </Typography>
-        <Button
-          onClick={onClose}
-          sx={{
-            "&:hover": {
-              background: "white",
-            },
-          }}
-        >
-          <CloseIcon />
-        </Button>
-      </List>
-      <Divider />
-      <RolegroupForm onClose={onClose} />
-      <List sx={{ p: 0 }}></List>
-    </Box>
-  );
+export default function DrawerEdit({ selectedItem, onClose, ...props }) {
+  const { data: { items: actions } = { items: [] } } = useGetRoleListQuery({ PageSize: 1000 });
+  const { data: editRole = null } = useGetRoleDetailQuery(selectedItem?.id, { skip: !selectedItem?.id });
+
+  const actionIds = useMemo(() => {
+    let objIds = {};
+    actions.map(ac => {
+      objIds[ac.name] = ac.id;
+    });
+    return objIds;
+  }, actions);
+
+  const [saveRoleGroup] = useSaveRoleGroupMutation();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const onSubmit = async (data) => {
+    const { identityRoles = [] } = data;
+    const identityRoleIds = identityRoles.filter(ac => !!actionIds[ac])
+      .map(ac => actionIds[ac]);
+
+    const requestData = {
+      ..._pick(data, ['id', 'name', 'description', 'isActivated']),
+      identityRoleIds,
+    };
+
+    try {
+      await saveRoleGroup(requestData).unwrap();
+      onClose();
+      enqueueSnackbar('Lưu vai trò thành công!');
+    } catch (err) {
+      enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
+    }
+  };
 
   return (
-    <div>
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={onClose}
-        onOpen={onOpen}
-      >
-        {list("right")}
-      </Drawer>
-    </div>
+    <DrawerEditForm
+      title={editRole ? 'Sửa vai trò' : 'Thêm mới vai trò'}
+      onSubmit={onSubmit}
+      onClose={() => {
+        onClose(selectedItem);
+      }}
+      {...props}
+    >
+      <RolegroupForm
+        role={editRole}
+      />
+    </DrawerEditForm>
   );
 }

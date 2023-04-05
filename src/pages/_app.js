@@ -38,6 +38,7 @@ import { NotificationProvider } from '@/contexts/NotificationContext'
 import { RoleProvider } from '@/contexts/RoleContext'
 import { SettingsProvider } from '@/contexts/SettingsContext'
 // import { SocketProvider } from '@/contexts/SocketContext'
+import { ConfirmModalProvider } from '@/contexts/ConfirmModalContext';
 // i18n
 import '@/locales/i18n'
 // redux
@@ -85,11 +86,13 @@ export default function MyApp(props) {
                         <NotistackProvider>
                           {/* <SocketProvider> */}
                           <NotificationProvider>
-                            <ProgressBar />
-                            {getLayout(
-                              pageProps,
-                              <Component {...pageProps} />
-                            )}
+                            <ConfirmModalProvider>
+                              <ProgressBar />
+                              {getLayout(
+                                pageProps,
+                                <Component {...pageProps} />
+                              )}
+                            </ConfirmModalProvider>
                           </NotificationProvider>
                           {/* </SocketProvider> */}
                         </NotistackProvider>

@@ -19,7 +19,7 @@ import {
   API_GET_LIST_RECRUITMENT,
   API_GET_ADD_APPLICANT_TO_RECRUITMENT
 } from "@/routes/api";
-import {convertArrayToObject} from '@/utils/help'
+import {convertArrayToObject} from '@/utils/helper'
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["GetColumnApplicants", "GetListsApplicants"],
 });
