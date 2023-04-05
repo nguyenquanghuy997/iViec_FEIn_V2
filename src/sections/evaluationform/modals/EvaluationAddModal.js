@@ -1,16 +1,22 @@
-import { Text, View } from "@/components/FlexStyled";
-import SvgIcon from "@/components/SvgIcon";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
+import {
+  ButtonDS,
+  TextAreaDS,
+} from "@/components/DesignSystem";
+import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import Iconify from "@/components/Iconify";
+import { FormProvider, RHFCheckbox, RHFTextField } from "@/components/hook-form";
+import { Label } from "@/components/hook-form/style";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
+import { ButtonIcon } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
-import { Modal } from "@mui/material";
+import { Divider, Modal } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-const defaultValues = {
-  name: "",
-  des: "",
+const defaultValuess = {
+  name:"",
+  des: ""
 };
 
 export const EvaluationAddModal = ({
@@ -18,127 +24,124 @@ export const EvaluationAddModal = ({
   setShow,
   editData,
   onSubmit,
-  onDelete,
 }) => {
-  const isEdit = !!editData.name;
-
+  const isEdit = !!editData?.name;
   // form
-  const ProfileSchema = Yup.object().shape({
-    name: Yup.string().required("Chưa nhập tiêu chí đánh giá"),
-    des: Yup.string(),
+    // form
+    const Schema = Yup.object().shape({
+      name: Yup.string().required("Chưa nhập tên tiêu chí"),
+    });
+
+  const methodss = useForm({
+    defaultValuess,
+    resolver: yupResolver(Schema),
   });
-  const methods = useForm({
-    defaultValues,
-    resolver: yupResolver(ProfileSchema),
-  });
-  const { setValue, handleSubmit } = methods;
+
+  const {
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methodss;
 
   const pressHide = () => {
     setShow(false);
   };
-
-  const pressSave = handleSubmit((d) => {
-    onSubmit?.(d);
-    pressHide();
+  const pressSave = handleSubmit(async (d) => {
+    const data = {
+      name: d.name,
+      isRequired: d.isRequired,
+      des: d.des,
+    };
+      onSubmit?.(data);
+      pressHide();
+    
   });
 
-  const pressDelete = () => {
-    onDelete?.();
-    pressHide();
-  };
-
   useEffect(() => {
-    if (!show) {
-      setValue("name", defaultValues.name);
-      setValue("des", defaultValues.des);
+    if (!isEdit) {
+      setValue("name", "");
+      setValue("isRequired", "");
+      setValue("des", "");
       return;
+    } else {
+      setValue("name", editData.name);
+      setValue("isRequired", editData.isRequired);
+      setValue("des", editData.des);
     }
-
-    if (!isEdit) return;
-
-    setValue("name", editData.name);
-    setValue("des", editData.des);
-  }, [show]);
-
+  }, []);
   return (
     <Modal
       open={show}
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       onBackdropClick={pressHide}
     >
-      <FormProvider methods={methods}>
-        <View hidden width={668} borderRadius={8} bgColor={"#fff"}>
-          <View p={24}>
-            <View flexRow atCenter mb={24}>
-              <Text flex1 fontSize={22} fontWeight={"700"}>
-                {isEdit ? "Sửa tiêu chí" : "Thêm tiêu chí"}
+      <>
+        <FormProvider methods={methodss}>
+          <View hidden width={668} borderradius={8} bgcolor={"#FDFDFD"}>
+            <View flexrow="true" atcenter="true" pv={22} ph={24}>
+              <Text flex fontsize={16} fontweight={"700"}>
+                {isEdit ? "Sửa tiêu chí đánh giá" : "Thêm tiêu chí đánh giá"}
               </Text>
 
-              <View onPress={pressHide}>
-                <SvgIcon>
-                  {
-                    '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.74988 3.75L8.99987 9M8.99987 9L14.2499 14.25M8.99987 9L14.2499 3.75M8.99987 9L3.74988 14.25" stroke="#393B3E" stroke-width="2.025" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-                  }
-                </SvgIcon>
+              <ButtonIcon
+                onClick={pressHide}
+                icon={
+                  <Iconify
+                    icon={"ic:baseline-close"}
+                    width={20}
+                    height={20}
+                    color="#455570"
+                  />
+                }
+              />
+            </View>
+            <Divider />
+            <View p={24}>
+            <View mb={12}>
+              <Label required={true}>{"Tên tiêu chí"}</Label>
+              <RHFTextField
+                name={"name"}
+                placeholder="Nhập tên tiêu chí"
+                maxLength={150}
+              />
+            </View>
+            <View mb={8}>
+              <RHFCheckbox
+                style={{ marginLeft: "-8px" }}
+                name="isRequired"
+                label="Bắt buộc đánh giá"
+              />
+            </View>
+              <View mb={24}>
+                <Label>{"Mô tả tiêu chí"}</Label>
+                <TextAreaDS
+                  initialValue=""
+                  maxLength={255}
+                  placeholder="Nhập nội dung mô tả tiêu chí đánh giá"
+                  name={"des"}
+                />
               </View>
             </View>
+            <Divider />
+            <View flexrow="true" jcend="true" pv={16} ph={24}>
+              <ButtonCancelStyle
+                sx={{ marginRight: "8px" }}
+                onClick={pressHide}
+              >
+                Hủy
+              </ButtonCancelStyle>
 
-            <Text flexRow mb={10} fontWeight={"600"}>
-              {"Tiêu chí đánh giá "}
-              <Text ml={4} color={"#E82E25"}>
-                {"*"}
-              </Text>
-            </Text>
-
-            <RHFTextField name={"name"} placeholder={"Nhập tên tiêu chí"} />
-
-            <Text flexRow mt={24} mb={10} fontWeight={"600"}>
-              {"Mô tả tiêu chí đánh giá"}
-            </Text>
-
-            <RHFTextField
-              multiline
-              rows={3}
-              name={"des"}
-              placeholder={
-                "Nhập gợi ý ngắn gọn giúp hội đồng tuyển dụng dễ dàng dựa theo để đánh giá ứng viên"
-              }
-            />
+              <ButtonDS
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+                tittle={isEdit ? "Lưu" : "Thêm"}
+                onClick={pressSave}
+              />
+            </View>
           </View>
-
-          <View
-            flexRow
-            jcEnd
-            pv={12}
-            ph={16}
-            bgColor={"#F8F8F9"}
-            boxShadow={"inset 0px 1px 0px #EBECF4"}
-          >
-            {!!isEdit && (
-              <>
-                <LoadingButton
-                  size="large"
-                  variant="text"
-                  color="error"
-                  onClick={pressDelete}
-                >
-                  {"Xóa"}
-                </LoadingButton>
-                <View flex1 />
-              </>
-            )}
-
-            <LoadingButton size="large" variant="text" onClick={pressHide}>
-              {"Hủy"}
-            </LoadingButton>
-            <View width={8} />
-
-            <LoadingButton size="large" variant="contained" onClick={pressSave}>
-              {"Lưu"}
-            </LoadingButton>
-          </View>
-        </View>
-      </FormProvider>
+        </FormProvider>
+      </>
     </Modal>
   );
 };

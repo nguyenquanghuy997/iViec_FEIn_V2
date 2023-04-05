@@ -36,31 +36,30 @@ const DynamicColumnsTable = (props) => {
     itemSelected,
     setItemSelected,
     columnsTable,
-    setColumnsTable
+    setColumnsTable,
   } = props;
 
   const [columnsVisible, setColumnsVisible] = useState();
   const [valueChangeSetting, setValueChangeSetting] = useState();
-  
   useEffect(() => {
-    if(ColumnData){
-      setColumnsVisible(ColumnData)
+    if (ColumnData) {
+      setColumnsVisible(ColumnData);
       setColumnsTable(
-        columns.filter((item) =>  
-        { 
-          return ColumnData[item.dataIndex];
-        })
-        .map((col) => {
-          const renderFunc = col.render;
-          if (renderFunc) {
-            col.render = (text, record, index) => {
-              return renderFunc(text, record, index, page, paginationSize);
-            };
-          }
-          return col;
-        })
+        columns
+          .filter((item) => {
+            return ColumnData[item.dataIndex];
+          })
+          .map((col) => {
+            const renderFunc = col.render;
+            if (renderFunc) {
+              col.render = (text, record, index) => {
+                return renderFunc(text, record, index, page, paginationSize);
+              };
+            }
+            return col;
+          })
       );
-    } else{
+    } else {
       setColumnsTable(
         columns.map((col) => {
           const renderFunc = col.render;
@@ -73,8 +72,7 @@ const DynamicColumnsTable = (props) => {
         })
       );
     }
-    
-  }, [ColumnData]);
+  }, [ColumnData, columns]);
 
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
 
@@ -136,7 +134,7 @@ const DynamicColumnsTable = (props) => {
                         }}
                         control={
                           <Checkbox
-                            defaultChecked={
+                            checked={
                               columnsVisible[p?.dataIndex] ? true : false
                             }
                             onChange={(e) => onChangeCheck(e)}
@@ -164,7 +162,7 @@ const DynamicColumnsTable = (props) => {
                         }}
                         control={
                           <Checkbox
-                            defaultChecked={
+                            checked={
                               columnsVisible[p?.dataIndex] ? true : false
                             }
                             onChange={(e) => onChangeCheck(e)}
@@ -208,17 +206,16 @@ const DynamicColumnsTable = (props) => {
   const onChangeCheck = (e) => {
     const checked = e.target.checked;
     const targetId = e.target.name;
-    setValueChangeSetting({...valueChangeSetting, [targetId]:checked})
-    const visible = {...columnsVisible, [targetId]:checked}
-    setColumnsVisible(visible)
+    setValueChangeSetting({ ...valueChangeSetting, [targetId]: checked });
+    const visible = { ...columnsVisible, [targetId]: checked };
+    setColumnsVisible(visible);
   };
 
   const handleUpdateListColumnApplicants = async () => {
     const filtered = columns.filter((item) => columnsVisible[item.dataIndex]);
     setColumnsTable(filtered);
     var data = { id: columnsVisible.id, body: valueChangeSetting };
-
-    await UpdateListColumn(data);
+    if (ColumnData) await UpdateListColumn(data);
   };
 
   const useStyles = makeStyles(() => ({
@@ -236,7 +233,7 @@ const DynamicColumnsTable = (props) => {
         height: "72px",
         padding: "13px 8px",
         borderBottom: "2px solid #CCD4DC",
-        wordBreak: 'break-all'
+        wordBreak: "break-all",
       },
       "& .ant-table-tbody >tr >td": {
         padding: "13px 8px",
@@ -378,20 +375,22 @@ const DynamicColumnsTable = (props) => {
         mb={16}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <ButtonIcon
-            onClick={showSetting}
-            sx={{ backgroundColor: "unset" }}
-            icon={
-              <Iconify
-                icon={"material-symbols:settings"}
-                width={20}
-                height={20}
-                color="#5C6A82"
-                background="#5C6A82"
-                mr={1}
-              />
-            }
-          />
+          {ColumnData && (
+            <ButtonIcon
+              onClick={showSetting}
+              sx={{ backgroundColor: "unset" }}
+              icon={
+                <Iconify
+                  icon={"material-symbols:settings"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
+                  background="#5C6A82"
+                  mr={1}
+                />
+              }
+            />
+          )}
           <View>
             <TextMaxLine
               line={1}
@@ -434,7 +433,7 @@ const DynamicColumnsTable = (props) => {
           }
           columns={[...columnsTable]}
           dataSource={source?.items}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: "max-content" }}
           loading={loading}
           className={classes.table}
           pagination={{

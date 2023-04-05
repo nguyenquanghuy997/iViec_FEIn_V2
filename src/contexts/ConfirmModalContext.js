@@ -127,7 +127,7 @@ const ConfirmModalProvider = ({ children }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          zIndex: 12005,
+          zIndex: 2000,
         }}
         {...props}
       >

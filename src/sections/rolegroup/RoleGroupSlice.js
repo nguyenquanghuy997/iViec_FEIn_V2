@@ -9,6 +9,7 @@ import {
   API_GET_COLUMN_ROLE,
   API_UPDATE_COLUMN_ROLE,
   API_GET_ROLE_GROUP,
+  API_SET_ACTIVE_ROLE_GROUP,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -75,7 +76,12 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
           data: restData,
         };
       },
-      invalidatesTags: ['RoleGroup'],
+      invalidatesTags: (result, error, { id }) => {
+        return error ? [] : [
+          { type: 'RoleGroup' },
+          ...(id ? [{ type: 'RoleGroup', id: 'ROLE_' + id }] : []),
+        ];
+      },
     }),
 
     // Chi tiết vai trò theo ID
@@ -99,6 +105,18 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
         },
       }),
       invalidatesTags: ["RoleGroup"],
+    }),
+
+    // Update status role group
+    setStatusRoleGroup: builder.mutation({
+      query: (data) => {
+        return {
+          url: API_SET_ACTIVE_ROLE_GROUP,
+          method: 'PATCH',
+          data,
+        };
+      },
+      invalidatesTags: ['RoleGroup'],
     }),
 
     //settings
@@ -129,5 +147,7 @@ export const {
   useUpdateListColumnsMutation,
   useSaveRoleGroupMutation,
   useGetRoleDetailQuery,
+  useLazyGetRoleDetailQuery,
   useRemoveRoleGroupMutation,
+  useSetStatusRoleGroupMutation,
 } = PipelineFormSlice;

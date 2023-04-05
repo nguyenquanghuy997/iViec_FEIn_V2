@@ -2,11 +2,10 @@
 import Page from "@/components/Page";
 import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {
-  EvaluationItem,
-} from "@/sections/evaluationform";
+
 import { getRolesByPage } from "@/utils/role";
 import PageWrapper from "@/components/PageWrapper";
+import EvaluationItem from "@/sections/evaluationform/items/EvaluationItem";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
   return (
@@ -27,8 +26,8 @@ export async function getStaticProps() {
 export default function Setting() {
 
   return (
-    <PageWrapper title={"Quy trình tuyển dụng"}>
-      <Page>
+    <PageWrapper>
+      <Page title={"Mẫu đánh giá"}>
         <EvaluationItem />
       </Page>
     </PageWrapper>
