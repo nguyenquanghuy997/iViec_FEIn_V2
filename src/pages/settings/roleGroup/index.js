@@ -1,5 +1,4 @@
 import { RoleContainer } from "@/sections/rolegroup";
-import Page from "@/components/Page";
 import PageWrapper from "@/components/PageWrapper";
 import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
@@ -20,9 +19,7 @@ export async function getStaticProps() {
 export default function Setting() {
   return (
     <PageWrapper title={"Vai trò"}>
-      <Page>
-        <RoleContainer />
-      </Page>
+      <RoleContainer />
     </PageWrapper>
   );
 }
