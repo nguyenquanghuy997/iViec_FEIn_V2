@@ -36,6 +36,7 @@ export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicat
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants";
 export const API_GET_FILTER_ALL_APPLICANTS = "/applicant/ApplicantRecruitment/FilterApplicantRecruitments";
 export const API_UPLOAD_FILE_APPLICANTS = "/applicant/ApplicantRecruitment/UploadApplicantFile";
+export const API_UPLOAD_FILE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/UploadApplicantRecruitmentCv";
 export const API_GET_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/GetApplicantRecruitmentVisible";
 export const API_UPDATE_COLUMN_APPLICANTS = "/aggregator/ApplicantRecruitmentVisible/UpdateApplicantRecruitmentVisible";
 export const API_GET_APPLICANTS_BY_ID = "/applicant/Applicant/GetApplicant";

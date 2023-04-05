@@ -13,7 +13,7 @@ import {
   API_UPDATE_COLUMN_APPLICANTS,
   API_GET_APPLICANT_RECRUITMENT,
   API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE,
-  API_GET_RECRUITMENT_BY_ORGANIZATION, 
+  API_GET_RECRUITMENT_BY_ORGANIZATION,
   API_UPDATE_APPLICANT,
   API_GET_APPLICANT_BY_PIPELINESTETEID,
   API_GET_LIST_RECRUITMENT,
@@ -21,10 +21,10 @@ import {
 } from "@/routes/api";
 import {convertArrayToObject} from '@/utils/helper'
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["GetColumnApplicants", "GetListsApplicants"],
+  addTagTypes: ["GetColumnApplicants", "GetListsApplicants", "GetListApplicantPipeline"],
 });
 
-const ApplicantFormSlice = apiWithTag.injectEndpoints({
+export const ApplicantFormSlice = apiWithTag.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getListApplicants: builder.query({
@@ -53,7 +53,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
       query: (data) => ({
         url: `${API_UPDATE_APPLICANT}/${data.id}`,
         method: "PATCH",
-        data: data.body,
+        data: data,
       }),
     }),
     getApplicantById: builder.query({
@@ -61,18 +61,13 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 1,
     }),
     getRecruitmentsByApplicant: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENTS_BY_APPLICANT,
         method: "GET",
         params,
-      }),
-    }),
-    getRecruitmentPipelineStatesByRecruitment2: builder.query({
-      query: (id) => ({
-        url: `${API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT}?RecruitmentId=${id}`,
-        method: "GET",
       }),
     }),
     getRecruitments: builder.query({
@@ -88,10 +83,6 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params,
       }),
-      // transformResponse: (response) => {
-      //   const presponseModified = convertArrayToObject(response.items, 'id');
-      //   return presponseModified;
-      // },
     }),
     getApplicantCurrentStateWithRecruitmentStates: builder.mutation({
       query: (params) => ({
@@ -143,6 +134,7 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
         return {data:presponseModified}
       },
+      providesTags: ["GetListApplicantPipeline"]
     }),
     updateApplicantRecruitmentToNextState: builder.mutation({
       query: (data) => ({

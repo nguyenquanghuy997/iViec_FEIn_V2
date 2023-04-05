@@ -14,3 +14,14 @@ input:-webkit-autofill:focus {
 input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px white inset;
 }
+
+*::-webkit-scrollbar-thumb {
+    background: #B9BFC9;
+    margin-right: 3px;
+    border-radius: 30px;
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
