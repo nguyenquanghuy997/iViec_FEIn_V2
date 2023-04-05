@@ -30,7 +30,8 @@ export const API_USER_INVITE_SET_PASSWORD = "/identity/Identity/UserInvitedSetPa
 export const API_CHANGE_PASSWORD = "/identity/Identity/ChangePassword";
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken";
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup";
-
+export const API_DELETE_USER_ORGANIZATION = "/identity/Identity/RemoveApplicationUsers";
+export const API_UPDATE_USER_ROLE_ORGANIZATION = "/identity/Identity/ApplicationUserUpdateRole";
 
 //Ứng viên
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants";
@@ -60,6 +61,8 @@ export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganiz
 export const API_DELETE_MULTIPLE_ORGANIZATION = "/organization/Organization/RemoveOrganizations";
 export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrganizationsActive";
 export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin";
+
+export const API_GET_LIST_USER_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganization"
 
 // mời người dùng
 export const API_INVITE_USER = "/organization/OrganizationUserInvite/CreateOrganizationUserInvites";
@@ -99,6 +102,7 @@ export const API_UPDATE_COMPANY_INFOR = 'organization/OrganizationInformation/Up
 export const API_UPLOAD_IMAGE ='organization/Organization/OrganizationUploadImage'
 export const API_UPDATE_ORGANIZATION_HUMAN = '/organization/OrganizationHuman/UpdateOrganizationHuman'
 export const API_UPDATE_ORGANIZATION_BUSINESS = 'organization/OrganizationBusiness/UpdateOrganizationBusiness'
+export const API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT = '/organization/OrganizationWorkingEnvironment/UpdateOrganizationWorkingEnvironment'
 export const API_UPDATE_ORGANIZATION_PIPELINE ='organization/OrganizationProfilePipeline/UpdateOrganizationProfilePipelines'
 export const API_UPDATE_ORGANIZATION_ENDING = 'organization/Organization/UpdateOrganization'
 export const API_ADD_ORGANIZATION_BUSINESS='organization/OrganizationBusiness/CreateOrganizationBusiness'

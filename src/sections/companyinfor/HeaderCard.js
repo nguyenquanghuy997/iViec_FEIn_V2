@@ -19,7 +19,7 @@ const HeaderCard = ({text, onOpen, checked, handleChange}) => {
         </Typography>
         <Box sx={{display: 'flex'}}>
           <FormControlLabel
-              control={<Switch checked={checked} onChange={handleChange}/>}
+              control={<Switch color={"success"} checked={checked} onChange={handleChange}/>}
               label={checked ? "Hiển thị" : "Không hiển thị"}
           />
           <Box>

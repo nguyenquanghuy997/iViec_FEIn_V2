@@ -11,7 +11,7 @@ import {
   API_UPDATE_ORGANIZATION_BUSINESS,
   API_UPDATE_ORGANIZATION_PIPELINE,
   API_UPDATE_ORGANIZATION_ENDING,
-  API_ADD_ORGANIZATION_BUSINESS,
+  API_ADD_ORGANIZATION_BUSINESS, API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT,
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -122,6 +122,14 @@ export const companyServiceApi = createApi({
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
+    updateCompanyEnvironment: builder.mutation({
+      query: (body) => ({
+        url: `${API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT}`,
+        method: "PATCH",
+        data: body,
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
     updateCompanyPipeline: builder.mutation({
       query: (body) => ({
         url: API_UPDATE_ORGANIZATION_PIPELINE,
@@ -152,5 +160,6 @@ export const {
   useUpdateCompanyBusinessMutation,
   useUpdateCompanyPipelineMutation,
   useUpdateCompanyEndingMutation,
+  useUpdateCompanyEnvironmentMutation,
   useAddOrganizationBusinessMutation
 } = companyServiceApi;

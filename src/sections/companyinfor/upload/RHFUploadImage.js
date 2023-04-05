@@ -2,8 +2,29 @@ import {Controller, useFormContext} from "react-hook-form";
 import UploadImage from "@/assets/UploadImage";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 
-function RHFUploadImage({name, title = 'Tải lên ảnh', ...other}) {
-  const {control} = useFormContext();
+function RHFUploadImage({name, title = 'Tải lên ảnh', key = 'imagePreview', ...other}) {
+  const {control, setValue} = useFormContext();
+
+  function readFileAsync(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve({
+                    url: reader.result,
+                    type: "image"
+                });
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+  }
+
+  const handleChange = async (e) => {
+      const files = e.target.files;
+      if (files) {
+          setValue(`${name.substring(0, name.lastIndexOf("."))}.${key}`, await readFileAsync(files[0]))
+      }
+  }
 
   return (
       <Controller
@@ -21,12 +42,14 @@ function RHFUploadImage({name, title = 'Tải lên ảnh', ...other}) {
                             type="file"
                             onChange={(e) => {
                               field.onChange(e.target.files);
+                              handleChange(e)
                             }}
                         />
                       </>
                       }
                       onChange={(e) => {
                         field.onChange(e.target.files);
+                        handleChange(e)
                       }}
                       variant={"outlined"}
                       startIcon={<UploadImage/>}

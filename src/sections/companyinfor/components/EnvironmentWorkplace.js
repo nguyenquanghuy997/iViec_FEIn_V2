@@ -3,20 +3,15 @@ import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import CloseIcon from "@/assets/CloseIcon";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
-import React, {useState} from "react";
-// import { RiFlagLine } from "react-icons/ri";
-// import "react-multi-carousel/lib/styles.css";
-// import SwiperCore, {
-//   Navigation,
-//   Pagination,
-//   Autoplay,
-//   Virtual,
-// } from "swiper/core";
+import {useState} from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import "swiper/swiper-bundle.css";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import {useSnackbar} from "notistack";
 import LoadingScreen from "@/components/LoadingScreen";
+import EditEnvironmentWorkplace from "@/sections/companyinfor/components/EditEnvironmentWorkplace";
+import {get} from "lodash";
+import {DOMAIN_SERVER_API} from "@/config";
 
 export const SliderStyle = styled("div")(() => ({
     "& .swiper-pagination": {
@@ -107,80 +102,38 @@ const EnvironmentWorkplace = ({ data }) => {
                                 spaceBetween={50}
                                 pagination
                             >
-                                {data?.organizationBusiness?.organizationBusinessDatas.map(
-                                    (item, index) => (
-                                        <SwiperSlide
-                                            key={`slide-${index}`}
-                                            style={{listStyle: "none"}}
-                                        >
-                                            {/* <div
-                      style={{
-                        color: "white",
-                        width: "100%",
-                        height: "302px",
-                        // backgroundImage: `url(https://media.istockphoto.com/id/840091762/vi/anh/n%E1%BB%81n-m%E1%BB%9D-n%E1%BB%99i-th%E1%BA%A5t-y-t%E1%BA%BF-b%E1%BB%87nh-vi%E1%BB%87n.jpg?s=612x612&w=0&k=20&c=j3wnEX_ey606LK9IC9oZ0aM-Vtug6bYMrzJiUtVApWY=)`,
-                        // backgroundsize: "cover",
-                        // padding: "36px 40px",
-                        // display: "flex",
-                        // alignItems: "end",
-                      }}
-                    >
-                      <>
-                        <div>
-                          <source
-                            src="//vjs.zencdn.net/v/oceans.mp4"
-                            type="video/mp4"
-                          ></source>
-                        </div>
-                        {/* <div
-                          style={{
-                            padding: "16px",
-                            backgroundImage:
-                              "linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)",
-                            borderRadius: "6px 0 0 6px",
-                            position: "absolute",
-                            right: 0,
-                            width: "400px",
-                          }}
-                        >
-                          <p
-                            style={{
-                              fontWeight: 500,
-                              fontSize: 14,
-                            }}
-                          >
-                            <RiFlagLine /> Trụ sở miền Bắc
-                          </p>
-                          <span style={{ fontSize: "12px" }}>
-                            Số 6 Quang Trung, phường Trần Hưng Đạo, Quận Hoàn
-                            Kiếm, Thành Phố Hà Nội, Việt Nam
-                          </span>
-                        </div>
-                      //</SwiperSlide>
-                    //</SliderStyle></div> */}
-
+                                {data?.organizationWorkingEnvironments.map((item, index) => (
+                                        <SwiperSlide key={`slide-${index}`} style={{listStyle: "none"}}>
+                                            <Box
+                                                sx={{
+                                                    minHeight: "465px",
+                                                    backgroundImage: `url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(item, 'image')})`,
+                                                    padding: "36px 40px",
+                                                    backgroundRepeat: 'no-repeat',
+                                                    backgroundSize: 'cover'
+                                                }}
+                                            />
                                         </SwiperSlide>
                                     )
                                 )}
                             </Swiper>
                         </SliderStyle>
                     ) : <EmptyValue text={"Hiện chưa nội dung Môi trường làm việc"}/>}
-                    {/* <SwiperColumn/> */}
                 </Box>
             </Box>
             {open && (
                 <Drawer anchor="right" open={open} onClose={handleClose} onOpen={handleOpen}>
-                    <Box sx={{width: 700}}>
+                    <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
-                                Chỉnh sửa Lĩnh vực kinh doanh
+                                Chỉnh sửa Môi trường làm việc
                             </Typography>
                             <Button onClick={handleClose} sx={{"&:hover": {background: "#FDFDFD"}}}>
                                 <CloseIcon/>
                             </Button>
                         </List>
                         <Divider/>
-                        <div>{/* <EditBusinessArea onClose={handleClose} /> */}</div>
+                        <EditEnvironmentWorkplace data={data} onClose={handleClose} />
                     </Box>
                 </Drawer>
             )}

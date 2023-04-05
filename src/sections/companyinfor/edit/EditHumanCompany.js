@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import {useSnackbar} from "notistack";
-import {useFieldArray, useForm} from "react-hook-form";
+import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {RiDeleteBin6Line} from "react-icons/ri";
 import * as Yup from "yup";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
@@ -28,6 +28,7 @@ const EditHumanCompany = ({data, onClose}) => {
         organizationHumans: data?.organizationHumans?.map(item => ({
           id: item.id,
           avatar: item.avatar,
+            imagePreview: '',
           name: item.name,
           description: item.description
         }))
@@ -44,10 +45,10 @@ const EditHumanCompany = ({data, onClose}) => {
         resolver: yupResolver(ProfileSchema),
         defaultValues,
       });
-      const {setValue, handleSubmit, control, watch, formState: {isSubmitting, isValid}} = methods;
+      const {setValue, handleSubmit, control, formState: {isSubmitting, isValid}} = methods;
       const {fields, append, move, remove} = useFieldArray({control, name: "organizationHumans"});
 
-      const organizationHumans = watch("organizationHumans")
+      const organizationHumans = useWatch({ control, name: 'organizationHumans' });
 
       const onSubmit = async (formData) => {
         const imageData = formData.organizationHumans?.filter(item => item.avatar !== null && typeof item.avatar === 'object')?.map(item => item.avatar?.[0]);
@@ -140,24 +141,27 @@ const EditHumanCompany = ({data, onClose}) => {
                                           }} {...provided.dragHandleProps}>
                                             <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color="#A2AAB7"/>
                                           </Box>
-                                          {item?.avatar ? <Image
-                                              disabledEffect
-                                              visibleByDefault
-                                              src={typeof organizationHumans[index]?.avatar === 'string' ?
-                                                  `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${item?.avatar}` :
-                                                  'null'
-                                                 }
-                                              id={index}
-                                              alt="image"
-                                              sx={{display: "flex", maxWidth: '215px', width: '100%', height: 254, px: 2}}
-                                          /> : <Image
-                                              disabledEffect
-                                              visibleByDefault
-                                              src={'/assets/placeholder.png'}
-                                              id={index}
-                                              alt="image"
-                                              sx={{display: "flex", maxWidth: '215px', width: '100%', height: 254, px: 2}}
-                                          />}
+                                          {item?.avatar ? (
+                                                  <Image
+                                                      disabledEffect
+                                                      visibleByDefault
+                                                      src={typeof organizationHumans[index]?.avatar === 'string' ?
+                                                          `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${item?.avatar}` : organizationHumans[index]?.imagePreview?.url
+                                                      }
+                                                      id={index}
+                                                      alt="image"
+                                                      sx={{display: "flex", maxWidth: '215px', width: '100%', height: 254, px: 2}}
+                                                  />
+                                              )
+                                              : <Image
+                                                  disabledEffect
+                                                  visibleByDefault
+                                                  src={'/assets/placeholder.png'}
+                                                  id={index}
+                                                  alt="image"
+                                                  sx={{display: "flex", maxWidth: '215px', width: '100%', height: 254, px: 2}}
+                                                />
+                                          }
                                           <Box sx={{flex: 1, ml: 2}}>
                                             <Box sx={{
                                               display: "flex",
