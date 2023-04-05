@@ -30,13 +30,13 @@ SideBar.propTypes = {
 
 export default function SideBar({ navConfig, isCollapse = false, ...other }) {
   const { translate } = useLocales();
-  const { checkAccessPermission } = useRole();
+  const { canAccess } = useRole();
   const navConfigBaseRole = useMemo(
     () =>
       navConfig.filter(({ items = [] }) =>
-        items.some(({ roles = [] }) => checkAccessPermission(roles))
+        items.some(({ actions = [] }) => canAccess(actions))
       ),
-    [checkAccessPermission, navConfig]
+    [navConfig]
   );
 
   return (
