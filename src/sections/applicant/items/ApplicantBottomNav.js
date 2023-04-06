@@ -88,8 +88,11 @@ const ApplicantBottomNav = ({
     });
     handleExportExcel(dataFormat);
   };
-  const [reject, setReject] = useState(false);
-  const [rejectid, setRejectid] = useState();
+
+  const [actionId, setActionId] = useState();
+  const [actionType, setActionType] = useState();
+  const [actionShow, setActionShow] = useState(false);
+
   return (
     <Drawer
       anchor={"bottom"}
@@ -226,8 +229,9 @@ const ApplicantBottomNav = ({
             setShowConfirmMultiple={setShowConfirmMultiple}
             onClose={onCloseModel}
             itemSelected={itemSelected[0]}
-            setRejectid={setRejectid}
-            setReject={setReject}
+            setActionId={setActionId}
+            setActionType={setActionType}
+            setActionShow={setActionShow}
           />
         )}
       {showConfirmMultiple && typeConfirmMultiple.includes("tranferRe") && (
@@ -239,13 +243,14 @@ const ApplicantBottomNav = ({
           itemSelected={itemSelected[0]}
         />
       )}
-      {reject && (
+      {actionShow && (
         <RejectApplicantModal
           applicantId={itemSelected[0]?.applicantId}
           recruimentId={itemSelected[0]?.recruitmentId}
-          rejectid={rejectid}
-          show={reject}
-          setShow={setReject}
+          actionId={actionId}
+          actionType={actionType}
+          show={actionShow}
+          setShow={setActionShow}
           onClose={onCloseModel}
         />
       )}
