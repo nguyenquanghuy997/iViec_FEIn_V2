@@ -2,11 +2,12 @@ import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import { srcImage } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
-import { Box, Paper, Stack, Typography, Grid } from "@mui/material";
+import { Box, Paper, Stack, Typography, Grid, Button, ButtonGroup } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { memo,useState } from "react";
+import React, { memo, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
+import { Divider } from "antd";
 function Item(props) {
   const { sx, ...other } = props;
   return (
@@ -21,13 +22,23 @@ function Item(props) {
     />
   );
 }
+
 function Baseitem(props) {
   const { item } = props;
   return (
     <Grid
       display="flex"
       alignItems="center"
-      sx={{ "& .MuiBadge-dot": { width: "6px", minWidth: "6px", height: "6px", top: 3, right: 3, } }}
+      sx={{
+        margin: '0 12px',
+        "& .MuiBadge-dot": {
+          width: "6px",
+          minWidth: "6px",
+          height: "6px",
+          top: 3,
+          right: 3,
+        }
+      }}
     >
       <AvatarDS
         sx={{ height: "32px", width: "32px", borderRadius: "14px", }}
@@ -35,7 +46,7 @@ function Baseitem(props) {
       />
 
       <Box pl={1}>
-        <Typography fontSize="12px" display="flex" fontSize="13px" fontWeight="600" alignItems="center">
+        <Typography fontSize="12px" display="flex" fontWeight="600" alignItems="center">
           {item?.fullName}
         </Typography>
         <Stack direction="row" spacing={2} color="#172B4D">
@@ -54,13 +65,15 @@ function ExaminationItem(props) {
     <div>
       <Baseitem item={item} />
       <Box
-        sx={{ backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE",display: "flex", 
+        sx={{
+          backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE", display: "flex",
           flexDirection: "column-reverse",
-          alignItems: "flex-start", }}
-       >
+          alignItems: "flex-start",
+        }}
+      >
         <Stack
           direction="row"
-           spacing={0.5}
+          spacing={0.5}
           p={0.5}
           color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
         >
@@ -86,159 +99,174 @@ function InterviewItem(props) {
   return (
     <div>
       <Baseitem item={item} />
-      <ButtonDS
-                      tittle={"Đặt lịch phỏng vấn"}
-                      type="submit"
-                      sx={{
-                        ":hover": {
-                          backgroundColor: "#F3F4F6",
-                        },
-                        pt: "2px",
-                        color: "#455570",
-                        backgroundColor: "#FFFFFF",
-                        borderRadius: 1,
-                        border: 1,
-                        borderColor: "#455570",
-                        marginRight: "2px",
-                        fontSize: "14px",
-                        padding: "6px 12px",
-                        textTransform: "none",
-                      }}
-                    />
-      
+      <Divider style={{ margin: '12px 0px' }} />
+      <div style={{
+        padding: '0 12px'
+      }}>
+        <ButtonDS
+          tittle={"Đặt lịch phỏng vấn"}
+          type="submit"
+          sx={{
+            ":hover": {
+              backgroundColor: "#F3F4F6",
+            },
+            pt: "2px",
+            color: "#455570",
+            backgroundColor: "#FFFFFF",
+            borderRadius: 1,
+            border: 1,
+            borderColor: "#455570",
+            marginRight: "2px",
+            fontSize: "12px",
+            fontWeight: 600,
+            padding: "6px 12px",
+            textTransform: "none",
+          }}
+        />
+      </div>
+
+
     </div>
   );
 }
+
 function ResultItem(props) {
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const { item } = props;
   return (
     <div>
       <Baseitem item={item} />
-      <Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-around",
-                          p: 1,
-                          m: 1,
-                          bgcolor: "background.paper",
-                          borderRadius: 1,
-                        }}
-                      >
-                        <ButtonDS
-                          tittle={"Đạt"}
-                          type="submit"
-                          sx={{
-                            color:
-                              item.pipelineStateResultType == 0
-                                ? "#FDFDFD"
-                                : "#455570",
-                            backgroundColor:
-                              item.pipelineStateResultType == 0
-                                ? "#4CAF50"
-                                : "#FDFDFD",
-                            boxShadow: "none",
-                            ":hover": {
-                              backgroundColor: "#E7E9ED",
-                            },
-                            marginRight: "2px",
-                            fontSize: "12px",
-                            padding: "6px 12px",
-                          }}
-                        />
-                        <ButtonDS
-                          tittle={"Cân Nhắc"}
-                          type="submit"
-                          sx={{
-                            color:
-                              item.pipelineStateResultType == 1
-                                ? "#FDFDFD"
-                                : "#455570",
-                            backgroundColor:
-                              item.pipelineStateResultType == 1
-                                ? "#FF9800"
-                                : "#FDFDFD",
-                            boxShadow: "none",
-                            ":hover": {
-                              backgroundColor: "#1565C0",
-                            },
-                            marginRight: "2px",
-                            fontSize: "12px",
-                            padding: "6px 12px",
-                            textTransform: "none",
-                          }}
-                        />
-                        <ButtonDS
-                          tittle={"Loại"}
-                          type="submit"
-                          mr={2}
-                          sx={{
-                            color:
-                              item.pipelineStateResultType == 2
-                                ? "#FDFDFD"
-                                : "#455570",
-                            backgroundColor:
-                              item.pipelineStateResultType == 2
-                                ? "#F44336"
-                                : "#FDFDFD",
-                            boxShadow: "none",
-                            ":hover": {
-                              backgroundColor: "#01B6A7",
-                            },
-                            marginLeft: "2px",
-                            fontSize: "12px",
-                            padding: "6px 12px",
-                            textTransform: "none",
-                          }}
-                        />
-                      </Box>
+      <Divider style={{ margin: '12px 0px' }} />
+      <div style={{ padding: '0 12px' }}>
+        <Box>
+          <Box
+            sx={{
+              // display: "flex",
+              // justifyContent: "space-between",
+              bgcolor: "background.paper",
+              borderRadius: 1,
+            }}
+          >
+            <ButtonGroup fullWidth={true} style={{border:'1px solid #E7E9ED'}}>
+              <Button
+                type="submit"
+                sx={{
+                  border: 'none',
+                  color:
+                    item.pipelineStateResultType == 0
+                      ? "#FDFDFD"
+                      : "#455570",
+                  backgroundColor:
+                    item.pipelineStateResultType == 0
+                      ? "#4CAF50"
+                      : "#FDFDFD",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#4CAF50",
+                    color: '#FDFDFD',
+                    border: 'none',
+                  },
+                  fontSize: "12px",
+                  padding: "6px 10px",
+                }}>
+                  Đạt
+              </Button>
+              <Button
+                type="submit"
+                sx={{
+                  border: 'none',
+                  color:
+                    item.pipelineStateResultType == 1
+                      ? "#FDFDFD"
+                      : "#455570",
+                  backgroundColor:
+                    item.pipelineStateResultType == 1
+                      ? "#FF9800"
+                      : "#FDFDFD",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#FF9800",
+                    color: '#FDFDFD',
+                    border: 'none',
+                  },
+                  fontSize: "12px",
+                  padding: "6px 10px",
+                  textTransform: "none",
+                }}
+              >Cân nhắc</Button>
+              <Button
+                type="submit"
+                sx={{
+                  border: 'none',
+                  color:
+                    item.pipelineStateResultType == 2
+                      ? "#FDFDFD"
+                      : "#455570",
+                  backgroundColor:
+                    item.pipelineStateResultType == 2
+                      ? "#F44336"
+                      : "#FDFDFD",
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#F44336",
+                    color: '#FDFDFD',
+                    border: 'none',
+                  },
+                  marginLeft: "2px",
+                  fontSize: "12px",
+                  padding: "6px 10px",
+                  textTransform: "none",
+                }}
+              >Loại</Button>
+            </ButtonGroup>
 
-                      {item.pipelineStateResultType == 2 && (
-                        <ButtonDS
-                          tittle={"Tái Khai Thác"}
-                          type="submit"
-                          sx={{
-                            ":hover": {
-                              backgroundColor: "#F3F4F6",
-                            },
-                            pt: "2px",
-                            color: "#455570",
-                            backgroundColor: "#FFFFFF",
-                            borderRadius: 1,
-                            border: 1,
-                            borderColor: "#455570",
-                            marginRight: "2px",
-                            fontSize: "14px",
-                            padding: "6px 12px",
-                            textTransform: "none",
-                          }}
-                        />
-                      )}
-                      {item.pipelineStateResultType == 0 && (
-                        <ButtonDS
-                         onClick={()=>{setIsOpenSendOffer(true)}}
-                          tittle={"Gửi thư mời nhận việc"}
-                          type="submit"
-                          sx={{
-                            ":hover": {
-                              backgroundColor: "#F3F4F6",
-                            },
-                            pt: "2px",
-                            color: "#455570",
-                            backgroundColor: "#FFFFFF",
-                            borderRadius: 1,
-                            border: 1,
-                            borderColor: "#455570",
-                            marginRight: "2px",
-                            fontSize: "14px",
-                            padding: "6px 12px",
-                            textTransform: "none",
-                          }}
-                        />
-                   )} 
-                    </Box>
-                         {
+          </Box>
+
+          {item.pipelineStateResultType == 2 && (
+            <ButtonDS
+              tittle={"Tái Khai Thác"}
+              type="submit"
+              sx={{
+                ":hover": {
+                  backgroundColor: "#F3F4F6",
+                },
+                marginTop: '12px',
+                pt: "2px",
+                color: "#455570",
+                backgroundColor: "#FFFFFF",
+                borderRadius: 1,
+                border: '1px solid #455570',
+                fontSize: "12px",
+                fontWeight: 600,
+                padding: "6px 10px",
+                textTransform: "none",
+              }}
+            />
+          )}
+          {item.pipelineStateResultType == 0 && (
+            <ButtonDS
+              onClick={() => { setIsOpenSendOffer(true) }}
+              tittle={"Gửi thư mời nhận việc"}
+              type="submit"
+              sx={{
+                ":hover": {
+                  backgroundColor: "#F3F4F6",
+                },
+                marginTop: '12px',
+                pt: "2px",
+                color: "#455570",
+                backgroundColor: "#FFFFFF",
+                borderRadius: 1,
+                border: '1px solid #455570',
+                fontSize: "12px",
+                fontWeight: 600,
+                padding: "6px 10px",
+                textTransform: "none",
+              }}
+            />
+          )}
+        </Box>
+        {
           isOpenSendOffer && <ApplicantSendOfferModal
             isOpen={isOpenSendOffer}
             onClose={() => setIsOpenSendOffer(false)}
@@ -246,6 +274,7 @@ function ResultItem(props) {
             title="Tạo thư mời nhận việc"
           />
         }
+      </div>
     </div>
   );
 }
@@ -255,97 +284,97 @@ function OfferItem(props) {
     <div>
       <Baseitem item={item} />
       {item.offerStateResultType == 0 && (
-                    <Box sx={{ display: "flex", pt: 1 }}>
-                      <Item sx={{ flexShrink: 1 }}>
-                        <Iconify
-                          icon={"ri:mail-check-fill"}
-                          width={20}
-                          height={20}
-                          color="#172B4D"
-                        />
-                      </Item>
-                      <Item sx={{ width: "100%", color: "#172B4D" }}>
-                        Đã tạo thư mời nhận việc
-                      </Item>
-                      <Item sx={{ flexShrink: 0 }}>
-                        <Iconify
-                          icon={"fluent-mdl2:circle-half-full"}
-                          width={20}
-                          height={20}
-                          color="#172B4D"
-                        />
-                      </Item>
-                    </Box>
-                  )}
-                  {item.offerStateResultType == 1 && (
-                    <Box sx={{ display: "flex", pt: 1 }}>
-                      <Item sx={{ flexShrink: 1 }}>
-                        <Iconify
-                          icon={"ic:round-mark-email-unread"}
-                          width={20}
-                          height={20}
-                          color="#F77A0C"
-                        />
-                      </Item>
-                      <Item sx={{ width: "100%", color: "#F77A0C" }}>
-                        Đã gửi, chờ phản hồi
-                      </Item>
-                      <Item sx={{ flexShrink: 0 }}>
-                        <Iconify
-                          icon={"fluent-mdl2:circle-half-full"}
-                          width={20}
-                          height={20}
-                          color="#F77A0C"
-                        />
-                      </Item>
-                    </Box>
-                  )}
-                  {item.offerStateResultType == 2 && (
-                    <Box sx={{ display: "flex", pt: 1 }}>
-                      <Item sx={{ flexShrink: 1 }}>
-                        <Iconify
-                          icon={"material-symbols:check-circle"}
-                          width={20}
-                          height={20}
-                          color="#388E3C"
-                        />
-                      </Item>
-                      <Item sx={{ width: "100%", color: "#388E3C" }}>
-                        Đồng ý nhận việc
-                      </Item>
-                      <Item sx={{ flexShrink: 0 }}>
-                        <Iconify
-                          icon={"fluent-mdl2:circle-half-full"}
-                          width={20}
-                          height={20}
-                          color="#388E3C"
-                        />
-                      </Item>
-                    </Box>
-                  )}
-                  { item.offerStateResultType == 3 && (
-                    <Box sx={{ display: "flex", pt: 1 }}>
-                      <Item sx={{ flexShrink: 1 }}>
-                        <Iconify
-                          icon={"mdi:alpha-x-circle"}
-                          width={20}
-                          height={20}
-                          color="#D32F2F"
-                        />
-                      </Item>
-                      <Item sx={{ width: "100%", color: "#D32F2F" }}>
-                        Từ chối nhận việc
-                      </Item>
-                      <Item sx={{ flexShrink: 0 }}>
-                        <Iconify
-                          icon={"fluent-mdl2:circle-half-full"}
-                          width={20}
-                          height={20}
-                          color="#D32F2F"
-                        />
-                      </Item>
-                    </Box>
-                  )}
+        <Box sx={{ display: "flex", pt: 1 }}>
+          <Item sx={{ flexShrink: 1 }}>
+            <Iconify
+              icon={"ri:mail-check-fill"}
+              width={20}
+              height={20}
+              color="#172B4D"
+            />
+          </Item>
+          <Item sx={{ width: "100%", color: "#172B4D" }}>
+            Đã tạo thư mời nhận việc
+          </Item>
+          <Item sx={{ flexShrink: 0 }}>
+            <Iconify
+              icon={"fluent-mdl2:circle-half-full"}
+              width={20}
+              height={20}
+              color="#172B4D"
+            />
+          </Item>
+        </Box>
+      )}
+      {item.offerStateResultType == 1 && (
+        <Box sx={{ display: "flex", pt: 1 }}>
+          <Item sx={{ flexShrink: 1 }}>
+            <Iconify
+              icon={"ic:round-mark-email-unread"}
+              width={20}
+              height={20}
+              color="#F77A0C"
+            />
+          </Item>
+          <Item sx={{ width: "100%", color: "#F77A0C" }}>
+            Đã gửi, chờ phản hồi
+          </Item>
+          <Item sx={{ flexShrink: 0 }}>
+            <Iconify
+              icon={"fluent-mdl2:circle-half-full"}
+              width={20}
+              height={20}
+              color="#F77A0C"
+            />
+          </Item>
+        </Box>
+      )}
+      {item.offerStateResultType == 2 && (
+        <Box sx={{ display: "flex", pt: 1 }}>
+          <Item sx={{ flexShrink: 1 }}>
+            <Iconify
+              icon={"material-symbols:check-circle"}
+              width={20}
+              height={20}
+              color="#388E3C"
+            />
+          </Item>
+          <Item sx={{ width: "100%", color: "#388E3C" }}>
+            Đồng ý nhận việc
+          </Item>
+          <Item sx={{ flexShrink: 0 }}>
+            <Iconify
+              icon={"fluent-mdl2:circle-half-full"}
+              width={20}
+              height={20}
+              color="#388E3C"
+            />
+          </Item>
+        </Box>
+      )}
+      {item.offerStateResultType == 3 && (
+        <Box sx={{ display: "flex", pt: 1 }}>
+          <Item sx={{ flexShrink: 1 }}>
+            <Iconify
+              icon={"mdi:alpha-x-circle"}
+              width={20}
+              height={20}
+              color="#D32F2F"
+            />
+          </Item>
+          <Item sx={{ width: "100%", color: "#D32F2F" }}>
+            Từ chối nhận việc
+          </Item>
+          <Item sx={{ flexShrink: 0 }}>
+            <Iconify
+              icon={"fluent-mdl2:circle-half-full"}
+              width={20}
+              height={20}
+              color="#D32F2F"
+            />
+          </Item>
+        </Box>
+      )}
 
 
     </div>
@@ -366,9 +395,15 @@ function TaskCard({ item, index, pipelineStateType }) {
               sx={{
                 width: 1,
                 position: "relative",
-                boxShadow: (theme) => theme.customShadows.z1,
+                border: 'none',
+                borderRadius: '4px',
+                boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+                mb: 2,
+                // boxShadow: (theme) => theme.customShadows.z1,
                 "&:hover": {
-                  boxShadow: (theme) => theme.customShadows.z16,
+                  // border: '0.5px solid #5C6A82',
+                  // boxShadow: (theme) => theme.customShadows.z16,
+                  boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
                 },
               }}
             >
@@ -377,39 +412,39 @@ function TaskCard({ item, index, pipelineStateType }) {
                   justifyContent: "space-between",
                   display: "flex",
                   flexDirection: "row",
-                  p: 1,
+                  p: '16px 12px 4px 12px',
                 }}
               >
                 <Typography
                   display="flex"
-                  fontSize="20px"
+                  fontSize="11px"
+                  lineHeight={18}
                   fontWeight="600"
                   alignItems="center"
                 >
                   <Iconify
                     icon={"carbon:dot-mark"}
-                    width={20}
-                    height={20}
+                    width={12}
+                    height={12}
                     color="#4CAF50"
-                    ml={1}
+                    mr={1}
                   />
                   <Typography fontSize="12px">
                     {fDate(item.createdTime)}
                   </Typography>
                 </Typography>
                 <Iconify
-                  icon={"ph:dots-three"}
+                  icon={"ph:dots-three-bold"}
                   width={20}
                   height={20}
-                  color="#4CAF50"
-                  ml={1}
+                  color="#455570"
                 />
               </Box>
 
-              <Box sx={{ cursor: 'pointer', mb: 2 }}>
+              <Box sx={{ cursor: 'pointer' }}>
                 <Stack
                   spacing={1}
-                  sx={{ borderRadius: '8px', p: 2, background: "#FDFDFD" }}
+                  sx={{ borderRadius: '8px', padding: '0 0px 16px', background: "#FDFDFD" }}
                 >
                   {pipelineStateType == 0 && <Baseitem item={item} />}
                   {pipelineStateType == 1 && <ExaminationItem item={item} />}
@@ -417,7 +452,6 @@ function TaskCard({ item, index, pipelineStateType }) {
                   {pipelineStateType == 3 && <ResultItem item={item} />}
                   {pipelineStateType == 4 && <OfferItem item={item} />}
 
-              
                   <Box
                     display="Grid"
                     alignItems="center"

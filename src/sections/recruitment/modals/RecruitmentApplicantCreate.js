@@ -322,7 +322,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                         />
                       </Grid>
                       <Grid mb={3}>
-                        <Label>Họ vấn</Label>
+                        <Label>Học vấn</Label>
                         <TextAreaDS
                           name={"education"}
                           placeholder="VD: Thời gian - Trình độ - Nơi đào tạo - Chuyên ngành..."
