@@ -14,9 +14,11 @@ export default function DrawerEditForm({
   open,
   onClose,
   validateFields = {},
+  defaultValues = {},
   title = '',
   statusField = 'isActivated',
   onSubmit,
+  initing = false,
   children,
 }) {
   const theme = useTheme();
@@ -25,13 +27,18 @@ export default function DrawerEditForm({
   const methods = useForm({
     resolver: yupResolver(validateSchema),
     defaultValues: {
+      [statusField]: true,
+      ...defaultValues,
     },
   });
   const {
     formState: { isSubmitting, errors },
     handleSubmit,
     reset,
+    watch,
   } = methods;
+
+  const isActive = watch(statusField);
 
   const childrenWithProps = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
@@ -46,9 +53,20 @@ export default function DrawerEditForm({
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-    if (onClose) {
-      onClose();
+
+    if (!isOpen) {
+      if (onClose) {
+        onClose();
+      }
+      reset(defaultValues);
     }
+  }
+
+  const handleOnSubmit = (data) => {
+    onSubmit(data, () => {
+      if (onClose) onClose();
+      reset(defaultValues);
+    });
   }
 
   return (
@@ -60,7 +78,7 @@ export default function DrawerEditForm({
         sx: drawerPaperStyle(theme),
       }}
     >
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(handleOnSubmit)}>
         <Box display="flex" alignItems="center" justifyContent="space-between" className="edit-header">
           <Typography fontSize={pxToRem(16)} fontWeight={600}>
             {title}
@@ -88,6 +106,7 @@ export default function DrawerEditForm({
               loading={isSubmitting}
               height={36}
               sx={{ mr: 1 }}
+              disabled={initing}
             >
               Lưu
             </Button>
@@ -95,10 +114,7 @@ export default function DrawerEditForm({
             <Button
               variant="text"
               color="basic"
-              onClick={() => {
-                reset();
-                onClose();
-              }}
+              onClick={e => toggleDrawer(false, e)}
               height={36}
             >
               Hủy
@@ -107,7 +123,7 @@ export default function DrawerEditForm({
 
           <SwitchStatusDS
             name={statusField}
-            label={'Đang hoạt động'}
+            label={isActive ? 'Đang hoạt động' : 'Không hoạt động'}
           />
         </Box>
       </FormProvider>

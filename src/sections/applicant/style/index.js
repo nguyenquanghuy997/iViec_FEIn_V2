@@ -7,7 +7,7 @@ const ButtonFilterStyle = styled(Button)(({theme}) => ({
     padding: "12px 16px 12px 16px !important",
     height: "44px",
     borderRadius: "6px !important",
-    color: '#455570 !important'
+    color: '#455570 !important',
 }));
 
 const ButtonCancelStyle = styled(Button)(({theme}) => ({
@@ -37,7 +37,7 @@ const ButtonSaveStyle = styled(Button)(({theme}) => ({
 
 const HelperTextTypography = styled(Typography)(({theme}) => ({
     padding: theme.spacing(0, 2),
-    fontSize: '13px',
+    fontSize: '13px !important',
     fontWeight: 400,
     fontStyle: 'italic',
     color: "#8A94A5"

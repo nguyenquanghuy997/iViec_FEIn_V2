@@ -91,126 +91,6 @@ export const DATE_FORMAT_DAY_MONTH = "do MMM";
 export const CALANDER_DATE_FORMAT = "MM/dd/yyyy";
 export const TIMEZONE = "Asia/Ho_Chi_Minh";
 
-// User setting
-export const PAGES = {
-  Dashboard: "Dashboard",
-  Notification: "Notification",
-  Candidates: "Candidates",
-  Applicant: "Applicant",
-  ApproveProcess: "ApproveProcess",
-  Interview: "Interview",
-  Board: "Board",
-  Calculator: "Calculator",
-  Recruiter: "External recruiter",
-  Jobs: "Jobs",
-  Recruitment: "Recruitment",
-  RecruitmentAd: "RecruitmentAd",
-  Clients: "Clients",
-  Users: "Users",
-  Task: "Task",
-  Blogs: "Blogs",
-  Reports: "Reports",
-  Pipeline: "Pipeline",
-
-  // Create Router step 1.1
-  Products: "Products",
-  Hashtag: "Hashtag",
-  Industry: "Industry",
-  CompanyInfor: "CompanyInfor",
-
-  Report1: "Report1",
-  Report2: "Report2",
-  Report3: "Report3",
-  Report4: "Report4",
-
-  // Account: 'Account',
-  Organization: "Organization",
-};
-
-// ROLE AND PERMISSION
-export const ROLE = {
-  // DIRECTOR: 'Director',
-  // LEADER: 'Leader',
-  MEMBER: 'Member',
-  ADMIN: "Admin",
-  // BLOGER: 'Bloger',
-};
-
-export const ROLE_BY_PAGES = [
-  // New admin configure
-  {
-    pageNames: [
-      PAGES.Dashboard,
-      PAGES.Notification,
-      PAGES.Interview,
-      PAGES.Candidates,
-      PAGES.Applicant,
-      PAGES.Board,
-      PAGES.Calculator,
-      PAGES.Recruiter,
-      PAGES.Jobs,
-      PAGES.Clients,
-      PAGES.Clients,
-      PAGES.Users,
-      PAGES.Task,
-      PAGES.Blogs,
-      PAGES.Reports,
-      PAGES.Pipeline,
-      // PAGES.Account,
-      // Create Router step 1.2
-      PAGES.Products,
-      PAGES.Hashtag,
-      PAGES.Industry,
-      PAGES.CompanyInfor,
-      PAGES.Recruitment,
-      PAGES.RecruitmentAd,
-
-      PAGES.Report1,
-      PAGES.Report2,
-      PAGES.Report3,
-      PAGES.Report4,
-
-      PAGES.Organization,
-      PAGES.Recruitment,
-    ],
-    roles: [ROLE.ADMIN],
-  },
-
-  // {
-  //   pageNames: [
-  //     PAGES.Dashboard,
-  //     PAGES.Notification,
-  //     PAGES.Jobs,
-  //     PAGES.Candidates,
-  //     PAGES.Interview,
-  //     PAGES.Board,
-  //     PAGES.Calculator,
-  //     // PAGES.Recruiter,
-  //   ],
-  //   roles: [ROLE.DIRECTOR, ROLE.LEADER, ROLE.MEMBER],
-  // },
-  // {
-  //   pageNames: [PAGES.Task],
-  //   roles: [ROLE.DIRECTOR, ROLE.LEADER, ROLE.MEMBER, ROLE.ADMIN],
-  // },
-  // {
-  //   pageNames: [PAGES.Jobs, PAGES.Clients],
-  //   roles: [ROLE.DIRECTOR, ROLE.LEADER, ROLE.MEMBER],
-  // },
-  // {
-  //   pageNames: [PAGES.Task],
-  //   roles: [ROLE.DIRECTOR, ROLE.LEADER, ROLE.MEMBER, ROLE.ADMIN],
-  // },
-  // {
-  //   pageNames: [PAGES.Blogs],
-  //   roles: [ROLE.DIRECTOR, ROLE.LEADER, ROLE.MEMBER, ROLE.BLOGER],
-  // },
-  // {
-  //   pageNames: [PAGES.Users],
-  //   roles: [ROLE.DIRECTOR, ROLE.LEADER],
-  // },
-];
-
 // MULTI LANGUAGES
 // Please remove `localStorage` when you change settings.
 
@@ -233,4 +113,109 @@ export const defaultLang = allLangs[0]; // English
 export const MAX_SIZE_FILEIMAGE = 5145728;
 
 export const API_KEY_EDITOR = "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189"
+
+export const PERMISSIONS = {
+  ADMINISTRATOR: 'Administrator',
+  VIEW_CDD: 'ViewCandidate',
+  ADD_EDIT_CDD: 'AddEditCandidate',
+  EVALUATE_CDD: 'EvaluateCandidate',
+  CHANGE_STAGE_CDD: 'ChangeCandidateStage',
+  VIEW_JOB: 'ViewJob',
+  CRUD_JOB: 'AddEditDeleteJob',
+  VIEW_JOB_POS: 'ViewJobDescription',
+  CRUD_JOB_POS: 'AddEditDeleteJobDescription',
+  CRUD_INTV_SCHE: 'AddEditDeleteInterviewSchedule',
+  SEND_MAIL_OFFER: 'SendOfferMail',
+  APPR_JOB: 'ApproveJob',
+  VIEW_CAMPAIN: 'ViewCampaign',
+  CRUD_CAMPAIN: 'AddEditDeleteCampaign',
+  APPR_CAMPAIN: 'ApproveCampaign',
+  VIEW_INTV_SCHE: 'ViewInterviewSchedule',
+  PARTICIPATE_INTV_SCHE: 'ParticipateInterviewSchedule',
+  VIEW_REPORT: 'ViewReport',
+  VIEW_COMPANY: 'ViewCompanyInformation',
+  EDIT_COMPANY: 'EditCompanyInformation',
+  VIEW_USER: 'ViewUser',
+  VIEW_UNIT: 'ViewUnit',
+  CRUD_USER: 'AddEditDeleteUser',
+  CRUD_UNIT: 'AddEditDeleteUnit',
+  APPR_USER_INVITE: 'ApproveUserInvitation',
+  VIEW_ROLE: 'ViewRole',
+  CRUD_ROLE: 'AddEditDeleteRole',
+  VIEW_EVA_TPL: 'ViewEvaluationTemplate',
+  CRUD_EVA_TPL: 'AddEditDeleteEvaluationTemplate',
+  VIEW_RECRUIT_PROCESS: 'ViewRecruitmentProcess',
+  CRUD_RECRUIT_PROCESS: 'AddEditDeleteRecruitmentProcess',
+  VIEW_APPR_PROCESS: 'ViewApprovalProcess',
+  CRUD_APPR_PROCESS: 'AddEditDeleteApprovalProcess',
+  VIEW_QUESTION: 'ViewQuestion',
+  CRUD_QUESTION: 'AddEditDeleteQuestion',
+  VIEW_EXAM: 'ViewExam',
+  CRUD_EXAM: 'AddEditDeleteExam',
+  REPORT_EXAM_QUESTION: 'ReportExamQuestion',
+  VIEW_OFFER_TPL: 'ViewOfferTemplate',
+  CRUD_OFFER_TPL: 'AddEditDeleteOfferTemplate',
+  APPR_OFFER_TPL: 'ApproveOfferTemplate',
+  VIEW_EMAIL: 'ViewEmail',
+  CRUD_EMAIL: 'AddEditDeleteEmail',
+  VIEW_CONNECT: 'ViewConnect',
+  ADD_STOP_CONNECT: 'AddStopConnect',
+};
+
+  // group
+export const PERMISSION_GROUPS = {
+  ACCESS_DASHBOARD: [
+    PERMISSIONS.VIEW_CDD,
+    PERMISSIONS.VIEW_JOB,
+    PERMISSIONS.APPR_JOB,
+    PERMISSIONS.VIEW_INTV_SCHE,
+    //PERS.VIEW_CDD_STORE,
+    PERMISSIONS.VIEW_REPORT,
+    PERMISSIONS.VIEW_COMPANY,
+  ],
+  ACCESS_SETTINGS: [
+    PERMISSIONS.VIEW_RECRUIT_PROCESS,
+    PERMISSIONS.VIEW_APPR_PROCESS,
+    PERMISSIONS.VIEW_JOB_POS,
+    PERMISSIONS.VIEW_CONNECT,
+    PERMISSIONS.VIEW_EXAM,
+    PERMISSIONS.VIEW_EVA_TPL,
+    PERMISSIONS.VIEW_OFFER_TPL,
+    PERMISSIONS.VIEW_EMAIL,
+    PERMISSIONS.VIEW_COMPANY,
+    PERMISSIONS.VIEW_ROLE,
+  ],
+};
+
+export const PERMISSION_PAGES = {
+  dashboard: PERMISSION_GROUPS.ACCESS_DASHBOARD,
+  approveRecruitment: [PERMISSIONS.APPR_JOB],
+  applicant: [PERMISSIONS.VIEW_CDD],
+  applicantDetail: [PERMISSIONS.VIEW_CDD],
+  interview: [PERMISSIONS.VIEW_INTV_SCHE],
+  recruitment: [PERMISSIONS.VIEW_JOB],
+  copyRecruitment: [PERMISSIONS.CRUD_JOB],
+  editRecruitment: [PERMISSIONS.CRUD_JOB],
+  detailRecruitment: [PERMISSIONS.VIEW_JOB],
+  createRecruitment: [PERMISSIONS.CRUD_JOB],
+  report: [PERMISSIONS.VIEW_REPORT],
+  setting: PERMISSION_GROUPS.ACCESS_SETTINGS,
+  approveProcess: [PERMISSIONS.VIEW_APPR_PROCESS],
+  organization: [
+    PERMISSIONS.VIEW_COMPANY,
+    PERMISSIONS.VIEW_ROLE,
+    PERMISSIONS.VIEW_USER,
+  ],
+  editOrganization: [PERMISSIONS.EDIT_COMPANY],
+  connect: [PERMISSIONS.VIEW_CONNECT],
+  emailTemplate: [PERMISSIONS.VIEW_EMAIL],
+  evaluationTemplate: [PERMISSIONS.VIEW_EVA_TPL],
+  exam: [PERMISSIONS.VIEW_EXAM],
+  jobPosition: [PERMISSIONS.VIEW_JOB_POS],
+  offerTemplate: [PERMISSIONS.VIEW_OFFER_TPL],
+  editOfferTemplate: [PERMISSIONS.CRUD_OFFER_TPL],
+  approveOfferTemplate: [PERMISSIONS.APPR_OFFER_TPL],
+  recruitmentProcess: [PERMISSIONS.VIEW_RECRUIT_PROCESS],
+  role: [PERMISSIONS.VIEW_ROLE],
+};
 

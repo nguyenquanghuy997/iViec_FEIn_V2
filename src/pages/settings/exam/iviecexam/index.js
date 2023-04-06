@@ -1,32 +1,23 @@
 import { Text, View } from "@/components/FlexStyled";
 import Page from "@/components/Page";
 import SvgIcon from "@/components/SvgIcon";
-import { PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
 import {
   PipelineFormModal,
   PipelineItem,
   useGetAllReviewFormMutation,
 } from "@/sections/pipeline";
-import { getRolesByPage } from "@/utils/role";
 import { useRef, useState } from "react";
 import PageWrapper from "@/components/PageWrapper";
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
+Setting.getLayout = function getLayout(pageProps, page) {
   return (
-    <SettingLayout roles={roles}>
+    <SettingLayout permissions={PERMISSION_PAGES.exam} {...pageProps}>
       {page}
     </SettingLayout>
   );
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
 
 export default function Setting() {
   // ref

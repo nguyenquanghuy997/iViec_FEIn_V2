@@ -2,7 +2,6 @@
 import DashboardAppBar from "./header/AppBar";
 import NavbarVertical from "./navbar/NavbarVertical";
 import {HEADER, NAVBAR} from "@/config";
-import RoleBasedGuard from "@/guards/RoleBasedGuard";
 import useCollapseDrawer from "@/hooks/useCollapseDrawer";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
@@ -10,6 +9,8 @@ import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import useRole from "@/hooks/useRole";
+import Page403 from '@/pages/403';
 
 const WrapperStyle = styled("div")(({ theme }) => ({
   maxWidth: "100%",
@@ -46,18 +47,21 @@ const MainStyle = styled("main", { shouldForwardProp: (prop) => prop !== "collap
 
 DashboardLayout.propTypes = {
   children: PropTypes.node.isRequired,
-  roles: PropTypes.arrayOf(PropTypes.string), // Example ['Admin', 'Leader']
+  permissions: PropTypes.arrayOf(PropTypes.string), // Example ['ViewJob', 'ViewCandidate']
 };
 
-export default function DashboardLayout({ roles, children }) {
+export default function DashboardLayout({ children, permissions }) {
+  const { canAccess } = useRole();
+
+  if (!canAccess(permissions)) {
+    return <Page403 />
+  }
+
   const { collapseClick, isCollapse } = useCollapseDrawer();
-
   const { themeLayout } = useSettings();
-
   const isDesktop = useResponsive("up", "lg");
 
   const [open, setOpen] = useState(false);
-
   const verticalLayout = themeLayout === "vertical";
 
   if (verticalLayout) {
@@ -75,11 +79,7 @@ export default function DashboardLayout({ roles, children }) {
         )}
         <WrapperStyle>
           <MainStyle collapseClick={collapseClick}>
-            {!roles || !Array.isArray(roles) ? (
-              children
-            ) : (
-              <RoleBasedGuard roles={roles}>{children}</RoleBasedGuard>
-            )}
+            {children}
           </MainStyle>
           {/*<InstructionPopover />*/}
         </WrapperStyle>
@@ -100,11 +100,7 @@ export default function DashboardLayout({ roles, children }) {
       />
       <WrapperStyle>
         <MainStyle collapseClick={collapseClick}>
-          {!roles || !Array.isArray(roles) ? (
-            children
-          ) : (
-            <RoleBasedGuard roles={roles}>{children}</RoleBasedGuard>
-          )}
+          {children}
         </MainStyle>
         {/*<InstructionPopover />*/}
       </WrapperStyle>

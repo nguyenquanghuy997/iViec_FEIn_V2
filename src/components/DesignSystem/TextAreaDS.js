@@ -35,7 +35,7 @@ const InputTextArea = styled(TextArea)`
   `;
 
 export default function TextAreaDS(props) {
-  const { name, placeholder, maxLength } = props;
+  const { name, placeholder, maxLength, ...other } = props;
   const { control } = useFormContext();
   return (
     <Controller
@@ -54,6 +54,7 @@ export default function TextAreaDS(props) {
               value={field.value}
               onChange={field.onChange}
               placeholder={placeholder}
+              {...other}
             />
           </FormLabel>
 

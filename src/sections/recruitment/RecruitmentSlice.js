@@ -1,11 +1,19 @@
-import { apiSlice } from '@/redux/api/apiSlice'
+import {apiSlice} from '@/redux/api/apiSlice'
 import {
   API_CREATE_RECRUITMENT,
   API_GET_LIST_RECRUITMENT,
   API_GET_RECRUITMENT_BY_ID,
   API_UPDATE_RECRUITMENT_DRAFT,
   API_UPDATE_RECRUITMENT_OFFICIAL,
-  API_CREATE_APPLICANT_RECRUITMENT, API_CLOSE_RECRUITMENT, API_REMOVE_RECRUITMENT, API_GET_RECRUITMENT_BY_SLUG, API_GET_COLUMN_RECRUITMENT, API_UPDATE_COLUMN_RECRUITMENT,
+  API_CREATE_APPLICANT_RECRUITMENT,
+  API_CLOSE_RECRUITMENT,
+  API_REMOVE_RECRUITMENT,
+  API_GET_RECRUITMENT_BY_SLUG,
+  API_GET_COLUMN_RECRUITMENT,
+  API_UPDATE_COLUMN_RECRUITMENT,
+  API_GET_APPLICANT_RECRUITMENT,
+  API_UPLOAD_FILE_APPLICANTS,
+  API_UPLOAD_FILE_APPLICANT_RECRUITMENT,
 } from '@/routes/api'
 
 const apiWithTag = apiSlice.enhanceEndpoints({
@@ -21,7 +29,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: "POST",
         data
       }),
-      providesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
+      providesTags: [{type: 'RECRUITMENT', id: 'LIST'}]
     }),
     getRecruitmentById: builder.query({
       query: (params) => ({
@@ -29,7 +37,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'GET',
         params
       }),
-      providesTags: (result, error, id) => [{ type: 'RECRUITMENT', id }],
+      providesTags: (result, error, id) => [{type: 'RECRUITMENT', id}],
     }),
     // Lấy việc làm theo slug
     getRecruitmentBySlug: builder.query({
@@ -37,16 +45,16 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         url: API_GET_RECRUITMENT_BY_SLUG + '?Slug=' + slug,
         method: 'GET',
       }),
-      providesTags: [{ type: 'RECRUITMENT', id: 'SLUG' }],
+      providesTags: [{type: 'RECRUITMENT', id: 'SLUG'}],
     }),
-
+    
     createRecruitment: builder.mutation({
       query: (data) => ({
         url: API_CREATE_RECRUITMENT,
         method: 'POST',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'RECRUITMENT', id: arg.recruitmentId }]
+      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.recruitmentId}]
     }),
     createApplicantRecruitment: builder.mutation({
       query: (data) => ({
@@ -61,7 +69,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'RECRUITMENT', id: arg.id }]
+      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.id}]
     }),
     updateRecruitmentDraft: builder.mutation({
       query: (data) => ({
@@ -69,7 +77,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'RECRUITMENT', id: arg.id }]
+      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.id}]
     }),
     // đóng tin
     closeRecruitment: builder.mutation({
@@ -78,7 +86,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
+      invalidatesTags: [{type: 'RECRUITMENT', id: 'LIST'}]
     }),
     // xóa tin
     deleteRecruitment: builder.mutation({
@@ -87,7 +95,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'DELETE',
         data
       }),
-      invalidatesTags: [{ type: 'RECRUITMENT', id: 'LIST' }]
+      invalidatesTags: [{type: 'RECRUITMENT', id: 'LIST'}]
     }),
     //settings
     getListColumns: builder.query({
@@ -105,6 +113,28 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["GetColumn"],
     }),
+    uploadFileApplicant: builder.mutation({
+      query: (data) => ({
+        url: API_UPLOAD_FILE_APPLICANTS,
+        method: 'POST',
+        data
+      }),
+    }),
+    uploadFileApplicantRecruitment: builder.mutation({
+      query: (data) => ({
+        url: API_UPLOAD_FILE_APPLICANT_RECRUITMENT,
+        method: 'PATCH',
+        data
+      }),
+    }),
+    getApplicantRecruitment: builder.query({
+      query: (params) => ({
+        url: API_GET_APPLICANT_RECRUITMENT,
+        method: "GET",
+        params,
+      }),
+      keepUnusedDataFor: 1,
+    }),
   }),
 })
 
@@ -113,6 +143,7 @@ export const {
   useGetRecruitmentBySlugQuery,
   useCreateApplicantRecruitmentMutation,
   useLazyGetRecruitmentsQuery,
+  useGetRecruitmentsQuery,
   useCreateRecruitmentMutation,
   useUpdateRecruitmentOfficialMutation,
   useUpdateRecruitmentDraftMutation,
@@ -123,4 +154,7 @@ export const {
   useAddRecruitmentMutation,
   useGetPreviewRecruitmentMutation,
   useUpdateRecruitmentMutation,
+  useGetApplicantRecruitmentQuery,
+  useUploadFileApplicantMutation,
+  useUploadFileApplicantRecruitmentMutation,
 } = RecruitmentSlice;

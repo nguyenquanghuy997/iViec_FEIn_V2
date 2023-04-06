@@ -1,8 +1,7 @@
 import DragCandidate from "./DragCandidate";
 import PlusIcon from "@/assets/interview/PlusIcon";
-// import { AvatarDS } from "@/components/DesignSystem";
-// import ChipDS from "@/components/DesignSystem/ChipDS";
 import Iconify from "@/components/Iconify";
+// import { RHFCheckbox } from "@/components/hook-form";
 import {
   LabelStyle,
   MenuItemStyle,
@@ -21,25 +20,11 @@ import {
   Stack,
   Typography,
   Button,
-  // FormControlLabel,
 } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
-// const Placeholder = (placeholder) => {
-//   return (
-//     <Typography
-//       variant="body2"
-//       sx={{
-//         color: style.COLOR_TEXT_GRAY,
-//         fontSize: style.FONT_SM,
-//         fontWeight: style.FONT_NORMAL,
-//       }}
-//     >
-//       {placeholder}
-//     </Typography>
-//   );
-// };
+// import { RiEqualizerFill } from "react-icons/ri";
 
 const MenuProps = {
   PaperProps: {
@@ -60,7 +45,6 @@ const InputProps = {
 };
 
 const renderOptions = (options) => {
-  // const { control } = useFormContext();
   return options?.map((variant, i) => {
     return (
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
@@ -71,10 +55,12 @@ const renderOptions = (options) => {
               height: 28,
               borderRadius: "10px",
             }}
-            src="https://i.pinimg.com/236x/c6/90/fe/c690fe74d48aa77c2ab0e5000131304a.jpg"
+            src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
           />
           <Box sx={{ ml: 1 }}>
-            <Typography sx={{ fontSize: 13 }}>{variant.name}</Typography>
+            <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+              {variant.name}
+            </Typography>
             <Typography
               sx={{
                 fontSize: 13,
@@ -86,68 +72,67 @@ const renderOptions = (options) => {
             </Typography>
           </Box>
         </Box>
-        {/* <FormControlLabel
-          labelPlacement={variant.id}
-          control={
-            <Controller
-              name={"bookingCalendarGroups"}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <input
-                    {...field}
-                    value={variant.id}
-                    type="checkbox"
-                    // onChange={handleCheck}
-                  />
-                </>
-              )}
-            />
-          }
-        /> */}
       </MenuItem>
     );
   });
 };
 
-
-const renderChipsSelect = (options, value) => {
-  return (
-    <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-      <DragCandidate
-        data={options?.filter((option) => value.includes(option?.value))}
-      />
-    </Stack>
-  );
-};
-
-function RHFSelectMultiple({ name, ...props }) {
+function RHFSelectMultiple({ name, defaultItem,isEditmode,...props }) {
+  const [filterOptions, setFilterOptions] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const { control } = useFormContext();
+
   const classes = useStyles();
-  const {
-    defaultValue,
-    // placeholder,
-    // action,
-    isRequired,
-    title,
-    options,
-    disabled,
-    multiple,
-  } = props;
-  const { remove } = useFieldArray({ control, name })
-  const [searchText, setSearchText] = useState("")
-  const [filterOptions, setFilterOptions] = useState([])
+  const { defaultValue, isRequired, title, options, disabled, multiple } =
+    props;
+  const { remove } = useFieldArray({ control, name });
+  const renderChipsSelect = (options, value) => {
+    const [open, setOpen] = useState(false);
+    const handleClose = () => {
+      setOpen(false);
+    };
+    const handleOpen = () => {
+      setOpen(true);
+    };
+    const idArr = defaultItem && defaultItem.map( item => item?.id)
+
+    return (
+      <Stack flexWrap="wrap" justifyContent="flex-start">
+        {/* <Box sx={{ display: "flex", justifyContent: "center", alignItems:'center',fontSize: 12 }}>
+          <RHFCheckbox
+            name="adjust"
+            label="Điều chỉnh hàng loạt"
+            style={{ fontSize: "12px" }}
+          />
+          <p>
+            <RiEqualizerFill color={"#1976D2"} size={'15'} />
+            Điều chỉnh
+          </p>
+  
+        </Box> */}
+
+        <DragCandidate
+          data={options?.filter((option) =>
+            (isEditmode ? idArr : value).includes(option?.value)
+          )}
+
+          open={open}
+          onClose={handleClose}
+          onOpen={handleOpen}
+        />
+      </Stack>
+    );
+  };
 
   useEffect(() => {
     if (searchText) {
       setFilterOptions(
         options?.filter((option) => containsText(option.name, searchText))
-      )
+      );
     } else {
-      setFilterOptions(options)
+      setFilterOptions(options);
     }
-  }, [searchText, options])
-
+  }, [searchText, options]);
   return (
     <Controller
       name={name}
@@ -166,14 +151,14 @@ function RHFSelectMultiple({ name, ...props }) {
               },
             }}
             {...field}
-            value={field.value}
+            value={field.value || []}
             displayEmpty
             disabled={disabled}
             error={!!error}
             multiple
             onClose={() => setSearchText("")}
             renderValue={(selected) => {
-              if (selected.length === 0) {
+              if (selected?.length === 0) {
                 return (
                   <Button
                     sx={{ width: "100%", textTransform: "none" }}
@@ -181,7 +166,7 @@ function RHFSelectMultiple({ name, ...props }) {
                   >
                     Thêm ứng viên
                   </Button>
-                )
+                );
               }
               return (
                 <Button

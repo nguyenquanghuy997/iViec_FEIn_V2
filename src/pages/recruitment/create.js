@@ -18,8 +18,7 @@ import Preview from "@/sections/recruitment-form/preview/Preview";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 
-import {PAGES} from '@/config'
-import {getRolesByPage} from '@/utils/role'
+import { PERMISSION_PAGES } from '@/config'
 import {
   useCreateRecruitmentMutation,
   useUpdateRecruitmentDraftMutation,
@@ -34,16 +33,8 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {cleanObject} from "@/utils/function";
 import {FormValidate} from "@/sections/recruitment-form/form/Validate";
 
-CreateRecruitment.getLayout = function getLayout({roles = []}, page) {
-  return <Layout roles={roles}>{page}</Layout>
-}
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Jobs),
-    },
-  }
+CreateRecruitment.getLayout = function getLayout(pageProps, page) {
+  return <Layout permissions={PERMISSION_PAGES.createRecruitment} {...pageProps}>{page}</Layout>
 }
 
 export default function CreateRecruitment() {

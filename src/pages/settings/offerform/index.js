@@ -1,12 +1,11 @@
 import Page from "@/components/Page";
-import {PAGES} from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {getRolesByPage} from "@/utils/role";
 import OfferFormContent from "@/sections/offerform/OfferFormContent";
 
-OfferForm.getLayout = function getLayout({roles = []}, page) {
+OfferForm.getLayout = function getLayout(pageProps, page) {
   return (
-      <SettingLayout roles={roles}>
+      <SettingLayout permissions={PERMISSION_PAGES.offerTemplate} {...pageProps}>
         {page}
       </SettingLayout>
   );
@@ -20,10 +19,3 @@ export default function OfferForm() {
   );
 }
 
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}

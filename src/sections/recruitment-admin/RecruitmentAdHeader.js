@@ -14,7 +14,14 @@ const RecruitmentAdHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit
               <RHFTextField
                   name="searchKey"
                   placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
-                  sx={{minWidth: '510px'}}
+                  sx={{
+                    minWidth: '510px',
+                    background: '#F2F4F5',
+                    borderRadius: '6px',
+                    '.MuiInput-root':{
+                       border: 'none'
+                    }
+                  }}
                   InputProps={{
                     startAdornment: (
                         <InputAdornment position='start' sx={{ ml: 1.5 }}>

@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import SettingLayout from "@/layouts/setting";
-import {getRolesByPage} from "@/utils/role";
-import {PAGES} from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import Page from "@/components/Page";
 import OrganizationDetailContent from "@/sections/organizationdetail/OrganizationDetailContent";
 import {useRouter} from "next/router";
@@ -12,21 +11,13 @@ import {
 } from "@/sections/organization/override/OverrideOrganizationSlice";
 import LoadingScreen from "@/components/LoadingScreen";
 
-OrganizationDetail.getLayout = function getLayout({roles = []}, page) {
+OrganizationDetail.getLayout = function getLayout(pageProps, page) {
     return (
-        <SettingLayout roles={roles}>
+        <SettingLayout permissions={PERMISSION_PAGES.organization} {...pageProps}>
             {page}
         </SettingLayout>
     );
 };
-
-export async function getServerSideProps() {
-    return {
-        props: {
-            roles: getRolesByPage(PAGES.Organization),
-        },
-    };
-}
 
 function OrganizationDetail() {
 

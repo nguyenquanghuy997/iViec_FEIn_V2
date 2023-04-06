@@ -12,6 +12,7 @@ import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import LoadingScreen from "@/components/LoadingScreen";
 import {useSnackbar} from "notistack";
 import {isEmpty, get} from "lodash";
+import { DOMAIN_SERVER_API } from "@/config";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
 
@@ -90,7 +91,7 @@ const BusinessArea = ({ data }) => {
                             color: "white",
                             width: "100%",
                             minHeight: "302px",
-                            backgroundImage: `url(http://103.176.149.158:5001/api/Image/GetImage?imagePath=${get(data, 'organizationBusiness.businessPhoto')})`,
+                            backgroundImage: `url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(data, 'organizationBusiness.businessPhoto')})`,
                             padding: "36px 40px",
                         }}
                     >

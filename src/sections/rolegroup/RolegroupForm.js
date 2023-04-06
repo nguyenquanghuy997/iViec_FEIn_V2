@@ -9,13 +9,15 @@ import {
   Stack,
   Divider,
   Box,
+  FormHelperText,
 } from "@mui/material";
 import { pick as _pick } from 'lodash';
 
 const InputStyle = { width: "100%", minHeight: 44 };
 
 const RolegroupForm = ({ role, ...methods }) => {
-  const { setValue } = methods;
+  const { setValue, formState: { errors } } = methods;
+
   const actions = useMemo(() => {
     if (!role || !role.identityRoles || role.identityRoles.length < 1) {
       return [];
@@ -32,6 +34,7 @@ const RolegroupForm = ({ role, ...methods }) => {
     for (let f in fieldValues) {
       setValue(f, fieldValues[f]);
     }
+    setValue('identityRoles', role.identityRoles?.map(ac => ac.name));
   }, [role]);
 
   return (
@@ -61,6 +64,10 @@ const RolegroupForm = ({ role, ...methods }) => {
       <Typography sx={{ py: 2, fontSize: "16px", fontWeight: 600 }}>
         Thiết lập chức năng
       </Typography>
+
+      {!!errors.identityRoles && (
+        <FormHelperText error={true}>{errors.identityRoles.message}</FormHelperText>
+      )}
 
       <PipelineTable
         actions={actions}

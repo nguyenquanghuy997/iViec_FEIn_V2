@@ -5,10 +5,10 @@ import {ButtonAddStyle, SubTitleStyle, TitleStyle} from "@/sections/emailform/st
 
 const FormHeader = ({ onOpenModal, title, subtitle, showButton = true, buttonTitle = '', buttonIcon='material-symbols:add' }) => {
   return (
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
           <Stack>
               <TitleStyle className="form-title">{title}</TitleStyle>
-              <SubTitleStyle className="form-subtitle">{subtitle}</SubTitleStyle>
+              {subtitle && <SubTitleStyle className="form-subtitle">{subtitle}</SubTitleStyle>}
           </Stack>
         {showButton && <Box>
           <ButtonAddStyle

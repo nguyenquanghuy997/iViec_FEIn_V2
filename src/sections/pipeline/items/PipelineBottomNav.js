@@ -47,6 +47,7 @@ const PipelineBottomNav = ({
     setShowConfirmMultiple(true);
   };
   let item = itemSelected.map((p) => p.isActivated);
+  let isDefault = itemSelected.map((p) => p.isDefault);
   let ids = itemSelected.map((p) => p.id);
   let itemApply = itemSelected.map((p) => p.recruitmentAppliedCount);
   function checkSameApply(arr) {
@@ -74,6 +75,7 @@ const PipelineBottomNav = ({
           }}
         >
           <Stack flexDirection="row" alignItems="center">
+            {itemSelected[0]?.isDefault == false && checkSameValue(isDefault) &&(<>
             {checkSameValue(item) && (
               <>
                 {item.includes(true) ? (
@@ -142,6 +144,8 @@ const PipelineBottomNav = ({
                   />
                 }
               />
+            )}
+            </>
             )}
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>

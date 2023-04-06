@@ -31,6 +31,7 @@ export default function PipelineTable({
 
   useEffect(() => {
     if (initActions.length < 1) {
+      setActionsList([]);
       return;
     }
     setActionsList(initActions);
@@ -113,7 +114,7 @@ export default function PipelineTable({
               <span>Nhóm chức năng</span>
             </TableCell>
 
-            <TableCell>
+            <TableCell sx={{ width: '50%' }}>
               <span>Chức năng</span>
             </TableCell>
 
