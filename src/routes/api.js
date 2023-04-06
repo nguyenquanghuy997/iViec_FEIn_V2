@@ -52,8 +52,8 @@ export const API_USER_INVITE_SET_PASSWORD = "/identity/Identity/UserInvitedSetPa
 export const API_CHANGE_PASSWORD = "/identity/Identity/ChangePassword";
 export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePasswordWithToken";
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup";
-
-// Common
+export const API_DELETE_USER_ORGANIZATION = "/identity/Identity/RemoveApplicationUsers";
+export const API_UPDATE_USER_ROLE_ORGANIZATION = "/identity/Identity/ApplicationUserUpdateRole";
 
 //Ứng viên
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new lấy danh sách ứng viên
@@ -84,27 +84,25 @@ export const API_APPLICANT_REVIEW_FORM = "/applicant/ApplicantReview/GetApplican
 export const API_LIST_JOBS = "/api/recruitment/Recruitment/GetRecruitments"; //new  danh sách tin
 // Lấy danh sách đơn vị/tổ chức
 export const API_GET_ORGANIZATION = "/organization/Organization/GetOrganization";
-export const API_GET_ORGANIZATION_WITH_CHILD = "/organization/Organization/GetOrganizationsLessDataWithChild"; // lấy danh sách đơn vị để đổ dữ liệu dạng cây
-export const API_GET_ORGANIZATION_DETAIL_BY_ID = "/organization/Organization/GetOrganizationDetailById"; // lấy chi tiết thông tin đơn vị
-export const API_GET_ORGANIZATION_DETAIL_BY_SLUG = "/organization/Organization/GetOrganizationBySlug"; // lấy chi tiết thông tin đơn vị
-export const API_GET_ORGANIZATION_PREVIEW = "/organization/Organization/GetOrganizationPreview"; // lấy chi tiết thông tin đơn vị
-export const API_CREATE_CHILD_ORGANIZATION = "/organization/Organization/CreateChildOrganization"; // tạo đơn vị
-export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganizationData"; // cập nhật thông tin đơn vị
-export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganizationById"; // xóa đơn vị
-export const API_DELETE_MULTIPLE_ORGANIZATION = "/organization/Organization/RemoveOrganizations"; // xóa nhiều đơn vị
-export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrganizationsActive"; // xóa nhiều đơn vị
-export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin"; // lấy danh sách admin
-export const API_GET_ALL_USER_BY_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId"; // lấy danh sách người dùng theo đơn vị
+export const API_GET_ORGANIZATION_WITH_CHILD = "/organization/Organization/GetOrganizationsLessDataWithChild";
+export const API_GET_ORGANIZATION_DETAIL_BY_ID = "/organization/Organization/GetOrganizationDetailById";
+export const API_GET_ORGANIZATION_DETAIL_BY_SLUG = "/organization/Organization/GetOrganizationBySlug";
+export const API_GET_ORGANIZATION_PREVIEW = "/organization/Organization/GetOrganizationPreview";
+export const API_CREATE_CHILD_ORGANIZATION = "/organization/Organization/CreateChildOrganization";
+export const API_UPDATE_ORGANIZATION = "/organization/Organization/UpdateOrganizationData";
+export const API_DELETE_ORGANIZATION = "/organization/Organization/RemoveOrganizationById";
+export const API_DELETE_MULTIPLE_ORGANIZATION = "/organization/Organization/RemoveOrganizations";
+export const API_SET_ACTIVE_ORGANIZATION = "/organization/Organization/SetOrganizationsActive";
+export const API_GET_ALL_ADMIN_ORGANIZATION = "/organization/Organization/GetApplicantUsersAdmin";
+
+export const API_GET_LIST_USER_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganization"
+
+// mời người dùng
 export const API_INVITE_USER = "/organization/OrganizationUserInvite/CreateOrganizationUserInvites";
 export const API_USER_CONFIRM_INVITE = "/identity/Identity/UserInvitedActive";
 export const API_GET_LIST_USER_INVITE = "/organization/OrganizationUserInvite/GetOrganizationUserInvites";
 export const API_DELETE_INVITE_USER = "/organization/OrganizationUserInvite/RemoveOrganizationUserInvite";
 export const API_RESEND_INVITE_USER = "/organization/OrganizationUserInvite/ResendOrganizationUserInvite";
-export const API_UPDATE_ORGANIZATION_HUMAN = '/organization/OrganizationHuman/UpdateOrganizationHuman'
-export const API_UPDATE_ORGANIZATION_BUSINESS = 'organization/OrganizationBusiness/UpdateOrganizationBusiness'
-export const API_UPDATE_ORGANIZATION_PIPELINE ='organization/OrganizationProfilePipeline/UpdateOrganizationProfilePipelines'
-export const API_UPDATE_ORGANIZATION_ENDING = 'organization/Organization/UpdateOrganization'
-export const API_ADD_ORGANIZATION_BUSINESS='organization/OrganizationBusiness/CreateOrganizationBusiness'
 //Role
 export const API_GET_ROLE = '/identity/Role/GetRoles'
 // Role Group
@@ -169,10 +167,12 @@ export const API_GET_COMPANY_INFOR = 'organization/Organization/GetOrganization'
 export const API_GET_COMPANY_INFOR_BY_IDS = 'organization/Organization/GetOrganizationIds'
 export const API_UPDATE_COMPANY_INFOR = 'organization/OrganizationInformation/UpdateOrganizationInformation'
 export const API_UPLOAD_IMAGE ='organization/Organization/OrganizationUploadImage'
-// Thông báo
-export const API_GET_LIST_NOTIFICATION = "/UserNotifications/GetPaging";
-export const API_MASK_READ_NOTIFICATION =
-  "api/UserNotifications/MaskAsRead?id=";
+export const API_UPDATE_ORGANIZATION_HUMAN = '/organization/OrganizationHuman/UpdateOrganizationHuman'
+export const API_UPDATE_ORGANIZATION_BUSINESS = 'organization/OrganizationBusiness/UpdateOrganizationBusiness'
+export const API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT = '/organization/OrganizationWorkingEnvironment/UpdateOrganizationWorkingEnvironment'
+export const API_UPDATE_ORGANIZATION_PIPELINE ='organization/OrganizationProfilePipeline/UpdateOrganizationProfilePipelines'
+export const API_UPDATE_ORGANIZATION_ENDING = 'organization/Organization/UpdateOrganization'
+export const API_ADD_ORGANIZATION_BUSINESS='organization/OrganizationBusiness/CreateOrganizationBusiness'
 
 // Mẫu đánh giá
 export const API_GET_ALL_REVIEW_FORM = "/organization/ReviewForm/GetReviewForms";

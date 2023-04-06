@@ -23,7 +23,7 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
   const [selected, setSelected] = useState([]);
   const toggleModalState = useSelector((state) => state.modalReducer.openState);
 
-  const {openDelete, openResend} = toggleModalState;
+  const {openDeleteInvite, openResend} = toggleModalState;
   const handleOpenModalState = (data) => dispatch(modalSlice.actions.openStateModal(data));
   const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
 
@@ -140,8 +140,8 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
               }
             }}
         />}
-        {openDelete && <ConfirmModal
-            open={openDelete}
+        {openDeleteInvite && <ConfirmModal
+            open={openDeleteInvite}
             onClose={handleCloseModal}
             icon={<AlertIcon/>}
             data={selected}
@@ -199,7 +199,7 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
                       {
                         key: 'delete',
                         icon: <DeleteIcon/>,
-                        onClick: () => handleOpenModalState({ openDelete: true }),
+                        onClick: () => handleOpenModalState({ openDeleteInvite: true }),
                       }
                     ]}
 
