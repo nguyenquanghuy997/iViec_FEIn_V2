@@ -359,6 +359,8 @@ export default function CropImage({ data, size }) {
             border: size === "cover" ? "0" : "3px solid white",
             objectFit: "cover",
             cursor: "pointer",
+            borderTopLeftRadius: '4px',
+            borderTopRightRadius: '4px',
           }}
           onClick={() => setDialogOpen(true)}
         />

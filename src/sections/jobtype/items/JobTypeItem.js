@@ -5,7 +5,11 @@ import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import { useGetListColumnsQuery, useLazyGetAllJobTypeQuery, useUpdateListColumnsMutation } from "@/sections/jobtype";
+import {
+  useGetListColumnsQuery,
+  useLazyGetAllJobTypeQuery,
+  useUpdateListColumnsMutation,
+} from "@/sections/jobtype";
 import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -27,94 +31,100 @@ export const JobTypeItem = () => {
   const [getAllFilter, { data: Data = [], isLoading }] =
     useLazyGetAllJobTypeQuery();
   // api get list Column
-  const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
+  const { data: { items: ColumnData = [] } = {} } = useGetListColumnsQuery();
 
   // api update list Column
   const [updateListColumn] = useUpdateListColumnsMutation();
-  const columns = [
-    {
-      dataIndex: "organizationPositionVisibleId",
-      title: "STT",
-      key: "index",
-      render: (item, record, index, page, paginationSize) => (
-        <>{(page - 1) * paginationSize + index + 1}</>
-      ),
-      width: "60px",
-      fixed: "left",
-    },
-    { dataIndex: "name", title: "Vị trí công việc", width: "240px" },
-    {
-      dataIndex: "numberOfRecruitmentApplied",
-      title: "Số tin áp dụng",
-      width: "160px",
-      align: "center",
-    },
-    {
-      dataIndex: "isActivated",
-      title: "Trạng thái",
-      width: "180px",
-      name: "isActive",
-      type: "select",
-      label: "Trạng thái",
-      render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#455570" }}>
-          {Status(item)}
-        </span>
-      ),
-    },
-    {
-      dataIndex: "createdTime",
-      title: "Ngày tạo",
-      width: "180px",
-      type: "date",
-      label: "Ngày tạo",
-      name: "createdTime",
-      render: (date) => fDate(date),
-      items: [
-        {
-          name: "createdTimeFrom",
-          type: "date",
-          placeholder: "Chọn ngày",
-          startIcon: <span>Từ</span>,
-          endIcon: <Iconify icon="material-symbols:calendar-today" />,
-        },
-        {
-          name: "createdTimeTo",
-          type: "date",
-          placeholder: "Chọn ngày",
-          startIcon: <span>Đến</span>,
-          endIcon: <Iconify icon="material-symbols:calendar-today" />,
-        },
-      ],
-    },
-    {
-      dataIndex: "creatorEmail",
-      title: "Người tạo",
-      width: "300px",
-      name: "creatorIds",
-      label: "Người tạo",
-      placeholder: "Chọn 1 hoặc nhiều người",
-      type: "select",
-      multiple: true,
-      render: (item) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <AvatarDS
-            sx={{
-              height: "20px",
-              width: "20px",
-              borderRadius: "100px",
-              fontSize: "12px",
-            }}
-            name={item}
-          ></AvatarDS>
-          <span fontSize="14px" fontWeight="600" color="#172B4D">
-            {item}
+  const columns = useMemo(() => {
+    return [
+      {
+        dataIndex: "organizationPositionVisibleId",
+        title: "STT",
+        key: "index",
+        render: (item, record, index, page, paginationSize) => (
+          <>{(page - 1) * paginationSize + index + 1}</>
+        ),
+        width: "60px",
+        fixed: "left",
+      },
+      {
+        dataIndex: "name",
+        title: "Vị trí công việc",
+        width: "240px",
+        render: (name) => <span style={{fontWeight: 500}}>{name}</span>
+      },
+      {
+        dataIndex: "numberOfRecruitmentApplied",
+        title: "Số tin áp dụng",
+        width: "160px",
+        align: "center",
+      },
+      {
+        dataIndex: "isActivated",
+        title: "Trạng thái",
+        width: "180px",
+        name: "isActive",
+        type: "select",
+        label: "Trạng thái",
+        render: (item) => (
+          <span style={{ color: item ? "#388E3C" : "#455570" }}>
+            {Status(item)}
           </span>
-        </div>
-      ),
-    },
-  ];
-
+        ),
+      },
+      {
+        dataIndex: "createdTime",
+        title: "Ngày tạo",
+        width: "180px",
+        type: "date",
+        label: "Ngày tạo",
+        name: "createdTime",
+        render: (date) => fDate(date),
+        items: [
+          {
+            name: "createdTimeFrom",
+            type: "date",
+            placeholder: "Chọn ngày",
+            startIcon: <span>Từ</span>,
+            endIcon: <Iconify icon="material-symbols:calendar-today" />,
+          },
+          {
+            name: "createdTimeTo",
+            type: "date",
+            placeholder: "Chọn ngày",
+            startIcon: <span>Đến</span>,
+            endIcon: <Iconify icon="material-symbols:calendar-today" />,
+          },
+        ],
+      },
+      {
+        dataIndex: "creatorEmail",
+        title: "Người tạo",
+        width: "300px",
+        name: "creatorIds",
+        label: "Người tạo",
+        placeholder: "Chọn 1 hoặc nhiều người",
+        type: "select",
+        multiple: true,
+        render: (item) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <AvatarDS
+              sx={{
+                height: "20px",
+                width: "20px",
+                borderRadius: "100px",
+                fontSize: "12px",
+              }}
+              name={item}
+            ></AvatarDS>
+            <span fontSize="14px" fontWeight="600" color="#172B4D">
+              {item}
+            </span>
+          </div>
+        ),
+      },
+    ];
+  }, [page, paginationSize]);
   // form search
   const Schema = Yup.object().shape({
     search: Yup.string(),

@@ -133,8 +133,12 @@ const ApplicantBottomNav = ({
                   href={
                     "applicant/" +
                     itemSelected[0]?.applicantId +
-                    "?or=" +
-                    itemSelected[0]?.organizationId
+                    "?co=" +
+                    itemSelected[0]?.correlationId +
+                    "&&or=" +
+                    itemSelected[0]?.organizationId +
+                    "&&re=" +
+                    itemSelected[0]?.recruitmentId
                   }
                   icon={
                     <Iconify
@@ -193,7 +197,7 @@ const ApplicantBottomNav = ({
             />
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
               Đã chọn: {selectedList.length}
             </Typography>
             <Divider

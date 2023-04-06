@@ -39,9 +39,10 @@ export default function LoginForm() {
 
     const defaultValues = {
         email: "thuybon1@gmail.com",
-        password: "000000",
+        password: "123123",
         remember: true,
     };
+    
 
     const methods = useForm({
         mode: 'onChange',

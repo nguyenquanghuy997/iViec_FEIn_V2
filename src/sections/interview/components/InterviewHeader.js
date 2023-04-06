@@ -1,5 +1,3 @@
-import DateIcon from "../../../assets/interview/DateIcon";
-import MenuIcon from "../../../assets/interview/MenuIcon";
 import HeadingBar from "../../../components/heading-bar/HeadingBar";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -8,7 +6,6 @@ import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { InputAdornment, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 
 const InterviewHeader = ({
   methods,
@@ -25,38 +22,6 @@ const InterviewHeader = ({
         justifyContent="space-between"
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <ButtonGroup
-            disableElevation
-            variant="contained"
-            aria-label="Disabled elevation buttons"
-            sx={{ mx: 1, boxShadow: "none" }}
-          >
-            <Button
-              startIcon={<DateIcon />}
-              sx={{
-                background: "#1976D2",
-                borderRadius: "6px 0px 0px 6px",
-                height: "44px",
-                width: "52px",
-                "& .MuiButton-startIcon": { mr: 0 },
-              }}
-            />
-            <Button
-              variant="outlined"
-              startIcon={<MenuIcon />}
-              sx={{
-                borderColor: "#D0D4DB",
-                borderRadius: "0 6px 6px 0",
-                height: "44px",
-                width: "52px",
-                "&:hover": {
-                  background: "white",
-                  borderColor: "#D0D4DB",
-                },
-                "& .MuiButton-startIcon": { mr: 0 },
-              }}
-            />
-          </ButtonGroup>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <RHFTextField
               name="searchKey"
@@ -100,7 +65,7 @@ const InterviewHeader = ({
             borderRadius: 4,
             background: "#1976D2",
             textDecoration: "none",
-            height:'44px'
+            height: "44px",
           }}
           onClick={handleOpen}
         >
@@ -119,7 +84,7 @@ const InterviewHeader = ({
               lineHeight: 20 / 15,
               marginLeft: 8,
               color: "white",
-              textTransform:'none'
+              textTransform: "none",
             }}
           >
             {"Đặt lịch phỏng vấn"}

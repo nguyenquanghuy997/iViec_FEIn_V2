@@ -19,7 +19,7 @@ const Ending = () => {
   const PlaceholderStyle = styled("div")(() => ({
     background: "white",
     padding: "12px 96px",
-    height: 150,
+    // height: 150,
     "& .content": {
       backgroundColor: "white",
       color: "#455570",
@@ -43,7 +43,7 @@ const Ending = () => {
     <Box
       sx={{ width: 700 }}
       role="presentation"
-      // onKeyDown={toggleDrawer(false)}
+    // onKeyDown={toggleDrawer(false)}
     >
       <List
         sx={{
@@ -103,6 +103,7 @@ const Ending = () => {
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
+        name=''
       />
       {open && (
         <Drawer
@@ -115,13 +116,23 @@ const Ending = () => {
         </Drawer>
       )}
       {Data?.conclusion ? (
-        <PlaceholderStyle>
-          <div className="content" style={{ height: 100 }}>
+        <PlaceholderStyle style={{
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '4px',
+        }}>
+          <div className="content" style={{
+            borderRadius: '4px',
+          }}>
             <blockquote>{renderItem(Data?.conclusion)}</blockquote>
+            <div style={{ textAlign: 'end' }}><strong>{Data?.name}</strong></div>
           </div>
         </PlaceholderStyle>
       ) : (
-        <Box sx={{ bgcolor: "white" }}>
+        <Box sx={{
+          bgcolor: "white",
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '4px',
+        }}>
           {" "}
           <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
             <NoInformation />

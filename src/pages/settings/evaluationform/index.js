@@ -2,10 +2,8 @@
 import Page from "@/components/Page";
 import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {
-  EvaluationItem,
-} from "@/sections/evaluationform";
 import PageWrapper from "@/components/PageWrapper";
+import EvaluationItem from "@/sections/evaluationform/items/EvaluationItem";
 
 Setting.getLayout = function getLayout(pageProps, page) {
   return (
@@ -18,8 +16,8 @@ Setting.getLayout = function getLayout(pageProps, page) {
 export default function Setting() {
 
   return (
-    <PageWrapper title={"Quy trình tuyển dụng"}>
-      <Page>
+    <PageWrapper>
+      <Page title={"Mẫu đánh giá"}>
         <EvaluationItem />
       </Page>
     </PageWrapper>

@@ -32,7 +32,6 @@ const defaultValues = {
 };
 export const PipelineFormModal = ({ data, show, onClose }) => {
   const isEditMode = !!data?.id;
-
   // api
   const [addForm] = useAddPipelineMutation();
   const [updateForm] = useUpdatePipelineMutation();
@@ -180,7 +179,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
   }, []);
   useEffect(() => {
     setValue("pipelineStates", listForm);
-    listForm.length && handleSubmit(() => {})();
+    setEditItemIndex(-1);
   }, [listForm]);
   const isActivated = methods.watch("isActivated");
   return (
@@ -254,7 +253,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
             <Divider />
             {/* dept */}
             <View pv={24}>
-              {renderTitle("Bước tuyển dụng", true)}
+              <Label required={true} sx={{color:'#455570', fontSize:16, fontWeight:600}}>{"Bước tuyển dụng"}</Label>
               <FormHelperText error sx={{ mt: 0, mb: 1 }}>
                 {errorStage && errorStage}
               </FormHelperText>

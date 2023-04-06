@@ -1,4 +1,3 @@
-// form
 import {Controller, useFormContext} from "react-hook-form";
 import SwitchItem from '../form/Switch';
 
@@ -13,7 +12,7 @@ export default function SwitchStatusDS({name, label, disabled}) {
                     <SwitchItem {...field} checked={field.value} disabled={disabled}/>
                     <label
                         style={{
-                            fontWeight: 600,
+                            fontWeight: 400,
                             fontSize: 14,
                             color: field.value == true ? "#388E3C" : "#455570",
                         }}

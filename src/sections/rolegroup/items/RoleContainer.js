@@ -116,16 +116,17 @@ export const RoleContainer = () => {
     },
 
     {
+      dataIndex: "isActivated",
       title: "Trạng thái",
       key: "isActivated",
-      render: (item) => (
+      render: (isActivated) => (
         <Typography
           sx={{
-            color: item?.isActivated ? "#388E3C" : "red",
+            color: isActivated ? "#388E3C" : "red",
             fontSize: "12px",
           }}
         >
-          {item?.isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+          {isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
         </Typography>
       ),
       width: "160px",

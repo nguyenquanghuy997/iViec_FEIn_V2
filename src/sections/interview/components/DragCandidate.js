@@ -1,35 +1,27 @@
-import DeleteIcon from "@/assets/interview/DeleteIcon";
+import { DeleteIcon } from "@/assets/ActionIcon";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
 import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
-// import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
-// import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography, Box, Card, Collapse } from "@mui/material";
-// import { MobileTimePicker } from "@mui/x-date-pickers";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { TimePicker } from "antd";
-// import dayjs from "dayjs";
+import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-function DragCandidate({ onDelete }) {
+export const DragItem = styled("li")(() => ({
+  "&::marker": {
+    color: "white",
+  },
+}));
+function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
   const [characters, setCharacters] = useState([]);
-  const [checked, setChecked] = useState(false);
-
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
-
-  function handleOnDragEnd(result) {
+  const newArr = (data || [])?.map((item) => item);
+  const handleOnDragEnd = (result) => {
     if (!result.destination) return;
-
     const items = Array.from(characters);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
-    setCharacters(items);
-  }
+    setCharacters([...data, items]);
+  };
   const time = false;
 
   return (
@@ -42,11 +34,11 @@ function DragCandidate({ onDelete }) {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {characters.map(({ id, name, phone }, index) => {
+              {newArr.map(({ id, name, phone }, index) => {
                 return (
                   <Draggable key={id} draggableId={id} index={index}>
                     {(provided) => (
-                      <li
+                      <DragItem
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
@@ -57,12 +49,11 @@ function DragCandidate({ onDelete }) {
                             padding: "16px",
                             marginBottom: "16px",
                             borderRadius: "6px ",
+                            width: "100%",
                           }}
                         >
                           <Card
                             sx={{
-                              dispaly: "flex",
-                              flexDirection: "row",
                               boxShadow: "none",
                               border: "none",
                               mb: 2,
@@ -76,7 +67,12 @@ function DragCandidate({ onDelete }) {
                                 justifyContent: "space-between",
                               }}
                             >
-                              <div style={{ display: "flex" }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
                                 <MenuListIcon />
                                 <Box sx={{ display: "flex", ml: 1 }}>
                                   <img
@@ -109,17 +105,16 @@ function DragCandidate({ onDelete }) {
                                   </div>
                                 </Box>
                               </div>
-                              <div style={{ display: "flex" }}>
-                                <Box
-                                  sx={{ mt: "2px", cursor: "pointer" }}
-                                  onClick={onDelete}
-                                >
-                                  <DeleteIcon />
-                                </Box>
-                              </div>
+
+                              <Box
+                                sx={{ mt: "2px", cursor: "pointer" }}
+                                onClick={onDelete}
+                              >
+                                <DeleteIcon />
+                              </Box>
                             </div>
                           </Card>
-                          {checked ? (
+                          {open ? (
                             <>
                               <Box sx={{ mb: 2, width: "100%" }}>
                                 <Typography>
@@ -137,7 +132,7 @@ function DragCandidate({ onDelete }) {
                               <Box sx={{ width: "100%" }}>
                                 <Box>
                                   <div>
-                                    <Collapse in={checked}>
+                                    <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
                                         <Typography>
                                           Giờ phỏng vấn{" "}
@@ -146,7 +141,7 @@ function DragCandidate({ onDelete }) {
                                           </span>
                                         </Typography>
                                         <RHFTimePicker
-                                          name="time"
+                                          name={`bookingCalendarApplicants.${id}.interviewTime`}
                                           style={{
                                             width: "100%",
                                             background: "white",
@@ -160,7 +155,7 @@ function DragCandidate({ onDelete }) {
                               <Box sx={{ width: "100%" }}>
                                 <Box>
                                   <div>
-                                    <Collapse in={checked}>
+                                    <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
                                         <Typography>
                                           Thời lượng phỏng vấn{" "}
@@ -176,7 +171,7 @@ function DragCandidate({ onDelete }) {
                                             background: "white",
                                             border: "8px",
                                           }}
-                                          name="interviewDuration"
+                                          name={`bookingCalendarApplicants.${id}.interviewDuration`}
                                           placeholder="Nhập số phút"
                                         />
                                       </Box>
@@ -191,13 +186,13 @@ function DragCandidate({ onDelete }) {
                                 }}
                               >
                                 <Button
-                                  onClick={() => setChecked(!checked)}
+                                  onClick={onClose}
                                   sx={{ color: "#172B4D" }}
                                 >
                                   Hủy
                                 </Button>
                                 <Button
-                                  type="submit"
+                                  onClick={onClose}
                                   variant="contained"
                                   sx={{ background: "#1976D2" }}
                                 >
@@ -228,7 +223,7 @@ function DragCandidate({ onDelete }) {
                             </Card>
                           ) : (
                             <>
-                              {checked ? (
+                              {open ? (
                                 ""
                               ) : (
                                 <Card
@@ -242,11 +237,11 @@ function DragCandidate({ onDelete }) {
                                     sx={{
                                       m: "0 auto",
                                       textTransform: "none",
-                                      // display:{checked} ? "none" :'block'
+                                      fontWeight: 400,
+                                      fontSize: 14,
                                     }}
-                                    onClick={handleChange}
+                                    onClick={onOpen}
                                   >
-                                    {" "}
                                     Điều chỉnh ngày giờ phỏng vấn
                                   </Button>
                                 </Card>
@@ -254,7 +249,7 @@ function DragCandidate({ onDelete }) {
                             </>
                           )}
                         </div>
-                      </li>
+                      </DragItem>
                     )}
                   </Draggable>
                 );
