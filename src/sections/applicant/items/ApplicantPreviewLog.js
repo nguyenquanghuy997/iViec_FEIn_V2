@@ -11,6 +11,8 @@ export const ApplicantPreviewLog = ({dataLog, dataApplicant}) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const dataExamInterviewFilter = dataLog.events.filter(p=>p.recruitmentPipelineStateType == 1 && p.recruitmentPipelineStateType == 2)
+  const dataResultOfferFilter = dataLog.events.filter(p=>p.eventType == 'SendOfferTemplateToApplicantEvent' && p.eventType == 'CreateApplicantReviewEvent')
   return (
     <Grid item style={{padding:'24px 24px 0 24px'}}>
       <Box sx={{ width: "100%", typography: "body1", mb: 3 }}>
@@ -53,7 +55,10 @@ export const ApplicantPreviewLog = ({dataLog, dataApplicant}) => {
             <Activities dataLog={dataLog} dataApplicant={dataApplicant}/>
           </TabPanel>
           <TabPanel value="2">
-          <Activities dataLog={dataLog} dataApplicant={dataApplicant}/>
+          <Activities dataLog={dataExamInterviewFilter} dataApplicant={dataApplicant}/>
+          </TabPanel>
+          <TabPanel value="3">
+          <Activities dataLog={dataResultOfferFilter} dataApplicant={dataApplicant}/>
           </TabPanel>
         </TabContext>
       </Box>
