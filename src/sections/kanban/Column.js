@@ -94,7 +94,7 @@ const Column = ({ droppableId, column }) => {
                   style={{
                     // background: "rgba(9, 30, 66, 0.1)",
                     padding: 8,
-                    minWidth: 320,
+                    width: 320,
                     minHeight: 1000,
                     // border: "2px solid #ccc",
                     borderRadius: "8px",

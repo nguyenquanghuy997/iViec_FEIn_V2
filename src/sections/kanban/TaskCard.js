@@ -31,6 +31,7 @@ function Baseitem(props) {
       alignItems="center"
       sx={{
         margin: '0 12px',
+        marginBottom: '16px',
         "& .MuiBadge-dot": {
           width: "6px",
           minWidth: "6px",
@@ -99,10 +100,32 @@ function InterviewItem(props) {
   return (
     <div>
       <Baseitem item={item} />
-      <Divider style={{ margin: '12px 0px' }} />
-      <div style={{
-        padding: '0 12px'
+
+
+      {/* đã từng phỏng vấn */}
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        background: '#F3F4F6',
+        padding: '4px 12px'
       }}>
+        <Typography fontSize="12px" fontWeight="500">
+          {'Phỏng vấn lần 1'}
+        </Typography>
+
+        <Iconify
+          icon={"material-symbols:play-circle"}
+          width={20}
+          height={20}
+          color="#455570"
+        />
+      </Box>
+
+      <Divider style={{ margin: '12px 0px' }} />
+
+      {/* default */}
+      <Box style={{ padding: '0 12px 16px' }}>
         <ButtonDS
           tittle={"Đặt lịch phỏng vấn"}
           type="submit"
@@ -123,9 +146,67 @@ function InterviewItem(props) {
             textTransform: "none",
           }}
         />
-      </div>
+      </Box>
 
+      {/* schedule */}
+      {/* <Box sx={{
+        background: '#4CAF50',
+        color: '#FDFDFD',
+        padding: '8px 12px 16px',
+        marginTop: '12px',
+        borderBottomLeftRadius: '4px',
+        borderBottomRightRadius: '4px',
+      }}>
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <Box>
+            <Typography fontSize="12px" display="flex" fontWeight="700" alignItems="left">
+              {'Phỏng vấn nhân viên kinh doanh'}
+            </Typography>
+            <Typography fontSize="12px" display="flex" fontWeight="500" alignItems="center">
+              {'12/03/2023 15:00 - 15:30'}
+            </Typography>
+          </Box>
+          <Iconify
+            icon={"mdi:arrow-right-bold-circle"}
+            width={20}
+            height={20}
+            color="#FDFDFD"
+          />
+        </Box>
 
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: '#FDFDFD',
+          borderRadius: '6px',
+          marginTop: '8px',
+          padding: '10px',
+        }}>
+          <Box>
+            <Typography sx={{
+              fontSize: "12px",
+              color: '#5C6A82',
+              fontWeight: "500",
+              lineClamp: 1,
+              boxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}>
+              {'https://www.iviec.vn/...'}
+            </Typography>
+          </Box>
+          <Iconify
+            icon={"ri:file-copy-fill"}
+            width={20}
+            height={20}
+            color="#5C6A82"
+          />
+        </Box>
+      </Box> */}
     </div>
   );
 }
@@ -147,7 +228,7 @@ function ResultItem(props) {
               borderRadius: 1,
             }}
           >
-            <ButtonGroup fullWidth={true} style={{border:'1px solid #E7E9ED'}}>
+            <ButtonGroup fullWidth={true} style={{ border: '1px solid #E7E9ED' }}>
               <Button
                 type="submit"
                 sx={{
@@ -169,7 +250,7 @@ function ResultItem(props) {
                   fontSize: "12px",
                   padding: "6px 10px",
                 }}>
-                  Đạt
+                Đạt
               </Button>
               <Button
                 type="submit"
@@ -443,8 +524,7 @@ function TaskCard({ item, index, pipelineStateType }) {
 
               <Box sx={{ cursor: 'pointer' }}>
                 <Stack
-                  spacing={1}
-                  sx={{ borderRadius: '8px', padding: '0 0px 16px', background: "#FDFDFD" }}
+                  sx={{ borderRadius: '8px', background: "#FDFDFD" }}
                 >
                   {pipelineStateType == 0 && <Baseitem item={item} />}
                   {pipelineStateType == 1 && <ExaminationItem item={item} />}
