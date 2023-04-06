@@ -119,7 +119,7 @@ const OrganizationUserInviteCard = (
                                 minWidth: '230px',
                                 border: '1px solid #A2AAB7',
                                 borderRadius: '6px',
-                                display: 'flex', alignItems: 'center',
+                                display: 'flex', alignItems: 'center', mr: 1.5, mb: 1.5
                               }}
                           >
                             <Box sx={{width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '24px'}}>

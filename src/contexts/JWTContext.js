@@ -6,37 +6,42 @@ import { setRefreshToken, setRememberMe, setSession } from "@/utils/jwt";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { createContext, useEffect, useReducer } from "react";
+import jwtDecode from 'jwt-decode';
 
 const initialState = {
   // Open authen gurad
   isAuthenticated: false,
   isInitialized: false,
   user: null,
+  permissions: [],
 };
 
 const handlers = {
   INITIALIZE: (state, action) => {
-    const { isAuthenticated, user } = action.payload;
+    const { isAuthenticated, user, permissions } = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
       user,
+      permissions,
     };
   },
   LOGIN: (state, action) => {
-    const { user } = action.payload;
+    const { user, permissions } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
       user,
+      permissions,
     };
   },
   LOGOUT: (state) => ({
     ...state,
     isAuthenticated: false,
     user: null,
+    permissions: [],
   }),
 };
 
@@ -66,11 +71,17 @@ function AuthProvider({ children }) {
           const user = await getUserInfoByToken(accessToken);
           setSession(accessToken);
 
+          let { role: permissions = [] } = jwtDecode(accessToken) || {};
+          if (!Array.isArray(permissions)) {
+            permissions = [permissions];
+          }
+
           dispatch({
             type: "INITIALIZE",
             payload: {
               isAuthenticated: true,
               user,
+              permissions,
             },
           });
 
@@ -80,6 +91,7 @@ function AuthProvider({ children }) {
             payload: {
               isAuthenticated: false,
               user: null,
+              permissions: [],
             },
           });
         }
@@ -89,6 +101,7 @@ function AuthProvider({ children }) {
           payload: {
             isAuthenticated: false,
             user: null,
+            permissions: [],
           },
         });
       }
@@ -110,10 +123,9 @@ function AuthProvider({ children }) {
       const user = await axios(config);
       return user.data;
     } catch (err) {
-      return null;
+      throw err;
     }
   }
-
 
   const login = async (email, password, remember) => {
 
@@ -124,6 +136,10 @@ function AuthProvider({ children }) {
     });
     const response = await _postApi(API_LOGIN, data);
     const userData = await getUserInfoByToken(response.token);
+    let { role: permissions = [] } = jwtDecode(response.token) || {};
+    if (!Array.isArray(permissions)) {
+      permissions = [permissions];
+    }
 
     setRememberMe(remember);
     setSession(response.token);
@@ -133,6 +149,7 @@ function AuthProvider({ children }) {
       type: "LOGIN",
       payload: {
         user: userData,
+        permissions,
       },
     });
   };

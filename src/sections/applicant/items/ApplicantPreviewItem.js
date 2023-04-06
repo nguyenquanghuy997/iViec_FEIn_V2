@@ -1,12 +1,13 @@
-//import { RejectApplicantModal } from "../modals";
 import {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useGetApplicantReviewFormQuery,
   useGetRecruitmentsByApplicantQuery,
+  useLazyGetApplicantByIdQuery,
 } from "../ApplicantFormSlice";
-import { RejectApplicantModal } from "../modals";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
+import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
+import { RejectApplicantModal } from "../modals/RejectApplicantModal";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
@@ -22,6 +23,7 @@ import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
+import { srcImage } from "@/utils/enum";
 import {
   Box,
   Card,
@@ -35,10 +37,15 @@ import {
 import { styled } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 
-function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
+function ApplicantPreviewItem({
+  ApplicantId,
+  OrganizationId,
+  ApplicantCorrelationId,
+  RecruitmentId,
+}) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
-      ApplicantId,
+      ApplicantCorrelationId: ApplicantCorrelationId,
       OrganizationId,
     });
 
@@ -63,9 +70,8 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
         >
           <AvatarDS
             sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
-            src={
-              "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
-            }
+            name={data?.fullName}
+            src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
           ></AvatarDS>
           <Box pl={1}>
             <Typography
@@ -159,7 +165,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                 icon={"ph:user-focus-fill"}
                 width={20}
                 height={20}
-                color={reviewFormCriterias ? "fff":"#8A94A5"}
+                color={reviewFormCriterias ? "fff" : "#8A94A5"}
                 mr={1}
               />
             }
@@ -225,53 +231,78 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { themeStretch } = useSettings();
 
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
+  // const { data: data } = useGetApplicantByIdQuery({
+  //   applicantId: ApplicantId,
+  // });
   const [fetchPipe, { data: pipelines = [], isSuccess }] =
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
+  const [fetchDataApplicant, { data: data = [] }] =
+    useLazyGetApplicantByIdQuery();
 
   const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
     },
-    { skip: pipelines && pipelines?.recruitmentPipelineStates?.filter(
-      (i) => i.id == pipelines.currentApplicantPipelineState && i.pipelineStateType == 3
-    ).length > 0 }
+    {
+      skip: !pipelines?.recruitmentPipelineStates?.length > 0,
+    }
   );
 
+  const [actionId, setActionId] = useState();
+  const [actionType, setActionType] = useState();
+  const [actionShow, setActionShow] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
-  const [rejectApplicant, setRejectApplicant] = useState(false);
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+
   const [ownerName, setOwnerName] = useState();
+
+  const onCloseModel = () => {
+    setActionShow(false);
+    setShowConfirmMultiple(false);
+    const recruiment = options.filter((p) => p.id == RecruitmentId);
+    fetchPipe({
+      ApplicantId: recruiment[0]?.applicantId,
+      RecruitmentId: recruiment[0]?.id,
+    }).unwrap();
+  };
 
   useEffect(() => {
     if (!isFetching) {
-      setSelectedOption(options[0]);
-      setOwnerName(options[0]?.ownerName?.trim());
+      const recruiment = options.filter((p) => p.id == RecruitmentId);
+      setSelectedOption(recruiment[0]);
+      setOwnerName(recruiment[0]?.ownerName?.trim());
       fetchPipe({
-        ApplicantId,
-        RecruitmentId: options[0]?.id,
+        ApplicantId: recruiment[0]?.applicantId,
+        RecruitmentId: recruiment[0]?.id,
       }).unwrap();
       fetchData({
-        ApplicantId,
-        RecruitmentId: options[0]?.id,
+        ApplicantId: recruiment[0]?.applicantId,
+        RecruitmentId: recruiment[0]?.id,
         IsWithdrawHistory: true,
       }).unwrap();
+      fetchDataApplicant({
+        applicantId: recruiment[0]?.applicantId,
+      });
     }
   }, [isFetching]);
-
   const onChangeRecruiment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
     fetchPipe({
-      ApplicantId,
+      ApplicantId: e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
     }).unwrap();
     fetchData({
-      ApplicantId,
+      ApplicantId: e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
       IsWithdrawHistory: true,
     }).unwrap();
+    fetchDataApplicant({
+      applicantId: e.target.value.applicantId,
+    });
   };
   return (
     <div>
@@ -368,6 +399,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                               },
                               textTransform: "none",
                             }}
+                            onClick={() => setShowConfirmMultiple(true)}
                             icon={
                               <Iconify
                                 icon={"ci:transfer"}
@@ -378,7 +410,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                               />
                             }
                           />
-                          <ButtonDS
+                          {/* <ButtonDS
                             type="submit"
                             sx={{
                               padding: "8px",
@@ -400,7 +432,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                                 color="#D32F2F"
                               />
                             }
-                          />
+                          /> */}
                         </Grid>
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
@@ -448,14 +480,32 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                   </Grid>
                 </Grid>
               </CardContent>
-
-              <RejectApplicantModal
-                applicantId={data?.id}
-                recruimentId={selectedOption?.id}
-                stage={pipelines}
-                show={rejectApplicant}
-                setShow={setRejectApplicant}
-              />
+              {showConfirmMultiple && (
+                <ApplicantTransferPipelineModal
+                  showConfirmMultiple={showConfirmMultiple}
+                  setShowConfirmMultiple={setShowConfirmMultiple}
+                  onClose={onCloseModel}
+                  itemSelected={{
+                    applicantId: ApplicantId,
+                    recruitmentId: RecruitmentId,
+                  }}
+                  setActionId={setActionId}
+                  setActionType={setActionType}
+                  setActionShow={setActionShow}
+                />
+              )}
+              {actionShow && (
+                <RejectApplicantModal
+                  applicantId={ApplicantId}
+                  recruimentId={RecruitmentId}
+                  stage={pipelines}
+                  actionId={actionId}
+                  actionType={actionType}
+                  show={actionShow}
+                  setShow={setActionShow}
+                  onClose={onCloseModel}
+                />
+              )}
             </Card>
           </Grid>
         </Grid>

@@ -107,7 +107,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                             </div>
                           }
                           action="create"
-                          avatarSrc={srcImage(dataApplicant?.portraitImage)}
+                          avatarSrc={dataApplicant?.portraitImage ? srcImage(dataApplicant?.portraitImage): ''}
                           isShow={false}
                         />
                       ))}

@@ -1,16 +1,9 @@
 import { useMemo } from 'react'
-
-// @mui
 import { Box, List, ListSubheader } from '@mui/material'
 import { styled } from '@mui/material/styles'
-
 import PropTypes from 'prop-types'
-
-// hook
 import useLocales from '@/hooks/useLocales'
 import useRole from '@/hooks/useRole'
-
-//
 import { NavListRoot } from './NavList'
 
 export const ListSubheaderStyle = styled((props) => (
@@ -37,13 +30,13 @@ export default function NavSectionVertical({
   ...other
 }) {
   const { translate } = useLocales()
-  const { checkAccessPermission } = useRole()
+  const { canAccess } = useRole()
   const navConfigBaseRole = useMemo(
     () =>
       navConfig.filter(({ items = [] }) =>
-        items.some(({ roles = [] }) => checkAccessPermission(roles))
+        items.some(({ permissions = [] }) => canAccess(permissions))
       ),
-    [checkAccessPermission, navConfig]
+    [navConfig]
   )
 
   return (

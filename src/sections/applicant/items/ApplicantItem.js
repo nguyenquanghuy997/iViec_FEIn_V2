@@ -485,7 +485,7 @@ export const ApplicantItem = () => {
           onClose={toggleDrawer(false)}
           selectedList={selectedRowKeys || []}
           onOpenForm={toggleDrawer(true)}
-          setselectedList={setSelectedRowKeys}
+          setSelectedList={setSelectedRowKeys}
           itemSelected={itemSelected}
         />
       </Content>

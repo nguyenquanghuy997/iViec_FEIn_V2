@@ -3,14 +3,13 @@ import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPr
 // componentsf
 import Page from '@/components/Page'
 // config
-import {PAGES } from '@/config'
+import { PERMISSION_PAGES } from '@/config'
 // layouts
 import Layout from '@/layouts'
 import { DragDropContext } from "react-beautiful-dnd";
 import {Column} from '@/sections/kanban';
 import {useGetRecruitmentByIdQuery} from "@/sections/recruitment";
 // utils
-import { getRolesByPage } from '@/utils/role'
 import {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useUpdateApplicantRecruitmentToNextStateMutation
@@ -23,24 +22,12 @@ import { FormProvider } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import {
-
-  Typography,
-
-} from '@mui/material'
-Recruitment.getLayout = function getLayout({ roles = [] }, page) {
-  return <Layout roles={roles}>{page}</Layout>
-}
-export async function getServerSideProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Recruitment),
-    },
-  }
-}
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 
-
+Recruitment.getLayout = function getLayout(pageProps, page) {
+  return <Layout permissions={PERMISSION_PAGES.detailRecruitment} {...pageProps}>{page}</Layout>
+}
 
 export default function Recruitment() {
   const Schema = Yup.object().shape({
