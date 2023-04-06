@@ -141,7 +141,7 @@ const EditHumanCompany = ({data, onClose}) => {
                                           }} {...provided.dragHandleProps}>
                                             <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color="#A2AAB7"/>
                                           </Box>
-                                          {item?.avatar ? (
+                                          {item?.avatar || organizationHumans[index]?.imagePreview?.url ? (
                                                   <Image
                                                       disabledEffect
                                                       visibleByDefault

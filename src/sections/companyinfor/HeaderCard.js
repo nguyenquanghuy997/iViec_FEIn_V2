@@ -19,7 +19,19 @@ const HeaderCard = ({text, onOpen, checked, handleChange}) => {
         </Typography>
         <Box sx={{display: 'flex'}}>
           <FormControlLabel
-              control={<Switch color={"success"} checked={checked} onChange={handleChange}/>}
+              control={<Switch
+                  color={"success"}
+                  checked={checked}
+                  onChange={handleChange}
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: '#388E3C',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: '#A5D6A7',
+                    },
+                  }}
+              />}
               label={checked ? "Hiển thị" : "Không hiển thị"}
           />
           <Box>

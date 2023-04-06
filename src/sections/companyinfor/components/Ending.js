@@ -8,49 +8,28 @@ import React, {useState} from "react";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import {useSnackbar} from "notistack";
 import LoadingScreen from "@/components/LoadingScreen";
+import {QuoteIcon} from "@/sections/companyinfor/icon";
 
 const PlaceholderStyle = styled("div")(() => ({
     background: "white",
     padding: "8px 96px 24px 96px",
     minHeight: 150,
-    textAlign: 'justify',
+    position: 'relative',
     "& .content": {
         backgroundColor: "white",
         color: "#455570",
         background: "#F2F4F5",
         position: "relative",
         padding: "24px 96px",
-    },
-    "& blockquote:before": {
-        content: '" ,, "',
-        position: "absolute",
-        top: -100,
-        left: "20px",
-        fontSize: "128px",
-        color: "#A2AAB7",
+        "& .quote-icon": {
+            position: "absolute",
+            top: -100,
+            left: "40px",
+            fontSize: "128px",
+            color: "#A2AAB7",
+        },
     },
 }));
-
-
-const renderItem = (value, main) => {
-    return (
-        <div style={{flex: main ? undefined : 1}}>
-            {String(value).startsWith("<") ? (
-                <p dangerouslySetInnerHTML={{__html: value}}/>
-            ) : (
-                <span style={{
-                    display: "flex",
-                    fontSize: 14,
-                    lineHeight: 24 / 16,
-                    color: "#172B4D",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis"
-                }}>{value}</span>
-            )}
-        </div>
-    );
-};
 
 const Ending = ({data}) => {
     const {enqueueSnackbar} = useSnackbar();
@@ -109,15 +88,13 @@ const Ending = ({data}) => {
                     checked={checked}
                 />
                 {data?.conclusion ? (
-                    <PlaceholderStyle style={{
-                        borderBottomLeftRadius: '4px',
-                        borderBottomRightRadius: '4px',
-                    }}>
-                        <div className="content" style={{
-                            borderRadius: '4px',
-                        }}>
-                            <blockquote>{renderItem(data?.conclusion)}</blockquote>
-                            <div style={{ textAlign: 'end' }}><strong>{data?.name}</strong></div>
+                    <PlaceholderStyle style={{borderBottomLeftRadius: '4px', borderBottomRightRadius: '4px'}}>
+                        <div className="content" style={{borderRadius: '4px',}}>
+                            <div className={"quote-icon"}>
+                                <QuoteIcon />
+                            </div>
+                            <Typography sx={{ fontSize: 14, fontWeight: 400, color: '#455570' }} dangerouslySetInnerHTML={{ __html: data?.conclusion }} />
+                            <Typography sx={{ textAlign: 'end', fontSize: 14, fontWeight: 500, color: '#455570', fontStyle: 'italic' }}>{data?.name}</Typography>
                         </div>
                     </PlaceholderStyle>
                 ) : <EmptyValue text={"Hiện chưa có nội dung Lời kết"}/>}
@@ -127,9 +104,8 @@ const Ending = ({data}) => {
                     anchor="right"
                     open={open}
                     onClose={handleClose}
-                    onOpen={handleOpen}
                 >
-                    <Box sx={{width: 700}}>
+                    <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
                                 Chỉnh sửa Lời kết

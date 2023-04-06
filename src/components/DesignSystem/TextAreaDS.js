@@ -1,13 +1,12 @@
-import { FormHelperText, FormLabel, styled } from "@mui/material";
+import { FormLabel, styled } from "@mui/material";
 import { Input } from "antd";
 import PropTypes from "prop-types";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import HelperText from "@/components/BaseComponents/HelperText";
 
-export default function TextAreaDS(props) {
-  const { name, placeholder, maxLength } = props;
-  const { TextArea } = Input;
-  const InputTextArea = styled(TextArea)`
+const { TextArea } = Input;
+const InputTextArea = styled(TextArea)`
     .ant-input {
       padding: 12px 16px 12px 12px;
       font-weight: 400;
@@ -34,6 +33,9 @@ export default function TextAreaDS(props) {
       border-radius: 30px;
     }
   `;
+
+export default function TextAreaDS(props) {
+  const { name, placeholder, maxLength } = props;
   const { control } = useFormContext();
   return (
     <Controller
@@ -55,11 +57,7 @@ export default function TextAreaDS(props) {
             />
           </FormLabel>
 
-          {error && (
-            <FormHelperText error sx={{ px: 2, textTransform: "capitalize" }}>
-              {error?.message}
-            </FormHelperText>
-          )}
+          {error && <HelperText errorText={error?.message} /> }
         </>
       )}
     />

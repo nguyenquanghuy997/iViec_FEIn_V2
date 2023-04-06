@@ -33,8 +33,8 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
             }))
         };
         const Schema = {
-            name: Yup.string().nullable().required('Họ và tên không được bỏ trống'),
-            description: Yup.string().nullable().required('Chức vụ không được bỏ trống'),
+            name: Yup.string().nullable().required('Lĩnh vực kinh doanh không được bỏ trống'),
+            description: Yup.string().nullable().required('Mô tả không được bỏ trống'),
         }
         const ProfileSchema = Yup.object().shape({
             organizationWorkingEnvironments: Yup.array().of(Yup.object().shape(Schema))
@@ -171,7 +171,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                 </Box>
 
                                                                 <Box sx={{flex: 1}}>
-                                                                    {item?.image ? (
+                                                                    {item?.image || organizationWorkingEnvironments[index]?.imagePreview?.url ? (
                                                                             <Image
                                                                                 disabledEffect
                                                                                 visibleByDefault
@@ -180,10 +180,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                                 }
                                                                                 id={index}
                                                                                 alt="image"
-                                                                                sx={{
-                                                                                    border: "1px dashed #1976D2",
-                                                                                    height: 400,
-                                                                                }}
+                                                                                sx={{border: "1px dashed #1976D2", height: 400}}
                                                                             />
                                                                         )
                                                                         : <Image
@@ -192,22 +189,9 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                             src={'/assets/placeholder.png'}
                                                                             id={index}
                                                                             alt="image"
-                                                                            sx={{
-                                                                                border: "1px dashed #1976D2",
-                                                                                height: 400,
-                                                                            }}
+                                                                            sx={{border: "1px dashed #1976D2", height: 400}}
                                                                         />
                                                                     }
-                                                                    {/*<Image*/}
-                                                                    {/*    disabledEffect*/}
-                                                                    {/*    visibleByDefault*/}
-                                                                    {/*    src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${item?.image}`}*/}
-                                                                    {/*    alt="image"*/}
-                                                                    {/*    sx={{*/}
-                                                                    {/*        border: "1px dashed #1976D2",*/}
-                                                                    {/*        height: 400,*/}
-                                                                    {/*    }}*/}
-                                                                    {/*/>*/}
                                                                     <Box sx={{
                                                                         display: "flex",
                                                                         alignItems: "center",

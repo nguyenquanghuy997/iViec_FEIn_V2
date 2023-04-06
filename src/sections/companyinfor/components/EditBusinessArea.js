@@ -173,8 +173,10 @@ const EditBusinessArea = ({data: Data, onClose}) => {
                               {(provided) => (
                                   <li key={item.id} ref={provided.innerRef} {...provided.draggableProps}>
                                     <Box sx={{my: 3, px: 3, py: 2, background: "#F2F4F5",}} key={item.id}>
-                                      <Box sx={{py: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} {...provided.dragHandleProps}>
-                                        <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color="#A2AAB7"/>
+                                      <Box sx={{py: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                        <div {...provided.dragHandleProps}>
+                                          <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color="#A2AAB7"/>
+                                        </div>
                                         <RiDeleteBin6Line color="#E53935" onClick={() => remove(index)} cursor="pointer"/>
                                       </Box>
                                       <Stack justifyContent="space-between" sx={{mb: 3}}>

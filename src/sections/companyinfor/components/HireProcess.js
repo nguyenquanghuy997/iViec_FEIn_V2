@@ -4,7 +4,7 @@ import EditHirePipeline from "./EditHirePipeline";
 import CloseIcon from "@/assets/CloseIcon";
 import {PipelineStateType} from "@/utils/enum";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
-import {useState} from "react";
+import {useState, Fragment} from "react";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import LoadingScreen from "@/components/LoadingScreen";
 import {useSnackbar} from "notistack";
@@ -89,16 +89,17 @@ const HireProcess = ({data}) => {
                     py: 2,
                     display: "flex",
                     px: 5,
-                    "& .pipeline-box:first-child": {
+                    justifyContent: 'space-between',
+                    "& .pipeline-box:first-of-type": {
                       pl: 0
                     },
-                    "& .pipeline-divider:last-child": {
+                    "& .pipeline-divider:last-of-type": {
                       display: 'none'
                     }
                   }}>
                 {data?.organizationProfilePipelines.map((item, index) => (
-                    <>
-                      <Box className={"pipeline-box"} sx={{minWidth: "200px", px: 1}} key={index}>
+                    <Fragment key={index}>
+                      <Box className={"pipeline-box"} sx={{minWidth: "200px", px: 1}}>
                         <Box sx={{
                           minHeight: '112px',
                           display: 'flex',
@@ -108,8 +109,7 @@ const HireProcess = ({data}) => {
                         }}>
                           {renderIconByPipelineType(item?.type)}
                         </Box>
-                        <Typography sx={{fontSize: 28, color: "#F77A0C", display: "flex", justifyContent: "center"}}
-                                    color="text.secondary" gutterBottom>
+                        <Typography sx={{fontSize: 28, color: "#F77A0C", display: "flex", justifyContent: "center"}} color="text.secondary" gutterBottom>
                           {index + 1}
                         </Typography>
                         <Typography
@@ -127,15 +127,14 @@ const HireProcess = ({data}) => {
                           {item?.description}
                         </Typography>
                       </Box>
-                      <Divider className={"pipeline-divider"} orientation="vertical" variant="end" flexItem
-                               sx={{height: '96px', mt: 10}}/>
-                    </>
+                      <Divider className={"pipeline-divider"} orientation="vertical" variant="end" flexItem sx={{height: '96px', mt: 10}}/>
+                    </Fragment>
                 ))}
               </Box>
           ) : <EmptyValue text={"Hiện chưa có nội dung Con người công ty"}/>}
         </Box>
         {open && (
-            <Drawer anchor="right" open={open} onClose={handleClose} onOpen={handleOpen}>
+            <Drawer anchor="right" open={open} onClose={handleClose}>
               <Box sx={{width: 700}}>
                 <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
                   <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>

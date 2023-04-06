@@ -122,7 +122,7 @@ const EnvironmentWorkplace = ({ data }) => {
                 </Box>
             </Box>
             {open && (
-                <Drawer anchor="right" open={open} onClose={handleClose} onOpen={handleOpen}>
+                <Drawer anchor="right" open={open} onClose={handleClose}>
                     <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>

@@ -93,7 +93,6 @@ const HumanCompany = ({data}) => {
                     anchor="right"
                     open={open}
                     onClose={handleClose}
-                    onOpen={handleOpen}
                 >
                     <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0,}}>

@@ -1,9 +1,8 @@
-import { Fragment } from 'react';
+import {Fragment} from 'react';
 import {RiCheckboxBlankCircleFill, RiImageFill} from "react-icons/ri";
 import {Box, Divider, Typography} from "@mui/material";
 import {get} from 'lodash';
 
-import CropImageBackground from "./CropImage";
 import EditInformation from "./edit/EditInformation";
 import {OrganizationSize} from "@/utils/enum";
 import {BoxInfoStyle} from "@/sections/companyinfor/style";
@@ -11,6 +10,7 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import ReadMoreText from "@/components/ReadMoreText";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import useModal from "@/sections/companyinfor/hooks/useModal";
+import CropImage from "@/sections/companyinfor/upload/CropImage";
 
 const renderText = (title, content) => {
   return (
@@ -41,18 +41,19 @@ export default function CompanyInfor({ data }) {
 
   return (
       <>
-        {/* BG image */}
-        <CropImageBackground
-            data={get(data, 'organizationInformation.coverPhoto')}
-            size="cover"
+        <CropImage
+            defaultImage={get(data, 'organizationInformation.coverPhoto')}
+            size={"cover"}
+            companyInfor={data}
         />
+
         {/* Avatar & name */}
         <BoxInfoStyle className={"box-info"}>
           <Box className={'box-image'}>
-            {/* <CropImage data={Data?.organizationInformation?.avatar} /> */}
-            {get(data, 'organizationInformation.avatar') ? <img
+            {get(data, 'organizationInformation.avatar') ? <CropImage
+                defaultImage={get(data, 'organizationInformation.avatar')}
+                companyInfor={data}
                 className={"avatar-image"}
-                src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${get(data, 'organizationInformation.avatar')}`}
             /> : (
                 <Box className={"avatar-image avatar-placeholder"}>
                   <RiImageFill color={"#8A94A5"} size={'1.25em'}/>

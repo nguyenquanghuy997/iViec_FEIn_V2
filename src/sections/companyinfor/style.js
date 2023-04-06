@@ -23,11 +23,13 @@ const BoxInfoStyle = styled(Box)(({theme}) => ({
         top: '0%',
         left: 0,
         transform: 'translateY(-50%)',
+        cursor: 'pointer',
       },
       "& .avatar-image.avatar-placeholder": {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        cursor: 'pointer',
       }
     }
   }
