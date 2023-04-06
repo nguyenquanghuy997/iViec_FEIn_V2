@@ -6,7 +6,9 @@ import {
   useGetRecruitmentsByApplicantQuery,
   useLazyGetApplicantByIdQuery,
 } from "../ApplicantFormSlice";
+import { RejectApplicantModal } from "../modals";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
+import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
@@ -33,9 +35,14 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/styles";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelationId, RecruitmentId }) {
+function ApplicantPreviewItem({
+  ApplicantId,
+  OrganizationId,
+  ApplicantCorrelationId,
+  RecruitmentId,
+}) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
       ApplicantCorrelationId: ApplicantCorrelationId,
@@ -233,7 +240,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
   const [fetchDataApplicant, { data: data = [] }] =
-  useLazyGetApplicantByIdQuery();
+    useLazyGetApplicantByIdQuery();
 
   const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
@@ -241,17 +248,31 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
       ApplicantId: ApplicantId,
     },
     {
-      skip: !pipelines?.recruitmentPipelineStates?.length > 0
+      skip: !pipelines?.recruitmentPipelineStates?.length > 0,
     }
   );
 
+  const [actionId, setActionId] = useState();
+  const [actionType, setActionType] = useState();
+  const [actionShow, setActionShow] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
 
   const [ownerName, setOwnerName] = useState();
 
+  const onCloseModel = () => {
+    setActionShow(false);
+    setShowConfirmMultiple(false);
+    const recruiment = options.filter((p) => p.id == RecruitmentId);
+    fetchPipe({
+      ApplicantId: recruiment[0]?.applicantId,
+      RecruitmentId: recruiment[0]?.id,
+    }).unwrap();
+  };
+
   useEffect(() => {
     if (!isFetching) {
-      const recruiment = options.filter(p => p.id == RecruitmentId)
+      const recruiment = options.filter((p) => p.id == RecruitmentId);
       setSelectedOption(recruiment[0]);
       setOwnerName(recruiment[0]?.ownerName?.trim());
       fetchPipe({
@@ -268,15 +289,16 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
       });
     }
   }, [isFetching]);
+
   const onChangeRecruiment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
     fetchPipe({
-      ApplicantId:e.target.value.applicantId,
+      ApplicantId: e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
     }).unwrap();
     fetchData({
-      ApplicantId:e.target.value.applicantId,
+      ApplicantId: e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
       IsWithdrawHistory: true,
     }).unwrap();
@@ -284,6 +306,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
       applicantId: e.target.value.applicantId,
     });
   };
+
   return (
     <div>
       <HeadingFixed>
@@ -346,9 +369,9 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               background: "#E7E9ED",
                             },
                             "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
-                            {
-                              borderColor: "#E7E9ED",
-                            },
+                              {
+                                borderColor: "#E7E9ED",
+                              },
                           }}
                         />
                       ) : null}
@@ -379,6 +402,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               },
                               textTransform: "none",
                             }}
+                            onClick={() => setShowConfirmMultiple(true)}
                             icon={
                               <Iconify
                                 icon={"ci:transfer"}
@@ -402,7 +426,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               textTransform: "none",
                               marginLeft: "12px",
                             }}
-                            onClick={() => setRejectApplicant(true)}
+                            onClick={() => setActionShow(true)}
                             icon={
                               <Iconify
                                 icon={"ic:outline-remove-circle"}
@@ -460,6 +484,33 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                 </Grid>
               </CardContent>
 
+              {showConfirmMultiple && (
+                <ApplicantTransferPipelineModal
+                  showConfirmMultiple={showConfirmMultiple}
+                  setShowConfirmMultiple={setShowConfirmMultiple}
+                  onClose={onCloseModel}
+                  itemSelected={{
+                    applicantId: ApplicantId,
+                    recruitmentId: RecruitmentId,
+                  }}
+                  setActionId={setActionId}
+                  setActionType={setActionType}
+                  setActionShow={setActionShow}
+                />
+              )}
+
+              {actionShow && (
+                <RejectApplicantModal
+                  applicantId={ApplicantId}
+                  recruimentId={RecruitmentId}
+                  stage={pipelines}
+                  actionId={actionId}
+                  actionType={actionType}
+                  show={actionShow}
+                  setShow={setActionShow}
+                  onClose={onCloseModel}
+                />
+              )}
               {/* <RejectApplicantModal
                 applicantId={data?.id}
                 recruimentId={selectedOption?.id}
