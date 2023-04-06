@@ -15,6 +15,10 @@ input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px white inset;
 }
 
+.SnackbarContainer-root {
+    z-index: 3001!important;
+}
+
 *::-webkit-scrollbar-thumb {
     background: #B9BFC9;
     margin-right: 3px;

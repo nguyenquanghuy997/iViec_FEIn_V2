@@ -115,7 +115,7 @@ const ApplicantBottomNav = ({
       variant="persistent"
       onClose={onClose}
     >
-      <Content sx={{padding: "20px 24px"}}>
+      <Content sx={{ padding: "20px 24px" }}>
         <Box
           sx={{
             width: "100%",
@@ -151,8 +151,12 @@ const ApplicantBottomNav = ({
                   href={
                     "applicant/" +
                     itemSelected[0]?.applicantId +
-                    "?or=" +
-                    itemSelected[0]?.organizationId
+                    "?co=" +
+                    itemSelected[0]?.correlationId +
+                    "&&or=" +
+                    itemSelected[0]?.organizationId +
+                    "&&re=" +
+                    itemSelected[0]?.recruitmentId
                   }
                   icon={
                     <Iconify
@@ -208,14 +212,14 @@ const ApplicantBottomNav = ({
               }
             />
           </Stack>
-          <Box sx={{display: "flex", alignItems: "center"}}>
-            <Typography sx={{fontSize: 14, fontWeight: 600}}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
               Đã chọn: {selectedList.length}
             </Typography>
             <Divider
               orientation="vertical"
               flexItem
-              sx={{mx: 2, width: "2px", backgroundColor: "#E7E9ED"}}
+              sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
             />
             <ButtonIcon
               sx={{
