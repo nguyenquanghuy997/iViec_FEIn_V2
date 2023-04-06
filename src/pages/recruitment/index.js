@@ -1,19 +1,12 @@
 import Page from "@/components/Page";
 import Layout from "@/layouts";
 import { RecruitmentItem } from "../../sections/recruitment/items/RecruitmentItem";
-import {getRolesByPage} from "@/utils/role";
-import {PAGES} from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 
-Recruitment.getLayout = function getLayout({roles = ['ADMIN']}, page) {
-    return <Layout roles={roles}>{page}</Layout>;
+Recruitment.getLayout = function getLayout(pageProps, page) {
+    return <Layout permissions={PERMISSION_PAGES.recruitment} {...pageProps}>{page}</Layout>;
 };
-export async function getStaticProps() {
-    return {
-        props: {
-            roles: getRolesByPage(PAGES.Recruitment),
-        },
-    };
-}
+
 export default function Recruitment() {
     return (
             <Page title={"Tin tuyển dụng"}>

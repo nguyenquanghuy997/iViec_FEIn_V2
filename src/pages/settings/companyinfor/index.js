@@ -1,5 +1,5 @@
 import Page from "@/components/Page";
-import { PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
 import { CompanyInfor } from "@/sections/companyinfor";
 import BusinessArea from "@/sections/companyinfor/components/BusinessArea";
@@ -7,11 +7,13 @@ import Ending from "@/sections/companyinfor/components/Ending";
 // import EnviromentWorkplace from "@/sections/companyinfor/components/EnviromentWorkplace";
 import HireProcess from "@/sections/companyinfor/components/HireProcess";
 import HumanCompany from "@/sections/companyinfor/components/HumanCompany";
-import { getRolesByPage } from "@/utils/role";
 import { Box, Button, Typography } from "@mui/material";
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <SettingLayout roles={roles}>{page}</SettingLayout>;
+Setting.getLayout = function getLayout(pageProps, page) {
+  return <SettingLayout
+    permissions={PERMISSION_PAGES.organization}
+    {...pageProps}
+  >{page}</SettingLayout>;
 };
 
 export default function Setting() {
@@ -41,10 +43,3 @@ export default function Setting() {
   );
 }
 
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.CompanyInfor),
-    },
-  };
-}

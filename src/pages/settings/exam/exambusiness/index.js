@@ -2,7 +2,7 @@ import { Text, View } from "@/components/FlexStyled";
 import Page from "@/components/Page";
 import PageWrapper from "@/components/PageWrapper";
 import SvgIcon from "@/components/SvgIcon";
-import { PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
 // import {
 //   PipelineFormModal,
@@ -10,20 +10,11 @@ import SettingLayout from "@/layouts/setting";
 //   // useGetAllReviewFormMutation,
 // } from "@/sections/pipeline";
 import { QuestionAddModal } from "@/sections/question";
-import { getRolesByPage } from "@/utils/role";
 import {  useState } from "react";
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <SettingLayout roles={roles}>{page}</SettingLayout>;
+Setting.getLayout = function getLayout(pageProps, page) {
+  return <SettingLayout permissions={PERMISSION_PAGES.exam} {...pageProps}>{page}</SettingLayout>;
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
 
 export default function Setting() {
   // ref

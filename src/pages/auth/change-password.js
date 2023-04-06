@@ -3,23 +3,13 @@ import Page from "@/components/Page";
 import {STYLE_CONSTANT} from "@/sections/auth/register/constants";
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/auth/style";
 import {Box, Stack, Typography} from "@mui/material";
-import {getRolesByPage} from "@/utils/role";
-import {PAGES} from "@/config";
 import LogoOnlyLayout from "@/layouts/LogoOnlyLayout";
 import ChangePasswordForm from "@/sections/auth/change-password/ChangePasswordForm";
 import {useRouter} from "next/router";
 import ChangePasswordSuccess from "@/sections/auth/change-password/ChangePasswordSuccess";
 
-ChangePassword.getLayout = function getLayout({roles = []}, page) {
-  return <LogoOnlyLayout roles={roles}>{page}</LogoOnlyLayout>
-}
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Jobs),
-    },
-  }
+ChangePassword.getLayout = function getLayout(pageProps, page) {
+  return <LogoOnlyLayout {...pageProps}>{page}</LogoOnlyLayout>
 }
 
 export default function ChangePassword() {
