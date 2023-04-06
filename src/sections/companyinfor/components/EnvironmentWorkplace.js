@@ -9,7 +9,7 @@ import "swiper/swiper-bundle.css";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import {useSnackbar} from "notistack";
 import LoadingScreen from "@/components/LoadingScreen";
-import EditEnvironmentWorkplace from "@/sections/companyinfor/components/EditEnvironmentWorkplace";
+import EditEnvironmentWorkplace from "@/sections/companyinfor/edit/EditEnvironmentWorkplace";
 import {get} from "lodash";
 import {DOMAIN_SERVER_API} from "@/config";
 
@@ -122,7 +122,17 @@ const EnvironmentWorkplace = ({ data }) => {
                 </Box>
             </Box>
             {open && (
-                <Drawer anchor="right" open={open} onClose={handleClose}>
+                <Drawer
+                    anchor="right"
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{sx: {width: 800, position: 'fixed', top: '64px', right: 0}}}
+                    componentsProps={{
+                        backdrop: {
+                            sx: {background: 'rgba(9, 30, 66, 0.25) !important', boxShadow: 'none !important'}
+                        }
+                    }}
+                >
                     <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>

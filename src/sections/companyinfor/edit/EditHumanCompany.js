@@ -82,6 +82,7 @@ const EditHumanCompany = ({data, onClose}) => {
               enqueueSnackbar("Chỉnh sửa thông tin Con người công ty thành công!", {
                 autoHideDuration: 2000,
               });
+              onClose();
             } catch (err) {
               enqueueSnackbar('Chỉnh sửa thông tin Con người công ty không thành công!', {
                 autoHideDuration: 1000,
