@@ -47,8 +47,6 @@ const PersonalInterview = ({ item, watchStep, watchType, watchPipe }) => {
   };
   const id = item?.recruitmentId;
   const idReviewForm = item?.reviewFormId;
-
-  console.log(relateCalendar);
   return (
     <Stack spacing={3}>
       <Stack>

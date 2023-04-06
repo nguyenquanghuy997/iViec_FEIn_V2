@@ -204,7 +204,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   //   setValue("isSendMailApplicant", body.isSendMailApplicant);
   //   setValue("bookingCalendarGroups", body.bookingCalendarGroups);
   // }, [isEditMode, data, preview]);
-console.log(watchPipelineStep,'lok')
+
   const list = () => (
     <BoxInnerStyle>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
