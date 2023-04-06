@@ -23,7 +23,7 @@ const RecruitmentInformation = ({recruitment: Recruitment}) => {
     if (!isEmpty(defaultOrganization) && isEmpty(Recruitment)) {
       setValue('organizationId', defaultOrganization.id);
     }
-  }, [defaultOrganization, Recruitment])
+  }, [])
 
 
   return (

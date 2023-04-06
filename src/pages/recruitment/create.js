@@ -1,11 +1,9 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
-import {Grid, Typography} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useForm} from "react-hook-form";
 import {useSnackbar} from "notistack";
-import {TabContext} from "@mui/lab";
-import TabPanel from "@mui/lab/TabPanel";
 
 import Layout from '@/layouts'
 import Page from '@/components/Page'
@@ -44,7 +42,8 @@ export default function CreateRecruitment() {
   const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
   const {query} = router;
-  const [valueTab, setValueTab] = useState('0');
+  const [selected, setSelected] = useState(0);
+  const _timeoutTab = useRef();
 
   const stateOpenForm = useSelector((state) => state.modalReducer.openState);
   const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
@@ -104,12 +103,62 @@ export default function CreateRecruitment() {
     defaultValues: defaultValues,
   });
 
-  const {handleSubmit, getValues, watch, formState: {isValid}} = methods;
-  const recruitmentName = watch('name');
+  const {handleSubmit, getValues, formState: {isValid}} = methods;
 
-  const handleSelected = (event, newValue) => {
-    setValueTab(newValue);
+  const display = [
+    {
+      tab: <Information />,
+      title: 'Thông tin tuyển dụng',
+    },
+    {
+      id: 'pipeline',
+      tab: <Pipeline
+          pipelineStateDatas={pipelineStateDatas}
+          onSetPipelineStateDatas={handleSetPipelineStateDatas}
+          onSetHasExamination={setHasExamination}
+      />,
+      title: 'Quy trình tuyển dụng',
+    },
+  ];
+
+  const handleSelected = (index) => {
+    setSelected(index);
+
+    clearTimeout(_timeoutTab.current);
+    _timeoutTab.current = setTimeout(() => {
+      router.push({
+        pathname: PATH_DASHBOARD.recruitment.create,
+        query: {...query},
+        hash: display[index].id || null,
+      }, undefined, {shallow: true});
+    }, 300);
   };
+
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+    let hash = window.location.hash;
+    if (!hash) {
+      return;
+    }
+    hash = hash.replace('#', '');
+    let index = display.findIndex(d => d.id === hash);
+    if (index < 0) {
+      index = 0;
+    }
+    handleSelected(index);
+  }, [router.isReady]);
+
+  const TabDisplay = (props) => {
+    const {children, value, index, ...other} = props;
+    return (
+        <Box role="tabDisplay" hidden={value !== index} {...other}>
+          {value === index && (children)}
+        </Box>
+    );
+  };
+
   const onSubmit = async (data) => {
     const body = {
       ...data,
@@ -194,26 +243,22 @@ export default function CreateRecruitment() {
               title={'Đăng tin tuyển dụng'}
               onOpenConfirm={handleOpenConfirm}
               errors={(isValid && !hasExamination.hasValue) || isValid && (hasExamination.hasValue === true && hasExamination.size === pipelineStateDatas.length)}
-              name={recruitmentName}
           />
+          <TabList handleSelected={handleSelected} selected={selected}/>
         </Grid>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <TabContext value={valueTab}>
-            <TabList handleSelected={handleSelected} selected={valueTab}/>
-            <Content>
-                <TabPanel value={'0'}>
-                  <Information />
-                </TabPanel>
-                <TabPanel value={'1'}>
-                  <Pipeline
-                      pipelineStateDatas={pipelineStateDatas}
-                      onSetPipelineStateDatas={handleSetPipelineStateDatas}
-                      onSetHasExamination={setHasExamination}
-                  />
-                </TabPanel>
-            </Content>
-          </TabContext>
-        </FormProvider>
+        <Content>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Grid container columnSpacing={3}>
+              <Grid item md={12} className="profile-content">
+                {display.map((d, index) =>
+                    <TabDisplay value={selected} key={index} index={index} onSubmit={onSubmit}>
+                      {d.tab}
+                    </TabDisplay>
+                )}
+              </Grid>
+            </Grid>
+          </FormProvider>
+        </Content>
         {
             openSaveDraft && <ConfirmModal
                 open={openSaveDraft}

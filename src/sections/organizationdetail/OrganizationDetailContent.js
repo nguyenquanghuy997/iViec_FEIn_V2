@@ -27,6 +27,8 @@ import {DeleteIcon, EditIcon} from "@/assets/ActionIcon";
 import OrganizationDetailUserForm from "@/sections/organizationdetail/component/OrganizationDetailUserForm";
 import {API_GET_RECRUITMENT_BY_ORGANIZATION} from "@/routes/api";
 import {useRouter} from "next/router";
+import {useDeleteUserMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
+import {useSnackbar} from "notistack";
 
 const defaultValues = {
   searchKey: "",
@@ -88,6 +90,9 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
   const router = useRouter();
   const { asPath } = router;
   const dispatch = useDispatch();
+  const {enqueueSnackbar} = useSnackbar();
+
+  const [deleteUserMulti] = useDeleteUserMutation();
 
   const [selected, setSelected] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -171,11 +176,40 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
     setSelected([]);
   };
 
-  const handleDelete = (data) => {
-    return data;
+  const handleDelete = async (data) => {
+    if(selected?.length >= 1) {
+      try {
+        await deleteUserMulti({ userIds: selected?.map(item => item.id)}).unwrap();
+        handleCloseModal();
+        handleCloseBottomNav();
+        enqueueSnackbar("Xóa người dùng thành công!", {
+          autoHideDuration: 1000
+        });
+      } catch (e) {
+        enqueueSnackbar("Xóa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+          autoHideDuration: 1000,
+          variant: 'error',
+        });
+        throw e;
+      }
+    } else {
+        try {
+          await deleteUserMulti({ userIds: [data?.id]}).unwrap();
+          handleCloseModal();
+          enqueueSnackbar("Xóa người dùng thành công!", {
+            autoHideDuration: 1000
+          });
+        } catch (e) {
+          enqueueSnackbar("Xóa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+            autoHideDuration: 1000,
+            variant: 'error',
+          });
+          throw e;
+        }
+    }
   }
 
-  const handleActive = (data) => {
+  const handleActive = async (data) => {
     return data;
   }
 
@@ -254,8 +288,9 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
                 item={column}
                 checked={selected.map(i => i.id).includes(column.id)}
                 onChangeSelected={() => handleSelected(column)}
-                onOpenConfirmDelete={() => handleOpenConfirm(column)}
+                onOpenConfirmDelete={() => handleOpenConfirm([column])}
                 onOpenFormModal={() => handleOpenFormUser(column)}
+                selected={selected}
             />
           })}
         </Box>
@@ -292,7 +327,7 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
             open={openDelete || toggleConfirm}
             onClose={handleCloseModal}
             icon={<AlertIcon/>}
-            data={item}
+            data={selected}
             onSubmit={handleDelete}
             title={<Typography sx={{
               textAlign: 'center',

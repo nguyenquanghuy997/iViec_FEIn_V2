@@ -9,6 +9,7 @@ import {
     useGetListOrganizationWithChildQuery,
     useGetOrganizationByIdQuery
 } from "@/sections/organization/override/OverrideOrganizationSlice";
+import LoadingScreen from "@/components/LoadingScreen";
 
 OrganizationDetail.getLayout = function getLayout(pageProps, page) {
     return (
@@ -23,24 +24,21 @@ function OrganizationDetail() {
     const router = useRouter();
     const {query, isReady} = router;
 
-    const {data: organization = {}, isLoading} = useGetOrganizationByIdQuery({
+    const {data: organization = {}} = useGetOrganizationByIdQuery({
         OrganizationId: query?.id
     }, {skip: !query?.id});
 
     const {data: {items: ListUser = []} = {}, isLoading: loadingUser} = useGetAllApplicantUserOrganizationByIdQuery({
-        Id: query?.id
+        OrganizationId: query?.id
     }, {skip: !query?.id});
 
-    const {
-        data: {items: ListOrganization = []} = {},
-        isLoading: loadingOrganization
-    } = useGetListOrganizationWithChildQuery();
+    const {data: {items: ListOrganization = []} = {}} = useGetListOrganizationWithChildQuery();
 
     useEffect(() => {
         if (!isReady) return;
     }, [isReady])
 
-    if (isLoading || loadingUser || loadingOrganization) return <div>Loading...</div>;
+    if (loadingUser) return <LoadingScreen />;
 
     return (
         <Page title="Thông tin chi tiết đơn vị">
