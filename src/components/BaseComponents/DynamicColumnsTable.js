@@ -36,7 +36,8 @@ const DynamicColumnsTable = (props) => {
     itemSelected,
     setItemSelected,
     columnsTable,
-    setColumnsTable
+    setColumnsTable,
+    tableProps = {},
   } = props;
 
   const [columnsVisible, setColumnsVisible] = useState();
@@ -445,6 +446,7 @@ const DynamicColumnsTable = (props) => {
             showTotal: (total, range) =>
               `${range[1]} / ${source?.totalRecord} kết quả phù hợp`,
           }}
+          {...tableProps}
         />
       </div>
       {visibleMenuSettings && <>{menu}</>}

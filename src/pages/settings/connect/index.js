@@ -5,7 +5,7 @@ import ConnectCard from "@/sections/connect/ConnectCard";
 // import { IconButtonAnimate } from "@/components/animate";
 // import { SkeletonKanbanColumn } from "@/components/skeleton";
 // config
-import {PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 // import useCollapseDrawer from "@/hooks/useCollapseDrawer";
 // // hooks
 // import useLocales from "@/hooks/useLocales";
@@ -31,7 +31,6 @@ import {
 } from "@/sections/kanban/kanbanSlice";
 // import cssStyles from "@/utils/cssStyles";
 // // utils
-import { getRolesByPage } from "@/utils/role";
 // // @mui
 import {
   Container,
@@ -42,17 +41,9 @@ import { useSnackbar } from "notistack";
 import React, { useCallback, useEffect } from "react";
 // import { DragDropContext } from "react-beautiful-dnd";
 
-Board.getLayout = function getLayout({ roles = [] }, page) {
-  return <SettingLayout roles={roles} >{page}</SettingLayout>;
+Board.getLayout = function getLayout(pageProps, page) {
+  return <SettingLayout permissions={PERMISSION_PAGES.connect} {...pageProps} >{page}</SettingLayout>;
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Board),
-    },
-  };
-}
 
 // const SearchIconStyle = styled("div")(({ theme, ownerState }) => {
 //   const { isCollapse = false } = ownerState;

@@ -9,6 +9,8 @@ import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import useRole from "@/hooks/useRole";
+import Page403 from '@/pages/403';
 
 const WrapperStyle = styled("div")(({ theme }) => ({
   maxWidth: "100%",
@@ -48,15 +50,18 @@ DashboardLayout.propTypes = {
   permissions: PropTypes.arrayOf(PropTypes.string), // Example ['ViewJob', 'ViewCandidate']
 };
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({ children, permissions }) {
+  const { canAccess } = useRole();
+
+  if (!canAccess(permissions)) {
+    return <Page403 />
+  }
+
   const { collapseClick, isCollapse } = useCollapseDrawer();
-
   const { themeLayout } = useSettings();
-
   const isDesktop = useResponsive("up", "lg");
 
   const [open, setOpen] = useState(false);
-
   const verticalLayout = themeLayout === "vertical";
 
   if (verticalLayout) {

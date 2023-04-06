@@ -1,6 +1,5 @@
 import Iconify from "@/components/Iconify";
-import { PAGES } from "@/config";
-import { getListRoles } from "@/utils/role";
+import { PERMISSIONS as PERS } from "@/config";
 
 const getIconByIconify = (icon) => (
     <Iconify icon={icon} width="100%" height="100%" />
@@ -9,8 +8,6 @@ const getIconByIconify = (icon) => (
 const ICONS = {
   notification: getIconByIconify("eva:bell-fill"),
 };
-
-const ROLES = getListRoles();
 
 export const SIDEBAR_CONSTANTS = {
   // WIDTH
@@ -37,38 +34,36 @@ export const sidebarConfig = [
       {
         title: "Quy trình tuyển dụng",
         path: "/settings/pipeline",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_RECRUIT_PROCESS],
       },
       {
         title: "Quy trình phê duyệt",
         path: "/settings/approve-process",
-        roles: ROLES[PAGES.ApproveProcess],
+        permissions: [PERS.VIEW_APPR_PROCESS],
       },
       {
         title: "Vị trí công việc",
         path: "/settings/jobtype",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_JOB_POS],
       },
       {
         title: "Kết nối",
         path: "/settings/connect",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_CONNECT],
       },
       {
         title: "Quản lý đề thi",
         path: "/settings/exam",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_EXAM],
         children: [
           {
             title: "Kho đề thi doanh nghiệp",
             path: "/settings/exam/exambusiness",
-            roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Kho đề thi iVIEC",
             path: "/settings/exam/iviecexam",
             icon: ICONS.notification,
-            roles: ROLES[PAGES.Applicant],
           },
         ],
       },
@@ -80,52 +75,46 @@ export const sidebarConfig = [
       {
         title: "Mẫu đánh giá",
         path: "/settings/evaluationform",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_EVA_TPL],
       },
       {
         title: "Mẫu thư mời nhận việc",
         path: "/settings/offerform",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_OFFER_TPL],
       },
       {
         title: "Mẫu email tự động",
         path: "/settings/emailform",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_EMAIL],
         children: [
           {
             title: "Email thông báo tài khoản",
             path: "/settings/emailform/account",
-            roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email lịch thi tuyển",
             path: "/settings/emailform/schedule-exam",
             icon: ICONS.notification,
-            roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email lịch phỏng vấn trực tuyến",
             path: "/settings/emailform/schedule-online",
             icon: ICONS.notification,
-            roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email lịch phỏng vấn trực tiếp",
             path: "/settings/emailform/schedule-live",
             icon: ICONS.notification,
-            roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email thông báo Kết quả - Đạt",
             path: "/settings/emailform/approve",
             icon: ICONS.notification,
-            roles: ROLES[PAGES.Applicant],
           },
           {
             title: "Email thông báo Kết quả - Loại",
             path: "/settings/emailform/reject",
             icon: ICONS.notification,
-            roles: ROLES[PAGES.Applicant],
           },
         ],
       },
@@ -137,17 +126,17 @@ export const sidebarConfig = [
       {
         title: "Thông tin công ty",
         path: "/settings/companyinfor",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_COMPANY],
       },
       {
         title: "Người dùng và Cơ cấu tổ chức",
         path: "/settings/organization",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_USER],
       },
       {
         title: "Vai trò",
         path: "/settings/roleGroup",
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_ROLE],
       },
     ],
   },

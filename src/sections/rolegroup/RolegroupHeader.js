@@ -11,6 +11,7 @@ const RolegroupHeader = ({
   onSubmit,
   handleSubmit,
   onOpenAddForm,
+  canEdit,
 }) => {
   return (
     <>
@@ -51,6 +52,8 @@ const RolegroupHeader = ({
             Bộ lọc
           </ButtonFilterStyle>
         </View>
+
+        {canEdit && (
         <Button
           style={{
             padding: "8px 12px 8px 14px",
@@ -84,6 +87,7 @@ const RolegroupHeader = ({
             {"Thêm vai trò"}
           </span>
         </Button>
+        )}
       </Stack>
     </>
   );

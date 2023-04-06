@@ -7,7 +7,7 @@ import {IconButtonAnimate} from "@/components/animate";
 import {getActive} from "@/components/nav-section";
 import {NavItemRoot} from "@/components/nav-section/vertical/NavItem";
 // config
-import {DASHBOARD_CONTENT_WIDTH, HEADER} from "@/config";
+import {DASHBOARD_CONTENT_WIDTH, HEADER, PERMISSION_GROUPS } from "@/config";
 // hooks
 // hooks
 import useOffSetTop from "@/hooks/useOffSetTop";
@@ -23,6 +23,7 @@ import {styled} from "@mui/material/styles";
 import NextLink from "next/link";
 import {useRouter} from "next/router";
 import PropTypes from "prop-types";
+import useRole from "@/hooks/useRole";
 
 const RootStyle = styled(AppBar, { shouldForwardProp: (prop) => prop !== "isCollapse" && prop !== "isOffset" && prop !== "verticalLayout",})(({isCollapse, isOffset, verticalLayout, theme}) => ({
     ...cssStyles(theme).bgBlur(),
@@ -79,6 +80,7 @@ DashboardAppBar.propTypes = {
 };
 
 export default function DashboardAppBar({ onOpenSidebar, isCollapse = false, verticalLayout = false }) {
+    const { canAccess } = useRole();
     const router = useRouter();
     const activeSettingPath = getActive(
         "/settings",
@@ -123,7 +125,7 @@ export default function DashboardAppBar({ onOpenSidebar, isCollapse = false, ver
                     alignItems="center"
                     spacing={{xs: 0.5, sm: 1.5}}
                 >
-                    {isDesktop && verticalLayout && (
+                    {isDesktop && verticalLayout && canAccess(PERMISSION_GROUPS.ACCESS_SETTINGS) && (
                         <NavItemRoot
                             item={{
                                 icon: <Iconify icon="material-symbols:settings"/>,

@@ -1,20 +1,18 @@
 import { RoleContainer } from "@/sections/rolegroup";
 import PageWrapper from "@/components/PageWrapper";
-import { PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import { getRolesByPage } from "@/utils/role";
+import { PERMISSION_GROUPS } from "@/config";
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <SettingLayout roles={roles}>{page}</SettingLayout>;
+Setting.getLayout = function getLayout(pageProps, page) {
+  return (
+    <SettingLayout
+      permission={PERMISSION_GROUPS.ACCESS_SETTINGS}
+      {...pageProps}
+    >
+      {page}
+    </SettingLayout>
+  );
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
 
 export default function Setting() {
   return (

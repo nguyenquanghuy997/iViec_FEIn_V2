@@ -31,6 +31,8 @@ import {
   RiToggleLine,
 } from 'react-icons/ri';
 import { useSnackbar } from "notistack";
+import useRole from "@/hooks/useRole";
+import { PERMISSIONS } from "@/config";
 import { getErrorMessage } from "@/utils/helper";
 
 import { RoleGroupStyle } from "../styles";
@@ -42,6 +44,7 @@ const defaultValues = {
 export const RoleContainer = () => {
   const { palette } = useTheme();
   const { confirmModal } = useConfirmModal();
+  const { canAccess } = useRole();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { query, isReady } = router;
@@ -58,6 +61,8 @@ export const RoleContainer = () => {
 
   const [removeRoleGroup] = useRemoveRoleGroupMutation();
   const [setStatusRoleGroup] = useSetStatusRoleGroupMutation();
+
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_ROLE), []);
 
   const handleSetDataFilter = (data) =>
     dispatch(filterSlice.actions.setAllDataFilter(data));
@@ -89,8 +94,11 @@ export const RoleContainer = () => {
       fixed: "left",
       render: (item, record) => (
         <TextMaxLine
-          sx={{ width: 220, fontWeight: "normal", fontSize: 14, cursor: 'pointer' }}
+          sx={{ width: 220, fontWeight: "normal", fontSize: 14, ...(canEdit && { cursor: 'pointer' }) }}
           onClick={(e) => {
+            if (!canEdit) {
+              return;
+            }
             setEditItem(record);
             setOpen(true);
             e.stopPropagation();
@@ -239,6 +247,9 @@ export const RoleContainer = () => {
   const [columnsTable, setColumnsTable] = useState([]);
 
   const showActionStatus = useMemo(() => {
+    if (!canEdit) {
+      return false;
+    }
     if (itemSelected.length < 1) {
       return false;
     }
@@ -357,7 +368,11 @@ export const RoleContainer = () => {
               onOpenFilterForm={handleOpenFilterForm}
               onCloseFilterForm={handleCloseFilterForm}
               onOpenAddForm={() => setOpen(true)}
+              canEdit={canEdit}
             />
+          }
+          tableProps={
+            !canEdit && { rowSelection: false }
           }
         />
       </Content>
@@ -380,7 +395,7 @@ export const RoleContainer = () => {
               />
             ),
           }] : []),
-          ...(itemSelected.length === 1 ? [{
+          ...((canEdit && itemSelected.length === 1) ? [{
             icon: <RiEdit2Fill size={18} color={palette.text.secondary} />,
             onClick: () => {
               if (itemSelected.length > 1) {
@@ -391,12 +406,12 @@ export const RoleContainer = () => {
             },
             disabled: selectedRowKeys.length > 1,
           }] : []),
-          {
+          ...(canEdit ? [{
             icon: <RiDeleteBin6Line size={18} color={palette.text.warning} />,
             onClick: () => {
               handleConfirmDelete();
             },
-          },
+          }] : []),
         ]}
       />
 
