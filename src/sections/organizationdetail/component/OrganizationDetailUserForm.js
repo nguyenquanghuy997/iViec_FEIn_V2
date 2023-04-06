@@ -11,19 +11,19 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {AvatarDS} from "@/components/DesignSystem";
 import RHFTreeSelect from "@/components/hook-form/RHFTreeSelect";
-import {useGetRoleGroupQuery} from "@/sections/organization/OrganizationSlice";
 import {
     useGetListOrganizationWithChildQuery,
     useUpdateRoleUserMutation
 } from "@/sections/organization/override/OverrideOrganizationSlice";
 import {LabelStyle} from "@/components/hook-form/style";
 import {useSnackbar} from "notistack";
+import {useGetRoleGroupListQuery} from "@/sections/rolegroup";
 
 const OrganizationUserForm = ({isOpen, onClose, data}) => {
     const {enqueueSnackbar} = useSnackbar();
     const [updateUser] = useUpdateRoleUserMutation();
 
-    const {data: {items: ListRoleGroup = []} = {}} = useGetRoleGroupQuery();
+    const {data: {items: ListRoleGroup = []} = {}} = useGetRoleGroupListQuery();
     const {data: {items: ListOrganization = []} = {}} = useGetListOrganizationWithChildQuery();
 
     const [, setIsScrolled] = useState(false);

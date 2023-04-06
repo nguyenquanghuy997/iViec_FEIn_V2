@@ -12,9 +12,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    outputStandalone: true
-  },
+  output: "standalone",
   rewrites: async () => [
     {
       source: "/public/myfile.html",
@@ -22,6 +20,5 @@ const nextConfig = {
     },
   ],
 };
-
 
 module.exports = withTM(withBundleAnalyzer(nextConfig));
