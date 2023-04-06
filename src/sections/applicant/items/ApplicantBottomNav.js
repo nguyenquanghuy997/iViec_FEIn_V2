@@ -1,5 +1,4 @@
 import { handleExportExcel } from "../helper/excel";
-import { RejectApplicantModal } from "../modals";
 import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
 import ApplicantTransferRecruitmentModal from "../modals/ApplicantTransferRecruitmentModal";
 import Content from "@/components/BaseComponents/Content";
@@ -17,6 +16,7 @@ import {
 import { fDate } from "@/utils/formatTime";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { RejectApplicantModal } from "../modals/RejectApplicantModal";
 
 const ApplicantBottomNav = ({
   selectedList,

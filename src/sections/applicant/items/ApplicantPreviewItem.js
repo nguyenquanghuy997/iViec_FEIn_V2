@@ -1,4 +1,3 @@
-//import { RejectApplicantModal } from "../modals";
 import {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
@@ -6,9 +5,9 @@ import {
   useGetRecruitmentsByApplicantQuery,
   useLazyGetApplicantByIdQuery,
 } from "../ApplicantFormSlice";
-import { RejectApplicantModal } from "../modals";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
 import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
+import { RejectApplicantModal } from "../modals/RejectApplicantModal";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
@@ -24,6 +23,7 @@ import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
+import { srcImage } from "@/utils/enum";
 import {
   Box,
   Card,
@@ -35,7 +35,7 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/styles";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function ApplicantPreviewItem({
   ApplicantId,
@@ -70,9 +70,8 @@ function ApplicantPreviewItem({
         >
           <AvatarDS
             sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
-            src={
-              "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
-            }
+            name={data?.fullName}
+            src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
           ></AvatarDS>
           <Box pl={1}>
             <Typography
@@ -289,7 +288,6 @@ function ApplicantPreviewItem({
       });
     }
   }, [isFetching]);
-
   const onChangeRecruiment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
@@ -306,7 +304,6 @@ function ApplicantPreviewItem({
       applicantId: e.target.value.applicantId,
     });
   };
-
   return (
     <div>
       <HeadingFixed>
@@ -426,7 +423,7 @@ function ApplicantPreviewItem({
                               textTransform: "none",
                               marginLeft: "12px",
                             }}
-                            onClick={() => setActionShow(true)}
+                            onClick={() => setRejectApplicant(true)}
                             icon={
                               <Iconify
                                 icon={"ic:outline-remove-circle"}
@@ -483,7 +480,6 @@ function ApplicantPreviewItem({
                   </Grid>
                 </Grid>
               </CardContent>
-
               {showConfirmMultiple && (
                 <ApplicantTransferPipelineModal
                   showConfirmMultiple={showConfirmMultiple}
@@ -498,7 +494,6 @@ function ApplicantPreviewItem({
                   setActionShow={setActionShow}
                 />
               )}
-
               {actionShow && (
                 <RejectApplicantModal
                   applicantId={ApplicantId}
@@ -511,13 +506,6 @@ function ApplicantPreviewItem({
                   onClose={onCloseModel}
                 />
               )}
-              {/* <RejectApplicantModal
-                applicantId={data?.id}
-                recruimentId={selectedOption?.id}
-                stage={pipelines}
-                show={rejectApplicant}
-                setShow={setRejectApplicant}
-              /> */}
             </Card>
           </Grid>
         </Grid>
