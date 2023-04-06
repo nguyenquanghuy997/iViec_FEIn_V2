@@ -1,6 +1,7 @@
 import TickIcon from "../../assets/TickIcon";
 import CropImage from "./CropImage";
 import DrawerEdit from "./edit/DrawerEdit";
+import NoInformation from "@/assets/NoInformation";
 import {
   useGetCompanyInfoQuery, // useGetJobCategoriesQuery,
 } from "@/sections/companyinfor/companyInforSlice";
@@ -72,38 +73,33 @@ export default function CompanyInfor() {
         >
           {title}
         </span>
-
         {String(value).startsWith("<") ? (
-          <p
-            dangerouslySetInnerHTML={{ __html: value }}
-            style={{
-              overflow: !seeData ? "hidden" : "visible",
-              lineHeight: "1.2em",
-              height: seeData ? "auto" : "3.6em",
-            }}
-          />
+          <>
+            <p
+              dangerouslySetInnerHTML={{ __html: value }}
+              style={{
+                overflow: !seeData ? "hidden" : "visible",
+                lineHeight: "1.2em",
+                height: seeData ? "auto" : "3.6em",
+              }}
+            />
+            <button
+              onClick={() => setSeeData(!seeData)}
+              style={{ border: "none", background: "white" }}
+            >
+              <p style={{ fontSize: 14, fontWeight: 700 }}>
+                {seeData ? "Thu ngắn" : "... Xem thêm"}
+              </p>
+            </button>
+          </>
         ) : (
-          <span
-            style={{
-              display: "flex",
-              fontSize: 14,
-              lineHeight: 24 / 16,
-              color: "#172B4D",
-            }}
-          >
-            {value}
-          </span>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <NoInformation />
+          </Box>
         )}
-        <button
-          onClick={() => setSeeData(!seeData)}
-          style={{ border: "none", background: "white" }}
-        >
-          <p style={{ fontSize: 14, fontWeight: 700 }}>
-            {seeData ? "Thu ngắn" : "... Xem thêm"}
-          </p>
-        </button>
       </div>
     );
+    //
   };
   // const { data: { items: JobCategoryList = [] } = {} } =
   //   useGetJobCategoriesQuery();
@@ -122,6 +118,8 @@ export default function CompanyInfor() {
           paddingRight: 40,
           marginTop: "-2%",
           background: "white",
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '4px',
         }}
       >
         <Box sx={{ display: "flex" }}>
@@ -214,8 +212,7 @@ export default function CompanyInfor() {
           )}
           {renderItem(
             "Giới thiệu công ty",
-            Data?.organizationInformation?.description,
-            true
+            Data?.organizationInformation?.description
           )}
         </Box>
       </div>

@@ -7,7 +7,9 @@ import {
   API_REMOVE_ROLE_GROUP,
   API_UPDATE_ROLE_GROUP,
   API_GET_COLUMN_ROLE,
-  API_UPDATE_COLUMN_ROLE
+  API_UPDATE_COLUMN_ROLE,
+  API_GET_ROLE_GROUP,
+  API_SET_ACTIVE_ROLE_GROUP,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -18,11 +20,11 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 const PipelineFormSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getRoleList: builder.query({
-      query: () => ({
-        url: API_GET_ROLE,
+      query: (params = {}) => ({
+        url: API_GET_ROLE + '?' + qs.stringify(params),
         method: "GET",
       }),
-      providesTags: ["RoleGroup"],
+      providesTags: ["ActionList"],
     }),
 
     getRoleGroupList: builder.query({
@@ -53,22 +55,70 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
     }),
 
     updateRolegroup: builder.mutation({
-      query: (res) => ({
-        url: `${API_UPDATE_ROLE_GROUP}/${res.id}`,
-        method: "PATCH",
-        data: res,
+      query: (data = {}) => {
+        const { id, ...rest } = data;
+        return {
+          url: `${API_UPDATE_ROLE_GROUP}/${id}`,
+          method: "PATCH",
+          data: rest,
+        }
+      },
+      invalidatesTags: ["RoleGroup"],
+    }),
+
+    // Lưu vai trò (create/update)
+    saveRoleGroup: builder.mutation({
+      query: (data) => {
+        const { id, ...restData } = data;
+        return {
+          url: id ? (API_UPDATE_ROLE_GROUP + '/' + id) : API_ADD_ROLE_GROUP,
+          method: id ? 'PATCH' : 'POST',
+          data: restData,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => {
+        return error ? [] : [
+          { type: 'RoleGroup' },
+          ...(id ? [{ type: 'RoleGroup', id: 'ROLE_' + id }] : []),
+        ];
+      },
+    }),
+
+    // Chi tiết vai trò theo ID
+    getRoleDetail: builder.query({
+      query: (id) => ({
+        url: API_GET_ROLE_GROUP,
+        method: 'GET',
+        params: { RoleGroupId: id },
+      }),
+      providesTags: (result, error, id) => {
+        return error ? [] : [{ type: 'RoleGroup', id: 'ROLE_' + id }];
+      },
+    }),
+
+    removeRoleGroup: builder.mutation({
+      query: (ids) => ({
+        url: API_REMOVE_ROLE_GROUP,
+        method: "DELETE",
+        data: {
+          roleGroupIds: ids,
+        },
       }),
       invalidatesTags: ["RoleGroup"],
     }),
 
-    deletePipeline: builder.mutation({
-      query: (data) => ({
-        url: API_REMOVE_ROLE_GROUP,
-        method: "POST",
-        data: qs.stringify(data),
-      }),
-      invalidatesTags: ["RoleGroup"],
+    // Update status role group
+    setStatusRoleGroup: builder.mutation({
+      query: (data) => {
+        return {
+          url: API_SET_ACTIVE_ROLE_GROUP,
+          method: 'PATCH',
+          data,
+        };
+      },
+      invalidatesTags: ['RoleGroup'],
     }),
+
     //settings
     getListColumns: builder.query({
       query: () => ({
@@ -94,5 +144,10 @@ export const {
   useAddRoleGroupMutation,
   useUpdateRolegroupMutation,
   useGetListColumnsQuery,
-  useUpdateListColumnsMutation
+  useUpdateListColumnsMutation,
+  useSaveRoleGroupMutation,
+  useGetRoleDetailQuery,
+  useLazyGetRoleDetailQuery,
+  useRemoveRoleGroupMutation,
+  useSetStatusRoleGroupMutation,
 } = PipelineFormSlice;

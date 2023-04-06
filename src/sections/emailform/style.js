@@ -39,30 +39,33 @@ const ButtonAddStyle = styled(Button)(({theme}) => ({
   }
 }));
 
-const TitleStyle = styled(Typography)(({theme}) => ({
+const TitleStyle = styled(Typography)(() => ({
   '&.form-title': {
     color: '#172B4D',
     fontSize: 20,
     fontWeight: 700,
-    marginBottom: theme.spacing(1)
   }
 }));
 
-const SubTitleStyle = styled(Typography)(() => ({
+const SubTitleStyle = styled(Typography)(({theme}) => ({
   '&.form-subtitle': {
     color: '#455570',
     fontSize: 14,
     fontWeight: 400,
+    marginTop: theme.spacing(1)
   }
 }));
 
-const CardEmailFormItemStyle = styled(Accordion)(({theme}) => ({
-  '&.card-email-item': {
+const CardFormItemStyle = styled(Accordion)(({theme}) => ({
+  '&.card-item': {
     border: '1px solid #E7E9ED',
     backgroundColor: '#FDFDFD',
     padding: theme.spacing(2.5, 3),
     marginBottom: theme.spacing(2),
     borderRadius: 4,
+    '&:before':{
+      backgroundColor:'unset'
+    },
     "&.Mui-expanded": {
       borderRadius: 4,
       boxShadow: 'none',
@@ -73,8 +76,9 @@ const CardEmailFormItemStyle = styled(Accordion)(({theme}) => ({
       alignItems: 'flex-start',
       "& .MuiAccordionSummary-expandIconWrapper": {
         position: 'absolute',
-        top: 10,
-        right: 6
+        right: 6,
+        top: -5,
+      transform: 'unset'
       }
     },
     "& .MuiAccordionSummary-content": {
@@ -86,31 +90,33 @@ const CardEmailFormItemStyle = styled(Accordion)(({theme}) => ({
       padding: 0,
       marginTop: theme.spacing(3)
     }
-  }
+  },
+  '&.card-item:hover':{
+    border: '1px solid #1E88E5'
+  },
 }));
-const CardEmailFormItemTitleStyle = styled(Typography)(({theme}) => ({
-  '&.card-email-item-title': {
+const CardFormItemTitleStyle = styled(Typography)(({theme}) => ({
+  '&.card-item-title': {
     display: 'flex',
     alignItems: 'center',
-    color: '#455570',
+    color: '#172B4D',
     fontSize: 16,
     fontWeight: 600,
-    marginBottom: theme.spacing(3),
     "& .MuiCheckbox-root": {
       padding: 0,
       marginRight: theme.spacing(2)
     },
-    "& .card-email-item-subtitle": {
+    "& .card-item-subtitle": {
       color: '#455570',
       fontSize: 13,
       fontWeight: 400,
-      marginLeft: theme.spacing(0.5)
+      marginLeft: theme.spacing(1)
     }
   }
 }));
 
-const CardEmailFormItemSubTitleStyle = styled(Typography)(({theme}) => ({
-    "& .card-email-item-subtitle": {
+const CardFormItemSubTitleStyle = styled(Typography)(({theme}) => ({
+    "& .card-item-subtitle": {
       color: '#455570',
       fontSize: 13,
       fontWeight: 400,
@@ -118,14 +124,14 @@ const CardEmailFormItemSubTitleStyle = styled(Typography)(({theme}) => ({
     }
 }));
 
-const CardEmailFormItemContentStyle = styled(Typography)(({theme}) => ({
-  '&.card-email-item-content-text': {
+const CardFormItemContentStyle = styled(Typography)(({theme}) => ({
+  '&.card-item-content-text': {
     display: 'flex',
     alignItems: 'flex-end',
     color: '#172B4D',
     fontSize: 12,
-    fontWeight: 400,
-    "& .card-email-item-content-subtext": {
+    fontWeight: 500,
+    "& .card-item-content-subtext": {
       color: '#5C6A82',
       fontSize: 12,
       fontWeight: 400,
@@ -174,10 +180,10 @@ export {
   ButtonAddStyle,
   TitleStyle,
   SubTitleStyle,
-  CardEmailFormItemStyle,
-  CardEmailFormItemTitleStyle,
-  CardEmailFormItemContentStyle,
-  CardEmailFormItemSubTitleStyle,
+  CardFormItemStyle,
+  CardFormItemTitleStyle,
+  CardFormItemContentStyle,
+  CardFormItemSubTitleStyle,
   EmailFormHeadStyle,
   EmailFormFooterStyle
 }

@@ -2,7 +2,7 @@
 import Iconify from "@/components/Iconify";
 import SvgIconStyle from "@/components/SvgIconStyle";
 // config
-import { PAGES } from "@/config";
+import { PAGES, PERMISSIONS as PERS } from "@/config";
 // utils
 import { getListRoles } from "@/utils/role";
 
@@ -217,37 +217,37 @@ export const headerMenuConfig = [
         title: "Duyệt tin",
         path: "/adrecruitment",
         // icon: ICONS.job,
-        roles: ROLES[PAGES.RecruitmentAd],
+        permissions: [],
       },
       {
         title: "Tin tuyển dụng",
         path: "/recruitment",
         // icon: ICONS.job,
-        roles: ROLES[PAGES.Recruitment],
+        permissions: [],
       },
       {
         title: "Ứng viên",
         path: "/applicant",
         // icon: ICONS.invoice,
-        roles: ROLES[PAGES.Applicant],
+        permissions: [PERS.VIEW_CDD],
       },
       {
         title: "Lịch phỏng vấn",
         path: "/interview",
         // icon: ICONS.interview,
-        roles: ROLES[PAGES.Interview],
+        permissions: [PERS.VIEW_INTV_SCHE],
       },
       {
         title: "Kho ứng viên",
         path: "/stores",
         // icon: ICONS.client,
-        roles: ROLES[PAGES.Jobs],
+        permissions: [],
       },
       {
         title: "Báo cáo",
         path: "/report",
         // icon: ICONS.report,
-        roles: ROLES[PAGES.Report1],
+        permissions: [],
       },
     ],
   },

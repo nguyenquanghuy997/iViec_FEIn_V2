@@ -33,6 +33,7 @@ export default function RHFDatePicker({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <DatePicker
+        defaultProp={null}
           {...field}
           error={!!error}
           label={label}

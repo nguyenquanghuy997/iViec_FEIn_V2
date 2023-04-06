@@ -1,4 +1,5 @@
 import {apiSlice} from "@/redux/api/apiSlice";
+import qs from 'query-string';
 import {
   API_GET_ALL_APPLICANTS,
   API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
@@ -17,9 +18,10 @@ import {
   API_UPDATE_APPLICANT,
   API_GET_APPLICANT_BY_PIPELINESTETEID,
   API_GET_LIST_RECRUITMENT,
-  API_GET_ADD_APPLICANT_TO_RECRUITMENT
+  API_GET_ADD_APPLICANT_TO_RECRUITMENT,
+  API_APPLICANT_REVIEW_FORM
 } from "@/routes/api";
-import {convertArrayToObject} from '@/utils/help'
+import {convertArrayToObject} from '@/utils/helper'
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["GetColumnApplicants", "GetListsApplicants"],
 });
@@ -98,6 +100,12 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
         url: API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
         method: "GET",
         params,
+      }),
+    }),
+    // mẫu đánh giá theo ứng viên
+    getApplicantReviewForm: builder.query({
+      query: (data) => ({
+        url: API_APPLICANT_REVIEW_FORM + '?' + qs.stringify(data),
       }),
     }),
     getApplicantRecruitment: builder.mutation({
@@ -231,4 +239,5 @@ export const {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useAddApplicantFormMutation,
   useUpdateApplicantFormMutation,
+  useGetApplicantReviewFormQuery
 } = ApplicantFormSlice;

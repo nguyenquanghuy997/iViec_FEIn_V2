@@ -1,6 +1,6 @@
 import RHFTextField from "./RHFTextField";
 import { IconPlus, IconSubstract } from "@/assets/icons";
-import { alphabetPosition } from "@/utils/help";
+import { alphabetPosition } from "@/utils/helper";
 import {
   IconButton,
   RadioGroup,

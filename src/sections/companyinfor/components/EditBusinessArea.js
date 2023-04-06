@@ -60,7 +60,7 @@ const EditBusinessArea = ({ onClose }) => {
   });
 
   const {
-    setValue,
+    // setValue,
     // setError,
     register,
     handleSubmit,
@@ -120,10 +120,10 @@ const EditBusinessArea = ({ onClose }) => {
 
   useEffect(() => {
     if (!Data) return;
-    setValue(
-      "organizationBusinessDatas",
-      Data?.organizationBusiness.organizationBusinessDatas
-    );
+    // setValue(
+    //   "organizationBusinessDatas",
+    //   Data?.organizationBusiness.organizationBusinessDatas
+    // );
     setBg(
       `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto}`
     );
