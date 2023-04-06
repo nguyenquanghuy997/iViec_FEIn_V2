@@ -24,6 +24,7 @@ export const RejectApplicantModal = ({
   setShow,
   actionId,
   actionType,
+  onClose,
 }) => {
   // data
   const recruitmentPipelineStateId = stage?.recruitmentPipelineStates?.filter(
@@ -63,7 +64,7 @@ export const RejectApplicantModal = ({
       };
       await addForm(body).unwrap();
       enqueueSnackbar("Chuyên bước thành công");
-      location.reload();
+      onClose();
     } catch (err) {
       enqueueSnackbar("Chuyên bước thất bại", {
         autoHideDuration: 1000,

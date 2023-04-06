@@ -8,6 +8,7 @@ import {
 } from "../ApplicantFormSlice";
 import { RejectApplicantModal } from "../modals";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
+import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
@@ -34,9 +35,14 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/styles";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelationId, RecruitmentId }) {
+function ApplicantPreviewItem({
+  ApplicantId,
+  OrganizationId,
+  ApplicantCorrelationId,
+  RecruitmentId,
+}) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
       ApplicantCorrelationId: ApplicantCorrelationId,
@@ -234,40 +240,58 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
   const [fetchDataApplicant, { data: data = [] }] =
-  useGetApplicantByIdMutation();
+    useGetApplicantByIdMutation();
   const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
     },
     {
-      skip: pipelines && pipelines?.recruitmentPipelineStates?.filter(
-        (i) => i.id == pipelines.currentApplicantPipelineState && i.pipelineStateType == 3
-      ).length > 0
+      skip:
+        pipelines &&
+        pipelines?.recruitmentPipelineStates?.filter(
+          (i) =>
+            i.id == pipelines.currentApplicantPipelineState &&
+            i.pipelineStateType == 3
+        ).length > 0,
     }
   );
 
+  const [actionId, setActionId] = useState();
+  const [actionType, setActionType] = useState();
+  const [actionShow, setActionShow] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
-  const [rejectApplicant, setRejectApplicant] = useState(false);
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+
   const [ownerName, setOwnerName] = useState();
+
+  const fetchAll = () => {
+    const recruiment = options.filter((p) => p.id == RecruitmentId);
+    setSelectedOption(recruiment[0]);
+    setOwnerName(recruiment[0]?.ownerName?.trim());
+    fetchPipe({
+      ApplicantId: recruiment[0]?.applicantId,
+      RecruitmentId: recruiment[0]?.id,
+    }).unwrap();
+    fetchData({
+      ApplicantId: recruiment[0]?.applicantId,
+      RecruitmentId: recruiment[0]?.id,
+      IsWithdrawHistory: true,
+    }).unwrap();
+    fetchDataApplicant({
+      Id: recruiment[0]?.applicantId,
+    }).unwrap();
+  };
+
+  const onCloseModel = () => {
+    fetchAll();
+    setActionShow(false);
+    setShowConfirmMultiple(false);
+  };
 
   useEffect(() => {
     if (!isFetching) {
-      const recruiment = options.filter(p => p.id == RecruitmentId)
-      setSelectedOption(recruiment[0]);
-      setOwnerName(recruiment[0]?.ownerName?.trim());
-      fetchPipe({
-        ApplicantId: recruiment[0]?.applicantId,
-        RecruitmentId: recruiment[0]?.id,
-      }).unwrap();
-      fetchData({
-        ApplicantId: recruiment[0]?.applicantId,
-        RecruitmentId: recruiment[0]?.id,
-        IsWithdrawHistory: true,
-      }).unwrap();
-      fetchDataApplicant({
-        Id: recruiment[0]?.applicantId,
-      }).unwrap();
+      fetchAll();
     }
   }, [isFetching]);
 
@@ -275,11 +299,11 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
     fetchPipe({
-      ApplicantId:e.target.value.applicantId,
+      ApplicantId: e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
     }).unwrap();
     fetchData({
-      ApplicantId:e.target.value.applicantId,
+      ApplicantId: e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
       IsWithdrawHistory: true,
     }).unwrap();
@@ -287,6 +311,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
       Id: e.target.value.applicantId,
     }).unwrap();
   };
+
   return (
     <div>
       <HeadingFixed>
@@ -349,9 +374,9 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               background: "#E7E9ED",
                             },
                             "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
-                            {
-                              borderColor: "#E7E9ED",
-                            },
+                              {
+                                borderColor: "#E7E9ED",
+                              },
                           }}
                         />
                       ) : null}
@@ -382,6 +407,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               },
                               textTransform: "none",
                             }}
+                            onClick={() => setShowConfirmMultiple(true)}
                             icon={
                               <Iconify
                                 icon={"ci:transfer"}
@@ -392,7 +418,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               />
                             }
                           />
-                          <ButtonDS
+                          {/* <ButtonDS
                             type="submit"
                             sx={{
                               padding: "8px",
@@ -405,7 +431,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               textTransform: "none",
                               marginLeft: "12px",
                             }}
-                            onClick={() => setRejectApplicant(true)}
+                            onClick={() => setActionShow(true)}
                             icon={
                               <Iconify
                                 icon={"ic:outline-remove-circle"}
@@ -414,7 +440,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                                 color="#D32F2F"
                               />
                             }
-                          />
+                          /> */}
                         </Grid>
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
@@ -463,13 +489,33 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                 </Grid>
               </CardContent>
 
-              <RejectApplicantModal
-                applicantId={data?.id}
-                recruimentId={selectedOption?.id}
-                stage={pipelines}
-                show={rejectApplicant}
-                setShow={setRejectApplicant}
-              />
+              {showConfirmMultiple && (
+                <ApplicantTransferPipelineModal
+                  showConfirmMultiple={showConfirmMultiple}
+                  setShowConfirmMultiple={setShowConfirmMultiple}
+                  onClose={onCloseModel}
+                  itemSelected={{
+                    applicantId: ApplicantId,
+                    recruitmentId: RecruitmentId,
+                  }}
+                  setActionId={setActionId}
+                  setActionType={setActionType}
+                  setActionShow={setActionShow}
+                />
+              )}
+
+              {actionShow && (
+                <RejectApplicantModal
+                  applicantId={ApplicantId}
+                  recruimentId={RecruitmentId}
+                  stage={pipelines}
+                  actionId={actionId}
+                  actionType={actionType}
+                  show={actionShow}
+                  setShow={setActionShow}
+                  onClose={onCloseModel}
+                />
+              )}
             </Card>
           </Grid>
         </Grid>

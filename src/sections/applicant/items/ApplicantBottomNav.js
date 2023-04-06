@@ -33,6 +33,7 @@ const ApplicantBottomNav = ({
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
     setselectedList([]);
+    setActionShow(false);
   };
   // const handleOpenFormWithCurrentNode = () => {
   //   onOpenForm();
