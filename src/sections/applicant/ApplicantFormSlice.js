@@ -17,8 +17,10 @@ import {
   API_UPDATE_APPLICANT,
   API_GET_APPLICANT_BY_PIPELINESTETEID,
   API_GET_LIST_RECRUITMENT,
-  API_GET_ADD_APPLICANT_TO_RECRUITMENT
+  API_GET_ADD_APPLICANT_TO_RECRUITMENT,
+  API_APPLICANT_REVIEW_FORM
 } from "@/routes/api";
+import qs from 'query-string';
 import {convertArrayToObject} from '@/utils/helper'
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["GetColumnApplicants", "GetListsApplicants", "GetListApplicantPipeline"],
@@ -199,6 +201,12 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
         }));
       },
     }),
+    // mẫu đánh giá theo ứng viên
+    getApplicantReviewForm: builder.query({
+      query: (data) => ({
+        url: API_APPLICANT_REVIEW_FORM + '?' + qs.stringify(data),
+      }),
+    }),
   }),
 });
 
@@ -224,4 +232,5 @@ export const {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useAddApplicantFormMutation,
   useUpdateApplicantFormMutation,
+  useGetApplicantReviewFormQuery
 } = ApplicantFormSlice;
