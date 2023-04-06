@@ -19,6 +19,11 @@ export default function DrawerEditForm({
   statusField = 'isActivated',
   onSubmit,
   initing = false,
+  width,
+  activeText = 'Đang hoạt động',
+  inActiveText = 'Không hoạt động',
+  okText = 'Lưu',
+  cancelText = 'Hủy',
   children,
 }) {
   const theme = useTheme();
@@ -75,7 +80,7 @@ export default function DrawerEditForm({
       open={open}
       onClose={(e) => toggleDrawer(false, e)}
       PaperProps={{
-        sx: drawerPaperStyle(theme),
+        sx: drawerPaperStyle({ ...theme, width }),
       }}
     >
       <FormProvider methods={methods} onSubmit={handleSubmit(handleOnSubmit)}>
@@ -108,7 +113,7 @@ export default function DrawerEditForm({
               sx={{ mr: 1 }}
               disabled={initing}
             >
-              Lưu
+              {okText}
             </Button>
 
             <Button
@@ -117,13 +122,13 @@ export default function DrawerEditForm({
               onClick={e => toggleDrawer(false, e)}
               height={36}
             >
-              Hủy
+              {cancelText}
             </Button>
           </Box>
 
           <SwitchStatusDS
             name={statusField}
-            label={isActive ? 'Đang hoạt động' : 'Không hoạt động'}
+            label={isActive ? activeText : inActiveText}
           />
         </Box>
       </FormProvider>

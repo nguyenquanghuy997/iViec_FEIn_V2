@@ -21,7 +21,7 @@ import {
   API_GET_ADD_APPLICANT_TO_RECRUITMENT,
   API_APPLICANT_REVIEW_FORM
 } from "@/routes/api";
-import {convertArrayToObject} from '@/utils/helper'
+import {convertArrayToObject, toRequestFilterData} from '@/utils/helper'
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["GetColumnApplicants", "GetListsApplicants"],
 });
@@ -44,11 +44,14 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
       providesTags: ["GetColumnApplicants"],
     }),
     updateListColumnApplicants: builder.mutation({
-      query: (data) => ({
-        url: `${API_UPDATE_COLUMN_APPLICANTS}/${data.id}`,
-        method: "PATCH",
-        data: data.body,
-      }),
+      query: (data = {}) => {
+        let { id, ...restData } = data;
+        return {
+          url: `${API_UPDATE_COLUMN_APPLICANTS}/${id}`,
+          method: "PATCH",
+          data: restData,
+        };
+      },
       invalidatesTags: ["GetColumnApplicants"],
     }),
     updateApplicant: builder.mutation({
@@ -178,10 +181,10 @@ const ApplicantFormSlice = apiWithTag.injectEndpoints({
     // new
     // get all applicant with filter
     getAllFilterApplicant: builder.query({
-      query: (data) => ({
+      query: (data = {}) => ({
         url: API_GET_FILTER_ALL_APPLICANTS,
         method: "POST",
-        data,
+        data: toRequestFilterData(data),
       }),
       providesTags: ["GetListsApplicants"],
     }),

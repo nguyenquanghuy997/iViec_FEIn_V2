@@ -1,5 +1,4 @@
-import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import {
@@ -7,60 +6,18 @@ import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import ApplicantHeader from "@/sections/applicant/ApplicantHeader";
-import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
 import { Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience, } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "@/redux/store";
-import { filterSlice } from "@/redux/common/filterSlice";
-import { useEffect, useMemo, useState } from "react";
-import { cleanObject } from "@/utils/function";
-import { isEmpty } from "lodash";
+import { useMemo, useState } from "react";
 import ApplicantBottomNav from "./ApplicantBottomNav";
-
-const defaultValues = {
-  searchKey: "",
-};
 
 export const ApplicantItem = () => {
   const router = useRouter();
-  const { query, isReady } = router;
-  const dispatch = useDispatch();
-  const toggleFormFilter = useSelector((state) => state.filterReducer.openForm);
-  const dataFilter = useSelector((state) => state.filterReducer.data);
-  const handleOpenFilterForm = () => dispatch(filterSlice.actions.openFilterModal());
-  const handleCloseFilterForm = () => dispatch(filterSlice.actions.closeModal());
-  const handleSetDataFilter = (data) => dispatch(filterSlice.actions.setAllDataFilter(data));
-  const handleClearDataFilter = () => dispatch(filterSlice.actions.clearDataFilter());
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(query, { skip: !isReady });
 
-  useEffect(() => {
-    if (!isReady) return;
-    handleClearDataFilter();
-  }, [isReady, query])
-
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
-  // api get list
-  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(JSON.stringify(cleanObject(dataFilter)));
-
-  // api get list Column
-  // api update list Column
-  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
-  const [page, setPage] = useState(1);
-  const [paginationSize, setPaginationSize] = useState(10);
-  const handleChangePagination = (pageIndex, pageSize) => {
-    setPaginationSize(pageSize);
-    setPage(pageIndex);
-    handleSetDataFilter({ ...dataFilter, pageSize: pageSize, pageIndex: pageIndex })
-  };
   const columns = useMemo(() => {
     return [
       {
@@ -392,29 +349,7 @@ export const ApplicantItem = () => {
         ],
       },
     ];
-  }, [page, paginationSize]);
-
-  const onSubmitSearch = async (data) => {
-    handleSetDataFilter({ searchKey: data.searchKey });
-  };
-
-  const onSubmit = async (data) => {
-    const body = {
-      ...data,
-      createdTimeFrom: data.createdTimeFrom ? new Date(data.createdTimeFrom).toISOString() : null,
-      createdTimeTo: data.createdTimeTo ? new Date(data.createdTimeTo).toISOString() : null,
-      recruitmentPipelineStates: data.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
-      yearsOfExperience: typeof data.yearsOfExperience === 'number' ? [data.yearsOfExperience] : null,
-      sexs: typeof data.sexs === 'number' ? [data.sexs] : null,
-      maritalStatuses: typeof data.maritalStatuses === 'number' ? [data.maritalStatuses] : null,
-      livingAddressProvinceIds: data.livingAddressProvinceIds && typeof data.livingAddressProvinceIds === 'string' ? [data.livingAddressProvinceIds] : null,
-      livingAddressDistrictIds: data.livingAddressDistrictIds && typeof data.livingAddressDistrictIds === 'string' ? [data.livingAddressDistrictIds] : null,
-      homeTowerProvinceIds: data.homeTowerProvinceIds && typeof data.homeTowerProvinceIds === 'string' ? [data.homeTowerProvinceIds] : null,
-      homeTowerDistrictIds: data.homeTowerDistrictIds && typeof data.homeTowerDistrictIds === 'string' ? [data.homeTowerDistrictIds] : null,
-    };
-    handleSetDataFilter(body);
-    handleCloseFilterForm();
-  };
+  }, [query.PageIndex, query.PageSize]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
@@ -452,34 +387,24 @@ export const ApplicantItem = () => {
 
   return (
     <View>
-      <ApplicantHeader
-        methods={methods}
-        onSubmit={onSubmitSearch}
-        handleSubmit={handleSubmit}
-        onOpenFilterForm={handleOpenFilterForm}
-        dataFilter={dataFilter}
-      />
-      <Content>
-        <View mt={!isEmpty(cleanObject(dataFilter)) ? 136 : 96}>
+        <View>
           <DynamicColumnsTable
-            page={page}
-            paginationSize={paginationSize}
-            handleChangePagination={handleChangePagination}
             columns={columns}
             columnsTable={columnsTable}
             setColumnsTable={setColumnsTable}
             source={Data}
             loading={isLoading}
-            ColumnData={ColumnData}
-            UpdateListColumn={UpdateListColumnApplicants}
             settingName={"DANH SÁCH ỨNG VIÊN"}
             nodata="Hiện chưa có ứng viên nào"
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
             itemSelected={itemSelected}
             setItemSelected={setItemSelected}
+            useGetColumnsFunc={useGetListColumnApplicantsQuery}
+            useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
           />
         </View>
+
         <ApplicantBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
@@ -488,16 +413,6 @@ export const ApplicantItem = () => {
           setselectedList={setSelectedRowKeys}
           itemSelected={itemSelected}
         />
-      </Content>
-      {toggleFormFilter && (
-        <ApplicantFilterModal
-          columns={columnsTable}
-          isOpen={toggleFormFilter}
-          onClose={handleCloseFilterForm}
-          onOpen={handleOpenFilterForm}
-          onSubmit={onSubmit}
-        />
-      )}
     </View>
   );
 };

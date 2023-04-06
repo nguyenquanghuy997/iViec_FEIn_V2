@@ -2,7 +2,7 @@ import FilterModalRole from "../FilterModalRole";
 import RolegroupHeader from "../RolegroupHeader";
 import RoleDrawer from '../modals/RoleDrawer';
 import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import TextMaxLine from "@/components/TextMaxLine";
 import { filterSlice } from "@/redux/common/filterSlice";
@@ -51,7 +51,7 @@ export const RoleContainer = () => {
   const { data, isLoading } = useGetRoleGroupListQuery();
   const dispatch = useDispatch();
   // const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
-  const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
+  const { data: { items: ColumnData } = { items: [] } } = useGetListColumnsQuery();
   const dataFilter = useSelector((state) => state.filterReducer.data);
   const [updateListColumn] = useUpdateListColumnsMutation();
   const [open, setOpen] = useState(false);
@@ -350,7 +350,7 @@ export const RoleContainer = () => {
           columns={columns}
           source={data}
           loading={isLoading}
-          ColumnData={ColumnData[0]}
+          ColumnData={ColumnData}
           settingName={"DANH SÁCH VAI TRÒ"}
           isSetting={true}
           nodata="Hiện chưa có vai trò"

@@ -1,7 +1,7 @@
 import JobTypeFilterModal from "../modals/JobTypeFilterModal";
 import JobTypeBottomNav from "./JobTypeBottomNav";
 import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";

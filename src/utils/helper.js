@@ -46,3 +46,28 @@ export const getErrorMessage = (error, defaultMess = null) => {
   }
   return output.slice(0, output.length - 1);
 }
+
+export const isNumeric = (value) => {
+  if (typeof value === 'number') {
+    return true;
+  }
+  if (typeof value !== 'string') {
+    return false;
+  }
+  if (isNaN(parseInt(value))) {
+    return false;
+  }
+  return true;
+}
+
+export const toRequestFilterData = (data = {}) => {
+  let reqData = {};
+  for (let f in data) {
+    let val = data[f];
+    if (isNumeric(data[f])) {
+      val = parseInt(data[f]);
+    }
+    reqData[f] = val;
+  }
+  return reqData;
+}
