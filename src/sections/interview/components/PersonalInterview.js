@@ -42,6 +42,8 @@ const PersonalInterview = ({ item, watchStep, watchType }) => {
     return <Label required={required}>{title}</Label>;
   };
   const id = item?.recruitmentId;
+  const idReviewForm = item?.reviewFormId;
+
   return (
     <Stack spacing={3}>
       <Stack>
@@ -194,7 +196,7 @@ const PersonalInterview = ({ item, watchStep, watchType }) => {
                 fontSize: 14,
               }}
             >
-              {item?.reviewFormId}
+              {DataForm.filter((item) => item?.id.includes(idReviewForm))[0]?.name}
             </Box>
           </Box>
         ) : (

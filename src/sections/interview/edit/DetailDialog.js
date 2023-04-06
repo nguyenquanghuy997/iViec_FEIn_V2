@@ -1,8 +1,6 @@
-import { ButtonDS } from "@/components/DesignSystem";
 import { useGetDetailCalendarsQuery } from "@/sections/interview/InterviewSlice";
 import {
   Dialog,
-  DialogActions,
   DialogTitle,
   Divider,
   List,
@@ -11,10 +9,8 @@ import {
   Typography,
   ListItemText,
   Button,
-  Box
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { RiLinkM } from "react-icons/ri";
 
 DetailDialog.propTypes = {
   title: PropTypes.node.isRequired,
@@ -168,7 +164,7 @@ export default function DetailDialog({
           </ListItem>
         ))}
       </List>
-      <DialogActions
+      {/* <DialogActions
         sx={{
           position: "fixed",
           bottom: 30,
@@ -239,7 +235,7 @@ export default function DetailDialog({
           }}
         />
         </Box>
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 }

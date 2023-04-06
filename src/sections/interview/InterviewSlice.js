@@ -1,12 +1,12 @@
 import { DOMAIN_SERVER_API } from "@/config";
 import {
   API_POST_BOOK_CALENDAR,
-  API_GET_REVIEW_FORM,
-  API_GET_APPLICANT,
+  API_GET_ALL_REVIEW_FORM,
   API_GET_CALENDAR,
   API_GET_CALENDAR_DETAIL,
   API_UPDATE_CALENDAR,
   API_GET_APPLICANT_BY_PIPELINES_STATE,
+  API_GET_RELATE_CALENDAR
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -43,9 +43,9 @@ export const calendarServiceApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ["BookCalendar"],
   endpoints: (builder) => ({
-    getApplicant: builder.query({
+    getRelateCalendara: builder.query({
       query: (params) => ({
-        url: API_GET_APPLICANT,
+        url: API_GET_RELATE_CALENDAR,
         method: "GET",
         params,
       }),
@@ -59,9 +59,10 @@ export const calendarServiceApi = createApi({
       }),
       providesTags: ["BookCalendar"],
     }),
+    
     getReviewForm: builder.query({
       query: () => ({
-        url: API_GET_REVIEW_FORM,
+        url: API_GET_ALL_REVIEW_FORM,
         method: "GET",
       }),
       providesTags: ["BookCalendar"],
@@ -110,7 +111,7 @@ export const calendarServiceApi = createApi({
 export const {
   useAddCalendarMutation,
   useGetReviewFormQuery,
-  useGetApplicantQuery,
+  useGetRelateCalendaraQuery,
   useGetCalendarQuery,
   useGetDetailCalendarsQuery,
   useGetApplicantByPipeLINEQuery,

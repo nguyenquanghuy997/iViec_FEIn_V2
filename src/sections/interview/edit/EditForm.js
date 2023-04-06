@@ -217,7 +217,7 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
               <ListCandidate isEditmode={true} item={DetailData?.bookingCalendarGroups[0].applicants} watchStep={watchStep} watch={watchPipelineStep} />
             </Grid> 
             <Grid item xs={5} md={3}>
-              <InterviewCouncil item={DetailData?.bookingCalendarCouncils} watchStep={watchStep} />
+              <InterviewCouncil  isEditmode={true} item={DetailData?.bookingCalendarCouncils} watchStep={watchStep} />
             </Grid>
           </Grid>
         </Box>

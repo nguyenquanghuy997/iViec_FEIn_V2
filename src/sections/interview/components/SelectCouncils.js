@@ -75,16 +75,15 @@ function SelectCouncils({ name, ...props }) {
   const { remove } = useFieldArray({ control, name });
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
-  const renderChipsSelect = (
-    options,
-    value
-  ) => {
+  const renderChipsSelect = (options, value, remove) => {
+
     return (
       <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
-
         {options
-          ?.filter((option) => value .includes(option?.value))
-          ?.map((item) => (
+          ?.filter((option) =>
+            (value).includes(option?.value)
+          )
+          ?.map((item, index) => (
             <Card
               sx={{
                 p: 2,
@@ -130,7 +129,10 @@ function SelectCouncils({ name, ...props }) {
                     </Typography>
                   </div>
                 </div>
-                <Box sx={{ mt: "2px", cursor: "pointer" }}>
+                <Box
+                  sx={{ mt: "2px", cursor: "pointer" }}
+                  onClick={() => remove(index)}
+                >
                   <DeleteIcon />
                 </Box>
               </div>

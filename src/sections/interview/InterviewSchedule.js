@@ -21,17 +21,15 @@ export default function InterviewSchedule() {
   const [itemDialog, setItemDialog] = useState({});
 
   const [openDialog, setOpenDialog] = useState(false);
-  
+
   const handleClick = (data) => {
     setOpenForm(true);
     setItem(data);
-  }
+  };
   const handleClickDialog = (data) => {
     setOpenDialog(true);
     setItemDialog(data);
-  }
-
-
+  };
 
   return (
     <Card sx={{ m: "140px 0", borderRadius: "6px", border: "none", p: 3 }}>
@@ -64,118 +62,122 @@ export default function InterviewSchedule() {
 
       {Data?.items.map((item) => (
         <>
-        <Box
-          key={item.id}
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <CardContent
-            sx={{
-              display: "flex",
-              width: "100%",
-              bgcolor: "background.paper",
-              color: "text.secondary",
-              px: 2,
-            }}
-            onClick={() => handleClickDialog(item)}
+          <Box
+            key={item.id}
+            sx={{ display: "flex", justifyContent: "space-between" }}
           >
-            <Box sx={{ width: "20%" }}>
-              <Typography
-                sx={{ fontSize: 13, fontWeight: 600 }}
-                color="#172B4D"
-              >
-                {item.name}
-              </Typography>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                15:00 - 18:00
-              </Typography>
-            </Box>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "15%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Số ứng viên
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>3</Typography>
-            </Box>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "15%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Loại phỏng vấn
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {/* {item?.interviewType == 0 ? " Online" : "Trực tiếp"} */}
-              </Typography>
-            </Box>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "15%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Hình thức
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.interviewType == 0 ? " Online" : "Trực tiếp"}
-              </Typography>
-            </Box>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            {item?.interviewType == 1 ? (
-              <Box sx={{ width: "30%", px: 3 }}>
-                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                  Địa chỉ
+            <CardContent
+              sx={{
+                display: "flex",
+                width: "100%",
+                bgcolor: "background.paper",
+                color: "text.secondary",
+                px: 2,
+              }}
+              onClick={() => handleClickDialog(item)}
+            >
+              <Box sx={{ width: "20%" }}>
+                <Typography
+                  sx={{ fontSize: 13, fontWeight: 600 }}
+                  color="#172B4D"
+                >
+                  {item.name}
                 </Typography>
-                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                  {item?.onlineInterviewAddress}
+                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                  15:00 - 18:00
                 </Typography>
               </Box>
-            ) : (
-              ""
-            )}
-          </CardContent>
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              width: check ? "150px" : "fit-content",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => handleClick(item)}
+              <Divider orientation="vertical" variant="middle" flexItem />
+              <Box sx={{ width: "15%", px: 3 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                  Số ứng viên
+                </Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                  3
+                </Typography>
+              </Box>
+              <Divider orientation="vertical" variant="middle" flexItem />
+              <Box sx={{ width: "15%", px: 3 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                  Loại phỏng vấn
+                </Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                  {/* {item?.interviewType == 0 ? " Online" : "Trực tiếp"} */}
+                </Typography>
+              </Box>
+              <Divider orientation="vertical" variant="middle" flexItem />
+              <Box sx={{ width: "15%", px: 3 }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                  Hình thức
+                </Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                  {item?.interviewType == 0 ? " Online" : "Trực tiếp"}
+                </Typography>
+              </Box>
+              <Divider orientation="vertical" variant="middle" flexItem />
+              {item?.interviewType == 1 ? (
+                <Box sx={{ width: "30%", px: 3 }}>
+                  <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                    Địa chỉ
+                  </Typography>
+                  <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                    {item?.onlineInterviewAddress}
+                  </Typography>
+                </Box>
+              ) : (
+                ""
+              )}
+            </CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                width: check ? "150px" : "fit-content",
+                alignItems: "center",
+              }}
             >
-              <EditIcon width={12} height={12} />
-            </div>
-            {check ? (
-              <ButtonDS
-                tittle="Tham gia"
-                sx={{
-                  bgcolor: "#388E3C",
-                  "&:hover": {
-                    backgroundColor: "#43A047 !important",
-                  },
-                }}
-              />
-            ) : (
-              ""
-            )}
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => handleClick(item)}
+              >
+                <EditIcon width={12} height={12} />
+              </div>
+              {check ? (
+                <ButtonDS
+                  tittle="Tham gia"
+                  sx={{
+                    bgcolor: "#388E3C",
+                    "&:hover": {
+                      backgroundColor: "#43A047 !important",
+                    },
+                  }}
+                />
+              ) : (
+                ""
+              )}
+            </Box>
+
+            <Divider />
           </Box>
-          <Divider />
-        </Box>
         </>
       ))}
       {openForm && (
-          <EditForm
-            open={openForm}
-            item={item}
-            onClose={() => setOpenForm(false)}
-          />
-        )}
+        <EditForm
+          open={openForm}
+          item={item}
+          onClose={() => setOpenForm(false)}
+        />
+      )}
       {openDialog && (
         <DetailDialog
           subheader={<CloseIcon />}
           title="Chi tiết lịch phỏng vấn"
           open={openDialog}
           item={itemDialog}
-          onClose={()=> setOpenDialog(false)}
+          onClose={() => setOpenDialog(false)}
         />
       )}
+     
     </Card>
   );
 }

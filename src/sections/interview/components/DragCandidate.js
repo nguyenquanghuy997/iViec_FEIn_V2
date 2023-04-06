@@ -23,7 +23,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
     setCharacters([...data, items]);
   };
   const time = false;
-
+const today= new Date()
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -123,6 +123,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                 </Typography>
                                 <RHFDatePicker
                                   name="date"
+                                  today={today}
                                   style={{
                                     background: "white",
                                     borderRadius: "8px",
