@@ -22,8 +22,8 @@ export function RHFCheckbox({ name, labelPlacement, label, style, ...other }) {
           render={({ field }) => (
             <Checkbox
               {...field}
-              sx={other.sx}
-              checked={field.value}
+              style={other.style}
+              checked={field.value ? true : false}
             />
           )}
         />

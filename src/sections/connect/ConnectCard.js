@@ -1,6 +1,6 @@
 import InforIcon from "../../assets/InforIcon";
 import ConnectForm from "./ConnectForm";
-import DeleteIcon from "@/assets/DeleteIcon";
+import {DeleteIcon} from "@/assets/ActionIcon";
 import { FormProvider } from "@/components/hook-form";
 import ConnectDialog from "@/sections/connect/ConnectDialog";
 import { ConnectCardStyle } from "@/sections/connect/style";

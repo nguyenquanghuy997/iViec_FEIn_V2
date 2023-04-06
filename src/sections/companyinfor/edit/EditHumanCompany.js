@@ -8,14 +8,13 @@ import {
   useUpdateCompanyHumanMutation,
   useUploadImageCompanyMutation,
 } from "@/sections/companyinfor/companyInforSlice";
-import { yupResolver } from "@hookform/resolvers/yup";
+// import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import * as Yup from "yup";
 import {DOMAIN_SERVER_API} from "@/config";
 
 const InputStyle = { width: "100%", minHeight: 40, background: "white" };
@@ -42,18 +41,18 @@ const EditHumanCompany = ({ onClose }) => {
   const defaultValues = {
     ...Data?.organizationHumans,
   };
-  const ProfileSchema = Yup.object().shape({
-    approvalProcessLevels: Yup.array().of(
-      Yup.object().shape({
-        avatar: Yup.string(),
-        name: Yup.string(),
-        description: Yup.string(),
-      })
-    ),
-  });
+  // const ProfileSchema = Yup.object().shape({
+  //   approvalProcessLevels: Yup.array().of(
+  //     Yup.object().shape({
+  //       avatar: Yup.string(),
+  //       name: Yup.string(),
+  //       description: Yup.string(),
+  //     })
+  //   ),
+  // });
 
   const methods = useForm({
-    resolver: yupResolver(ProfileSchema),
+    // resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
 
@@ -63,7 +62,7 @@ const EditHumanCompany = ({ onClose }) => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
   } = methods;
 
   const { fields, append, remove } = useFieldArray({
@@ -147,7 +146,7 @@ const EditHumanCompany = ({ onClose }) => {
               <Image
                 disabledEffect
                 visibleByDefault
-                src={image[index]?.uploaded_file || '/assets/placeholder.png'}
+                src={image[index]?.uploaded_file || "/assets/placeholder.png"}
                 id={index}
                 alt="image"
                 sx={{display: "flex", width: "35%", height: 254, px: 2}}
@@ -263,7 +262,7 @@ const EditHumanCompany = ({ onClose }) => {
         <LoadingButton
           type="submit"
           variant="contained"
-          loading={isSubmitting}
+          // loading={isSubmitting}
           sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
         >
           {"Lưu"}

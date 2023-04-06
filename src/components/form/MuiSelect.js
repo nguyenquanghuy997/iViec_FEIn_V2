@@ -39,6 +39,7 @@ const MuiSelect = forwardRef((
         sx = {},
         onChange,
         remoteUrl = null,
+        method = 'GET',
         useQueryFilters = {
            PageSize: 20,
         },
@@ -116,7 +117,10 @@ const MuiSelect = forwardRef((
                 data: { items, totalPage: resTotalPage } = { items: [], totalPage: 1 }
             } = await axiosInstance({
                 url: remoteUrl,
-                method: 'GET',
+                method: method,
+                data: {
+                    ...filters
+                },
                 params: {
                     ...filters,
                 },

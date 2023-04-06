@@ -82,7 +82,7 @@ export default function SelectAutoCompleteDS(props) {
         MenuProps={{ autoFocus: false, classes: { paper: classes.paper } }}
         labelId="search-select-label"
         id="search-select"
-        value={selectedOption?.name ? selectedOption?.name : ""}
+        value={selectedOption?.name ? selectedOption.name : ""}
         displayEmpty
         onChange={onChange}
         renderValue={
