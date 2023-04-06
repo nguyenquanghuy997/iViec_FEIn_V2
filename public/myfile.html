@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body, #meet {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="meet"></div>
+<script src="https://update.onmeeting.com.vn/lib/meeting-api.js"></script>
+<script>
+    
+    const openMeeting = async () => {
+        const result = await $onmeetingApi.init({
+            publicKey: "iviec", // Public key được OnMeeting cung cấp
+            accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdmF0YXIiOiIiLCJEaXNwbGF5TmFtZSI6Ik5ndXnhu4VuIFRow6BuaCBIxrBuZyIsIkVtYWlsIjoiIiwiUm9sZSI6MSwiUm9vbU5hbWUiOiJtZWV0aW5nIiwiVXNlckppZCI6IiJ9.DD_QdhV6OVvPn-LxfL_wQ2rR0RKVHP15z7TJeJoKKsw",
+            parentNode: document.querySelector('#meet'),
+            width: "100%",
+            height: "100%",
+            lang: "vi"
+        });
+
+        console.log(result);
+    };
+
+    openMeeting();
+
+</script>
+</body>
+</html>
