@@ -1,17 +1,24 @@
+import EmptyIcon from "@/assets/EmptyIcon";
 import { Text, View } from "@/components/FlexStyled";
 import Page from "@/components/Page";
 import PageWrapper from "@/components/PageWrapper";
-import SvgIcon from "@/components/SvgIcon";
 import { PAGES } from "@/config";
+import { useDebounce } from "@/hooks/useDebounce";
 import SettingLayout from "@/layouts/setting";
-// import {
-//   PipelineFormModal,
-//   PipelineItem,
-//   // useGetAllReviewFormMutation,
-// } from "@/sections/pipeline";
-import { QuestionAddModal } from "@/sections/question";
+import ActiveModal from "@/sections/emailform/component/ActiveModal";
+import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
+import {
+  useLazyGetQuestionGroupQuery,
+  useRemoveQuestionGroupMutation,
+  useUpdateActiveQuestionGroupMutation,
+} from "@/sections/exam/ExamSlice";
+import QuestionGalleryBottomNav from "@/sections/exam/components/QuestionGalleryBottomNav";
+import QuestionGalleryHeader from "@/sections/exam/components/QuestionGalleryHeader";
+import QuestionGalleryItem from "@/sections/exam/components/QuestionGalleryItem";
 import { getRolesByPage } from "@/utils/role";
-import {  useState } from "react";
+import { CircularProgress } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 Setting.getLayout = function getLayout({ roles = [] }, page) {
   return <SettingLayout roles={roles}>{page}</SettingLayout>;
@@ -26,71 +33,160 @@ export async function getStaticProps() {
 }
 
 export default function Setting() {
-  // ref
-  // const refRequest = useRef({});
-
   // state
-  const [showForm, setShowForm] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
+  const [listSelected, setListSelected] = useState([]);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showConfirmSwitchActive, setShowConfirmSwitchActive] = useState(false);
 
   // api
-  // const [fetchData] = useGetAllReviewFormMutation();
+  const [getQuestionGroup, { isLoading, data: { items = [] } = {} }] =
+    useLazyGetQuestionGroupQuery();
+  const list = Array.isArray(items) ? items : [];
+  const [updateActiveQuestionGroup] = useUpdateActiveQuestionGroupMutation();
+  const [removeQuestionGroup] = useRemoveQuestionGroupMutation();
 
-  const refreshData = () => {
-    // fetchData(refRequest.current).unwrap();
+  // variable
+  const isMulti = !currentItem && !!listSelected.length;
+  const { name = "", isActive } =
+    (isMulti
+      ? { ...list.find((i) => i.id === listSelected[0]), name: "" }
+      : currentItem) || {};
+
+  // form
+  const methods = useForm({
+    mode: "onChange",
+    defaultValues: {
+      searchKey: "",
+    },
+  });
+  const searchKey = useDebounce(methods.watch("searchKey"), 500);
+
+  // callback
+  const onCloseConfirmDelete = () => {
+    setCurrentItem(null);
+    setShowConfirmDelete(false);
   };
+
+  const onCloseActiveModal = () => {
+    setCurrentItem(null);
+    setShowConfirmSwitchActive(false);
+  };
+
+  const onHandleFinish = () => {
+    setListSelected([]);
+    onCloseActiveModal();
+    onCloseConfirmDelete();
+    getQuestionGroup({ searchKey });
+  };
+
+  // handle
+  const handleDelete = async () => {
+    await removeQuestionGroup({
+      ids: isMulti ? listSelected : [currentItem.id],
+    });
+    onHandleFinish();
+  };
+
+  const handleActive = async () => {
+    await updateActiveQuestionGroup({
+      ids: isMulti ? listSelected : [currentItem.id],
+      isActive: !isActive,
+    });
+    onHandleFinish();
+  };
+
+  // render
+  const renderItem = (data) => {
+    const { id } = data;
+    const isSelected = listSelected.includes(id);
+
+    const pressCheckbox = () => {
+      setListSelected((l) =>
+        isSelected ? l.filter((i) => i !== id) : [...l, id]
+      );
+    };
+
+    return (
+      <QuestionGalleryItem
+        data={data}
+        isSelected={isSelected}
+        pressCheckbox={pressCheckbox}
+        setCurrentItem={setCurrentItem}
+        setShowConfirmDelete={setShowConfirmDelete}
+        setShowConfirmSwitchActive={setShowConfirmSwitchActive}
+      />
+    );
+  };
+
+  // effect
+  useEffect(() => {
+    getQuestionGroup({ searchKey });
+  }, [searchKey]);
 
   return (
     <PageWrapper title={"Kho đề thi doanh nghiệp"}>
       <Page>
-        {/* header */}
-        <View
-          flexRow
-          atCenter
-          ph={24}
-          pv={16}
-          bgColor={"#fff"}
-          boxShadow={"inset 0px -1px 0px #DBE6EB"}
-        >
-          {/* title */}
-          <Text fontSize={22} fontWeight={"600"}>
-            {"Kho đề thi doanh nghiệp"}
-          </Text>
-          <View flex1 />
+        {/* title */}
+        <Text fontSize={20} fontWeight={"700"}>
+          {"Danh sách nhóm câu hỏi"}
+        </Text>
 
-          {/* button add */}
-          <View
-            flexRow
-            atCenter
-            pv={8}
-            ph={12}
-            borderRadius={4}
-            bgColor={"#01B6A7"}
-            onPress={() => setShowForm(true)}
-          >
-            <SvgIcon>
-              {
-                '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.9167 9H3.58333C3.26444 9 3 8.66 3 8.25C3 7.84 3.26444 7.5 3.58333 7.5H12.9167C13.2356 7.5 13.5 7.84 13.5 8.25C13.5 8.66 13.2356 9 12.9167 9Z" fill="white"/><path d="M8.24994 13.5C7.83994 13.5 7.49994 13.2356 7.49994 12.9167V3.58333C7.49994 3.26444 7.83994 3 8.24994 3C8.65994 3 8.99994 3.26444 8.99994 3.58333V12.9167C8.99994 13.2356 8.65994 13.5 8.24994 13.5Z" fill="white"/></svg>'
-              }
-            </SvgIcon>
+        <QuestionGalleryHeader
+          methods={methods}
+          handleSubmit={methods.handleSubmit}
+        />
 
-            <Text
-              ml={12}
-              color={"#fff"}
-              fontSize={15}
-              lineHeight={20 / 15}
-              fontWeight={"600"}
-            >
-              {"Thêm quy trình"}
-            </Text>
-          </View>
+        <View flex1>
+          {list.length ? (
+            list.map(renderItem)
+          ) : (
+            <View contentCenter pt={64}>
+              {isLoading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <EmptyIcon />
+                  <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
+                    {"Hiện chưa có nhóm câu hỏi nào."}
+                  </Text>
+                </>
+              )}
+            </View>
+          )}
         </View>
-        {/* table option */}
-        {/* <PipelineItem /> */}
 
-        <QuestionAddModal
-          show={showForm}
-          setShow={setShowForm}
-          onRefreshData={refreshData}
+        <QuestionGalleryBottomNav
+          list={list}
+          listSelected={listSelected}
+          setListSelected={setListSelected}
+          setShowConfirmDelete={setShowConfirmDelete}
+          setShowConfirmSwitchActive={setShowConfirmSwitchActive}
+        />
+
+        <ConfirmModal
+          confirmDelete={showConfirmDelete}
+          title="Xác nhận xóa nhóm câu hỏi"
+          subtitle={`Bạn có chắc chắn muốn xóa nhóm câu hỏi ${name}`.trim()}
+          onSubmit={handleDelete}
+          onCloseConfirmDelete={onCloseConfirmDelete}
+        />
+
+        <ActiveModal
+          item={{ isActive }}
+          isOpenActive={showConfirmSwitchActive}
+          title={
+            isActive
+              ? "Tắt trạng thái hoạt động cho nhóm câu hỏi"
+              : "Bật trạng thái hoạt động cho nhóm câu hỏi"
+          }
+          subtitle={
+            isActive
+              ? `Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi ${name}`.trim()
+              : `Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi ${name}`.trim()
+          }
+          onSubmit={handleActive}
+          onCloseActiveModal={onCloseActiveModal}
         />
       </Page>
     </PageWrapper>
