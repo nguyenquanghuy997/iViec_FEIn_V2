@@ -126,7 +126,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         name: d.name,
         recruitmentId: d.recruitmentId,
         recruitmentPipelineStateId: d.recruitmentPipelineStateId,
-        // reviewFormId: d.reviewFormId,
+        reviewFormId: d.reviewFormId,
         interviewType: d.interviewType,
         onlineInterviewAddress: d.onlineInterviewAddress,
         note: d?.note,
@@ -204,7 +204,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   //   setValue("isSendMailApplicant", body.isSendMailApplicant);
   //   setValue("bookingCalendarGroups", body.bookingCalendarGroups);
   // }, [isEditMode, data, preview]);
-
+console.log(watchPipelineStep,'lok')
   const list = () => (
     <BoxInnerStyle>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -243,6 +243,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
                 <PersonalInterview
                   watchStep={watchStep}
                   watchType={watchInterviewType}
+                  watchPipe ={watchPipelineStep}
                 />
               </Box>
             </Grid>
