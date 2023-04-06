@@ -12,6 +12,7 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {get, isEmpty} from "lodash";
 import AntdTextArea from "@/components/form/AntdTextArea";
 import {AddIcon} from "@/assets/ActionIcon";
+import HelperText from "@/components/BaseComponents/HelperText";
 
 const LIST_PIPELINE = [
   {description: "", organizationProfilePipelineType: 0, type: 0, isFixed: true, isOpen: true},
@@ -27,32 +28,49 @@ const EditHirePipeline = ({data, onClose}) => {
 
   const [updatePipeline] = useUpdateCompanyPipelineMutation();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    const dataVisiblePipeLine = pipeLineState.filter(item => item.isFixed || item.isOpen);
-    const res = {
-      organizationId: data?.id,
-      organizationProfilePipelines: dataVisiblePipeLine
-    };
-    try {
-      await updatePipeline(res).unwrap();
-      enqueueSnackbar("Chỉnh sửa thông tin Quy trình tuyển dụng thành công!", {
-        autoHideDuration: 2000,
-      });
-      onClose();
-    } catch (err) {
-      enqueueSnackbar('Chỉnh sửa thông tin Quy trình tuyển dụng không thành công!', {
-        autoHideDuration: 1000,
-        variant: "error",
-      });
-      throw err;
+  useEffect(() => {
+    if (!data) return;
+    const organizationProfilePipelines = get(data, 'organizationProfilePipelines');
+    if (isEmpty(organizationProfilePipelines)) {
+      setPipeLineState(LIST_PIPELINE);
+    } else {
+      setPipeLineState(LIST_PIPELINE.reduce((acc, curr) => {
+        const match = organizationProfilePipelines?.find((item) => item.type === curr.organizationProfilePipelineType);
+        if (match) {
+          acc.push({
+            ...match,
+            organizationProfilePipelineType: match.type,
+            isOpen: true,
+            error: { description: '' }
+          });
+        } else {
+          acc.push({
+            ...curr,
+            error: { description: '' }
+          });
+        }
+        return acc;
+      }, []));
     }
-  };
+  }, [JSON.stringify(data)]);
 
   const handleChange = (index, event) => {
-    let newPipeLineState = [...pipeLineState];
-    newPipeLineState[index][event.target.name] = event.target.value;
-    setPipeLineState(newPipeLineState);
+    // let newPipeLineState = [...pipeLineState];
+    // newPipeLineState[index][event.target.name] = event.target.value;
+    // setPipeLineState(newPipeLineState);
+    setPipeLineState((prev) => {
+      return prev.map((key, i) => {
+        if (i !== index) return key;
+        return {
+          ...key,
+          [event.target.name]: event.target.value,
+          error: {
+            ...key.error,
+            [event.target.name]: event.target.value.length > 0 ? null : 'Mô tả không được bỏ trống',
+          },
+        };
+      });
+    });
   }
 
   const addPipeline = (type) => {
@@ -72,30 +90,42 @@ const EditHirePipeline = ({data, onClose}) => {
     setPipeLineState(newPipeLine);
   };
 
-  useEffect(() => {
-    if (!data) return;
-    const organizationProfilePipelines = get(data, 'organizationProfilePipelines');
-
-    if (isEmpty(organizationProfilePipelines)) {
-      setPipeLineState(LIST_PIPELINE);
-    } else {
-      setPipeLineState(LIST_PIPELINE.reduce((acc, curr) => {
-        const match = organizationProfilePipelines?.find((item) => item.type === curr.organizationProfilePipelineType);
-        if (match) {
-          acc.push({
-            ...match,
-            organizationProfilePipelineType: match.type,
-            isOpen: true
-          });
-        } else {
-          acc.push(curr);
+  const prevIsValid = () => {
+    const someEmpty = pipeLineState.filter(item => item.isFixed || item.isOpen).some((pipeLine) => pipeLine.description === '');
+    if (someEmpty) {
+      pipeLineState.map((key, index) => {
+        const allPrev = [...pipeLineState];
+        if (pipeLineState[index].description === '') {
+          allPrev[index].error.description = 'Mô tả không được bỏ trống';
         }
-        return acc;
-      }, []));
+        setPipeLineState(allPrev);
+      });
     }
+    return !someEmpty;
+  };
 
-
-  }, [JSON.stringify(data)]);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!prevIsValid()) return;
+    const dataVisiblePipeLine = pipeLineState.filter(item => item.isFixed || item.isOpen);
+    const res = {
+      organizationId: data?.id,
+      organizationProfilePipelines: dataVisiblePipeLine
+    };
+    try {
+      await updatePipeline(res).unwrap();
+      enqueueSnackbar("Chỉnh sửa thông tin Quy trình tuyển dụng thành công!", {
+        autoHideDuration: 2000,
+      });
+      onClose();
+    } catch (err) {
+      enqueueSnackbar('Chỉnh sửa thông tin Quy trình tuyển dụng không thành công!', {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+      throw err;
+    }
+  };
 
   return (
       <form onSubmit={onSubmit}>
@@ -123,9 +153,10 @@ const EditHirePipeline = ({data, onClose}) => {
                         onChange={(e) => handleChange(index, e)}
                         name={'description'}
                     />
+                    {pipeline.error?.description && <HelperText errorText={pipeline.error?.description} />}
                   </View>
               )
-            } else if (pipeline.organizationProfilePipelineType === 1 || pipeline.organizationProfilePipelineType === 2) {
+            } else {
               if (pipeline.isOpen) {
                 return (
                     <View key={index} mb={24} p={24} style={{background: style.BG_GRAY}}>
@@ -148,6 +179,7 @@ const EditHirePipeline = ({data, onClose}) => {
                           onChange={(e) => handleChange(index, e)}
                           name={'description'}
                       />
+                      {pipeline.error?.description && <HelperText errorText={pipeline.error?.description} />}
                     </View>
                 )
               } else {
@@ -180,31 +212,6 @@ const EditHirePipeline = ({data, onClose}) => {
                     </View>
                 )
               }
-            } else {
-              return (
-                  <View key={index} mb={24} p={24} style={{background: style.BG_GRAY}}>
-                    <Box key={index} sx={{
-                      border: '1px dashed #A2AAB7',
-                      padding: '12px 24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                      <Stack>
-                        <Typography sx={{fontSize: 14, fontWeight: 600, color: '#172B4D'}}>Thi tuyển</Typography>
-                        <Typography sx={{fontSize: 13, fontWeight: 400, color: '#5C6A82'}}>Không hiển thị</Typography>
-                      </Stack>
-                      <Box>
-                        <MuiButton
-                            title={"Thêm"}
-                            onClick={() => addPipeline(index)}
-                            startIcon={<AddIcon/>}
-                            sx={{height: 30}}
-                        />
-                      </Box>
-                    </Box>
-                  </View>
-              )
             }
           })}
         </Box>

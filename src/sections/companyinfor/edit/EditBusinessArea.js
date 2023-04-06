@@ -1,4 +1,4 @@
-import EditUpload from "../edit/EditUpload";
+import EditUpload from "./EditUpload";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import {TextAreaDS} from "@/components/DesignSystem";
 import {View} from "@/components/DesignSystem/FlexStyled";
