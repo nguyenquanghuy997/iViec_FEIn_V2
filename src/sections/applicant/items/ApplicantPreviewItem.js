@@ -1,12 +1,11 @@
 //import { RejectApplicantModal } from "../modals";
 import {
-  useGetApplicantByIdMutation,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useGetApplicantReviewFormQuery,
+  useGetFetchApplicantByIdMutation,
   useGetRecruitmentsByApplicantQuery,
 } from "../ApplicantFormSlice";
-import { RejectApplicantModal } from "../modals";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
@@ -234,7 +233,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
   const [fetchDataApplicant, { data: data = [] }] =
-  useGetApplicantByIdMutation();
+  useGetFetchApplicantByIdMutation();
   const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
@@ -248,7 +247,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
   );
 
   const [selectedOption, setSelectedOption] = useState();
-  const [rejectApplicant, setRejectApplicant] = useState(false);
+  // const [rejectApplicant, setRejectApplicant] = useState(false);
   const [ownerName, setOwnerName] = useState();
 
   useEffect(() => {
@@ -392,7 +391,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                               />
                             }
                           />
-                          <ButtonDS
+                          {/* <ButtonDS
                             type="submit"
                             sx={{
                               padding: "8px",
@@ -414,7 +413,7 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                                 color="#D32F2F"
                               />
                             }
-                          />
+                          /> */}
                         </Grid>
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
@@ -463,13 +462,13 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
                 </Grid>
               </CardContent>
 
-              <RejectApplicantModal
+              {/* <RejectApplicantModal
                 applicantId={data?.id}
                 recruimentId={selectedOption?.id}
                 stage={pipelines}
                 show={rejectApplicant}
                 setShow={setRejectApplicant}
-              />
+              /> */}
             </Card>
           </Grid>
         </Grid>
