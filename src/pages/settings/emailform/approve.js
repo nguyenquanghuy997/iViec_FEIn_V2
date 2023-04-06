@@ -1,5 +1,4 @@
-import {getRolesByPage} from "@/utils/role";
-import {PAGES} from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
 import {useState} from "react";
 import Page from "@/components/Page";
@@ -12,9 +11,9 @@ import FormModal from "@/sections/emailform/component/FormModal";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 
-NotifyApprove.getLayout = function getLayout({roles = []}, page) {
+NotifyApprove.getLayout = function getLayout(pageProps, page) {
   return (
-      <SettingLayout roles={roles}>
+      <SettingLayout permissions={PERMISSION_PAGES.approveOfferTemplate} {...pageProps}>
         {page}
       </SettingLayout>
   );
@@ -103,14 +102,6 @@ function NotifyApprove() {
         />}
       </Page>
   )
-}
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
 }
 
 export default NotifyApprove;

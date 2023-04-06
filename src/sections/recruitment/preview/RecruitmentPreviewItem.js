@@ -260,6 +260,7 @@ function RecruitmentPreviewItem() {
   const [modelApplication, setModelApplication] = useState({
     id: undefined,
     stage: undefined,
+    stageResult: undefined,
     recruitmentId: recruitmentId,
     recruitmentTitle: undefined
   });

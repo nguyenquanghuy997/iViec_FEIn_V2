@@ -1,6 +1,5 @@
 import {useState} from "react";
-import {getRolesByPage} from "@/utils/role";
-import {PAGES} from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
 import {Box} from "@mui/material";
 import FormHeader from "@/sections/emailform/component/FormHeader";
@@ -12,9 +11,9 @@ import FormModal from "@/sections/emailform/component/FormModal";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 
-Account.getLayout = function getLayout({roles = []}, page) {
+Account.getLayout = function getLayout(pageProps, page) {
   return (
-      <SettingLayout roles={roles}>
+      <SettingLayout permissions={PERMISSION_PAGES.emailTemplate} {...pageProps}>
         {page}
       </SettingLayout>
   );
@@ -139,14 +138,6 @@ function Account() {
         />}
       </Page>
   )
-}
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
 }
 
 export default Account;

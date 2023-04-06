@@ -1,31 +1,40 @@
-import {ButtonDS, TextAreaDS} from "@/components/DesignSystem";
-import {Text, View} from "@/components/DesignSystem/FlexStyled";
+import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
-import {RHFTextField} from "@/components/hook-form";
-import {Label} from "@/components/hook-form/style";
-import {ViewModel} from "@/utils/cssStyles";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {Avatar, CircularProgress, Divider, Grid, Modal, Typography} from "@mui/material";
-import {useSnackbar} from "notistack";
-import React, {Suspense, useEffect, useState} from "react";
-import {FormProvider, useForm} from "react-hook-form";
+import { RHFTextField } from "@/components/hook-form";
+import { Label } from "@/components/hook-form/style";
+import { ViewModel } from "@/utils/cssStyles";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Avatar, CircularProgress, Divider, Grid, Modal, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
+import React, { Fragment, Suspense, useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {getExtension, phoneRegExp} from "@/utils/function";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
+import { getExtension, phoneRegExp } from "@/utils/function";
 import UploadAvatarApplicant from "@/components/upload/UploadAvatarApplicant";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import {LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES} from "@/utils/formatString";
-import {useCreateApplicantRecruitmentMutation} from "@/sections/recruitment";
-import {useGetApplicantByIdQuery, useUpdateApplicantMutation} from "@/sections/applicant";
-import {DOMAIN_SERVER_API} from "@/config";
+import { LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES } from "@/utils/formatString";
+import {
+  useCreateApplicantRecruitmentMutation,
+  useGetApplicantRecruitmentQuery,
+  useUploadFileApplicantMutation,
+  useUploadFileApplicantRecruitmentMutation
+} from "@/sections/recruitment";
+import { ApplicantFormSlice, useGetApplicantByIdQuery, useUpdateApplicantMutation } from "@/sections/applicant";
 import UploadFileDragAndDrop from "@/components/upload/UploadFileDragAndDrop";
+import { dispatch } from "@/redux/store";
+import { getFileUrl } from "@/utils/helper";
 
 const defaultValues = {
+  id: undefined,
   recruitmentId: undefined,
   recruitmentPipelineStageId: undefined,
+  pipelineStateResultType: undefined,
   fullName: undefined,
   portraitImage: undefined,
   cvFile: undefined,
+  cvFileName: undefined,
   dateOfBirth: undefined,
   email: undefined,
   phoneNumber: undefined,
@@ -58,20 +67,29 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     // api
     const [addForm] = useCreateApplicantRecruitmentMutation();
     const [updateForm] = useUpdateApplicantMutation();
+    const [uploadFile] = useUploadFileApplicantMutation();
+    const [uploadFileApplicantRecruitment] = useUploadFileApplicantRecruitmentMutation();
     let {data: preview = {}} = useGetApplicantByIdQuery({applicantId: data?.id}, {skip: !data?.id});
-    const isLoading = isEditMode && !preview.id;
+    let {data: extendData = null} = useGetApplicantRecruitmentQuery({
+      applicantId: data?.id,
+      recruitmentId: data?.recruitmentId
+    }, {skip: !(data?.id && data?.recruitmentId)});
+    const isLoading = isEditMode && !preview?.id && !extendData?.id;
     // form
     const Schema = Yup.object().shape({
+      id: Yup.string().nullable(),
       recruitmentId: Yup.string(),
       recruitmentTitle: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
-      recruitmentPipelineStageId: Yup.string(),
+      recruitmentPipelineStageId: Yup.string().nullable(),
+      pipelineStateResultType: Yup.string().nullable(),
       fullName: Yup.string().max(50, "Họ tên không quá 50 ký tự").required("Chưa nhập họ tên"),
       portraitImage: Yup.string(),
       email: Yup.string().email("Email cần nhập đúng định dạng").required("Chưa nhập email"),
       phoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, 'Số điện thoại không đúng định dạng'),
       weight: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       height: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
-      cvFile: Yup.string(),
+      cvFile: Yup.string().nullable(),
+      cvFileName: Yup.string().nullable(),
       yearOfExperience: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
       experience: Yup.string(),
       identityNumber: Yup.string(),
@@ -86,105 +104,126 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
       }),
       rawApplicantSkills: Yup.string(),
     });
-
+    
     const methods = useForm({
       defaultValues,
       resolver: yupResolver(Schema),
     });
-
+    
     const {
       reset,
-      // control,
       watch,
       setValue,
       handleSubmit,
       formState: {isSubmitting},
     } = methods;
-
-    // if (typeof window !== "undefined") {
-    //   lng = localStorage.getItem("i18nextLng") || defaultLang.value;
-    // }
-
-
     const pressHide = () => {
       reset();
       setAvatar(undefined);
       setCV(undefined);
-      setData(data => ({...data, stage: null}));
+      setData(data => ({...data, id: undefined, stage: undefined, stageResult: undefined}));
       setShow(false);
     };
     const {enqueueSnackbar} = useSnackbar();
-    const pressSave = handleSubmit(async (e) => {
-      let body = e;
+    
+    const pressSave = handleSubmit(async (body) => {
+      let pathFile = "";
       if (isEditMode) {
-        try {
-          await updateForm(body).unwrap();
+        if (cv && cv.length > 0) {
+          const file = new FormData();
+          file.append("CvFile", cv[0].originFileObj);
+          file.append("ApplicantRecruitmentId", extendData.id);
+          pathFile = await uploadFileApplicantRecruitment(file).unwrap();
+        }
+        await updateForm({...body, cvFile: pathFile}).unwrap()
+        .then(() => {
           enqueueSnackbar("Thực hiện thành công!", {
             autoHideDuration: 2000,
           });
+          dispatch(ApplicantFormSlice.util.invalidateTags([
+            {type: 'GetListApplicantPipeline'},
+            {type: 'GetListsApplicants'}
+          ]));
           pressHide();
-        } catch (err) {
+        }).catch(() => {
           enqueueSnackbar("Thực hiện thất bại!", {
             autoHideDuration: 1000,
             variant: "error",
           });
-        }
+        });
       } else {
-        try {
-          await addForm(body).unwrap();
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 1000,
-          });
-          pressHide();
-        } catch (err) {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
+        if (cv && cv.length > 0) {
+          const file = new FormData();
+          file.append("File", cv[0].originFileObj)
+          pathFile = await uploadFile(file).unwrap();
         }
+        await addForm({...body, cvFile: pathFile}).unwrap()
+        .then(() => {
+          enqueueSnackbar("Thực hiện thành công!", {
+            autoHideDuration: 2000,
+          });
+          dispatch(ApplicantFormSlice.util.invalidateTags([
+            {type: 'GetListApplicantPipeline'},
+            {type: 'GetListsApplicants'}
+          ]));
+          pressHide();
+        }).catch(() => {
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 2000,
+            variant: "error",
+          })
+        });
       }
     });
-
+    
     // effect
     useEffect(() => {
       if (!show) return;
+      setValue("id", data.id);
       setValue("recruitmentId", data.recruitmentId);
       setValue("recruitmentTitle", data.recruitmentTitle);
-      setValue("RecruitmentPipelineStateId", data.stage);
+      setValue("recruitmentPipelineStateId", data.stage);
+      setValue("pipelineStateResultType", data.stageResult);
     }, [show]);
-
+    
     useEffect(() => {
-      if (!data?.id) return;
-      setValue("fullName", preview.fullName);
-      setValue("portraitImage", preview.portraitImage);
-      setValue("phoneNumber", preview.phoneNumber);
-      setValue("email", preview.email);
-      setValue("weight", preview.weight);
-      setValue("height", preview.height);
-      setValue("cvFile", preview.cvFile);
-      setValue("yearOfExperience", preview.yearOfExperience);
-      setValue("experience", preview.experience);
-      setValue("identityNumber", preview.identityNumber);
-      setValue("education", preview.education);
-      setValue("sex", preview.sex);
-      setValue("maritalStatus", preview.maritalStatus);
-      setValue("homeTower.address", preview.homeTower?.address);
-      setValue("livingAddress.address", preview.livingAddress?.address);
-      setValue("rawApplicantSkills", preview.rawApplicantSkills);
-    }, [isEditMode, data, preview]);
-
+      if (!preview?.id) return;
+      setValue("fullName", preview.fullName ?? undefined);
+      setValue("portraitImage", preview.portraitImage ?? undefined);
+      setValue("phoneNumber", preview.phoneNumber ?? undefined);
+      setValue("email", preview.email ?? undefined);
+      setValue("weight", preview.weight ?? undefined);
+      setValue("height", preview.height ?? undefined);
+      setValue("yearOfExperience", preview.yearOfExperience ?? undefined);
+      setValue("experience", preview.experience ?? undefined);
+      setValue("identityNumber", preview.identityNumber ?? undefined);
+      setValue("education", preview.education ?? undefined);
+      setValue("sex", preview.sex ?? undefined);
+      setValue("maritalStatus", preview.maritalStatus ?? undefined);
+      setValue("homeTower.address", preview.homeTower?.address ?? undefined);
+      setValue("livingAddress.address", preview.livingAddress?.address ?? undefined);
+      setValue("rawApplicantSkills", preview.rawApplicantSkills ?? undefined);
+    }, [preview]);
+    
+    useEffect(() => {
+      if (!extendData?.id) return;
+      setValue("cvFile", extendData?.applicantCvPath);
+      setValue("cvFileName", extendData?.applicantCvPath);
+    }, [extendData])
+    
     useEffect(() => {
       if (avatar && avatar.length > 0) {
-        setValue("portraitImage", avatar[0]?.response);
+        setValue("portraitImage", avatar[0].response);
       }
-    }, [avatar, cv]);
-
+    }, [avatar]);
+    
     useEffect(() => {
       if (cv && cv.length > 0) {
-        setValue("cvFile", cv[0]?.response);
+        setValue("cvFile", URL.createObjectURL(cv[0].originFileObj));
+        setValue("cvFileName", cv[0].name);
       }
     }, [cv]);
-
+    
     return (
       <FormProvider {...methods}>
         <Modal
@@ -192,53 +231,56 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
           onClose={pressHide}
           sx={{display: "flex", justifyContent: "flex-end"}}
         >
-          <ViewModel sx={{width: "unset", height: "100%"}}>
+          <ViewModel sx={{width: "unset", height: "100%", justifyContent: "space-between"}}>
             {/* header */}
-            <View
-              flexrow="true"
-              atcenter="center"
-              pv={12}
-              ph={24}
-              bgcolor={"#FDFDFD"}
-            >
-              <Text flex="true" fontsize={16} fontweight={"600"}>
-                {isEditMode
-                  ? `Chỉnh sửa ứng viên`
-                  : `Thêm mới ứng viên`}
-              </Text>
-              <ButtonDS
-                type="submit"
-                sx={{
-                  backgroundColor: "#fff",
-                  boxShadow: "none",
-                  ":hover": {
-                    backgroundColor: "#EFF3F7",
-                  },
-                  textTransform: "none",
-                  padding: "12px",
-                  minWidth: "unset",
-                }}
-                onClick={pressHide}
-                icon={
-                  <Iconify
-                    icon={"mi:close"}
-                    width={20}
-                    height={20}
-                    color="#5C6A82"
-                  />
-                }
-              />
+            <View>
+              <View
+                flexrow="true"
+                atcenter="center"
+                pv={12}
+                ph={24}
+                bgcolor={"#FDFDFD"}
+              >
+                <Text flex="true" fontsize={16} fontweight={"600"}>
+                  {isEditMode
+                    ? `Chỉnh sửa ứng viên`
+                    : `Thêm mới ứng viên`}
+                </Text>
+                <ButtonDS
+                  type="submit"
+                  sx={{
+                    backgroundColor: "#fff",
+                    boxShadow: "none",
+                    ":hover": {
+                      backgroundColor: "#EFF3F7",
+                    },
+                    textTransform: "none",
+                    padding: "12px",
+                    minWidth: "unset",
+                  }}
+                  onClick={pressHide}
+                  icon={
+                    <Iconify
+                      icon={"mi:close"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
+                    />
+                  }
+                />
+              </View>
+              <Divider/>
             </View>
-            <Divider/>
             {/* body */}
-            <View style={{minWidth: "600px", maxWidth: "1200px", height: "100%", overflowY: "auto"}}>
+            <View style={{minWidth: "600px", maxWidth: "1200px", overflow: 'hidden'}}>
               {isLoading ? (
                 <View flex="true" contentcenter="true">
                   <CircularProgress/>
                 </View>
               ) : (
-                <Grid container flexDirection={"row"} wrap={"nowrap"}>
-                  <Grid container sx={{width: "600px"}} flexDirection={"column"}>
+                <Grid container flexDirection={"row"} height={"100%"} flexWrap={"nowrap"} overflow={"hidden"}>
+                  <Grid container sx={{width: "600px", overflowY: "auto"}} height={"100%"} flexWrap={"nowrap"}
+                        flexDirection={"column"}>
                     <Grid item p={3}>
                       <Grid mb={3}>
                         <RHFTextField
@@ -252,8 +294,8 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       <Grid mb={3}>
                         <UploadFileDragAndDrop multiple={false} fileList={cv} setFileList={setCV}
                                                maxFile={1}
-                                               showUploadList={false} height={120}/>
-
+                                               showUploadList={false} height={120} autoUpload={false}/>
+                      
                       </Grid>
                       <Grid mb={3}>
                         <Grid flexDirection={"row"} mb={3}>
@@ -263,7 +305,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                         <Grid container alignItems={"center"}>
                           <Grid item mr={3}>
                             <Avatar sx={{width: 120, height: 120}}
-                                    src={DOMAIN_SERVER_API + "/File/GetFile?filePath=" + watch('portraitImage')}/>
+                                    src={getFileUrl(watch('portraitImage'))}/>
                           </Grid>
                           <UploadAvatarApplicant multiple={false} fileList={avatar} setFileList={setAvatar} maxFile={1}
                                                  showUploadList={false} accept={"image/png, image/gif, image/jpeg"}/>
@@ -299,7 +341,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       <Typography variant={"subtitle2"} color={"#5C6A82"}>KINH NGHIỆM LÀM VIỆC VÀ HỌC VẤN</Typography>
                     </Grid>
                     <Grid item p={3}>
-                      <Grid mb={3} xs={6} pr={"12px"}>
+                      <Grid item mb={3} xs={6} pr={"12px"}>
                         <RHFDropdown
                           title={"Số năm kinh nghiệm"}
                           options={LIST_EXPERIENCE_NUMBER}
@@ -403,7 +445,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {watch('cvFile') && <>
+                  {watch("cvFile") && <Fragment key={new Date().getTime()}>
                     <Divider orientation={"vertical"}/>
                     <Grid sx={{
                       minWidth: "580px",
@@ -411,17 +453,19 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                         overflowY: 'auto'
                       },
                     }}>
-                      <Suspense fallback={<div></div>}>
+                      <Suspense fallback={<View flex="true" contentcenter="true">
+                        <CircularProgress/>
+                      </View>}>
                         <FileViewer
-                          fileType={getExtension(watch('cvFile'))}
-                          filePath={"http://103.176.149.158:5001/api/File/GetFile?filePath=" + watch('cvFile')}/>
+                          fileType={getExtension(watch("cvFileName"))}
+                          filePath={getFileUrl(watch("cvFile"))}/>
                       </Suspense>
                     </Grid>
-                  </>}
+                  </Fragment>}
                 </Grid>
               )}
             </View>
-
+            
             {/* footer */}
             <View
               flexrow="true"

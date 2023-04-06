@@ -7,14 +7,17 @@ import {Upload} from "antd";
 const {Dragger} = Upload;
 
 export default function
-  UploadFileDragAndDrop({setFileList, maxFile, multiple, showUploadList, height = 80, accept}) {
+  UploadFileDragAndDrop({setFileList, maxFile, multiple, showUploadList, height = 80, accept, url = API_UPLOAD_FILE_APPLICANTS, autoUpload = true}) {
   const token = "Bearer " + localStorage.getItem("accessToken");
-
+  
   const props = {
     name: 'file',
-    action: DOMAIN_SERVER_API + API_UPLOAD_FILE_APPLICANTS,
+    action: DOMAIN_SERVER_API + url,
     headers: {Authorization: token},
+    beforeUpload: (() => autoUpload),
     onChange(info) {
+      if(!autoUpload) return setFileList(info.fileList);
+      
       const {status} = info.file;
       if (status !== 'uploading') {
         setFileList(info.fileList);

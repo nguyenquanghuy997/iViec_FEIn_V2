@@ -15,16 +15,19 @@ import {
 } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 
 const ApplicantBottomNav = ({
   selectedList,
   open,
   onClose,
-  setselectedList,
+  setSelectedList,
   itemSelected,
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+  const [showModelCreate, setShowModelCreate] = useState(false);
+  const [modelApplication, setModelApplication] = useState(undefined);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
@@ -32,11 +35,26 @@ const ApplicantBottomNav = ({
   };
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
-    setselectedList([]);
+    setSelectedList([]);
   };
-  // const handleOpenFormWithCurrentNode = () => {
-  //   onOpenForm();
-  // };
+  
+  useEffect(() => {
+    if (!showModelCreate) {
+      onCloseModel();
+    }
+  }, [showModelCreate])
+  
+  const handleOpenEditForm = () => {
+    setModelApplication(
+      {
+        ...modelApplication,
+        id: itemSelected[0].applicantId,
+        recruitmentId: itemSelected[0].recruitmentId,
+        recruitmentTitle: itemSelected[0].recruitmentName
+      });
+    setShowModelCreate(true);
+  }
+  
   const exportExcel = (data) => {
     const dataFormat = data?.map((applicant, index) => {
       return {
@@ -133,8 +151,12 @@ const ApplicantBottomNav = ({
                   href={
                     "applicant/" +
                     itemSelected[0]?.applicantId +
-                    "?or=" +
-                    itemSelected[0]?.organizationId
+                    "?co=" +
+                    itemSelected[0]?.correlationId +
+                    "&&or=" +
+                    itemSelected[0]?.organizationId +
+                    "&&re=" +
+                    itemSelected[0]?.recruitmentId
                   }
                   icon={
                     <Iconify
@@ -145,12 +167,12 @@ const ApplicantBottomNav = ({
                     />
                   }
                 />
-
+                
                 <ButtonIcon
                   sx={{
                     marginRight: "16px",
                   }}
-                  // onClick={() => handleOpenFormWithCurrentNode(organization)}
+                  onClick={() => handleOpenEditForm()}
                   icon={
                     <Iconify
                       icon={"ri:edit-2-fill"}
@@ -165,7 +187,6 @@ const ApplicantBottomNav = ({
                     marginRight: "16px",
                   }}
                   onClick={() => handleShowConfirmMultiple("tranferRe")}
-                  // onClick={() => exportExcel(itemSelected)}
                   icon={
                     <Iconify
                       icon={"ri:share-forward-2-fill"}
@@ -181,7 +202,6 @@ const ApplicantBottomNav = ({
               sx={{
                 marginRight: "16px",
               }}
-              // onClick={() => handleOpenFormWithCurrentNode(organization)}
               onClick={() => exportExcel(itemSelected)}
               icon={
                 <Iconify
@@ -193,7 +213,7 @@ const ApplicantBottomNav = ({
             />
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
               Đã chọn: {selectedList.length}
             </Typography>
             <Divider
@@ -218,7 +238,7 @@ const ApplicantBottomNav = ({
           </Box>
         </Box>
       </Content>
-
+      
       {showConfirmMultiple &&
         typeConfirmMultiple.includes("tranferPipeline") && (
           <ApplicantTransferPipelineModal
@@ -249,6 +269,9 @@ const ApplicantBottomNav = ({
           onClose={onCloseModel}
         />
       )}
+      
+      <RecruitmentApplicantCreate show={showModelCreate} setShow={setShowModelCreate} data={modelApplication}
+                                  setData={setModelApplication}/>
       {/* {showConfirmMultiple && typeConfirmMultiple.includes("reject") && (
         <RecruitmentAdRejectModal
           showConfirmMultiple={showConfirmMultiple}

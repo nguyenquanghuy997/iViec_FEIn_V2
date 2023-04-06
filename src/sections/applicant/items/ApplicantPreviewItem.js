@@ -4,8 +4,8 @@ import {
   useGetApplicantRecruitmentMutation,
   useGetApplicantReviewFormQuery,
   useGetRecruitmentsByApplicantQuery,
+  useLazyGetApplicantByIdQuery,
 } from "../ApplicantFormSlice";
-import { RejectApplicantModal } from "../modals";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
@@ -35,10 +35,10 @@ import {
 import { styled } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 
-function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
+function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelationId, RecruitmentId }) {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
-      ApplicantId,
+      ApplicantCorrelationId: ApplicantCorrelationId,
       OrganizationId,
     });
 
@@ -159,7 +159,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                 icon={"ph:user-focus-fill"}
                 width={20}
                 height={20}
-                color={reviewFormCriterias ? "fff":"#8A94A5"}
+                color={reviewFormCriterias ? "fff" : "#8A94A5"}
                 mr={1}
               />
             }
@@ -225,53 +225,64 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
   const { themeStretch } = useSettings();
 
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
+  // const { data: data } = useGetApplicantByIdQuery({
+  //   applicantId: ApplicantId,
+  // });
   const [fetchPipe, { data: pipelines = [], isSuccess }] =
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
+  const [fetchDataApplicant, { data: data = [] }] =
+  useLazyGetApplicantByIdQuery();
 
   const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
     },
-    { skip: pipelines && pipelines?.recruitmentPipelineStates?.filter(
-      (i) => i.id == pipelines.currentApplicantPipelineState && i.pipelineStateType == 3
-    ).length > 0 }
+    {
+      skip: !pipelines?.recruitmentPipelineStates?.length > 0
+    }
   );
 
   const [selectedOption, setSelectedOption] = useState();
-  const [rejectApplicant, setRejectApplicant] = useState(false);
+
   const [ownerName, setOwnerName] = useState();
 
   useEffect(() => {
     if (!isFetching) {
-      setSelectedOption(options[0]);
-      setOwnerName(options[0]?.ownerName?.trim());
+      const recruiment = options.filter(p => p.id == RecruitmentId)
+      setSelectedOption(recruiment[0]);
+      setOwnerName(recruiment[0]?.ownerName?.trim());
       fetchPipe({
-        ApplicantId,
-        RecruitmentId: options[0]?.id,
+        ApplicantId: recruiment[0]?.applicantId,
+        RecruitmentId: recruiment[0]?.id,
       }).unwrap();
       fetchData({
-        ApplicantId,
-        RecruitmentId: options[0]?.id,
+        ApplicantId: recruiment[0]?.applicantId,
+        RecruitmentId: recruiment[0]?.id,
         IsWithdrawHistory: true,
       }).unwrap();
+      fetchDataApplicant({
+        applicantId: recruiment[0]?.applicantId,
+      });
     }
   }, [isFetching]);
-
   const onChangeRecruiment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
     fetchPipe({
-      ApplicantId,
+      ApplicantId:e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
     }).unwrap();
     fetchData({
-      ApplicantId,
+      ApplicantId:e.target.value.applicantId,
       RecruitmentId: e.target.value.id,
       IsWithdrawHistory: true,
     }).unwrap();
+    fetchDataApplicant({
+      applicantId: e.target.value.applicantId,
+    });
   };
   return (
     <div>
@@ -335,9 +346,9 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                               background: "#E7E9ED",
                             },
                             "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
-                              {
-                                borderColor: "#E7E9ED",
-                              },
+                            {
+                              borderColor: "#E7E9ED",
+                            },
                           }}
                         />
                       ) : null}
@@ -378,7 +389,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                               />
                             }
                           />
-                          <ButtonDS
+                          {/* <ButtonDS
                             type="submit"
                             sx={{
                               padding: "8px",
@@ -400,7 +411,7 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                                 color="#D32F2F"
                               />
                             }
-                          />
+                          /> */}
                         </Grid>
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
@@ -449,13 +460,13 @@ function ApplicantPreviewItem({ data, ApplicantId, OrganizationId }) {
                 </Grid>
               </CardContent>
 
-              <RejectApplicantModal
+              {/* <RejectApplicantModal
                 applicantId={data?.id}
                 recruimentId={selectedOption?.id}
                 stage={pipelines}
                 show={rejectApplicant}
                 setShow={setRejectApplicant}
-              />
+              /> */}
             </Card>
           </Grid>
         </Grid>

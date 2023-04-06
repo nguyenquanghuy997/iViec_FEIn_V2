@@ -25,13 +25,13 @@ NavSectionHorizontal.propTypes = {
 }
 
 function NavSectionHorizontal({ navConfig }) {
-  const { checkAccessPermission } = useRole()
+  const { canAccess } = useRole()
   const navConfigBaseRole = useMemo(
     () =>
       navConfig.filter(({ items = [] }) =>
-        items.some(({ roles = [] }) => checkAccessPermission(roles))
+        items.some(({ permissions = [] }) => canAccess(permissions))
       ),
-    [checkAccessPermission, navConfig]
+    [navConfig]
   )
 
   return (
