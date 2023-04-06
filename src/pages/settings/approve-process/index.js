@@ -1,6 +1,5 @@
-import {PAGES} from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {getRolesByPage} from "@/utils/role";
 import {Container} from "@mui/material";
 import ApproveProcessCard from "@/sections/approve-process/ApproveProcessCard";
 import useSettings from "@/hooks/useSettings";
@@ -9,17 +8,14 @@ import Page from "@/components/Page";
 import PageWrapper from "@/components/PageWrapper";
 import {useGetAllApproveProcessQuery} from "@/sections/approve-process/ApproveProcessSlice";
 import React, {useEffect, useState} from "react";
-ApproveProcess.getLayout = function getLayout({roles = []}, page) {
-    return <SettingLayout roles={roles}>{page}</SettingLayout>;
+
+ApproveProcess.getLayout = function getLayout(pageProps, page) {
+    return <SettingLayout
+        permissions={PERMISSION_PAGES.approveProcess}
+        {...pageProps}
+    >{page}</SettingLayout>;
 };
 
-export async function getStaticProps() {
-    return {
-        props: {
-            roles: getRolesByPage(PAGES.Board),
-        },
-    };
-}
 export default function ApproveProcess() {
     const {data: {items: Data = []} = {}} = useGetAllApproveProcessQuery();
     const {themeStretch} = useSettings();

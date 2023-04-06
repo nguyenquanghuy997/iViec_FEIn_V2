@@ -71,7 +71,10 @@ function AuthProvider({ children }) {
           const user = await getUserInfoByToken(accessToken);
           setSession(accessToken);
 
-          const { role: permissions = [] } = jwtDecode(accessToken) || {};
+          let { role: permissions = [] } = jwtDecode(accessToken) || {};
+          if (!Array.isArray(permissions)) {
+            permissions = [permissions];
+          }
 
           dispatch({
             type: "INITIALIZE",
@@ -133,7 +136,10 @@ function AuthProvider({ children }) {
     });
     const response = await _postApi(API_LOGIN, data);
     const userData = await getUserInfoByToken(response.token);
-    const { role: permissions = [] } = jwtDecode(response.token) || {};
+    let { role: permissions = [] } = jwtDecode(response.token) || {};
+    if (!Array.isArray(permissions)) {
+      permissions = [permissions];
+    }
 
     setRememberMe(remember);
     setSession(response.token);

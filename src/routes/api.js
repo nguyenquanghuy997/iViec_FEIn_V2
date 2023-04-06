@@ -40,24 +40,6 @@ export const API_MEMBER_ACTIVITIES_USER_INFO = "/api/user";
 export const API_ADMIN_RECRUITMENT_PROGRESS = "/api/admin/card/recruitment";
 export const API_ADMIN_CALENDAR_INTERVIEW = "/api/admin/calendar/interview";
 export const API_ALL_SKILL = "/api/all/skill";
-export const API_ADMIN_SEARCH_CANDIDATE = "/api/admin/search/candidate";
-export const API_ADMIN_DETAIL_CANDIDATE = "/api/admin/candidate/detail";
-export const API_ADMIN_DOWNLOAD_CV_PDF = "/api/v1/download/pdf/private";
-export const API_ADMIN_PREVIEW_PDF_CANDIDATEJOB =
-  "/api/v1/admin/preview/pdf/candidateJob";
-export const API_ADMIN_LIST_NEW_APPLICANTS = "/api/admin/applicants/candidate";
-export const API_ASSIGNMENT_JOB = "/api/assignment/job";
-export const API_ASSIGN_LIST_USER = "/api/assign/list/user";
-export const API_CANDIDATE_JOB = "/api/candidate/job";
-export const API_LANES = "/api/lanes";
-export const API_SEARCH_SKILL = "/api/skill/admin/search";
-export const API_ADD_SKILL = "/api/skill";
-export const API_LOCATIONS = "/api/location";
-export const API_DOWNLOAD_JOB = "/api/download/job";
-export const API_HISTORY_JOB = "/api/history/job";
-export const API_CREATE_JOB = "/api/jobs";
-export const API_LIST_TAGS = "/api/v1/tags";
-export const API_JOB_REMOVE_ASSIGNMENT = "/api/remove/assignment";
 
 //auth
 export const API_REFRESH_TOKEN = "/api/refreshToken";
@@ -89,6 +71,7 @@ export const API_GET_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/Ge
 export const API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT = "/recruitment/Recruitment/GetRecruitmentPipelineStatesByRecruitment"; //List bước tuyển dụng
 export const API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES = "/applicant/ApplicantRecruitment/GetApplicantCurrentStateWithRecruitmentStates"; //List pipeline và trạng thái UV theo TTD
 export const API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE = "/applicant/ApplicantRecruitment/UpdateApplicantRecruitmentToNextState"; //Chuyển bước uv
+export const API_UPLOAD_FILE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/UploadApplicantRecruitmentCv";
 export const API_GET_APPLICANT_BY_PIPELINESTETEID ="/applicant/ApplicantRecruitment/GetApplicantByPipelineStateId"
 export const API_UPDATE_APPLICANT = "/applicant/Applicant/UpdateApplicant";
 

@@ -1,6 +1,6 @@
 import Page from "@/components/Page";
 import SvgIcon from "@/components/SvgIcon";
-import { PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import useSettings from "@/hooks/useSettings";
 import Layout from "@/layouts";
 import {
@@ -16,7 +16,6 @@ import {
   useReportConversionItemTableMutation,
   useReportConversionTableMutation,
 } from "@/sections/report/reportSlice";
-import { getRolesByPage } from "@/utils/role";
 import { Card, Container } from "@mui/material";
 import moment from "moment";
 import dynamic from "next/dynamic";
@@ -27,17 +26,9 @@ const Chart = dynamic(() => import("../../sections/report/chart2"), {
   ssr: false,
 });
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <Layout roles={roles}>{page}</Layout>;
+Setting.getLayout = function getLayout(pageProps, page) {
+  return <Layout permissions={PERMISSION_PAGES.report} {...pageProps}>{page}</Layout>;
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
 
 const TABLE_HEAD_PARENT = [
   { id: "report1", label: "Tin tuyển dụng", align: "left" },

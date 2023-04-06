@@ -4,6 +4,7 @@ import AuthGuard from "@/guards/AuthGurad";
 // components
 import DashboardLayout from "@/layouts/dashboard";
 import PropTypes from "prop-types";
+import { PERMISSION_GROUPS } from "@/config";
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
@@ -13,17 +14,20 @@ Layout.propTypes = {
 
 Layout.defaultProps = {
   variant: "dashboard",
-  permissions: ["ViewCandidate"],
+  permissions: [
+    ...PERMISSION_GROUPS.ACCESS_DASHBOARD,
+    ...PERMISSION_GROUPS.ACCESS_SETTINGS,
+  ],
 };
 
-export default function Layout({ variant = "dashboard", roles, children }) {
+export default function Layout({ variant = "dashboard", permissions, children }) {
   if (variant === "logoOnly") {
     return <LogoOnlyLayout> {children} </LogoOnlyLayout>;
   }
 
   return (
     <AuthGuard>
-      <DashboardLayout permissions={roles}>
+      <DashboardLayout permissions={permissions}>
         {children}
       </DashboardLayout>
     </AuthGuard>

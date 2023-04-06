@@ -1,25 +1,29 @@
 import { createContext, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import useAuth from '@/hooks/useAuth'
+import { PERMISSIONS } from '@/config'
 
-const RoleContext = createContext()
+const RoleContext = createContext({
+  canAccess: () => {},
+})
 
 const RoleProvider = ({ children }) => {
   const { permissions } = useAuth();
+  const AdminPermiss = PERMISSIONS.ADMINISTRATOR;
 
   const canAccess = useCallback((action) => {
-    if (!action) {
-      return false;
+    if (!action || permissions.includes(AdminPermiss)) {
+      return true;
     }
 
     if (!Array.isArray(action)) {
       action = [action];
     }
 
-    let hasPermiss = true;
+    let hasPermiss = false;
     action.map(ac => {
-      if (!permissions.includes(ac)) {
-        hasPermiss = false;
+      if (permissions.includes(ac)) {
+        hasPermiss = true;
       }
     });
 

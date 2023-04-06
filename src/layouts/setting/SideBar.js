@@ -31,13 +31,20 @@ SideBar.propTypes = {
 export default function SideBar({ navConfig, isCollapse = false, ...other }) {
   const { translate } = useLocales();
   const { canAccess } = useRole();
-  const navConfigBaseRole = useMemo(
-    () =>
-      navConfig.filter(({ items = [] }) =>
-        items.some(({ actions = [] }) => canAccess(actions))
-      ),
-    [navConfig]
-  );
+
+  const navConfigBaseRole = useMemo(() => {
+    let displayItems = [];
+    navConfig.map(group => {
+      let items = group.items?.filter(({ permissions = [] }) => canAccess(permissions));
+      if (items && items.length > 0) {
+        displayItems.push({
+          ...group,
+          items,
+        });
+      }
+    });
+    return displayItems;
+  }, [navConfig]);
 
   return (
     <Box {...other}>

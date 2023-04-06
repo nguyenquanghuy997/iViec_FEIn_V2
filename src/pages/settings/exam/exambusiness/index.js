@@ -2,7 +2,7 @@ import EmptyIcon from "@/assets/EmptyIcon";
 import { Text, View } from "@/components/FlexStyled";
 import Page from "@/components/Page";
 import PageWrapper from "@/components/PageWrapper";
-import { PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import { useDebounce } from "@/hooks/useDebounce";
 import SettingLayout from "@/layouts/setting";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
@@ -15,22 +15,17 @@ import {
 import QuestionGalleryBottomNav from "@/sections/exam/components/QuestionGalleryBottomNav";
 import QuestionGalleryHeader from "@/sections/exam/components/QuestionGalleryHeader";
 import QuestionGalleryItem from "@/sections/exam/components/QuestionGalleryItem";
-import { getRolesByPage } from "@/utils/role";
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <SettingLayout roles={roles}>{page}</SettingLayout>;
+Setting.getLayout = function getLayout(pageProps, page) {
+  return (
+    <SettingLayout permissions={PERMISSION_PAGES.exam} {...pageProps}>
+      {page}
+    </SettingLayout>
+  );
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
 
 export default function Setting() {
   // state

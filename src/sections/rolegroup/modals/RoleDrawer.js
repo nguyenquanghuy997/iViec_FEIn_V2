@@ -3,7 +3,7 @@ import RolegroupForm from '../RolegroupForm'
 import DrawerEditForm from "@/components/drawer-edit-form";
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
-import { pick as _pick } from 'lodash';
+import { pick as _pick, uniq as _uniq } from 'lodash';
 import { getErrorMessage } from "@/utils/helper";
 
 import {
@@ -41,8 +41,10 @@ export default function DrawerEdit({ selectedItem, onClose, ...props }) {
 
   const onSubmit = async (data, close) => {
     const { identityRoles = [] } = data;
-    const identityRoleIds = identityRoles.filter(ac => !!actionIds[ac])
-      .map(ac => actionIds[ac]);
+    const identityRoleIds = _uniq(
+      identityRoles.filter(ac => !!actionIds[ac])
+        .map(ac => actionIds[ac])
+    );
 
     const requestData = {
       ..._pick(data, ['id', 'name', 'description', 'isActivated']),

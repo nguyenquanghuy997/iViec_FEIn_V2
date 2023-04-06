@@ -8,7 +8,7 @@ import Tab from "@mui/material/Tab";
 import React, { useState } from "react";
 
 export const ApplicantPreviewCV = ({data}) => {
-  const [value, setValue] = useState("2");
+  const [value, setValue] = useState("1");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
