@@ -36,15 +36,13 @@ export default function Page403() {
         <ContentStyle sx={{ textAlign: 'center', alignItems: 'center' }}>
           <m.div variants={varBounce().in}>
             <Typography variant='h3' paragraph>
-              No permission
+              Không có quyền truy cập
             </Typography>
           </m.div>
 
           <m.div variants={varBounce().in}>
             <Typography sx={{ color: 'text.secondary' }}>
-              The page you're trying access has restricted access.
-              <br />
-              Please refer to your system administrator
+              Bạn không có quyền truy cập vào trang này
             </Typography>
           </m.div>
 
@@ -56,7 +54,7 @@ export default function Page403() {
 
           <NextLink href='/' passHref>
             <Button size='large' variant='contained'>
-              Go to Home
+              Về trang chủ
             </Button>
           </NextLink>
         </ContentStyle>

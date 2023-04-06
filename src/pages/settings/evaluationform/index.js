@@ -1,27 +1,17 @@
 
 import Page from "@/components/Page";
-import { PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-
-import { getRolesByPage } from "@/utils/role";
 import PageWrapper from "@/components/PageWrapper";
 import EvaluationItem from "@/sections/evaluationform/items/EvaluationItem";
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
+Setting.getLayout = function getLayout(pageProps, page) {
   return (
-    <SettingLayout roles={roles}>
+    <SettingLayout permissions={PERMISSION_PAGES.evaluationTemplate} {...pageProps}>
       {page}
     </SettingLayout>
   );
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
 
 export default function Setting() {
 

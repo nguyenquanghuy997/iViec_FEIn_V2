@@ -30,7 +30,7 @@ export const TYPES = [
   {
     name: EMPLOY_NEWS,
     actions: [
-      'ViewJobDescription',
+      'ViewJob',
       'AddEditDeleteJob',
       'AddEditDeleteInterviewSchedule',
       'SendOfferMail',
@@ -122,7 +122,7 @@ export const TYPES = [
       'AddEditDeleteQuestion',
       'ViewExam',
       'AddEditDeleteExam',
-      'ReportiVIECExamQuestion',
+      'ReportExamQuestion',
     ],
   },
   {
@@ -159,8 +159,10 @@ export const getActionName = (action) => {
       return "Đánh giá ứng viên";
     case "ChangeCandidateStage":
       return "Chuyển bước ứng viên";
-    case "ViewJobDescription":
+    case "ViewJob":
       return "Xem tin tuyển dụng";
+    case "ViewJobDescription":
+      return "Xem vị trí công việc";
     case "AddEditDeleteJob":
       return "Thêm/Sửa/Xóa tin tuyển dụng";
     case "AddEditDeleteInterviewSchedule":
@@ -221,8 +223,8 @@ export const getActionName = (action) => {
       return "Xem đề thi";
     case "AddEditDeleteExam":
       return "Thêm/sửa/xóa đề thi";
-    case "ReportiVIECExamQuestion":
-      return "Báo cáo đề thi/câu hỏi iVIEC";
+    case "ReportExamQuestion":
+      return "Báo cáo đề thi/câu hỏi";
     case "ViewOfferTemplate":
       return "Xem mẫu thư mời làm việc";
     case "AddEditDeleteOfferTemplate":
