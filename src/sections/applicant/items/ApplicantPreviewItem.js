@@ -3,8 +3,8 @@ import {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
   useGetApplicantReviewFormQuery,
-  useGetFetchApplicantByIdMutation,
   useGetRecruitmentsByApplicantQuery,
+  useLazyGetApplicantByIdQuery,
 } from "../ApplicantFormSlice";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
 import { PipelineApplicant } from "../others";
@@ -233,21 +233,20 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
   const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
     useGetApplicantRecruitmentMutation();
   const [fetchDataApplicant, { data: data = [] }] =
-  useGetFetchApplicantByIdMutation();
+  useLazyGetApplicantByIdQuery();
+
   const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
     },
     {
-      skip: pipelines && pipelines?.recruitmentPipelineStates?.filter(
-        (i) => i.id == pipelines.currentApplicantPipelineState && i.pipelineStateType == 3
-      ).length > 0
+      skip: !pipelines?.recruitmentPipelineStates?.length > 0
     }
   );
 
   const [selectedOption, setSelectedOption] = useState();
-  // const [rejectApplicant, setRejectApplicant] = useState(false);
+
   const [ownerName, setOwnerName] = useState();
 
   useEffect(() => {
@@ -265,11 +264,10 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
         IsWithdrawHistory: true,
       }).unwrap();
       fetchDataApplicant({
-        Id: recruiment[0]?.applicantId,
-      }).unwrap();
+        applicantId: recruiment[0]?.applicantId,
+      });
     }
   }, [isFetching]);
-
   const onChangeRecruiment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
@@ -283,8 +281,8 @@ function ApplicantPreviewItem({ ApplicantId, OrganizationId, ApplicantCorrelatio
       IsWithdrawHistory: true,
     }).unwrap();
     fetchDataApplicant({
-      Id: e.target.value.applicantId,
-    }).unwrap();
+      applicantId: e.target.value.applicantId,
+    });
   };
   return (
     <div>

@@ -53,7 +53,7 @@ export const ApplicantPreviewLog = ({dataLog, dataApplicant}) => {
             <Activities dataLog={dataLog} dataApplicant={dataApplicant}/>
           </TabPanel>
           <TabPanel value="2">
-            "hi"
+          <Activities dataLog={dataLog} dataApplicant={dataApplicant}/>
           </TabPanel>
         </TabContext>
       </Box>
