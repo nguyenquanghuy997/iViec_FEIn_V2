@@ -262,3 +262,11 @@ export const API_GET_APPLICANT_BY_PIPELINES_STATE= 'applicant/BookingCalendar/Ge
 // Thi tuyển
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID = "/examination/Examination/GetExamination";
+
+// QuestionGroup
+export const API_GET_QUESTION_GROUP =
+  "/examination/QuestionGroup/GetQuestionGroups";
+export const API_UPDATE_ACTIVE_QUESTION_GROUP =
+  "/examination/QuestionGroup/UpdateActiveQuestionGroups";
+export const API_REMOVE_QUESTION_GROUP =
+  "/examination/QuestionGroup/RemoveQuestionGroups";

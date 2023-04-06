@@ -1,10 +1,10 @@
 import { handleExportExcel } from "../helper/excel";
-import { RejectApplicantModal } from "../modals";
 import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
 import ApplicantTransferRecruitmentModal from "../modals/ApplicantTransferRecruitmentModal";
 import Content from "@/components/BaseComponents/Content";
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
+import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 import { ButtonIcon } from "@/utils/cssStyles";
 import {
   Address,
@@ -16,7 +16,7 @@ import {
 import { fDate } from "@/utils/formatTime";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
+import { RejectApplicantModal } from "../modals/RejectApplicantModal";
 
 const ApplicantBottomNav = ({
   selectedList,
@@ -35,26 +35,26 @@ const ApplicantBottomNav = ({
   };
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
+    setActionShow(false);
     setSelectedList([]);
   };
-  
+
   useEffect(() => {
     if (!showModelCreate) {
       onCloseModel();
     }
-  }, [showModelCreate])
-  
+  }, [showModelCreate]);
+
   const handleOpenEditForm = () => {
-    setModelApplication(
-      {
-        ...modelApplication,
-        id: itemSelected[0].applicantId,
-        recruitmentId: itemSelected[0].recruitmentId,
-        recruitmentTitle: itemSelected[0].recruitmentName
-      });
+    setModelApplication({
+      ...modelApplication,
+      id: itemSelected[0].applicantId,
+      recruitmentId: itemSelected[0].recruitmentId,
+      recruitmentTitle: itemSelected[0].recruitmentName,
+    });
     setShowModelCreate(true);
-  }
-  
+  };
+
   const exportExcel = (data) => {
     const dataFormat = data?.map((applicant, index) => {
       return {
@@ -106,8 +106,11 @@ const ApplicantBottomNav = ({
     });
     handleExportExcel(dataFormat);
   };
-  const [reject, setReject] = useState(false);
-  const [rejectid, setRejectid] = useState();
+
+  const [actionId, setActionId] = useState();
+  const [actionType, setActionType] = useState();
+  const [actionShow, setActionShow] = useState(false);
+
   return (
     <Drawer
       anchor={"bottom"}
@@ -167,7 +170,7 @@ const ApplicantBottomNav = ({
                     />
                   }
                 />
-                
+
                 <ButtonIcon
                   sx={{
                     marginRight: "16px",
@@ -238,7 +241,7 @@ const ApplicantBottomNav = ({
           </Box>
         </Box>
       </Content>
-      
+
       {showConfirmMultiple &&
         typeConfirmMultiple.includes("tranferPipeline") && (
           <ApplicantTransferPipelineModal
@@ -246,8 +249,9 @@ const ApplicantBottomNav = ({
             setShowConfirmMultiple={setShowConfirmMultiple}
             onClose={onCloseModel}
             itemSelected={itemSelected[0]}
-            setRejectid={setRejectid}
-            setReject={setReject}
+            setActionId={setActionId}
+            setActionType={setActionType}
+            setActionShow={setActionShow}
           />
         )}
       {showConfirmMultiple && typeConfirmMultiple.includes("tranferRe") && (
@@ -259,19 +263,24 @@ const ApplicantBottomNav = ({
           itemSelected={itemSelected[0]}
         />
       )}
-      {reject && (
+      {actionShow && (
         <RejectApplicantModal
           applicantId={itemSelected[0]?.applicantId}
           recruimentId={itemSelected[0]?.recruitmentId}
-          rejectid={rejectid}
-          show={reject}
-          setShow={setReject}
+          actionId={actionId}
+          actionType={actionType}
+          show={actionShow}
+          setShow={setActionShow}
           onClose={onCloseModel}
         />
       )}
-      
-      <RecruitmentApplicantCreate show={showModelCreate} setShow={setShowModelCreate} data={modelApplication}
-                                  setData={setModelApplication}/>
+
+      <RecruitmentApplicantCreate
+        show={showModelCreate}
+        setShow={setShowModelCreate}
+        data={modelApplication}
+        setData={setModelApplication}
+      />
       {/* {showConfirmMultiple && typeConfirmMultiple.includes("reject") && (
         <RecruitmentAdRejectModal
           showConfirmMultiple={showConfirmMultiple}
