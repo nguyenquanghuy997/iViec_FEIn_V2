@@ -63,6 +63,12 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
       }),
       keepUnusedDataFor: 1,
     }),
+    getFetchApplicantById: builder.mutation({
+      query: (params) => ({
+        url: API_GET_APPLICANTS_BY_ID,
+        params
+      }),
+    }),
     getRecruitmentsByApplicant: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENTS_BY_APPLICANT,
@@ -215,6 +221,7 @@ export const {
   useUpdateApplicantMutation,
   useLazyGetAllUserFromOrganizationQuery,
   useGetApplicantByIdQuery,
+  useGetFetchApplicantByIdMutation,
   useGetRecruitmentsByApplicantQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
