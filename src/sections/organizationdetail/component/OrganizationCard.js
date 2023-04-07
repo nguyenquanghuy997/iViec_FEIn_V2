@@ -65,7 +65,7 @@ const OrganizationCard = (
             </Stack>
           </CardUserFormItemTitleStyle>
           <Typography sx={{color: style.COLOR_SUCCESS, fontSize: style.FONT_XS, fontWeight: style.FONT_MEDIUM}}>
-            {item.isActive ? 'Đang hoạt động' : 'Không hoạt động'}
+            {item.isActive ? 'Đang hoạt động' : <span style={{ color: style.COLOR_TEXT_BLACK }}>Không hoạt động</span>}
           </Typography>
         </BoxFlex>
         <BoxFlex>
