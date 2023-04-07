@@ -173,12 +173,13 @@ export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories"
 
 //ĐẶT LỊCH
 export const API_POST_BOOK_CALENDAR = 'applicant/BookingCalendar/CreateBookingCalendar'
-export const API_GET_REVIEW_FORM = '/recruitment/ReviewForm/GetReviewForms'
 export const API_GET_APPLICANT = 'applicant/ApplicantRecruitment/GetApplicantByPipelineStateId'
 export const API_GET_CALENDAR ='applicant/BookingCalendar/GetBookingCalendars'
 export const API_GET_CALENDAR_DETAIL = 'applicant/BookingCalendar/GetBookingCalendar'
 export const API_UPDATE_CALENDAR = 'applicant/BookingCalendar/UpdateBookingCalendar'
 export const API_GET_APPLICANT_BY_PIPELINES_STATE= 'applicant/BookingCalendar/GetBookingApplicantsAvailableByPipelineState'
+export const API_GET_RELATE_CALENDAR = 'applicant/BookingCalendar/GetRelateBookingCalendar'
+export const API_DELETE_CALENDAR = '/applicant/BookingCalendar/RemoveBookingCalendar'
 // Thi tuyển
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID = "/examination/Examination/GetExamination";
