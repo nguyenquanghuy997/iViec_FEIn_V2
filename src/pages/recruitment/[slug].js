@@ -189,13 +189,17 @@ export default function Recruitment() {
   return (
     <Page title={"Chi tiết tin"}>
 
-      <RecruitmentPreviewItem RecruitmentData={RecruitmentData} viewModeDefault={viewMode} tabDefault={tab} onChangeViewMode={onChangViewMode} onChangeTab={onChangeTab} />
+      <RecruitmentPreviewItem RecruitmentData={RecruitmentData} 
+                              viewModeDefault={viewMode} 
+                              tabDefault={tab} 
+                              onChangeViewMode={onChangViewMode} 
+                              onChangeTab={onChangeTab}/>
       {/* ứng viên kanban */}
       {
         tab == 1 && viewMode == 1 &&
-        <div style={{ width: windowWidth, display: "flex", justifyContent: "center", height: windowHeight.current, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: `url('../assets/icons/candidate/bgImage.png')` }}>
+        <div style={{ width: windowWidth, display: "flex", justifyContent: "left", height: windowHeight.current, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: `url('../assets/icons/candidate/bgImage.png')` }}>
           <Container maxWidth='xl'>
-            <div style={{ overflowY: 'auto', width: windowWidth, display: "flex", justifyContent: "center" }}>
+            <div style={{ overflowY: 'auto', width: windowWidth, display: "flex", justifyContent: "left" }}>
               <DragDropContext
                 onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
               >
