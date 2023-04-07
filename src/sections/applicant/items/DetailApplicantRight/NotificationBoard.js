@@ -3,6 +3,7 @@ import ExpanLess from "../../../../../public/assets/icons/candidate/ExpanLess";
 import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
 import ModalReload from "./ModalReload";
 import { AvatarDS } from "@/components/DesignSystem";
+import { fTimeDate } from "@/utils/formatTime";
 import { Button } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import Dialog from "@mui/material/Dialog";
@@ -25,9 +26,9 @@ const NotificationBoard = ({
   icon,
   avatarSrc,
   avatarName,
-  action,
   title,
   isShow,
+  data,
   option,
 }) => {
   const [open, setOpen] = useState(false);
@@ -54,7 +55,7 @@ const NotificationBoard = ({
     },
   }));
 
-  const renderText = (title, reason) => {
+  const renderText = (title, reason, resultType) => {
     return (
       <div style={{ marginTop: "16px" }}>
         <span
@@ -79,7 +80,7 @@ const NotificationBoard = ({
         >
           {reason}
         </span>
-        <ModalReload />
+        {resultType && <ModalReload />}
       </div>
     );
   };
@@ -107,6 +108,7 @@ const NotificationBoard = ({
       </DialogTitle>
     );
   }
+
   return (
     <Container
       sx={{
@@ -167,11 +169,16 @@ const NotificationBoard = ({
                 variant="body2"
                 color="#5C6A82"
               >
-                15:00 17/02/2023
+                {fTimeDate(data?.occurredAt)}
               </Typography>
-              {action === "fail"
-                ? renderText("Lý do loại:", "kHÔNG THÍCH")
-                : ""}
+              {data?.recruitmentPipelineStateType == 3 &&
+                (data.pipelineStateResultType == 2
+                  ? renderText(
+                      "Lý do loại:",
+                      data?.note,
+                      data.pipelineStateResultType
+                    )
+                  : renderText("Ghi chú:", data?.note))}
             </React.Fragment>
           </div>
 

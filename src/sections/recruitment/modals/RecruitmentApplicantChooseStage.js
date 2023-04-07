@@ -81,20 +81,24 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
         >
           {data?.filter(item => item.pipelineStateType !== 4).map(item => (
             item.pipelineStateType === 3 ? <>
-                <FormControlLabel value={item.id+ ",0"}
+                <FormControlLabel key={item.id}
+                                  value={item.id+ ",0"}
                                   sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                   control={<Radio/>}
                                   label={PipelineStateType(item.pipelineStateType, 0)}/>
-                <FormControlLabel value={item.id + ",1"}
+                <FormControlLabel key={item.id}
+                                  value={item.id + ",1"}
                                   sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                   control={<Radio/>}
                                   label={PipelineStateType(item.pipelineStateType, 1)}/>
-                <FormControlLabel value={item.id + ",2"}
+                <FormControlLabel key={item.id}
+                                  value={item.id + ",2"}
                                   sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                   control={<Radio/>}
                                   label={PipelineStateType(item.pipelineStateType, 2)}/>
               </> :
-              <FormControlLabel value={item.id}
+              <FormControlLabel key={item.id}
+                                value={item.id}
                                 sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                 control={<Radio/>}
                                 label={PipelineStateType(item.pipelineStateType)}/>
