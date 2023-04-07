@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -80,7 +80,7 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
           onChange={handleChange}
         >
           {data?.filter(item => item.pipelineStateType !== 4).map(item => (
-            item.pipelineStateType === 3 ? <>
+            item.pipelineStateType === 3 ? <Fragment key={item.id}>
                 <FormControlLabel value={item.id+ ",0"}
                                   sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                   control={<Radio/>}
@@ -93,8 +93,8 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
                                   sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                   control={<Radio/>}
                                   label={PipelineStateType(item.pipelineStateType, 2)}/>
-              </> :
-              <FormControlLabel value={item.id}
+              </Fragment> :
+              <FormControlLabel key={item.id} value={item.id}
                                 sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                 control={<Radio/>}
                                 label={PipelineStateType(item.pipelineStateType)}/>

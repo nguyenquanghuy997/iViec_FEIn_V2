@@ -7,7 +7,7 @@ import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Avatar, CircularProgress, Divider, Grid, Modal, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { Fragment, Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
@@ -25,6 +25,8 @@ import { ApplicantFormSlice, useGetApplicantByIdQuery, useUpdateApplicantMutatio
 import UploadFileDragAndDrop from "@/components/upload/UploadFileDragAndDrop";
 import { dispatch } from "@/redux/store";
 import { getFileUrl } from "@/utils/helper";
+import { API_SCAN_FILE_APPLICANTS } from "@/routes/api";
+import { setValueFieldScan } from "@/sections/recruitment/helper";
 
 const defaultValues = {
   id: undefined,
@@ -75,6 +77,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
       recruitmentId: data?.recruitmentId
     }, {skip: !(data?.id && data?.recruitmentId)});
     const isLoading = isEditMode && !preview?.id && !extendData?.id;
+    const [isUpload, setIsUpload] = useState(false);
     // form
     const Schema = Yup.object().shape({
       id: Yup.string().nullable(),
@@ -120,6 +123,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     const pressHide = () => {
       reset();
       setAvatar(undefined);
+      setIsUpload(false);
       setCV(undefined);
       setData(data => ({...data, id: undefined, stage: undefined, stageResult: undefined}));
       setShow(false);
@@ -219,8 +223,13 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
     
     useEffect(() => {
       if (cv && cv.length > 0) {
+        setIsUpload(true);
         setValue("cvFile", URL.createObjectURL(cv[0].originFileObj));
         setValue("cvFileName", cv[0].name);
+        if(cv[0].status === "done" && cv[0].response)
+        {
+          setValueFieldScan(setValue, cv[0].response.profileScan)
+        }
       }
     }, [cv]);
     
@@ -294,7 +303,8 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       <Grid mb={3}>
                         <UploadFileDragAndDrop multiple={false} fileList={cv} setFileList={setCV}
                                                maxFile={1}
-                                               showUploadList={false} height={120} autoUpload={false}/>
+                                               url={API_SCAN_FILE_APPLICANTS}
+                                               showUploadList={false} height={120} autoUpload={true}/>
                       
                       </Grid>
                       <Grid mb={3}>
@@ -445,7 +455,7 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {watch("cvFile") && <Fragment key={new Date().getTime()}>
+                  {isUpload && <>
                     <Divider orientation={"vertical"}/>
                     <Grid sx={{
                       minWidth: "580px",
@@ -453,15 +463,20 @@ export const RecruitmentApplicantCreate = ({data, setData, show, setShow}) => {
                         overflowY: 'auto'
                       },
                     }}>
-                      <Suspense fallback={<View flex="true" contentcenter="true">
-                        <CircularProgress/>
-                      </View>}>
-                        <FileViewer
-                          fileType={getExtension(watch("cvFileName"))}
-                          filePath={getFileUrl(watch("cvFile"))}/>
-                      </Suspense>
+                      {watch("cvFile") && cv[0].status === "done" ?
+                        <Suspense fallback={<View flex="true" contentcenter="true" height={"100%"}>
+                          <CircularProgress/>
+                        </View>}>
+                          <FileViewer
+                            fileType={getExtension(watch("cvFileName"))}
+                            filePath={getFileUrl(watch("cvFile"))}/>
+                        </Suspense>
+                        : <View flex="true" contentcenter="true" height={"100%"}>
+                          <CircularProgress/>
+                        </View>
+                      }
                     </Grid>
-                  </Fragment>}
+                  </>}
                 </Grid>
               )}
             </View>
