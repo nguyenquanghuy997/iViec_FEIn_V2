@@ -22,6 +22,7 @@ const ListCandidate = ({ item, watch, isEditmode }) => {
             label: i.fullName,
             phone: i.phoneNumber,
             name: i.fullName,
+            image: `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${i?.portraitImage}`
           }))}
           name="bookingCalendarGroups"
           fullWidth

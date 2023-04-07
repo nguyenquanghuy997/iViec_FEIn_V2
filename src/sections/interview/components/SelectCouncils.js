@@ -67,7 +67,7 @@ const renderOptions = (options) => {
   });
 };
 
-function SelectCouncils({ name, ...props }) {
+function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
   const { control } = useFormContext();
   const classes = useStyles();
   const { defaultValue, isRequired, title, options, disabled, multiple } =
@@ -75,14 +75,13 @@ function SelectCouncils({ name, ...props }) {
   const { remove } = useFieldArray({ control, name });
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
-  const renderChipsSelect = (options, value, remove) => {
+  const idArr = defaultItem?.map((item) => item?.id);
 
+  const renderChipsSelect = (options, value, remove) => {
     return (
       <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
         {options
-          ?.filter((option) =>
-            (value).includes(option?.value)
-          )
+          ?.filter((option) => value.includes(option?.value))
           ?.map((item, index) => (
             <Card
               sx={{
@@ -138,6 +137,64 @@ function SelectCouncils({ name, ...props }) {
               </div>
             </Card>
           ))}
+        {isEditmode &&
+          options
+            ?.filter((option) => idArr.includes(option?.value))
+            ?.map((item, index) => (
+              <Card
+                sx={{
+                  p: 2,
+                  background: "#F2F4F5",
+                  mb: 2,
+                  borderRadius: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    marginBottom: 0,
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <img
+                      style={{
+                        width: 40,
+                        height: 40,
+                        marginRight: "16px",
+                        borderRadius: "11px",
+                      }}
+                      src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
+                    />
+                    <div>
+                      <Typography
+                        component="div"
+                        sx={{ fontSize: "13px", fontWeight: "600" }}
+                      >
+                        {item?.name}
+                      </Typography>
+                      <Typography
+                        color="#455570"
+                        sx={{ fontSize: "12px", fontWeight: "400" }}
+                      >
+                        {item?.mail}
+                      </Typography>
+                    </div>
+                  </div>
+                  <Box
+                    sx={{ mt: "2px", cursor: "pointer" }}
+                    onClick={() => remove(index)}
+                  >
+                    <DeleteIcon />
+                  </Box>
+                </div>
+              </Card>
+            ))}
       </Stack>
     );
   };

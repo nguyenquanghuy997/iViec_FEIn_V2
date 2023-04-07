@@ -96,6 +96,7 @@ export const calendarServiceApi = createApi({
       query: (res) => ({
         url: `${API_UPDATE_CALENDAR}/${res.id}`,
         method: "PATCH",
+        data: res
       }),
       invalidatesTags: ["BookCalendar"],
     }),

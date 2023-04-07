@@ -1,7 +1,6 @@
 import CloseIcon from "../../../assets/CloseIcon";
 import {
-  useAddCalendarMutation,
-  // useGetRelateCalendaraQuery,
+  useAddCalendarMutation, // useGetRelateCalendaraQuery,
 } from "../InterviewSlice";
 import InterviewCouncil from "./InterviewCouncil";
 import ListCandidate from "./ListCandidate";
@@ -16,14 +15,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 
 export const BoxInnerStyle = styled("Box")(({ theme }) => ({
-  [theme.breakpoints.up("xl")]: {
-    width: "2000px",
-  },
-  [theme.breakpoints.up("md")]: {
+  [theme.breakpoints.up("sm")]: {
     width: "1000px",
   },
-  [theme.breakpoints.up("2k")]: {
-    width: "100%",
+  [theme.breakpoints.up("xl")]: {
+    width: "1400px",
   },
 }));
 
@@ -115,12 +111,13 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours}:${minutes}:${newSeconds}`;
-  }
+  };
 
   // convertStoMs(stringDurationTime + stringTime);
 
   const { enqueueSnackbar } = useSnackbar();
   const onSubmit = async (d) => {
+
     try {
       const body = {
         name: d.name,
@@ -190,19 +187,10 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   // };
 
   // useEffect(() => {
-  //   if (!data?.id) return;
-  //   let body = preview;
-  //   body = formatDataGet(body);
+  //   if (!Data?.id) return;
+
   //   setValue("name", body.name);
-  //   setValue("recruitmentId", body.recruitmentId);
-  //   setValue("recruitmentPipelineStateId", body.recruitmentPipelineStateId);
-  //   setValue("onlineInterviewAddress", body.onlineInterviewAddress);
-  //   setValue("note", body.note);
-  //   setValue("councilIds", body.councilIds);
-  //   setValue("reviewFormId", body.reviewFormId);
-  //   setValue("isSendMailCouncil", body.isSendMailCouncil);
-  //   setValue("isSendMailApplicant", body.isSendMailApplicant);
-  //   setValue("bookingCalendarGroups", body.bookingCalendarGroups);
+
   // }, [isEditMode, data, preview]);
 
   const list = () => (
@@ -243,7 +231,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
                 <PersonalInterview
                   watchStep={watchStep}
                   watchType={watchInterviewType}
-                  watchPipe ={watchPipelineStep}
+                  watchPipe={watchPipelineStep}
                 />
               </Box>
             </Grid>
