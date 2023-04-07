@@ -74,11 +74,19 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                 autoHideDuration: 1000
             });
         } catch (e) {
+            const {data} = e;
+            if (data?.code === 'AUE_01') {
+              enqueueSnackbar("Người dùng không hoạt động.", {
+                autoHideDuration: 1000,
+                variant: 'error',
+              });
+              return;
+            }
             enqueueSnackbar("Chỉnh sửa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
                 autoHideDuration: 1000,
                 variant: 'error',
             });
-            throw e;
+            return e;
         }
     }
 
