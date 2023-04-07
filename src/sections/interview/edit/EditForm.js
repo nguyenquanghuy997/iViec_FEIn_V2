@@ -1,19 +1,17 @@
 import CloseIcon from "../../../assets/CloseIcon";
-import { useUpdateCalendarMutation } from "../InterviewSlice";
-import { useGetDetailCalendarsQuery } from "../InterviewSlice";
+import { useGetDetailCalendarsQuery, useUpdateCalendarMutation } from "../InterviewSlice";
 import InterviewCouncil from "../components/InterviewCouncil";
 import ListCandidate from "../components/ListCandidate";
 import PersonalInterview from "../components/PersonalInterview";
 import { FormProvider } from "@/components/hook-form";
 import { LoadingButton } from "@mui/lab";
-import { Box, List, Button, Typography, Grid, Drawer } from "@mui/material";
+import { Box, Button, Drawer, Grid, List, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useSnackbar } from "notistack";
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-export const BoxInnerStyle = styled("Box")(({ theme }) => ({
+export const BoxInnerStyle = styled("Box")(({theme}) => ({
   [theme.breakpoints.up("sm")]: {
     width: "1000px",
   },
@@ -22,11 +20,11 @@ export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   },
 }));
 
-const EditForm = ({ item, open, onClose, onOpen }) => {
-  const { data: DetailData } = useGetDetailCalendarsQuery({
+const EditForm = ({item, open, onClose, onOpen}) => {
+  const {data: DetailData} = useGetDetailCalendarsQuery({
     BookingCalendarId: item?.id,
   });
-  const defaultValues = {  };
+  const defaultValues = {};
   // const CalendarSchema = Yup.object().shape({
   //   name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
   //   recruitmentId: Yup.string().required(
@@ -54,20 +52,17 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
     // resolver: yupResolver(CalendarSchema),
     defaultValues,
   });
-
+  
   const {
-
     setValue,
-   
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = methods;
-;
   const [updateCalendar] = useUpdateCalendarMutation();
-
-  const { enqueueSnackbar } = useSnackbar();
+  
+  const {enqueueSnackbar} = useSnackbar();
   const onSubmit = async (d) => {
-
+    
     const res = {
       id: d?.id,
       name: d.name,
@@ -91,24 +86,24 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
       //   },
       // ],
     };
-
+    
     try {
       await updateCalendar(res).unwrap();
       enqueueSnackbar("Chỉnh sửa lịch thành công!", {
         autoHideDuration: 2000,
       });
       onClose();
-
+      
       // location.reload()
     } catch (err) {
-   
+      
       enqueueSnackbar(errors.afterSubmit?.message, {
         autoHideDuration: 1000,
         variant: "error",
       });
     }
   };
-
+  
   useEffect(() => {
     if (!item?.id) return;
     setValue("name", item?.name);
@@ -122,7 +117,7 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
     // setValue("isSendMailApplicant", body.isSendMailApplicant);
     // setValue("bookingCalendarGroups", body.bookingCalendarGroups);
   }, [item]);
-
+  
   const list = () => (
     <BoxInnerStyle>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -133,7 +128,7 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
             p: 0,
           }}
         >
-          <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
+          <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
             Chỉnh sửa lịch phỏng vấn
           </Typography>
           <Button
@@ -144,10 +139,10 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
               },
             }}
           >
-            <CloseIcon />
+            <CloseIcon/>
           </Button>
         </List>
-
+        
         <Box>
           <Grid container border="1px solid #E7E9ED">
             <Grid
@@ -155,26 +150,23 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
               xs={12}
               md={6}
               borderRight="1px solid #E7E9ED"
-              sx={{ padding: "24px 24px 0 24px" }}
+              sx={{padding: "24px 24px 0 24px"}}
             >
-              <Box sx={{ width: "100%", typography: "body1", mb: 3 }}>
+              <Box sx={{width: "100%", typography: "body1", mb: 3}}>
                 <PersonalInterview
                   item={item}
- 
                 />
               </Box>
             </Grid>
             <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
               <ListCandidate
                 isEditmode={true}
-              
               />
             </Grid>
             <Grid item xs={5} md={3}>
               <InterviewCouncil
                 isEditmode={true}
                 item={DetailData?.bookingCalendarCouncils}
-                
               />
             </Grid>
           </Grid>
@@ -196,14 +188,14 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
             type="submit"
             variant="contained"
             loading={isSubmitting}
-            sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
+            sx={{backgroundColor: "#1976D2", p: 1, fontSize: 14}}
           >
             {"Lưu"}
           </LoadingButton>
-
+          
           <LoadingButton
             variant="text"
-            sx={{ color: "#455570" }}
+            sx={{color: "#455570"}}
             onClick={onClose}
           >
             {"Hủy"}
@@ -212,7 +204,7 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
       </FormProvider>
     </BoxInnerStyle>
   );
-
+  
   return (
     <div>
       <Drawer anchor="right" open={open} onClose={onClose} onOpen={onOpen}>

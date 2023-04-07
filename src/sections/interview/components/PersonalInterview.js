@@ -108,7 +108,7 @@ const PersonalInterview = ({ item,  }) => {
             </Typography>
             <RHFSelect
               options={ListStep.filter(
-                (item) => item.pipelineStateType == 2
+                (item) => item.pipelineStateType === 2
               )?.map((i) => ({
                 value: i.id,
                 label: PipelineStateType(i.pipelineStateType),
@@ -197,7 +197,7 @@ const PersonalInterview = ({ item,  }) => {
             </Typography>
             <Box
               sx={{
-                bgcolor: "#EFF3F6",
+                bgColor: "#EFF3F6",
                 p: 2,
                 borderRadius: "6px",
                 fontSize: 14,

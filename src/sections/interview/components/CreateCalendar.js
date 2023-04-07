@@ -1,6 +1,6 @@
 import CloseIcon from "../../../assets/CloseIcon";
 import {
-  useAddCalendarMutation, // useGetRelateCalendaraQuery,
+  useAddCalendarMutation,
 } from "../InterviewSlice";
 import InterviewCouncil from "./InterviewCouncil";
 import ListCandidate from "./ListCandidate";
@@ -80,10 +80,10 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
 
   const toHHMMSS = (num) => {
-    var sec_num = parseInt(num * 60, 10);
-    var hours = Math.floor(sec_num / 3600);
-    var minutes = Math.floor((sec_num - hours * 3600) / 60);
-    var seconds = sec_num - hours * 3600 - minutes * 60;
+    let sec_num = parseInt(num * 60, 10);
+    let hours = Math.floor(sec_num / 3600);
+    let minutes = Math.floor((sec_num - hours * 3600) / 60);
+    let seconds = sec_num - hours * 3600 - minutes * 60;
 
     if (hours < 10) {
       hours = "0" + hours;

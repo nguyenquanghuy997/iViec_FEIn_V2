@@ -48,6 +48,7 @@ const renderOptions = (options) => {
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
         <Box sx={{ display: "flex" }}>
           <img
+            alt=""
             style={{
               width: 28,
               height: 28,
@@ -84,6 +85,7 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
           ?.filter((option) => value.includes(option?.value))
           ?.map((item, index) => (
             <Card
+              key={item.id}
               sx={{
                 p: 2,
                 background: "#F2F4F5",
@@ -105,6 +107,7 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
                   }}
                 >
                   <img
+                    alt=""
                     style={{
                       width: 40,
                       height: 40,
@@ -163,6 +166,7 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
                     }}
                   >
                     <img
+                      alt=""
                       style={{
                         width: 40,
                         height: 40,
