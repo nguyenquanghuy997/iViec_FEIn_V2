@@ -77,7 +77,7 @@ const renderOptions = (options) => {
   });
 };
 
-function RHFSelectMultiple({ name, defaultItem,isEditmode,...props }) {
+function RHFSelectMultiple({ name, ...props }) {
   const [filterOptions, setFilterOptions] = useState([]);
   const [searchText, setSearchText] = useState("");
   const { control } = useFormContext();
@@ -86,7 +86,9 @@ function RHFSelectMultiple({ name, defaultItem,isEditmode,...props }) {
   const { defaultValue, isRequired, title, options, disabled, multiple } =
     props;
   const { remove } = useFieldArray({ control, name });
+
   const renderChipsSelect = (options, value) => {
+    // console.log("option-value", { options, value });
     const [open, setOpen] = useState(false);
     const handleClose = () => {
       setOpen(false);
@@ -94,7 +96,6 @@ function RHFSelectMultiple({ name, defaultItem,isEditmode,...props }) {
     const handleOpen = () => {
       setOpen(true);
     };
-    const idArr = defaultItem && defaultItem.map( item => item?.id)
 
     return (
       <Stack flexWrap="wrap" justifyContent="flex-start">
@@ -113,9 +114,8 @@ function RHFSelectMultiple({ name, defaultItem,isEditmode,...props }) {
 
         <DragCandidate
           data={options?.filter((option) =>
-            (isEditmode ? idArr : value).includes(option?.value)
+            (value || []).includes(option?.value)
           )}
-
           open={open}
           onClose={handleClose}
           onOpen={handleOpen}

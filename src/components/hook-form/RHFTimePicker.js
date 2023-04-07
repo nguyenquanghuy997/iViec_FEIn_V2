@@ -10,8 +10,6 @@ export default function RHFTimePicker({
   style
 }) {
   const { control } = useFormContext();
-
-
   return (
     <Controller
       name={name}
