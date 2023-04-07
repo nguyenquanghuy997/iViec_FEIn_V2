@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {isEmpty, get} from "lodash";
 import * as Yup from "yup";
 import {useForm, useWatch} from "react-hook-form";
@@ -6,7 +6,7 @@ import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material
 import {FormProvider, RHFSelect, RHFSwitch} from "@/components/hook-form";
 import Iconify from "@/components/Iconify";
 import Scrollbar from "@/components/Scrollbar";
-import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
+import {OrganizationFromHeadStyle} from "@/sections/organization/style";
 import {yupResolver} from "@hookform/resolvers/yup";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {AvatarDS} from "@/components/DesignSystem";
@@ -70,11 +70,11 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                 organizationIds: formData?.organizationIds,
             }).unwrap();
             onClose();
-            enqueueSnackbar("Xóa lòi mời thành công!", {
+            enqueueSnackbar("Chỉnh sửa người dùng thành công!", {
                 autoHideDuration: 1000
             });
         } catch (e) {
-            enqueueSnackbar("Xóa lòi mời không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+            enqueueSnackbar("Chỉnh sửa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
                 autoHideDuration: 1000,
                 variant: 'error',
             });
@@ -92,7 +92,9 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                     sx: {
                         width: {xs: 1, sm: 560, md: 800},
                         boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-                        top: 'calc(100%-64px)'
+                        position: 'fixed',
+                        top: '64px',
+                        right: 0
                     },
                     onScroll: handleScroll
                 }}
@@ -115,7 +117,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                         </OrganizationFromHeadStyle>
                         <Divider/>
                         {/* content form */}
-                        <Box sx={{py: 2, px: 2, my: 8}}>
+                        <Box sx={{py: 2, px: 3, mb: 8}}>
                             <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
                                 <AvatarDS
                                     sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
@@ -210,23 +212,35 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                         />
                                     </Box>
                                 </Box>
-
                             </Box>
                         </Box>
-                        {/* end content form */}
-                        <OrganizationFromFooterStyle className="organization-form-footer" width={800}>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginTop: 12,
+                                position: "fixed",
+                                bottom: 0,
+                                width: "800px",
+                                padding: "16px 24px",
+                                border: "1px solid #EFF3F6",
+                                zIndex: 1001,
+                            }}
+                        >
                             <Stack flexDirection="row">
                                 <MuiButton
                                     type="submit"
                                     loading={isSubmitting}
                                     title="Lưu"
-                                    sx={{px: 2, py: 1, minWidth: 24}}
+                                    sx={{height: 36, minWidth: 24}}
                                 />
                                 <MuiButton
                                     title={"Hủy"}
                                     onClick={onClose}
                                     color={"basic"}
                                     sx={{
+                                        height: 36,
                                         color: '#455570',
                                         fontWeight: 600,
                                         ml: 1,
@@ -237,8 +251,42 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                             <RHFSwitch
                                 name="isActive"
                                 label={watchActive ? "Đang hoạt động" : "Không hoạt động"}
+                                sx={{
+                                    '& .MuiSwitch-switchBase.Mui-checked': {
+                                        color: '#388E3C',
+                                    },
+                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                        backgroundColor: '#A5D6A7',
+                                    },
+                                }}
                             />
-                        </OrganizationFromFooterStyle>
+                        </div>
+                        {/* end content form */}
+                        {/*<OrganizationFromFooterStyle className="organization-form-footer" width={800}>*/}
+                        {/*    <Stack flexDirection="row">*/}
+                        {/*        <MuiButton*/}
+                        {/*            type="submit"*/}
+                        {/*            loading={isSubmitting}*/}
+                        {/*            title="Lưu"*/}
+                        {/*            sx={{px: 2, py: 1, minWidth: 24}}*/}
+                        {/*        />*/}
+                        {/*        <MuiButton*/}
+                        {/*            title={"Hủy"}*/}
+                        {/*            onClick={onClose}*/}
+                        {/*            color={"basic"}*/}
+                        {/*            sx={{*/}
+                        {/*                color: '#455570',*/}
+                        {/*                fontWeight: 600,*/}
+                        {/*                ml: 1,*/}
+                        {/*                "&:hover": {backgroundColor: 'transparent', boxShadow: 'none'}*/}
+                        {/*            }}*/}
+                        {/*        />*/}
+                        {/*    </Stack>*/}
+                        {/*    <RHFSwitch*/}
+                        {/*        name="isActive"*/}
+                        {/*        label={watchActive ? "Đang hoạt động" : "Không hoạt động"}*/}
+                        {/*    />*/}
+                        {/*</OrganizationFromFooterStyle>*/}
                     </FormProvider>
                 </Scrollbar>
             </Drawer>
