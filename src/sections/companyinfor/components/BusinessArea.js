@@ -1,6 +1,6 @@
 import HeaderCard from "../HeaderCard";
 import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
-import EditBusinessArea from "./EditBusinessArea";
+import EditBusinessArea from "../edit/EditBusinessArea";
 import CloseIcon from "@/assets/CloseIcon";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
@@ -120,7 +120,17 @@ const BusinessArea = ({ data }) => {
                 ) : <EmptyValue text={"Hiện chưa nội dung Lĩnh vực kinh doanh"}/>}
             </Box>
             {open && (
-                <Drawer anchor="right" open={open} onClose={handleClose}>
+                <Drawer
+                    anchor="right"
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{sx: {width: 800, position: 'fixed', top: '64px', right: 0}}}
+                    componentsProps={{
+                        backdrop: {
+                            sx: {background: 'rgba(9, 30, 66, 0.25) !important', boxShadow: 'none !important'}
+                        }
+                    }}
+                >
                     <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0,}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>

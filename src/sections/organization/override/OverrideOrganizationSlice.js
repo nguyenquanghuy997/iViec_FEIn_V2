@@ -12,7 +12,7 @@ import {
   API_GET_ORGANIZATION_WITH_CHILD,
   API_INVITE_USER,
   API_RESEND_INVITE_USER,
-  API_SET_ACTIVE_ORGANIZATION,
+  API_SET_ACTIVE_ORGANIZATION, API_SET_ACTIVE_USER,
   API_UPDATE_ORGANIZATION, API_UPDATE_USER_ROLE_ORGANIZATION,
   API_USER_CONFIRM_INVITE
 } from "@/routes/api";
@@ -206,6 +206,17 @@ export const organizationServiceApi = createApi({
       },
       invalidatesTags: ['ORGANIZATION_USER']
     }),
+    // active user
+    activeUsers: build.mutation({
+      query: (data) =>  {
+        return {
+          url: `${API_SET_ACTIVE_USER}`,
+          method: 'PATCH',
+          data
+        }
+      },
+      invalidatesTags: ['ORGANIZATION_USER']
+    }),
   }),
 })
 
@@ -227,4 +238,5 @@ export const {
   useDeleteInviteUserMutation,
   useUpdateRoleUserMutation,
   useDeleteUserMutation,
+  useActiveUsersMutation,
 } = organizationServiceApi;

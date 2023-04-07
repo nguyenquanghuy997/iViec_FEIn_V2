@@ -4,7 +4,7 @@ import {FormProvider, RHFSelect, RHFTextField} from "@/components/hook-form";
 import Iconify from "@/components/Iconify";
 import Scrollbar from "@/components/Scrollbar";
 import {useForm} from "react-hook-form";
-import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
+import {OrganizationFromHeadStyle} from "@/sections/organization/style";
 import {useGetDistrictByProvinceIdQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -145,9 +145,10 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                 width: {xs: 1, sm: 560, md: 600},
                 boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
                 position: 'fixed',
-                height: 'calc(100% - 92px - 1px)',
+                // height: 'calc(100% - 64px)',
                 top: '64px',
-                right: 0
+                right: 0,
+                background: 'FDFDFD'
               },
               onScroll: handleScroll
             }}
@@ -250,25 +251,53 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                     style={{...InputStyle}}
                 />
               </Box>
-
-              {/* end content form */}
-
-              <OrganizationFromFooterStyle className="organization-form-footer">
-                <Stack flexDirection="row">
-                  <MuiButton
-                      type="submit"
-                      loading={isSubmitting}
-                      title="Lưu"
-                      sx={{ px: 2, py: 1, minWidth: 24 }}
-                  />
-                  <MuiButton
+              <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 12,
+                    position: "fixed",
+                    bottom: 0,
+                    width: "100%",
+                    padding: "16px 24px",
+                    borderTop: "1px solid #EFF3F6",
+                    zIndex: 1001,
+                  }}
+              >
+                <MuiButton
+                    title={"Lưu"}
+                    type="submit"
+                    loading={isSubmitting}
+                    sx={{
+                      height: 36
+                    }}
+                />
+                <MuiButton
                     title={"Hủy"}
-                    onClick={onClose}
                     color={"basic"}
-                    sx={{ color: '#455570', fontWeight: 600, ml: 1 }}
-                  />
-                </Stack>
-              </OrganizationFromFooterStyle>
+                    onClick={onClose}
+                    sx={{
+                      height: 36
+                    }}
+                />
+              </div>
+              {/* end content form */}
+              {/*<OrganizationFromFooterStyle className="organization-form-footer">*/}
+              {/*  <Stack flexDirection="row">*/}
+              {/*    <MuiButton*/}
+              {/*        type="submit"*/}
+              {/*        loading={isSubmitting}*/}
+              {/*        title="Lưu"*/}
+              {/*        sx={{ px: 2, py: 1, minWidth: 24 }}*/}
+              {/*    />*/}
+              {/*    <MuiButton*/}
+              {/*      title={"Hủy"}*/}
+              {/*      onClick={onClose}*/}
+              {/*      color={"basic"}*/}
+              {/*      sx={{ color: '#455570', fontWeight: 600, ml: 1 }}*/}
+              {/*    />*/}
+              {/*  </Stack>*/}
+              {/*</OrganizationFromFooterStyle>*/}
             </FormProvider>
           </Scrollbar>
         </Drawer>

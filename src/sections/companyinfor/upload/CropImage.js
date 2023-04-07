@@ -11,13 +11,13 @@ const CropImage = ({ defaultImage, size, companyInfor }) => {
 
   const handleCloseModal = () => {
     setDialogOpen(false);
-    setImage(null);
+    // setImage(null);
     // setCroppedImage(null);
   }
 
   useEffect(() => {
     setImage(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${defaultImage}`)
-  }, [defaultImage])
+  }, [defaultImage, dialogOpen])
 
   return (
       <>

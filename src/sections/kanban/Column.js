@@ -9,31 +9,34 @@ import { Droppable } from "react-beautiful-dnd";
 const Column = ({ droppableId, column }) => {
   // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
   return (
-    <Stack spacing={2} sx={{ p: 2 }}>
+    <Stack spacing={2} sx={{ p: 1, py: 0 }}>
       <div
         style={{
           background: "rgba(9, 30, 66, 0.1)",
-          padding: 4,
-          width: 300,
-          minHeight: 1000,
-          border: "2px solid #ccc",
-          borderRadius: "8px",
+          padding: '12px',
+          // backdropFilter: 'blur(3px)'
+          // width: 300,
+          // minHeight: 1000,
+          // border: "2px solid #ccc",
+          // borderRadius: "8px",
         }}
       >
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            p: 1,
+            p: 2,
             m: 1,
             bgcolor: "background.paper",
-            borderRadius: 1,
+            borderRadius: '4px',
+            boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'
           }}
         >
           <Iconify
             icon={"fluent:arrow-sort-16-regular"}
-            width={12}
-            height={12}
+            width={13}
+            height={13}
+            fontWeight={600}
             color="#455570"
             mt={0.5}
           />
@@ -46,7 +49,7 @@ const Column = ({ droppableId, column }) => {
             }}
           >
             <Iconify
-              icon={"material-symbols:square"}
+              icon={"material-symbols:square-rounded"}
               width={12}
               height={12}
               color="#1E88E5"
@@ -56,16 +59,18 @@ const Column = ({ droppableId, column }) => {
             <Typography
               display="flex"
               fontSize="14px"
-              fontWeight="600"
+              fontWeight="700"
               alignItems="center"
+              color='#455570'
             >
               {PipelineStateType(column.pipelineStateType)}
             </Typography>
             <Typography
               display="flex"
               fontSize="14px"
-              fontWeight="600"
+              fontWeight="700"
               alignItems="center"
+              color='#455570'
               ml={1}
             >
               {column.items.length}
@@ -73,8 +78,8 @@ const Column = ({ droppableId, column }) => {
           </Box>
           <Iconify
             icon={"material-symbols:filter-list-rounded"}
-            width={12}
-            height={12}
+            width={13}
+            height={13}
             color="#455570"
             mt={0.5}
           />
@@ -88,8 +93,8 @@ const Column = ({ droppableId, column }) => {
                   ref={provided.innerRef}
                   style={{
                     // background: "rgba(9, 30, 66, 0.1)",
-                    padding: 4,
-                    width: 300,
+                    padding: 8,
+                    width: 320,
                     minHeight: 1000,
                     // border: "2px solid #ccc",
                     borderRadius: "8px",

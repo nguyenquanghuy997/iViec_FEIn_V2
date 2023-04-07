@@ -64,6 +64,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                     enqueueSnackbar("Chỉnh sửa thông tin Môi trường làm việc thành công!", {
                         autoHideDuration: 2000,
                     });
+                    onClose();
                 } catch (err) {
                     enqueueSnackbar('Chỉnh sửa thông tin Môi trường làm việc không thành công!', {
                         autoHideDuration: 1000,
@@ -105,6 +106,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                             enqueueSnackbar("Chỉnh sửa thông tin Môi trường làm việc thành công!", {
                                 autoHideDuration: 2000,
                             });
+                            onClose();
                         } catch (err) {
                             enqueueSnackbar('Chỉnh sửa thông tin Môi trường làm việc không thành công!', {
                                 autoHideDuration: 1000,

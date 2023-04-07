@@ -139,11 +139,11 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
         try {
             await deleteInviteUser({ ids: [data?.id]}).unwrap();
             handleCloseConfirmDelete();
-            enqueueSnackbar("Xóa lòi mời thành công!", {
+            enqueueSnackbar("Xóa lời mời thành công!", {
                 autoHideDuration: 1000
             });
         } catch (e) {
-            enqueueSnackbar("Xóa lòi mời không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+            enqueueSnackbar("Xóa lời mời không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
                 autoHideDuration: 1000,
                 variant: 'error',
             });
