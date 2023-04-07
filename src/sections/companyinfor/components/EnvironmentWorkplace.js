@@ -12,6 +12,8 @@ import LoadingScreen from "@/components/LoadingScreen";
 import EditEnvironmentWorkplace from "@/sections/companyinfor/edit/EditEnvironmentWorkplace";
 import {get} from "lodash";
 import {DOMAIN_SERVER_API} from "@/config";
+import {RiTreasureMapLine} from "react-icons/ri";
+import {STYLE_CONSTANT as style} from "@/theme/palette";
 
 export const SliderStyle = styled("div")(() => ({
     "& .swiper-pagination": {
@@ -110,9 +112,42 @@ const EnvironmentWorkplace = ({ data }) => {
                                                     backgroundImage: `url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(item, 'image')})`,
                                                     padding: "36px 40px",
                                                     backgroundRepeat: 'no-repeat',
-                                                    backgroundSize: 'cover'
+                                                    backgroundSize: 'cover',
+                                                    position: 'relative'
                                                 }}
-                                            />
+                                            >
+                                                <Box sx={{
+                                                    maxWidth: '400px',
+                                                    width: '100%',
+                                                    padding: 2,
+                                                    background: 'linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)',
+                                                    color: style.COLOR_WHITE,
+                                                    borderRadius: '4px 0px 0px 4px',
+                                                    position: 'absolute',
+                                                    right: 0,
+                                                    bottom: 16
+                                                }}>
+                                                    <Box sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        mb: 1
+                                                    }}>
+                                                        <RiTreasureMapLine style={20} />
+                                                        <Typography sx={{
+                                                            ml: '10px',
+                                                            fontSize: style.FONT_BASE,
+                                                            fontWeight: style.FONT_SEMIBOLD,
+                                                            lineHeight: '24px'
+                                                        }}>{get(item, 'name')}</Typography>
+                                                    </Box>
+                                                    <Typography sx={{
+                                                        fontSize: style.FONT_SM,
+                                                        fontWeight: style.FONT_NORMAL
+                                                    }}>
+                                                        {get(item, 'description')}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
                                         </SwiperSlide>
                                     )
                                 )}
