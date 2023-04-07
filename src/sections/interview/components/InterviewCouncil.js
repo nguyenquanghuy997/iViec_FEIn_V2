@@ -3,7 +3,7 @@ import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice
 import { Typography, Box } from "@mui/material";
 import React from "react";
 
-const InterviewCouncil = ({ isEditmode,item,watchStep, action }) => {
+const InterviewCouncil = ({ isEditmode, item,watchStep, action }) => {
   const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
     PageSize: 20,

@@ -23,7 +23,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
     setCharacters([...data, items]);
   };
   const time = false;
-const today= new Date()
+  const today = new Date();
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -34,7 +34,7 @@ const today= new Date()
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {newArr.map(({ id, name, phone }, index) => {
+              {newArr.map(({ id, name, phone, image }, index) => {
                 return (
                   <Draggable key={id} draggableId={id} index={index}>
                     {(provided) => (
@@ -79,10 +79,10 @@ const today= new Date()
                                     style={{
                                       width: 40,
                                       height: 40,
-                                      borderRadius: "11px",
+                                      borderRadius: "10px",
                                       marginRight: "16px",
                                     }}
-                                    src="https://i.pinimg.com/236x/a7/f5/40/a7f540b5e119822ff15075600b1d22dd.jpg"
+                                    src={image}
                                   />
                                   <div>
                                     <Typography
@@ -107,7 +107,12 @@ const today= new Date()
                               </div>
 
                               <Box
-                                sx={{ mt: "2px", cursor: "pointer" }}
+                                sx={{
+                                  mt: "2px",
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
                                 onClick={onDelete}
                               >
                                 <DeleteIcon />
@@ -122,7 +127,7 @@ const today= new Date()
                                   <span style={{ color: "red" }}>*</span>
                                 </Typography>
                                 <RHFDatePicker
-                                  name="date"
+                                  name={`bookingCalendarApplicants.${id}.date`}
                                   today={today}
                                   style={{
                                     background: "white",

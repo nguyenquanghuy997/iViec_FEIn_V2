@@ -11,13 +11,17 @@ import { Box, Stack, Typography, TextField } from "@mui/material";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-const PersonalInterview = ({ item, watchStep, watchType, watchPipe }) => {
+const PersonalInterview = ({ item,  }) => {
+  const { watch } = useFormContext();
+  const watchStep = watch("recruitmentId");
+  const watchPipe = watch("recruitmentPipelineStateId");
+  const watchType = watch("interviewType");
   const { control } = useFormContext();
   const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
     PageSize: 20,
   });
-  const { data: { items: ListStep = [] } = {}, isLoading: isLoadingStep } =
+  const { data: { items: ListStep = [] } = {}} =
     useGetRecruitmentPipelineStatesByRecruitment1Query(
       { RecruitmentId: watchStep },
       {
@@ -30,7 +34,7 @@ const PersonalInterview = ({ item, watchStep, watchType, watchPipe }) => {
   );
   const { data: { items: DataForm = [] } = {} } = useGetReviewFormQuery();
 
-  if (isLoadingStep) return null;
+  
   const options = [
     {
       id: 0,
