@@ -1,42 +1,40 @@
 import HeaderCard from "../HeaderCard";
 import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
-import EditorEnding from "../edit/EditorEnding";
 import CloseIcon from "@/assets/CloseIcon";
 import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
-import React, {useState} from "react";
+import {useState} from "react";
+import {Swiper, SwiperSlide} from "swiper/react";
+import "swiper/swiper-bundle.css";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import {useSnackbar} from "notistack";
 import LoadingScreen from "@/components/LoadingScreen";
-import {QuoteIcon} from "@/sections/companyinfor/icon";
+import EditEnvironmentWorkplace from "@/sections/companyinfor/edit/EditEnvironmentWorkplace";
+import {get} from "lodash";
+import {DOMAIN_SERVER_API} from "@/config";
 
-const PlaceholderStyle = styled("div")(() => ({
-    background: "white",
-    padding: "8px 96px 24px 96px",
-    minHeight: 150,
-    position: 'relative',
-    "& .content": {
-        backgroundColor: "white",
-        color: "#455570",
-        background: "#F2F4F5",
-        position: "relative",
-        padding: "24px 96px",
-        "& .quote-icon": {
-            position: "absolute",
-            top: -100,
-            left: "40px",
-            fontSize: "128px",
-            color: "#A2AAB7",
-        },
+export const SliderStyle = styled("div")(() => ({
+    "& .swiper-pagination": {
+        display: "flex",
+        alignItems: "end",
+        marginLeft: "36px",
+        marginBottom: "30px",
+    },
+    "& .swiper-pagination-bullet": {
+        background: "white",
+    },
+    "& .swiper-pagination-bullet.swiper-pagination-bullet-active": {
+        background: "orange",
+        width: 24,
+        borderRadius: 8,
     },
 }));
 
-const Ending = ({data}) => {
+const EnvironmentWorkplace = ({ data }) => {
     const {enqueueSnackbar} = useSnackbar();
-
     const [open, setOpen] = useState(false);
 
-    const [checked, setChecked] = useState(data?.isConclusionVisible);
+    const [checked, setChecked] = useState(data?.isWorkingEnvironmentVisible);
     const [loading, setLoading] = useState(false);
 
     const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
@@ -53,7 +51,7 @@ const Ending = ({data}) => {
         try {
             await updateVisibleHuman({
                 organizationId: data?.id,
-                isConclusionVisible: !checked
+                isWorkingEnvironmentVisible: !checked
             }).unwrap();
             enqueueSnackbar("Chỉnh sửa hiển thị thành công!", {
                 autoHideDuration: 1000
@@ -80,24 +78,48 @@ const Ending = ({data}) => {
         <>
             <Box sx={{minHeight: '296px'}}>
                 <HeaderCard
-                    text="Lời kết"
+                    text={"Môi trường làm việc"}
                     open={open}
                     onClose={handleClose}
                     onOpen={handleOpen}
                     handleChange={handleChangeChecked}
                     checked={checked}
                 />
-                {data?.conclusion ? (
-                    <PlaceholderStyle style={{borderBottomLeftRadius: '4px', borderBottomRightRadius: '4px'}}>
-                        <div className="content" style={{borderRadius: '4px',}}>
-                            <div className={"quote-icon"}>
-                                <QuoteIcon />
-                            </div>
-                            <Typography sx={{ fontSize: 14, fontWeight: 400, color: '#455570' }} dangerouslySetInnerHTML={{ __html: data?.conclusion }} />
-                            <Typography sx={{ textAlign: 'end', fontSize: 14, fontWeight: 500, color: '#455570', fontStyle: 'italic' }}>{data?.name}</Typography>
-                        </div>
-                    </PlaceholderStyle>
-                ) : <EmptyValue text={"Hiện chưa có nội dung Lời kết"}/>}
+                <Box
+                    sx={{
+                        px: 12,
+                        pb: 3,
+                        background: "white",
+                        width: "100%",
+                    }}
+                >
+                    {data?.organizationWorkingEnvironments ? (
+                        <SliderStyle>
+                            <Swiper
+                                id="swiper"
+                                virtual
+                                slidesPerView={1}
+                                spaceBetween={50}
+                                pagination
+                            >
+                                {data?.organizationWorkingEnvironments.map((item, index) => (
+                                        <SwiperSlide key={`slide-${index}`} style={{listStyle: "none"}}>
+                                            <Box
+                                                sx={{
+                                                    minHeight: "465px",
+                                                    backgroundImage: `url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(item, 'image')})`,
+                                                    padding: "36px 40px",
+                                                    backgroundRepeat: 'no-repeat',
+                                                    backgroundSize: 'cover'
+                                                }}
+                                            />
+                                        </SwiperSlide>
+                                    )
+                                )}
+                            </Swiper>
+                        </SliderStyle>
+                    ) : <EmptyValue text={"Hiện chưa nội dung Môi trường làm việc"}/>}
+                </Box>
             </Box>
             {open && (
                 <Drawer
@@ -114,18 +136,19 @@ const Ending = ({data}) => {
                     <Box sx={{width: 800}}>
                         <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
                             <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
-                                Chỉnh sửa Lời kết
+                                Chỉnh sửa Môi trường làm việc
                             </Typography>
                             <Button onClick={handleClose} sx={{"&:hover": {background: "#FDFDFD"}}}>
                                 <CloseIcon/>
                             </Button>
                         </List>
                         <Divider/>
-                        <EditorEnding data={data} onClose={handleClose}/>
+                        <EditEnvironmentWorkplace data={data} onClose={handleClose} />
                     </Box>
                 </Drawer>
             )}
         </>
     );
 };
-export default Ending;
+
+export default EnvironmentWorkplace;

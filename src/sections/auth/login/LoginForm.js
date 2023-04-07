@@ -1,23 +1,23 @@
 // components
-import {STYLE_CONSTANT} from "../register/constants";
-import {ButtonDS} from "@/components/DesignSystem";
+import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import {FormProvider, RHFCheckbox, RHFTextField,} from "@/components/hook-form";
+import { FormProvider, RHFCheckbox, RHFTextField, } from "@/components/hook-form";
+import { STYLE_CONSTANT } from "../register/constants";
 // hooks
 import useAuth from "@/hooks/useAuth";
 // import useIsMountedRef from "@/hooks/useIsMountedRef";
-import {PATH_AUTH} from "@/routes/paths";
+import { PATH_AUTH } from "@/routes/paths";
 // form
-import {yupResolver} from "@hookform/resolvers/yup";
-import {Alert, IconButton, Link, Stack, Typography,} from "@mui/material";
+import { LabelStyle } from "@/components/hook-form/style";
+import { errorMessages } from '@/utils/errorMessages';
+import { CHECK_EMAIL } from '@/utils/regex';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Alert, IconButton, Link, Stack, Typography, } from "@mui/material";
 import NextLink from "next/link";
-import {useSnackbar} from "notistack";
-import {useState} from "react";
-import {useForm} from "react-hook-form";
+import { useSnackbar } from "notistack";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {errorMessages} from '@/utils/errorMessages'
-import {CHECK_EMAIL} from '@/utils/regex'
-import {LabelStyle} from "@/components/hook-form/style";
 // routes
 // import { PATH_AUTH } from '@/routes/paths'
 

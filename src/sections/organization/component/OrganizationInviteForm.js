@@ -2,7 +2,6 @@ import React, {memo, useRef, useState} from "react";
 import {Box, DialogContent, Divider, IconButton, Tab, Tabs, Typography} from "@mui/material";
 import {FormProvider, RHFSelect, RHFTextField} from "@/components/hook-form";
 import {useFieldArray, useForm} from "react-hook-form";
-import {useGetRoleGroupQuery} from "@/sections/organization/OrganizationSlice";
 import {AddIcon, DeleteIcon} from "@/assets/ActionIcon";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -20,6 +19,7 @@ import Iconify from "@/components/Iconify";
 import OrganizationInviteResultCard from "@/sections/organization/component/OrganizationInviteResultCard";
 import OrganizationUserInviteTab from "@/sections/organization/component/OrganizationUserInviteTab";
 import {AlertIcon, EmailInviteIcon} from "@/sections/organization/component/Icon";
+import {useGetRoleGroupListQuery} from "@/sections/rolegroup";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -166,7 +166,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
         }
     }
 
-    const {data: {items: ListRoleGroup = []} = {}, isLoading} = useGetRoleGroupQuery();
+    const {data: {items: ListRoleGroup = []} = {}, isLoading} = useGetRoleGroupListQuery();
     if (isLoading) return <div>loading...</div>;
 
     return (

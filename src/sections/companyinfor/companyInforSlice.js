@@ -11,7 +11,7 @@ import {
   API_UPDATE_ORGANIZATION_BUSINESS,
   API_UPDATE_ORGANIZATION_PIPELINE,
   API_UPDATE_ORGANIZATION_ENDING,
-  API_ADD_ORGANIZATION_BUSINESS,
+  API_ADD_ORGANIZATION_BUSINESS, API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT,
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -48,14 +48,6 @@ export const companyServiceApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ["CompanyInfor"],
   endpoints: (builder) => ({
-    // Thông tin công ty
-    // getBranchByUser: builder.query({
-    //   query: () => ({
-    //     url: API_GET_COMPANY_INFOR_BY_IDS,
-    //     method: "GET",
-    //   }),
-    //   providesTags: ["branch_by_user"],
-    // }),
     getCompanyInfo: builder.query({
       query: () => ({
         url: `${API_GET_COMPANY_INFOR}`,
@@ -88,7 +80,6 @@ export const companyServiceApi = createApi({
         params: { ProvinceId: provinceId },
       }),
     }),
-   
     addOrganizationBusiness: builder.mutation({
       query: (rest) => ({
         url: API_ADD_ORGANIZATION_BUSINESS,
@@ -97,7 +88,6 @@ export const companyServiceApi = createApi({
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
-
     uploadImageCompany: builder.mutation({
       query: (rest) => ({
         url: API_UPLOAD_IMAGE,
@@ -107,7 +97,6 @@ export const companyServiceApi = createApi({
           "Content-Type": "multipart/form-data",
         },
       }),
-      invalidatesTags: ["CompanyInfor"],
     }),
     updateCompanyInfo: builder.mutation({
       query: (rest) => ({
@@ -133,6 +122,14 @@ export const companyServiceApi = createApi({
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
+    updateCompanyEnvironment: builder.mutation({
+      query: (body) => ({
+        url: `${API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT}`,
+        method: "PATCH",
+        data: body,
+      }),
+      invalidatesTags: ["CompanyInfor"],
+    }),
     updateCompanyPipeline: builder.mutation({
       query: (body) => ({
         url: API_UPDATE_ORGANIZATION_PIPELINE,
@@ -153,18 +150,16 @@ export const companyServiceApi = createApi({
 });
 
 export const {
-  // Thông tin công ty
   useGetCompanyInfoQuery,
   useGetJobCategoriesQuery,
   useGetProvinceQuery,
-  useLazyGetProvinceQuery,
   useGetDistrictByProvinceIdQuery,
-  useLazyGetDistrictByProvinceIdQuery,
   useUpdateCompanyInfoMutation,
   useUploadImageCompanyMutation,
   useUpdateCompanyHumanMutation,
   useUpdateCompanyBusinessMutation,
   useUpdateCompanyPipelineMutation,
   useUpdateCompanyEndingMutation,
+  useUpdateCompanyEnvironmentMutation,
   useAddOrganizationBusinessMutation
 } = companyServiceApi;
