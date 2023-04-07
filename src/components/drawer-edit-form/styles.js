@@ -1,4 +1,4 @@
-export const drawerPaperStyle = ({ palette, width = 800 }) => ({
+export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) => ({
   height: '100vh',
   width: width + 'px',
   maxWidth: '95%',
@@ -23,6 +23,7 @@ export const drawerPaperStyle = ({ palette, width = 800 }) => ({
     flex: 1,
     overflow: 'auto',
     padding: '24px',
+    ...contentStyles,
   },
   '.edit-footer': {
     background: "#FDFDFD",

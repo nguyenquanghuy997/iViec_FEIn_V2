@@ -20,6 +20,7 @@ import FilterModal from './FilterModal';
 import { HeaderStyle } from './styles';
 
 export default function TableHeader({
+  columns = [],
   createText = null,
   onClickCreate,
   onSubmitFilter,
@@ -95,7 +96,8 @@ export default function TableHeader({
         onClose={() => {
           setOpenFilter(false);
         }}
-        onSubmit={onSubmit}
+        columns={columns}
+        onSubmit={onSubmitFilter}
         width={384}
       />
     </HeaderStyle>

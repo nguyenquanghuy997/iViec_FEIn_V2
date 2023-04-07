@@ -1,6 +1,5 @@
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
-import Iconify from "@/components/Iconify";
 import {
   useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
@@ -12,8 +11,26 @@ import { Tag } from "antd";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import ApplicantBottomNav from "./ApplicantBottomNav";
+import useAuth from "@/hooks/useAuth";
+import { TBL_FILTER_TYPE } from "@/config";
+import {
+  LIST_GENDER,
+  LIST_MARITAL_STATUSES,
+  LIST_EXPERIENCE_NUMBER,
+  LIST_STEP_RECRUITMENT,
+} from "@/utils/formatString";
+import {
+  API_GET_LIST_RECRUITMENT,
+  API_GET_PROVINCE,
+  API_GET_LIST_JOB_SOURCE,
+  API_GET_USER_FROM_ORGANIZATION,
+  API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_JOB_CATEGORIES,
+  API_GET_APPLICANT_SKILLS,
+} from "@/routes/api";
 
 export const ApplicantItem = () => {
+  const { user } = useAuth();
   const router = useRouter();
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data, isLoading } = useGetAllFilterApplicantQuery(query, { skip: !isReady });
@@ -37,12 +54,18 @@ export const ApplicantItem = () => {
         fixed: "left",
         width: "220px",
         render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
+        filters: {
+          type: TBL_FILTER_TYPE.TEXT,
+        },
       },
       {
         dataIndex: "phoneNumber",
         title: "Số điện thoại",
         fixed: "left",
         width: "120px",
+        filters: {
+          type: TBL_FILTER_TYPE.TEXT,
+        },
       },
       {
         dataIndex: "dateOfBirth",
@@ -50,93 +73,94 @@ export const ApplicantItem = () => {
         render: (date) => fDate(date),
         width: "120px",
       },
-      { dataIndex: "email", title: "Email", width: "214px" },
+      {
+        dataIndex: "email",
+        title: "Email",
+        width: "214px",
+        filters: {
+          type: TBL_FILTER_TYPE.TEXT,
+        },
+      },
       {
         dataIndex: "recruitmentName",
         title: "Tin tuyển dụng",
         width: "300px",
-        name: "recruitmentIds",
-        type: "select",
-        multiple: true,
-        placeholder: "Chọn một hoặc nhiều tin tuyển dụng",
-        label: "Tin tuyển dụng",
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "recruitmentIds",
+          remoteUrl: API_GET_LIST_RECRUITMENT,
+          remoteMethod: 'POST',
+          placeholder: "Chọn một hoặc nhiều tin tuyển dụng",
+        },
       },
       {
         dataIndex: "recruitmentPipelineState",
         title: "Bước tuyển dụng",
         width: "200px",
-        name: "recruitmentPipelineStates",
-        label: "Bước tuyển dụng",
-        placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
-        type: "select",
-        multiple: true,
         render: (item, record) => getStatusPipelineStateType(item, record?.pipelineStateResultType),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "recruitmentPipelineStates",
+          placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
+          options: LIST_STEP_RECRUITMENT.map(item => ({ value: item.value, label: item.name })),
+        },
       },
       {
         dataIndex: "createdTime",
         title: "Ngày ứng tuyển",
         width: "200px",
-        type: "date",
-        label: "Ngày ứng tuyển",
-        name: "createdTime",
         render: (date) => fDate(date),
-        items: [
-          {
-            name: "createdTimeFrom",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Từ</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-          {
-            name: "createdTimeTo",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Đến</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_DATE,
+          name: ['createdTimeFrom', 'createdTimeTo'],
+          placeholder: 'Chọn ngày',
+        },
       },
       {
         dataIndex: "organizationName",
         title: "Đơn vị",
         width: "200px",
-        name: "organizationIds",
-        type: "tree",
-        isTree: true,
-        multiple: true,
-        placeholder: "Chọn một hoặc nhiều đơn vị",
         label: "Đơn vị",
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: 'organizationIds',
+          isTree: true,
+          placeholder: "Chọn một hoặc nhiều đơn vị",
+          remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
+        },
       },
       {
         dataIndex: "jobSourceName",
         title: "Nguồn",
         width: "200px",
-        name: "jobSourceIds",
-        label: "Nguồn",
-        placeholder: "Chọn 1 hoặc nhiều nguồn",
-        type: "select",
-        multiple: true,
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: 'jobSourceIds',
+          placeholder: "Chọn 1 hoặc nhiều nguồn",
+          remoteUrl: API_GET_LIST_JOB_SOURCE,
+        },
       },
       {
         dataIndex: "ownerName",
         title: "Cán bộ tuyển dụng",
         width: "220px",
-        name: "ownerIds",
-        label: "Cán bộ tuyển dụng",
-        placeholder: "Chọn 1 hoặc nhiều cán bộ",
-        type: "select",
-        multiple: true,
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "ownerIds",
+          placeholder: "Chọn 1 hoặc nhiều cán bộ",
+          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
+        },
       },
       {
         dataIndex: "creatorName",
         title: "Cán bộ tạo ứng viên",
         width: "200px",
-        name: "creatorIds",
-        label: "Người tạo ứng viên",
-        placeholder: "Chọn 1 hoặc nhiều người",
-        type: "select",
-        multiple: true,
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "creatorIds",
+          placeholder: "Chọn 1 hoặc nhiều người",
+          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
+        },
       },
       {
         title: "Học vấn",
@@ -144,40 +168,44 @@ export const ApplicantItem = () => {
         key: "name",
         width: "120px",
         render: (text) => <Tag>{text}</Tag>,
-        name: "educations",
-        type: "text",
-        placeholder: "Tìm kiếm...",
-        label: "Học vấn",
+        filters: {
+          type: TBL_FILTER_TYPE.TEXT,
+          name: "educations",
+        },
       },
       {
         dataIndex: "experience",
         title: "Kinh nghiệm làm việc",
         width: "200px",
-        name: "experience",
-        type: "text",
-        placeholder: "Tìm kiếm...",
-        label: "Kinh nghiệm làm việc",
+        filters: {
+          type: TBL_FILTER_TYPE.TEXT,
+        },
       },
       {
-        dataIndex: "fullName",
+        dataIndex: "jobCategories",
         title: "Ngành nghề",
         width: "200px",
-        name: "jobCategoryIds",
-        label: "Ngành nghề",
-        placeholder: "Chọn 1 hoặc nhiều ngành nghề",
-        type: "select",
-        multiple: true,
+        render: (jobCats = []) => {
+          return jobCats.map(cat => cat.name).join(', ');
+        },
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "jobCategoryIds",
+          placeholder: "Chọn 1 hoặc nhiều ngành nghề",
+          remoteUrl: API_GET_JOB_CATEGORIES,
+        },
       },
       {
         dataIndex: "yearOfExperience",
         title: "Số năm kinh nghiệm",
         width: "220px",
-        name: "yearsOfExperience",
-        type: "select",
-        multiple: false,
-        placeholder: "Chọn số năm kinh nghiệm",
-        label: "Số năm kinh nghiệm",
         render: (item) => YearOfExperience(item),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          placeholder: 'Chọn số năm kinh nghiệm',
+          name: "yearsOfExperience",
+          options: LIST_EXPERIENCE_NUMBER,
+        },
       },
       {
         title: "Kỹ năng",
@@ -192,55 +220,51 @@ export const ApplicantItem = () => {
           </>
         ),
         width: "200px",
-        name: "applicantSkillIds",
-        label: "Kỹ năng",
-        placeholder: "Chọn 1 hoặc nhiều kỹ năng",
-        type: "select",
-        multiple: true,
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "applicantSkillIds",
+          placeholder: "Chọn 1 hoặc nhiều kỹ năng",
+          remoteUrl: API_GET_APPLICANT_SKILLS,
+        },
       },
-      { dataIndex: "identityNumber", title: "CCCD/CMND", width: "200px" },
+      {
+        dataIndex: "identityNumber",
+        title: "CCCD/CMND",
+        width: "200px",
+      },
       {
         dataIndex: "sex",
         title: "Giới tính",
         render: (item) => Sex(item),
         width: "80px",
-        name: "sexs",
-        type: "radio",
-        label: "Giới tính",
+        filters: {
+          type: TBL_FILTER_TYPE.RADIO,
+          name: "sexs",
+          options: LIST_GENDER,
+        },
       },
       {
         dataIndex: "maritalStatus",
         title: "TTHN",
         width: "120px",
-        name: "maritalStatuses",
-        type: "select",
-        label: "Tình trạng hôn nhân",
         render: (item) => MaritalStatus(item),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT,
+          name: "maritalStatuses",
+          label: "Tình trạng hôn nhân",
+          options: [{ value: null, label: 'Tất cả' }].concat(LIST_MARITAL_STATUSES),
+        },
       },
       {
         dataIndex: "height",
         title: "Chiều cao",
         width: "120px",
-        name: "height",
-        label: "Chiều cao",
-        type: "number",
         align: "center",
-        items: [
-          {
-            name: "heightFrom",
-            type: "number",
-            placeholder: "Nhập chiều cao",
-            startIcon: <span>Từ</span>,
-            endIcon: <span>Cm</span>,
-          },
-          {
-            name: "heightTo",
-            type: "number",
-            placeholder: "Nhập chiều cao",
-            startIcon: <span>Đến</span>,
-            endIcon: <span>Cm</span>,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_NUMBER,
+          name: ['heightFrom', 'heightTo'],
+          placeholder: 'Nhập chiều cao',
+        },
       },
       {
         dataIndex: "weight",
@@ -250,103 +274,53 @@ export const ApplicantItem = () => {
         label: "Cân nặng",
         type: "number",
         align: "center",
-        items: [
-          {
-            name: "weightFrom",
-            type: "number",
-            placeholder: "Nhập cân nặng",
-            startIcon: <span>Từ</span>,
-            endIcon: <span>Kg</span>,
-          },
-          {
-            name: "weightTo",
-            type: "number",
-            placeholder: "Nhập cân nặng",
-            startIcon: <span>Đến</span>,
-            endIcon: <span>Kg</span>,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_NUMBER,
+          name: ['weightFrom', 'weightTo'],
+          placeholder: 'Nhập cân nặng',
+        },
       },
       {
         dataIndex: "expectedWorkingAddress",
         title: "Nơi làm việc mong muốn",
         width: "220px",
-        name: "expectWorkingAddressProvinceIds",
-        label: "Nơi làm việc mong muốn",
-        placeholder: "Chọn 1 hoặc nhiều Tỉnh/Thành phố",
-        type: "select",
-        multiple: true,
         render: (item) => Address(item),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "expectWorkingAddressProvinceIds",
+          placeholder: "Chọn 1 hoặc nhiều Tỉnh/Thành phố",
+          remoteUrl: API_GET_PROVINCE,
+        },
       },
       {
-        dataIndex: "expectedSalaryTo",
+        dataIndex: "expectedSalary",
         title: "Mức lương mong muốn",
         width: "240px",
-        name: "expectSalary",
-        placeholder: "",
-        label: "Mức lương mong muốn",
-        items: [
-          {
-            name: "expectSalaryFrom",
-            type: "number",
-            placeholder: "Nhập số tiền",
-            startIcon: <span>Từ</span>,
-            endIcon: <span>VNĐ</span>,
-          },
-          {
-            name: "expectSalaryTo",
-            type: "number",
-            placeholder: "Nhập số tiền",
-            startIcon: <span>Đến</span>,
-            endIcon: <span>VNĐ</span>,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_MONEY,
+          placeholder: 'Nhập số tiền',
+          name: ['expectedSalaryFrom', 'expectedSalaryTo'],
+        },
       },
       {
         dataIndex: "livingAddress",
         title: "Nơi ở hiện tại",
         width: "220px",
-        name: "livingAddresses",
-        type: "select",
-        label: "Nơi ở hiện tại",
         render: (item) => Address(item),
-        items: [
-          {
-            name: "livingAddressProvinceIds",
-            type: "select",
-            placeholder: "Chọn Tỉnh/Thành phố",
-            label: "Tỉnh/Thành phố",
-          },
-          {
-            name: "livingAddressDistrictIds",
-            type: "select",
-            placeholder: "Chọn Quận/Huyện",
-            label: "Quận/Huyện",
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_ADDRESS,
+          name: ['livingAddressProvinceIds', 'livingAddressDistrictIds'],
+        },
       },
       {
         dataIndex: "homeTower",
         title: "Quê quán",
         width: "220px",
-        name: "homeTowers",
-        type: "select",
-        label: "Quê quán",
         render: (item) => Address(item),
-        items: [
-          {
-            name: "homeTowerProvinceIds",
-            type: "select",
-            placeholder: "Chọn Tỉnh/Thành phố",
-            label: "Chọn Tỉnh/Thành phố",
-          },
-          {
-            name: "homeTowerDistrictIds",
-            type: "select",
-            placeholder: "Chọn Quận/Huyện",
-            label: "Chọn Quận/Huyện",
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_ADDRESS,
+          name: ['homeTowerProvinceIds', 'homeTowerDistrictIds'],
+        },
       },
     ];
   }, [query.PageIndex, query.PageSize]);

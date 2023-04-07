@@ -2,7 +2,7 @@
 import NextLink from 'next/link'
 
 // @mui
-import { Button, Container, Typography } from '@mui/material'
+import { Button, Container, Typography, Link } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 import { m } from 'framer-motion'
@@ -14,6 +14,9 @@ import Page from '@/components/Page'
 import { MotionContainer, varBounce } from '@/components/animate'
 // layouts
 import Layout from '@/layouts'
+import useAuth from '@/hooks/useAuth'
+import { useRouter } from 'next/router';
+import { PATH_AUTH } from '@/routes/paths'
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -30,6 +33,9 @@ Page403.getLayout = function getLayout(data, page) {
 }
 
 export default function Page403() {
+  const { logout } = useAuth();
+  const router = useRouter();
+
   return (
     <Page title='403 Forbidden'>
       <Container component={MotionContainer}>
@@ -57,6 +63,15 @@ export default function Page403() {
               Về trang chủ
             </Button>
           </NextLink>
+
+          <Link
+            component="button"
+            sx={{ mt: 2 }}
+            onClick={() => {
+              logout();
+              router.push(PATH_AUTH.login);
+            }}
+          >Hoặc đăng xuất</Link>
         </ContentStyle>
       </Container>
     </Page>

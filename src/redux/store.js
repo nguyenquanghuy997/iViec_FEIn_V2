@@ -12,6 +12,7 @@ import {calendarServiceApi} from '@/sections/interview/InterviewSlice'
 import {filterSlice} from "@/redux/common/filterSlice";
 import {applicantFilterSlice} from "@/redux/slice/applicantFilterSlice";
 import { pipelineFilterSlice } from './slice/pipelineFilterSlice'
+import { masterDataSlice } from './api/masterDataSlice';
 
 const store = configureStore({
   reducer: {
@@ -30,6 +31,8 @@ const store = configureStore({
     filterReducer: filterSlice.reducer,
     applicantFilterReducer: applicantFilterSlice.reducer,
     pipelineFilterReducer: pipelineFilterSlice.reducer,
+
+    [masterDataSlice.reducerPath]: masterDataSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -38,7 +41,8 @@ const store = configureStore({
     }).concat(apiSlice.middleware)
     .concat(organizationServiceApi.middleware)
     .concat(companyServiceApi.middleware)
-    .concat(calendarServiceApi.middleware),
+    .concat(calendarServiceApi.middleware)
+    .concat(masterDataSlice.middleware)
 })
 
 const { dispatch } = store

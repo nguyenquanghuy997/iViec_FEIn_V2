@@ -24,7 +24,10 @@ export default function DrawerEditForm({
   inActiveText = 'Không hoạt động',
   okText = 'Lưu',
   cancelText = 'Hủy',
+  contentStyles = {},
+  modalStyles = {},
   children,
+  ...props
 }) {
   const theme = useTheme();
 
@@ -80,8 +83,12 @@ export default function DrawerEditForm({
       open={open}
       onClose={(e) => toggleDrawer(false, e)}
       PaperProps={{
-        sx: drawerPaperStyle({ ...theme, width }),
+        sx: drawerPaperStyle({ ...theme, width, contentStyles }),
       }}
+      ModalProps={{
+        sx: modalStyles,
+      }}
+      {...props}
     >
       <FormProvider methods={methods} onSubmit={handleSubmit(handleOnSubmit)}>
         <Box display="flex" alignItems="center" justifyContent="space-between" className="edit-header">

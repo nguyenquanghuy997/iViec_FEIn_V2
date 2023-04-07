@@ -7,7 +7,7 @@ import {
 } from '@/routes/api'
 import axiosInstance from '@/utils/axios'
 
-const axiosBaseQuery =
+export const axiosBaseQuery =
   () =>
   async ({ url, method, data, params }) => {
     try {

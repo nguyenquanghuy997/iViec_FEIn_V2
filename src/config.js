@@ -219,3 +219,15 @@ export const PERMISSION_PAGES = {
   role: [PERMISSIONS.VIEW_ROLE],
 };
 
+export const TBL_FILTER_TYPE = {
+  TEXT: 'text',
+  SELECT: 'select',
+  SELECT_CHECKBOX: 'select_checkbox',
+  SELECT_ADDRESS: 'select_address',
+  RANGE_DATE: 'range_date',
+  RANGE_MONEY: 'range_money',
+  RANGE_NUMBER: 'range_number',
+  CHECKBOX: 'checkbox',
+  RADIO: 'radio',
+};
+

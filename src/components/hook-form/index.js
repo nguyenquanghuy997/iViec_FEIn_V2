@@ -10,6 +10,7 @@ export { default as RHFTextField } from "./RHFTextField";
 export { default as RHFSearchTextField } from "./RHFSearchTextField";
 export { default as RHFBasicSelect } from "./RHFBasicSelect";
 export { default as RHFSelect } from "./RHFSelect";
+export { default as RHFAddress } from './RHFAddress';
 
 export { default as RHFDatePicker } from "./RHFDatePicker";
 

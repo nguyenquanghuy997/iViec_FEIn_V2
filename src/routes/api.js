@@ -246,7 +246,7 @@ export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/CloseRecruitment
 // job source nguồn job
 
 // get user from organization
-export const API_GET_USER_FROM_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganizationId";
+export const API_GET_USER_FROM_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganization";
 export const API_GET_ADD_APPLICANT_TO_RECRUITMENT = "/applicant/ApplicantRecruitment/AddApplicantsToRecruitment";
 // API ApproveProcess
 export const API_CREATE_APPROVE_PROCESS = "/organization/ApprovalProcess/CreateApprovalProcess";
@@ -263,6 +263,7 @@ export const API_GET_LIST_JOB_SOURCE = "/masterData/JobSource/GetJobSources"
 export const API_GET_PROVINCE = "/masterData/Province/GetProvinces";
 // Lấy danh sách quận / huyện
 export const API_GET_DISTRICT = "/masterData/District/GetDistricts";
+export const API_GET_DISTRICT_DETAIL = '/masterData/District/GetDistrict';
 // Lấy danh sách job category
 export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories";
 

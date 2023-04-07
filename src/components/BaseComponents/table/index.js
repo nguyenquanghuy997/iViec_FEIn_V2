@@ -46,7 +46,12 @@ const DynamicColumnsTable = (props) => {
           return renderFunc(text, record, index, parseInt(PageIndex), parseInt(PageSize));
         };
       }
-      return col;
+
+      return {
+        ...col,
+        colFilters: col.filters,
+        filters: null,
+      };
     });
   }, [columnsVisible, columns]);
 
@@ -121,6 +126,7 @@ const DynamicColumnsTable = (props) => {
     <View>
       <TableHeader
         onSubmitFilter={onSubmitFilter}
+        columns={columnsDisplay}
       />
 
       <Content>

@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { pxToRem } from '@/utils/getFontValue';
 
 export const HeaderStyle = styled('div')(() => ({
   background: '#fff',
@@ -93,5 +94,62 @@ export const TableStyle = styled('div')(() => ({
     boxShadow:
       "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
     borderRadius: "4px",
+  },
+}));
+
+export const FilterItemStyle = styled('div')(({ theme: { palette } }) => ({
+  marginBottom: 24,
+  paddingBottom: 20,
+  borderBottom: '1px solid ' + palette.text.border,
+  '> div > label': {
+    fontWeight: 600,
+    fontSize: pxToRem(14),
+    color: palette.text.sub,
+    transform: 'none',
+    position: 'static',
+    display: 'block',
+    marginBottom: 16,
+    '&.Mui-focused': {
+      color: palette.text.sub,
+    },
+    '+ *': {
+      marginTop: 0,
+    },
+  },
+  '&:last-of-type': {
+    borderBottom: 'none',
+    marginBottom: 0,
+  },
+
+  '.date-fields, .range-number-fields, .range-money-fields': {
+    '.MuiInputAdornment-positionStart > span:last-of-type': {
+      display: 'inline-block',
+      minWidth: 30,
+    },
+    '.MuiInputAdornment-positionEnd > button': {
+      marginRight: -6,
+    },
+  },
+
+  '.radio-group-fields': {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    '> label': {
+      minWidth: 'calc('+ 100/3 +'% - 16px)',
+    },
+  },
+
+  '.address-fields': {
+    '.form-group': {
+      marginBottom: 16,
+      '> label': {
+        fontSize: pxToRem(14),
+        fontWeight: 500,
+        color: palette.text.primary,
+      },
+    },
+    '.MuiGrid-item:last-of-type > .form-group': {
+      marginBottom: 0,
+    },
   },
 }));
