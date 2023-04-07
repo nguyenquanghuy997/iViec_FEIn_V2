@@ -3,11 +3,12 @@ import Iconify from "@/components/Iconify";
 import { PipelineStateType } from "@/utils/enum";
 import { Box, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { memo } from "react";
+import React, { memo, useRef } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
 const Column = ({ droppableId, column }) => {
   // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
+  const windowHeight = useRef(window.innerHeight);
   return (
     <Stack spacing={2} sx={{ p: 1, py: 0 }}>
       <div
@@ -15,8 +16,10 @@ const Column = ({ droppableId, column }) => {
           background: "rgba(9, 30, 66, 0.1)",
           padding: '12px',
           // backdropFilter: 'blur(3px)'
-          // width: 300,
-          // minHeight: 1000,
+          width: 350,
+          minHeight: windowHeight.current,
+          maxHeight: windowHeight.current,
+          overflow: 'auto',
           // border: "2px solid #ccc",
           // borderRadius: "8px",
         }}
@@ -84,7 +87,7 @@ const Column = ({ droppableId, column }) => {
             mt={0.5}
           />
         </Box>
-        <div style={{ display: "flex", overflow: "auto" ,borderRadius: "8px"}}>
+        <Box style={{ borderRadius: "8px" }}>
           <Droppable droppableId={droppableId} key={droppableId}>
             {(provided) => {
               return (
@@ -94,9 +97,6 @@ const Column = ({ droppableId, column }) => {
                   style={{
                     // background: "rgba(9, 30, 66, 0.1)",
                     padding: 8,
-                    width: 320,
-                    minHeight: 1000,
-                    // border: "2px solid #ccc",
                     borderRadius: "8px",
                   }}
                 >
@@ -115,7 +115,7 @@ const Column = ({ droppableId, column }) => {
               );
             }}
           </Droppable>
-        </div>
+        </Box>
       </div>
     </Stack>
   );
