@@ -159,9 +159,9 @@ const ButtonTreeStyle = styled(Button)(({theme}) => ({
 
 const OrganizationFromHeadStyle = styled(Box)(({theme, width = 600}) => ({
   "&.organization-form-head": {
-    position: "fixed",
-    top: 0,
-    right: 0,
+    // position: "fixed",
+    // top: 0,
+    // right: 0,
     width: width,
     backgroundColor: '#FDFDFD',
     zIndex: 1,
@@ -177,9 +177,9 @@ const OrganizationFromHeadStyle = styled(Box)(({theme, width = 600}) => ({
 
 const OrganizationFromFooterStyle = styled(Box)(({theme, width = 600}) => ({
   "&.organization-form-footer": {
-    position: "fixed",
-    bottom: 0,
-    right: 0,
+    // position: "fixed",
+    // bottom: 0,
+    // right: 0,
     width: width,
     backgroundColor: '#FDFDFD',
     zIndex: 1,
