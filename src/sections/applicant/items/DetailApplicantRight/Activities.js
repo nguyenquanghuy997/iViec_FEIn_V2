@@ -29,14 +29,6 @@ export const Activities = ({ dataLog, dataApplicant }) => {
           >
             {dataLog?.events &&
               dataLog?.events.map((p, index) => {
-                var stagePrevious = "";
-                var stageResultPrevious = "";
-                if (index < dataLog?.events?.length) {
-                  stagePrevious =
-                    dataLog?.events[index + 1]?.recruitmentPipelineStateType;
-                  stageResultPrevious =
-                    dataLog?.events[index + 1]?.pipelineStateResultType;
-                }
                 return (
                   <div key={index}>
                     {p.eventType.includes("AddApplicantToRecruitmentEvent") && (
@@ -54,7 +46,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                               </span>
                               {" vào tin tuyển dụng "}
                               <span style={{ fontWeight: 600 }}>
-                                {"Tin tuyển dụng phổ biến"}
+                                {dataLog?.recruitmentName}
                               </span>
                             </p>
                           </div>
@@ -62,6 +54,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                         action="add"
                         avatarName={p?.creatorName}
                         isShow={false}
+                        data={p}
                       />
                     )}
                     {p.eventType.includes("CreateApplicantRecruitmentEvent") &&
@@ -91,6 +84,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                           action="add"
                           avatarName={p?.creatorName}
                           isShow={false}
+                          data={p}
                         />
                       ) : (
                         <NotificationBoard
@@ -102,12 +96,14 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                                 <span style={{ fontWeight: 600 }}>
                                   {dataApplicant?.fullName}
                                 </span>
-                                {" đã ứng tuyển."}
+                                {" đã ứng tuyển"}
                               </p>
                             </div>
                           }
                           action="create"
+                          avatarName={dataApplicant?.fullName}
                           avatarSrc={dataApplicant?.portraitImage ? srcImage(dataApplicant?.portraitImage): ''}
+                          data={p}
                           isShow={false}
                         />
                       ))}
@@ -131,7 +127,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                                 </span>
                                 {" ứng viên "}
                                 <span style={{ fontWeight: 600 }}>
-                                  {dataApplicant?.fullName}.
+                                  {dataApplicant?.fullName}
                                 </span>
                               </p>
                             </div>
@@ -139,6 +135,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                           action="add"
                           avatarName={p?.updaterName}
                           isShow={false}
+                          data={p}
                         />
                       ) : 
                       
@@ -158,8 +155,8 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                                 {" từ bước "}
                                 <span style={{ fontWeight: 600 }}>
                                   {PipelineStateType(
-                                    stagePrevious,
-                                    stageResultPrevious
+                                    p?.stagePrevious,
+                                    p?.stageResultPrevious
                                   )}
                                 </span>
                                 {" sang bước "}
@@ -183,7 +180,8 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                           }
                           action="add"
                           avatarName={p?.updaterName}
-                          isShow={false}
+                          data={p}
+                          isShow={true}
                         />
                       ) : (
                         <NotificationBoard
@@ -198,8 +196,8 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                                 {" đã tự động chuyển từ bước "}
                                 <span style={{ fontWeight: 600 }}>
                                   {PipelineStateType(
-                                    stagePrevious,
-                                    stageResultPrevious
+                                    p?.stagePrevious,
+                                    p?.stageResultPrevious
                                   )}
                                 </span>
                                 {" sang bước "}
@@ -215,6 +213,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                           action="add"
                           avatarName={p?.updaterName}
                           isShow={false}
+                          data={p}
                         />
                       ))}
                   </div>

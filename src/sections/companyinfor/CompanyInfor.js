@@ -2,12 +2,10 @@ import {Fragment} from 'react';
 import {RiCheckboxBlankCircleFill, RiImageFill} from "react-icons/ri";
 import {Box, Divider, Typography} from "@mui/material";
 import {get} from 'lodash';
-
 import EditInformation from "./edit/EditInformation";
 import {OrganizationSize} from "@/utils/enum";
 import {BoxInfoStyle} from "@/sections/companyinfor/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import ReadMoreText from "@/components/ReadMoreText";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import useModal from "@/sections/companyinfor/hooks/useModal";
 import CropImage from "@/sections/companyinfor/upload/CropImage";
@@ -26,11 +24,15 @@ const renderText = (title, content) => {
 };
 const renderItem = (title, content) => {
   return (
-      <Box sx={{mb: 3, py: 3, "&:first-of-type": {mt: 3}}}>
+      <Box sx={{pt: 3, pb: 1, "&:first-of-type": {mt: 3}}}>
         <Typography sx={{display: "inline-flex", fontSize: 16, fontWeight: 600, lineHeight: '24px', color: "#172B4D", mb: 1.5}}>
           {title}
         </Typography>
-        {content ? <ReadMoreText text={content} /> : <EmptyValue sx={{ minHeight: '100%' }} text={"Hiện chưa nội dung giới thiệu công ty"} />}
+        {content ? <Typography sx={{
+          fontSize: 14,
+          fontWeight: 400,
+          lineHeight: '24px'
+        }} dangerouslySetInnerHTML={{__html: content}} /> : <EmptyValue sx={{ minHeight: '100%' }} text={"Hiện chưa nội dung giới thiệu công ty"} />}
       </Box>
   );
 };

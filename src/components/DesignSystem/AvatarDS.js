@@ -53,7 +53,7 @@ export default function AvatarDS(props) {
             <Avatar
                 sx={{...sx}}
                 src={src}
-                {...stringAvatar(name?.toUpperCase())}
+                {...stringAvatar(name?.trim().toUpperCase())}
             />
         </Badge>
     );

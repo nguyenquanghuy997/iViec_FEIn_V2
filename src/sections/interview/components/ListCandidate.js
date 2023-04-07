@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const ListCandidate = ({ item, watch,isEditmode }) => {
+const ListCandidate = ({ item, watch, isEditmode }) => {
   const res = useGetApplicantByPipeLINEQuery({ RecruitmentPipelineStateId: watch }, {skip: !watch, });
   const { data: { items } = { items: [] }} = res;
 

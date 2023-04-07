@@ -18,7 +18,7 @@ const ActionItem = ({title, icon, onClick, sx, component, ...other}) => {
   }
   if (icon) {
     return (
-        <IconButton onClick={onClick} sx={{...sxProps}} {...other}>
+        <IconButton disableRipple onClick={onClick} sx={{...sxProps}} {...other}>
           {icon}
         </IconButton>
     )
