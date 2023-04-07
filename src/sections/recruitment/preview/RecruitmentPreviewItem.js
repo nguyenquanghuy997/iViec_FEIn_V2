@@ -247,6 +247,7 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
   const [tab, setTab] = useState(tabDefault);
   const [showDialogStage, setShowDialogStage] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
+  const [isFullHeader, setIsFullHeader] = useState(true);
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -300,132 +301,141 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
         return <span style={{ color: '#455570', border: '1px solid #455570', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Đóng</span>;
     }
   };
+
+  const collapseHeader = () => {
+    setIsFullHeader(!isFullHeader)
+  }
+
   return (
     <div>
       <TabContext value={tab}>
-        <HeadingBar style={{ mb: "28px", position: "unset", top: 8 }}>
-          <BoxFlex>
-            <Stack flexDirection="row" alignItems="center">
-              <Tooltip
-                title={
-                  <div dangerouslySetInnerHTML={{ __html: inforRecruitment }} />
-                }
-                placement="right-start"
-                componentsProps={{
-                  tooltip: {
-                    sx: {
-                      color: "#455570",
-                      backgroundColor: "#FDFDFD",
-                      fontSize: 13,
-                      border: "1px solid #E7E9ED",
-                      boxShadow:
-                        "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-                      borderRadius: "6px",
-                      fontWeight: 600,
-                      maxWidth: "540px",
-                      padding: "20px",
-                      paddingBottom: 0,
-                      "& .content": {
-                        display: "flex",
-                        marginBottom: "16px",
+        <HeadingBar style={{ mb: "28px", position: "relative", top: 0, zIndex: 1000 }}>
+          {
+            isFullHeader && <>
+              <BoxFlex>
+                <Stack flexDirection="row" alignItems="center">
+                  <Tooltip
+                    title={
+                      <div dangerouslySetInnerHTML={{ __html: inforRecruitment }} />
+                    }
+                    placement="right-start"
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          color: "#455570",
+                          backgroundColor: "#FDFDFD",
+                          fontSize: 13,
+                          border: "1px solid #E7E9ED",
+                          boxShadow:
+                            "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+                          borderRadius: "6px",
+                          fontWeight: 600,
+                          maxWidth: "540px",
+                          padding: "20px",
+                          paddingBottom: 0,
+                          "& .content": {
+                            display: "flex",
+                            marginBottom: "16px",
+                          },
+                          "& .content-title": {
+                            fontWeight: 500,
+                            minWidth: 140,
+                          },
+                        },
                       },
-                      "& .content-title": {
-                        fontWeight: 500,
-                        minWidth: 140,
-                      },
-                    },
-                  },
-                }}
-              >
-                <div>
-                  <NavGoBack
-                    sx={{
-                      marginTop: 0,
-                      padding: 0,
-                      color: '#172B4D',
-                      fontWeight: 700
                     }}
-                    link={PATH_DASHBOARD.dashboard}
-                    name={RecruitmentData?.name}
-                  ></NavGoBack>
-                </div>
-              </Tooltip>
+                  >
+                    <div>
+                      <NavGoBack
+                        sx={{
+                          marginTop: 0,
+                          padding: 0,
+                          color: '#172B4D',
+                          fontWeight: 700
+                        }}
+                        link={PATH_DASHBOARD.dashboard}
+                        name={RecruitmentData?.name}
+                      ></NavGoBack>
+                    </div>
+                  </Tooltip>
 
-              <ButtonIcon
-                style={{
-                  marginLeft: '12px'
-                }}
-                icon={
-                  <Iconify
-                    icon={"ri:edit-2-fill"}
-                    width={20}
-                    height={20}
-                    color="#8A94A5"
+                  <ButtonIcon
+                    style={{
+                      marginLeft: '12px'
+                    }}
+                    icon={
+                      <Iconify
+                        icon={"ri:edit-2-fill"}
+                        width={20}
+                        height={20}
+                        color="#8A94A5"
+                      />
+                    }
                   />
-                }
-              />
 
-              <Box>{DivRecruitmentDataProcessStatus(RecruitmentData?.processStatus)}</Box>
-            </Stack>
-            <Stack flexDirection={"row"}>
-              <ButtonGray
-                variant="contained"
-                tittle="Xem tin tuyển dụng"
-                sx={{
-                  border: "1px solid #455570",
-                  fontSize: '12px',
-                  fontWeight: 600,
-                }}
-                // onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
-                icon={
-                  <Iconify
-                    icon={"ri:share-box-line"}
-                    width={20}
-                    height={20}
-                    color="#5C6A82"
-                    mr={1}
+                  <Box>{DivRecruitmentDataProcessStatus(RecruitmentData?.processStatus)}</Box>
+                </Stack>
+                <Stack flexDirection={"row"}>
+                  <ButtonGray
+                    variant="contained"
+                    tittle="Xem tin tuyển dụng"
+                    sx={{
+                      border: "1px solid #455570",
+                      fontSize: '12px',
+                      fontWeight: 600,
+                    }}
+                    // onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
+                    icon={
+                      <Iconify
+                        icon={"ri:share-box-line"}
+                        width={20}
+                        height={20}
+                        color="#5C6A82"
+                        mr={1}
+                      />
+                    }
                   />
-                }
-              />
-            </Stack>
-          </BoxFlex>
-          <Box sx={{ width: "100%", typography: "body1", mb: 3, mt: 1 }}>
-            <Box>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-                sx={{
-                  "& .MuiTab-root": {
-                    color: '#8A94A5'
-                    // minHeight: "36px",
-                    // textTransform: "unset",
-                    // padding: "8px 12px",
-                  },
-                  "& .Mui-selected": {
-                    color: '#1976D2',
-                    fontWeight: 700
-                    // color: "white !important",
-                    // backgroundColor: "#455570",
-                    // borderRadius: "6px",
-                  },
-                  // "& .MuiTabs-indicator": {
-                  //   display: "none",
-                  // },
-                }}
-              >
-                <Tab
-                  label="ỨNG VIÊN"
-                  value={1}
-                  sx={{
-                    "&:not(:last-of-type)": {
-                      marginRight: "16px",
-                    },
-                  }}
-                />
-                <Tab label="LỊCH PHỎNG VẤN" value={2} />
-              </TabList>
-            </Box>
-          </Box>
+                </Stack>
+              </BoxFlex>
+              <Box sx={{ width: "100%", typography: "body1", mb: 3, mt: 1 }}>
+                <Box>
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
+                    sx={{
+                      "& .MuiTab-root": {
+                        color: '#8A94A5'
+                        // minHeight: "36px",
+                        // textTransform: "unset",
+                        // padding: "8px 12px",
+                      },
+                      "& .Mui-selected": {
+                        color: '#1976D2',
+                        fontWeight: 700
+                        // color: "white !important",
+                        // backgroundColor: "#455570",
+                        // borderRadius: "6px",
+                      },
+                      // "& .MuiTabs-indicator": {
+                      //   display: "none",
+                      // },
+                    }}
+                  >
+                    <Tab
+                      label="ỨNG VIÊN"
+                      value={1}
+                      sx={{
+                        "&:not(:last-of-type)": {
+                          marginRight: "16px",
+                        },
+                      }}
+                    />
+                    <Tab label="LỊCH PHỎNG VẤN" value={2} />
+                  </TabList>
+                </Box>
+              </Box>
+            </>
+          }
           {tab === 1 ? (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
@@ -758,10 +768,23 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
               </Stack>
             </BoxFlex>
           )}
+
+          <ButtonIcon
+            className='btn-collapse-header'
+            style={{
+              
+            }}
+            onClick={() => collapseHeader()}
+            icon={
+              <Iconify icon={isFullHeader?"material-symbols:arrow-drop-up":'material-symbols:arrow-drop-down'}
+                width={20}
+                height={20}
+                color="#5C6A82" />
+            } />
         </HeadingBar>
         <Container
           maxWidth={themeStretch ? false : "xl"}
-          sx={{ ...(smDown && { padding: 0 }) }}
+          sx={{ ...(smDown && { padding: 0 }), position: 'relative', zIndex: 999 }}
         >
           {/* <TabPanel value="1">
             "ha"
