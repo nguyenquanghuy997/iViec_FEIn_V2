@@ -1,9 +1,6 @@
-import {
-  Typography,
-  useTheme,
-} from '@mui/material';
+import FilterFields from "./filter-fields";
 import DrawerEditForm from "@/components/drawer-edit-form";
-import FilterFields from './filter-fields';
+import { Typography, useTheme } from "@mui/material";
 
 export default function FilterModal({
   columns = [],
@@ -12,9 +9,7 @@ export default function FilterModal({
 }) {
   const { palette } = useTheme();
 
-  const handleSubmit = () => {
-    // console.log('data', data);
-  }
+  const handleSubmit = () => {};
 
   const DrawerContent = (formProps) => {
     return (
@@ -29,13 +24,10 @@ export default function FilterModal({
           Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ liệu
         </Typography>
 
-        <FilterFields
-          columns={columns}
-          {...formProps}
-        />
+        <FilterFields columns={columns} {...formProps} />
       </>
-    )
-  }
+    );
+  };
 
   return (
     <DrawerEditForm
@@ -46,10 +38,10 @@ export default function FilterModal({
       activeText="Tự động"
       inActiveText="Tự động"
       // hideBackdrop={true}
-      contentStyles={{ padding: '14px' }}
+      contentStyles={{ padding: "14px" }}
       modalStyles={{
-        '.MuiModal-backdrop': {
-          background: 'transparent',
+        ".MuiModal-backdrop": {
+          background: "transparent",
         },
       }}
       onSubmit={handleSubmit}
@@ -57,5 +49,5 @@ export default function FilterModal({
     >
       <DrawerContent />
     </DrawerEditForm>
-  )
+  );
 }
