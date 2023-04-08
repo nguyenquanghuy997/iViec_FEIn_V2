@@ -1,9 +1,9 @@
 import {
   useGetApplicantCurrentStateWithRecruitmentStatesMutation,
   useGetApplicantRecruitmentMutation,
-  useGetApplicantReviewFormQuery,
   useGetRecruitmentsByApplicantQuery,
   useLazyGetApplicantByIdQuery,
+  useLazyGetApplicantReviewFormQuery,
 } from "../ApplicantFormSlice";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
 import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
@@ -150,7 +150,7 @@ function ApplicantPreviewItem({
             tittle={"Đánh giá"}
             type="submit"
             onClick={() => setIsOpenReview(true)}
-            isDisabled={reviewFormCriterias ? false : true}
+            isDisabled={isSuccessReview  ? false : true}
             mr={2}
             sx={{
               ":hover": {
@@ -240,16 +240,19 @@ function ApplicantPreviewItem({
     useGetApplicantRecruitmentMutation();
   const [fetchDataApplicant, { data: data = [] }] =
     useLazyGetApplicantByIdQuery();
-
-  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
-    {
-      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-      ApplicantId: ApplicantId,
-    },
-    {
-      skip: !pipelines?.recruitmentPipelineStates?.length > 0,
-    }
-  );
+    const [fetchReviewForm, { data: reviewFormCriterias , isSuccess: isSuccessReview}] =
+    useLazyGetApplicantReviewFormQuery( {
+      skip: pipelines?.recruitmentPipelineStates?.length > 0,
+    });
+  // const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
+  //   {
+  //     RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+  //     ApplicantId: ApplicantId,
+  //   },
+  //   {
+  //     skip: !pipelines?.recruitmentPipelineStates?.length > 0,
+  //   }
+  // );
 
   const [actionId, setActionId] = useState();
   const [actionType, setActionType] = useState();
@@ -286,8 +289,20 @@ function ApplicantPreviewItem({
       fetchDataApplicant({
         applicantId: recruiment[0]?.applicantId,
       });
+      fetchReviewForm({
+        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+        ApplicantId: recruiment[0]?.applicantId,
+      });
     }
   }, [isFetching]);
+  useEffect(() => {
+    if (isSuccess) {
+      fetchReviewForm({
+        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+        ApplicantId: selectedOption?.applicantId,
+      });
+    }
+  }, [isSuccess]);
   const onChangeRecruiment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
@@ -304,6 +319,7 @@ function ApplicantPreviewItem({
       applicantId: e.target.value.applicantId,
     });
   };
+
   return (
     <div>
       <HeadingFixed>
@@ -518,7 +534,13 @@ function ApplicantPreviewItem({
           />
         )}
         {isOpenReview && (
-          <ApplicantReviewModal show={isOpenReview} setShow={setIsOpenReview} />
+          <ApplicantReviewModal
+            show={isOpenReview}
+            setShow={setIsOpenReview}
+            applicantId={data?.id}
+            recruitmentId={selectedOption?.id}
+            data={reviewFormCriterias}
+          />
         )}
       </Container>
     </div>

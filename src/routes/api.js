@@ -47,6 +47,7 @@ export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantS
 
 //Apply mẫu đánh giá
 export const API_APPLICANT_REVIEW_FORM = "/applicant/ApplicantReview/GetApplicantReviewForm";
+export const API_ADD_APPLICANT_REVIEW = "/applicant/ApplicantReview/CreateApplicantReview";
 
 //Tin tuyển dụng
 export const API_LIST_JOBS = "/api/recruitment/Recruitment/GetRecruitments"; //new  danh sách tin
