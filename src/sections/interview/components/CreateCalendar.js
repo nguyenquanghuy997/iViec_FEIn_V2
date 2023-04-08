@@ -1,29 +1,30 @@
-import CloseIcon from "../../../assets/CloseIcon";
-import {
-  useAddCalendarMutation,
-} from "../InterviewSlice";
-import InterviewCouncil from "./InterviewCouncil";
-import ListCandidate from "./ListCandidate";
+import { useAddCalendarMutation } from "../InterviewSlice";
 import PersonalInterview from "./PersonalInterview";
 import { FormProvider } from "@/components/hook-form";
 import { LoadingButton } from "@mui/lab";
-import { Box, List, Button, Typography, Grid, Drawer } from "@mui/material";
+import { Divider, Grid, Modal } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { ViewModel } from "@/utils/cssStyles";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
+import { ButtonDS } from "@/components/DesignSystem";
+import Iconify from "@/components/Iconify";
+import ListCandidate from "@/sections/interview/components/ListCandidate";
+import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
 
 export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
-    width: "1000px",
+    width: "1000px"
   },
   [theme.breakpoints.up("xl")]: {
-    width: "1400px",
-  },
+    width: "1400px"
+  }
 }));
 
-const CreateCalendar = ({ open, onClose, onOpen }) => {
+const CreateCalendar = ({ open, setOpen }) => {
   const defaultValues = {
     name: "",
     recruitmentId: "",
@@ -35,7 +36,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     reviewFormId: "",
     isSendMailCouncil: false,
     isSendMailApplicant: false,
-    bookingCalendarGroups: [],
+    bookingCalendarGroups: []
   };
   // const CalendarSchema = Yup.object().shape({
   //   name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
@@ -63,19 +64,15 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
 
   const methods = useForm({
     // resolver: yupResolver(CalendarSchema),
-    defaultValues,
+    defaultValues
   });
 
   const {
     setError,
-    watch,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }
   } = methods;
 
-  const watchStep = watch("recruitmentId");
-  const watchPipelineStep = watch("recruitmentPipelineStateId");
-  const watchInterviewType = watch("interviewType");
   const [addCalendar] = useAddCalendarMutation();
   // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
 
@@ -141,11 +138,11 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
                 convertDurationTimeToSeconds(
                   `${d?.bookingCalendarApplicants[item].interviewTime}:00`
                 ) +
-                  convertDurationTimeToSeconds(
-                    toHHMMSS(
-                      d?.bookingCalendarApplicants[item].interviewDuration
-                    )
+                convertDurationTimeToSeconds(
+                  toHHMMSS(
+                    d?.bookingCalendarApplicants[item].interviewDuration
                   )
+                )
               );
               return {
                 applicantId: item,
@@ -154,23 +151,23 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
                 ).toISOString(),
                 interviewDuration: toHHMMSS(
                   d?.bookingCalendarApplicants[item].interviewDuration
-                ),
+                )
               };
-            }),
-          },
-        ],
+            })
+          }
+        ]
       };
       try {
         await addCalendar(body).unwrap();
         enqueueSnackbar("Đặt lịch thành công!", {
-          autoHideDuration: 2000,
+          autoHideDuration: 2000
         });
         onClose();
         // location.reload()
       } catch (err) {
         enqueueSnackbar(errors.afterSubmit?.message, {
           autoHideDuration: 1000,
-          variant: "error",
+          variant: "error"
         });
       }
     } catch (err) {
@@ -181,109 +178,108 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     }
   };
 
-  // const handleClearField = (field) => {
-  //   if (!field) return;
-  //   else methods.resetField(field);
-  // };
-
-  // useEffect(() => {
-  //   if (!Data?.id) return;
-
-  //   setValue("name", body.name);
-
-  // }, [isEditMode, data, preview]);
-
-  const list = () => (
-    <BoxInnerStyle>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <List
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            p: 0,
-          }}
-        >
-          <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-            Đặt lịch phỏng vấn
-          </Typography>
-          <Button
-            onClick={onClose}
-            sx={{
-              "&:hover": {
-                background: "white",
-              },
-            }}
-          >
-            <CloseIcon />
-          </Button>
-        </List>
-
-        <Box>
-          <Grid container border="1px solid #E7E9ED">
-            <Grid
-              item
-              xs={12}
-              md={6}
-              borderRight="1px solid #E7E9ED"
-              sx={{ padding: "24px 24px 0 24px" }}
-            >
-              <Box sx={{ width: "100%", typography: "body1", mb: 3 }}>
-                <PersonalInterview
-                  watchStep={watchStep}
-                  watchType={watchInterviewType}
-                  watchPipe={watchPipelineStep}
-                />
-              </Box>
-            </Grid>
-            <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
-              <ListCandidate watchStep={watchStep} watch={watchPipelineStep} />
-            </Grid>
-            <Grid item xs={5} md={3}>
-              <InterviewCouncil watchStep={watchStep} />
-            </Grid>
-          </Grid>
-        </Box>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 12,
-            position: "fixed",
-            bottom: 0,
-            background: "#FDFDFD",
-            width: "100%",
-            padding: "16px 24px",
-            border: "1px solid #EFF3F6",
-          }}
-        >
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
-          >
-            {"Lưu"}
-          </LoadingButton>
-          <div style={{ width: 8 }} />
-
-          <LoadingButton
-            variant="text"
-            sx={{ color: "#455570" }}
-            onClick={onClose}
-          >
-            {"Hủy"}
-          </LoadingButton>
-        </div>
-      </FormProvider>
-    </BoxInnerStyle>
-  );
+  const onClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div>
-      <Drawer anchor="right" open={open} onClose={onClose} onOpen={onOpen}>
-        {list("right")}
-      </Drawer>
-    </div>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Modal
+        open={open}
+        onClose={onClose}
+        sx={{ display: "flex", justifyContent: "flex-end" }}
+      >
+        <ViewModel sx={{ width: "unset", height: "100%", justifyContent: "space-between" }}>
+          <View style={{ overflow: "hidden" }}>
+            <View>
+              <View
+                flexrow="true"
+                atcenter="center"
+                pv={12}
+                ph={24}
+                bgcolor={"#FDFDFD"}
+              >
+                <Text flex="true" fontsize={16} fontweight={"600"}>
+                  Đặt lịch phỏng vấn
+                </Text>
+                <ButtonDS
+                  type="submit"
+                  sx={{
+                    backgroundColor: "#fff",
+                    boxShadow: "none",
+                    ":hover": {
+                      backgroundColor: "#EFF3F7"
+                    },
+                    textTransform: "none",
+                    padding: "12px",
+                    minWidth: "unset"
+                  }}
+                  onClick={onClose}
+                  icon={
+                    <Iconify
+                      icon={"mi:close"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
+                    />
+                  }
+                />
+              </View>
+              <Divider />
+            </View>
+            <View style={{ minWidth: "600px", maxWidth: "1400px", overflow: "hidden" }}>
+              <Grid container flexDirection={"row"} height={"100%"} flexWrap={"nowrap"} overflow={"hidden"}>
+                <Grid container sx={{ width: "600px", overflowY: "auto" }} p={3} height={"100%"} flexWrap={"nowrap"}
+                      flexDirection={"column"}>
+                  <PersonalInterview />
+                </Grid>
+                <Divider orientation="vertical"/>
+                <Grid p={3} sx={{
+                  minWidth: "400px"
+                }}>
+                  <ListCandidate />
+                </Grid>
+                <Divider orientation="vertical"/>
+                <Grid sx={{
+                  minWidth: "400px",
+                  overflowY: "auto"
+                }}>
+                  <InterviewCouncil />
+                </Grid>
+              </Grid>
+            </View>
+          </View>
+
+          <View
+            flexrow="true"
+            jcbetween="true"
+            pv={12}
+            ph={16}
+            boxshadow={"inset 0px 1px 0px #EBECF4"}
+          >
+            <View flexrow="true">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+                sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
+              >
+                {"Lưu"}
+              </LoadingButton>
+              <div style={{ width: 8 }} />
+
+              <LoadingButton
+                variant="text"
+                sx={{ color: "#455570" }}
+                onClick={onClose}
+              >
+                {"Hủy"}
+              </LoadingButton>
+            </View>
+          </View>
+        </ViewModel>
+      </Modal>
+    </FormProvider>
   );
 };
 export default CreateCalendar;

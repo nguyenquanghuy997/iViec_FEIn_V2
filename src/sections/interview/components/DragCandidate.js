@@ -27,9 +27,10 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="characters">
+        <Droppable sx={{height: '100%'}} droppableId="characters">
           {(provided) => (
             <ul
+              style={{overflowY: 'auto', height: 'calc(100% - 105px)'}}
               className="characters"
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -76,6 +77,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                 <MenuListIcon />
                                 <Box sx={{ display: "flex", ml: 1 }}>
                                   <img
+                                    alt={""}
                                     style={{
                                       width: 40,
                                       height: 40,

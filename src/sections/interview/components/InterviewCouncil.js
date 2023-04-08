@@ -2,31 +2,38 @@ import SelectCouncils from "./SelectCouncils";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { Typography, Box } from "@mui/material";
 import React from "react";
+import { useFormContext } from "react-hook-form";
+import { Label } from "@/components/hook-form/style";
+import { useTheme } from "@mui/material/styles";
 
-const InterviewCouncil = ({ isEditmode, item,watchStep, action }) => {
+const InterviewCouncil = ({ isEditmode, item, action }) => {
+  const { watch } = useFormContext();
+  const { palette } = useTheme();
   const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
-    PageSize: 20,
+    PageSize: 20
   });
-  const coOwners = Data?.filter((item) => item.id === watchStep);
+  const coOwners = Data?.filter((item) => item.id === watch("recruitmentId"));
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
-        Hội đồng phỏng vấn
-      </Typography>
-      {watchStep && (
+      <Label mb={3}>
+        <Typography variant={"subtitle2"} color={palette.text.primary}>
+          Hội đồng phỏng vấn
+        </Typography>
+      </Label>
+      {watch("recruitmentId") && (
         <SelectCouncils
           options={coOwners[0]?.coOwners?.map((i) => ({
             id: i.id,
             value: i.id,
             label: i.name,
             mail: i.email || "tuyetda@fpt.com.vn",
-            name: i.name,
+            name: i.name
             // position: "Giám đốc tuyển dụng",
           }))}
           name="councilIds"
-          defaultItem ={item}
+          defaultItem={item}
           isEditmode={isEditmode}
           action={action}
           fullWidth

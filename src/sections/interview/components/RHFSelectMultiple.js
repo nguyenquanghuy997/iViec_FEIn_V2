@@ -1,14 +1,13 @@
 import DragCandidate from "./DragCandidate";
 import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
-// import { RHFCheckbox } from "@/components/hook-form";
 import {
   LabelStyle,
   MenuItemStyle,
   SearchInputStyle,
   SelectFieldStyle,
   TextFieldStyle,
-  useStyles,
+  useStyles
 } from "@/components/hook-form/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { containsText } from "@/utils/function";
@@ -20,7 +19,7 @@ import {
   Stack,
   Typography,
   Button,
-  Card,
+  Card
 } from "@mui/material";
 import moment from "moment";
 import React, { memo, useEffect, useState } from "react";
@@ -28,12 +27,12 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
 const MenuProps = {
   PaperProps: {
-    style: { maxHeight: 330 },
+    style: { maxHeight: 330 }
   },
   disableAutoFocusItem: true,
   MenuListProps: {
-    disableListWrap: true,
-  },
+    disableListWrap: true
+  }
 };
 
 const InputProps = {
@@ -41,7 +40,7 @@ const InputProps = {
     <InputAdornment position="start">
       <Iconify icon={"ri:search-2-line"} color="#5c6a82" />
     </InputAdornment>
-  ),
+  )
 };
 
 const renderOptions = (options) => {
@@ -50,10 +49,11 @@ const renderOptions = (options) => {
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
         <Box sx={{ display: "flex" }}>
           <img
+            alt={""}
             style={{
               width: 36,
               height: 36,
-              borderRadius: "10px",
+              borderRadius: "10px"
             }}
             src={variant?.image}
           />
@@ -65,7 +65,7 @@ const renderOptions = (options) => {
               sx={{
                 fontSize: 13,
                 fontWeight: 400,
-                color: "#5C6A82",
+                color: "#5C6A82"
               }}
             >
               {variant?.phone}
@@ -83,16 +83,9 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
   const { control } = useFormContext();
 
   const classes = useStyles();
-  const { defaultValue, isRequired, title, options, disabled, multiple } = props;
+  const { defaultValue, isRequired, title, options, disabled, multiple } =
+    props;
   const { remove } = useFieldArray({ control, name });
-
-  // const convertDurationTimeToSeconds = (time) => {
-  //   const splitToString = time.split(":");
-  //   return (
-  //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
-  //   );
-  // };
-
   const renderChipsSelect = (options, value) => {
     const [open, setOpen] = useState(false);
     const handleClose = () => {
@@ -105,22 +98,26 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
     const test = value[0]?.bookingCalendarGroupApplicants?.map(
       (item) => item?.interviewTime
     );
+    const duration = value[0]?.bookingCalendarGroupApplicants?.map(
+      (item) => item?.interviewDuration
+    );
+    const convertDurationTimeToSeconds = (time) => {
+      const splitToString = time.split(":");
+      return (
+        +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+      );
+    };
+
+    const convertStoMs = (s) => {
+      const totalMinutes = Math.floor(s / 60);
+      const hours = Math.floor(totalMinutes / 60);
+      const newHours = hours < 10 ? "0" + hours : hours;
+      const minutes = totalMinutes % 60;
+      return `${newHours}:${minutes}`;
+    };
 
     return (
-      <Stack flexWrap="wrap" justifyContent="flex-start">
-        {/* <Box sx={{ display: "flex", justifyContent: "center", alignItems:'center',fontSize: 12 }}>
-          <RHFCheckbox
-            name="adjust"
-            label="Điều chỉnh hàng loạt"
-            style={{ fontSize: "12px" }}
-          />
-          <p>
-            <RiEqualizerFill color={"#1976D2"} size={'15'} />
-            Điều chỉnh
-          </p>
-  
-        </Box> */}
-
+      <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
           data={options?.filter((option) =>
             (value || []).includes(option?.value)
@@ -130,7 +127,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
           onOpen={handleOpen}
         />
         {isEditmode &&
-          value[0]?.bookingCalendarGroupApplicants?.map((item,index) => (
+          value[0]?.bookingCalendarGroupApplicants?.map((item, index) => (
             <div
               style={{
                 background: "#F2F4F5",
@@ -138,6 +135,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                 marginBottom: "16px",
                 borderRadius: "6px ",
                 width: "100%",
+                height: "100%"
               }}
             >
               <Card
@@ -146,29 +144,29 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                   border: "none",
                   mb: 2,
                   borderRadius: "6px",
-                  background: "#F2F4F5",
+                  background: "#F2F4F5"
                 }}
               >
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "space-between"
                   }}
                 >
                   <div
                     style={{
                       display: "flex",
-                      alignItems: "center",
+                      alignItems: "center"
                     }}
                   >
-                    {/* <MenuListIcon /> */}
                     <Box sx={{ display: "flex", ml: 1 }}>
                       <img
+                        alt={""}
                         style={{
                           width: 40,
                           height: 40,
                           borderRadius: "10px",
-                          marginRight: "16px",
+                          marginRight: "16px"
                         }}
                         src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.applicant?.portraitImage}`}
                       />
@@ -176,7 +174,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                         <Typography
                           sx={{
                             fontSize: "13px",
-                            fontWeight: "600",
+                            fontWeight: "600"
                           }}
                         >
                           {item?.applicant?.fullName}
@@ -185,7 +183,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                           color="#455570"
                           sx={{
                             fontSize: "12px",
-                            fontWeight: "400",
+                            fontWeight: "400"
                           }}
                         >
                           {item?.applicant?.phoneNumber}
@@ -263,7 +261,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "end",
+                      justifyContent: "end"
                     }}
                   >
                     <Button
@@ -290,7 +288,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                     sx={{
                       fontWeight: 600,
                       m: "0 auto",
-                      fontSize: 13,
+                      fontSize: 13
                     }}
                   >
                     {time}
@@ -309,10 +307,15 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                         borderRadius: "6px",
                         fontSize: 13,
                         py: 2,
-                        fontWeight: 600,
+                        fontWeight: 600
                       }}
                     >
-                      {moment(test[index]).format("hh:mm")}
+                      {convertStoMs(
+                        convertDurationTimeToSeconds(
+                          moment(test[index]).format("hh:mm:ss")
+                        ) - convertDurationTimeToSeconds(duration[index])
+                      )}
+                      -{moment(test[index]).format("hh:mm")}
                       {` Ngày ${moment(test[index]).format("DD-MM-YYYY")}`}
                     </Card>
                   ) : (
@@ -320,7 +323,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                       sx={{
                         textAlign: "center",
                         px: 2,
-                        borderRadius: "6px",
+                        borderRadius: "6px"
                       }}
                     >
                       <Button
@@ -328,7 +331,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
                           m: "0 auto",
                           textTransform: "none",
                           fontWeight: 400,
-                          fontSize: 14,
+                          fontSize: 14
                         }}
                         // onClick={onOpen}
                       >
@@ -359,7 +362,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
       control={control}
       defaultValue={defaultValue || []}
       render={({ field, fieldState: { error } }) => (
-        <Stack direction="column">
+        <Stack height={"100%"} direction="column">
           {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
           <SelectFieldStyle
             sx={{
@@ -367,8 +370,8 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
               height: "36px",
               borderRadius: "8px",
               "& .MuiSvgIcon-root": {
-                display: "none",
-              },
+                display: "none"
+              }
             }}
             {...field}
             value={field.value || []}
@@ -417,7 +420,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
             sx={{
               color: style.COLOR_TEXT_DANGER,
               fontSize: style.FONT_XS,
-              fontWeight: style.FONT_NORMAL,
+              fontWeight: style.FONT_NORMAL
             }}
           >
             {error?.message}

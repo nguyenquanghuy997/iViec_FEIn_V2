@@ -1,5 +1,5 @@
 import CloseIcon from "../../../assets/CloseIcon";
-import { useGetDetailCalendarsQuery, useUpdateCalendarMutation } from "../InterviewSlice";
+import { useUpdateCalendarMutation } from "../InterviewSlice";
 import InterviewCouncil from "../components/InterviewCouncil";
 import ListCandidate from "../components/ListCandidate";
 import PersonalInterview from "../components/PersonalInterview";
@@ -7,6 +7,7 @@ import { FormProvider } from "@/components/hook-form";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Drawer, Grid, List, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { get } from "lodash";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -20,11 +21,11 @@ export const BoxInnerStyle = styled("Box")(({theme}) => ({
   },
 }));
 
-const EditForm = ({item, open, onClose, onOpen}) => {
-  const {data: DetailData} = useGetDetailCalendarsQuery({
-    BookingCalendarId: item?.id,
-  });
-  const defaultValues = {};
+const EditForm = ({ item, open, onClose, onOpen }) => {
+  // const { data: DetailData } = useGetDetailCalendarsQuery({
+  //   BookingCalendarId: item?.id,
+  // });
+  const defaultValues = { ...item };
   // const CalendarSchema = Yup.object().shape({
   //   name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
   //   recruitmentId: Yup.string().required(
@@ -52,19 +53,51 @@ const EditForm = ({item, open, onClose, onOpen}) => {
     // resolver: yupResolver(CalendarSchema),
     defaultValues,
   });
-  
   const {
     setValue,
     handleSubmit,
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
   } = methods;
+
   const [updateCalendar] = useUpdateCalendarMutation();
-  
-  const {enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
+
+  // const toHHMMSS = (num) => {
+  //   var sec_num = parseInt(num * 60, 10);
+  //   var hours = Math.floor(sec_num / 3600);
+  //   var minutes = Math.floor((sec_num - hours * 3600) / 60);
+  //   var seconds = sec_num - hours * 3600 - minutes * 60;
+  //
+  //   if (hours < 10) {
+  //     hours = "0" + hours;
+  //   }
+  //   if (minutes < 10) {
+  //     minutes = "0" + minutes;
+  //   }
+  //   if (seconds < 10) {
+  //     seconds = "0" + seconds;
+  //   }
+  //   return hours + ":" + minutes + ":" + seconds;
+  // };
+  //
+  // const convertDurationTimeToSeconds = (time) => {
+  //   const splitToString = time.split(":");
+  //   return (
+  //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+  //   );
+  // };
+  //
+  // const convertStoMs = (s) => {
+  //   const totalMinutes = Math.floor(s / 60);
+  //   const seconds = s % 60;
+  //   const newSeconds = seconds < 10 ? "0" + seconds : seconds;
+  //   const hours = Math.floor(totalMinutes / 60);
+  //   const minutes = totalMinutes % 60;
+  //   return `${hours}:${minutes}:${newSeconds}`;
+  // };
   const onSubmit = async (d) => {
-    
     const res = {
-      id: d?.id,
+      id: item?.id,
       name: d.name,
       recruitmentId: d.recruitmentId,
       recruitmentPipelineStateId: d.recruitmentPipelineStateId,
@@ -74,39 +107,100 @@ const EditForm = ({item, open, onClose, onOpen}) => {
       note: d?.note,
       isSendMailCouncil: d.isSendMailApplicant,
       isSendMailApplicant: d.isSendMailApplicant,
-      councilIds: d.bookingCalendarCouncils || d?.councilIds,
-      bookingCalendarGroups: d?.bookingCalendarGroups
+      councilIds: d.bookingCalendarCouncils.map((item) => item?.id),
       // bookingCalendarGroups: [
       //   {
       //     name: "person",
       //     interviewGroupType: 0,
       //     interviewTime: "",
       //     interviewDuration: "",
-      //     bookingCalendarApplicants: d?.bookingCalendarGroups.map( item => d?.bookingCalendarApplicants[item])
+      //     bookingCalendarApplicants:[ d?.bookingCalendarGroups.map((item) => {
+      //       const dateTime = convertStoMs(
+      //         convertDurationTimeToSeconds(
+      //           `${d?.bookingCalendarApplicants[item]?.interviewTime}:00`
+      //         ) +
+      //           convertDurationTimeToSeconds(
+      //             toHHMMSS(
+      //               d?.bookingCalendarApplicants[item]?.interviewDuration
+      //             )
+      //           )
+      //       );
+
+      //       return {
+      //         applicantId: item,
+      //         interviewTime: new Date(
+      //           `${moment(d?.date).format("YYYY-MM-DD")} ${dateTime}`
+      //         ).toISOString(),
+      //         interviewDuration: toHHMMSS(
+      //           d?.bookingCalendarApplicants[item].interviewDuration
+      //         ),
+      //       };
+      //     })],
       //   },
       // ],
+      bookingCalendarGroups: item?.bookingCalendarGroups.map((group) => {
+        return {
+          name: "person",
+          interviewGroupType: 0,
+          interviewTime: "",
+          interviewDuration: "",
+          bookingCalendarApplicants: group?.bookingCalendarGroupApplicants.map(
+            (item) => {
+              return {
+                applicantId: item?.id,
+                interviewTime: item?.interviewTime,
+                interviewDuration: item?.interviewDuration,
+              };
+            }
+          ),
+          // d?.bookingCalendarGroups.map((item) => {
+          //   const dateTime = convertStoMs(
+          //     convertDurationTimeToSeconds(
+          //       `${d?.bookingCalendarApplicants[item]?.interviewTime}:00`
+          //     ) +
+          //       convertDurationTimeToSeconds(
+          //         toHHMMSS(
+          //           d?.bookingCalendarApplicants[item]?.interviewDuration
+          //         )
+          //       )
+          //   );
+
+          //   return {
+          //     applicantId: item,
+          //     interviewTime: new Date(
+          //       `${moment(d?.date).format("YYYY-MM-DD")} ${dateTime}`
+          //     ).toISOString(),
+          //     interviewDuration: toHHMMSS(
+          //       d?.bookingCalendarApplicants[item].interviewDuration
+          //     ),
+          //   };
+          // }),
+        };
+      }),
     };
-    
+
     try {
       await updateCalendar(res).unwrap();
       enqueueSnackbar("Chỉnh sửa lịch thành công!", {
         autoHideDuration: 2000,
       });
       onClose();
-      
+
       // location.reload()
     } catch (err) {
-      
+   
       enqueueSnackbar(errors.afterSubmit?.message, {
         autoHideDuration: 1000,
         variant: "error",
       });
     }
   };
-  
   useEffect(() => {
     if (!item?.id) return;
-    setValue("name", item?.name);
+    setValue(
+      "bookingCalendarGroups",
+      get(item, "bookingCalendarGroups.bookingCalendarApplicants")
+    );
     // setValue("recruitmentId", body.recruitmentId);
     // setValue("recruitmentPipelineStateId", body.recruitmentPipelineStateId);
     // setValue("onlineInterviewAddress", body.onlineInterviewAddress);
@@ -117,7 +211,7 @@ const EditForm = ({item, open, onClose, onOpen}) => {
     // setValue("isSendMailApplicant", body.isSendMailApplicant);
     // setValue("bookingCalendarGroups", body.bookingCalendarGroups);
   }, [item]);
-  
+
   const list = () => (
     <BoxInnerStyle>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -128,7 +222,7 @@ const EditForm = ({item, open, onClose, onOpen}) => {
             p: 0,
           }}
         >
-          <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
+          <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
             Chỉnh sửa lịch phỏng vấn
           </Typography>
           <Button
@@ -139,10 +233,10 @@ const EditForm = ({item, open, onClose, onOpen}) => {
               },
             }}
           >
-            <CloseIcon/>
+            <CloseIcon />
           </Button>
         </List>
-        
+
         <Box>
           <Grid container border="1px solid #E7E9ED">
             <Grid
@@ -154,7 +248,7 @@ const EditForm = ({item, open, onClose, onOpen}) => {
             >
               <Box sx={{width: "100%", typography: "body1", mb: 3}}>
                 <PersonalInterview
-                  item={item}
+                  item={defaultValues}
                 />
               </Box>
             </Grid>
@@ -166,7 +260,6 @@ const EditForm = ({item, open, onClose, onOpen}) => {
             <Grid item xs={5} md={3}>
               <InterviewCouncil
                 isEditmode={true}
-                item={DetailData?.bookingCalendarCouncils}
               />
             </Grid>
           </Grid>
@@ -192,7 +285,7 @@ const EditForm = ({item, open, onClose, onOpen}) => {
           >
             {"Lưu"}
           </LoadingButton>
-          
+
           <LoadingButton
             variant="text"
             sx={{color: "#455570"}}
@@ -204,7 +297,7 @@ const EditForm = ({item, open, onClose, onOpen}) => {
       </FormProvider>
     </BoxInnerStyle>
   );
-  
+
   return (
     <div>
       <Drawer anchor="right" open={open} onClose={onClose} onOpen={onOpen}>

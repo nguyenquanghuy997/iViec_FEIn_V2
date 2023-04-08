@@ -76,9 +76,9 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
   const { remove } = useFieldArray({ control, name });
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
-  const idArr = defaultItem?.map((item) => item?.id);
 
   const renderChipsSelect = (options, value, remove) => {
+    console.log("option-value", defaultItem?.bookingCalendarCouncils );
     return (
       <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
         {options
@@ -141,9 +141,7 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
             </Card>
           ))}
         {isEditmode &&
-          options
-            ?.filter((option) => idArr.includes(option?.value))
-            ?.map((item, index) => (
+          defaultItem?.bookingCalendarCouncils.map((item) => (
               <Card
                 sx={{
                   p: 2,
@@ -168,8 +166,8 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
                     <img
                       alt=""
                       style={{
-                        width: 40,
-                        height: 40,
+                        width: 42,
+                        height: 42,
                         marginRight: "16px",
                         borderRadius: "11px",
                       }}
@@ -186,16 +184,16 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
                         color="#455570"
                         sx={{ fontSize: "12px", fontWeight: "400" }}
                       >
-                        {item?.mail}
+                        {item?.email}
                       </Typography>
                     </div>
                   </div>
-                  <Box
+                  {/* <Box
                     sx={{ mt: "2px", cursor: "pointer" }}
                     onClick={() => remove(index)}
                   >
                     <DeleteIcon />
-                  </Box>
+                  </Box> */}
                 </div>
               </Card>
             ))}

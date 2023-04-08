@@ -5,7 +5,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import Checkbox from "../form/Checkbox";
 
 RHFCheckbox.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
 };
 
 export function RHFCheckbox({ name, labelPlacement, label, style, ...other }) {
@@ -15,6 +15,7 @@ export function RHFCheckbox({ name, labelPlacement, label, style, ...other }) {
     <FormControlLabel
       labelPlacement={labelPlacement}
       label={label}
+      style={{ marginLeft: "-8px" }}
       control={
         <Controller
           name={name}
@@ -36,7 +37,7 @@ export function RHFCheckbox({ name, labelPlacement, label, style, ...other }) {
 
 RHFMultiCheckbox.propTypes = {
   name: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired,
+  options: PropTypes.array.isRequired
 };
 
 export function RHFMultiCheckbox({ name, options, ...other }) {
