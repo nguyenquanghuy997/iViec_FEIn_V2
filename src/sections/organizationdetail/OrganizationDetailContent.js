@@ -16,7 +16,6 @@ import {modalSlice} from "@/redux/common/modalSlice";
 import {useDispatch, useSelector} from "@/redux/store";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import {
-  ActionSwitchCheckedIcon,
   AlertIcon,
   CheckedSwitchIcon,
   UnCheckedSwitchIcon
@@ -27,8 +26,9 @@ import {DeleteIcon, EditIcon} from "@/assets/ActionIcon";
 import OrganizationDetailUserForm from "@/sections/organizationdetail/component/OrganizationDetailUserForm";
 import {API_GET_RECRUITMENT_BY_ORGANIZATION} from "@/routes/api";
 import {useRouter} from "next/router";
-import {useDeleteUserMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
+import {useDeleteUserMutation, useActiveUsersMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {useSnackbar} from "notistack";
+import Switch from "@/components/form/Switch";
 
 const defaultValues = {
   searchKey: "",
@@ -93,6 +93,7 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
   const {enqueueSnackbar} = useSnackbar();
 
   const [deleteUserMulti] = useDeleteUserMutation();
+  const [activeUserMulti] = useActiveUsersMutation();
 
   const [selected, setSelected] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -210,7 +211,23 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
   }
 
   const handleActive = async (data) => {
-    return data;
+    try {
+      await activeUserMulti({
+        userIds: data.map(user => user.id),
+        isActive: !data[0].isActive
+      }).unwrap();
+      handleCloseModal();
+      handleCloseBottomNav();
+      enqueueSnackbar("Thay đổi trạng thái người dùng thành công!", {
+        autoHideDuration: 1000
+      });
+    } catch (e) {
+      enqueueSnackbar("Thay đổi trạng thái không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+        autoHideDuration: 1000,
+        variant: 'error',
+      });
+      throw e;
+    }
   }
 
   const listKeyActions = useMemo(() => {
@@ -226,6 +243,13 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
     }
     return getKeysByStatus(selected)
   }, [selected])
+
+  const selectedStatus = useMemo(() => {
+    if (selected.length < 1) {
+      return true;
+    }
+    return selected[0].isActive;
+  }, [selected]);
 
   return (
       <Box>
@@ -362,7 +386,7 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
         {(openActive || toggleActive) && <ConfirmModal
             open={openActive || toggleActive}
             onClose={handleCloseModal}
-            icon={item?.isActive ? <UnCheckedSwitchIcon/> : <CheckedSwitchIcon/>}
+            icon={selectedStatus ? <UnCheckedSwitchIcon/> : <CheckedSwitchIcon/>}
             data={selected}
             onSubmit={handleActive}
             title={
@@ -396,8 +420,8 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
               }
             }}
             btnConfirmProps={{
-              title: item.isActive ? 'Tắt' : 'Bật',
-              color: 'primary'
+              title: selectedStatus ? 'Tắt' : 'Bật',
+              color: selectedStatus ? 'error' : 'primary'
             }}
 
         />}
@@ -411,8 +435,17 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
                       {
                         key: 'active',
                         color: 'basic',
-                        icon: <ActionSwitchCheckedIcon/>,
-                        onClick: () => handleOpenActive(selected[0])
+                        // icon: <ActionSwitchCheckedIcon/>,
+                        // onClick: () => handleOpenActive(selected[0])
+                        component: (
+                            <Switch
+                                label={selectedStatus ? 'Đang hoạt động' : 'Không hoạt động'}
+                                checked={selectedStatus}
+                                onClick={e => {
+                                  handleOpenActive(e.target.checked);
+                                }}
+                            />
+                        ),
                       },
                       {
                         key: 'edit',

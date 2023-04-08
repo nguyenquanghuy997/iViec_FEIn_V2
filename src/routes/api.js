@@ -25,6 +25,7 @@ export const API_CHANGE_PASSWORD_WITH_TOKEN = "/identity/Identity/ChangePassword
 export const API_GET_APPLICATION_BY_ROLE_GROUP = "/identity/Identity/GetApplicationUsersByRoleGroup";
 export const API_DELETE_USER_ORGANIZATION = "/identity/Identity/RemoveApplicationUsers";
 export const API_UPDATE_USER_ROLE_ORGANIZATION = "/identity/Identity/ApplicationUserUpdateRole";
+export const API_SET_ACTIVE_USER= "/identity/Identity/UpdateActiveApplicationUser";
 
 //Ứng viên
 export const API_GET_ALL_APPLICANTS = "/applicant/Applicant/GetApplicants"; //new lấy danh sách ứng viên
