@@ -2,7 +2,7 @@ name: Deploy to Docker hub
 'on':
   push:
     branches:
-      - develop_dev
+      - develop_inside
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
