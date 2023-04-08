@@ -122,9 +122,8 @@ export const ApplicantItem = () => {
         width: "200px",
         label: "Đơn vị",
         filters: {
-          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          type: TBL_FILTER_TYPE.SELECT_TREE,
           name: 'organizationIds',
-          isTree: true,
           placeholder: "Chọn một hoặc nhiều đơn vị",
           remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
         },
@@ -252,7 +251,8 @@ export const ApplicantItem = () => {
           type: TBL_FILTER_TYPE.SELECT,
           name: "maritalStatuses",
           label: "Tình trạng hôn nhân",
-          options: [{ value: null, label: 'Tất cả' }].concat(LIST_MARITAL_STATUSES),
+          options: [{ value: '', label: 'Tất cả' }].concat(LIST_MARITAL_STATUSES),
+          placeholder: 'Tất cả',
         },
       },
       {
@@ -327,7 +327,6 @@ export const ApplicantItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
-  const [columnsTable, setColumnsTable] = useState([]);
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -364,8 +363,6 @@ export const ApplicantItem = () => {
         <View>
           <DynamicColumnsTable
             columns={columns}
-            columnsTable={columnsTable}
-            setColumnsTable={setColumnsTable}
             source={Data}
             loading={isLoading}
             settingName={"DANH SÁCH ỨNG VIÊN"}

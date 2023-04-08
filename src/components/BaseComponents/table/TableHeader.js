@@ -46,7 +46,7 @@ export default function TableHeader({
               <TextField
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment>
+                    <InputAdornment position='start'>
                       <RiSearch2Line size={16} color={palette.text.secondary} />
                     </InputAdornment>
                   )
@@ -97,7 +97,7 @@ export default function TableHeader({
           setOpenFilter(false);
         }}
         columns={columns}
-        onSubmit={onSubmitFilter}
+        onSubmitFilter={onSubmitFilter}
         width={384}
       />
     </HeaderStyle>

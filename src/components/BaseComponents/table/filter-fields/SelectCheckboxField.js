@@ -1,13 +1,14 @@
+import { memo } from 'react';
 import { InputLabel } from '@mui/material';
 import { RHFSelect } from '@/components/hook-form';
 
-export default function SelectCheckboxField({
+const SelectCheckboxField = ({
   label,
   remoteUrl,
   remoteMethod,
   search,
   ...props
-}) {
+}) => {
   return (
     <div>
       {label && (
@@ -23,3 +24,5 @@ export default function SelectCheckboxField({
     </div>
   )
 }
+
+export default memo(SelectCheckboxField);

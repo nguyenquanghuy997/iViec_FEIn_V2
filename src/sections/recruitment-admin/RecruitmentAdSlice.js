@@ -78,6 +78,7 @@ export const RecruitmentAdSlice = apiWithTag.injectEndpoints({
 
 export const {
   useLazyGetRecruitmentAdQuery,
+  useGetRecruitmentAdQuery,
   useGetRecruitmentAdByIdQuery,
   useGetOrganizationsDataWithChildQuery,
   useGetAllUserFromOrganizationQuery,

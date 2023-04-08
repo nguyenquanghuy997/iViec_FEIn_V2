@@ -224,6 +224,7 @@ export const TBL_FILTER_TYPE = {
   SELECT: 'select',
   SELECT_CHECKBOX: 'select_checkbox',
   SELECT_ADDRESS: 'select_address',
+  SELECT_TREE: 'select_tree',
   RANGE_DATE: 'range_date',
   RANGE_MONEY: 'range_money',
   RANGE_NUMBER: 'range_number',

@@ -59,7 +59,7 @@ export default function RHFAddress({
             remoteUrl={API_GET_DISTRICT + '?ProvinceId=' + currentProvince}
             selectedOptions={selectedDistricts}
             resetOnClose={true}
-            disable={!currentProvince}
+            disabled={!currentProvince}
           />
         </div>
       </Grid>

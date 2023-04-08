@@ -34,7 +34,25 @@ const DynamicColumnsTable = (props) => {
   const router = useRouter();
   const { PageIndex = 1, PageSize = 10 } = router.query;
   const { palette } = useTheme();
-  const { data: columnsVisible = {} } = useGetColumnsFunc ? useGetColumnsFunc() : { data: {} };
+  const { data: colsVisible = {} } = useGetColumnsFunc ? useGetColumnsFunc() : { data: {} };
+
+  const columnsVisible = useMemo(() => {
+    if (!useGetColumnsFunc) {
+      let cols = {};
+      columns.map(col => {
+        cols[col.dataIndex] = true;
+      });
+      return cols;
+    }
+
+    if (typeof colsVisible.items !== 'undefined') {
+      if (Array.isArray(colsVisible.items)) {
+        return colsVisible.items[0] || [];
+      }
+      return [];
+    }
+    return colsVisible;
+  }, [colsVisible]);
 
   const columnsDisplay = useMemo(() => {
     return columns.filter(col => {
@@ -109,10 +127,16 @@ const DynamicColumnsTable = (props) => {
     };
   };
 
-  const onSubmitFilter = (values = {}) => {
-    router.push({
-      query: { ...router.query, ...values },
-    }, undefined, { shallow: false });
+  const onSubmitFilter = (values = {}, reset = false, timeout = 0) => {
+    if (reset && _isEmpty(router.query)) {
+      return;
+    }
+
+    setTimeout(() => {
+      router.push({
+        query: reset ? {} : { ...router.query, ...values },
+      }, undefined, { shallow: false });
+    }, timeout);
   }
 
   const handleOnChange = ({ current, pageSize }) => {
@@ -129,7 +153,7 @@ const DynamicColumnsTable = (props) => {
         columns={columnsDisplay}
       />
 
-      <Content>
+      <Content style={{ paddingBottom: itemSelected?.length > 0 ? 100 : 24 }}>
         <View
           style={{
             flexDirection: "row",
@@ -139,13 +163,11 @@ const DynamicColumnsTable = (props) => {
           mb={16}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {!_isEmpty(columnsVisible) && (
-              <ButtonIcon
-                onClick={showSetting}
-                sx={{ backgroundColor: "unset" }}
-                icon={<RiSettings3Fill size={16} color={palette.text.primary} />}
-              />
-            )}
+            <ButtonIcon
+              onClick={showSetting}
+              sx={{ backgroundColor: "unset" }}
+              icon={<RiSettings3Fill size={16} color={palette.text.primary} />}
+            />
 
             <View>
               <TextMaxLine

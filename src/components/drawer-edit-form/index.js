@@ -26,6 +26,8 @@ export default function DrawerEditForm({
   cancelText = 'Hủy',
   contentStyles = {},
   modalStyles = {},
+  resetOnClose = true,
+  cancelCallback,
   children,
   ...props
 }) {
@@ -57,7 +59,7 @@ export default function DrawerEditForm({
     return child;
   });
 
-  const toggleDrawer = (isOpen, event) => {
+  const toggleDrawer = (isOpen, event, btnClose = false) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
@@ -66,14 +68,21 @@ export default function DrawerEditForm({
       if (onClose) {
         onClose();
       }
-      reset(defaultValues);
+      if (resetOnClose) {
+        reset(defaultValues);
+      }
+      if (btnClose && cancelCallback) {
+        cancelCallback();
+      }
     }
   }
 
   const handleOnSubmit = (data) => {
     onSubmit(data, () => {
       if (onClose) onClose();
-      reset(defaultValues);
+      if (resetOnClose) {
+        reset(defaultValues);
+      }
     });
   }
 
@@ -126,7 +135,7 @@ export default function DrawerEditForm({
             <Button
               variant="text"
               color="basic"
-              onClick={e => toggleDrawer(false, e)}
+              onClick={e => toggleDrawer(false, e, true)}
               height={36}
             >
               {cancelText}

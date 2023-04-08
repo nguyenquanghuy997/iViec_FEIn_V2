@@ -1,11 +1,12 @@
+import { memo } from 'react';
 import { InputLabel } from '@mui/material';
 import { RHFSelect } from '@/components/hook-form';
 
-export default function SelectField({
+const SelectField = ({
   label,
   remoteMethod,
   ...props
-}) {
+}) => {
   return (
     <div>
       {label && (
@@ -13,9 +14,11 @@ export default function SelectField({
       )}
 
       <RHFSelect
-         method={remoteMethod}
+        method={remoteMethod}
         {...props}
       />
     </div>
   )
 }
+
+export default memo(SelectField);

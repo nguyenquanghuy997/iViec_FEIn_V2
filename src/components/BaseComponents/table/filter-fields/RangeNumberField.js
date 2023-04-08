@@ -1,11 +1,12 @@
+import { memo } from 'react';
 import { InputLabel } from "@mui/material";
 import { RHFTextField } from "@/components/hook-form";
 
-export default function RangeNumberField({
+const RangeNumberField = ({
   label,
   name,
   ...props
-}) {
+}) => {
   return (
     <div className="range-number-fields">
       {label && (
@@ -31,3 +32,5 @@ export default function RangeNumberField({
     </div>
   )
 }
+
+export default memo(RangeNumberField);

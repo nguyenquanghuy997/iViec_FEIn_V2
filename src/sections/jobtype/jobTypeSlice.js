@@ -95,11 +95,14 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
       providesTags: ["GetColumn"],
     }),
     updateListColumns: builder.mutation({
-      query: (data) => ({
-        url: `${API_UPDATE_COLUMN_JOBTYPE}/${data.id}`,
-        method: "PATCH",
-        data: data.body,
-      }),
+      query: (data) => {
+        const { id, ...restData } = data;
+        return {
+          url: `${API_UPDATE_COLUMN_JOBTYPE}/${id}`,
+          method: "PATCH",
+          data: restData,
+        }
+      },
       invalidatesTags: ["GetColumn"],
     }),
   }),
@@ -108,6 +111,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
 export const {
   useGetJobPositionByIdQuery,
   useLazyGetAllJobTypeQuery,
+  useGetAllJobTypeQuery,
   useLazyGetApplicantUsersOnJobtypeQuery,
   useUpdateStatusJobTypeMutation,
   useDeleteJobTypeMutation,

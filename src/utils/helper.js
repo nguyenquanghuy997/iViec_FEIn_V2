@@ -1,4 +1,5 @@
 import { errorMessages } from "./errorMessages";
+import moment from 'moment';
 
 export function alphabetPosition(index) {
   return String.fromCharCode(index + "A".charCodeAt(0));
@@ -47,25 +48,28 @@ export const getErrorMessage = (error, defaultMess = null) => {
   return output.slice(0, output.length - 1);
 }
 
-export const isNumeric = (value) => {
-  if (typeof value === 'number') {
-    return true;
+export const isNumeric = (num) => {
+  if (typeof num === 'number') {
+    return num - num === 0;
   }
-  if (typeof value !== 'string') {
-    return false;
+  if (typeof num === 'string' && num.trim() !== '') {
+    return Number.isFinite ? Number.isFinite(+num) : isFinite(+num);
   }
-  if (isNaN(parseInt(value))) {
-    return false;
-  }
-  return true;
+  return false;
 }
 
-export const toRequestFilterData = (data = {}) => {
+export const toRequestFilterData = (data = {}, removeEmpty = true) => {
   let reqData = {};
   for (let f in data) {
     let val = data[f];
     if (isNumeric(data[f])) {
       val = parseInt(data[f]);
+    }
+    if (val instanceof moment) {
+      val = val.toISOString();
+    }
+    if (removeEmpty && typeof val === 'undefined' || val === '') {
+      continue;
     }
     reqData[f] = val;
   }

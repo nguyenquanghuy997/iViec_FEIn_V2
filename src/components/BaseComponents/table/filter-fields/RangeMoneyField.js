@@ -1,11 +1,12 @@
+import { memo } from 'react';
 import { InputLabel } from "@mui/material";
 import { RHFTextField } from "@/components/hook-form";
 
-export default function RangeMoneyField({
+const RangeMoneyField = ({
   label,
   name,
   ...props
-}) {
+}) => {
   return (
     <div className="range-money-fields">
       {label && (
@@ -31,3 +32,5 @@ export default function RangeMoneyField({
     </div>
   )
 }
+
+export default memo(RangeMoneyField);

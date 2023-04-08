@@ -3,29 +3,18 @@ import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { fDate } from "@/utils/formatTime";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import RecruitmentAdFilterModal from "../modals/RecruitmentAdFilterModal";
-import RecruitmentAdHeader from "../RecruitmentAdHeader";
-import { useLazyGetRecruitmentAdQuery } from "../RecruitmentAdSlice";
+import { useState, useMemo } from "react";
+import { useGetRecruitmentAdQuery } from "../RecruitmentAdSlice";
 import RecruitmentAdBottomNav from "./RecruitmentAdBottomNav";
-
-const defaultValues = {
-  searchKey: "",
-};
 
 export const RecruitmentAdItem = () => {
   const router = useRouter();
-  const { query, isReady } = router;
-  // api get list
 
-  const [getAllFilter, { data: Data = {}, isLoading }] =
-  useLazyGetRecruitmentAdQuery();
-  const [page, setPage] = useState(1);
-  const [paginationSize, setPaginationSize] = useState(10);
+  // api get list
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const { data: Data = {}, isLoading } = useGetRecruitmentAdQuery(query, { skip: !isReady });
+
   const columns = useMemo(() => {
     return [
       {
@@ -128,218 +117,7 @@ export const RecruitmentAdItem = () => {
         ],
       },
     ];
-  }, [page, paginationSize]);
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues: useMemo(
-      () =>
-        query.searchKey
-          ? { ...defaultValues, searchKey: query.searchKey }
-          : { ...defaultValues },
-      [query.searchKey]
-    ),
-    // defaultValues: {...defaultValues, searchKey: query.searchKey},
-    resolver: yupResolver(Schema),
-  });
-
-  const { handleSubmit } = methods;
-  let queryParams = {
-    ...query,
-    applicantSkillIds:
-      query.applicantSkillIds && typeof query.applicantSkillIds === "string"
-        ? [query.applicantSkillIds]
-        : query.applicantSkillIds && query.applicantSkillIds,
-    expectSalaryFrom: query.expectSalaryFrom
-      ? Number(query.expectSalaryFrom)
-      : null,
-    expectSalaryTo: query.expectSalaryTo ? Number(query.expectSalaryTo) : null,
-    yearsOfExperience: query.yearsOfExperience
-      ? [Number(query.yearsOfExperience)]
-      : null,
-    sexs: query.sexs ? [Number(query.sexs)] : null,
-    weightFrom: query.weightFrom ? Number(query.weightFrom) : null,
-    weightTo: query.weightTo ? Number(query.weightTo) : null,
-    heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
-    heightTo: query.heightTo ? Number(query.heightTo) : null,
-    maritalStatuses: query.maritalStatuses
-      ? [Number(query.maritalStatuses)]
-      : null,
-    education: query.education ? query.education : null,
-    homeTowerProvinceIds: query.homeTowerProvinceIds
-      ? [query.homeTowerProvinceIds]
-      : null,
-    homeTowerDistrictIds: query.homeTowerDistrictIds
-      ? [query.homeTowerDistrictIds]
-      : null,
-    livingAddressProvinceIds: query.livingAddressProvinceIds
-      ? [query.livingAddressProvinceIds]
-      : null,
-    livingAddressDistrictIds: query.livingAddressDistrictIds
-      ? [query.livingAddressDistrictIds]
-      : null,
-    expectWorkingAddressProvinceIds:
-      query.expectWorkingAddressProvinceIds &&
-      typeof query.expectWorkingAddressProvinceIds === "string"
-        ? [query.expectWorkingAddressProvinceIds]
-        : query.expectWorkingAddressProvinceIds &&
-          query.expectWorkingAddressProvinceIds,
-    organizationIds:
-      query.organizationIds && typeof query.organizationIds === "string"
-        ? [query.organizationIds]
-        : query.organizationIds && query.organizationIds,
-    recruitmentIds:
-      query.recruitmentIds && typeof query.recruitmentIds === "string"
-        ? [query.recruitmentIds]
-        : query.recruitmentIds && query.recruitmentIds,
-    ownerIds:
-      query.ownerIds && typeof query.ownerIds === "string"
-        ? [query.ownerIds]
-        : query.ownerIds && query.ownerIds,
-    councilIds:
-      query.councilIds && typeof query.councilIds === "string"
-        ? [query.councilIds]
-        : query.councilIds && query.councilIds,
-    creatorIds:
-      query.creatorIds && typeof query.creatorIds === "string"
-        ? [query.creatorIds]
-        : query.creatorIds && query.creatorIds,
-    createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-    createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-    recruitmentPipelineStates:
-      query.recruitmentPipelineStates &&
-      typeof query.recruitmentPipelineStates === "string"
-        ? [Number(query.recruitmentPipelineStates)]
-        : query.recruitmentPipelineStates &&
-          query.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
-    jobCategoryIds:
-      query.jobCategoryIds && typeof query.jobCategoryIds === "string"
-        ? [query.jobCategoryIds]
-        : query.jobCategoryIds && query.jobCategoryIds,
-    jobSourceIds:
-      query.jobSourceIds && typeof query.jobSourceIds === "string"
-        ? [query.jobSourceIds]
-        : query.jobSourceIds && query.jobSourceIds,
-    pageSize: paginationSize,
-    pageIndex: page,
-  };
-  useEffect(() => {
-    if (!isReady) return;
-    if (query) {
-      getAllFilter(
-        JSON.stringify(
-          Object.entries(queryParams).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
-        )
-      ).unwrap();
-    } else {
-      getAllFilter({ pageSize: paginationSize, pageIndex: page }).unwrap();
-    }
-  }, [isReady, query]);
-
-  const handleChangePagination = (pageIndex, pageSize) => {
-    setPaginationSize(pageSize);
-    setPage(pageIndex);
-    if (query) {
-      queryParams = {
-        ...queryParams,
-        pageSize: pageSize,
-        pageIndex: pageIndex,
-      };
-      getAllFilter(
-        JSON.stringify(
-          Object.entries(queryParams).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
-        )
-      ).unwrap();
-    } else {
-      getAllFilter({ pageSize: pageSize, pageIndex: pageIndex }).unwrap();
-    }
-  };
-  // open filter form
-  const [isOpen, setIsOpen] = useState(false);
-
-  // filter modal
-  const handleOpenFilterForm = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseFilterForm = () => {
-    setIsOpen(false);
-  };
-
-  const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
-
-  const onSubmit = async (data) => {
-    const body = { ...data, searchKey: data.searchKey };
-
-    if (query) {
-      queryParams = {
-        ...queryParams,
-        ...body,
-        pageSize: page,
-        pageIndex: paginationSize,
-      };
-      getAllFilter(
-        JSON.stringify(
-          Object.entries(queryParams).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
-        )
-      ).unwrap();
-    } else {
-      getAllFilter({ pageSize: page, pageIndex: paginationSize }).unwrap();
-    }
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...body,
-          startDateFrom: data.startDateFrom
-            ? new Date(data.startDateFrom).toISOString()
-            : null,
-          startDateTo: data.startDateTo
-            ? new Date(data.startDateTo).toISOString()
-            : null,
-          endDateFrom: data.endDateFrom
-            ? new Date(data.endDateFrom).toISOString()
-            : null,
-          endDateTo: data.endDateTo
-            ? new Date(data.endDateTo).toISOString()
-            : null,
-          createdTimeFrom: data.createdTimeFrom
-            ? new Date(data.createdTimeFrom).toISOString()
-            : null,
-          createdTimeTo: data.createdTimeTo
-            ? new Date(data.createdTimeTo).toISOString()
-            : null,
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
-    handleCloseFilterForm();
-  };
-  const refreshData = () => {
-    getAllFilter().unwrap();
-  };
+  }, [query.PageSize, query.PageIndex]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [columnsTable, setColumnsTable] = useState([]);
@@ -352,7 +130,7 @@ export const RecruitmentAdItem = () => {
 
   return (
     <View>
-      <RecruitmentAdHeader
+      {/* <RecruitmentAdHeader
         data={Data.items}
         methods={methods}
         isOpen={isOpen}
@@ -360,13 +138,10 @@ export const RecruitmentAdItem = () => {
         handleSubmit={handleSubmit}
         onOpenFilterForm={handleOpenFilterForm}
         onCloseFilterForm={handleCloseFilterForm}
-      />
+      /> */}
       <Content>
         <View mt={96}>
           <DynamicColumnsTable
-            page={page}
-            paginationSize={paginationSize}
-            handleChangePagination={handleChangePagination}
             columns={columns}
             source={Data}
             loading={isLoading}
@@ -378,6 +153,7 @@ export const RecruitmentAdItem = () => {
             setColumnsTable={setColumnsTable}
           />
         </View>
+
         <RecruitmentAdBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
@@ -386,15 +162,6 @@ export const RecruitmentAdItem = () => {
           setselectedList={setSelectedRowKeys}
         />
       </Content>
-      {isOpen && (
-        <RecruitmentAdFilterModal
-          columns={columns}
-          isOpen={isOpen}
-          onClose={handleCloseFilterForm}
-          onSubmit={onSubmit}
-          onRefreshData={refreshData}
-        />
-      )}
     </View>
   );
 };
