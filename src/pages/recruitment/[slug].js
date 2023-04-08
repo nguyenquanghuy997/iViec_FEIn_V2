@@ -1,31 +1,38 @@
-import React, { useEffect, useState, useRef } from 'react'
-import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPreviewItem";
-// componentsf
-import Page from '@/components/Page'
-// config
-import { PERMISSION_PAGES } from '@/config'
-// layouts
-import Layout from '@/layouts'
-import { DragDropContext } from "react-beautiful-dnd";
-import { Column } from '@/sections/kanban';
-import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
 // utils
-import {
-  useGetRecruitmentPipelineStatesByRecruitmentQuery,
-  useUpdateApplicantRecruitmentToNextStateMutation
-} from "@/sections/applicant";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
-import { useRouter } from "next/router";
+import { View } from "@/components/FlexStyled";
+// componentsf
+import Page from "@/components/Page";
 import SvgIcon from "@/components/SvgIcon";
 import { FormProvider } from "@/components/hook-form";
+// config
+import { PERMISSION_PAGES } from "@/config";
+// layouts
+import Layout from "@/layouts";
+import {
+  ApplicantItem,
+  useGetAllFilterApplicantQuery,
+  useGetRecruitmentPipelineStatesByRecruitmentQuery,
+  useUpdateApplicantRecruitmentToNextStateMutation,
+} from "@/sections/applicant";
+import { Column } from "@/sections/kanban";
+import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
+import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPreviewItem";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+import { Container, Grid, Modal, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
-import { Typography, Container, Grid, Modal } from '@mui/material';
-import { View } from "@/components/FlexStyled";
+import * as Yup from "yup";
+
 Recruitment.getLayout = function getLayout(pageProps, page) {
-  return <Layout permissions={PERMISSION_PAGES.detailRecruitment} {...pageProps}>{page}</Layout>
-}
+  return (
+    <Layout permissions={PERMISSION_PAGES.detailRecruitment} {...pageProps}>
+      {page}
+    </Layout>
+  );
+};
 
 export default function Recruitment() {
   const Schema = Yup.object().shape({
@@ -36,9 +43,7 @@ export default function Recruitment() {
     resolver: yupResolver(Schema),
   });
 
-  const {
-    handleSubmit,
-  } = methods;
+  const { handleSubmit } = methods;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -48,37 +53,41 @@ export default function Recruitment() {
 
   const [applicantId, setApplicantId] = useState();
   const [recruitmentId, setRecruitmentId] = useState();
-  const [recruitmentPipelineStateId, setRecruitmentPipelineStateId] = useState();
+  const [recruitmentPipelineStateId, setRecruitmentPipelineStateId] =
+    useState();
   const [resultNew, setResultNew] = useState();
   const [pipelineStateResultType, setPipelineStateResultType] = useState(0);
 
   const handleOk = handleSubmit(async (e) => {
     let body = {
-      "applicantId": applicantId,
-      "recruitmentId": recruitmentId,
-      "recruitmentPipelineStateId": recruitmentPipelineStateId,
-      "pipelineStateResultType": pipelineStateResultType,
-      "note": e?.note
-    }
+      applicantId: applicantId,
+      recruitmentId: recruitmentId,
+      recruitmentPipelineStateId: recruitmentPipelineStateId,
+      pipelineStateResultType: pipelineStateResultType,
+      note: e?.note,
+    };
 
-    await ChangeToNextState(body)
+    await ChangeToNextState(body);
     const { source, destination } = resultNew;
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
     const sourceItems = [...sourceColumn.items];
     const destItems = [...destColumn.items];
     const [removed] = sourceItems.splice(source.index, 1);
-    destItems.splice(destination.index, 0, { ...removed, pipelineStateResultType: pipelineStateResultType });
+    destItems.splice(destination.index, 0, {
+      ...removed,
+      pipelineStateResultType: pipelineStateResultType,
+    });
     setColumns({
       ...columns,
       [source.droppableId]: {
         ...sourceColumn,
-        items: sourceItems
+        items: sourceItems,
       },
       [destination.droppableId]: {
         ...destColumn,
-        items: destItems
-      }
+        items: destItems,
+      },
     });
 
     setIsModalOpen(false);
@@ -89,13 +98,36 @@ export default function Recruitment() {
   };
 
   const router = useRouter();
-  const RecruitmentId = router.query.slug;
-  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({ Id: RecruitmentId })
-  const { data: ColumnData } = useGetRecruitmentPipelineStatesByRecruitmentQuery(RecruitmentId);
-  const [ChangeToNextState] = useUpdateApplicantRecruitmentToNextStateMutation();
+  const { query, isReady, asPath } = router;
+  const { slug, PageIndex = 1, PageSize = 10, ...rest } = query;
+  const RecruitmentId = slug;
+  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
+    Id: RecruitmentId,
+  });
+  const { data: ColumnData } =
+    useGetRecruitmentPipelineStatesByRecruitmentQuery(RecruitmentId);
+  const [ChangeToNextState] =
+    useUpdateApplicantRecruitmentToNextStateMutation();
+
+  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(
+    { ...rest, PageIndex, PageSize, recruitmentIds: [slug] },
+    {
+      skip: !isReady,
+    }
+  );
+
+  const isSearch = (() => {
+    for (const key in rest) if (rest[key]) return true;
+
+    return false;
+  })();
+
+  useEffect(() => {
+    if (isSearch) setViewMode(2);
+  }, [rest]);
 
   const onDragEnd = async (result, columns, setColumns) => {
-    setResultNew(result)
+    setResultNew(result);
     if (!result.destination) return;
     const { source, destination } = result;
     // khác cột
@@ -108,45 +140,41 @@ export default function Recruitment() {
       destItems.splice(destination.index, 0, removed);
       let applicantId;
       sourceColumn.items.map((item) => {
-        if (item.id == result.draggableId)
-          applicantId = item.applicantId
-
-      })
+        if (item.id == result.draggableId) applicantId = item.applicantId;
+      });
       // call api
 
       if (destColumn.pipelineStateType == 3) {
-        setPipelineStateResultType(0)
-        setApplicantId(applicantId)
-        setRecruitmentId(RecruitmentId)
-        setRecruitmentPipelineStateId(destColumn.id)
-        showModal()
-      }
-      else {
-
+        setPipelineStateResultType(0);
+        setApplicantId(applicantId);
+        setRecruitmentId(RecruitmentId);
+        setRecruitmentPipelineStateId(destColumn.id);
+        showModal();
+      } else {
         // disable offer
-        if (destColumn.pipelineStateType == 4) { /* empty */ }
-        else {
+        if (destColumn.pipelineStateType == 4) {
+          /* empty */
+        } else {
           //
           let body = {
-            "applicantId": applicantId,
-            "recruitmentId": RecruitmentId,
-            "recruitmentPipelineStateId": destColumn.id,
-          }
-          await ChangeToNextState(body)
+            applicantId: applicantId,
+            recruitmentId: RecruitmentId,
+            recruitmentPipelineStateId: destColumn.id,
+          };
+          await ChangeToNextState(body);
           setColumns({
             ...columns,
             [source.droppableId]: {
               ...sourceColumn,
-              items: sourceItems
+              items: sourceItems,
             },
             [destination.droppableId]: {
               ...destColumn,
-              items: destItems
-            }
+              items: destItems,
+            },
           });
         }
       }
-
     } else {
       // cùng cột
       const column = columns[source.droppableId];
@@ -157,16 +185,16 @@ export default function Recruitment() {
         ...columns,
         [source.droppableId]: {
           ...column,
-          items: copiedItems
-        }
+          items: copiedItems,
+        },
       });
     }
   };
 
   const [columns, setColumns] = useState(ColumnData);
   useEffect(() => {
-    setColumns(ColumnData)
-  }, [ColumnData])
+    setColumns(ColumnData);
+  }, [ColumnData]);
 
   const windowWidth = useRef(window.innerWidth);
   const windowHeight = useRef(window.innerHeight);
@@ -179,64 +207,101 @@ export default function Recruitment() {
   const [viewMode, setViewMode] = useState(1);
   const [tab, setTab] = useState(1);
   const onChangViewMode = (value) => {
-    setViewMode(value);
-  }
+    if (value === 1 && isSearch) window.location.href = asPath.split("?")[0];
+    else setViewMode(value);
+  };
 
   const onChangeTab = (value) => {
     setTab(value);
-  }
+  };
 
   return (
     <Page title={"Chi tiết tin"}>
-
-      <RecruitmentPreviewItem RecruitmentData={RecruitmentData} 
-                              viewModeDefault={viewMode} 
-                              tabDefault={tab} 
-                              onChangeViewMode={onChangViewMode} 
-                              onChangeTab={onChangeTab}/>
+      <RecruitmentPreviewItem
+        RecruitmentData={RecruitmentData}
+        viewModeDefault={viewMode}
+        tabDefault={tab}
+        onChangeViewMode={onChangViewMode}
+        onChangeTab={onChangeTab}
+      >
+        <ApplicantItem
+          hideTable
+          headerProps={{
+            headerProps: {
+              style: { background: "transparent", boxShadow: "none" },
+            },
+            contentProps: {
+              style: {
+                padding: 0,
+              },
+            },
+            inputProps: {
+              placeholder: "Tìm kiếm theo họ tên, email, SĐT ứng viên...",
+            },
+          }}
+        />
+      </RecruitmentPreviewItem>
       {/* ứng viên kanban */}
-      {
-        tab == 1 && viewMode == 1 &&
-        <div style={{ width: windowWidth, display: "flex", justifyContent: "left", height: windowHeight.current, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: `url('../assets/icons/candidate/bgImage.png')` }}>
-          <Container maxWidth='xl'>
-            <div style={{ overflowY: 'auto', width: windowWidth, display: "flex", justifyContent: "left" }}>
+      {tab == 1 && viewMode == 1 && (
+        <div
+          style={{
+            width: windowWidth,
+            display: "flex",
+            justifyContent: "left",
+            height: windowHeight.current,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundImage: `url('../assets/icons/candidate/bgImage.png')`,
+          }}
+        >
+          <Container maxWidth="xl">
+            <div
+              style={{
+                overflowY: "auto",
+                width: windowWidth,
+                display: "flex",
+                justifyContent: "left",
+              }}
+            >
               <DragDropContext
                 onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
               >
-                {columns && Object.entries(columns).map(([columnId, column], index) => {
-                  if (column.pipelineStateType != 4)
-                    return (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          borderRadius: "8px",
-                          minHeight: windowHeight.current,
-                          maxHeight: windowHeight.current,
-                        }}
-                        key={columnId}
-                      >
-                        <div>
-                          <Column
-                            droppableId={columnId}
-                            key={columnId}
-                            index={index}
-                            column={column}
-                          />
+                {columns &&
+                  Object.entries(columns).map(([columnId, column], index) => {
+                    if (column.pipelineStateType != 4)
+                      return (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            borderRadius: "8px",
+                            minHeight: windowHeight.current,
+                            maxHeight: windowHeight.current,
+                          }}
+                          key={columnId}
+                        >
+                          <div>
+                            <Column
+                              droppableId={columnId}
+                              key={columnId}
+                              index={index}
+                              column={column}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    );
-                })}
+                      );
+                  })}
 
-                <Modal open={isModalOpen}
+                <Modal
+                  open={isModalOpen}
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
-                  onBackdropClick={() => handleCancel()}>
-
+                  onBackdropClick={() => handleCancel()}
+                >
                   <FormProvider methods={methods}>
                     <View width={600} borderRadius={8} bgColor={"#fff"}>
                       <View pt={20} pb={36} ph={24}>
@@ -296,7 +361,9 @@ export default function Recruitment() {
                                 pv={16}
                                 key={item.id}
                                 bgColor={isActive ? item.color : undefined}
-                                onPress={() => setPipelineStateResultType(index)}
+                                onPress={() =>
+                                  setPipelineStateResultType(index)
+                                }
                               >
                                 <Typography
                                   fontSize={14}
@@ -311,7 +378,12 @@ export default function Recruitment() {
                           })}
                         </View>
 
-                        <Typography fontWeight={"600"} color="#5C6A82" mt="24px" mb="8px">
+                        <Typography
+                          fontWeight={"600"}
+                          color="#5C6A82"
+                          mt="24px"
+                          mb="8px"
+                        >
                           {"Ghi chú"}
                         </Typography>
                         <TextAreaDS
@@ -362,26 +434,29 @@ export default function Recruitment() {
                     </View>
                   </FormProvider>
                 </Modal>
-
               </DragDropContext>
             </div>
           </Container>
         </div>
-      }
+      )}
 
       {/* ứng viên list */}
-      {
-        tab == 1 && viewMode == 2 &&
-        <View></View>
-      }
-
+      {tab == 1 && viewMode == 2 && (
+        <View>
+          <ApplicantItem
+            Data={Data}
+            isLoading={isLoading}
+            PageSize={query.PageSize}
+            PageIndex={query.PageIndex}
+            headerProps={{
+              display: "none",
+            }}
+          />
+        </View>
+      )}
 
       {/* lịch phỏng vấn */}
-      {
-        tab == 2 &&
-        <View></View>
-      }
-
+      {tab == 2 && <View></View>}
     </Page>
-  )
+  );
 }

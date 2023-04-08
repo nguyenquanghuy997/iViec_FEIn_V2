@@ -1,4 +1,10 @@
+import {
+  DownloadLineIcon,
+  ImportLinkIcon,
+  TeamLineIcon,
+} from "@/assets/ActionIcon";
 import { NavGoBack } from "@/components/DesignSystem";
+import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
@@ -7,6 +13,9 @@ import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
+import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
+import { RecruitmentApplicantChooseStage } from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
+import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 import { ButtonGray, ButtonIcon } from "@/utils/cssStyles";
 import { TabContext, TabList } from "@mui/lab";
 import {
@@ -14,27 +23,33 @@ import {
   Button,
   ButtonGroup,
   ClickAwayListener,
-  Container, Divider,
+  Container,
+  Divider,
   InputAdornment,
   MenuItem,
   MenuList,
   Stack,
   Tab,
-  Tooltip, Typography,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
-import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
-import { RecruitmentApplicantChooseStage } from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
-import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 import { useRouter } from "next/router";
-import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
 import PropTypes from "prop-types";
-function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault, onChangeTab }) {
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+function RecruitmentPreviewItem({
+  viewModeDefault,
+  onChangeViewMode,
+  tabDefault,
+  onChangeTab,
+  children,
+}) {
   const router = useRouter();
   const RecruitmentId = router.query.slug;
-  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({ Id: RecruitmentId })
+  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
+    Id: RecruitmentId,
+  });
   const defaultValues = {
     name: "",
   };
@@ -198,42 +213,45 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
     <div class="content">
       <div class="content-title">Đồng phụ trách: </div>
       <div>
-      ${recruitment?.coOwners
-      ?.map((p, index) => {
-        if (index < 3) {
-          return p.email;
-        }
-      })
-      .join(", ") || "-"
-    }
+      ${
+        recruitment?.coOwners
+          ?.map((p, index) => {
+            if (index < 3) {
+              return p.email;
+            }
+          })
+          .join(", ") || "-"
+      }
       <span>+ ${recruitment?.coOwners?.length - 3 || ""}</span>
       </div>
     </div>
     <div class="content">
       <div class="content-title">Hội đồng tuyển dụng: </div>
       <div>
-      ${recruitment?.recruitmentCouncils
-      ?.map((p, index) => {
-        if (index < 3) {
-          return p.councilEmail;
-        }
-      })
-      .join(", ") || "-"
-    }
+      ${
+        recruitment?.recruitmentCouncils
+          ?.map((p, index) => {
+            if (index < 3) {
+              return p.councilEmail;
+            }
+          })
+          .join(", ") || "-"
+      }
       <span>+ ${recruitment?.recruitmentCouncils?.length - 3 || ""}</span>
       </div>
     </div>
     <div class="content">
       <div class="content-title">Kênh tuyển dụng: </div>
       <div>
-      ${recruitment?.jobSource
-      ?.map((p, index) => {
-        if (index < 3) {
-          return p.name;
-        }
-      })
-      .join(", ") || "-"
-    }
+      ${
+        recruitment?.jobSource
+          ?.map((p, index) => {
+            if (index < 3) {
+              return p.name;
+            }
+          })
+          .join(", ") || "-"
+      }
       <span>+ ${recruitment?.jobSource?.length - 3 || ""}</span>
       </div>
     </div>
@@ -262,7 +280,7 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
     stage: undefined,
     stageResult: undefined,
     recruitmentId: recruitmentId,
-    recruitmentTitle: undefined
+    recruitmentTitle: undefined,
   });
   const handleCloseGroup = () => {
     setOpenGroup(false);
@@ -272,7 +290,10 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
   };
 
   useEffect(() => {
-    setModelApplication({ ...modelApplication, recruitmentTitle: RecruitmentData?.name })
+    setModelApplication({
+      ...modelApplication,
+      recruitmentTitle: RecruitmentData?.name,
+    });
   }, [RecruitmentData]);
 
   useEffect(() => {
@@ -282,41 +303,171 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
   const DivRecruitmentDataProcessStatus = (item) => {
     switch (item) {
       case 0: //"Draft"
-        return <span style={{ color: '#455570', border: '1px solid #455570', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Bản nháp</span>
+        return (
+          <span
+            style={{
+              color: "#455570",
+              border: "1px solid #455570",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Bản nháp
+          </span>
+        );
       case 1: //"WaitingOrganizationApproval":
-        return <span style={{ color: '#F77A0C', border: '1px solid #F77A0C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Chờ nội bộ phê duyệt</span>;
+        return (
+          <span
+            style={{
+              color: "#F77A0C",
+              border: "1px solid #F77A0C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Chờ nội bộ phê duyệt
+          </span>
+        );
       case 2: //"OrganizationReject":
-        return <span style={{ color: '#E53935', border: '1px solid #E53935', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Nội bộ từ chối</span>;
+        return (
+          <span
+            style={{
+              color: "#E53935",
+              border: "1px solid #E53935",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Nội bộ từ chối
+          </span>
+        );
       case 3: //"WaitingMedusaApproval":
-        return <span style={{ color: '#F77A0C', border: '1px solid #F77A0C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Chờ iVIEC phê duyệt</span>;
+        return (
+          <span
+            style={{
+              color: "#F77A0C",
+              border: "1px solid #F77A0C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Chờ iVIEC phê duyệt
+          </span>
+        );
       case 4: //"MedusaReject":
-        return <span style={{ color: '#E53935', border: '1px solid #E53935', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>iVIEC từ chối</span>;
+        return (
+          <span
+            style={{
+              color: "#E53935",
+              border: "1px solid #E53935",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            iVIEC từ chối
+          </span>
+        );
       case 5: //"Recruiting":
-        return <span style={{ color: '#388E3C', border: '1px solid #388E3C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Đang tuyển dụng</span>;
+        return (
+          <span
+            style={{
+              color: "#388E3C",
+              border: "1px solid #388E3C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Đang tuyển dụng
+          </span>
+        );
       case 6: //"Calendared":
-        return <span style={{ color: '#388E3C', border: '1px solid #388E3C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Đã lên lịch</span>;
+        return (
+          <span
+            style={{
+              color: "#388E3C",
+              border: "1px solid #388E3C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Đã lên lịch
+          </span>
+        );
       case 7: //"Expired":
-        return <span style={{ color: '#455570', border: '1px solid #455570', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Hết hạn</span>;
+        return (
+          <span
+            style={{
+              color: "#455570",
+              border: "1px solid #455570",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Hết hạn
+          </span>
+        );
       case 8: //"Closed":
-        return <span style={{ color: '#455570', border: '1px solid #455570', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Đóng</span>;
+        return (
+          <span
+            style={{
+              color: "#455570",
+              border: "1px solid #455570",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Đóng
+          </span>
+        );
     }
   };
 
   const collapseHeader = () => {
-    setIsFullHeader(!isFullHeader)
-  }
+    setIsFullHeader(!isFullHeader);
+  };
 
   return (
     <div>
       <TabContext value={tab}>
-        <HeadingBar style={{ mb: "28px", position: "relative", top: 0, zIndex: 1000 }}>
-          {
-            isFullHeader && <>
+        <HeadingBar
+          style={{ mb: "28px", position: "relative", top: 0, zIndex: 1000 }}
+        >
+          {isFullHeader && (
+            <>
               <BoxFlex>
                 <Stack flexDirection="row" alignItems="center">
                   <Tooltip
                     title={
-                      <div dangerouslySetInnerHTML={{ __html: inforRecruitment }} />
+                      <div
+                        dangerouslySetInnerHTML={{ __html: inforRecruitment }}
+                      />
                     }
                     placement="right-start"
                     componentsProps={{
@@ -350,8 +501,8 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                         sx={{
                           marginTop: 0,
                           padding: 0,
-                          color: '#172B4D',
-                          fontWeight: 700
+                          color: "#172B4D",
+                          fontWeight: 700,
                         }}
                         link={PATH_DASHBOARD.dashboard}
                         name={RecruitmentData?.name}
@@ -361,7 +512,7 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
 
                   <ButtonIcon
                     style={{
-                      marginLeft: '12px'
+                      marginLeft: "12px",
                     }}
                     icon={
                       <Iconify
@@ -373,7 +524,11 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     }
                   />
 
-                  <Box>{DivRecruitmentDataProcessStatus(RecruitmentData?.processStatus)}</Box>
+                  <Box>
+                    {DivRecruitmentDataProcessStatus(
+                      RecruitmentData?.processStatus
+                    )}
+                  </Box>
                 </Stack>
                 <Stack flexDirection={"row"}>
                   <ButtonGray
@@ -381,7 +536,7 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     tittle="Xem tin tuyển dụng"
                     sx={{
                       border: "1px solid #455570",
-                      fontSize: '12px',
+                      fontSize: "12px",
                       fontWeight: 600,
                     }}
                     // onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
@@ -404,14 +559,14 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     aria-label="lab API tabs example"
                     sx={{
                       "& .MuiTab-root": {
-                        color: '#8A94A5'
+                        color: "#8A94A5",
                         // minHeight: "36px",
                         // textTransform: "unset",
                         // padding: "8px 12px",
                       },
                       "& .Mui-selected": {
-                        color: '#1976D2',
-                        fontWeight: 700
+                        color: "#1976D2",
+                        fontWeight: 700,
                         // color: "white !important",
                         // backgroundColor: "#455570",
                         // borderRadius: "6px",
@@ -435,7 +590,7 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                 </Box>
               </Box>
             </>
-          }
+          )}
           {tab === 1 ? (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
@@ -447,7 +602,7 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     sx={{ mr: 1, boxShadow: "none" }}
                   >
                     <Button
-                      variant={'outlined'}
+                      variant={"outlined"}
                       startIcon={
                         <Iconify
                           icon={"charm:swap-horizontal"}
@@ -455,11 +610,14 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                             width: 20,
                             height: 20,
                           }}
-                        />}
+                        />
+                      }
                       sx={{
-                        background: viewModeDefault == 1 ? "#1976D2" : "#fdfdfd",
+                        background:
+                          viewModeDefault == 1 ? "#1976D2" : "#fdfdfd",
                         color: viewModeDefault == 1 ? "#fdfdfd" : "#455570",
-                        borderColor: viewModeDefault == 1 ? "none" : "#D0D4DB !important",
+                        borderColor:
+                          viewModeDefault == 1 ? "none" : "#D0D4DB !important",
                         borderRadius: "6px 0px 0px 6px",
                         height: "44px",
                         width: "52px",
@@ -468,7 +626,7 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                       onClick={() => onChangeViewMode(1)}
                     />
                     <Button
-                      variant={'outlined'}
+                      variant={"outlined"}
                       startIcon={
                         <Iconify
                           icon={"material-symbols:menu"}
@@ -476,11 +634,14 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                             width: 20,
                             height: 20,
                           }}
-                        />}
+                        />
+                      }
                       sx={{
-                        background: viewModeDefault == 2 ? "#1976D2" : "#fdfdfd",
+                        background:
+                          viewModeDefault == 2 ? "#1976D2" : "#fdfdfd",
                         color: viewModeDefault == 2 ? "#fdfdfd" : "#455570",
-                        borderColor: viewModeDefault == 2 ? "none" : "#D0D4DB !important",
+                        borderColor:
+                          viewModeDefault == 2 ? "none" : "#D0D4DB !important",
                         borderRadius: "0 6px 6px 0",
                         height: "44px",
                         width: "52px",
@@ -491,57 +652,67 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                   </ButtonGroup>
                 </Box>
 
-                <FormProvider methods={methods}>
-                  <RHFTextField
-                    name="searchKey"
-                    placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
-                    sx={{ minWidth: "510px" }}
-                    InputProps={{
-                      style: {
-                        background: '#F2F4F5',
-                        border: 'none'
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start" sx={{ ml: 1.5 }}>
-                          <Iconify
-                            icon={"eva:search-fill"}
-                            sx={{
-                              color: "text.disabled",
-                              width: 20,
-                              height: 20,
-                            }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </FormProvider>
-                <ButtonFilterStyle
-                  startIcon={
-                    <Iconify
-                      sx={{ height: "18px", width: "18px" }}
-                      icon="material-symbols:filter-alt-outline"
-                    />
-                  }
-                >
-                  Bộ lọc
-                </ButtonFilterStyle>
+                {children ?? (
+                  <>
+                    <FormProvider methods={methods}>
+                      <RHFTextField
+                        name="searchKey"
+                        placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
+                        sx={{ minWidth: "510px" }}
+                        InputProps={{
+                          style: {
+                            background: "#F2F4F5",
+                            border: "none",
+                          },
+                          startAdornment: (
+                            <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                              <Iconify
+                                icon={"eva:search-fill"}
+                                sx={{
+                                  color: "text.disabled",
+                                  width: 20,
+                                  height: 20,
+                                }}
+                              />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </FormProvider>
+                    <ButtonFilterStyle
+                      startIcon={
+                        <Iconify
+                          sx={{ height: "18px", width: "18px" }}
+                          icon="material-symbols:filter-alt-outline"
+                        />
+                      }
+                    >
+                      Bộ lọc
+                    </ButtonFilterStyle>
+                  </>
+                )}
               </Stack>
               <Stack flexDirection={"row"}>
-                <ButtonGroup variant="contained" aria-label="split button" sx={{
-                  boxShadow: "unset",
-                  '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-                    borderColor: "white"
-                  }, '& .MuiButtonGroup-grouped:hover': {
-                    opacity: 0.8
-                  }
-                }}>
-
-                  <Button style={{
-                    background: '#1976D2',
-                    padding: '12px 16px'
+                <ButtonGroup
+                  variant="contained"
+                  aria-label="split button"
+                  sx={{
+                    boxShadow: "unset",
+                    "& .MuiButtonGroup-grouped:not(:last-of-type)": {
+                      borderColor: "white",
+                    },
+                    "& .MuiButtonGroup-grouped:hover": {
+                      opacity: 0.8,
+                    },
                   }}
-                    onClick={() => setShowDialogStage(true)}>
+                >
+                  <Button
+                    style={{
+                      background: "#1976D2",
+                      padding: "12px 16px",
+                    }}
+                    onClick={() => setShowDialogStage(true)}
+                  >
                     <Iconify
                       icon={"material-symbols:add"}
                       width={20}
@@ -555,12 +726,17 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     placement="bottom-start"
                     onClose={handleCloseGroup}
                     disableFocusListener
-                    disableHoverList ener
+                    disableHoverList
+                    ener
                     disableTouchListener
                     open={openGroup}
                     title={
                       <ClickAwayListener onClickAway={handleCloseGroup}>
-                        <MenuList autoFocusItem divider={true} disableGutters={true}>
+                        <MenuList
+                          autoFocusItem
+                          divider={true}
+                          disableGutters={true}
+                        >
                           <MenuItem>
                             <DownloadLineIcon />
                             <Typography ml={"12px"} variant={"textSize13600"}>
@@ -590,8 +766,8 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                       aria-haspopup="menu"
                       onClick={handleOpenGroup}
                       style={{
-                        background: '#1976D2',
-                        padding: '12px 16px'
+                        background: "#1976D2",
+                        padding: "12px 16px",
                       }}
                     >
                       <Iconify
@@ -603,8 +779,15 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     </Button>
                   </LightTooltip>
                 </ButtonGroup>
-                <RecruitmentApplicantChooseStage data={RecruitmentData?.recruitmentPipeline?.recruitmentPipelineStates} show={showDialogStage} setShow={setShowDialogStage}
-                  setStage={setModelApplication} />
+                <RecruitmentApplicantChooseStage
+                  data={
+                    RecruitmentData?.recruitmentPipeline
+                      ?.recruitmentPipelineStates
+                  }
+                  show={showDialogStage}
+                  setShow={setShowDialogStage}
+                  setStage={setModelApplication}
+                />
               </Stack>
             </BoxFlex>
           ) : (
@@ -618,13 +801,15 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     sx={{ mx: 1, boxShadow: "none" }}
                   >
                     <Button
-                      startIcon={<Iconify
-                        icon={"charm:swap-horizontal"}
-                        sx={{
-                          width: 20,
-                          height: 20,
-                        }}
-                      />}
+                      startIcon={
+                        <Iconify
+                          icon={"charm:swap-horizontal"}
+                          sx={{
+                            width: 20,
+                            height: 20,
+                          }}
+                        />
+                      }
                       sx={{
                         background: "#1976D2",
                         borderRadius: "6px 0px 0px 6px",
@@ -658,8 +843,8 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     sx={{ minWidth: "510px" }}
                     InputProps={{
                       style: {
-                        background: '#F2F4F5',
-                        border: 'none'
+                        background: "#F2F4F5",
+                        border: "none",
                       },
                       startAdornment: (
                         <InputAdornment position="start" sx={{ ml: 1.5 }}>
@@ -688,20 +873,26 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                 </ButtonFilterStyle>
               </Stack>
               <Stack flexDirection={"row"}>
-                <ButtonGroup variant="contained" aria-label="split button" sx={{
-                  boxShadow: "unset",
-                  '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-                    borderColor: "white"
-                  }, '& .MuiButtonGroup-grouped:hover': {
-                    opacity: 0.8
-                  }
-                }}>
-
-                  <Button style={{
-                    background: '#1976D2',
-                    padding: '12px 16px'
+                <ButtonGroup
+                  variant="contained"
+                  aria-label="split button"
+                  sx={{
+                    boxShadow: "unset",
+                    "& .MuiButtonGroup-grouped:not(:last-of-type)": {
+                      borderColor: "white",
+                    },
+                    "& .MuiButtonGroup-grouped:hover": {
+                      opacity: 0.8,
+                    },
                   }}
-                    onClick={() => setShowDialogStage(true)}>
+                >
+                  <Button
+                    style={{
+                      background: "#1976D2",
+                      padding: "12px 16px",
+                    }}
+                    onClick={() => setShowDialogStage(true)}
+                  >
                     <Iconify
                       icon={"material-symbols:add"}
                       width={20}
@@ -715,12 +906,17 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     placement="bottom-start"
                     onClose={handleCloseGroup}
                     disableFocusListener
-                    disableHoverList ener
+                    disableHoverList
+                    ener
                     disableTouchListener
                     open={openGroup}
                     title={
                       <ClickAwayListener onClickAway={handleCloseGroup}>
-                        <MenuList autoFocusItem divider={true} disableGutters={true}>
+                        <MenuList
+                          autoFocusItem
+                          divider={true}
+                          disableGutters={true}
+                        >
                           <MenuItem>
                             <DownloadLineIcon />
                             <Typography ml={"12px"} variant={"textSize13600"}>
@@ -750,8 +946,8 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                       aria-haspopup="menu"
                       onClick={handleOpenGroup}
                       style={{
-                        background: '#1976D2',
-                        padding: '12px 16px'
+                        background: "#1976D2",
+                        padding: "12px 16px",
                       }}
                     >
                       <Iconify
@@ -763,28 +959,44 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
                     </Button>
                   </LightTooltip>
                 </ButtonGroup>
-                <RecruitmentApplicantChooseStage data={RecruitmentData?.recruitmentPipeline?.recruitmentPipelineStates} show={showDialogStage} setShow={setShowDialogStage}
-                  setStage={setModelApplication} />
+                <RecruitmentApplicantChooseStage
+                  data={
+                    RecruitmentData?.recruitmentPipeline
+                      ?.recruitmentPipelineStates
+                  }
+                  show={showDialogStage}
+                  setShow={setShowDialogStage}
+                  setStage={setModelApplication}
+                />
               </Stack>
             </BoxFlex>
           )}
 
           <ButtonIcon
-            className='btn-collapse-header'
-            style={{
-              
-            }}
+            className="btn-collapse-header"
+            style={{}}
             onClick={() => collapseHeader()}
             icon={
-              <Iconify icon={isFullHeader?"material-symbols:arrow-drop-up":'material-symbols:arrow-drop-down'}
+              <Iconify
+                icon={
+                  isFullHeader
+                    ? "material-symbols:arrow-drop-up"
+                    : "material-symbols:arrow-drop-down"
+                }
                 width={20}
                 height={20}
-                color="#5C6A82" />
-            } />
+                color="#5C6A82"
+              />
+            }
+          />
         </HeadingBar>
         <Container
           maxWidth={themeStretch ? false : "xl"}
-          sx={{ ...(smDown && { padding: 0 }), position: 'relative', zIndex: 999 }}
+          sx={{
+            ...(smDown && { padding: 0 }),
+            position: "relative",
+            zIndex: 999,
+          }}
         >
           {/* <TabPanel value="1">
             "ha"
@@ -792,8 +1004,12 @@ function RecruitmentPreviewItem({ viewModeDefault, onChangeViewMode, tabDefault,
           <TabPanel value="2">"hi"</TabPanel> */}
         </Container>
       </TabContext>
-      <RecruitmentApplicantCreate show={showModelCreate} setShow={setShowModelCreate} data={modelApplication}
-        setData={setModelApplication} />
+      <RecruitmentApplicantCreate
+        show={showModelCreate}
+        setShow={setShowModelCreate}
+        data={modelApplication}
+        setData={setModelApplication}
+      />
     </div>
   );
 }
@@ -802,6 +1018,6 @@ RecruitmentPreviewItem.propTypes = {
   viewModeDefault: PropTypes.number,
   onChangeViewMode: PropTypes.func,
   tabDefault: PropTypes.number,
-  onChangeTab: PropTypes.func
+  onChangeTab: PropTypes.func,
 };
 export default RecruitmentPreviewItem;
