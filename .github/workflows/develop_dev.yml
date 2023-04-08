@@ -27,7 +27,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Pulling Inside docker image
-        run: docker pull thuybon1/inside_iviec:1.0.0
+        run: docker pull thuybon1/iviec_inside:1.0.0
 
       - name: Deploy Inside Iviec service
         working-directory: /root/iViec_Fe
