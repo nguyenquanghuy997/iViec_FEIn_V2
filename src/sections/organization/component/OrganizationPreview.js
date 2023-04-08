@@ -1,7 +1,7 @@
 import React from "react";
 import {get, isEmpty} from 'lodash'
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
-import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
+import {OrganizationFromHeadStyle} from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
 import {useGetOrganizationByIdQuery} from "@/sections/organization/OrganizationSlice";
 import {useRouter} from "next/router";
@@ -49,7 +49,19 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
               sx: {
                 width: {xs: 1, sm: 560, md: 600},
                 boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+                position: 'fixed',
+                // height: 'calc(100% - 64px)',
+                top: '64px',
+                right: 0
               },
+            }}
+            componentsProps={{
+              backdrop: {
+                sx: {
+                  background: 'transparent !important',
+                  boxShadow: 'none !important'
+                }
+              }
             }}
         >
           <OrganizationFromHeadStyle className="organization-form-head">
@@ -59,7 +71,7 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
             <IconButton size="small" onClick={onClose}><Iconify icon="ic:baseline-close"/></IconButton>
           </OrganizationFromHeadStyle>
           <Divider/>
-          <Box sx={{py: 2, px: 2, mt: 8}}>
+          <Box sx={{py: 2, px: 2, mt: 0}}>
             <Typography sx={{fontSize: 24, fontWeight: 700, color: '#455570'}}>
               {get(organization, 'name') && get(organization, 'name')}
             </Typography>
@@ -73,32 +85,71 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
               )}
             {renderInfoOrganization('Trực thuộc', get(organization, 'parentOrganizationName') && get(organization, 'parentOrganizationName'))}
             {renderInfoOrganization('Đơn vị trực thuộc', get(organization, 'subsidiaryNames')?.map((sub, index, arr) => index < arr.length - 1 ? `${sub}, ` : `${sub}`))}
-            <MuiButton
-              title={"Danh sách người dùng"}
-              onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
-              endIcon={<Iconify icon='material-symbols:arrow-right'/>}
-              sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
-            />
+            <Box sx={{pt: 1}}>
+              <MuiButton
+                  title={"Danh sách người dùng"}
+                  onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
+                  endIcon={<Iconify icon='material-symbols:arrow-right'/>}
+                  sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
+              />
+            </Box>
           </Box>
-          <OrganizationFromFooterStyle className="organization-form-footer">
+          <div
+              style={{
+                display: "flex",
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 12,
+                position: "fixed",
+                bottom: 0,
+                background: "#FDFDFD",
+                width: "600px",
+                padding: "16px 24px",
+                border: "1px solid #EFF3F6",
+                zIndex: 1001,
+              }}
+          >
             <Stack flexDirection="row">
-              <MuiButton
-                  type="button"
-                  title="Chỉnh sửa"
-                  onClick={() => handleOpenFormWithCurrentNode(organization)}
-                  sx={{ px: 2, py: 1, minWidth: 24 }}
-              />
-              <MuiButton
-                  title={"Đóng"}
-                  onClick={onClose}
-                  color={"basic"}
-                  sx={{ color: '#455570', fontWeight: 600, ml: 1 }}
-              />
+            <MuiButton
+                title="Chỉnh sửa"
+                type="button"
+                onClick={() => handleOpenFormWithCurrentNode(organization)}
+                sx={{
+                  height: 36
+                }}
+            />
+            <MuiButton
+                title={"Đóng"}
+                color={"basic"}
+                onClick={onClose}
+                sx={{
+                  height: 36
+                }}
+            />
             </Stack>
-            <IconButton>
-              <Iconify icon="ci:trash-full" onClick={() => handleShowDelete(organization)} />
-            </IconButton>
-          </OrganizationFromFooterStyle>
+              <IconButton>
+                <Iconify icon="ci:trash-full" onClick={() => handleShowDelete(organization)} />
+              </IconButton>
+          </div>
+          {/*<OrganizationFromFooterStyle className="organization-form-footer">*/}
+          {/*  <Stack flexDirection="row">*/}
+          {/*    <MuiButton*/}
+          {/*        type="button"*/}
+          {/*        title="Chỉnh sửa"*/}
+          {/*        onClick={() => handleOpenFormWithCurrentNode(organization)}*/}
+          {/*        sx={{ px: 2, py: 1, minWidth: 24 }}*/}
+          {/*    />*/}
+          {/*    <MuiButton*/}
+          {/*        title={"Đóng"}*/}
+          {/*        onClick={onClose}*/}
+          {/*        color={"basic"}*/}
+          {/*        sx={{ color: '#455570', fontWeight: 600, ml: 1 }}*/}
+          {/*    />*/}
+          {/*  </Stack>*/}
+          {/*  <IconButton>*/}
+          {/*    <Iconify icon="ci:trash-full" onClick={() => handleShowDelete(organization)} />*/}
+          {/*  </IconButton>*/}
+          {/*</OrganizationFromFooterStyle>*/}
         </Drawer>
       </>
   )
