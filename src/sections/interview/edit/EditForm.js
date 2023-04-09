@@ -1,30 +1,29 @@
-import CloseIcon from "../../../assets/CloseIcon";
 import { useUpdateCalendarMutation } from "../InterviewSlice";
-import InterviewCouncil from "../components/InterviewCouncil";
-import ListCandidate from "../components/ListCandidate";
 import PersonalInterview from "../components/PersonalInterview";
 import { FormProvider } from "@/components/hook-form";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Drawer, Grid, List, Typography } from "@mui/material";
+import { Divider, Grid, Modal } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { get } from "lodash";
 import { useSnackbar } from "notistack";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-
-export const BoxInnerStyle = styled("Box")(({theme}) => ({
+import { ViewModel } from "@/utils/cssStyles";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
+import { ButtonDS } from "@/components/DesignSystem";
+import Iconify from "@/components/Iconify";
+import ListCandidate from "@/sections/interview/components/ListCandidate";
+import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
+import {useEffect} from "react";
+export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
-    width: "1000px",
+    width: "1000px"
   },
   [theme.breakpoints.up("xl")]: {
-    width: "1400px",
-  },
+    width: "1400px"
+  }
 }));
 
-const EditForm = ({ item, open, onClose, onOpen }) => {
-  // const { data: DetailData } = useGetDetailCalendarsQuery({
-  //   BookingCalendarId: item?.id,
-  // });
+const EditForm  = ({item, open, setOpen }) => {
   const defaultValues = { ...item };
   // const CalendarSchema = Yup.object().shape({
   //   name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
@@ -49,52 +48,21 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
   //     })
   //   ),
   // });
+
   const methods = useForm({
     // resolver: yupResolver(CalendarSchema),
-    defaultValues,
+    defaultValues
   });
+
   const {
-    setValue,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }
   } = methods;
 
   const [updateCalendar] = useUpdateCalendarMutation();
-  const { enqueueSnackbar } = useSnackbar();
+  // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
 
-  // const toHHMMSS = (num) => {
-  //   var sec_num = parseInt(num * 60, 10);
-  //   var hours = Math.floor(sec_num / 3600);
-  //   var minutes = Math.floor((sec_num - hours * 3600) / 60);
-  //   var seconds = sec_num - hours * 3600 - minutes * 60;
-  //
-  //   if (hours < 10) {
-  //     hours = "0" + hours;
-  //   }
-  //   if (minutes < 10) {
-  //     minutes = "0" + minutes;
-  //   }
-  //   if (seconds < 10) {
-  //     seconds = "0" + seconds;
-  //   }
-  //   return hours + ":" + minutes + ":" + seconds;
-  // };
-  //
-  // const convertDurationTimeToSeconds = (time) => {
-  //   const splitToString = time.split(":");
-  //   return (
-  //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
-  //   );
-  // };
-  //
-  // const convertStoMs = (s) => {
-  //   const totalMinutes = Math.floor(s / 60);
-  //   const seconds = s % 60;
-  //   const newSeconds = seconds < 10 ? "0" + seconds : seconds;
-  //   const hours = Math.floor(totalMinutes / 60);
-  //   const minutes = totalMinutes % 60;
-  //   return `${hours}:${minutes}:${newSeconds}`;
-  // };
+  const { enqueueSnackbar } = useSnackbar();
   const onSubmit = async (d) => {
     const res = {
       id: item?.id,
@@ -188,19 +156,20 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
 
       // location.reload()
     } catch (err) {
-   
+
       enqueueSnackbar(errors.afterSubmit?.message, {
         autoHideDuration: 1000,
         variant: "error",
       });
     }
   };
+  const onClose = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (!item?.id) return;
-    setValue(
-      "bookingCalendarGroups",
-      get(item, "bookingCalendarGroups.bookingCalendarApplicants")
-    );
+    // setValue("bookingCalendarGroups", item?.bookingCalendarGroups);
     // setValue("recruitmentId", body.recruitmentId);
     // setValue("recruitmentPipelineStateId", body.recruitmentPipelineStateId);
     // setValue("onlineInterviewAddress", body.onlineInterviewAddress);
@@ -209,101 +178,108 @@ const EditForm = ({ item, open, onClose, onOpen }) => {
     // setValue("reviewFormId", body.reviewFormId);
     // setValue("isSendMailCouncil", body.isSendMailCouncil);
     // setValue("isSendMailApplicant", body.isSendMailApplicant);
-    // setValue("bookingCalendarGroups", body.bookingCalendarGroups);
-  }, [item]);
 
-  const list = () => (
+  }, [item]);
+  return (
     <BoxInnerStyle>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <List
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            p: 0,
-          }}
+        <Modal
+          open={open}
+          onClose={onClose}
+          sx={{ display: "flex", justifyContent: "flex-end" }}
         >
-          <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-            Chỉnh sửa lịch phỏng vấn
-          </Typography>
-          <Button
-            onClick={onClose}
-            sx={{
-              "&:hover": {
-                background: "white",
-              },
-            }}
-          >
-            <CloseIcon />
-          </Button>
-        </List>
+          <ViewModel sx={{ width: "unset", height: "100%", justifyContent: "space-between" }}>
+            <View style={{ overflow: "hidden" }}>
+              <View>
+                <View
+                  flexrow="true"
+                  atcenter="center"
+                  pv={12}
+                  ph={24}
+                  bgcolor={"#FDFDFD"}
+                >
+                  <Text flex="true" fontsize={16} fontweight={"600"}>
+                    Chỉnh sửa lịch phỏng vấn
+                  </Text>
+                  <ButtonDS
+                    type="submit"
+                    sx={{
+                      backgroundColor: "#fff",
+                      boxShadow: "none",
+                      ":hover": {
+                        backgroundColor: "#EFF3F7"
+                      },
+                      textTransform: "none",
+                      padding: "12px",
+                      minWidth: "unset"
+                    }}
+                    onClick={onClose}
+                    icon={
+                      <Iconify
+                        icon={"mi:close"}
+                        width={20}
+                        height={20}
+                        color="#5C6A82"
+                      />
+                    }
+                  />
+                </View>
+                <Divider />
+              </View>
+              <View style={{ minWidth: "600px", maxWidth: "1400px", overflow: "hidden" }}>
+                <Grid container flexDirection={"row"} height={"100%"} flexWrap={"nowrap"} overflow={"hidden"}>
+                  <Grid container sx={{ width: "600px", overflowY: "auto" }} p={3} height={"100%"} flexWrap={"nowrap"}
+                        flexDirection={"column"}>
+                    <PersonalInterview item={item}/>
+                  </Grid>
+                  <Divider orientation="vertical"/>
+                  <Grid p={3} sx={{
+                    minWidth: "400px"
+                  }}>
+                    <ListCandidate item={item} isEditmode={true}/>
+                  </Grid>
+                  <Divider orientation="vertical"/>
+                  <Grid sx={{
+                    minWidth: "400px",
+                    overflowY: "auto"
+                  }}>
+                    <InterviewCouncil item={item} isEditmode={true}/>
+                  </Grid>
+                </Grid>
+              </View>
+            </View>
 
-        <Box>
-          <Grid container border="1px solid #E7E9ED">
-            <Grid
-              item
-              xs={12}
-              md={6}
-              borderRight="1px solid #E7E9ED"
-              sx={{padding: "24px 24px 0 24px"}}
+            <View
+              flexrow="true"
+              jcbetween="true"
+              pv={12}
+              ph={16}
+              boxshadow={"inset 0px 1px 0px #EBECF4"}
             >
-              <Box sx={{width: "100%", typography: "body1", mb: 3}}>
-                <PersonalInterview
-                  item={defaultValues}
-                />
-              </Box>
-            </Grid>
-            <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
-              <ListCandidate
-                isEditmode={true}
-              />
-            </Grid>
-            <Grid item xs={5} md={3}>
-              <InterviewCouncil
-                isEditmode={true}
-              />
-            </Grid>
-          </Grid>
-        </Box>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 12,
-            position: "fixed",
-            bottom: 0,
-            background: "#FDFDFD",
-            width: "100%",
-            padding: "16px 24px",
-            border: "1px solid #EFF3F6",
-          }}
-        >
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            sx={{backgroundColor: "#1976D2", p: 1, fontSize: 14}}
-          >
-            {"Lưu"}
-          </LoadingButton>
+              <View flexrow="true">
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                  sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
+                >
+                  {"Lưu"}
+                </LoadingButton>
+                <div style={{ width: 8 }} />
 
-          <LoadingButton
-            variant="text"
-            sx={{color: "#455570"}}
-            onClick={onClose}
-          >
-            {"Hủy"}
-          </LoadingButton>
-        </div>
+                <LoadingButton
+                  variant="text"
+                  sx={{ color: "#455570" }}
+                  onClick={onClose}
+                >
+                  {"Hủy"}
+                </LoadingButton>
+              </View>
+            </View>
+          </ViewModel>
+        </Modal>
       </FormProvider>
     </BoxInnerStyle>
   );
-
-  return (
-    <div>
-      <Drawer anchor="right" open={open} onClose={onClose} onOpen={onOpen}>
-        {list("right")}
-      </Drawer>
-    </div>
-  );
 };
-export default EditForm;
+export default EditForm ;

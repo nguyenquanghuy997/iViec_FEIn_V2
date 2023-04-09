@@ -44,6 +44,7 @@ const PersonalInterview = ({ item }) => {
     getRelateCalendar({ RecruitmentPipelineStateId: e });
   };
 
+
   return (
     <Grid spacing={3}>
       <Grid mb={3}>
@@ -62,21 +63,15 @@ const PersonalInterview = ({ item }) => {
           </Typography>
           <Box
             sx={{
-              bgColor: "#EFF3F6",
+              backgroundColor: "#EFF3F6",
               p: 2,
               borderRadius: "6px",
               fontSize: 14
             }}
           >
-            {Data.filter((item) => item?.id.includes(item?.recruitmentId))[0]?.name}
+            {Data.filter((data) => data?.id.includes(item?.recruitmentId))[0]?.name}
           </Box>
-          {/*<RHFTextField*/}
-          {/*  title={"Tin tuyển dụng"}*/}
-          {/*  isRequired={true}*/}
-          {/*  name={"recruitmentTitle"}*/}
-          {/*  disabled*/}
-          {/*  placeholder="Nhập tên tin tuyển dụng"*/}
-          {/*/>*/}
+
         </Grid>
       ) : (
         <Grid mb={3}>
@@ -95,7 +90,7 @@ const PersonalInterview = ({ item }) => {
             multiple={false}
             placeholder="Chọn tin tuyển dụng"
             required
-            onChange={changeRecruitment}
+onChange={changeRecruitment}
           />
         </Grid>
       )}
@@ -113,7 +108,8 @@ const PersonalInterview = ({ item }) => {
                 (item) => item.pipelineStateType === 2
               )?.map((i) => ({
                 value: i.id,
-                label: PipelineStateType(i.pipelineStateType)
+                label: PipelineStateType(i.pipelineStateType),
+
               }))}
               name="recruitmentPipelineStateId"
               multiple={false}
@@ -195,8 +191,7 @@ const PersonalInterview = ({ item }) => {
               fontSize: 14
             }}
           >
-            {DataForm.filter((item) => item?.id.includes(item?.reviewFormId))[0]
-              ?.name || relateCalendar?.reviewFormName}
+            {DataForm.filter((data) => data?.id.includes(item?.reviewFormId))[0]?.name || relateCalendar?.reviewFormName}
           </Box> :
           <RHFSelect
             options={DataForm.map((i) => ({

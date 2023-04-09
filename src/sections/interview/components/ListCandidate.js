@@ -6,7 +6,7 @@ import { Label } from "@/components/hook-form/style";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 
-const ListCandidate = ({ isEditmode }) => {
+const ListCandidate = ({ item, isEditmode }) => {
   const { watch } = useFormContext();
   const { palette } = useTheme();
   const res = useGetApplicantByPipeLineQuery(
@@ -34,6 +34,7 @@ const ListCandidate = ({ isEditmode }) => {
           name="bookingCalendarGroups"
           fullWidth
           isEditmode={isEditmode}
+          defaultValue={item}
           multiple
           isRequired
           open={open}

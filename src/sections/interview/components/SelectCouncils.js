@@ -78,7 +78,6 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
   const [filterOptions, setFilterOptions] = useState([]);
 
   const renderChipsSelect = (options, value, remove) => {
-    console.log("option-value", defaultItem?.bookingCalendarCouncils );
     return (
       <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
         {options

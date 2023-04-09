@@ -66,7 +66,7 @@ export default function InterviewSchedule() {
         <EditForm
           open={openForm}
           item={item}
-          onClose={() => setOpenForm(false)}
+          setOpen={setOpenForm}
         />
       )}
       {openDialog && (

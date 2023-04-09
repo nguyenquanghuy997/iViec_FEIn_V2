@@ -184,102 +184,105 @@ const CreateCalendar = ({ open, setOpen }) => {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Modal
-        open={open}
-        onClose={onClose}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
-      >
-        <ViewModel sx={{ width: "unset", height: "100%", justifyContent: "space-between" }}>
-          <View style={{ overflow: "hidden" }}>
-            <View>
-              <View
-                flexrow="true"
-                atcenter="center"
-                pv={12}
-                ph={24}
-                bgcolor={"#FDFDFD"}
-              >
-                <Text flex="true" fontsize={16} fontweight={"600"}>
-                  Đặt lịch phỏng vấn
-                </Text>
-                <ButtonDS
-                  type="submit"
-                  sx={{
-                    backgroundColor: "#fff",
-                    boxShadow: "none",
-                    ":hover": {
-                      backgroundColor: "#EFF3F7"
-                    },
-                    textTransform: "none",
-                    padding: "12px",
-                    minWidth: "unset"
-                  }}
-                  onClick={onClose}
-                  icon={
-                    <Iconify
-                      icon={"mi:close"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                    />
-                  }
-                />
+      <BoxInnerStyle>
+        <Modal
+          open={open}
+          onClose={onClose}
+          sx={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          <ViewModel sx={{ width: "unset", height: "100%", justifyContent: "space-between" }}>
+            <View style={{ overflow: "hidden" }}>
+              <View>
+                <View
+                  flexrow="true"
+                  atcenter="center"
+                  pv={12}
+                  ph={24}
+                  bgcolor={"#FDFDFD"}
+                >
+                  <Text flex="true" fontsize={16} fontweight={"600"}>
+                    Đặt lịch phỏng vấn
+                  </Text>
+                  <ButtonDS
+                    type="submit"
+                    sx={{
+                      backgroundColor: "#fff",
+                      boxShadow: "none",
+                      ":hover": {
+                        backgroundColor: "#EFF3F7"
+                      },
+                      textTransform: "none",
+                      padding: "12px",
+                      minWidth: "unset"
+                    }}
+                    onClick={onClose}
+                    icon={
+                      <Iconify
+                        icon={"mi:close"}
+                        width={20}
+                        height={20}
+                        color="#5C6A82"
+                      />
+                    }
+                  />
+                </View>
+                <Divider />
               </View>
-              <Divider />
+              <View style={{ minWidth: "600px", maxWidth: "1400px", overflow: "hidden" }}>
+                <Grid container flexDirection={"row"} height={"100%"} flexWrap={"nowrap"} overflow={"hidden"}>
+                  <Grid container sx={{ width: "600px", overflowY: "auto" }} p={3} height={"100%"} flexWrap={"nowrap"}
+                        flexDirection={"column"}>
+                    <PersonalInterview />
+                  </Grid>
+                  <Divider orientation="vertical"/>
+                  <Grid p={3} sx={{
+                    minWidth: "400px"
+                  }}>
+                    <ListCandidate />
+                  </Grid>
+                  <Divider orientation="vertical"/>
+                  <Grid sx={{
+                    minWidth: "400px",
+                    overflowY: "auto"
+                  }}>
+                    <InterviewCouncil />
+                  </Grid>
+                </Grid>
+              </View>
             </View>
-            <View style={{ minWidth: "600px", maxWidth: "1400px", overflow: "hidden" }}>
-              <Grid container flexDirection={"row"} height={"100%"} flexWrap={"nowrap"} overflow={"hidden"}>
-                <Grid container sx={{ width: "600px", overflowY: "auto" }} p={3} height={"100%"} flexWrap={"nowrap"}
-                      flexDirection={"column"}>
-                  <PersonalInterview />
-                </Grid>
-                <Divider orientation="vertical"/>
-                <Grid p={3} sx={{
-                  minWidth: "400px"
-                }}>
-                  <ListCandidate />
-                </Grid>
-                <Divider orientation="vertical"/>
-                <Grid sx={{
-                  minWidth: "400px",
-                  overflowY: "auto"
-                }}>
-                  <InterviewCouncil />
-                </Grid>
-              </Grid>
-            </View>
-          </View>
 
-          <View
-            flexrow="true"
-            jcbetween="true"
-            pv={12}
-            ph={16}
-            boxshadow={"inset 0px 1px 0px #EBECF4"}
-          >
-            <View flexrow="true">
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-                sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
-              >
-                {"Lưu"}
-              </LoadingButton>
-              <div style={{ width: 8 }} />
+            <View
+              flexrow="true"
+              jcbetween="true"
+              pv={12}
+              ph={16}
+              boxshadow={"inset 0px 1px 0px #EBECF4"}
+            >
+              <View flexrow="true">
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                  sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
+                >
+                  {"Lưu"}
+                </LoadingButton>
+                <div style={{ width: 8 }} />
 
-              <LoadingButton
-                variant="text"
-                sx={{ color: "#455570" }}
-                onClick={onClose}
-              >
-                {"Hủy"}
-              </LoadingButton>
+                <LoadingButton
+                  variant="text"
+                  sx={{ color: "#455570" }}
+                  onClick={onClose}
+                >
+                  {"Hủy"}
+                </LoadingButton>
+              </View>
             </View>
-          </View>
-        </ViewModel>
-      </Modal>
+          </ViewModel>
+        </Modal>
+      </BoxInnerStyle>
     </FormProvider>
+
   );
 };
 export default CreateCalendar;
