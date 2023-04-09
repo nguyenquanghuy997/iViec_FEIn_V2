@@ -249,7 +249,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                             <Box className="box-content-wrapper" sx={{width: '100%'}}>
                                 {invitesResult?.map((item, index) => {
                                     const userItem = dataSubmitRef.current?.find((field) => field.email === item?.email);
-                                    const roleGroup = ListRoleGroup.find(role => role.id === userItem.roleGroupId);
+                                    const roleGroup = ListRoleGroup.find(role => role.id === userItem?.roleGroupId);
                                     const organizations = ListOrganization.filter(organization => userItem?.organizationIds?.includes(organization?.id));
                                     return (
                                         <OrganizationInviteResultCard
