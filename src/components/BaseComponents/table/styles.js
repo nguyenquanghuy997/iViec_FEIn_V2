@@ -32,6 +32,18 @@ export const HeaderStyle = styled('div')(() => ({
       },
     },
   },
+
+  '.drawer-filter': {
+    '.MuiDrawer-paper': {
+      paddingLeft: 16,
+      background: 'transparent',
+      borderLeft: 'none',
+    },
+    'form': {
+      background: '#fff',
+      boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+    },
+  },
 }));
 
 export const TableStyle = styled('div')(() => ({
