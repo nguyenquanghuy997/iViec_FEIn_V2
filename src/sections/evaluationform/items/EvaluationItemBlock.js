@@ -37,6 +37,11 @@ const EvaluationItemBlock = ({
   return (
     <CardFormItemStyle className="card-item">
       <AccordionSummary
+        sx={{
+          ".MuiAccordionSummary-content": {
+            width: '100%'
+          }
+        }}
         expandIcon={
           <ButtonIcon
             // onClick={onChangeExpand}
@@ -53,8 +58,8 @@ const EvaluationItemBlock = ({
         aria-controls={`panel${index}a-content`}
         id={`panel${index}a-header`}
       >
-        <BoxFlex style={{ marginBottom: 12, flexFlow: 'unset' }}>
-          <CardFormItemTitleStyle className="card-item-title">
+        <BoxFlex style={{ marginBottom: 12, width: '100%' }}>
+          <CardFormItemTitleStyle className="card-item-title" sx={{ width: '70%' }}>
             {/* {isCheckbox && (
               <Checkbox
                 value={item}
@@ -64,8 +69,19 @@ const EvaluationItemBlock = ({
                 checkedIcon={<CheckboxIconChecked />}
               />
             )} */}
-            {item.name}
-            <Typography className="card-item-subtitle" component="span">
+            <Tooltip title={item?.name}>
+              <Typography sx={{
+                maxWidth: '70%',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden'
+              }}>
+                {item.name}
+              </Typography>
+            </Tooltip>
+
+
+            <Typography sx={{ maxWidth: '30%' }} className="card-item-subtitle" component="span">
               ({item?.numOfRecruitment} tin áp dụng)
             </Typography>
           </CardFormItemTitleStyle>
