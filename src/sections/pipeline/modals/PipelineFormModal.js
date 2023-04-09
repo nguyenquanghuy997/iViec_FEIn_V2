@@ -244,7 +244,6 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
               {renderTitle("Mô tả")}
 
               <TextAreaDS
-                initialValue=""
                 maxLength={255}
                 placeholder="Nhập nội dung mô tả"
                 name={"description"}

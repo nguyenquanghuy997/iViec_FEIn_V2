@@ -15,14 +15,12 @@ import { fDate } from "@/utils/formatTime";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
 import { useState, useMemo } from "react";
-import useAuth from "@/hooks/useAuth";
-import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
+import { API_GET_APPLICANT_USERS_FILTER } from "@/routes/api";
 import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
 import { LIST_STATUS, LIST_STEP_RECRUITMENT } from "@/utils/formatString";
 import useRole from "@/hooks/useRole";
 
 export const PipelineItem = () => {
-  const { user } = useAuth();
   const router = useRouter();
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
@@ -173,7 +171,7 @@ export const PipelineItem = () => {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
-          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
+          remoteUrl: API_GET_APPLICANT_USERS_FILTER
         },
       },
     ];
