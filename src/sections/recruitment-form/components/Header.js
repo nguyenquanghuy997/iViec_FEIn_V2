@@ -1,6 +1,5 @@
-import NextLink from "next/link";
 import {useWatch} from "react-hook-form";
-import {Box, IconButton, Link, Stack} from "@mui/material";
+import {Box, IconButton, Stack} from "@mui/material";
 
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
@@ -8,13 +7,11 @@ import Iconify from "@/components/Iconify";
 
 import {DraftIcon, PreviewIcon} from "@/sections/recruitment-form/icon/HeaderIcon";
 
-import {PATH_DASHBOARD} from "@/routes/paths";
-
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {JobTitleStyle} from "@/sections/recruitment-form/style";
 
-const Header = ({title, errors, onOpenConfirm}) => {
-  const name = useWatch({ name: 'name' });
+const Header = ({title, errors, onOpenConfirm, setShowAlert}) => {
+  const name = useWatch({name: 'name'});
   return (
       <HeadingBar style={{
         position: 'fixed',
@@ -26,15 +23,13 @@ const Header = ({title, errors, onOpenConfirm}) => {
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <Stack flexDirection="row" alignItems="center">
             <Box sx={{display: 'flex', alignItems: 'center'}}>
-              <NextLink href={PATH_DASHBOARD.recruitment.root} passHref>
-                <Link>
-                  <IconButton
-                      size='small'
-                      sx={{color: style.COLOR_TEXT_BLACK, mr: 1}}>
-                    <Iconify icon="material-symbols:arrow-back"/>
-                  </IconButton>
-                </Link>
-              </NextLink>
+              <IconButton
+                  size='small'
+                  sx={{color: style.COLOR_TEXT_BLACK, mr: 1}}
+                  onClick={() => setShowAlert(true)}
+              >
+                <Iconify icon="material-symbols:arrow-back"/>
+              </IconButton>
               <JobTitleStyle className="job-title">
                 {title}
               </JobTitleStyle>
