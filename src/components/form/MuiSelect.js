@@ -185,7 +185,7 @@ const MuiSelect = forwardRef((
         let optionItem;
         if (remoteUrl) {
             optionItem = fetchedOptions.concat(selectedOptions).find(opt => opt.id === val);
-            return optionItem ? { value: optionItem.id, label: optionItem.name || optionItem.email || optionItem.lastName } : { value: val, label: val };
+            return optionItem ? { value: optionItem.id, label: optionItem.label || optionItem.name || optionItem.email || optionItem.lastName } : { value: val, label: val };
         }
         optionItem = options.find(opt => opt.value === val);
         return optionItem || { value: val, label: val };

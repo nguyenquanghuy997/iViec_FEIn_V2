@@ -9,7 +9,7 @@ import {API_GET_LIST_USER_ORGANIZATION} from "@/routes/api";
 
 import {BoxInnerStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
-const Owner = () => {
+const Owner = ({ recruitment }) => {
     const organizationId = useWatch({name: 'organizationId'});
     return (
         <BoxInnerStyle>
@@ -24,6 +24,10 @@ const Owner = () => {
                     <LabelStyle required>Cán bộ tuyển dụng</LabelStyle>
                     <RHFSelect
                         remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
+                        selectedOptions={[{
+                            id: recruitment?.ownerId,
+                            label: recruitment?.ownerEmail || recruitment?.ownerName
+                        }]}
                         name="ownerId"
                         placeholder="Chọn 1 cán bộ"
                         fullWidth
@@ -34,6 +38,10 @@ const Owner = () => {
                     <LabelStyle>Đồng phụ trách</LabelStyle>
                     <RHFSelect
                         remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
+                        selectedOptions={recruitment?.coOwners?.map(coOwner => ({
+                            id: coOwner?.id,
+                            label: coOwner?.email || coOwner?.name
+                        }))}
                         name="coOwnerIds"
                         placeholder="Chọn 1 hoặc nhiều cán bộ"
                         fullWidth
@@ -42,9 +50,13 @@ const Owner = () => {
                     />
                 </Box>
                 <Box sx={{mb: 2}}>
-                    <LabelStyle required>Thành viên hội đồng tuyển dụng</LabelStyle>
+                    <LabelStyle>Thành viên hội đồng tuyển dụng</LabelStyle>
                     <RHFSelect
                         remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
+                        selectedOptions={recruitment?.recruitmentCouncils?.map(coOwner => ({
+                            id: coOwner?.councilUserId,
+                            label: coOwner?.councilEmail || coOwner?.councilName
+                        }))}
                         name="recruitmentCouncilIds"
                         placeholder="Chọn 1 hoặc nhiều cán bộ"
                         fullWidth
