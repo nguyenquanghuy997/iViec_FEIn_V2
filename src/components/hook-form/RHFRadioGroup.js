@@ -14,7 +14,7 @@ RHFRadioGroup.propTypes = {
   options: PropTypes.array,
 };
 
-export default function RHFRadioGroup({ name, options, ...other }) {
+export default function RHFRadioGroup({ name, options, className, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -24,7 +24,7 @@ export default function RHFRadioGroup({ name, options, ...other }) {
       defaultValue=""
       render={({ field, fieldState: { error } }) => (
         <div>
-          <RadioGroup {...field} row {...other}>
+          <RadioGroup {...field} row className={className} {...other}>
             {options?.map((option) => (
               <FormControlLabel
                 key={option.value}
