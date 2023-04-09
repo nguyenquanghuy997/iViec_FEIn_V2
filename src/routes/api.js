@@ -96,6 +96,7 @@ export const API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT = '/organization/Organi
 export const API_UPDATE_ORGANIZATION_PIPELINE ='organization/OrganizationProfilePipeline/UpdateOrganizationProfilePipelines'
 export const API_UPDATE_ORGANIZATION_ENDING = 'organization/Organization/UpdateOrganization'
 export const API_ADD_ORGANIZATION_BUSINESS='organization/OrganizationBusiness/CreateOrganizationBusiness'
+export const API_GET_ORGANIZATION_USERS = '/organization/Organization/GetApplicationUsersFilter';
 
 // Mẫu đánh giá
 export const API_GET_ALL_REVIEW_FORM = "/organization/ReviewForm/GetReviewForms";

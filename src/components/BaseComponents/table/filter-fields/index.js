@@ -9,6 +9,7 @@ import AddressField from "./AddressField";
 import RangeMoneyField from "./RangeMoneyField";
 
 import { FilterItemStyle } from "../styles";
+import TreeSelectField from "./TreeSelectField";
 
 export default function FilterFields({
   columns = [],
@@ -72,7 +73,7 @@ const FilterFieldItem = ({
       )
     }
   
-    if (type === TBL_FILTER_TYPE.SELECT_CHECKBOX || type === TBL_FILTER_TYPE.SELECT_TREE) { //TODO
+    if (type === TBL_FILTER_TYPE.SELECT_CHECKBOX) {
       return (
         <SelectCheckboxField
           {...fieldProps}
@@ -81,6 +82,14 @@ const FilterFieldItem = ({
           remoteUrl={remoteUrl}
           remoteMethod={remoteMethod}
           multiple={true}
+        />
+      )
+    }
+
+    if (type === TBL_FILTER_TYPE.SELECT_TREE) {
+      return (
+        <TreeSelectField
+          {...fieldProps}
         />
       )
     }
