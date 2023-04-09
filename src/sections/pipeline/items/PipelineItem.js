@@ -32,8 +32,10 @@ export const PipelineItem = () => {
   const columns = useMemo(() => {
     return [
       {
+        dataIndex: 'id',
         title: "STT",
         key: "index",
+        align: 'center',
         render: (item, record, index, page, paginationSize) => (
           <>{(page - 1) * paginationSize + index + 1}</>
         ),
@@ -45,8 +47,8 @@ export const PipelineItem = () => {
         title: "Quy trình tuyển dụng",
         width: "240px",
         fixed: "left",
-        render: (item,record) => (
-          <span style={{fontWeight: 500}}>{record.isDefault == true ? 'Quy trình mặc định iVIEC':item}</span>
+        render: (item, record) => (
+          <span style={{ fontWeight: 500 }}>{record.isDefault == true ? 'Quy trình mặc định iVIEC' : item}</span>
         ),
       },
       {
@@ -93,7 +95,7 @@ export const PipelineItem = () => {
                         color: "#172B4D",
                         border: "none",
                         marginLeft: "8px",
-                        fontWeight:500
+                        fontWeight: 500
                       }}
                     >
                       +{indexplus}
@@ -114,7 +116,7 @@ export const PipelineItem = () => {
         dataIndex: "recruitmentAppliedCount",
         title: "Số tin áp dụng",
         width: "160px",
-        align: "center",
+        align: "left",
       },
       {
         dataIndex: "isActivated",
@@ -213,7 +215,7 @@ export const PipelineItem = () => {
           setselectedList={setSelectedRowKeys}
         />
       </Content>
-
+      
       <PipelineFormModal
         show={showForm}
         onClose={() => setShowForm(false)}
