@@ -37,7 +37,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'GET',
         params
       }),
-      providesTags: (result, error, id) => [{type: 'RECRUITMENT', id}],
+      providesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.Id}]
     }),
     // Lấy việc làm theo slug
     getRecruitmentBySlug: builder.query({
@@ -47,14 +47,13 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       providesTags: [{type: 'RECRUITMENT', id: 'SLUG'}],
     }),
-    
     createRecruitment: builder.mutation({
       query: (data) => ({
         url: API_CREATE_RECRUITMENT,
         method: 'POST',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.recruitmentId}]
+      invalidatesTags: (result) => [{type: 'RECRUITMENT', id: result}]
     }),
     createApplicantRecruitment: builder.mutation({
       query: (data) => ({
@@ -69,7 +68,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.id}]
+      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.Id}]
     }),
     updateRecruitmentDraft: builder.mutation({
       query: (data) => ({
@@ -77,7 +76,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.id}]
+      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.Id}]
     }),
     // đóng tin
     closeRecruitment: builder.mutation({

@@ -1,4 +1,4 @@
-import {memo} from 'react';
+import {forwardRef, memo, useEffect, useImperativeHandle, useState} from 'react';
 import {useRouter} from "next/router";
 import {useFormContext, useWatch} from "react-hook-form";
 import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
@@ -19,46 +19,29 @@ import {PATH_DASHBOARD} from "@/routes/paths";
 
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
-import {useEffect} from "react";
 
-const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStateDatas, onSetHasExamination}) => {
+const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
     const router = useRouter();
     const {setValue} = useFormContext();
-    const organizationId = useWatch({name: 'organizationId'});
-    const organizationPipelineId = useWatch({name: 'organizationPipelineId'});
 
     const {isOpen, selected, onOpen, onClose} = useModal();
-    const handleSaveExamination = (data) => {
-        if(isEmpty(recruitment)) {
-            const findIndex = pipelineStateDatas?.map(item => item.organizationPipelineStateId).indexOf(data.organizationPipelineStateId);
-            if (findIndex !== -1) {
-                const newValue = pipelineStateDatas.map(i => i.organizationPipelineStateId === data.organizationPipelineStateId ? {
-                    ...data,
-                    examinationName: data?.examinationName
-                } : {...i})
-                onSetPipelineStateDatas(newValue);
-            } else {
-                const newValue = [...pipelineStateDatas, {...data, examinationName: data?.examinationName}]
-                onSetPipelineStateDatas(newValue);
-                onSetHasExamination({
-                    hasValue: true,
-                    size: newValue.length
-                });
-            }
-        } else {
-            const findIndex = data?.index || 1;
-            const pipelineStateData = pipelineStateDatas[findIndex];
-            const newValue = pipelineStateDatas.map((i, index) => index === findIndex ? {
-                ...pipelineStateData,
-                ...data,
-            } : {...i})
-            onSetPipelineStateDatas(newValue);
-            onSetHasExamination({
-                hasValue: true,
-                size: newValue.length
-            });
+
+    const [pipelineStateDatas, setPipelineStateDatas] = useState([]);
+    const [hasExamination, setHasExamination] = useState({
+        hasValue: false,
+        size: 0,
+    });
+
+    useImperativeHandle(ref, () => {
+        return {
+            getHasValue: () => hasExamination.hasValue,
+            getSize: () => hasExamination.size,
+            getPipeLineStateData: () => pipelineStateDatas,
         }
-    }
+    })
+
+    const organizationId = useWatch({name: 'organizationId'});
+    const organizationPipelineId = useWatch({name: 'organizationPipelineId'});
 
     const {
         data: {items: ListPipeline = []} = {},
@@ -69,13 +52,52 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
     } = useGetAllStepOfPipelineQuery({Id: organizationPipelineId}, {skip: !organizationPipelineId});
 
     useEffect(() => {
-        if (ListStepPipeline?.filter(item => item.pipelineStateType === 1)?.length > 0) {
-            onSetHasExamination({
-                hasValue: true,
-                size: ListStepPipeline?.filter(item => item.pipelineStateType === 1)?.length
+        if (!isEmpty(recruitment)) {
+            setPipelineStateDatas(recruitment?.recruitmentPipeline?.recruitmentPipelineStates?.map(item => (
+                {
+                    organizationPipelineId: recruitment?.recruitmentPipeline?.organizationPipelineId,
+                    expiredTime: item?.examinationExpiredDays,
+                    examinationId: item?.examinationId,
+                    examinationName: item?.examinationName,
+                    pipelineStateType: item?.pipelineStateType,
+                }
+            )))
+        }
+    }, [recruitment])
+
+    useEffect(() => {
+        if (!isEmpty(ListStepPipeline)) {
+            const listStepPipelineSize = ListStepPipeline?.filter(item => item.pipelineStateType === 1)?.length;
+            setHasExamination({
+                hasValue: listStepPipelineSize > 0 ? true : false,
+                size: listStepPipelineSize
             });
         }
-    }, [ListStepPipeline])
+    }, [ListStepPipeline, organizationPipelineId])
+
+    const handleSaveExamination = (data) => {
+        if(isEmpty(recruitment)) {
+            const findIndex = pipelineStateDatas?.map(item => item.organizationPipelineStateId).indexOf(data.organizationPipelineStateId);
+            if (findIndex !== -1) {
+                const newValue = pipelineStateDatas.map(i => i.organizationPipelineStateId === data.organizationPipelineStateId ? {
+                    ...data,
+                    examinationName: data?.examinationName
+                } : {...i})
+                setPipelineStateDatas(newValue);
+            } else {
+                const newValue = [...pipelineStateDatas, {...data, examinationName: data?.examinationName}]
+                setPipelineStateDatas(newValue);
+            }
+        } else {
+            const findIndex = data?.index || 1;
+            const pipelineStateData = pipelineStateDatas[findIndex];
+            const newValue = pipelineStateDatas.map((i, index) => index === findIndex ? {
+                ...pipelineStateData,
+                ...data,
+            } : {...i})
+            setPipelineStateDatas(newValue);
+        }
+    }
 
     if (isLoading) return (
         <Box textAlign="center" my={1}>
@@ -104,7 +126,13 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
                                 }))}
                                 onChange={(e) => {
                                     setValue('organizationPipelineId', e);
-                                    setValue('organizationPipelineStateDatas', [])
+                                    setPipelineStateDatas(ListStepPipeline?.map(pipeline => ({
+                                        organizationPipelineId: pipeline.id,
+                                        pipelineStateType: pipeline.pipelineStateType,
+                                        examinationId: null,
+                                        expiredTime: null,
+                                        examinationName: null,
+                                    })));
                                 }}
                             />
                             <Divider sx={{my: 1.5}}/>
@@ -177,12 +205,11 @@ const RecruitmentPipeline = ({recruitment, pipelineStateDatas, onSetPipelineStat
                     open={isOpen}
                     onClose={onClose}
                     data={selected}
-                    organizationPipelineId={organizationPipelineId}
                     onSaveExamination={handleSaveExamination}
                 />
             }
         </>
     )
-}
+})
 
 export default memo(RecruitmentPipeline);

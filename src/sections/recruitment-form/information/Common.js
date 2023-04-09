@@ -120,7 +120,7 @@ const Common = () => {
                 {/* Giới tính & Ngôn ngữ làm việc */}
                 <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                     <div style={{flex: 1, marginRight: 8}}>
-                        <LabelStyle required>Giới tính</LabelStyle>
+                        <LabelStyle>Giới tính</LabelStyle>
                         <RHFSelect
                             name="sex"
                             placeholder="Chọn giới tính"
@@ -129,7 +129,7 @@ const Common = () => {
                         />
                     </div>
                     <div style={{flex: 1, marginLeft: 8}}>
-                        <LabelStyle required>Ngôn ngữ làm việc</LabelStyle>
+                        <LabelStyle>Ngôn ngữ làm việc</LabelStyle>
                         <RHFSelect
                             name="recruitmentLanguageIds"
                             placeholder="Chọn ngôn ngữ"
