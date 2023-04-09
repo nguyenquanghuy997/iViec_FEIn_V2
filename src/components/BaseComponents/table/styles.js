@@ -112,6 +112,7 @@ export const TableStyle = styled('div')(() => ({
   '&.inside': {
     '.ant-table-wrapper .ant-table': {
       borderRadius: 0,
+      paddingLeft: '10px'
     },
   },
 }));
