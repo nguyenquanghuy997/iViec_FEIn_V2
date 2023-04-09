@@ -1,14 +1,10 @@
-import {Divider} from "@mui/material";
+import {Box, Dialog, DialogActions, DialogContent, Divider, Typography} from "@mui/material";
 import {CheckedSwitchIcon, UnCheckedSwitchIcon} from "@/sections/organization/component/Icon";
 import {useSnackbar} from "notistack";
 import {useSetActiveOrganizationMutation} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {
-  DialogActionsStyle,
-  DialogContentStyle,
   DialogContentTextStyle,
-  DialogStyle,
   MuiDialogTitle,
-  TitleAlertStyle
 } from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
@@ -51,24 +47,52 @@ const OrganizationActiveModal = ({ selectedList, isOpenActive, setIsOpenActive, 
 
   }
   return (
-      <DialogStyle
+      <Dialog
           open={isOpenActive}
           onClose={() => setIsOpenActive(false)}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           className="dialog-confirm"
+          maxWidth={'sm'}
+          sx={{
+            boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+            borderRadius: '6px',
+            minHeight: '600px',
+            "& .MuiDialog-container": {
+              "& .MuiPaper-root": {
+                borderRadius: '6px',
+                width: "100%",
+              },
+            },
+          }}
       >
         <MuiDialogTitle onClose={onClose} />
-        <DialogContentStyle>
-          {actionTypeActive === 0 ? <CheckedSwitchIcon /> : <UnCheckedSwitchIcon />}
-          <TitleAlertStyle
+        <DialogContent sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}>
+          <Box sx={{ mt: 2 }}>
+            {actionTypeActive === 0 ? <CheckedSwitchIcon /> : <UnCheckedSwitchIcon />}
+          </Box>
+          <Typography
+              sx={{
+                textAlign: 'center',
+                width: '100%',
+                fontSize: 16,
+                fontWeight: 600,
+                color: '#E53935',
+                marginBottom: 1
+              }}
+
               color={actionTypeActive === 0 ? style.COLOR_PRIMARY : style.COLOR_TEXT_DANGER}
               fontSize={18}
               fontWeight={600}
               marginTop={2}
           >
             { actionTypeActive === 0 ? 'Bật' : 'Tắt' } trạng thái hoạt động cho đơn vị
-          </TitleAlertStyle>
+          </Typography>
           {
             selectedList.length > 1 ? <DialogContentTextStyle className="subtitle-confirm">
               Bạn có chắc chắn muốn bật hoạt động cho {selectedList.length} đơn vị ?
@@ -77,19 +101,28 @@ const OrganizationActiveModal = ({ selectedList, isOpenActive, setIsOpenActive, 
             </DialogContentTextStyle>
           }
           <Divider/>
-        </DialogContentStyle>
-        <DialogActionsStyle>
+        </DialogContent>
+        <DialogActions sx={{
+          minHeight: '68px',
+          borderTop: '1px solid #E7E9ED',
+          '& .btn-actions': {
+            height: '36px',
+          },
+        }}>
           <MuiButton
             title={"Hủy"}
             color={"default"}
+            className={'btn-actions'}
             onClick={onClose}
           />
           <MuiButton
             title={actionTypeActive === 0 ? 'Bật' : 'Tắt'}
+            className={'btn-actions'}
+            color={actionTypeActive === 0 ? 'primary' : 'error'}
             onClick={handleSetActiveOrganization}
           />
-        </DialogActionsStyle>
-      </DialogStyle>
+        </DialogActions>
+      </Dialog>
   )
 }
 

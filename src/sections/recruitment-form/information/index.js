@@ -44,7 +44,7 @@ const RecruitmentInformation = ({recruitment: Recruitment}) => {
           <TextNote/>
         </Box>
         <Box sx={{width: '100%', backgroundColor: 'transparent', display: 'flex',}}>
-          <Description/>
+          <Description recruitment={Recruitment}/>
           <TextNote
               title="Lưu ý:"
               texts={[
@@ -54,7 +54,7 @@ const RecruitmentInformation = ({recruitment: Recruitment}) => {
           />
         </Box>
         <Box className="box-item" sx={{width: '100%', backgroundColor: 'transparent', display: 'flex'}}>
-          <Owner/>
+          <Owner recruitment={Recruitment}/>
           <TextNote
               title="Lưu ý:"
               texts={[
