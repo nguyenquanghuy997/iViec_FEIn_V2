@@ -1,10 +1,9 @@
-import {
-  useTheme,
-} from "@mui/material";
+import { memo } from 'react';
+import { useTheme } from "@mui/material";
 import { RiSearch2Line } from 'react-icons/ri';
 import { RHFTextField } from "@/components/hook-form";
 
-export default function TextField({ ...props }) {
+const TextField = ({ ...props }) => {
   const { palette } = useTheme();
 
   return (
@@ -15,3 +14,5 @@ export default function TextField({ ...props }) {
     />
   )
 }
+
+export default memo(TextField);

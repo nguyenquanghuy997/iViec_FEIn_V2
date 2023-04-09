@@ -1,16 +1,18 @@
-import Content from "../Content";
-import TableHeader from "./TableHeader";
-import ColumnsModal from "./VisibleColumnsModal";
-import { TableStyle } from "./styles";
+import { useState, useMemo } from "react";
+import { Table } from "antd";
+import { useTheme } from "@mui/material";
+import { isEmpty as _isEmpty } from "lodash";
+import { RiSettings3Fill } from 'react-icons/ri';
+import { useRouter } from "next/router";
+
 import { View } from "@/components/FlexStyled";
 import TextMaxLine from "@/components/TextMaxLine";
 import { ButtonIcon } from "@/utils/cssStyles";
-import { useTheme } from "@mui/material";
-import { Table } from "antd";
-import { isEmpty as _isEmpty } from "lodash";
-import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
-import { RiSettings3Fill } from "react-icons/ri";
+import ColumnsModal from "./VisibleColumnsModal";
+import TableHeader from "./TableHeader";
+import Content from "../Content";
+
+import { TableStyle } from "./styles";
 
 const DynamicColumnsTable = (props) => {
   const {
@@ -26,43 +28,54 @@ const DynamicColumnsTable = (props) => {
     setItemSelected,
     useGetColumnsFunc,
     useUpdateColumnsFunc,
-    tableProps = {},
+    searchInside = true,
+    createText = null,
+    onClickCreate,
     headerProps,
     hideTable,
+    tableProps = {},
   } = props;
 
   const router = useRouter();
   const { PageIndex = 1, PageSize = 10 } = router.query;
   const { palette } = useTheme();
-  const { data: columnsVisible = {} } = useGetColumnsFunc
-    ? useGetColumnsFunc()
-    : { data: {} };
+  const { data: colsVisible = {} } = useGetColumnsFunc ? useGetColumnsFunc() : { data: {} };
+
+  const columnsVisible = useMemo(() => {
+    if (!useGetColumnsFunc) {
+      let cols = {};
+      columns.map(col => {
+        cols[col.dataIndex] = true;
+      });
+      return cols;
+    }
+
+    if (typeof colsVisible.items !== 'undefined') {
+      if (Array.isArray(colsVisible.items)) {
+        return colsVisible.items[0] || [];
+      }
+      return [];
+    }
+    return colsVisible;
+  }, [colsVisible]);
 
   const columnsDisplay = useMemo(() => {
-    return columns
-      .filter((col) => {
-        return !!columnsVisible[col.dataIndex];
-      })
-      .map((col) => {
-        let renderFunc = col.render;
-        if (renderFunc) {
-          col.render = (text, record, index) => {
-            return renderFunc(
-              text,
-              record,
-              index,
-              parseInt(PageIndex),
-              parseInt(PageSize)
-            );
-          };
-        }
-
-        return {
-          ...col,
-          colFilters: col.filters,
-          filters: null,
+    return columns.filter(col => {
+      return !!columnsVisible[col.dataIndex];
+    }).map(col => {
+      let renderFunc = col.render;
+      if (renderFunc) {
+        col.render = (text, record, index) => {
+          return renderFunc(text, record, index, parseInt(PageIndex), parseInt(PageSize));
         };
-      });
+      }
+
+      return {
+        ...col,
+        colFilters: col.filters,
+        filters: null,
+      };
+    });
   }, [columnsVisible, columns]);
 
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
@@ -119,33 +132,40 @@ const DynamicColumnsTable = (props) => {
     };
   };
 
-  const onSubmitFilter = (values = {}) => {
-    router.push(
-      {
-        query: { ...router.query, ...values },
-      },
-      undefined,
-      { shallow: false }
-    );
-  };
+  const onSubmitFilter = (values = {}, reset = false, timeout = 0) => {
+    if (reset && _isEmpty(router.query)) {
+      return;
+    }
+
+    setTimeout(() => {
+      router.push({
+        query: reset ? {} : { ...router.query, ...values },
+      }, undefined, { shallow: false });
+    }, timeout);
+  }
 
   const handleOnChange = ({ current, pageSize }) => {
     onSubmitFilter({
       PageIndex: current,
       PageSize: pageSize,
     });
-  };
+  }
 
   return (
     <View>
-      <TableHeader
-        onSubmitFilter={onSubmitFilter}
-        columns={columnsDisplay}
-        {...headerProps}
-      />
+      {!searchInside && (
+        <TableHeader
+          onSubmitFilter={onSubmitFilter}
+          columns={columnsDisplay}
+          isInside={false}
+          createText={createText}
+          onClickCreate={onClickCreate}
+          {...headerProps}
+        />
+      )}
 
       {!hideTable && (
-        <Content>
+        <Content style={{ paddingBottom: itemSelected?.length > 0 ? 100 : 24 }}>
           <View
             style={{
               flexDirection: "row",
@@ -155,15 +175,11 @@ const DynamicColumnsTable = (props) => {
             mb={16}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {!_isEmpty(columnsVisible) && (
-                <ButtonIcon
-                  onClick={showSetting}
-                  sx={{ backgroundColor: "unset" }}
-                  icon={
-                    <RiSettings3Fill size={16} color={palette.text.primary} />
-                  }
-                />
-              )}
+              <ButtonIcon
+                onClick={showSetting}
+                sx={{ backgroundColor: "unset" }}
+                icon={<RiSettings3Fill size={16} color={palette.text.primary} />}
+              />
 
               <View>
                 <TextMaxLine
@@ -197,16 +213,25 @@ const DynamicColumnsTable = (props) => {
             </View>
           </View>
 
-          <TableStyle>
+          <TableStyle className={searchInside ? 'inside' : ''}>
+            {searchInside && (
+              <TableHeader
+                onSubmitFilter={onSubmitFilter}
+                columns={columnsDisplay}
+                isInside={true}
+                createText={createText}
+                onClickCreate={onClickCreate}
+                {...headerProps}
+              />
+            )}
+
             <Table
               locale={locale}
               rowSelection={rowSelection}
               onRow={onRow}
               rowKey={(record) => record.id}
               rowClassName={(record) =>
-                selectedRowKeys?.includes(record.id)
-                  ? "ant-table-row-selected"
-                  : ""
+                selectedRowKeys?.includes(record.id) ? "ant-table-row-selected" : ""
               }
               columns={columnsDisplay}
               dataSource={source?.items}

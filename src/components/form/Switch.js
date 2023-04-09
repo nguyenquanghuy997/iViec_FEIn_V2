@@ -1,3 +1,4 @@
+import { useRef, forwardRef, useImperativeHandle } from 'react';
 import { Switch as MuiSwitch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -23,11 +24,17 @@ const SwitchItem = styled(MuiSwitch)(() => ({
   },
 }));
 
-export default function Switch({ label, checked, sx, ...props }) {
+const Switch = forwardRef(({ label, checked, sx, ...props }, ref) => {
+  const _switch = useRef();
+
+  useImperativeHandle(ref, () => ({
+    ..._switch.current,
+  }));
+
   if (label) {
     return (
       <FormControlLabel
-        control={<SwitchItem checked={checked} {...props} />}
+        control={<SwitchItem ref={_switch} checked={checked} {...props} />}
         sx={{
           '.MuiFormControlLabel-label': {
             color: checked ? "#388E3C" : "#455570",
@@ -40,6 +47,8 @@ export default function Switch({ label, checked, sx, ...props }) {
   }
 
   return (
-    <SwitchItem checked={checked} sx={sx} {...props} />
+    <SwitchItem ref={_switch} checked={checked} sx={sx} {...props} />
   )
-}
+})
+
+export default Switch;

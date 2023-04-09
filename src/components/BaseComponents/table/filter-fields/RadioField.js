@@ -1,14 +1,13 @@
-import {
-  InputLabel,
-} from "@mui/material";
+import { memo } from 'react';
+import { InputLabel } from "@mui/material";
 import { RHFRadioGroup } from "@/components/hook-form";
 
-export default function RadioField({
+const RadioField = ({
   label,
   name,
   options,
   ...props
-}) {
+}) => {
   return (
     <div>
       {label && (
@@ -24,3 +23,5 @@ export default function RadioField({
     </div>
   )
 }
+
+export default memo(RadioField);

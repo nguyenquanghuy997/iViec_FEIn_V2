@@ -28,7 +28,7 @@ export default function ColumnsModal({
   const { enqueueSnackbar } = useSnackbar();
   const [showColumns, setShowColumns] = useState({});
 
-  const [updateColumns, { isLoading: updating }] = useUpdateColumnsFunc();
+  const [updateColumns, { isLoading: updating }] = useUpdateColumnsFunc ? useUpdateColumnsFunc() : [undefined, {}];
 
   useEffect(() => {
     setShowColumns(columnsVisible);
@@ -44,6 +44,10 @@ export default function ColumnsModal({
   };
 
   const handleUpdateColumns = async () => {
+    if (!updateColumns) {
+      return;
+    }
+
     try {
       let reqColumns = {
         id: showColumns.id,

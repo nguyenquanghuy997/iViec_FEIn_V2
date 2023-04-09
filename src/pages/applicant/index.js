@@ -29,8 +29,6 @@ export default function Applicant() {
         <ApplicantItem
           Data={Data}
           isLoading={isLoading}
-          PageSize={query.PageSize}
-          PageIndex={query.PageIndex}
         />
       </Page>
     </PageWrapper>

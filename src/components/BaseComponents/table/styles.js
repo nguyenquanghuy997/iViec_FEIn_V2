@@ -19,9 +19,26 @@ export const HeaderStyle = styled('div')(() => ({
       },
     },
   },
+
+  '&.inside': {
+    background: '#FDFDFD',
+    '.table-header-container': {
+      padding: 16,
+    },
+
+    '.search-input': {
+      '.MuiInputBase-root': {
+        height: '36px',
+      },
+    },
+  },
 }));
 
 export const TableStyle = styled('div')(() => ({
+  background: "#FDFDFD",
+  boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+  borderRadius: "4px",
+
   ".ant-table": {
     minHeight: "500px",
     borderRadius: "8px",
@@ -89,11 +106,11 @@ export const TableStyle = styled('div')(() => ({
     color: "#455570",
     fontWeight: 700,
   },
-  '.setting': {
-    background: "#FDFDFD",
-    boxShadow:
-      "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-    borderRadius: "4px",
+  
+  '&.inside': {
+    '.ant-table-wrapper .ant-table': {
+      borderRadius: 0,
+    },
   },
 }));
 
@@ -124,7 +141,7 @@ export const FilterItemStyle = styled('div')(({ theme: { palette } }) => ({
   '.date-fields, .range-number-fields, .range-money-fields': {
     '.MuiInputAdornment-positionStart > span:last-of-type': {
       display: 'inline-block',
-      minWidth: 30,
+      minWidth: 28,
     },
     '.MuiInputAdornment-positionEnd > button': {
       marginRight: -6,
