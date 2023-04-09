@@ -1,6 +1,6 @@
-export const drawerPaperStyle = ({ palette }) => ({
+export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) => ({
   height: '100vh',
-  width: '800px',
+  width: width + 'px',
   maxWidth: '95%',
   overflow: 'hidden',
   '.edit-header': {
@@ -13,7 +13,6 @@ export const drawerPaperStyle = ({ palette }) => ({
     height: '100vh',
   },
   '.role-actions-table': {
-    color: 'red',
     '.MuiTableHead-root': {
       'tr th': {
         background: '#fff',
@@ -24,6 +23,7 @@ export const drawerPaperStyle = ({ palette }) => ({
     flex: 1,
     overflow: 'auto',
     padding: '24px',
+    ...contentStyles,
   },
   '.edit-footer': {
     background: "#FDFDFD",

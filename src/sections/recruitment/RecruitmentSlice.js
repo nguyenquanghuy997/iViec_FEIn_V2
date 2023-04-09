@@ -105,11 +105,14 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       providesTags: ["GetColumn"],
     }),
     updateListColumns: builder.mutation({
-      query: (data) => ({
-        url: `${API_UPDATE_COLUMN_RECRUITMENT}/${data.id}`,
-        method: "PATCH",
-        data: data.body,
-      }),
+      query: (data) => {
+        const { id, ...restData } = data;
+        return {
+          url: `${API_UPDATE_COLUMN_RECRUITMENT}/${id}`,
+          method: "PATCH",
+          data: restData,
+        }
+      },
       invalidatesTags: ["GetColumn"],
     }),
     uploadFileApplicant: builder.mutation({
