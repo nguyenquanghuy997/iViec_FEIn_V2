@@ -21,6 +21,8 @@ export const HeaderStyle = styled('div')(() => ({
   },
 
   '&.inside': {
+    borderRadius: '4px',
+    boxShadow:'unset',
     background: '#FDFDFD',
     '.table-header-container': {
       padding: 16,
