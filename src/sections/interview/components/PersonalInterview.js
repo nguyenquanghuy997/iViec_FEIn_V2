@@ -4,13 +4,14 @@ import { LabelStyle } from "@/components/hook-form/style";
 import { Label } from "@/components/hook-form/style";
 import { useGetRecruitmentPipelineStatesByRecruitment1Query } from "@/sections/applicant/ApplicantFormSlice";
 import { useGetReviewFormQuery } from "@/sections/interview/InterviewSlice";
+import { useGetRelateCalendaraQuery } from "@/sections/interview/InterviewSlice";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
 import { Box, Stack, Typography, TextField } from "@mui/material";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-const PersonalInterview = ({ item, watchStep, watchType }) => {
+const PersonalInterview = ({ item, watchStep, watchType, watchPipe }) => {
   const { control } = useFormContext();
   const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
@@ -23,7 +24,10 @@ const PersonalInterview = ({ item, watchStep, watchType }) => {
         skip: !watchStep,
       }
     );
-
+  const { data: relateCalendar } = useGetRelateCalendaraQuery(
+    { RecruitmentPipelineStateId: watchPipe },
+    { skip: !watchPipe }
+  );
   const { data: { items: DataForm = [] } = {} } = useGetReviewFormQuery();
 
   if (isLoadingStep) return null;
@@ -42,6 +46,7 @@ const PersonalInterview = ({ item, watchStep, watchType }) => {
     return <Label required={required}>{title}</Label>;
   };
   const id = item?.recruitmentId;
+  const idReviewForm = item?.reviewFormId;
   return (
     <Stack spacing={3}>
       <Stack>
@@ -181,10 +186,10 @@ const PersonalInterview = ({ item, watchStep, watchType }) => {
         />
       </Box>
       <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
-        {item?.reviewFormId ? (
+        {item?.reviewFormId || relateCalendar ? (
           <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
             <Typography sx={{ fontSize: 14, fontWeight: 500, mb: 1 }}>
-              Mẫu đánh giá
+              Mẫu đánh giá <span style={{ color: "red" }}>*</span>
             </Typography>
             <Box
               sx={{
@@ -194,13 +199,14 @@ const PersonalInterview = ({ item, watchStep, watchType }) => {
                 fontSize: 14,
               }}
             >
-              {item?.reviewFormId}
+              {DataForm.filter((item) => item?.id.includes(idReviewForm))[0]
+                ?.name || relateCalendar?.reviewFormName}
             </Box>
           </Box>
         ) : (
           <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
             <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-              Mẫu đánh giá
+              Mẫu đánh giá <span style={{ color: "red" }}>*</span>
             </Typography>
             <RHFSelect
               options={DataForm.map((i) => ({
@@ -208,6 +214,7 @@ const PersonalInterview = ({ item, watchStep, watchType }) => {
                 label: i.name,
                 name: i.name,
               }))}
+              required
               name="reviewFormId"
               placeholder="Chọn mẫu đánh giá"
               multiple={false}

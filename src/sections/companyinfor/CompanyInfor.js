@@ -1,221 +1,199 @@
-import TickIcon from "../../assets/TickIcon";
-import CropImage from "./CropImage";
-import DrawerEdit from "./edit/DrawerEdit";
-import NoInformation from "@/assets/NoInformation";
-import {
-  useGetCompanyInfoQuery, // useGetJobCategoriesQuery,
-} from "@/sections/companyinfor/companyInforSlice";
+import EditInformation from "./edit/EditInformation";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import useModal from "@/sections/companyinfor/hooks/useModal";
+import { BoxInfoStyle } from "@/sections/companyinfor/style";
+import CropImage from "@/sections/companyinfor/upload/CropImage";
 import { OrganizationSize } from "@/utils/enum";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Typography, Divider } from "@mui/material";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { RiCheckboxBlankCircleFill } from "react-icons/ri";
-import * as Yup from "yup";
+import { Box, Divider, Typography } from "@mui/material";
+import { get } from "lodash";
+import { Fragment } from "react";
+import { RiCheckboxBlankCircleFill, RiImageFill } from "react-icons/ri";
 
-export default function CompanyInfor() {
-  const { data: Data } = useGetCompanyInfoQuery();
-  const [seeData, setSeeData] = useState(false);
-
-  const ProfileSchema = Yup.object().shape({
-    avatar: Yup.string(),
-  });
-  const defaultValues = {};
-  const methods = useForm({
-    mode: "all",
-    resolver: yupResolver(ProfileSchema),
-    defaultValues,
-  });
-
-  const renderText = (title, content) => {
-    return (
-      <div>
-        <span
-          style={{
-            display: "inline-flex",
-            fontSize: 14,
-            fontWeight: 400,
-            margin: "24px 16px 0 0",
-            color: "#5C6A82",
-            width: "160px",
-          }}
-        >
-          {title}
-        </span>
-
-        <span
-          style={{
-            display: "inline-flex",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "#172B4D",
-          }}
-        >
-          {content}
-        </span>
-      </div>
-    );
-  };
-
-  const renderItem = (title, value, main) => {
-    return (
-      <div style={{ flex: main ? undefined : 1 }}>
-        <span
-          style={{
-            display: "flex",
-            fontSize: 16,
-            fontWeight: 600,
-            lineHeight: 24 / 15,
-            marginTop: 36,
-            marginBottom: 12,
-            color: "#172B4D",
-          }}
-        >
-          {title}
-        </span>
-        {String(value).startsWith("<") ? (
-          <>
-            <p
-              dangerouslySetInnerHTML={{ __html: value }}
-              style={{
-                overflow: !seeData ? "hidden" : "visible",
-                lineHeight: "1.2em",
-                height: seeData ? "auto" : "3.6em",
-              }}
-            />
-            <button
-              onClick={() => setSeeData(!seeData)}
-              style={{ border: "none", background: "white" }}
-            >
-              <p style={{ fontSize: 14, fontWeight: 700 }}>
-                {seeData ? "Thu ngắn" : "... Xem thêm"}
-              </p>
-            </button>
-          </>
-        ) : (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <NoInformation />
-          </Box>
-        )}
-      </div>
-    );
-    //
-  };
-  // const { data: { items: JobCategoryList = [] } = {} } =
-  //   useGetJobCategoriesQuery();
-
+const renderText = (title, content) => {
   return (
-    <FormProvider {...methods}>
-      <CropImage
-        data={Data?.organizationInformation?.coverPhoto}
-        size="cover"
-      />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          paddingLeft: 40,
-          paddingRight: 40,
-          marginTop: "-2%",
-          background: "white",
-          borderBottomLeftRadius: '4px',
-          borderBottomRightRadius: '4px',
+    <Box sx={{ mb: 3, "&:first-of-type": { mt: 3 } }}>
+      <Typography
+        sx={{
+          display: "inline-flex",
+          fontSize: 13,
+          fontWeight: 500,
+          color: "#5C6A82",
+          minWidth: "160px",
         }}
       >
-        <Box sx={{ display: "flex" }}>
-          {/* <CropImage data={Data?.organizationInformation?.avatar} /> */}
-
-          <img
-            src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${Data?.organizationInformation?.avatar}`}
-            style={{
-              width: "130px",
-              height: "130px",
-              border: "3px solid white",
-              borderRadius: "50%",
-              zIndex: 1000,
-            }}
-          />
-
-          <Box
+        {title}
+      </Typography>
+      <Typography
+        sx={{
+          display: "inline-flex",
+          fontSize: 13,
+          fontWeight: 500,
+          color: "#172B4D",
+        }}
+      >
+        {content}
+      </Typography>
+    </Box>
+  );
+};
+const renderItem = (title, content) => {
+  return (
+    <Box sx={{ pt: 3, pb: 1, "&:first-of-type": { mt: 3 } }}>
+      {content && (
+        <>
+          <Typography
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
+              display: "inline-flex",
+              fontSize: 16,
+              fontWeight: 600,
+              lineHeight: "24px",
+              color: "#172B4D",
+              mb: 1.5,
             }}
           >
-            <Typography
-              sx={{
-                fontSize: 18,
-                fontWeight: "700",
-                color: "#393B3E",
-                ml: 2,
-                mr: 1,
-                mt: Data?.organizationInformation?.coverPhoto ? 5 : 0,
-              }}
-            >
-              {Data?.name}
-              <span style={{ marginLeft: "0.6em" }}>
-                <TickIcon />
-              </span>
-              <Box sx={{ mb: 3, mt: 1 }}>
-                <span
-                  style={{
-                    marginRight: "1em",
-                    color: "#455570",
-                    fontSize: "12px",
-                  }}
-                >
-                  CÔNG NGHỆ THÔNG TIN
-                </span>
-                <RiCheckboxBlankCircleFill size={5} color="#8A94A5" />
-                <span
-                  style={{
-                    marginLeft: "1em",
-                    color: "#455570",
-                    fontSize: "12px",
-                  }}
-                >
-                  BẤT ĐỘNG SẢN
-                </span>
-              </Box>
-            </Typography>
+            {title}
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: 14,
+              fontWeight: 400,
+              lineHeight: "24px",
+            }}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </>
+      )}
+    </Box>
+  );
+};
 
-            <DrawerEdit dataForm={Data} />
+export default function CompanyInfor({ data }) {
+  const { onOpen, onClose, isOpen } = useModal();
+
+  return (
+    <>
+      <CropImage
+        defaultImage={get(data, "organizationInformation.coverPhoto")}
+        size={"cover"}
+        companyInfor={data}
+      />
+
+      {/* Avatar & name */}
+      <BoxInfoStyle className={"box-info"}>
+        <Box className={"box-image"}>
+          {get(data, "organizationInformation.avatar") ? (
+            <CropImage
+              defaultImage={get(data, "organizationInformation.avatar")}
+              companyInfor={data}
+              className={"avatar-image"}
+            />
+          ) : (
+            <Box className={"avatar-image avatar-placeholder"}>
+              <RiImageFill color={"#8A94A5"} size={"1.25em"} />
+            </Box>
+          )}
+        </Box>
+        <Box sx={{ flex: 1, pl: 3 }}>
+          <Box
+            sx={{
+              mb: 3,
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: "#172B4D",
+                  lineHeight: "26px",
+                  mb: 1,
+                }}
+              >
+                {get(data, "name") ||
+                  "Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic Group)"}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  "& .circle-icon:last-child": { display: "none" },
+                }}
+              >
+                {get(data, "organizationInformation.jobCategories")?.map(
+                  (item, index) => (
+                    <Fragment key={index}>
+                      <Typography
+                        sx={{
+                          color: "#455570",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {get(item, "name")}
+                      </Typography>
+                      <Typography
+                        className={"circle-icon"}
+                        sx={{ mx: 1.5, lineHeight: 0 }}
+                      >
+                        <RiCheckboxBlankCircleFill size={5} color="#8A94A5" />
+                      </Typography>
+                    </Fragment>
+                  )
+                )}
+              </Box>
+            </Box>
+            <Box>
+              <MuiButton
+                color={"default"}
+                title={"Chỉnh sửa"}
+                sx={{ fontWeight: 500 }}
+                onClick={onOpen}
+              />
+            </Box>
+          </Box>
+          <Divider />
+          <Box>
+            {renderText(
+              "Số điện thoại :",
+              get(data, "organizationInformation.phoneNumber")
+            )}
+            {renderText("Email :", get(data, "organizationInformation.email"))}
+            {renderText(
+              "Ngành nghề :",
+              get(data, "organizationInformation.jobCategories")
+                ?.map((item) => item?.name)
+                ?.join(", ")
+            )}
+            {renderText(
+              "Quy mô :",
+              OrganizationSize(
+                get(data, "organizationInformation.organizationSize")
+              )
+            )}
+            {renderText(
+              "Địa chỉ :",
+              <>
+                {get(data, "organizationInformation.address") &&
+                  `${get(data, "organizationInformation.address")}, `}
+                {get(data, "organizationInformation.districtName") &&
+                  `${get(data, "organizationInformation.districtName")}, `}
+                {get(data, "organizationInformation.provinceName") &&
+                  `${get(data, "organizationInformation.provinceName")}`}
+              </>
+            )}
+            {renderItem(
+              "Giới thiệu công ty",
+              get(data, "organizationInformation.description")
+            )}
           </Box>
         </Box>
-
-        <Box sx={{ ml: "15%", mb: 3 }}>
-          <Divider />
-          {renderText(
-            "Số điện thoại :",
-            `${Data?.organizationInformation?.phoneNumber}` || ""
-          )}
-          {renderText("Email :", Data?.organizationInformation?.email || "")}
-          {renderText(
-            "Ngành nghề :",
-            ""
-            // JobCategoryList.filter((item) =>
-            //   item.id.includes(
-            //     Data?.organizationInformation?.jobCategories.map(
-            //       (item) => item.jobCategoryId
-            //     )
-            //   )
-            // )
-          )}
-          {renderText(
-            "Quy mô :",
-            OrganizationSize(Data?.organizationInformation?.organizationSize)
-          )}
-          {renderText(
-            "Địa chỉ :",
-            `${Data?.organizationInformation?.address},${Data?.organizationInformation?.districtName}, ${Data?.organizationInformation?.provinceName}`
-          )}
-          {renderItem(
-            "Giới thiệu công ty",
-            Data?.organizationInformation?.description
-          )}
-        </Box>
-      </div>
-    </FormProvider>
+      </BoxInfoStyle>
+      {isOpen && (
+        <EditInformation open={isOpen} onClose={onClose} dataForm={data} />
+      )}
+    </>
   );
 }

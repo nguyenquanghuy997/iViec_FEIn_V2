@@ -51,6 +51,7 @@ const MuiSelect = forwardRef((
         allowClear = false,
         onClearValue,
         showAvatar,
+        disabledOption,
         ...selectProps
     }, ref) => {
     const theme = useTheme();
@@ -84,12 +85,7 @@ const MuiSelect = forwardRef((
     const _selectRef = useRef();
     const _lastPage = useRef(1);
 
-    useImperativeHandle(ref, () => {
-        return {
-            ..._selectRef.current,
-            getLabel: () => _selectRef.current?.['aria-label']
-        }
-    });
+    useImperativeHandle(ref, () => _selectRef.current);
 
     useEffect(() => {
         setFetchedOptions([]);
@@ -390,9 +386,6 @@ const MuiSelect = forwardRef((
                     display: allowClear && value ? "none" : "",
                 }
             }}
-            inputProps={{
-                "aria-label": getLabel(value)
-            }}
             {...selectProps}
         >
 
@@ -440,6 +433,7 @@ const MuiSelect = forwardRef((
                         key={option.value}
                         value={option.value}
                         onClick={() => handleClickItem(option.value)}
+                        disabled={disabledOption && value?.length >= disabledOption}
                     >
                         {showAvatar && <AvatarDS
                             sx={{height: "20px", width: "20px", borderRadius: "100px", fontSize: "10px"}}

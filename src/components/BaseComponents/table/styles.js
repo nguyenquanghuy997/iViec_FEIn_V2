@@ -21,7 +21,6 @@ export const HeaderStyle = styled('div')(() => ({
   },
 
   '&.inside': {
-    boxShadow: 'none',
     background: '#FDFDFD',
     '.table-header-container': {
       padding: 16,
@@ -36,6 +35,10 @@ export const HeaderStyle = styled('div')(() => ({
 }));
 
 export const TableStyle = styled('div')(() => ({
+  background: "#FDFDFD",
+  boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+  borderRadius: "4px",
+
   ".ant-table": {
     minHeight: "500px",
     borderRadius: "8px",
@@ -102,12 +105,6 @@ export const TableStyle = styled('div')(() => ({
     backgroundColor: "#EFF3F7",
     color: "#455570",
     fontWeight: 700,
-  },
-  '.setting': {
-    background: "#FDFDFD",
-    boxShadow:
-      "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-    borderRadius: "4px",
   },
   
   '&.inside': {

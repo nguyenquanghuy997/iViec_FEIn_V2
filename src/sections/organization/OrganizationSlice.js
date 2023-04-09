@@ -2,7 +2,6 @@ import {apiSlice} from "@/redux/api/apiSlice";
 import {
   API_CREATE_CHILD_ORGANIZATION,
   API_DELETE_ORGANIZATION,
-  API_GET_LIST_ROLE_GROUP,
   API_GET_ORGANIZATION_DETAIL_BY_ID,
   API_GET_ORGANIZATION_WITH_CHILD,
   API_UPDATE_ORGANIZATION
@@ -59,18 +58,9 @@ const OrganizationAPI = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ['Organization']
     }),
-    // role
-    getRoleGroup: builder.query({
-      query: (params) => ({
-        url: API_GET_LIST_ROLE_GROUP,
-        method: 'GET',
-        params
-      }),
-    }),
   })
 });
 export const {
   useGetOrganizationsDataWithChildQuery,
   useGetOrganizationByIdQuery,
-  useGetRoleGroupQuery,
 } = OrganizationAPI;

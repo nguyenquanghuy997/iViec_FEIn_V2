@@ -1,11 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {Grid, Typography} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useForm} from "react-hook-form";
 import {useSnackbar} from "notistack";
-import {TabContext} from "@mui/lab";
-import TabPanel from "@mui/lab/TabPanel";
+import moment from 'moment';
 
 import Layout from '@/layouts'
 import Page from '@/components/Page'
@@ -34,9 +33,21 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 
 import {cleanObject} from "@/utils/function";
 import {FormValidate} from "@/sections/recruitment-form/form/Validate";
+import {TabContext, useTabContext} from "@mui/lab";
+import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
+import {isEmpty} from "lodash";
 
 CreateRecruitment.getLayout = function getLayout(pageProps, page) {
   return <Layout permissions={PERMISSION_PAGES.createRecruitment} {...pageProps}>{page}</Layout>
+}
+
+const TabPanel = ({children, value}) => {
+  const {value: contextValue} = useTabContext() || {};
+  return (
+      <Box sx={{display: value === contextValue ? 'block' : 'none'}} key={value}>
+        {children}
+      </Box>
+  );
 }
 
 export default function CreateRecruitment() {
@@ -44,16 +55,20 @@ export default function CreateRecruitment() {
   const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
   const {query} = router;
-  const [valueTab, setValueTab] = useState('0');
 
   const stateOpenForm = useSelector((state) => state.modalReducer.openState);
   const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
 
+  const [valueTab, setValueTab] = useState('1');
   const [pipelineStateDatas, setPipelineStateDatas] = useState([]);
   const [hasExamination, setHasExamination] = useState({
     hasValue: false,
     size: 0,
   });
+
+  const handleChangeTab = (event, newValue) => {
+    setValueTab(newValue);
+  };
 
   const handleSetPipelineStateDatas = (data) => {
     setPipelineStateDatas(data);
@@ -67,11 +82,12 @@ export default function CreateRecruitment() {
   const [createRecruitment] = useCreateRecruitmentMutation();
   const [updateRecruitmentOfficial] = useUpdateRecruitmentOfficialMutation();
   const [updateRecruitmentDraft] = useUpdateRecruitmentDraftMutation();
+  const {data: defaultOrganization = {}} = useGetOrganizationInfoQuery();
 
   const defaultValues = {
     id: '',
     name: '',
-    organizationId: '',
+    organizationId: defaultOrganization?.id || '',
     description: '',
     benefit: '',
     requirement: '',
@@ -102,24 +118,25 @@ export default function CreateRecruitment() {
     mode: 'all',
     resolver: openSaveDraft ? null : yupResolver(FormValidate),
     defaultValues: defaultValues,
+    shouldUnregister: false,
   });
 
-  const {handleSubmit, getValues, watch, formState: {isValid}} = methods;
-  const recruitmentName = watch('name');
+  const {handleSubmit, getValues, setValue, formState: {isValid}} = methods;
 
-  const handleSelected = (event, newValue) => {
-    setValueTab(newValue);
-  };
+  useEffect(() => {
+    if (!isEmpty(defaultOrganization)) {
+      setValue('organizationId', defaultOrganization.id);
+    }
+  }, [defaultOrganization])
+
+
   const onSubmit = async (data) => {
     const body = {
       ...data,
-      id: data?.id,
-      recruitmentLanguageIds: data?.recruitmentLanguageIds?.map(item => item.value),
-      coOwnerIds: data?.coOwnerIds?.map(item => item.value),
-      recruitmentCouncilIds: data?.recruitmentCouncilIds.map(item => item.value),
-      recruitmentJobCategoryIds: data?.recruitmentJobCategoryIds.map(item => item.value),
-      recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
-      recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
+      coOwnerIds: data?.coOwnerIds,
+      startDate: moment(data?.startDate).toISOString(),
+      endDate: moment(data?.endDate).toISOString(),
+      recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
       recruitmentCreationType: openSaveDraft ? 0 : 1,
       organizationPipelineStateDatas: pipelineStateDatas?.map(item => ({
         organizationPipelineStateId: item.organizationPipelineStateId,
@@ -136,7 +153,7 @@ export default function CreateRecruitment() {
           })).unwrap();
           handleCloseConfirm();
           enqueueSnackbar("Cập nhật tin tuyển dụng thành công!", {
-            autoHideDuration: 1000
+            autoHideDuration: 1000,
           });
           await router.push(PATH_DASHBOARD.recruitment.root);
         } catch (e) {
@@ -189,28 +206,31 @@ export default function CreateRecruitment() {
 
   return (
       <Page title='Đăng tin tuyển dụng'>
-        <Grid container>
-          <Header
-              title={'Đăng tin tuyển dụng'}
-              onOpenConfirm={handleOpenConfirm}
-              errors={(isValid && !hasExamination.hasValue) || isValid && (hasExamination.hasValue === true && hasExamination.size === pipelineStateDatas.length)}
-              name={recruitmentName}
-          />
-        </Grid>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <TabContext value={valueTab}>
-            <TabList handleSelected={handleSelected} selected={valueTab}/>
+            <Grid container>
+              <Header
+                  title={'Đăng tin tuyển dụng'}
+                  onOpenConfirm={handleOpenConfirm}
+                  errors={(isValid && !hasExamination.hasValue) || isValid && (hasExamination.hasValue === true && hasExamination.size === pipelineStateDatas.length)}
+              />
+              <TabList onChange={handleChangeTab}/>
+            </Grid>
             <Content>
-                <TabPanel value={'0'}>
-                  <Information />
-                </TabPanel>
-                <TabPanel value={'1'}>
-                  <Pipeline
-                      pipelineStateDatas={pipelineStateDatas}
-                      onSetPipelineStateDatas={handleSetPipelineStateDatas}
-                      onSetHasExamination={setHasExamination}
-                  />
-                </TabPanel>
+              <Grid container columnSpacing={3}>
+                <Grid item md={12} className="profile-content">
+                  <TabPanel value="1">
+                    <Information />
+                  </TabPanel>
+                  <TabPanel value="2">
+                    <Pipeline
+                        pipelineStateDatas={pipelineStateDatas}
+                        onSetPipelineStateDatas={handleSetPipelineStateDatas}
+                        onSetHasExamination={setHasExamination}
+                      />
+                    </TabPanel>
+                  </Grid>
+                </Grid>
             </Content>
           </TabContext>
         </FormProvider>

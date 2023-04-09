@@ -25,6 +25,10 @@ export default function TableHeader({
   onClickCreate,
   onSubmitFilter,
   isInside,
+  display,
+  headerProps,
+  contentProps,
+  inputProps,
 }) {
   const { query = {} } = useRouter();
   const { palette } = useTheme();
@@ -39,9 +43,11 @@ export default function TableHeader({
     }, timeout);
   }
 
+  if (display === "none") return null;
+
   return (
-    <HeaderStyle className={isInside ? 'inside' : ''}>
-      <Content className="table-header-container">
+    <HeaderStyle className={isInside ? 'inside' : ''} {...headerProps}>
+      <Content className="table-header-container" {...contentProps}>
         <Box display="flex">
           <Box flex={1}>
             <Stack direction="row" className="search-form" spacing={1}>
@@ -64,6 +70,7 @@ export default function TableHeader({
                 onChange={e => {
                   onSubmit(e.target.value, 500);
                 }}
+                {...inputProps}
               />
               <Button
                 variant="contained"

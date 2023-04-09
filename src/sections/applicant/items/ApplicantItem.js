@@ -1,7 +1,6 @@
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
 import {
-  useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
@@ -28,13 +27,16 @@ import {
   API_GET_JOB_CATEGORIES,
   API_GET_APPLICANT_SKILLS,
 } from "@/routes/api";
-import { PATH_DASHBOARD } from '@/routes/paths';
 
-export const ApplicantItem = () => {
+export const ApplicantItem = ({
+  Data,
+  isLoading,
+  hideTable,
+  headerProps,
+}) => {
   const { user } = useAuth();
   const router = useRouter();
-  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
-  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(query, { skip: !isReady });
+  const { query = { PageIndex: 1, PageSize: 10 } } = router;
 
   const columns = useMemo(() => {
     return [
@@ -164,7 +166,7 @@ export const ApplicantItem = () => {
       },
       {
         title: "Học vấn",
-        dataIndex:'academicLevel', 
+        dataIndex: "academicLevel",
         key: "name",
         width: "120px",
         render: (text) => <Tag>{text}</Tag>,
@@ -333,63 +335,103 @@ export const ApplicantItem = () => {
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
     setSelectedRowKeys([]);
-    event.currentTarget.getElementsByClassName('css-6pqpl8')[0].style.paddingBottom = null;
+    event.currentTarget.getElementsByClassName(
+      "css-6pqpl8"
+    )[0].style.paddingBottom = null;
   };
 
-  const getStatusPipelineStateType = (recruitmentPipelineState, pipelineStateResultType) => {
+  const getStatusPipelineStateType = (
+    recruitmentPipelineState,
+    pipelineStateResultType
+  ) => {
     switch (recruitmentPipelineState) {
       case 0:
-        return PipelineStateType(recruitmentPipelineState, pipelineStateResultType);
+        return PipelineStateType(
+          recruitmentPipelineState,
+          pipelineStateResultType
+        );
       case 1:
-        return PipelineStateType(recruitmentPipelineState, pipelineStateResultType);
+        return PipelineStateType(
+          recruitmentPipelineState,
+          pipelineStateResultType
+        );
       case 2:
-        return PipelineStateType(recruitmentPipelineState, pipelineStateResultType);
+        return PipelineStateType(
+          recruitmentPipelineState,
+          pipelineStateResultType
+        );
       case 3:
         switch (pipelineStateResultType) {
           case 0:
-            return <span style={{ color: '#2E7D32' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+            return (
+              <span style={{ color: "#2E7D32" }}>
+                {PipelineStateType(
+                  recruitmentPipelineState,
+                  pipelineStateResultType
+                )}
+              </span>
+            );
           case 1:
-            return <span style={{ color: '#F77A0C' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+            return (
+              <span style={{ color: "#F77A0C" }}>
+                {PipelineStateType(
+                  recruitmentPipelineState,
+                  pipelineStateResultType
+                )}
+              </span>
+            );
           case 2:
-            return <span style={{ color: '#D32F2F' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+            return (
+              <span style={{ color: "#D32F2F" }}>
+                {PipelineStateType(
+                  recruitmentPipelineState,
+                  pipelineStateResultType
+                )}
+              </span>
+            );
           default:
-            return <span style={{ color: '#2E7D32' }}>{PipelineStateType(recruitmentPipelineState, pipelineStateResultType)}</span>;
+            return (
+              <span style={{ color: "#2E7D32" }}>
+                {PipelineStateType(
+                  recruitmentPipelineState,
+                  pipelineStateResultType
+                )}
+              </span>
+            );
         }
-
     }
-  }
+  };
 
   return (
     <View>
-        <View>
-          <DynamicColumnsTable
-            columns={columns}
-            source={Data}
-            loading={isLoading}
-            settingName={"DANH SÁCH ỨNG VIÊN"}
-            nodata="Hiện chưa có ứng viên nào"
-            selectedRowKeys={selectedRowKeys}
-            setSelectedRowKeys={setSelectedRowKeys}
-            itemSelected={itemSelected}
-            setItemSelected={setItemSelected}
-            useGetColumnsFunc={useGetListColumnApplicantsQuery}
-            useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
-            searchInside={false}
-            createText="Đăng tin tuyển dụng"
-            onClickCreate={() => {
-              router.push(PATH_DASHBOARD.recruitment.create);
-            }}
-          />
-        </View>
-
-        <ApplicantBottomNav
-          open={selectedRowKeys?.length > 0}
-          onClose={toggleDrawer(false)}
-          selectedList={selectedRowKeys || []}
-          onOpenForm={toggleDrawer(true)}
-          setselectedList={setSelectedRowKeys}
+      <View>
+        <DynamicColumnsTable
+          columns={columns}
+          source={Data}
+          loading={isLoading}
+          settingName={"DANH SÁCH ỨNG VIÊN"}
+          nodata="Hiện chưa có ứng viên nào"
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
+          useGetColumnsFunc={useGetListColumnApplicantsQuery}
+          useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+          searchInside={false}
+          headerProps={headerProps}
+          hideTable={hideTable}
         />
+      </View>
+
+      <ApplicantBottomNav
+        open={selectedRowKeys?.length > 0}
+        onClose={toggleDrawer(false)}
+        selectedList={selectedRowKeys || []}
+        onOpenForm={toggleDrawer(true)}
+        setSelectedList={setSelectedRowKeys}
+        itemSelected={itemSelected}
+        setItemSelected={setItemSelected}
+      />
     </View>
   );
 };

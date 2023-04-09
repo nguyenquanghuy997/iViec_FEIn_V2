@@ -10,7 +10,7 @@ import {
 } from 'date-fns'
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
 
-import { DATE_FORMAT, TIMEZONE, YEAR_FORMAT } from '@/config'
+import { AMPM_DATETIME_FORMAT, DATE_FORMAT, TIMEZONE, YEAR_FORMAT } from '@/config'
 
 export function fDate(date, dateFormat = DATE_FORMAT) {
   return format(new Date(date), dateFormat)
@@ -38,6 +38,9 @@ export function fTimestamp(date) {
 
 export function fDateTimeSuffix(date) {
   return format(new Date(date), 'dd/MM/yyyy hh:mm p')
+}
+export function fTimeDate(date) {
+  return format(new Date(date), AMPM_DATETIME_FORMAT)
 }
 
 export function fToNow(date) {

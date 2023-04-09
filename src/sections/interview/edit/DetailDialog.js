@@ -1,8 +1,10 @@
 import { ButtonDS } from "@/components/DesignSystem";
-import { useGetDetailCalendarsQuery } from "@/sections/interview/InterviewSlice";
+import {
+  useDeleteCalendarMutation,
+  useGetDetailCalendarsQuery,
+} from "@/sections/interview/InterviewSlice";
 import {
   Dialog,
-  DialogActions,
   DialogTitle,
   Divider,
   List,
@@ -11,8 +13,10 @@ import {
   Typography,
   ListItemText,
   Button,
-  Box
+  Box,
+  DialogActions,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { RiLinkM } from "react-icons/ri";
 
@@ -34,6 +38,26 @@ export default function DetailDialog({
   const { data: DetailData } = useGetDetailCalendarsQuery({
     BookingCalendarId: item?.id,
   });
+
+  const [deleteCalendar] = useDeleteCalendarMutation();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleClose = async (ids) => {
+    const res = [ids];
+    try {
+      await deleteCalendar({ ids: res, removeReason: "" }).unwrap();
+      enqueueSnackbar("Hủy lịch thành công!", {
+        autoHideDuration: 2000,
+      });
+      onClose();
+    } catch (err) {
+      enqueueSnackbar("Hủy lịch thất bại!", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+      onClose();
+    }
+  };
   const renderText = (title, content) => {
     return (
       <ListItem disableGutters sx={{ my: 1.5 }}>
@@ -62,7 +86,17 @@ export default function DetailDialog({
   };
 
   return (
-    <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={open}
+      onClose={onClose}
+      sx={{
+        height: "100%",
+        bordeRadius: 0,
+        position: "relative",
+      }}
+    >
       <DialogTitle
         sx={{
           display: "flex",
@@ -115,34 +149,42 @@ export default function DetailDialog({
           Danh sách ứng viên
         </Typography>
 
-        {DetailData?.bookingCalendarGroups[0]?.applicants.map((item, index) => (
-          <ListItem sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}>
-            <ListItemAvatar>
-              <img
-                src="https://i.pinimg.com/236x/2e/13/99/2e139971c08795a9de247848cc2c3fd9.jpg"
-                style={{ width: "60px", height: "60px", borderRadius: "11px" }}
-              />
-            </ListItemAvatar>
-            <ListItemText sx={{ width: "30%" }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                {item?.fullName}
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
-                {item?.phoneNumber}
-              </Typography>
-            </ListItemText>
-            <ListItemText>
-              <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                15:00 - 18:00
-              </Typography>
-            </ListItemText>
-            <ListItemText sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                Đồng ý tham gia
-              </Typography>
-            </ListItemText>
-          </ListItem>
-        ))}
+        {DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants.map(
+          (item, index) => (
+            <ListItem sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}>
+              <ListItemAvatar>
+                <img
+                  src="https://i.pinimg.com/236x/2e/13/99/2e139971c08795a9de247848cc2c3fd9.jpg"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "11px",
+                  }}
+                />
+              </ListItemAvatar>
+              <ListItemText sx={{ width: "30%" }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                  {item?.applicant?.fullName}
+                </Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
+                  {item?.applicant?.phoneNumber}
+                </Typography>
+              </ListItemText>
+              <ListItemText>
+                <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                  15:00 - 18:00
+                </Typography>
+              </ListItemText>
+              <ListItemText
+                sx={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                  Đồng ý tham gia
+                </Typography>
+              </ListItemText>
+            </ListItem>
+          )
+        )}
       </List>
       <Divider />
       <List sx={{ px: 3, pt: 2, mb: "80px" }}>
@@ -170,14 +212,13 @@ export default function DetailDialog({
       </List>
       <DialogActions
         sx={{
-          position: "fixed",
-          bottom: 30,
-          borderRadius: "0 0 6px 6px",
           bgcolor: "white",
-          width: "900px",
           borderTop: "1px solid #E7E9ED",
-          display:'flex',
-          justifyContent:'space-between'
+          display: "flex",
+          justifyContent: "space-between",
+          bottom: -20,
+          position: "absolute",
+          width: "100%",
         }}
       >
         <ButtonDS
@@ -195,49 +236,49 @@ export default function DetailDialog({
           }}
           icon={<RiLinkM />}
         />
-        <Box sx={{display:'flex', gap:2}}>
-        <ButtonDS
-          tittle={"Hủy lịch"}
-          type="button"
-          // onClick={() => setIsOpenSendOffer(true)}
-          sx={{
-            color: "#455570",
-            backgroundColor: "#F3F4F6",
-            boxShadow: "none",
-            ":hover": {
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <ButtonDS
+            tittle={"Hủy lịch"}
+            type="button"
+            onClick={() => handleClose(DetailData?.id)}
+            sx={{
+              color: "#455570",
               backgroundColor: "#F3F4F6",
-            },
-            textTransform: "none",
-          }}
-        />
-        <ButtonDS
-          tittle={"Chỉnh sửa"}
-          type="button"
-          // onClick={() => setIsOpenSendOffer(true)}
-          sx={{
-            color: "white",
-            backgroundColor: "#1976D2",
-            boxShadow: "none",
-            ":hover": {
-              backgroundColor: "#1565C0",
-            },
-            textTransform: "none",
-          }}
-        />
-        <ButtonDS
-          tittle={"Tham gia phòng họp"}
-          type="button"
-          // onClick={() => setIsOpenSendOffer(true)}
-          sx={{
-            color: "white",
-            backgroundColor: "#43A047",
-            boxShadow: "none",
-            ":hover": {
-              backgroundColor: "#388E3C",
-            },
-            textTransform: "none",
-          }}
-        />
+              boxShadow: "none",
+              ":hover": {
+                backgroundColor: "#F3F4F6",
+              },
+              textTransform: "none",
+            }}
+          />
+          <ButtonDS
+            tittle={"Chỉnh sửa"}
+            type="button"
+            // onClick={() => setIsOpenSendOffer(true)}
+            sx={{
+              color: "white",
+              backgroundColor: "#1976D2",
+              boxShadow: "none",
+              ":hover": {
+                backgroundColor: "#1565C0",
+              },
+              textTransform: "none",
+            }}
+          />
+          <ButtonDS
+            tittle={"Tham gia phòng họp"}
+            type="button"
+            // onClick={() => setIsOpenSendOffer(true)}
+            sx={{
+              color: "white",
+              backgroundColor: "#43A047",
+              boxShadow: "none",
+              ":hover": {
+                backgroundColor: "#388E3C",
+              },
+              textTransform: "none",
+            }}
+          />
         </Box>
       </DialogActions>
     </Dialog>

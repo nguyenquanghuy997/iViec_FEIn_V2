@@ -1,148 +1,131 @@
 import HeaderCard from "../HeaderCard";
-import { useGetCompanyInfoQuery } from "../companyInforSlice";
-import EditorEnding from "./EditorEnding";
+import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
+import EditorEnding from "../edit/EditorEnding";
 import CloseIcon from "@/assets/CloseIcon";
-import NoInformation from "@/assets/NoInformation";
-import { Drawer, Box, Divider, List, Typography, Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
+import {styled} from "@mui/material/styles";
+import React, {useState} from "react";
+import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
+import {useSnackbar} from "notistack";
+import LoadingScreen from "@/components/LoadingScreen";
+import {QuoteIcon} from "@/sections/companyinfor/icon";
 
-const Ending = () => {
-  const { data: Data } = useGetCompanyInfoQuery();
-  const [open, setOpen] = useState();
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const PlaceholderStyle = styled("div")(() => ({
+const PlaceholderStyle = styled("div")(() => ({
     background: "white",
-    padding: "12px 96px",
-    // height: 150,
+    padding: "8px 96px 24px 96px",
+    minHeight: 150,
+    position: 'relative',
     "& .content": {
-      backgroundColor: "white",
-      color: "#455570",
-      background: "#F2F4F5",
-      position: "relative",
-      padding: "24px 96px",
+        backgroundColor: "white",
+        color: "#455570",
+        background: "#F2F4F5",
+        position: "relative",
+        padding: "24px 96px",
+        "& .quote-icon": {
+            position: "absolute",
+            top: -100,
+            left: "40px",
+            fontSize: "128px",
+            color: "#A2AAB7",
+        },
     },
+}));
 
-    "& blockquote:before": {
-      content: '" ,, "',
-      // fontFamily: themeFont.typography.fontFamily,
-      position: "absolute",
-      // content: "\f10d";
-      top: -100,
-      left: "20px",
-      fontSize: "128px",
-      color: "#A2AAB7",
-    },
-  }));
-  const list = () => (
-    <Box
-      sx={{ width: 700 }}
-      role="presentation"
-    // onKeyDown={toggleDrawer(false)}
-    >
-      <List
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          p: 0,
-        }}
-      >
-        <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-          Chỉnh sửa Lời kết
-        </Typography>
-        <Button
-          onClick={handleClose}
-          sx={{
-            "&:hover": {
-              background: "white",
-            },
-          }}
-        >
-          <CloseIcon />
-        </Button>
-      </List>
-      <Divider />
-      <div>
-        <EditorEnding data={Data} onClose={handleClose} />
-      </div>
-    </Box>
-  );
+const Ending = ({data}) => {
+    const {enqueueSnackbar} = useSnackbar();
 
-  const renderItem = (value, main) => {
+    const [open, setOpen] = useState(false);
+
+    const [checked, setChecked] = useState(data?.isConclusionVisible);
+    const [loading, setLoading] = useState(false);
+
+    const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleChangeChecked = async () => {
+        setLoading(true);
+        try {
+            await updateVisibleHuman({
+                organizationId: data?.id,
+                isConclusionVisible: !checked
+            }).unwrap();
+            enqueueSnackbar("Chỉnh sửa hiển thị thành công!", {
+                autoHideDuration: 1000
+            });
+            setChecked(!checked);
+            setLoading(false);
+        } catch (e) {
+            enqueueSnackbar("Chỉnh sửa hiển thị không thành công, vui lòng thử lại!", {
+                autoHideDuration: 1000,
+                variant: 'error',
+            });
+            setLoading(false);
+            return e;
+        }
+    }
+
+    if (loading) {
+        return (
+            <LoadingScreen/>
+        )
+    }
+
     return (
-      <div style={{ flex: main ? undefined : 1 }}>
-        {String(value).startsWith("<") ? (
-          <p dangerouslySetInnerHTML={{ __html: value }} />
-        ) : (
-          <span
-            style={{
-              display: "flex",
-              fontSize: 14,
-              lineHeight: 24 / 16,
-              color: "#172B4D",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {value}
-          </span>
-        )}
-      </div>
+        <>
+            <Box sx={{minHeight: '296px'}}>
+                <HeaderCard
+                    text="Lời kết"
+                    open={open}
+                    onClose={handleClose}
+                    onOpen={handleOpen}
+                    handleChange={handleChangeChecked}
+                    checked={checked}
+                />
+                {data?.conclusion ? (
+                    <PlaceholderStyle style={{borderBottomLeftRadius: '4px', borderBottomRightRadius: '4px'}}>
+                        <div className="content" style={{borderRadius: '4px',}}>
+                            <div className={"quote-icon"}>
+                                <QuoteIcon />
+                            </div>
+                            <Typography sx={{ fontSize: 14, fontWeight: 400, color: '#455570' }} dangerouslySetInnerHTML={{ __html: data?.conclusion }} />
+                            <Typography sx={{ textAlign: 'end', fontSize: 14, fontWeight: 500, color: '#455570', fontStyle: 'italic' }}>{data?.name}</Typography>
+                        </div>
+                    </PlaceholderStyle>
+                ) : <EmptyValue text={"Hiện chưa có nội dung Lời kết"}/>}
+            </Box>
+            {open && (
+                <Drawer
+                    anchor="right"
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{sx: {width: 800, position: 'fixed', top: '64px', right: 0}}}
+                    componentsProps={{
+                        backdrop: {
+                            sx: {background: 'rgba(9, 30, 66, 0.25) !important', boxShadow: 'none !important'}
+                        }
+                    }}
+                >
+                    <Box sx={{width: 800}}>
+                        <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
+                            <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
+                                Chỉnh sửa Lời kết
+                            </Typography>
+                            <Button onClick={handleClose} sx={{"&:hover": {background: "#FDFDFD"}}}>
+                                <CloseIcon/>
+                            </Button>
+                        </List>
+                        <Divider/>
+                        <EditorEnding data={data} onClose={handleClose}/>
+                    </Box>
+                </Drawer>
+            )}
+        </>
     );
-  };
-  return (
-    <>
-      <HeaderCard
-        text="Lời kết"
-        open={open}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        name=''
-      />
-      {open && (
-        <Drawer
-          anchor="right"
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-        >
-          {list("right")}
-        </Drawer>
-      )}
-      {Data?.conclusion ? (
-        <PlaceholderStyle style={{
-          borderBottomLeftRadius: '4px',
-          borderBottomRightRadius: '4px',
-        }}>
-          <div className="content" style={{
-            borderRadius: '4px',
-          }}>
-            <blockquote>{renderItem(Data?.conclusion)}</blockquote>
-            <div style={{ textAlign: 'end' }}><strong>{Data?.name}</strong></div>
-          </div>
-        </PlaceholderStyle>
-      ) : (
-        <Box sx={{
-          bgcolor: "white",
-          borderBottomLeftRadius: '4px',
-          borderBottomRightRadius: '4px',
-        }}>
-          {" "}
-          <Box sx={{ display: "flex", justifyContent: "center", pt: 4 }}>
-            <NoInformation />
-          </Box>
-          <Typography sx={{ textAlign: "center", pb: 6 }}>
-            Hiện chưa có nội dung
-          </Typography>
-        </Box>
-      )}
-    </>
-  );
 };
 export default Ending;

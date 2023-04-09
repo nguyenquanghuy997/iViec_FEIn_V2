@@ -1,5 +1,8 @@
 import CloseIcon from "../../../assets/CloseIcon";
-import { useAddCalendarMutation } from "../InterviewSlice";
+import {
+  useAddCalendarMutation,
+  // useGetRelateCalendaraQuery,
+} from "../InterviewSlice";
 import InterviewCouncil from "./InterviewCouncil";
 import ListCandidate from "./ListCandidate";
 import PersonalInterview from "./PersonalInterview";
@@ -78,6 +81,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   const watchPipelineStep = watch("recruitmentPipelineStateId");
   const watchInterviewType = watch("interviewType");
   const [addCalendar] = useAddCalendarMutation();
+  // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
 
   const toHHMMSS = (num) => {
     var sec_num = parseInt(num * 60, 10);
@@ -96,6 +100,25 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     }
     return hours + ":" + minutes + ":" + seconds;
   };
+
+  const convertDurationTimeToSeconds = (time) => {
+    const splitToString = time.split(":");
+    return (
+      +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+    );
+  };
+
+  const convertStoMs = (s) => {
+    const totalMinutes = Math.floor(s / 60);
+    const seconds = s % 60;
+    const newSeconds = seconds < 10 ? "0" + seconds : seconds;
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}:${minutes}:${newSeconds}`;
+  }
+
+  // convertStoMs(stringDurationTime + stringTime);
+
   const { enqueueSnackbar } = useSnackbar();
   const onSubmit = async (d) => {
     try {
@@ -103,7 +126,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
         name: d.name,
         recruitmentId: d.recruitmentId,
         recruitmentPipelineStateId: d.recruitmentPipelineStateId,
-        // reviewFormId: d.reviewFormId,
+        reviewFormId: d.reviewFormId,
         interviewType: d.interviewType,
         onlineInterviewAddress: d.onlineInterviewAddress,
         note: d?.note,
@@ -114,15 +137,23 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
           {
             name: "person",
             interviewGroupType: 0,
-            interviewTime: '',
-            interviewDuration:'',
+            interviewTime: "",
+            interviewDuration: "",
             bookingCalendarApplicants: d?.bookingCalendarGroups.map((item) => {
+              const dateTime = convertStoMs(
+                convertDurationTimeToSeconds(
+                  `${d?.bookingCalendarApplicants[item].interviewTime}:00`
+                ) +
+                  convertDurationTimeToSeconds(
+                    toHHMMSS(
+                      d?.bookingCalendarApplicants[item].interviewDuration
+                    )
+                  )
+              );
               return {
                 applicantId: item,
                 interviewTime: new Date(
-                  `${moment(d?.date).format("YYYY-MM-DD")} ${
-                    d?.bookingCalendarApplicants[item].interviewTime
-                  }`
+                  `${moment(d?.date).format("YYYY-MM-DD")} ${dateTime}`
                 ).toISOString(),
                 interviewDuration: toHHMMSS(
                   d?.bookingCalendarApplicants[item].interviewDuration
@@ -212,6 +243,7 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
                 <PersonalInterview
                   watchStep={watchStep}
                   watchType={watchInterviewType}
+                  watchPipe ={watchPipelineStep}
                 />
               </Box>
             </Grid>

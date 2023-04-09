@@ -8,6 +8,8 @@ const ButtonFilterStyle = styled(Button)(({theme}) => ({
     height: "44px",
     borderRadius: "6px !important",
     color: '#455570 !important',
+    fontSize: '14px',
+    fontWeight: '600 !important'
 }));
 
 const ButtonCancelStyle = styled(Button)(({theme}) => ({

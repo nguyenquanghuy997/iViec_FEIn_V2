@@ -16,6 +16,7 @@ export default function RHFDatePicker({
   label,
   style,
   DatePickerProps,
+  today,
   ...other
 }) {
   const { control } = useFormContext();
@@ -33,7 +34,8 @@ export default function RHFDatePicker({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <DatePicker
-        defaultProp={null}
+          defaultProp={null}
+          minDate={today}
           {...field}
           error={!!error}
           label={label}
@@ -44,7 +46,7 @@ export default function RHFDatePicker({
               {...params}
               fullWidth
               {...other}
-              sx={{...style}}
+              sx={{ ...style }}
               // InputProps={{
               //   startAdornment: (
               //     <InputAdornment position="start">{startText}</InputAdornment>
