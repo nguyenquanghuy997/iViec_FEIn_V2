@@ -8,18 +8,15 @@ import { Droppable } from "react-beautiful-dnd";
 
 const Column = ({ droppableId, column }) => {
   // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
-  const windowHeight = useRef(window.innerHeight);
+  const windowHeight = useRef(window.innerHeight - 120);
   return (
     <Stack spacing={2} sx={{ p: 1, py: 0 }}>
       <div
         style={{
           background: "rgba(9, 30, 66, 0.1)",
-          padding: '12px',
+          padding: "12px",
           // backdropFilter: 'blur(3px)'
           width: 350,
-          minHeight: windowHeight.current,
-          maxHeight: windowHeight.current,
-          overflow: 'auto',
           // border: "2px solid #ccc",
           // borderRadius: "8px",
         }}
@@ -31,8 +28,9 @@ const Column = ({ droppableId, column }) => {
             p: 2,
             m: 1,
             bgcolor: "background.paper",
-            borderRadius: '4px',
-            boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'
+            borderRadius: "4px",
+            boxShadow:
+              "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
           }}
         >
           <Iconify
@@ -53,8 +51,8 @@ const Column = ({ droppableId, column }) => {
           >
             <Iconify
               icon={"material-symbols:square-rounded"}
-              width={12}
-              height={12}
+              width={15}
+              height={15}
               color="#1E88E5"
               mr={1}
               mt={0.5}
@@ -64,7 +62,7 @@ const Column = ({ droppableId, column }) => {
               fontSize="14px"
               fontWeight="700"
               alignItems="center"
-              color='#455570'
+              color="#455570"
             >
               {PipelineStateType(column.pipelineStateType)}
             </Typography>
@@ -73,7 +71,7 @@ const Column = ({ droppableId, column }) => {
               fontSize="14px"
               fontWeight="700"
               alignItems="center"
-              color='#455570'
+              color="#455570"
               ml={1}
             >
               {column.items.length}
@@ -98,6 +96,9 @@ const Column = ({ droppableId, column }) => {
                     // background: "rgba(9, 30, 66, 0.1)",
                     padding: 8,
                     borderRadius: "8px",
+                    minHeight: windowHeight.current,
+                    maxHeight: windowHeight.current,
+                    overflow: "auto",
                   }}
                 >
                   {column?.items?.map((item, index) => {
