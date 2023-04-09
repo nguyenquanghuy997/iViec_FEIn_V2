@@ -260,6 +260,10 @@ export const RoleContainer = () => {
           setItemSelected={setItemSelected}
           // useGetColumnsFunc={useGetListColumnsQuery}
           // useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          createText="Thêm vai trò"
+          onClickCreate={() => {
+            setOpen(true);
+          }}
           tableProps={
             !canEdit && { rowSelection: false }
           }

@@ -1,4 +1,3 @@
-import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -139,29 +138,29 @@ export const RecruitmentAdItem = () => {
         onOpenFilterForm={handleOpenFilterForm}
         onCloseFilterForm={handleCloseFilterForm}
       /> */}
-      <Content>
-        <View mt={96}>
-          <DynamicColumnsTable
-            columns={columns}
-            source={Data}
-            loading={isLoading}
-            settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
-            setSelectedRowKeys={setSelectedRowKeys}
-            nodata="Hiện chưa có tin tuyển dụng nào"
-            selectedRowKeys={selectedRowKeys}
-            columnsTable={columnsTable}
-            setColumnsTable={setColumnsTable}
-          />
-        </View>
 
-        <RecruitmentAdBottomNav
-          open={selectedRowKeys?.length > 0}
-          onClose={toggleDrawer(false)}
-          selectedList={selectedRowKeys || []}
-          onOpenForm={toggleDrawer(true)}
-          setselectedList={setSelectedRowKeys}
+      <View>
+        <DynamicColumnsTable
+          columns={columns}
+          source={Data}
+          loading={isLoading}
+          settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
+          setSelectedRowKeys={setSelectedRowKeys}
+          nodata="Hiện chưa có tin tuyển dụng nào"
+          selectedRowKeys={selectedRowKeys}
+          columnsTable={columnsTable}
+          setColumnsTable={setColumnsTable}
+          searchInside={false}
         />
-      </Content>
+      </View>
+
+      <RecruitmentAdBottomNav
+        open={selectedRowKeys?.length > 0}
+        onClose={toggleDrawer(false)}
+        selectedList={selectedRowKeys || []}
+        onOpenForm={toggleDrawer(true)}
+        setselectedList={setSelectedRowKeys}
+      />
     </View>
   );
 };

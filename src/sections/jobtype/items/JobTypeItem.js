@@ -16,6 +16,7 @@ import { useState, useMemo } from "react";
 import useAuth from "@/hooks/useAuth";
 import { LIST_STATUS } from "@/utils/formatString";
 import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
+import { JobTypeFormModal } from "@/sections/jobtype";
 
 export const JobTypeItem = () => {
   const router = useRouter();
@@ -23,6 +24,8 @@ export const JobTypeItem = () => {
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllJobTypeQuery(query, { skip: !isReady });
+
+  const [openEdit, setOpenEdit] = useState(false);
 
   const columns = useMemo(() => {
     return [
@@ -132,6 +135,10 @@ export const JobTypeItem = () => {
           setItemSelected={setItemSelected}
           useGetColumnsFunc={useGetListColumnsQuery}
           useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          createText="Thêm vị trí công việc"
+          onClickCreate={() => {
+            setOpenEdit(true);
+          }}
         />
 
         <JobTypeBottomNav
@@ -144,6 +151,12 @@ export const JobTypeItem = () => {
           setItemSelected={setItemSelected}
         />
       </Content>
+
+      <JobTypeFormModal
+        show={openEdit}
+        onClose={() => setOpenEdit(false)}
+        setShow={setOpenEdit}
+      />
     </View>
   );
 };

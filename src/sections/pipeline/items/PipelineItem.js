@@ -9,12 +9,12 @@ import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import { PipelineFormModal } from "../modals";
 import { PipelineStateType, Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import useAuth from "@/hooks/useAuth";
 import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
 import { TBL_FILTER_TYPE } from "@/config";
@@ -26,6 +26,8 @@ export const PipelineItem = () => {
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllPipelineQuery(query, { skip: !isReady });
+
+  const [showForm, setShowForm] = useState(false);
 
   const columns = useMemo(() => {
     return [
@@ -196,6 +198,10 @@ export const PipelineItem = () => {
           setItemSelected={setItemSelected}
           // useGetColumnsFunc={useGetListColumnsQuery}
           // useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+          createText="Thêm quy trình tuyển dụng"
+          onClickCreate={() => {
+            setShowForm(true);
+          }}
         />
 
         <PipelineBottomNav
@@ -207,6 +213,11 @@ export const PipelineItem = () => {
           setselectedList={setSelectedRowKeys}
         />
       </Content>
+
+      <PipelineFormModal
+        show={showForm}
+        onClose={() => setShowForm(false)}
+      />
     </View>
   );
 };

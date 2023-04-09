@@ -28,6 +28,7 @@ import {
   API_GET_JOB_CATEGORIES,
   API_GET_APPLICANT_SKILLS,
 } from "@/routes/api";
+import { PATH_DASHBOARD } from '@/routes/paths';
 
 export const ApplicantItem = () => {
   const { user } = useAuth();
@@ -373,6 +374,11 @@ export const ApplicantItem = () => {
             setItemSelected={setItemSelected}
             useGetColumnsFunc={useGetListColumnApplicantsQuery}
             useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+            searchInside={false}
+            createText="Đăng tin tuyển dụng"
+            onClickCreate={() => {
+              router.push(PATH_DASHBOARD.recruitment.create);
+            }}
           />
         </View>
 

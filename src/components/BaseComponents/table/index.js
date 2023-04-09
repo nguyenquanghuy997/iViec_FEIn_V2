@@ -28,6 +28,9 @@ const DynamicColumnsTable = (props) => {
     setItemSelected,
     useGetColumnsFunc,
     useUpdateColumnsFunc,
+    searchInside = true,
+    createText = null,
+    onClickCreate,
     tableProps = {},
   } = props;
 
@@ -148,10 +151,15 @@ const DynamicColumnsTable = (props) => {
 
   return (
     <View>
-      <TableHeader
-        onSubmitFilter={onSubmitFilter}
-        columns={columnsDisplay}
-      />
+      {!searchInside && (
+        <TableHeader
+          onSubmitFilter={onSubmitFilter}
+          columns={columnsDisplay}
+          isInside={false}
+          createText={createText}
+          onClickCreate={onClickCreate}
+        />
+      )}
 
       <Content style={{ paddingBottom: itemSelected?.length > 0 ? 100 : 24 }}>
         <View
@@ -201,7 +209,17 @@ const DynamicColumnsTable = (props) => {
           </View>
         </View>
 
-        <TableStyle>
+        {searchInside && (
+          <TableHeader
+            onSubmitFilter={onSubmitFilter}
+            columns={columnsDisplay}
+            isInside={true}
+            createText={createText}
+            onClickCreate={onClickCreate}
+          />
+        )}
+
+        <TableStyle className={searchInside ? 'inside' : ''}>
           <Table
             locale={locale}
             rowSelection={rowSelection}

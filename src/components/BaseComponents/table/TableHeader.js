@@ -24,11 +24,13 @@ export default function TableHeader({
   createText = null,
   onClickCreate,
   onSubmitFilter,
+  isInside,
 }) {
   const { query = {} } = useRouter();
   const { palette } = useTheme();
   const [openFilter, setOpenFilter] = useState(false);
   const _timeoutSearch = useRef();
+  const buttonHeight = isInside ? 36 : 44;
 
   const onSubmit = (value, timeout = 0) => {
     clearTimeout(_timeoutSearch.current);
@@ -38,7 +40,7 @@ export default function TableHeader({
   }
 
   return (
-    <HeaderStyle>
+    <HeaderStyle className={isInside ? 'inside' : ''}>
       <Content className="table-header-container">
         <Box display="flex">
           <Box flex={1}>
@@ -70,6 +72,7 @@ export default function TableHeader({
                 onClick={() => {
                   setOpenFilter(true);
                 }}
+                height={buttonHeight}
               >
                 Bộ lọc
               </Button>
@@ -80,9 +83,10 @@ export default function TableHeader({
             <Box mr={1}>
               <Button
                 startIcon={<RiAddCircleFill size={18} color="#fff" />}
-                onClic={onClickCreate}
+                onClick={onClickCreate}
                 variant="contained"
                 color="primary"
+                height={buttonHeight}
               >
                 {createText}
               </Button>

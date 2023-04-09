@@ -5,10 +5,11 @@ import {
   useGetRecruitmentsQuery,
   useUpdateListColumnsMutation,
 } from "../RecruitmentSlice";
+import { useGetOrganizationQuery } from "@/sections/report/reportSlice";
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
-import Content from "@/components/BaseComponents/Content";
+import OrganizationSettingModal from "../modals/OrganizationSettingModal";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
@@ -43,6 +44,7 @@ import { Tag } from "antd";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
+import { get } from "lodash";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -287,7 +289,7 @@ export const RecruitmentItem = () => {
               if (index < 3) {
                 return (
                   <Tag
-                    key={p}
+                    key={index}
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
@@ -302,7 +304,7 @@ export const RecruitmentItem = () => {
                 var indexplus = coOwners.length - 3;
                 return (
                   <Tag
-                    key={p}
+                    key={index}
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
@@ -331,9 +333,9 @@ export const RecruitmentItem = () => {
           <>
             {recruitmentAddresses.map((item, index) => {
               if (index < recruitmentAddresses?.length - 1) {
-                return <span key={item}>{item.provinceName}, </span>;
+                return <span key={index}>{item.provinceName}, </span>;
               } else {
-                return <span key={item}>{item.provinceName}</span>;
+                return <span key={index}>{item.provinceName}</span>;
               }
               // let color = item.length > 5 ? 'geekblue' : 'green';
             })}
@@ -354,13 +356,13 @@ export const RecruitmentItem = () => {
             {recruitmentWorkingForms.map((item, index) => {
               if (index < recruitmentWorkingForms?.length - 1) {
                 return (
-                  <span key={item}>
+                  <span key={index}>
                     {RecruitmentWorkingForm(item.workingForm)},{" "}
                   </span>
                 );
               } else {
                 return (
-                  <span key={item}>
+                  <span key={index}>
                     {RecruitmentWorkingForm(item.workingForm)}
                   </span>
                 );
@@ -407,6 +409,17 @@ export const RecruitmentItem = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
+  const [isOpenSettingOrganization, setIsOpenSettingOrganization] = useState(false);
+
+  const { data: Organization = {} } = useGetOrganizationQuery();
+
+  const handleCheckNavigate = () => {
+    if (get(Organization, 'isActivated')) {
+      return router.push(PATH_DASHBOARD.recruitment.create);
+    } else {
+      setIsOpenSettingOrganization(true)
+    }
+  }
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -511,24 +524,28 @@ export const RecruitmentItem = () => {
         onOpenFilterForm={handleOpenFilterForm}
         onCloseFilterForm={handleCloseFilterForm}
       /> */}
-      <Content>
-        <View mt={96}>
-          <DynamicColumnsTable
-            columns={columns}
-            source={Data}
-            loading={isLoading}
-            settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
-            scroll={{ x: 3954 }}
-            nodata="Hiện chưa có tin tuyển dụng nào"
-            selectedRowKeys={selectedRowKeys}
-            setSelectedRowKeys={setSelectedRowKeys}
-            itemSelected={itemSelected}
-            setItemSelected={setItemSelected}
-            useGetColumnsFunc={useGetListColumnsQuery}
-            useUpdateColumnsFunc={useUpdateListColumnsMutation}
-          />
-        </View>
-      </Content>
+      
+      <View>
+        <DynamicColumnsTable
+          columns={columns}
+          source={Data}
+          loading={isLoading}
+          settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
+          scroll={{ x: 3954 }}
+          nodata="Hiện chưa có tin tuyển dụng nào"
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
+          itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
+          useGetColumnsFunc={useGetListColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          searchInside={false}
+          createText="Đăng tin tuyển dụng"
+          onClickCreate={() => {
+            handleCheckNavigate();
+          }}
+        />
+      </View>
 
       {openClose && (
         <ConfirmModal
@@ -708,6 +725,11 @@ export const RecruitmentItem = () => {
             icon: <DeleteIcon />,
           },
         ].filter((item) => listKeyActions?.includes(item.key))}
+      />
+
+      <OrganizationSettingModal
+        onClose={() => setIsOpenSettingOrganization(false)}
+        isOpenSettingOrganization={isOpenSettingOrganization}
       />
     </View>
   );
