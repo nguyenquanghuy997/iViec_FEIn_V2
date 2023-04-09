@@ -22,6 +22,7 @@ import OrganizationConfirmMultipleModal from "@/sections/organization/component/
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
 import MuiButton from '@/components/BaseComponents/MuiButton';
 import { AddIcon } from '@/assets/ActionIcon';
+import LoadingScreen from "@/components/LoadingScreen";
 
 const OrganizationContent = () => {
   // selected
@@ -102,7 +103,7 @@ const OrganizationContent = () => {
     setValueSearch(value);
   }
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <LoadingScreen />
 
   return (
       <Box sx={{px: 7.5, py: 5, backgroundColor: "#FDFDFD", minHeight: '100vh'}}>
