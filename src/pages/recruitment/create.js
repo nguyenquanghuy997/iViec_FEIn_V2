@@ -1,9 +1,10 @@
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
-import {Box, Grid, Typography} from "@mui/material";
+import {Grid, Typography} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useForm} from "react-hook-form";
 import {useSnackbar} from "notistack";
+import moment from 'moment';
 
 import Layout from '@/layouts'
 import Page from '@/components/Page'
@@ -19,44 +20,36 @@ import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 
 import { PERMISSION_PAGES } from '@/config'
-import {
-  useCreateRecruitmentMutation,
-  useUpdateRecruitmentDraftMutation,
-  useUpdateRecruitmentOfficialMutation
-} from "@/sections/recruitment";
+import {useCreateRecruitmentMutation} from "@/sections/recruitment";
 
 import {PATH_DASHBOARD} from "@/routes/paths";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import {DraftIcon, SendIcon} from "@/sections/recruitment-form/icon/HeaderIcon";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 
-import {cleanObject} from "@/utils/function";
 import {FormValidate} from "@/sections/recruitment-form/form/Validate";
+import {TabContext} from "@mui/lab";
+import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
+import {isEmpty} from "lodash";
+import TabPanel from "@/sections/recruitment-form/components/TabPanel";
 
 CreateRecruitment.getLayout = function getLayout(pageProps, page) {
   return <Layout permissions={PERMISSION_PAGES.createRecruitment} {...pageProps}>{page}</Layout>
 }
-
 export default function CreateRecruitment() {
   const dispatch = useDispatch();
   const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
-  const {query} = router;
-  const [selected, setSelected] = useState(0);
-  const _timeoutTab = useRef();
 
   const stateOpenForm = useSelector((state) => state.modalReducer.openState);
   const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
 
-  const [pipelineStateDatas, setPipelineStateDatas] = useState([]);
-  const [hasExamination, setHasExamination] = useState({
-    hasValue: false,
-    size: 0,
-  });
+  const [valueTab, setValueTab] = useState('1');
+  const examinationDataRef = useRef(null);
 
-  const handleSetPipelineStateDatas = (data) => {
-    setPipelineStateDatas(data);
-  }
+  const handleChangeTab = (event, newValue) => {
+    setValueTab(newValue);
+  };
 
   const handleOpenConfirm = (data) => {
     dispatch(modalSlice.actions.openStateModal(data));
@@ -64,13 +57,12 @@ export default function CreateRecruitment() {
   const handleCloseConfirm = () => dispatch(modalSlice.actions.closeModal());
 
   const [createRecruitment] = useCreateRecruitmentMutation();
-  const [updateRecruitmentOfficial] = useUpdateRecruitmentOfficialMutation();
-  const [updateRecruitmentDraft] = useUpdateRecruitmentDraftMutation();
+  const {data: defaultOrganization = {}} = useGetOrganizationInfoQuery();
 
   const defaultValues = {
     id: '',
     name: '',
-    organizationId: '',
+    organizationId: defaultOrganization?.id || '',
     description: '',
     benefit: '',
     requirement: '',
@@ -95,170 +87,94 @@ export default function CreateRecruitment() {
     recruitmentAddressIds: [],
     recruitmentWorkingForms: [],
     organizationPipelineId: '',
+    isAutomaticStepChange: false,
   }
 
   const methods = useForm({
     mode: 'all',
     resolver: openSaveDraft ? null : yupResolver(FormValidate),
     defaultValues: defaultValues,
+    shouldUnregister: false,
   });
 
-  const {handleSubmit, getValues, formState: {isValid}} = methods;
-
-  const display = [
-    {
-      tab: <Information />,
-      title: 'Thông tin tuyển dụng',
-    },
-    {
-      id: 'pipeline',
-      tab: <Pipeline
-          pipelineStateDatas={pipelineStateDatas}
-          onSetPipelineStateDatas={handleSetPipelineStateDatas}
-          onSetHasExamination={setHasExamination}
-      />,
-      title: 'Quy trình tuyển dụng',
-    },
-  ];
-
-  const handleSelected = (index) => {
-    setSelected(index);
-
-    clearTimeout(_timeoutTab.current);
-    _timeoutTab.current = setTimeout(() => {
-      router.push({
-        pathname: PATH_DASHBOARD.recruitment.create,
-        query: {...query},
-        hash: display[index].id || null,
-      }, undefined, {shallow: true});
-    }, 300);
-  };
+  const {handleSubmit, getValues, setValue, formState: {isValid}} = methods;
 
   useEffect(() => {
-    if (!router.isReady) {
-      return;
+    if (!isEmpty(defaultOrganization)) {
+      setValue('organizationId', defaultOrganization.id);
     }
-    let hash = window.location.hash;
-    if (!hash) {
-      return;
-    }
-    hash = hash.replace('#', '');
-    let index = display.findIndex(d => d.id === hash);
-    if (index < 0) {
-      index = 0;
-    }
-    handleSelected(index);
-  }, [router.isReady]);
-
-  const TabDisplay = (props) => {
-    const {children, value, index, ...other} = props;
-    return (
-        <Box role="tabDisplay" hidden={value !== index} {...other}>
-          {value === index && (children)}
-        </Box>
-    );
-  };
+  }, [defaultOrganization])
 
   const onSubmit = async (data) => {
+    const hasExaminationValue = examinationDataRef.current.getHasValue();
+    const examinationSize = examinationDataRef.current?.getSize();
+    const pipelineStateDatas = examinationDataRef.current?.getPipeLineStateData();
+    const pipelineStateDatasSize = pipelineStateDatas?.filter(item => item.pipelineStateType === 1 && !isEmpty(item.examinationId)).length;
+
+    if (hasExaminationValue && examinationSize !== pipelineStateDatasSize) {
+      enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng chọn đề thi!", {
+        variant: 'error',
+      });
+      setValueTab('2');
+      return;
+    }
+
     const body = {
       ...data,
-      id: data?.id,
-      recruitmentLanguageIds: data?.recruitmentLanguageIds?.map(item => item.value),
-      coOwnerIds: data?.coOwnerIds?.map(item => item.value),
-      recruitmentCouncilIds: data?.recruitmentCouncilIds.map(item => item.value),
-      recruitmentJobCategoryIds: data?.recruitmentJobCategoryIds.map(item => item.value),
-      recruitmentAddressIds: data?.recruitmentAddressIds.map(item => item.value),
-      recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item.value)),
+      startDate: moment(data?.startDate).toISOString(),
+      endDate: moment(data?.endDate).toISOString(),
+      recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
       recruitmentCreationType: openSaveDraft ? 0 : 1,
-      organizationPipelineStateDatas: pipelineStateDatas?.map(item => ({
+      organizationPipelineStateDatas: !hasExaminationValue ? [] : pipelineStateDatas?.map(item => ({
         organizationPipelineStateId: item.organizationPipelineStateId,
         examinationId: item.examinationId,
         examinationExpiredDays: Number(item.expiredTime),
       }))
     }
-    if (data?.id && !query?.type) {
-      if (data.recruitmentCreationType === 0) {
-        try {
-          await updateRecruitmentDraft(cleanObject({
-            ...body,
-            recruitmentCreationType: 0
-          })).unwrap();
-          handleCloseConfirm();
-          enqueueSnackbar("Cập nhật tin tuyển dụng thành công!", {
-            autoHideDuration: 1000
-          });
-          await router.push(PATH_DASHBOARD.recruitment.root);
-        } catch (e) {
-          enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
-            autoHideDuration: 1000,
-            variant: 'error',
-          });
-          handleCloseConfirm();
-          throw e;
-        }
-      } else {
-        try {
-          await updateRecruitmentOfficial(cleanObject(body)).unwrap();
-          handleCloseConfirm();
-          enqueueSnackbar("Cập nhật tin tuyển dụng thành công!", {
-            autoHideDuration: 1000
-          });
-          await router.push(PATH_DASHBOARD.recruitment.root);
-        } catch (e) {
-          enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
-            autoHideDuration: 1000,
-            variant: 'error',
-          });
-          handleCloseConfirm();
-          throw e;
-        }
-      }
-    } else {
-      try {
-        await createRecruitment(cleanObject({
-          ...body,
-          id: null,
-          recruitmentCreationType: openSaveDraft ? 0 : 1
-        })).unwrap();
-        handleCloseConfirm();
-        enqueueSnackbar("Thêm tin tuyển dụng thành công!", {
-          autoHideDuration: 1000
-        });
-        await router.push(PATH_DASHBOARD.recruitment.root);
-      } catch (e) {
-        enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
-          autoHideDuration: 1000,
-          variant: 'error',
-        });
-        handleCloseConfirm();
-        throw e;
-      }
+    try {
+      await createRecruitment({
+        ...body,
+        id: null,
+        recruitmentCreationType: openSaveDraft ? 0 : 1
+      }).unwrap();
+      handleCloseConfirm();
+      enqueueSnackbar("Thêm tin tuyển dụng thành công!");
+      await router.push(PATH_DASHBOARD.recruitment.root);
+    } catch (e) {
+      enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+        variant: 'error',
+      });
+      handleCloseConfirm();
+      throw e;
     }
   }
 
   return (
       <Page title='Đăng tin tuyển dụng'>
-        <Grid container>
-          <Header
-              title={'Đăng tin tuyển dụng'}
-              onOpenConfirm={handleOpenConfirm}
-              errors={(isValid && !hasExamination.hasValue) || isValid && (hasExamination.hasValue === true && hasExamination.size === pipelineStateDatas.length)}
-          />
-          <TabList handleSelected={handleSelected} selected={selected}/>
-        </Grid>
-        <Content>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container columnSpacing={3}>
-              <Grid item md={12} className="profile-content">
-                {display.map((d, index) =>
-                    <TabDisplay value={selected} key={index} index={index} onSubmit={onSubmit}>
-                      {d.tab}
-                    </TabDisplay>
-                )}
-              </Grid>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <TabContext value={valueTab}>
+            <Grid container>
+              <Header
+                  title={'Đăng tin tuyển dụng'}
+                  onOpenConfirm={handleOpenConfirm}
+                  errors={isValid}
+              />
+              <TabList onChange={handleChangeTab}/>
             </Grid>
-          </FormProvider>
-        </Content>
+            <Content>
+              <Grid container columnSpacing={3}>
+                <Grid item md={12} className="profile-content">
+                  <TabPanel value="1">
+                    <Information />
+                  </TabPanel>
+                  <TabPanel value="2">
+                    <Pipeline ref={examinationDataRef}/>
+                    </TabPanel>
+                  </Grid>
+                </Grid>
+            </Content>
+          </TabContext>
+        </FormProvider>
         {
             openSaveDraft && <ConfirmModal
                 open={openSaveDraft}

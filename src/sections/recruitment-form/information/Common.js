@@ -1,10 +1,8 @@
 import {Box} from "@mui/material";
-
 import DividerCard from "@/sections/recruitment-form/components/DividerCard";
 import {LabelStyle} from "@/components/hook-form/style";
 import {RHFSelect, RHFTextField} from "@/components/hook-form";
 import RHFTreeSelect from "@/components/hook-form/RHFTreeSelect";
-import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
 import MuiInputNumber from "@/components/form/MuiInputNumber";
 
 import {LIST_EXPERIENCE_NUMBER, LIST_GENDER_RECRUITMENT, LIST_RECRUITMENT_WORKING_FORM} from "@/utils/formatString";
@@ -29,17 +27,14 @@ const Common = () => {
                 </Box>
                 {/* Khu vực đăng tin */}
                 <Box sx={{mb: 2}}>
-                    <RHFMuiAutocomplete
+                    <LabelStyle required>Khu vực đăng tin</LabelStyle>
+                    <RHFSelect
                         options={ListProvince.map(i => ({value: i.id, label: i.name}))}
                         name="recruitmentAddressIds"
-                        title="Khu vực đăng tin"
                         placeholder="Chọn tối đa 3 khu vực"
                         fullWidth
                         multiple
-                        isRequired
-                        showCheckbox
                         disabledOption={3}
-                        disableCloseOnSelect
                     />
                 </Box>
                 {/* Đơn vị & Chức danh */}
@@ -79,32 +74,26 @@ const Common = () => {
                 </Box>
                 {/* Ngành nghề */}
                 <Box sx={{mb: 2}}>
-                    <RHFMuiAutocomplete
+                    <LabelStyle required>Ngành nghề</LabelStyle>
+                    <RHFSelect
                         options={ListJobCategory?.map(item => ({value: item?.id, label: item?.name}))}
                         name="recruitmentJobCategoryIds"
-                        title="Ngành nghề"
                         placeholder="Chọn tối đa 3 ngành nghề"
                         fullWidth
                         multiple
-                        isRequired
-                        showCheckbox
                         disabledOption={3}
-                        disableCloseOnSelect
                     />
                 </Box>
                 {/* Hình thức làm việc */}
                 <Box sx={{mb: 2}}>
-                    <RHFMuiAutocomplete
+                    <LabelStyle required>Hình thức làm việc</LabelStyle>
+                    <RHFSelect
                         options={LIST_RECRUITMENT_WORKING_FORM}
                         name="recruitmentWorkingForms"
-                        title="Hình thức làm việc"
                         placeholder="Chọn tối đa 3 hình thức làm việc"
                         fullWidth
                         multiple
-                        isRequired
-                        showCheckbox
                         disabledOption={3}
-                        disableCloseOnSelect
                     />
                 </Box>
                 {/* Số năm kinh nghiệm & Số lượng cần tuyển */}
@@ -131,7 +120,7 @@ const Common = () => {
                 {/* Giới tính & Ngôn ngữ làm việc */}
                 <Box sx={{mb: 2, display: 'flex', justifyContent: 'space-between'}}>
                     <div style={{flex: 1, marginRight: 8}}>
-                        <LabelStyle required>Giới tính</LabelStyle>
+                        <LabelStyle>Giới tính</LabelStyle>
                         <RHFSelect
                             name="sex"
                             placeholder="Chọn giới tính"
@@ -140,18 +129,14 @@ const Common = () => {
                         />
                     </div>
                     <div style={{flex: 1, marginLeft: 8}}>
-                        <RHFMuiAutocomplete
+                        <LabelStyle>Ngôn ngữ làm việc</LabelStyle>
+                        <RHFSelect
                             name="recruitmentLanguageIds"
-                            title="Ngôn ngữ làm việc"
                             placeholder="Chọn ngôn ngữ"
                             fullWidth
                             multiple
                             options={ListLanguage?.map(item => ({value: item?.id, label: item?.name}))}
-                            isRequired
-                            showCheckbox
                             disabledOption={3}
-                            limitTags={2}
-                            disableCloseOnSelect
                         />
                     </div>
                 </Box>

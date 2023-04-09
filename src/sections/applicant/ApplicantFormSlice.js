@@ -18,12 +18,13 @@ import {
   API_GET_APPLICANT_BY_PIPELINESTETEID,
   API_GET_LIST_RECRUITMENT,
   API_GET_ADD_APPLICANT_TO_RECRUITMENT,
-  API_APPLICANT_REVIEW_FORM
+  API_APPLICANT_REVIEW_FORM,
+  API_ADD_APPLICANT_REVIEW
 } from "@/routes/api";
 import qs from 'query-string';
-import {convertArrayToObject} from '@/utils/helper'
+import { convertArrayToObject, toRequestFilterData } from '@/utils/helper'
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["GetColumnApplicants", "GetListsApplicants", "GetListApplicantPipeline"],
+  addTagTypes: ["GetColumnApplicants", "GetListsApplicants", "GetListApplicantPipeline", "LogApplicant"],
 });
 
 export const ApplicantFormSlice = apiWithTag.injectEndpoints({
@@ -44,11 +45,14 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
       providesTags: ["GetColumnApplicants"],
     }),
     updateListColumnApplicants: builder.mutation({
-      query: (data) => ({
-        url: `${API_UPDATE_COLUMN_APPLICANTS}/${data.id}`,
-        method: "PATCH",
-        data: data.body,
-      }),
+      query: (data = {}) => {
+        let { id, ...restData } = data;
+        return {
+          url: `${API_UPDATE_COLUMN_APPLICANTS}/${id}`,
+          method: "PATCH",
+          data: restData,
+        };
+      },
       invalidatesTags: ["GetColumnApplicants"],
     }),
     updateApplicant: builder.mutation({
@@ -103,6 +107,7 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
         response.events = response.events.reverse();
         return response;
       },
+      providesTags: ["LogApplicant"]
     }),
     getApplicantByPipelineStateId: builder.query({
       query: (PipelineStateId) => ({
@@ -146,6 +151,14 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["GetListsApplicants"],
     }),
+    addApplicantReview: builder.mutation({
+      query: (data) => ({
+        url: API_ADD_APPLICANT_REVIEW,
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: ["LogApplicant"],
+    }),
     addApplicantRecruitment: builder.mutation({
       query: (data) => ({
         url: API_GET_ADD_APPLICANT_TO_RECRUITMENT,
@@ -157,10 +170,10 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
     // new
     // get all applicant with filter
     getAllFilterApplicant: builder.query({
-      query: (data) => ({
+      query: (data = {}) => ({
         url: API_GET_FILTER_ALL_APPLICANTS,
         method: "POST",
-        data,
+        data: toRequestFilterData(data),
       }),
       providesTags: ["GetListsApplicants"],
     }),
@@ -233,5 +246,6 @@ export const {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useAddApplicantFormMutation,
   useUpdateApplicantFormMutation,
-  useGetApplicantReviewFormQuery
+  useLazyGetApplicantReviewFormQuery,
+  useAddApplicantReviewMutation
 } = ApplicantFormSlice;

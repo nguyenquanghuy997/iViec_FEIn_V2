@@ -1,4 +1,10 @@
-import { ButtonDS, NavGoBack } from "@/components/DesignSystem";
+import {
+  DownloadLineIcon,
+  ImportLinkIcon,
+  TeamLineIcon,
+} from "@/assets/ActionIcon";
+import { NavGoBack } from "@/components/DesignSystem";
+import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
@@ -7,6 +13,9 @@ import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
+import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
+import { RecruitmentApplicantChooseStage } from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
+import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 import { ButtonGray, ButtonIcon } from "@/utils/cssStyles";
 import { TabContext, TabList } from "@mui/lab";
 import {
@@ -14,29 +23,33 @@ import {
   Button,
   ButtonGroup,
   ClickAwayListener,
-  Container, Divider,
+  Container,
+  Divider,
   InputAdornment,
   MenuItem,
   MenuList,
   Stack,
   Tab,
-  Tooltip, Typography,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
-import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
-import { RecruitmentApplicantChooseStage } from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
-import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
-import MenuIcon from "@/assets/interview/MenuIcon";
-import DateIcon from "@/assets/interview/DateIcon";
 import { useRouter } from "next/router";
-import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
-function RecruitmentPreviewItem() {
+function RecruitmentPreviewItem({
+  viewModeDefault,
+  onChangeViewMode,
+  tabDefault,
+  onChangeTab,
+  children,
+}) {
   const router = useRouter();
   const RecruitmentId = router.query.slug;
-  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({ Id: RecruitmentId })
+  const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
+    Id: RecruitmentId,
+  });
   const defaultValues = {
     name: "",
   };
@@ -200,42 +213,45 @@ function RecruitmentPreviewItem() {
     <div class="content">
       <div class="content-title">Đồng phụ trách: </div>
       <div>
-      ${recruitment?.coOwners
-      ?.map((p, index) => {
-        if (index < 3) {
-          return p.email;
-        }
-      })
-      .join(", ") || "-"
-    }
+      ${
+        recruitment?.coOwners
+          ?.map((p, index) => {
+            if (index < 3) {
+              return p.email;
+            }
+          })
+          .join(", ") || "-"
+      }
       <span>+ ${recruitment?.coOwners?.length - 3 || ""}</span>
       </div>
     </div>
     <div class="content">
       <div class="content-title">Hội đồng tuyển dụng: </div>
       <div>
-      ${recruitment?.recruitmentCouncils
-      ?.map((p, index) => {
-        if (index < 3) {
-          return p.councilEmail;
-        }
-      })
-      .join(", ") || "-"
-    }
+      ${
+        recruitment?.recruitmentCouncils
+          ?.map((p, index) => {
+            if (index < 3) {
+              return p.councilEmail;
+            }
+          })
+          .join(", ") || "-"
+      }
       <span>+ ${recruitment?.recruitmentCouncils?.length - 3 || ""}</span>
       </div>
     </div>
     <div class="content">
       <div class="content-title">Kênh tuyển dụng: </div>
       <div>
-      ${recruitment?.jobSource
-      ?.map((p, index) => {
-        if (index < 3) {
-          return p.name;
-        }
-      })
-      .join(", ") || "-"
-    }
+      ${
+        recruitment?.jobSource
+          ?.map((p, index) => {
+            if (index < 3) {
+              return p.name;
+            }
+          })
+          .join(", ") || "-"
+      }
       <span>+ ${recruitment?.jobSource?.length - 3 || ""}</span>
       </div>
     </div>
@@ -246,12 +262,14 @@ function RecruitmentPreviewItem() {
   </div>
   `;
   const recruitmentId = window.location.pathname.split("/")[2];
-  const [value, setValue] = useState("1");
+  const [tab, setTab] = useState(tabDefault);
   const [showDialogStage, setShowDialogStage] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
+  const [isFullHeader, setIsFullHeader] = useState(true);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTab(newValue);
+    onChangeTab(newValue);
   };
   const smDown = useResponsive("down", "sm");
   const { themeStretch } = useSettings();
@@ -262,7 +280,7 @@ function RecruitmentPreviewItem() {
     stage: undefined,
     stageResult: undefined,
     recruitmentId: recruitmentId,
-    recruitmentTitle: undefined
+    recruitmentTitle: undefined,
   });
   const handleCloseGroup = () => {
     setOpenGroup(false);
@@ -272,7 +290,10 @@ function RecruitmentPreviewItem() {
   };
 
   useEffect(() => {
-    setModelApplication({ ...modelApplication, recruitmentTitle: RecruitmentData?.name })
+    setModelApplication({
+      ...modelApplication,
+      recruitmentTitle: RecruitmentData?.name,
+    });
   }, [RecruitmentData]);
 
   useEffect(() => {
@@ -282,152 +303,295 @@ function RecruitmentPreviewItem() {
   const DivRecruitmentDataProcessStatus = (item) => {
     switch (item) {
       case 0: //"Draft"
-        return <span style={{ color: '#455570', border: '1px solid #455570', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Bản nháp</span>
+        return (
+          <span
+            style={{
+              color: "#455570",
+              border: "1px solid #455570",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Bản nháp
+          </span>
+        );
       case 1: //"WaitingOrganizationApproval":
-        return <span style={{ color: '#F77A0C', border: '1px solid #F77A0C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Chờ nội bộ phê duyệt</span>;
+        return (
+          <span
+            style={{
+              color: "#F77A0C",
+              border: "1px solid #F77A0C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Chờ nội bộ phê duyệt
+          </span>
+        );
       case 2: //"OrganizationReject":
-        return <span style={{ color: '#E53935', border: '1px solid #E53935', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Nội bộ từ chối</span>;
+        return (
+          <span
+            style={{
+              color: "#E53935",
+              border: "1px solid #E53935",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Nội bộ từ chối
+          </span>
+        );
       case 3: //"WaitingMedusaApproval":
-        return <span style={{ color: '#F77A0C', border: '1px solid #F77A0C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Chờ iVIEC phê duyệt</span>;
+        return (
+          <span
+            style={{
+              color: "#F77A0C",
+              border: "1px solid #F77A0C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Chờ iVIEC phê duyệt
+          </span>
+        );
       case 4: //"MedusaReject":
-        return <span style={{ color: '#E53935', border: '1px solid #E53935', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>iVIEC từ chối</span>;
+        return (
+          <span
+            style={{
+              color: "#E53935",
+              border: "1px solid #E53935",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            iVIEC từ chối
+          </span>
+        );
       case 5: //"Recruiting":
-        return <span style={{ color: '#388E3C', border: '1px solid #388E3C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Đang tuyển dụng</span>;
+        return (
+          <span
+            style={{
+              color: "#388E3C",
+              border: "1px solid #388E3C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Đang tuyển dụng
+          </span>
+        );
       case 6: //"Calendared":
-        return <span style={{ color: '#388E3C', border: '1px solid #388E3C', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Đã lên lịch</span>;
+        return (
+          <span
+            style={{
+              color: "#388E3C",
+              border: "1px solid #388E3C",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Đã lên lịch
+          </span>
+        );
       case 7: //"Expired":
-        return <span style={{ color: '#455570', border: '1px solid #455570', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Hết hạn</span>;
+        return (
+          <span
+            style={{
+              color: "#455570",
+              border: "1px solid #455570",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Hết hạn
+          </span>
+        );
       case 8: //"Closed":
-        return <span style={{ color: '#455570', border: '1px solid #455570', borderRadius: '100px', padding: '6px 10px', marginLeft: '12px', fontSize: '12px', fontWeight: 600 }}>Đóng</span>;
+        return (
+          <span
+            style={{
+              color: "#455570",
+              border: "1px solid #455570",
+              borderRadius: "100px",
+              padding: "6px 10px",
+              marginLeft: "12px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Đóng
+          </span>
+        );
     }
   };
+
+  const collapseHeader = () => {
+    setIsFullHeader(!isFullHeader);
+  };
+
   return (
     <div>
-      <TabContext value={value}>
-        <HeadingBar style={{ mb: "28px", position: "unset", top: 8 }}>
-          <BoxFlex>
-            <Stack flexDirection="row" alignItems="center">
-              <Tooltip
-                title={
-                  <div dangerouslySetInnerHTML={{ __html: inforRecruitment }} />
-                }
-                placement="right-start"
-                componentsProps={{
-                  tooltip: {
-                    sx: {
-                      color: "#455570",
-                      backgroundColor: "#FDFDFD",
-                      fontSize: 13,
-                      border: "1px solid #E7E9ED",
-                      boxShadow:
-                        "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-                      borderRadius: "6px",
-                      fontWeight: 600,
-                      maxWidth: "540px",
-                      padding: "20px",
-                      paddingBottom: 0,
-                      "& .content": {
-                        display: "flex",
-                        marginBottom: "16px",
+      <TabContext value={tab}>
+        <HeadingBar
+          style={{ mb: "28px", position: "relative", top: 0, zIndex: 1000 }}
+        >
+          {isFullHeader && (
+            <>
+              <BoxFlex>
+                <Stack flexDirection="row" alignItems="center">
+                  <Tooltip
+                    title={
+                      <div
+                        dangerouslySetInnerHTML={{ __html: inforRecruitment }}
+                      />
+                    }
+                    placement="right-start"
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          color: "#455570",
+                          backgroundColor: "#FDFDFD",
+                          fontSize: 13,
+                          border: "1px solid #E7E9ED",
+                          boxShadow:
+                            "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+                          borderRadius: "6px",
+                          fontWeight: 600,
+                          maxWidth: "540px",
+                          padding: "20px",
+                          paddingBottom: 0,
+                          "& .content": {
+                            display: "flex",
+                            marginBottom: "16px",
+                          },
+                          "& .content-title": {
+                            fontWeight: 500,
+                            minWidth: 140,
+                          },
+                        },
                       },
-                      "& .content-title": {
-                        fontWeight: 500,
-                        minWidth: 140,
-                      },
-                    },
-                  },
-                }}
-              >
-                <div>
-                  <NavGoBack
-                    sx={{
-                      marginTop: 0,
-                      padding: 0,
-                      color: '#172B4D',
-                      fontWeight: 700
                     }}
-                    link={PATH_DASHBOARD.dashboard}
-                    name={RecruitmentData?.name}
-                  ></NavGoBack>
-                </div>
-              </Tooltip>
+                  >
+                    <div>
+                      <NavGoBack
+                        sx={{
+                          marginTop: 0,
+                          padding: 0,
+                          color: "#172B4D",
+                          fontWeight: 700,
+                        }}
+                        link={PATH_DASHBOARD.dashboard}
+                        name={RecruitmentData?.name}
+                      ></NavGoBack>
+                    </div>
+                  </Tooltip>
 
-              <ButtonIcon
-                style={{
-                  marginLeft: '12px'
-                }}
-                icon={
-                  <Iconify
-                    icon={"ri:edit-2-fill"}
-                    width={20}
-                    height={20}
-                    color="#8A94A5"
+                  <ButtonIcon
+                    style={{
+                      marginLeft: "12px",
+                    }}
+                    icon={
+                      <Iconify
+                        icon={"ri:edit-2-fill"}
+                        width={20}
+                        height={20}
+                        color="#8A94A5"
+                      />
+                    }
                   />
-                }
-              />
 
-              <div>{DivRecruitmentDataProcessStatus(RecruitmentData?.processStatus)}</div>
-            </Stack>
-            <Stack flexDirection={"row"}>
-              <ButtonGray
-                variant="contained"
-                tittle="Xem tin tuyển dụng"
-                sx={{
-                  border: "1px solid #455570",
-                  fontSize: '12px',
-                  fontWeight: 600,
-                }}
-                // onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
-                icon={
-                  <Iconify
-                    icon={"ri:share-box-line"}
-                    width={20}
-                    height={20}
-                    color="#5C6A82"
-                    mr={1}
+                  <Box>
+                    {DivRecruitmentDataProcessStatus(
+                      RecruitmentData?.processStatus
+                    )}
+                  </Box>
+                </Stack>
+                <Stack flexDirection={"row"}>
+                  <ButtonGray
+                    variant="contained"
+                    tittle="Xem tin tuyển dụng"
+                    sx={{
+                      border: "1px solid #455570",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                    }}
+                    // onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
+                    icon={
+                      <Iconify
+                        icon={"ri:share-box-line"}
+                        width={20}
+                        height={20}
+                        color="#5C6A82"
+                        mr={1}
+                      />
+                    }
                   />
-                }
-              />
-            </Stack>
-          </BoxFlex>
-          <Box sx={{ width: "100%", typography: "body1", mb: 3, mt: 1 }}>
-            <Box>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-                sx={{
-                  "& .MuiTab-root": {
-                    color: '#8A94A5'
-                    // minHeight: "36px",
-                    // textTransform: "unset",
-                    // padding: "8px 12px",
-                  },
-                  "& .Mui-selected": {
-                    color: '#1976D2',
-                    fontWeight: 700
-                    // color: "white !important",
-                    // backgroundColor: "#455570",
-                    // borderRadius: "6px",
-                  },
-                  // "& .MuiTabs-indicator": {
-                  //   display: "none",
-                  // },
-                }}
-              >
-                <Tab
-                  label="ỨNG VIÊN"
-                  value="1"
-                  sx={{
-                    "&:not(:last-of-type)": {
-                      marginRight: "16px",
-                    },
-                  }}
-                />
-                <Tab label="LỊCH PHỎNG VẤN" value="2"/>
-              </TabList>
-            </Box>
-          </Box>
-          {value === "1" ? (
+                </Stack>
+              </BoxFlex>
+              <Box sx={{ width: "100%", typography: "body1", mb: 3, mt: 1 }}>
+                <Box>
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
+                    sx={{
+                      "& .MuiTab-root": {
+                        color: "#8A94A5",
+                        // minHeight: "36px",
+                        // textTransform: "unset",
+                        // padding: "8px 12px",
+                      },
+                      "& .Mui-selected": {
+                        color: "#1976D2",
+                        fontWeight: 700,
+                        // color: "white !important",
+                        // backgroundColor: "#455570",
+                        // borderRadius: "6px",
+                      },
+                      // "& .MuiTabs-indicator": {
+                      //   display: "none",
+                      // },
+                    }}
+                  >
+                    <Tab
+                      label="ỨNG VIÊN"
+                      value={1}
+                      sx={{
+                        "&:not(:last-of-type)": {
+                          marginRight: "16px",
+                        },
+                      }}
+                    />
+                    <Tab label="LỊCH PHỎNG VẤN" value={2} />
+                  </TabList>
+                </Box>
+              </Box>
+            </>
+          )}
+          {tab === 1 ? (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
                 <Box>
@@ -435,87 +599,120 @@ function RecruitmentPreviewItem() {
                     disableElevation
                     variant="contained"
                     aria-label="Disabled elevation buttons"
-                    sx={{ mx: 1, boxShadow: "none" }}
+                    sx={{ mr: 1, boxShadow: "none" }}
                   >
                     <Button
-                      startIcon={<DateIcon />}
+                      variant={"outlined"}
+                      startIcon={
+                        <Iconify
+                          icon={"charm:swap-horizontal"}
+                          sx={{
+                            width: 20,
+                            height: 20,
+                          }}
+                        />
+                      }
                       sx={{
-                        background: "#1976D2",
+                        background:
+                          viewModeDefault == 1 ? "#1976D2" : "#fdfdfd",
+                        color: viewModeDefault == 1 ? "#fdfdfd" : "#455570",
+                        borderColor:
+                          viewModeDefault == 1 ? "none" : "#D0D4DB !important",
                         borderRadius: "6px 0px 0px 6px",
                         height: "44px",
                         width: "52px",
                         "& .MuiButton-startIcon": { mr: 0 },
                       }}
+                      onClick={() => onChangeViewMode(1)}
                     />
                     <Button
-                      variant="outlined"
-                      startIcon={<MenuIcon />}
+                      variant={"outlined"}
+                      startIcon={
+                        <Iconify
+                          icon={"material-symbols:menu"}
+                          sx={{
+                            width: 20,
+                            height: 20,
+                          }}
+                        />
+                      }
                       sx={{
-                        borderColor: "#D0D4DB",
+                        background:
+                          viewModeDefault == 2 ? "#1976D2" : "#fdfdfd",
+                        color: viewModeDefault == 2 ? "#fdfdfd" : "#455570",
+                        borderColor:
+                          viewModeDefault == 2 ? "none" : "#D0D4DB !important",
                         borderRadius: "0 6px 6px 0",
                         height: "44px",
                         width: "52px",
-                        "&:hover": {
-                          background: "white",
-                          borderColor: "#D0D4DB",
-                        },
                         "& .MuiButton-startIcon": { mr: 0 },
                       }}
+                      onClick={() => onChangeViewMode(2)}
                     />
                   </ButtonGroup>
                 </Box>
 
-                <FormProvider methods={methods}>
-                  <RHFTextField
-                    name="searchKey"
-                    placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
-                    sx={{ minWidth: "510px" }}
-                    InputProps={{
-                      style: {
-                        background: '#F2F4F5',
-                        border: 'none'
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start" sx={{ ml: 1.5 }}>
-                          <Iconify
-                            icon={"eva:search-fill"}
-                            sx={{
-                              color: "text.disabled",
-                              width: 20,
-                              height: 20,
-                            }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </FormProvider>
-                <ButtonFilterStyle
-                  startIcon={
-                    <Iconify
-                      sx={{ height: "18px", width: "18px" }}
-                      icon="material-symbols:filter-alt-outline"
-                    />
-                  }
-                >
-                  Bộ lọc
-                </ButtonFilterStyle>
+                {children ?? (
+                  <>
+                    <FormProvider methods={methods}>
+                      <RHFTextField
+                        name="searchKey"
+                        placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
+                        sx={{ minWidth: "510px" }}
+                        InputProps={{
+                          style: {
+                            background: "#F2F4F5",
+                            border: "none",
+                          },
+                          startAdornment: (
+                            <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                              <Iconify
+                                icon={"eva:search-fill"}
+                                sx={{
+                                  color: "text.disabled",
+                                  width: 20,
+                                  height: 20,
+                                }}
+                              />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </FormProvider>
+                    <ButtonFilterStyle
+                      startIcon={
+                        <Iconify
+                          sx={{ height: "18px", width: "18px" }}
+                          icon="material-symbols:filter-alt-outline"
+                        />
+                      }
+                    >
+                      Bộ lọc
+                    </ButtonFilterStyle>
+                  </>
+                )}
               </Stack>
               <Stack flexDirection={"row"}>
-                <ButtonGroup variant="contained" aria-label="split button" sx={{
-                  boxShadow: "unset",
-                  '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-                    borderColor: "white"
-                  }, '& .MuiButtonGroup-grouped:hover': {
-                    opacity: 0.8
-                  }
-                }}>
-
-                  <Button style={{
-                    background: '#1976D2',
-                    padding: '12px 16px'
+                <ButtonGroup
+                  variant="contained"
+                  aria-label="split button"
+                  sx={{
+                    boxShadow: "unset",
+                    "& .MuiButtonGroup-grouped:not(:last-of-type)": {
+                      borderColor: "white",
+                    },
+                    "& .MuiButtonGroup-grouped:hover": {
+                      opacity: 0.8,
+                    },
                   }}
-                    onClick={() => setShowDialogStage(true)}>
+                >
+                  <Button
+                    style={{
+                      background: "#1976D2",
+                      padding: "12px 16px",
+                    }}
+                    onClick={() => setShowDialogStage(true)}
+                  >
                     <Iconify
                       icon={"material-symbols:add"}
                       width={20}
@@ -529,12 +726,17 @@ function RecruitmentPreviewItem() {
                     placement="bottom-start"
                     onClose={handleCloseGroup}
                     disableFocusListener
-                    disableHoverList ener
+                    disableHoverList
+                    ener
                     disableTouchListener
                     open={openGroup}
                     title={
                       <ClickAwayListener onClickAway={handleCloseGroup}>
-                        <MenuList autoFocusItem divider={true} disableGutters={true}>
+                        <MenuList
+                          autoFocusItem
+                          divider={true}
+                          disableGutters={true}
+                        >
                           <MenuItem>
                             <DownloadLineIcon />
                             <Typography ml={"12px"} variant={"textSize13600"}>
@@ -564,8 +766,8 @@ function RecruitmentPreviewItem() {
                       aria-haspopup="menu"
                       onClick={handleOpenGroup}
                       style={{
-                        background: '#1976D2',
-                        padding: '12px 16px'
+                        background: "#1976D2",
+                        padding: "12px 16px",
                       }}
                     >
                       <Iconify
@@ -577,52 +779,73 @@ function RecruitmentPreviewItem() {
                     </Button>
                   </LightTooltip>
                 </ButtonGroup>
-                <RecruitmentApplicantChooseStage data={RecruitmentData?.recruitmentPipeline?.recruitmentPipelineStates} show={showDialogStage} setShow={setShowDialogStage}
-                  setStage={setModelApplication} />
+                <RecruitmentApplicantChooseStage
+                  data={
+                    RecruitmentData?.recruitmentPipeline
+                      ?.recruitmentPipelineStates
+                  }
+                  show={showDialogStage}
+                  setShow={setShowDialogStage}
+                  setStage={setModelApplication}
+                />
               </Stack>
             </BoxFlex>
           ) : (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
                 <Box>
-                  <TabList
-                    onChange={handleChange}
-                    aria-label="lab API tabs example"
-                    sx={{
-                      "& .MuiTab-root": {
-                        minHeight: "36px",
-                        textTransform: "unset",
-                        padding: "8px 12px",
-                      },
-                      "& .Mui-selected": {
-                        color: "white !important",
-                        backgroundColor: "#455570",
-                        borderRadius: "6px",
-                      },
-                      "& .MuiTabs-indicator": {
-                        display: "none",
-                      },
-                    }}
+                  <ButtonGroup
+                    disableElevation
+                    variant="contained"
+                    aria-label="Disabled elevation buttons"
+                    sx={{ mx: 1, boxShadow: "none" }}
                   >
-                    <Tab
-                      label="Kanban"
-                      value="1"
+                    <Button
+                      startIcon={
+                        <Iconify
+                          icon={"charm:swap-horizontal"}
+                          sx={{
+                            width: 20,
+                            height: 20,
+                          }}
+                        />
+                      }
                       sx={{
-                        "&:not(:last-of-type)": {
-                          marginRight: "16px",
-                        },
+                        background: "#1976D2",
+                        borderRadius: "6px 0px 0px 6px",
+                        height: "44px",
+                        width: "52px",
+                        "& .MuiButton-startIcon": { mr: 0 },
                       }}
                     />
-                    <Tab label="List" value="" />
-                  </TabList>
+                    {/* <Button
+                      variant="outlined"
+                      startIcon={<MenuIcon />}
+                      sx={{
+                        borderColor: "#D0D4DB",
+                        borderRadius: "0 6px 6px 0",
+                        height: "44px",
+                        width: "52px",
+                        "&:hover": {
+                          background: "white",
+                          borderColor: "#D0D4DB",
+                        },
+                        "& .MuiButton-startIcon": { mr: 0 },
+                      }}
+                    /> */}
+                  </ButtonGroup>
                 </Box>
 
                 <FormProvider methods={methods}>
                   <RHFTextField
                     name="searchKey"
-                    placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
+                    placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
                     sx={{ minWidth: "510px" }}
                     InputProps={{
+                      style: {
+                        background: "#F2F4F5",
+                        border: "none",
+                      },
                       startAdornment: (
                         <InputAdornment position="start" sx={{ ml: 1.5 }}>
                           <Iconify
@@ -650,14 +873,26 @@ function RecruitmentPreviewItem() {
                 </ButtonFilterStyle>
               </Stack>
               <Stack flexDirection={"row"}>
-                <ButtonDS
-                  tittle={"Đặt lịch phỏng vấn"}
-                  type="submit"
+                <ButtonGroup
+                  variant="contained"
+                  aria-label="split button"
                   sx={{
-                    textTransform: "none",
-                    boxShadow: "none",
+                    boxShadow: "unset",
+                    "& .MuiButtonGroup-grouped:not(:last-of-type)": {
+                      borderColor: "white",
+                    },
+                    "& .MuiButtonGroup-grouped:hover": {
+                      opacity: 0.8,
+                    },
                   }}
-                  icon={
+                >
+                  <Button
+                    style={{
+                      background: "#1976D2",
+                      padding: "12px 16px",
+                    }}
+                    onClick={() => setShowDialogStage(true)}
+                  >
                     <Iconify
                       icon={"material-symbols:add"}
                       width={20}
@@ -665,15 +900,103 @@ function RecruitmentPreviewItem() {
                       color="#fff"
                       mr={1}
                     />
+                    Thêm ứng viên
+                  </Button>
+                  <LightTooltip
+                    placement="bottom-start"
+                    onClose={handleCloseGroup}
+                    disableFocusListener
+                    disableHoverList
+                    ener
+                    disableTouchListener
+                    open={openGroup}
+                    title={
+                      <ClickAwayListener onClickAway={handleCloseGroup}>
+                        <MenuList
+                          autoFocusItem
+                          divider={true}
+                          disableGutters={true}
+                        >
+                          <MenuItem>
+                            <DownloadLineIcon />
+                            <Typography ml={"12px"} variant={"textSize13600"}>
+                              Tải mẫu Excel
+                            </Typography>
+                          </MenuItem>
+                          <Divider />
+                          <MenuItem>
+                            <ImportLinkIcon sx={{ mr: "12px" }} />
+                            <Typography ml={"12px"} variant={"textSize13600"}>
+                              Import Excel
+                            </Typography>
+                          </MenuItem>
+                          <Divider />
+                          <MenuItem>
+                            <TeamLineIcon sx={{ mr: "12px" }} />
+                            <Typography ml={"12px"} variant={"textSize13600"}>
+                              Scan CV hàng loạt
+                            </Typography>
+                          </MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    }
+                  >
+                    <Button
+                      size="small"
+                      aria-haspopup="menu"
+                      onClick={handleOpenGroup}
+                      style={{
+                        background: "#1976D2",
+                        padding: "12px 16px",
+                      }}
+                    >
+                      <Iconify
+                        icon={"material-symbols:arrow-drop-down"}
+                        width={20}
+                        height={20}
+                        color="#fff"
+                      />
+                    </Button>
+                  </LightTooltip>
+                </ButtonGroup>
+                <RecruitmentApplicantChooseStage
+                  data={
+                    RecruitmentData?.recruitmentPipeline
+                      ?.recruitmentPipelineStates
                   }
+                  show={showDialogStage}
+                  setShow={setShowDialogStage}
+                  setStage={setModelApplication}
                 />
               </Stack>
             </BoxFlex>
           )}
+
+          <ButtonIcon
+            className="btn-collapse-header"
+            style={{}}
+            onClick={() => collapseHeader()}
+            icon={
+              <Iconify
+                icon={
+                  isFullHeader
+                    ? "material-symbols:arrow-drop-up"
+                    : "material-symbols:arrow-drop-down"
+                }
+                width={20}
+                height={20}
+                color="#5C6A82"
+              />
+            }
+          />
         </HeadingBar>
         <Container
           maxWidth={themeStretch ? false : "xl"}
-          sx={{ ...(smDown && { padding: 0 }) }}
+          sx={{
+            ...(smDown && { padding: 0 }),
+            position: "relative",
+            zIndex: 999,
+          }}
         >
           {/* <TabPanel value="1">
             "ha"
@@ -681,10 +1004,20 @@ function RecruitmentPreviewItem() {
           <TabPanel value="2">"hi"</TabPanel> */}
         </Container>
       </TabContext>
-      <RecruitmentApplicantCreate show={showModelCreate} setShow={setShowModelCreate} data={modelApplication}
-        setData={setModelApplication} />
+      <RecruitmentApplicantCreate
+        show={showModelCreate}
+        setShow={setShowModelCreate}
+        data={modelApplication}
+        setData={setModelApplication}
+      />
     </div>
   );
 }
 
+RecruitmentPreviewItem.propTypes = {
+  viewModeDefault: PropTypes.number,
+  onChangeViewMode: PropTypes.func,
+  tabDefault: PropTypes.number,
+  onChangeTab: PropTypes.func,
+};
 export default RecruitmentPreviewItem;

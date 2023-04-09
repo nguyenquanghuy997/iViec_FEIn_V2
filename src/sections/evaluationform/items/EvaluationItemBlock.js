@@ -18,6 +18,8 @@ import {
   AccordionSummary,
   Box,
   Divider,
+  IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -51,7 +53,7 @@ const EvaluationItemBlock = ({
         aria-controls={`panel${index}a-content`}
         id={`panel${index}a-header`}
       >
-        <BoxFlex style={{ marginBottom: 12 }}>
+        <BoxFlex style={{ marginBottom: 12, flexFlow: 'unset' }}>
           <CardFormItemTitleStyle className="card-item-title">
             {/* {isCheckbox && (
               <Checkbox
@@ -125,31 +127,32 @@ const EvaluationItemBlock = ({
                 />
                 {item?.numOfRecruitment == 0 && (
                   <>
-                    <ButtonIcon
-                      onClick={(e) => onOpenModel(e, item, "form")}
-                      sx={{
-                        marginRight: "16px",
-                      }}
-                      icon={
+                    <Tooltip title="Sửa">
+                      <IconButton
+                        style={{
+                          margin: '0 8px'
+                        }}
+                        onClick={(e) => onOpenModel(e, item, "form")}>
                         <Iconify
                           icon={"ri:edit-2-fill"}
                           width={16}
                           height={16}
                           color="#5C6A82"
                         />
-                      }
-                    />
-                    <ButtonIcon
-                      onClick={(e) => onOpenModel(e, item, "delete")}
-                      icon={
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Xóa">
+                      <IconButton
+                        onClick={(e) => onOpenModel(e, item, "delete")}>
                         <Iconify
                           icon={"material-symbols:delete-outline-rounded"}
                           width={16}
                           height={16}
                           color="#5C6A82"
                         />
-                      }
-                    />
+                      </IconButton>
+                    </Tooltip>
                   </>
                 )}
               </>

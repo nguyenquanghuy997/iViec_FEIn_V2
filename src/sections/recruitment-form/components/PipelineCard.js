@@ -24,7 +24,6 @@ const useStyles = makeStyles(() => ({
 const BoxItemStyle = styled(Box)(({theme, borderColor = '#B9BFC9'}) => ({
     '&.card-pipeline-item': {
         marginBottom: theme.spacing(2),
-        marginRight: theme.spacing(2),
         padding: theme.spacing(2, 2),
         display: 'flex',
         alignItems: 'center',

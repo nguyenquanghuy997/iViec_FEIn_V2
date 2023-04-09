@@ -11,7 +11,7 @@ import "swiper/swiper-bundle.css";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import LoadingScreen from "@/components/LoadingScreen";
 import {useSnackbar} from "notistack";
-import {isEmpty, get} from "lodash";
+import {get} from "lodash";
 import { DOMAIN_SERVER_API } from "@/config";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
@@ -85,7 +85,7 @@ const BusinessArea = ({ data }) => {
                     handleChange={handleChangeChecked}
                     checked={checked}
                 />
-                {!isEmpty(data) ? (
+                {get(data, 'organizationBusiness.organizationBusinessDatas')  ? (
                     <Box
                         style={{
                             color: "white",
@@ -100,7 +100,7 @@ const BusinessArea = ({ data }) => {
                         </Typography>
                         <SliderStyle>
                             <Swiper id="swiper" virtual slidesPerView={4} spaceBetween={50} pagination>
-                                {get(data, 'organizationBusiness.organizationBusinessDatas').map((item, index) => (
+                                {get(data, 'organizationBusiness.organizationBusinessDatas') && get(data, 'organizationBusiness.organizationBusinessDatas').map((item, index) => (
                                         <SwiperSlide key={`slide-${index}`} style={{listStyle: "none"}}>
                                             <div className="slide" style={{minHeight: "220px"}}>
                                                 <hr style={{border: "3px solid #FF9800", width: "40px", borderRadius: "6px", marginBottom: "8px"}}/>
@@ -117,7 +117,7 @@ const BusinessArea = ({ data }) => {
                             </Swiper>
                         </SliderStyle>
                     </Box>
-                ) : <EmptyValue text={"Hiện chưa nội dung Lĩnh vực kinh doanh"}/>}
+                ) : <EmptyValue text={"Hiện chưa có nội dung Lĩnh vực kinh doanh"}/>}
             </Box>
             {open && (
                 <Drawer
