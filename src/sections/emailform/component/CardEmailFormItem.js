@@ -21,6 +21,8 @@ import {
   Box,
   Checkbox,
   Divider,
+  IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -36,7 +38,9 @@ const CardEmailFormItem = ({
   onOpenConfirmDelete,
   onOpenActiveModal,
   onOpenFormModal,
+  canEdit
 }) => {
+
   return (
     <CardFormItemStyle className="card-item" expanded={expanded}>
       <AccordionSummary
@@ -102,50 +106,57 @@ const CardEmailFormItem = ({
             </CardFormItemContentStyle>
           </BoxFlex>
           <BoxFlex>
-            <ButtonIcon
-              onClick={() => onOpenActiveModal("status")}
-              sx={{
-                backgroundColor: "unset !important",
-                cursor: "pointer",
-                padding:0
-              }}
-              icon={
-                item.isActive ? (
-                  <ActionSwitchCheckedIcon />
-                ) : (
-                  <ActionSwitchUnCheckedIcon />
-                )
-              }
-            />
-            <ButtonIcon
-              onClick={onOpenFormModal}
-              sx={{
-                marginRight: "16px",
-              }}
-              icon={
-                <Iconify
-                  icon={"ri:edit-2-fill"}
-                  width={16}
-                  height={16}
-                  color="#5C6A82"
+            {
+              canEdit && <>
+                <ButtonIcon
+                  onClick={() => onOpenActiveModal("status")}
+                  sx={{
+                    backgroundColor: "unset !important",
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                  icon={
+                    item.isActive ? (
+                      <ActionSwitchCheckedIcon />
+                    ) : (
+                      <ActionSwitchUnCheckedIcon />
+                    )
+                  }
                 />
-              }
-            />
-            <ButtonIcon
-              onClick={onOpenConfirmDelete}
-              icon={
-                <Iconify
-                  icon={"material-symbols:delete-outline-rounded"}
-                  width={16}
-                  height={16}
-                  color="#5C6A82"
-                />
-              }
-            />
+
+                <Tooltip title="Sửa">
+                  <IconButton
+                    style={{
+                      margin: '0 8px'
+                    }}
+                    onClick={onOpenFormModal}>
+                    <Iconify
+                      icon={"ri:edit-2-fill"}
+                      width={16}
+                      height={16}
+                      color="#5C6A82"
+                    />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Xóa">
+                  <IconButton
+                    onClick={onOpenConfirmDelete}
+                  >
+                    <Iconify
+                      icon={"material-symbols:delete-outline-rounded"}
+                      width={16}
+                      height={16}
+                      color="#5C6A82"
+                    />
+                  </IconButton>
+                </Tooltip>
+              </>
+            }
           </BoxFlex>
         </BoxFlex>
       </AccordionSummary>
-      <AccordionDetails sx={{mt: '12px !important'}}>
+      <AccordionDetails sx={{ mt: '12px !important' }}>
         <Divider />
         <Typography fontWeight={600} fontSize={14} color={'#172B4D'} mt={2.5}>Tiêu chí đánh giá</Typography>
         <BoxFlex>

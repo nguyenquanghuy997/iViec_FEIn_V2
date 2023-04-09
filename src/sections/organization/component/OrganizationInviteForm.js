@@ -1,5 +1,5 @@
 import React, {memo, useRef, useState} from "react";
-import {Box, DialogContent, Divider, IconButton, Tab, Tabs, Typography} from "@mui/material";
+import {Box, Dialog, DialogActions, DialogContent, Divider, IconButton, Tab, Tabs, Typography} from "@mui/material";
 import {FormProvider, RHFSelect, RHFTextField} from "@/components/hook-form";
 import {useFieldArray, useForm} from "react-hook-form";
 import {AddIcon, DeleteIcon} from "@/assets/ActionIcon";
@@ -12,7 +12,7 @@ import {
     useInviteUserMutation,
     useResendEmailMutation
 } from "@/sections/organization/override/OverrideOrganizationSlice";
-import ConfirmModal, {DialogActionsStyle, DialogStyle, MuiDialogTitle} from "@/components/BaseComponents/ConfirmModal";
+import ConfirmModal, {MuiDialogTitle} from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {LabelStyle} from "@/components/hook-form/style";
 import Iconify from "@/components/Iconify";
@@ -166,17 +166,27 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
         }
     }
 
-    const {data: {items: ListRoleGroup = []} = {}, isLoading} = useGetRoleGroupListQuery();
-    if (isLoading) return <div>loading...</div>;
+    const {data: {items: ListRoleGroup = []} = {}} = useGetRoleGroupListQuery();
 
     return (
-        <DialogStyle
+        <Dialog
             open={isOpenInviteForm}
             onClose={onClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
             className="dialog-confirm"
-            maxWidth={"1000px"}
+            maxWidth={"md"}
+            sx={{
+                boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+                borderRadius: '6px',
+                minHeight: '600px',
+                "& .MuiDialog-container": {
+                    "& .MuiPaper-root": {
+                        borderRadius: '6px',
+                        width: "100%",
+                    },
+                },
+            }}
             scroll={"paper"}
         >
             <MuiDialogTitle onClose={onClose}>
@@ -243,13 +253,11 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                             justifyContent: 'center',
                             alignItems: 'center',
                             flexDirection: 'column',
-                            px: 3,
-                            py: 0
                         }}>
                             <Box className="box-content-wrapper" sx={{width: '100%'}}>
                                 {invitesResult?.map((item, index) => {
                                     const userItem = dataSubmitRef.current?.find((field) => field.email === item?.email);
-                                    const roleGroup = ListRoleGroup.find(role => role.id === userItem.roleGroupId);
+                                    const roleGroup = ListRoleGroup.find(role => role.id === userItem?.roleGroupId);
                                     const organizations = ListOrganization.filter(organization => userItem?.organizationIds?.includes(organization?.id));
                                     return (
                                         <OrganizationInviteResultCard
@@ -273,8 +281,6 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 flexDirection: 'column',
-                                px: 3,
-                                py: 0
                             }}>
                                 <Box className="box-content-wrapper" sx={{width: '100%'}}>
                                     {fields.map((item, index) => {
@@ -386,11 +392,18 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                     />
                                 </Box>
                             </DialogContent>
-                            <DialogActionsStyle sx={{padding: 2}}>
+                            <DialogActions sx={{
+                                minHeight: '68px',
+                                borderTop: '1px solid #E7E9ED',
+                                '& .btn-actions': {
+                                height: '36px',
+                                },
+                            }}>
                                 <MuiButton
                                     title={"Hủy"}
                                     color={"basic"}
                                     onClick={onClose}
+                                    className={'btn-actions btn-confirm'}
                                     sx={{
                                         "&:hover": {
                                             boxShadow: 'none',
@@ -400,10 +413,11 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                 />
                                 <MuiButton
                                     title={"Gửi lời mời"}
+                                    className={'btn-actions btn-confirm'}
                                     disabled={!isValid || fields.length === 0}
                                     type={"submit"}
                                 />
-                            </DialogActionsStyle>
+                            </DialogActions>
                         </FormProvider>
                     )
                 }
@@ -427,6 +441,13 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                     <ConfirmModal
                         data={itemConfirm}
                         title={"Xác nhận xóa lời mời"}
+                        titleProps={{
+                            sx: {
+                                color: '#E53935',
+                                fontWeight: 600,
+                                marginBottom: 1
+                            }
+                        }}
                         icon={<AlertIcon />}
                         subtitle={<>Bạn có chắc chắn muốn xóa lời mời tới<span>{itemConfirm?.email}</span>?</>}
                         onClose={handleCloseConfirmDelete}
@@ -448,7 +469,11 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                         data={itemConfirm}
                         title={"Xác nhận gửi yêu cầu active tài khoản"}
                         titleProps={{
-                            color: '#1976D2'
+                            sx: {
+                                color: '#1976D2',
+                                fontWeight: 600,
+                                marginBottom: 1
+                            }
                         }}
                         icon={<EmailInviteIcon width={55} height={45} fill={"#1976D2"} />}
                         subtitle={<>Bạn có chắc chắn muốn gửi yêu cầu active tài khoản tới<span>{itemConfirm?.email}</span>?</>}
@@ -464,7 +489,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                     />
                 )
             }
-        </DialogStyle>
+        </Dialog>
     )
 }
 

@@ -45,6 +45,8 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
 import { get } from "lodash";
+import useRole from "@/hooks/useRole";
+import { PERMISSIONS } from "@/config";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -62,6 +64,11 @@ export const RecruitmentItem = () => {
   // delete & close recruitment
   const [closeRecruitments] = useCloseRecruitmentMutation();
   const [deleteRecruitments] = useDeleteRecruitmentMutation();
+
+  // permisions
+  const { canAccess } = useRole();
+  const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_JOB), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB), []);
 
   // api get list
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
@@ -85,7 +92,7 @@ export const RecruitmentItem = () => {
         title: "Tin tuyển dụng",
         fixed: "left",
         width: "300px",
-        render: (text) => <span style={{fontWeight: 500}}>{text}</span>,
+        render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
       },
       {
         dataIndex: "jobPosition",
@@ -524,7 +531,7 @@ export const RecruitmentItem = () => {
         onOpenFilterForm={handleOpenFilterForm}
         onCloseFilterForm={handleCloseFilterForm}
       /> */}
-      
+
       <View>
         <DynamicColumnsTable
           columns={columns}
@@ -540,7 +547,7 @@ export const RecruitmentItem = () => {
           useGetColumnsFunc={useGetListColumnsQuery}
           useUpdateColumnsFunc={useUpdateListColumnsMutation}
           searchInside={false}
-          createText="Đăng tin tuyển dụng"
+          createText={canEdit && "Đăng tin tuyển dụng"}
           onClickCreate={() => {
             handleCheckNavigate();
           }}
@@ -664,7 +671,7 @@ export const RecruitmentItem = () => {
               </Typography>
             ),
           },
-          {
+          canView && {
             key: "detail",
             title: "Chi tiết",
             onClick: () =>
@@ -672,7 +679,7 @@ export const RecruitmentItem = () => {
             startIcon: <ForwardLightIcon />,
             sx: { padding: "8px 12px" },
           },
-          {
+          canView && {
             key: "preview",
             title: "Xem tin tuyển dụng",
             onClick: () => handleOpenModalState({ openPreview: true }),
@@ -680,7 +687,7 @@ export const RecruitmentItem = () => {
             startIcon: <ExpandPreviewIcon />,
             sx: { padding: "8px 12px" },
           },
-          {
+          canEdit && {
             key: "close",
             title: "Đóng tin",
             onClick: () => handleOpenModalState({ openClose: true }),
@@ -690,7 +697,7 @@ export const RecruitmentItem = () => {
               padding: "8px 12px",
             },
           },
-          {
+          canEdit && {
             key: "edit",
             onClick: () =>
               router.push(
@@ -699,13 +706,13 @@ export const RecruitmentItem = () => {
             color: "basic",
             icon: <EditIcon />,
           },
-          {
+          (canView || canEdit) && {
             key: "excel",
             onClick: () => handleExportExcel(itemSelected),
             color: "basic",
             icon: <ExcelIcon />,
           },
-          {
+          canEdit && {
             key: "copy",
             onClick: () =>
               router.push({
@@ -718,7 +725,7 @@ export const RecruitmentItem = () => {
             color: "basic",
             icon: <CopyIcon />,
           },
-          {
+          canEdit && {
             key: "delete",
             onClick: () => handleOpenModalState({ openDelete: true }),
             color: "basic",

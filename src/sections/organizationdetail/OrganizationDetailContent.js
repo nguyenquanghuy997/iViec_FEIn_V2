@@ -353,13 +353,14 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
             icon={<AlertIcon/>}
             data={selected}
             onSubmit={handleDelete}
-            title={<Typography sx={{
-              textAlign: 'center',
-              width: '100%',
-              fontSize: style.FONT_BASE,
-              fontWeight: style.FONT_SEMIBOLD,
-              mb: 2,
-            }}>Xác nhận xóa người dùng</Typography>}
+            title={'Xác nhận xóa người dùng'}
+            titleProps={{
+              sx: {
+                color: style.COLOR_TEXT_DANGER,
+                fontWeight: 600,
+                marginBottom: 1
+              }
+            }}
             subtitle={
               selected.length > 1 ?
                   (
@@ -389,19 +390,14 @@ const OrganizationDetailContent = ({organization, ListUser, ListOrganization}) =
             icon={selectedStatus ? <UnCheckedSwitchIcon/> : <CheckedSwitchIcon/>}
             data={selected}
             onSubmit={handleActive}
-            title={
-              <Typography
-                  sx={{
-                    textAlign: 'center',
-                    width: '100%',
-                    fontSize: style.FONT_BASE,
-                    fontWeight: style.FONT_SEMIBOLD,
-                    color: selected.every(item => item.isActive === true) ? style.COLOR_TEXT_DANGER : style.COLOR_PRIMARY,
-                    mb: 2
-                  }}>
-                {selected.every(item => item.isActive === true) ? "Tắt trạng thái hoạt động cho người dùng" : "Bật trạng thái hoạt động cho người dùng"}
-              </Typography>
-            }
+            title={selected.every(item => item.isActive === true) ? "Tắt trạng thái hoạt động cho người dùng" : "Bật trạng thái hoạt động cho người dùng"}
+            titleProps={{
+              sx: {
+                color: selectedStatus ? style.COLOR_TEXT_DANGER : style.COLOR_PRIMARY,
+                fontWeight: 600,
+                marginBottom: 1
+              }
+            }}
             subtitle={
               selected.length > 1 ?
                   (

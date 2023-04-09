@@ -260,7 +260,7 @@ export const RoleContainer = () => {
           setItemSelected={setItemSelected}
           // useGetColumnsFunc={useGetListColumnsQuery}
           // useUpdateColumnsFunc={useUpdateListColumnsMutation}
-          createText="Thêm vai trò"
+          createText={canEdit && "Thêm vai trò"}
           onClickCreate={() => {
             setOpen(true);
           }}

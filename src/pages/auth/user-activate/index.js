@@ -11,13 +11,18 @@ import UserActiveFailure from "@/sections/auth/user-activate/UserActiveFailure";
 import {Box, Stack} from "@mui/material";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
+import LoadingScreen from "@/components/LoadingScreen";
+import LogoOnlyLayout from "@/layouts/LogoOnlyLayout";
 
-const UserActivePage = () => {
+UserActivePage.getLayout = function getLayout(pageProps, page) {
+  return <LogoOnlyLayout {...pageProps}>{page}</LogoOnlyLayout>
+}
+function UserActivePage() {
   const [statusActiveUser, setStatusActiveUser] = useState(false);
   const router = useRouter();
   const {query, asPath} = router;
   const {USER_NAME, OTPCode, SetPassword} = query;
-  const [confirmEmail] = useLazyConfirmEmailQuery();
+  const [confirmEmail, { isLoading }] = useLazyConfirmEmailQuery();
 
   const [, queryString = ""] = asPath.split("?");
 
@@ -52,6 +57,10 @@ const UserActivePage = () => {
     fetchConfirmEmail();
   }, [SetPassword, USER_NAME, OTPCode]);
 
+  if (isLoading) {
+    return <LoadingScreen />
+  }
+
   return (
       <GuestGuard>
         <Page
@@ -83,6 +92,6 @@ const UserActivePage = () => {
         </Page>
       </GuestGuard>
   );
-};
+}
 
 export default UserActivePage;

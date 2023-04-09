@@ -53,14 +53,14 @@ const OrganizationBottomNav = ({
                     {
                       status ? (
                           <>
-                            <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
+                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
                               <ActionSwitchCheckedIcon/>
                             </IconButton>
                             <Typography variant="body2" sx={{ color: '#388E3C', fontSize: 13 }}>Đang hoạt động</Typography>
                           </>
                       ) : (
                           <>
-                            <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
+                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
                               <ActionSwitchUnCheckedIcon />
                             </IconButton>
                             <Typography variant="body2" sx={{ color: '#5C6A82', fontSize: 13 }}>Không hoạt động</Typography>
@@ -74,14 +74,14 @@ const OrganizationBottomNav = ({
                     {
                       status ? (
                           <>
-                            <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
+                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
                               <ActionSwitchCheckedIcon/>
                             </IconButton>
                             <Typography variant="body2" sx={{ color: '#388E3C', fontSize: 13 }}>Đang hoạt động</Typography>
                           </>
                       ) : (
                           <>
-                            <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
+                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
                               <ActionSwitchUnCheckedIcon/>
                             </IconButton>
                             <Typography variant="body2" sx={{ color: '#5C6A82', fontSize: 13 }}>Không hoạt động</Typography>
@@ -93,17 +93,17 @@ const OrganizationBottomNav = ({
               {
                   selectedList.length === 1 && (
                       <Box sx={{ ml: 2 }}>
-                        <IconButton size='small' sx={{color: '#8A94A5', mx: 1}} onClick={() => handleOpenFormWithCurrentNode(organization)}>
+                        <IconButton disableRipple size='small' sx={{color: '#8A94A5', mx: 1}} onClick={() => handleOpenFormWithCurrentNode(organization)}>
                           <EditIcon/>
                         </IconButton>
-                        <IconButton size='small' sx={{color: '#1976D2', mx: 1}} onClick={() => handleShowDelete(organization)}>
+                        <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 1}} onClick={() => handleShowDelete(organization)}>
                           <DeleteIcon/>
                         </IconButton>
                       </Box>
                   )
               }
               {selectedList.length > 1 &&
-                  <IconButton size='small' sx={{color: '#1976D2', mx: 2}} onClick={handleShowMultipleDelete}>
+                  <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 2}} onClick={handleShowMultipleDelete}>
                     <DeleteIcon/>
                   </IconButton>}
             </Stack>
