@@ -29,7 +29,8 @@ export const EvaluationAddModal = ({
   // form
     // form
     const Schema = Yup.object().shape({
-      name: Yup.string().required("Chưa nhập tên tiêu chí"),
+      name: Yup.string().required("Chưa nhập tên tiêu chí").max(50, 'Độ dài không được quá 50 ký tự'),
+      des: Yup.string().max(255, 'Độ dài không được quá 255 ký tự'),
     });
 
   const methodss = useForm({
@@ -102,7 +103,7 @@ export const EvaluationAddModal = ({
               <RHFTextField
                 name={"name"}
                 placeholder="Nhập tên tiêu chí"
-                maxLength={150}
+                maxLength={50}
               />
             </View>
             <View mb={8}>

@@ -17,6 +17,9 @@ import {
 } from "@/sections/approve-process/ApproveProcessSlice";
 import { useSnackbar } from "notistack";
 import { GreenSwitch } from "@/utils/cssStyles";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
+import { PERMISSIONS } from "@/config";
 
 
 const SwitchForm = ({ name, handleChange, style, value, ...other }) => {
@@ -47,6 +50,11 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
   const [removeItem] = useDeleteApproveProcessMutation();
   const [updateItem] = useUpdateApproveProcessMutation();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { canAccess } = useRole();
+  const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_APPR_PROCESS), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_APPR_PROCESS), []);
+
   const handleMouseOver = () => {
     setHovered(true);
   };
@@ -143,32 +151,41 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
             </Typography>
           </Grid>
           <Grid mt={2}>
-            <SwitchForm
-              name={approveProcess.id}
-              value={approveProcess.isAvailable}
-              handleChange={() => setOpenActive(!openActive)}
-            />
+            {
+              canEdit && <SwitchForm
+                name={approveProcess.id}
+                value={approveProcess.isAvailable}
+                handleChange={() => setOpenActive(!openActive)}
+              />
+            }
+
             <ApproveProcessDialog open={openActive}
               onClose={() => setOpenActive(!openActive)}
               onAccept={() => handleActiveClose(approveProcess.id)}
               content={approveProcess.name}
               type={approveProcess.isAvailable ? 'approveProcessActive' : 'approveProcessDeActive'} />
             {hovered && <>
-              <Tooltip title="Xem" onClick={() => setOpenModelView(true)}>
-                <IconButton>
-                  <PreviewIcon width={16} height={16} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Chỉnh sửa" onClick={handleEdit}>
-                <IconButton>
-                  <EditIcon width={16} height={16} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Xóa" onClick={() => setOpen(!open)}>
-                <IconButton>
-                  <DeleteIconGrey width={16} height={16} />
-                </IconButton>
-              </Tooltip>
+              {
+                canView && <Tooltip title="Xem" onClick={() => setOpenModelView(true)}>
+                  <IconButton>
+                    <PreviewIcon width={16} height={16} />
+                  </IconButton>
+                </Tooltip>
+              }
+              {
+                canEdit && <Tooltip title="Chỉnh sửa" onClick={handleEdit}>
+                  <IconButton>
+                    <EditIcon width={16} height={16} />
+                  </IconButton>
+                </Tooltip>
+              }
+              {
+                canEdit && <Tooltip title="Xóa" onClick={() => setOpen(!open)}>
+                  <IconButton>
+                    <DeleteIconGrey width={16} height={16} />
+                  </IconButton>
+                </Tooltip>
+              }
             </>}
             <ApproveProcessDialog open={open} onAccept={() => handleClose(approveProcess.id)}
               onClose={() => setOpen(!open)}
@@ -194,6 +211,10 @@ const ApproveProcessCard = ({ type, approveProcesses, color, title }) => {
   const [data, setData] = useState(null);
 
   const [showForm, setShowForm] = useState(false);
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_APPR_PROCESS), []);
+
   return (<Box>
     <Grid container
       direction="row"
@@ -246,25 +267,27 @@ const ApproveProcessCard = ({ type, approveProcesses, color, title }) => {
           }
           <Grid container>
             <Grid item>
-              <ButtonDS
-                tittle={"Thêm quy trình"}
-                onClick={() =>
-                  setShowForm(true)
-                }
-                size="large"
-                sx={{
-                  fontSize: "14px"
-                }}
-                icon={
-                  <Iconify
-                    icon={"material-symbols:add"}
-                    width={20}
-                    height={20}
-                    color="#fff"
-                    mr={1}
-                  />
-                }
-              />
+              {
+                canEdit && <ButtonDS
+                  tittle={"Thêm quy trình"}
+                  onClick={() =>
+                    setShowForm(true)
+                  }
+                  size="large"
+                  sx={{
+                    fontSize: "14px"
+                  }}
+                  icon={
+                    <Iconify
+                      icon={"material-symbols:add"}
+                      width={20}
+                      height={20}
+                      color="#fff"
+                      mr={1}
+                    />
+                  }
+                />
+              }
               <ApproveProcessFormModal type={type} data={data} setData={setData} title={title}
                 show={showForm} setShow={setShowForm} />
             </Grid>

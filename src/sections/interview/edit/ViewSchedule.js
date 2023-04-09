@@ -1,14 +1,21 @@
 import { EditIcon } from "@/assets/ActionIcon";
 import { ButtonDS } from "@/components/DesignSystem";
+import { PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
+import useRole from "@/hooks/useRole";
 import { useGetDetailCalendarsQuery } from "@/sections/interview/InterviewSlice";
 import { Divider, Typography, Box, CardContent } from "@mui/material";
+import { useMemo } from "react";
 
 const ViewSchedule = ({ id, check, handleClick, handleClickDialog }) => {
   const { data: DetailData } = useGetDetailCalendarsQuery({
     BookingCalendarId: id,
   });
   const { user } = useAuth()
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
+
   return (
     <Box
       key={DetailData?.id}
@@ -84,35 +91,38 @@ const ViewSchedule = ({ id, check, handleClick, handleClickDialog }) => {
           alignItems: "center",
         }}
       >
-        <div
-          style={{ cursor: "pointer" }}
-          onClick={() => handleClick(DetailData)}
-        >
-          <EditIcon width={12} height={12} />
-        </div>
-          <ButtonDS
+        {
+          canEdit && <div
+            style={{ cursor: "pointer" }}
+            onClick={() => handleClick(DetailData)}
+          >
+            <EditIcon width={12} height={12} />
+          </div>
+        }
+
+        <ButtonDS
           onClick=""
-            tittle="Tham gia"
-            href={
-              "phong-van.html?DisplayName=" +
-              user?.firstName +
-              "&&Email=" +
-              user?.email +
-              "&&RoomName=" +
-              DetailData?.id +
-              "&&Role=1"
-            }
-            sx={{
-              fontSize: '12px',
-              lineHeight: '18px',
-              width: 'max-content',
-              padding: '6px 10px',
-              bgcolor: "#388E3C",
-              "&:hover": {
-                backgroundColor: "#43A047 !important",
-              },
-            }}
-          />
+          tittle="Tham gia"
+          href={
+            "phong-van.html?DisplayName=" +
+            user?.firstName +
+            "&&Email=" +
+            user?.email +
+            "&&RoomName=" +
+            DetailData?.id +
+            "&&Role=1"
+          }
+          sx={{
+            fontSize: '12px',
+            lineHeight: '18px',
+            width: 'max-content',
+            padding: '6px 10px',
+            bgcolor: "#388E3C",
+            "&:hover": {
+              backgroundColor: "#43A047 !important",
+            },
+          }}
+        />
         {check ? (
           <ButtonDS
             tittle="Tham gia"
