@@ -18,6 +18,9 @@ import React, { useState } from "react";
 import { checkSameValue } from "@/utils/formatString";
 import PipelineDeleteModal from "../modals/PipelineDeleteModal";
 import { PipelineFormModal } from "../modals";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
+import { PERMISSIONS } from "@/config";
 
 const PipelineBottomNav = ({
   open,
@@ -28,6 +31,10 @@ const PipelineBottomNav = ({
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
+
+  const { canAccess } = useRole();
+  // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
 
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
@@ -51,11 +58,11 @@ const PipelineBottomNav = ({
   let ids = itemSelected.map((p) => p.id);
   let itemApply = itemSelected.map((p) => p.recruitmentAppliedCount);
   function checkSameApply(arr) {
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] > 0 ) {
-          return false;
-        }
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > 0) {
+        return false;
       }
+    }
     return true;
   }
   return (
@@ -75,76 +82,76 @@ const PipelineBottomNav = ({
           }}
         >
           <Stack flexDirection="row" alignItems="center">
-            {itemSelected[0]?.isDefault == false && checkSameValue(isDefault) &&(<>
-            {checkSameValue(item) && (
-              <>
-                {item.includes(true) ? (
-                  <>
-                    <ButtonIcon
-                      onClick={() => handleShowConfirmMultiple("status")}
-                      sx={{
-                        backgroundColor: "unset !important",
-                      }}
-                      icon={<ActionSwitchCheckedIcon />}
+            {itemSelected[0]?.isDefault == false && checkSameValue(isDefault) && (<>
+              {checkSameValue(item) && (
+                <>
+                  {item.includes(true) ? (
+                    <>
+                      <ButtonIcon
+                        onClick={() => handleShowConfirmMultiple("status")}
+                        sx={{
+                          backgroundColor: "unset !important",
+                        }}
+                        icon={<ActionSwitchCheckedIcon />}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#388E3C", fontSize: 13 }}
+                      >
+                        Đang hoạt động
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      <ButtonIcon
+                        onClick={() => handleShowConfirmMultiple("status")}
+                        sx={{
+                          backgroundColor: "unset !important",
+                        }}
+                        icon={<ActionSwitchUnCheckedIcon />}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#5C6A82", fontSize: 13 }}
+                      >
+                        Không hoạt động
+                      </Typography>
+                    </>
+                  )}
+                </>
+              )}
+              {itemSelected.length === 1 && itemSelected[0]?.recruitmentAppliedCount == 0 && canEdit && (
+                <ButtonIcon
+                  sx={{
+                    marginLeft: "16px",
+                  }}
+                  onClick={() => handleShowConfirmMultiple("edit")}
+                  icon={
+                    <Iconify
+                      icon={"ri:edit-2-fill"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
                     />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "#388E3C", fontSize: 13 }}
-                    >
-                      Đang hoạt động
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <ButtonIcon
-                      onClick={() => handleShowConfirmMultiple("status")}
-                      sx={{
-                        backgroundColor: "unset !important",
-                      }}
-                      icon={<ActionSwitchUnCheckedIcon />}
+                  }
+                />
+              )}
+              {checkSameApply(itemApply) && canEdit && (
+                <ButtonIcon
+                  sx={{
+                    marginLeft: "16px",
+                  }}
+                  onClick={() => handleShowConfirmMultiple("delete")}
+                  icon={
+                    <Iconify
+                      icon={"material-symbols:delete-outline-rounded"}
+                      width={20}
+                      height={20}
+                      color="#D32F2F"
                     />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "#5C6A82", fontSize: 13 }}
-                    >
-                      Không hoạt động
-                    </Typography>
-                  </>
-                )}
-              </>
-            )}
-             {itemSelected.length === 1 && itemSelected[0]?.recruitmentAppliedCount == 0 && (
-              <ButtonIcon
-                sx={{
-                  marginLeft: "16px",
-                }}
-                onClick={() => handleShowConfirmMultiple("edit")}
-                icon={
-                  <Iconify
-                    icon={"ri:edit-2-fill"}
-                    width={20}
-                    height={20}
-                    color="#5C6A82"
-                  />
-                }
-              />
-            )}
-            {checkSameApply(itemApply) && (
-              <ButtonIcon
-                sx={{
-                  marginLeft: "16px",
-                }}
-                onClick={() => handleShowConfirmMultiple("delete")}
-                icon={
-                  <Iconify
-                    icon={"material-symbols:delete-outline-rounded"}
-                    width={20}
-                    height={20}
-                    color="#D32F2F"
-                  />
-                }
-              />
-            )}
+                  }
+                />
+              )}
             </>
             )}
           </Stack>
