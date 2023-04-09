@@ -1,9 +1,12 @@
+import { PERMISSIONS } from "@/config";
 import DetailDialog from "./edit/DetailDialog";
 import EditForm from "./edit/EditForm";
 import ViewSchedule from "./edit/ViewSchedule";
 import CloseIcon from "@/assets/CloseIcon";
+import useRole from "@/hooks/useRole";
 import { useGetCalendarQuery } from "@/sections/interview/InterviewSlice";
 import { Typography, Box, Card, CardContent } from "@mui/material";
+import { useMemo } from "react";
 import { useState } from "react";
 
 export default function InterviewSchedule() {
@@ -14,7 +17,10 @@ export default function InterviewSchedule() {
   const [itemDialog, setItemDialog] = useState({});
   
   const [openDialog, setOpenDialog] = useState(false);
-  
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
+
   const handleClick = (data) => {
     setOpenForm(true);
     setItem(data);
@@ -69,7 +75,7 @@ export default function InterviewSchedule() {
           setOpen={setOpenForm}
         />
       )}
-      {openDialog && (
+      {canEdit && openDialog && (
         <DetailDialog
           subheader={<CloseIcon/>}
           title="Chi tiết lịch phỏng vấn"

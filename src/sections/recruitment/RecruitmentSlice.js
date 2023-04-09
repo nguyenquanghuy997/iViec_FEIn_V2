@@ -144,7 +144,6 @@ export const {
   useGetRecruitmentByIdQuery,
   useGetRecruitmentBySlugQuery,
   useCreateApplicantRecruitmentMutation,
-  useLazyGetRecruitmentsQuery,
   useGetRecruitmentsQuery,
   useCreateRecruitmentMutation,
   useUpdateRecruitmentOfficialMutation,

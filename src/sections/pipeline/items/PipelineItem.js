@@ -17,8 +17,9 @@ import { useRouter } from "next/router";
 import { useState, useMemo } from "react";
 import useAuth from "@/hooks/useAuth";
 import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
-import { TBL_FILTER_TYPE } from "@/config";
+import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
 import { LIST_STATUS, LIST_STEP_RECRUITMENT } from "@/utils/formatString";
+import useRole from "@/hooks/useRole";
 
 export const PipelineItem = () => {
   const { user } = useAuth();
@@ -29,11 +30,17 @@ export const PipelineItem = () => {
 
   const [showForm, setShowForm] = useState(false);
 
+  const { canAccess } = useRole();
+  // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
+
   const columns = useMemo(() => {
     return [
       {
+        dataIndex: 'id',
         title: "STT",
         key: "index",
+        align: 'center',
         render: (item, record, index, page, paginationSize) => (
           <>{(page - 1) * paginationSize + index + 1}</>
         ),
@@ -45,8 +52,8 @@ export const PipelineItem = () => {
         title: "Quy trình tuyển dụng",
         width: "240px",
         fixed: "left",
-        render: (item,record) => (
-          <span style={{fontWeight: 500}}>{record.isDefault == true ? 'Quy trình mặc định iVIEC':item}</span>
+        render: (item, record) => (
+          <span style={{ fontWeight: 500 }}>{record.isDefault == true ? 'Quy trình mặc định iVIEC' : item}</span>
         ),
       },
       {
@@ -93,7 +100,7 @@ export const PipelineItem = () => {
                         color: "#172B4D",
                         border: "none",
                         marginLeft: "8px",
-                        fontWeight:500
+                        fontWeight: 500
                       }}
                     >
                       +{indexplus}
@@ -114,7 +121,7 @@ export const PipelineItem = () => {
         dataIndex: "recruitmentAppliedCount",
         title: "Số tin áp dụng",
         width: "160px",
-        align: "center",
+        align: "left",
       },
       {
         dataIndex: "isActivated",
@@ -198,7 +205,7 @@ export const PipelineItem = () => {
           setItemSelected={setItemSelected}
           // useGetColumnsFunc={useGetListColumnsQuery}
           // useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
-          createText="Thêm quy trình tuyển dụng"
+          createText={canEdit && "Thêm quy trình tuyển dụng"}
           onClickCreate={() => {
             setShowForm(true);
           }}
