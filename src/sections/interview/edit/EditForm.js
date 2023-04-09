@@ -14,9 +14,10 @@ import Iconify from "@/components/Iconify";
 import ListCandidate from "@/sections/interview/components/ListCandidate";
 import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
 import {useEffect} from "react";
+import moment from "moment";
 export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
-    width: "1000px"
+    width: "80%"
   },
   [theme.breakpoints.up("xl")]: {
     width: "1400px"
@@ -61,7 +62,39 @@ const EditForm  = ({item, open, setOpen }) => {
 
 
   const [updateCalendar] = useUpdateCalendarMutation();
-  // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
+  const toHHMMSS = (num) => {
+    let sec_num = parseInt(num * 60, 10);
+    let hours = Math.floor(sec_num / 3600);
+    let minutes = Math.floor((sec_num - hours * 3600) / 60);
+    let seconds = sec_num - hours * 3600 - minutes * 60;
+
+    if (hours < 10) {
+      hours = "0" + hours;
+    }
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    if (seconds < 10) {
+      seconds = "0" + seconds;
+    }
+    return hours + ":" + minutes + ":" + seconds;
+  };
+
+  const convertDurationTimeToSeconds = (time) => {
+    const splitToString = time.split(":");
+    return (
+      +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+    );
+  };
+
+  const convertStoMs = (s) => {
+    const totalMinutes = Math.floor(s / 60);
+    const seconds = s % 60;
+    const newSeconds = seconds < 10 ? "0" + seconds : seconds;
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}:${minutes}:${newSeconds}`;
+  };
 
   const { enqueueSnackbar } = useSnackbar();
   const onSubmit = async (d) => {
@@ -76,77 +109,39 @@ const EditForm  = ({item, open, setOpen }) => {
       note: d?.note,
       isSendMailCouncil: d.isSendMailApplicant,
       isSendMailApplicant: d.isSendMailApplicant,
-      councilIds: d.bookingCalendarCouncils.map((item) => item?.id),
-      // bookingCalendarGroups: [
-      //   {
-      //     name: "person",
-      //     interviewGroupType: 0,
-      //     interviewTime: "",
-      //     interviewDuration: "",
-      //     bookingCalendarApplicants:[ d?.bookingCalendarGroups.map((item) => {
-      //       const dateTime = convertStoMs(
-      //         convertDurationTimeToSeconds(
-      //           `${d?.bookingCalendarApplicants[item]?.interviewTime}:00`
-      //         ) +
-      //           convertDurationTimeToSeconds(
-      //             toHHMMSS(
-      //               d?.bookingCalendarApplicants[item]?.interviewDuration
-      //             )
-      //           )
-      //       );
-
-      //       return {
-      //         applicantId: item,
-      //         interviewTime: new Date(
-      //           `${moment(d?.date).format("YYYY-MM-DD")} ${dateTime}`
-      //         ).toISOString(),
-      //         interviewDuration: toHHMMSS(
-      //           d?.bookingCalendarApplicants[item].interviewDuration
-      //         ),
-      //       };
-      //     })],
-      //   },
-      // ],
-      bookingCalendarGroups: item?.bookingCalendarGroups.map((group) => {
-        return {
+      councilIds: d.councilIds,
+      bookingCalendarGroups: [
+        {
           name: "person",
           interviewGroupType: 0,
           interviewTime: "",
           interviewDuration: "",
-          bookingCalendarApplicants: group?.bookingCalendarGroupApplicants.map(
-            (item) => {
+          bookingCalendarApplicants: d?.bookingCalendarGroups.map(
+            (item, index) => {
+              const dateTime = convertStoMs(
+                convertDurationTimeToSeconds(
+                  `${item?.bookingCalendarApplicants[index].interviewTime}:00`
+                ) +
+                  convertDurationTimeToSeconds(
+                    toHHMMSS(
+                      item?.bookingCalendarApplicants[index].interviewDuration
+                    )
+                  )
+              );
               return {
-                applicantId: item?.id,
-                interviewTime: item?.interviewTime,
-                interviewDuration: item?.interviewDuration,
+                applicantId: d?.applicantId[index],
+                interviewTime: new Date(
+                  `${moment(d?.date[index]).format("YYYY-MM-DD")} ${dateTime}`
+                ).toISOString(),
+                interviewDuration: toHHMMSS(
+                  item?.bookingCalendarApplicants[index].interviewDuration
+                ),
               };
             }
           ),
-          // d?.bookingCalendarGroups.map((item) => {
-          //   const dateTime = convertStoMs(
-          //     convertDurationTimeToSeconds(
-          //       `${d?.bookingCalendarApplicants[item]?.interviewTime}:00`
-          //     ) +
-          //       convertDurationTimeToSeconds(
-          //         toHHMMSS(
-          //           d?.bookingCalendarApplicants[item]?.interviewDuration
-          //         )
-          //       )
-          //   );
-
-          //   return {
-          //     applicantId: item,
-          //     interviewTime: new Date(
-          //       `${moment(d?.date).format("YYYY-MM-DD")} ${dateTime}`
-          //     ).toISOString(),
-          //     interviewDuration: toHHMMSS(
-          //       d?.bookingCalendarApplicants[item].interviewDuration
-          //     ),
-          //   };
-          // }),
-        };
-      }),
-    };
+        },
+      ],
+    }
 
     try {
       await updateCalendar(res).unwrap();
@@ -154,10 +149,8 @@ const EditForm  = ({item, open, setOpen }) => {
         autoHideDuration: 2000,
       });
       onClose();
-
       // location.reload()
     } catch (err) {
-
       enqueueSnackbar(errors.afterSubmit?.message, {
         autoHideDuration: 1000,
         variant: "error",
@@ -170,15 +163,6 @@ const EditForm  = ({item, open, setOpen }) => {
 
   useEffect(() => {
     if (!item?.id) return;
-    // setValue("recruitmentId", body.recruitmentId);
-    // setValue("recruitmentPipelineStateId", body.recruitmentPipelineStateId);
-    // setValue("onlineInterviewAddress", body.onlineInterviewAddress);
-    // setValue("note", body.note);
-    // setValue("councilIds", body.councilIds);
-    // setValue("reviewFormId", body.reviewFormId);
-    // setValue("isSendMailCouncil", body.isSendMailCouncil);
-    // setValue("isSendMailApplicant", body.isSendMailApplicant);
-
   }, [item]);
 
   return (

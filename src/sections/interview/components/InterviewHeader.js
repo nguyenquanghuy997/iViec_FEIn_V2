@@ -32,6 +32,7 @@ const InterviewHeader = ({
                 minWidth: "510px",
                 background: "#F2F4F5",
                 borderRadius: "6px",
+                mb:1,
                 ".MuiInput-root": {
                   border: "none",
                 },
@@ -50,10 +51,10 @@ const InterviewHeader = ({
             color="default"
             onClick={onOpenFilterForm}
             startIcon={<FilterIcon />}
-            sx={{ fontWeight: 600, ml: 2 }}
+            sx={{ fontWeight: 600, ml: 2,mb:1 }}
           />
         </Stack>
-        <Stack flexDirection={"row"}>
+        <Stack flexDirection={"row"} mb={1}>
           {
             canEdit && <MuiButton
               title="Đặt lịch phỏng vấn"

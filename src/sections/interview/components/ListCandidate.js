@@ -10,7 +10,6 @@ import { useFormContext } from "react-hook-form";
 
 
 const ListCandidate = ({ item, isEditmode, applicantId }) => {
-
   const { watch } = useFormContext();
   const { palette } = useTheme();
   const res = useGetApplicantByPipeLineQuery(
@@ -20,7 +19,7 @@ const ListCandidate = ({ item, isEditmode, applicantId }) => {
 
   const { data: { items } = { items: [] } } = res;
   return (
-    <Box p={3} height={"100%"}>
+    <Box p={isEditmode ? 0 :3} height={"100%"}>
       <Label mb={3}>
         <Typography variant={"subtitle2"} color={palette.text.primary}>
           Danh sách ứng viên

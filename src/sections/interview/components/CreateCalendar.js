@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 
 export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
-    width: "1000px",
+    width: "80%",
   },
   [theme.breakpoints.up("xl")]: {
     width: "1400px",
@@ -75,7 +75,6 @@ const CreateCalendar = ({
   } = methods;
 
   const [addCalendar] = useAddCalendarMutation();
-  // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
 
   const toHHMMSS = (num) => {
     let sec_num = parseInt(num * 60, 10);
@@ -112,8 +111,8 @@ const CreateCalendar = ({
   };
 
   const { enqueueSnackbar } = useSnackbar();
-  const onSubmit = async (d) => {
 
+  const onSubmit = async (d) => {
     const body = {
       name: d.name,
       recruitmentId: d.recruitmentId,
@@ -137,11 +136,11 @@ const CreateCalendar = ({
                 convertDurationTimeToSeconds(
                   `${item?.bookingCalendarApplicants[index].interviewTime}:00`
                 ) +
-                  convertDurationTimeToSeconds(
-                    toHHMMSS(
-                      item?.bookingCalendarApplicants[index].interviewDuration
-                    )
+                convertDurationTimeToSeconds(
+                  toHHMMSS(
+                    item?.bookingCalendarApplicants[index].interviewDuration
                   )
+                )
               );
               return {
                 applicantId: d?.applicantId[index],
@@ -209,7 +208,6 @@ const CreateCalendar = ({
                 <CloseIcon />
               </Button>
             </List>
-
             <Box>
               <Grid container border="1px solid #E7E9ED">
                 <Grid
