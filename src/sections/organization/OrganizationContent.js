@@ -22,9 +22,19 @@ import OrganizationConfirmMultipleModal from "@/sections/organization/component/
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
 import MuiButton from '@/components/BaseComponents/MuiButton';
 import { AddIcon } from '@/assets/ActionIcon';
+import LoadingScreen from "@/components/LoadingScreen";
 import useRole from '@/hooks/useRole';
 
 const OrganizationContent = () => {
+  // role
+  const { canAccess } = useRole();
+  const canViewUser = useMemo(() => canAccess(PERMISSIONS.VIEW_USER), []);
+  const canEditUser = useMemo(() => canAccess(PERMISSIONS.CRUD_USER), []);
+  const canApproveUser = useMemo(() => canAccess(PERMISSIONS.APPR_USER_INVITE), []);
+
+  const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
+  const canEditUnit = useMemo(() => canAccess(PERMISSIONS.CRUD_UNIT), []);
+
   // selected
   const [selected, setSelected] = React.useState([]);
   // modal
@@ -103,16 +113,7 @@ const OrganizationContent = () => {
     setValueSearch(value);
   }
 
-  // role
-  const { canAccess } = useRole();
-  const canViewUser = useMemo(() => canAccess(PERMISSIONS.VIEW_USER), []);
-  const canEditUser = useMemo(() => canAccess(PERMISSIONS.CRUD_USER), []);
-  const canApproveUser = useMemo(() => canAccess(PERMISSIONS.APPR_USER_INVITE), []);
-
-  const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
-  const canEditUnit = useMemo(() => canAccess(PERMISSIONS.CRUD_UNIT), []);
-
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <LoadingScreen />
 
   return (
       <Box sx={{px: 7.5, py: 5, backgroundColor: "#FDFDFD", minHeight: '100vh'}}>

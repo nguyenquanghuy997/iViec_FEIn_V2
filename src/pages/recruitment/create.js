@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
-import {Grid, Typography} from "@mui/material";
+import {Grid} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useForm} from "react-hook-form";
 import {useSnackbar} from "notistack";
@@ -212,14 +212,14 @@ export default function CreateRecruitment() {
                 open={showAlert}
                 onClose={() => setShowAlert(false)}
                 icon={<OrangeAlertIcon />}
-                title={<Typography sx={{
-                  textAlign: 'center',
-                  width: '100%',
-                  fontSize: style.FONT_BASE,
-                  fontWeight: style.FONT_SEMIBOLD,
-                  color: style.COLOR_MAIN,
-                  marginTop: 2,
-                }}>Trở về danh sách tin tuyển dụng</Typography>}
+                title={'Trở về danh sách tin tuyển dụng'}
+                titleProps={{
+                  sx: {
+                    color: style.COLOR_MAIN,
+                    fontWeight: 600,
+                    marginBottom: 1
+                  }
+                }}
                 subtitle={"Các thao tác trước đó sẽ không được lưu, Bạn có chắc chắn muốn trở lại?"}
                 data={getValues()}
                 onSubmit={() => router.push(PATH_DASHBOARD.recruitment.root)}
@@ -235,14 +235,14 @@ export default function CreateRecruitment() {
                 open={openSaveDraft}
                 onClose={handleCloseConfirm}
                 icon={<DraftIcon height={45} width={50}/>}
-                title={<Typography sx={{
-                  textAlign: 'center',
-                  width: '100%',
-                  fontSize: style.FONT_BASE,
-                  fontWeight: style.FONT_SEMIBOLD,
-                  color: style.COLOR_PRIMARY,
-                  marginTop: 2,
-                }}>Lưu nháp tin tuyển dụng</Typography>}
+                title={'Lưu nháp tin tuyển dụng'}
+                titleProps={{
+                  sx: {
+                    color: style.COLOR_TEXT_PRIMARY,
+                    fontWeight: 600,
+                    marginBottom: 1
+                  }
+                }}
                 subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
                 data={getValues()}
                 onSubmit={onSubmit}
@@ -255,14 +255,14 @@ export default function CreateRecruitment() {
                 open={openSaveApprove}
                 onClose={handleCloseConfirm}
                 icon={<SendIcon/>}
-                title={<Typography sx={{
-                  textAlign: 'center',
-                  width: '100%',
-                  fontSize: style.FONT_BASE,
-                  fontWeight: style.FONT_SEMIBOLD,
-                  color: style.COLOR_PRIMARY,
-                  marginTop: 2
-                }}>Gửi phê duyệt tin tuyển dụng</Typography>}
+                title={'Gửi phê duyệt tin tuyển dụng'}
+                titleProps={{
+                  sx: {
+                    color: style.COLOR_PRIMARY,
+                    fontWeight: 600,
+                    marginBottom: 1
+                  }
+                }}
                 subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
                 data={getValues()}
                 onSubmit={onSubmit}
