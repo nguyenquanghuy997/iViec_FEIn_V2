@@ -3,7 +3,7 @@ import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
-import { TBL_FILTER_TYPE } from "@/config";
+import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
 import {
   useGetListColumnsQuery,
   useGetAllJobTypeQuery,
@@ -17,6 +17,7 @@ import useAuth from "@/hooks/useAuth";
 import { LIST_STATUS } from "@/utils/formatString";
 import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
 import { JobTypeFormModal } from "@/sections/jobtype";
+import useRole from "@/hooks/useRole";
 
 export const JobTypeItem = () => {
   const router = useRouter();
@@ -26,6 +27,9 @@ export const JobTypeItem = () => {
   const { data: Data = {}, isLoading } = useGetAllJobTypeQuery(query, { skip: !isReady });
 
   const [openEdit, setOpenEdit] = useState(false);
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB_POS), []);
 
   const columns = useMemo(() => {
     return [
@@ -43,7 +47,7 @@ export const JobTypeItem = () => {
         dataIndex: "name",
         title: "Vị trí công việc",
         width: "240px",
-        render: (name) => <span style={{fontWeight: 500}}>{name}</span>
+        render: (name) => <span style={{ fontWeight: 500 }}>{name}</span>
       },
       {
         dataIndex: "numberOfRecruitmentApplied",
@@ -135,7 +139,7 @@ export const JobTypeItem = () => {
           setItemSelected={setItemSelected}
           useGetColumnsFunc={useGetListColumnsQuery}
           useUpdateColumnsFunc={useUpdateListColumnsMutation}
-          createText="Thêm vị trí công việc"
+          createText={canEdit && "Thêm vị trí công việc"}
           onClickCreate={() => {
             setOpenEdit(true);
           }}

@@ -1,16 +1,19 @@
-import React, {useState} from 'react'
-import {Box} from "@mui/material";
+import React, { useState } from 'react'
+import { Box } from "@mui/material";
 import FormHeader from "@/sections/emailform/component/FormHeader";
 import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import OfferFormBottomNav from "@/sections/offerform/component/OfferFormBottomNav";
 import * as Yup from "yup";
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import OfferFormFilterHeader from "@/sections/offerform/component/OfferFormFilterHeader";
 import OfferFormFilterModal from "@/sections/offerform/component/OfferFormFilterModal";
 import OfferFormModal from "@/sections/offerform/component/OfferFormModal";
+import useRole from '@/hooks/useRole';
+import { useMemo } from 'react';
+import { PERMISSIONS } from '@/config';
 
 // data
 const data = [
@@ -73,7 +76,7 @@ const OfferFormContent = () => {
 
   const [expands, setExpands] = useState(Array(offerFormLIst.length).fill(false));
   const [selected, setSelected] = useState(Array(offerFormLIst.length).fill(false));
-  const [selectedValue, setSelectedValue] = useState(Array(offerFormLIst.length).fill({checked: false}));
+  const [selectedValue, setSelectedValue] = useState(Array(offerFormLIst.length).fill({ checked: false }));
 
   // modal
   const [item, setItem] = useState(null);
@@ -104,11 +107,11 @@ const OfferFormContent = () => {
 
   const methods = useForm({
     mode: "onChange",
-    defaultValues: {...defaultValues},
+    defaultValues: { ...defaultValues },
     resolver: yupResolver(Schema),
   });
 
-  const {handleSubmit} = methods;
+  const { handleSubmit } = methods;
 
   // expand card item
   const handleChangeExpand = (index) => {
@@ -118,7 +121,7 @@ const OfferFormContent = () => {
 
   const handleSelected = (data, index) => {
     const selectedNext = [...selected].map((i, idx) => idx === index ? !i : i)
-    const selectedValueNext = [...selectedValue].map((i, idx) => idx === index ? {...i, checked: !i.checked} : {
+    const selectedValueNext = [...selectedValue].map((i, idx) => idx === index ? { ...i, checked: !i.checked } : {
       ...i,
       checked: i.checked
     })
@@ -173,84 +176,88 @@ const OfferFormContent = () => {
     setSelected([]);
   };
 
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_OFFER_TPL), []);
+
   return (
-      <>
-        <Box>
-          <FormHeader
-              title="Mẫu email mời nhận việc"
-              subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
-              buttonTitle="Thêm mẫu email"
-              showButton={false}
-              onOpenForm={handleOpenForm}
+    <>
+      <Box>
+        <FormHeader
+          title="Mẫu email mời nhận việc"
+          subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
+          buttonTitle="Thêm mẫu email"
+          showButton={false}
+          onOpenForm={handleOpenForm}
+        />
+        <OfferFormFilterHeader
+          methods={methods}
+          handleSubmit={handleSubmit}
+          onOpenFilterForm={handleOpenFilterForm}
+          onCloseFilterForm={handleCloseFilterForm}
+          onOpenForm={handleOpenForm}
+        />
+        {data.map((column, index) => {
+          return <CardEmailFormItem
+            isCheckbox
+            key={index}
+            index={index}
+            item={column}
+            expanded={expands[index]}
+            checked={selectedValue[index].checked}
+            onChangeSelected={() => handleSelected(column, index)}
+            onChangeExpand={() => handleChangeExpand(index)}
+            onOpenConfirmDelete={handleOpenConfirm}
+            onOpenActiveModal={handleOpenActiveModal}
+            onOpenFormModal={handleOpenForm}
+            canEdit={canEdit}
           />
-          <OfferFormFilterHeader
-              methods={methods}
-              handleSubmit={handleSubmit}
-              onOpenFilterForm={handleOpenFilterForm}
-              onCloseFilterForm={handleCloseFilterForm}
-              onOpenForm={handleOpenForm}
-          />
-          {data.map((column, index) => {
-            return <CardEmailFormItem
-                isCheckbox
-                key={index}
-                index={index}
-                item={column}
-                expanded={expands[index]}
-                checked={selectedValue[index].checked}
-                onChangeSelected={() => handleSelected(column, index)}
-                onChangeExpand={() => handleChangeExpand(index)}
-                onOpenConfirmDelete={handleOpenConfirm}
-                onOpenActiveModal={handleOpenActiveModal}
-                onOpenFormModal={handleOpenForm}
-            />
-          })}
-        </Box>
-        {confirmDelete && <ConfirmModal
-            confirmDelete={confirmDelete}
-            onCloseConfirmDelete={handleCloseConfirm}
-            onSubmit={handleDelete}
-            title="Xác nhận xóa mẫu email mời nhận việc"
-            subtitle="Bạn có chắc chắn muốn xóa mẫu email"
-            item={item}
-        />}
-        {isOpenActive && <ActiveModal
-            isOpenActive={isOpenActive}
-            onCloseActiveModal={handleCloseActiveModal}
-            onSubmit={handleActive}
-            title={item.isActive ? "Tắt trạng thái hoạt động cho mẫu email mời nhận việc" : "Xác nhận xóa mẫu email mời nhận việc"}
-            subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt hoạt động cho mẫu email mời nhận việc" : "Bạn có chắc chắn muốn bật hoạt động cho mẫu email mời nhận việc"}
-            item={item}
-        />}
-        {isOpenForm && <OfferFormModal
-            isOpen={isOpenForm}
-            onClose={handleCloseForm}
-            item={item}
-            showUploadFile
-            title={item?.id ? 'Chỉnh sửa mẫu email mời nhận việc' : 'Thêm mới mẫu email mời nhận việc'}
-        />}
-        {
-            selected.some((i => i === true)) && <OfferFormBottomNav
-                item={data.find(i => i)}
-                open={selected?.length > 0}
-                onClose={handleCloseBottomNav}
-                setShowDelete={setShowDelete}
-                setShowMultipleDelete={setShowMultipleDelete}
-                setIsOpenActive={setIsOpenActive}
-                selectedList={selected.filter(i => i === true) || []}
-                onGetParentNode={setItem}
-                setActionType={setActionType}
-                setActionTypeActive={setActionTypeActive}
-                status={offerFormLIst?.filter(i => selectedValue.includes(i.id)).every(i => i.isActive === true)}
-                onOpenForm={handleOpenForm}
-            />
-        }
-        {isOpenFilter && <OfferFormFilterModal
-            isOpen={isOpenFilter}
-            onClose={handleCloseFilterForm}
-            onSubmit={handleCloseFilterForm}
-        />}
-      </>
+        })}
+      </Box>
+      {confirmDelete && <ConfirmModal
+        confirmDelete={confirmDelete}
+        onCloseConfirmDelete={handleCloseConfirm}
+        onSubmit={handleDelete}
+        title="Xác nhận xóa mẫu email mời nhận việc"
+        subtitle="Bạn có chắc chắn muốn xóa mẫu email"
+        item={item}
+      />}
+      {isOpenActive && <ActiveModal
+        isOpenActive={isOpenActive}
+        onCloseActiveModal={handleCloseActiveModal}
+        onSubmit={handleActive}
+        title={item.isActive ? "Tắt trạng thái hoạt động cho mẫu email mời nhận việc" : "Xác nhận xóa mẫu email mời nhận việc"}
+        subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt hoạt động cho mẫu email mời nhận việc" : "Bạn có chắc chắn muốn bật hoạt động cho mẫu email mời nhận việc"}
+        item={item}
+      />}
+      {isOpenForm && <OfferFormModal
+        isOpen={isOpenForm}
+        onClose={handleCloseForm}
+        item={item}
+        showUploadFile
+        title={item?.id ? 'Chỉnh sửa mẫu email mời nhận việc' : 'Thêm mới mẫu email mời nhận việc'}
+      />}
+      {
+        selected.some((i => i === true)) && <OfferFormBottomNav
+          item={data.find(i => i)}
+          open={selected?.length > 0}
+          onClose={handleCloseBottomNav}
+          setShowDelete={setShowDelete}
+          setShowMultipleDelete={setShowMultipleDelete}
+          setIsOpenActive={setIsOpenActive}
+          selectedList={selected.filter(i => i === true) || []}
+          onGetParentNode={setItem}
+          setActionType={setActionType}
+          setActionTypeActive={setActionTypeActive}
+          status={offerFormLIst?.filter(i => selectedValue.includes(i.id)).every(i => i.isActive === true)}
+          onOpenForm={handleOpenForm}
+        />
+      }
+      {isOpenFilter && <OfferFormFilterModal
+        isOpen={isOpenFilter}
+        onClose={handleCloseFilterForm}
+        onSubmit={handleCloseFilterForm}
+      />}
+    </>
   )
 }
 

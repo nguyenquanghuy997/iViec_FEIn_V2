@@ -1,6 +1,8 @@
 import { AvatarDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import { Label } from "@/components/hook-form/style";
+import { PERMISSIONS } from "@/config";
+import useRole from "@/hooks/useRole";
 import {
   BoxFlex,
   CardFormItemContentStyle,
@@ -23,6 +25,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { useMemo } from "react";
 
 const EvaluationItemBlock = ({
   // isCheckbox,
@@ -34,6 +37,10 @@ const EvaluationItemBlock = ({
   item,
   onOpenModel,
 }) => {
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
+
   return (
     <CardFormItemStyle className="card-item">
       <AccordionSummary
@@ -124,7 +131,7 @@ const EvaluationItemBlock = ({
             </CardFormItemContentStyle>
           </BoxFlex>
           <BoxFlex>
-            {!item?.isInternalDefault && (
+            {!item?.isInternalDefault && canEdit && (
               <>
                 <ButtonIcon
                   onClick={(e) => onOpenModel(e, item, "status")}

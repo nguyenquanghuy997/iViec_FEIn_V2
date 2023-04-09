@@ -17,8 +17,9 @@ import { useRouter } from "next/router";
 import { useState, useMemo } from "react";
 import useAuth from "@/hooks/useAuth";
 import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
-import { TBL_FILTER_TYPE } from "@/config";
+import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
 import { LIST_STATUS, LIST_STEP_RECRUITMENT } from "@/utils/formatString";
+import useRole from "@/hooks/useRole";
 
 export const PipelineItem = () => {
   const { user } = useAuth();
@@ -28,6 +29,10 @@ export const PipelineItem = () => {
   const { data: Data = {}, isLoading } = useGetAllPipelineQuery(query, { skip: !isReady });
 
   const [showForm, setShowForm] = useState(false);
+
+  const { canAccess } = useRole();
+  // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
 
   const columns = useMemo(() => {
     return [
@@ -200,7 +205,7 @@ export const PipelineItem = () => {
           setItemSelected={setItemSelected}
           // useGetColumnsFunc={useGetListColumnsQuery}
           // useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
-          createText="Thêm quy trình tuyển dụng"
+          createText={canEdit && "Thêm quy trình tuyển dụng"}
           onClickCreate={() => {
             setShowForm(true);
           }}
@@ -215,7 +220,7 @@ export const PipelineItem = () => {
           setselectedList={setSelectedRowKeys}
         />
       </Content>
-      
+
       <PipelineFormModal
         show={showForm}
         onClose={() => setShowForm(false)}

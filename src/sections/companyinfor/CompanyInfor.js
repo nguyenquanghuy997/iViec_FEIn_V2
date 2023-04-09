@@ -1,11 +1,14 @@
+import { PERMISSIONS } from "@/config";
 import EditInformation from "./edit/EditInformation";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import useRole from "@/hooks/useRole";
 import useModal from "@/sections/companyinfor/hooks/useModal";
 import { BoxInfoStyle } from "@/sections/companyinfor/style";
 import CropImage from "@/sections/companyinfor/upload/CropImage";
 import { OrganizationSize } from "@/utils/enum";
 import { Box, Divider, Typography } from "@mui/material";
 import { get } from "lodash";
+import { useMemo } from "react";
 import { Fragment } from "react";
 import { RiCheckboxBlankCircleFill, RiImageFill } from "react-icons/ri";
 
@@ -68,6 +71,10 @@ const renderItem = (title, content) => {
 };
 
 export default function CompanyInfor({ data }) {
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.EDIT_COMPANY), []);
+
   const { onOpen, onClose, isOpen } = useModal();
 
   return (
@@ -146,12 +153,14 @@ export default function CompanyInfor({ data }) {
               </Box>
             </Box>
             <Box>
-              <MuiButton
-                color={"default"}
-                title={"Chỉnh sửa"}
-                sx={{ fontWeight: 500 }}
-                onClick={onOpen}
-              />
+              {
+                canEdit && <MuiButton
+                  color={"default"}
+                  title={"Chỉnh sửa"}
+                  sx={{ fontWeight: 500 }}
+                  onClick={onOpen}
+                />
+              }
             </Box>
           </Box>
           <Divider />
