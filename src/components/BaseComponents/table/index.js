@@ -132,7 +132,7 @@ const DynamicColumnsTable = (props) => {
     };
   };
 
-  const onSubmitFilter = (values = {}, reset = false, timeout = 0) => {
+  const onSubmitFilter = (values = {}, reset = false, timeout = 1) => {
     if (reset && _isEmpty(router.query)) {
       return;
     }

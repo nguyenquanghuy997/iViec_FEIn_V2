@@ -13,15 +13,13 @@ import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { useRouter } from "next/router";
 import { useState, useMemo } from "react";
-import useAuth from "@/hooks/useAuth";
 import { LIST_STATUS } from "@/utils/formatString";
-import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 import { JobTypeFormModal } from "@/sections/jobtype";
 import useRole from "@/hooks/useRole";
 
 export const JobTypeItem = () => {
   const router = useRouter();
-  const { user } = useAuth();
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllJobTypeQuery(query, { skip: !isReady });
@@ -106,7 +104,7 @@ export const JobTypeItem = () => {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
-          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
+          remoteUrl: API_GET_ORGANIZATION_USERS,
         },
       },
     ];
