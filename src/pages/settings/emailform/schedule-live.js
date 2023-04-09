@@ -1,21 +1,23 @@
-import { PERMISSION_PAGES } from "@/config";
+import { PERMISSIONS, PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {useState} from "react";
+import { useState } from "react";
 import Page from "@/components/Page";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 import FormHeader from "@/sections/emailform/component/FormHeader";
 import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import FormModal from "@/sections/emailform/component/FormModal";
-import {useDispatch, useSelector} from "@/redux/store";
-import {modalSlice} from "@/redux/common/modalSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import { modalSlice } from "@/redux/common/modalSlice";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
 
 ScheduleLive.getLayout = function getLayout(pageProps, page) {
   return (
-      <SettingLayout permissions={PERMISSION_PAGES.emailTemplate} {...pageProps}>
-        {page}
-      </SettingLayout>
+    <SettingLayout permissions={PERMISSION_PAGES.emailTemplate} {...pageProps}>
+      {page}
+    </SettingLayout>
   );
 };
 
@@ -57,51 +59,55 @@ function ScheduleLive() {
     return data;
   }
 
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EMAIL), []);
+
   return (
-      <Page title="Email lịch phỏng vấn trực tiếp">
-        <Box>
-          <FormHeader
-              title="Email lịch phỏng vấn trực tiếp"
-              subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
-              buttonTitle="Thêm mẫu email"
-              onOpenModal={() => handleOpenModal(null)}
+    <Page title="Email lịch phỏng vấn trực tiếp">
+      <Box>
+        <FormHeader
+          title="Email lịch phỏng vấn trực tiếp"
+          subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
+          buttonTitle="Thêm mẫu email"
+          onOpenModal={() => handleOpenModal(null)}
+        />
+        {data.map((column, index) => {
+          return <CardEmailFormItem
+            key={index}
+            index={index}
+            item={column}
+            expanded={expands[index]}
+            onChangeExpand={() => handleChangeExpand(index)}
+            onOpenConfirmDelete={() => handleOpenConfirm(column)}
+            onOpenActiveModal={() => handleOpenActive(column)}
+            onOpenFormModal={() => handleOpenModal(column)}
+            canEdit={canEdit}
           />
-          {data.map((column, index) => {
-            return <CardEmailFormItem
-                key={index}
-                index={index}
-                item={column}
-                expanded={expands[index]}
-                onChangeExpand={() => handleChangeExpand(index)}
-                onOpenConfirmDelete={() => handleOpenConfirm(column)}
-                onOpenActiveModal={() => handleOpenActive(column)}
-                onOpenFormModal={() => handleOpenModal(column)}
-            />
-          })}
-        </Box>
-        {toggleConfirm && <ConfirmModal
-            confirmDelete={toggleConfirm}
-            onCloseConfirmDelete={handleCloseModal}
-            onSubmit={handleDelete}
-            title="Xác nhận xóa mẫu email"
-            subtitle="Bạn có chắc chắn muốn xóa mẫu email"
-            item={item}
-        />}
-        {toggleActive && <ActiveModal
-            isOpenActive={toggleActive}
-            onCloseActiveModal={handleCloseModal}
-            onSubmit={handleActive}
-            title={item.isActive ? "Tắt trạng thái áp dụng cho mẫu email" : "Bật trạng thái áp dụng cho mẫu email"}
-            subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt trạng thái áp dụng cho mẫu email" : "Bạn có chắc chắn muốn bật trạng thái áp dụng cho mẫu email"}
-            item={item}
-        />}
-        {toggleFormModal && <FormModal
-            isOpen={toggleFormModal}
-            onClose={handleCloseModal}
-            item={item}
-            title={item?.id ? 'Chỉnh sửa mẫu email lịch phỏng vấn trực tiếp' : 'Thêm mới mẫu email lịch phỏng vấn trực tiếp'}
-        />}
-      </Page>
+        })}
+      </Box>
+      {toggleConfirm && <ConfirmModal
+        confirmDelete={toggleConfirm}
+        onCloseConfirmDelete={handleCloseModal}
+        onSubmit={handleDelete}
+        title="Xác nhận xóa mẫu email"
+        subtitle="Bạn có chắc chắn muốn xóa mẫu email"
+        item={item}
+      />}
+      {toggleActive && <ActiveModal
+        isOpenActive={toggleActive}
+        onCloseActiveModal={handleCloseModal}
+        onSubmit={handleActive}
+        title={item.isActive ? "Tắt trạng thái áp dụng cho mẫu email" : "Bật trạng thái áp dụng cho mẫu email"}
+        subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt trạng thái áp dụng cho mẫu email" : "Bạn có chắc chắn muốn bật trạng thái áp dụng cho mẫu email"}
+        item={item}
+      />}
+      {toggleFormModal && <FormModal
+        isOpen={toggleFormModal}
+        onClose={handleCloseModal}
+        item={item}
+        title={item?.id ? 'Chỉnh sửa mẫu email lịch phỏng vấn trực tiếp' : 'Thêm mới mẫu email lịch phỏng vấn trực tiếp'}
+      />}
+    </Page>
   )
 }
 

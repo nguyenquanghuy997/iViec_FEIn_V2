@@ -1,9 +1,11 @@
+import { PERMISSIONS } from "@/config";
 import { useGetJobPositionByIdQuery } from "../jobTypeSlice";
 import { JobTypeFormModal } from "../modals";
 import JobTypeActiveModal from "../modals/JobTypeActiveModal";
 import JobTypeDeleteModal from "../modals/JobTypeDeleteModal";
 import Content from "@/components/BaseComponents/Content";
 import Iconify from "@/components/Iconify";
+import useRole from "@/hooks/useRole";
 import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
@@ -12,6 +14,7 @@ import { ButtonIcon } from "@/utils/cssStyles";
 import { checkSameValue } from "@/utils/formatString";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useMemo } from "react";
 
 const JobTypeBottomNav = ({
   selectedList,
@@ -30,6 +33,9 @@ const JobTypeBottomNav = ({
     setItemSelected([]);
   };
 
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB_POS), []);
+
   const { data: jobType } = useGetJobPositionByIdQuery(
     {
       Id: selectedList[0],
@@ -45,11 +51,11 @@ const JobTypeBottomNav = ({
   let item = itemSelected.map((p) => p.isActivated);
   let itemApply = itemSelected.map((p) => p.numberOfRecruitmentApplied);
   function checkSameApply(arr) {
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] > 0) {
-          return false;
-        }
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > 0) {
+        return false;
       }
+    }
     return true;
   }
   return (
@@ -73,13 +79,16 @@ const JobTypeBottomNav = ({
               <>
                 {item.includes(true) ? (
                   <>
-                    <ButtonIcon
-                      onClick={() => handleShowConfirmMultiple("status")}
-                      sx={{
-                        backgroundColor: "unset !important",
-                      }}
-                      icon={<ActionSwitchCheckedIcon />}
-                    />
+                    {
+                      canEdit && <ButtonIcon
+                        onClick={() => handleShowConfirmMultiple("status")}
+                        sx={{
+                          backgroundColor: "unset !important",
+                        }}
+                        icon={<ActionSwitchCheckedIcon />}
+                      />
+                    }
+
                     <Typography
                       variant="body2"
                       sx={{ color: "#388E3C", fontSize: 13 }}
@@ -89,13 +98,16 @@ const JobTypeBottomNav = ({
                   </>
                 ) : (
                   <>
-                    <ButtonIcon
-                      onClick={() => handleShowConfirmMultiple("status")}
-                      sx={{
-                        backgroundColor: "unset !important",
-                      }}
-                      icon={<ActionSwitchUnCheckedIcon />}
-                    />
+                    {
+                      canEdit && <ButtonIcon
+                        onClick={() => handleShowConfirmMultiple("status")}
+                        sx={{
+                          backgroundColor: "unset !important",
+                        }}
+                        icon={<ActionSwitchUnCheckedIcon />}
+                      />
+                    }
+
                     <Typography
                       variant="body2"
                       sx={{ color: "#5C6A82", fontSize: 13 }}
@@ -106,7 +118,7 @@ const JobTypeBottomNav = ({
                 )}
               </>
             )}
-            {itemSelected.length === 1 && itemSelected[0]?.numberOfRecruitmentApplied == 0 && (
+            {itemSelected.length === 1 && itemSelected[0]?.numberOfRecruitmentApplied == 0 && canEdit && (
               <ButtonIcon
                 sx={{
                   marginLeft: "16px",
@@ -122,7 +134,7 @@ const JobTypeBottomNav = ({
                 }
               />
             )}
-            {checkSameApply(itemApply) && (
+            {checkSameApply(itemApply) && canEdit && (
               <ButtonIcon
                 sx={{
                   marginLeft: "16px",

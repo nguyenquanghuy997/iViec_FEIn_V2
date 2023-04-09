@@ -5,7 +5,7 @@ import OrganizationTree from "@/sections/organization/component/OrganizationTree
 import Iconify from "@/components/Iconify";
 import OrganizationEmptyChildren from "@/sections/organization/component/OrganizationEmptyChildren";
 import OrganizationForm from "@/sections/organization/component/OrganizationForm";
-import {DOMAIN_SERVER_API} from "@/config";
+import {DOMAIN_SERVER_API, PERMISSIONS} from "@/config";
 import {convertFlatDataToTree, convertViToEn} from "@/utils/function";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
@@ -22,6 +22,7 @@ import OrganizationConfirmMultipleModal from "@/sections/organization/component/
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
 import MuiButton from '@/components/BaseComponents/MuiButton';
 import { AddIcon } from '@/assets/ActionIcon';
+import useRole from '@/hooks/useRole';
 
 const OrganizationContent = () => {
   // selected
@@ -102,6 +103,15 @@ const OrganizationContent = () => {
     setValueSearch(value);
   }
 
+  // role
+  const { canAccess } = useRole();
+  const canViewUser = useMemo(() => canAccess(PERMISSIONS.VIEW_USER), []);
+  const canEditUser = useMemo(() => canAccess(PERMISSIONS.CRUD_USER), []);
+  const canApproveUser = useMemo(() => canAccess(PERMISSIONS.APPR_USER_INVITE), []);
+
+  const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
+  const canEditUnit = useMemo(() => canAccess(PERMISSIONS.CRUD_UNIT), []);
+
   if (isLoading) return <div>Loading...</div>
 
   return (
@@ -124,20 +134,26 @@ const OrganizationContent = () => {
             </Stack>
           </Stack>
           <Stack flexDirection="row" alignItems="center">
-            <MuiButton 
+            {
+              (canViewUser || canViewUnit || canEditUser || canEditUnit || canApproveUser) && <MuiButton 
               title={"Danh sách mời"}
               color={"default"}
               onClick={() => setIsOpenInviteForm(true)}
               startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
               sx={{ fontWeight: 550, marginRight: 1 }}
             />
-            <MuiButton 
+            }
+            
+            {
+              (canEditUnit || canEditUser) && <MuiButton 
               title={"Mời người dùng"}
               color={"primary"}
               onClick={() => setIsOpenInviteForm(true)}
               startIcon={<AddIcon />}
               sx={{ fontWeight: 550 }}
             />
+            }
+            
           </Stack>
         </Stack>
         <Box sx={{mb: 3, mt: 0}}>

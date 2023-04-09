@@ -169,7 +169,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
           (i) =>
             i.pipelineStateType != 0 && {
               stageType: {
-                id: i.pipelineStateType == 1 ? 0: 1,
+                id: i.pipelineStateType == 1 ? 0 : 1,
                 name: PipelineStateType(i.pipelineStateType),
               },
               des: i.description,
@@ -253,7 +253,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
             <Divider />
             {/* dept */}
             <View pv={24}>
-              <Label required={true} sx={{color:'#455570', fontSize:16, fontWeight:600}}>{"Bước tuyển dụng"}</Label>
+              <Label required={true} sx={{ color: '#455570', fontSize: 16, fontWeight: 600 }}>{"Bước tuyển dụng"}</Label>
               <FormHelperText error sx={{ mt: 0, mb: 1 }}>
                 {errorStage && errorStage}
               </FormHelperText>
@@ -347,6 +347,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
       {/* modal */}
       {showForm && (
         <PipelineAddModal
+          pipeLineSelected={listForm}
           show={showForm}
           editData={editItemData}
           setShow={setShowForm}
