@@ -22,7 +22,7 @@ const InterviewCouncil = ({ isEditmode, item, action }) => {
           Hội đồng phỏng vấn
         </Typography>
       </Label>
-      {watch("recruitmentId") && (
+ 
         <SelectCouncils
           options={coOwners[0]?.coOwners?.map((i) => ({
             id: i.id,
@@ -36,11 +36,12 @@ const InterviewCouncil = ({ isEditmode, item, action }) => {
           defaultItem={item}
           isEditmode={isEditmode}
           action={action}
+          disabled={watch("recruitmentId") ? false: true}
           fullWidth
           multiple
           isRequired
         />
-      )}
+      
     </Box>
   );
 };

@@ -1,5 +1,5 @@
 import DragCandidate from "./DragCandidate";
-import PlusIcon from "@/assets/interview/PlusIcon";
+// import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
 import {
   LabelStyle,
@@ -7,7 +7,7 @@ import {
   SearchInputStyle,
   SelectFieldStyle,
   TextFieldStyle,
-  useStyles
+  useStyles,
 } from "@/components/hook-form/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { containsText } from "@/utils/function";
@@ -23,15 +23,14 @@ import {
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
-
 const MenuProps = {
   PaperProps: {
-    style: { maxHeight: 330 }
+    style: { maxHeight: 330 },
   },
   disableAutoFocusItem: true,
   MenuListProps: {
-    disableListWrap: true
-  }
+    disableListWrap: true,
+  },
 };
 
 const InputProps = {
@@ -39,7 +38,7 @@ const InputProps = {
     <InputAdornment position="start">
       <Iconify icon={"ri:search-2-line"} color="#5c6a82" />
     </InputAdornment>
-  )
+  ),
 };
 
 const renderOptions = (options) => {
@@ -52,7 +51,7 @@ const renderOptions = (options) => {
             style={{
               width: 36,
               height: 36,
-              borderRadius: "10px"
+              borderRadius: "10px",
             }}
             src={variant?.image}
           />
@@ -64,7 +63,7 @@ const renderOptions = (options) => {
               sx={{
                 fontSize: 13,
                 fontWeight: 400,
-                color: "#5C6A82"
+                color: "#5C6A82",
               }}
             >
               {variant?.phone}
@@ -82,13 +81,20 @@ function RHFSelectMultiple({ name, ...props }) {
   const { control } = useFormContext();
 
   const classes = useStyles();
-  const { defaultValue, isRequired, title, options, disabled, multiple } =
-    props;
+  const {
+    defaultValue,
+    isEditmode,
+    isRequired,
+    title,
+    options,
+    disabled,
+    multiple,
+    listApplicant
+  } = props;
   const { remove } = useFieldArray({ control, name });
 
   const renderChipsSelect = (options, value) => {
     const [open, setOpen] = useState(false);
-
     const handleClose = () => {
       setOpen(false);
     };
@@ -118,18 +124,15 @@ function RHFSelectMultiple({ name, ...props }) {
     // };
 
     return (
-      <Stack
-        height={"100%"}
-             sx={{ "> div": { height: "100%" } }}>
+      <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
           data={options?.filter((option) =>
-           value.includes(option?.value)
+            (isEditmode ? [] : value).includes(option?.value)
           )}
           open={open}
           onClose={handleClose}
           onOpen={handleOpen}
         />
-
       </Stack>
     );
   };
@@ -157,8 +160,8 @@ function RHFSelectMultiple({ name, ...props }) {
               height: "36px",
               borderRadius: "8px",
               "& .MuiSvgIcon-root": {
-                display: "none"
-              }
+                display: "none",
+              },
             }}
             {...field}
             value={field.value || []}
@@ -171,19 +174,31 @@ function RHFSelectMultiple({ name, ...props }) {
               if (selected?.length === 0) {
                 return (
                   <Button
-                    sx={{ width: "100%", textTransform: "none" }}
-                    startIcon={<PlusIcon />}
+                    sx={{
+                      width: "100%",
+                      textTransform: "none",
+                      color: "#1976D2",
+                      "&:hover": {
+                        bgcolor: "white",
+                      },
+                    }}
+                    
                   >
-                    Thêm ứng viên
+                    + Thêm ứng viên
                   </Button>
                 );
               }
               return (
                 <Button
-                  sx={{ width: "100%", textTransform: "none" }}
-                  startIcon={<PlusIcon />}
+                  sx={{
+                    width: "100%",
+                    textTransform: "none",
+                    "&:hover": {
+                      bgcolor: "white",
+                    },
+                  }}
                 >
-                  Thêm ứng viên
+                  + Thêm ứng viên
                 </Button>
               );
             }}
@@ -202,12 +217,13 @@ function RHFSelectMultiple({ name, ...props }) {
             )}
             {renderOptions(filterOptions)}
           </SelectFieldStyle>
+          {listApplicant}
           {multiple && renderChipsSelect(options, field.value, remove)}
           <FormHelperText
             sx={{
               color: style.COLOR_TEXT_DANGER,
               fontSize: style.FONT_XS,
-              fontWeight: style.FONT_NORMAL
+              fontWeight: style.FONT_NORMAL,
             }}
           >
             {error?.message}

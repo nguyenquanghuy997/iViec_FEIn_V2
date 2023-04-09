@@ -545,7 +545,7 @@ function ApplicantPreviewItem({
             data={reviewFormCriterias}
           />
         )}
-         {open && <CreateCalendar open={open} setOpen={setOpen}/>}
+         {open && <CreateCalendar open={open} setOpen={setOpen} options={selectedOption} currentApplicantPipelineState={pipelines?.currentApplicantPipelineState}/>}
       </Container>
     </div>
   );

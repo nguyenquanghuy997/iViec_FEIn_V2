@@ -27,10 +27,10 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable sx={{height: '100%'}} droppableId="characters">
+        <Droppable sx={{ height: "100%" }} droppableId="characters">
           {(provided) => (
             <ul
-              style={{overflowY: 'auto', height: 'calc(100% - 105px)'}}
+              style={{ overflowY: "auto", height: "calc(100% - 105px)" }}
               className="characters"
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -129,7 +129,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                   <span style={{ color: "red" }}>*</span>
                                 </Typography>
                                 <RHFDatePicker
-                                  name={`bookingCalendarApplicants.${id}.date`}
+                                  name={`date.${index}`}
                                   today={today}
                                   style={{
                                     background: "white",
@@ -149,7 +149,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                           </span>
                                         </Typography>
                                         <RHFTimePicker
-                                          name={`bookingCalendarApplicants.${id}.interviewTime`}
+                                          name={`bookingCalendarGroups.${index}.bookingCalendarApplicants.${index}.interviewTime`}
                                           style={{
                                             width: "100%",
                                             background: "white",
@@ -179,7 +179,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                             background: "white",
                                             border: "8px",
                                           }}
-                                          name={`bookingCalendarApplicants.${id}.interviewDuration`}
+                                          name={`bookingCalendarGroups.${index}.bookingCalendarApplicants.${index}.interviewDuration`}
                                           placeholder="Nhập số phút"
                                         />
                                       </Box>

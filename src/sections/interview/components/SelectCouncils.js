@@ -1,5 +1,5 @@
 import { DeleteIcon } from "@/assets/ActionIcon";
-import PlusIcon from "@/assets/interview/PlusIcon";
+// import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
 import {
   LabelStyle,
@@ -141,61 +141,61 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
           ))}
         {isEditmode &&
           defaultItem?.bookingCalendarCouncils.map((item) => (
-              <Card
-                sx={{
-                  p: 2,
-                  background: "#F2F4F5",
-                  mb: 2,
-                  borderRadius: "6px",
+            <Card
+              sx={{
+                p: 2,
+                background: "#F2F4F5",
+                mb: 2,
+                borderRadius: "6px",
+              }}
+            >
+              <div
+                style={{
+                  marginBottom: 0,
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
                 <div
                   style={{
-                    marginBottom: 0,
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                   }}
                 >
-                  <div
+                  <img
+                    alt=""
                     style={{
-                      display: "flex",
-                      justifyContent: "center",
+                      width: 42,
+                      height: 42,
+                      marginRight: "16px",
+                      borderRadius: "11px",
                     }}
-                  >
-                    <img
-                      alt=""
-                      style={{
-                        width: 42,
-                        height: 42,
-                        marginRight: "16px",
-                        borderRadius: "11px",
-                      }}
-                      src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
-                    />
-                    <div>
-                      <Typography
-                        component="div"
-                        sx={{ fontSize: "13px", fontWeight: "600" }}
-                      >
-                        {item?.name}
-                      </Typography>
-                      <Typography
-                        color="#455570"
-                        sx={{ fontSize: "12px", fontWeight: "400" }}
-                      >
-                        {item?.email}
-                      </Typography>
-                    </div>
+                    src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
+                  />
+                  <div>
+                    <Typography
+                      component="div"
+                      sx={{ fontSize: "13px", fontWeight: "600" }}
+                    >
+                      {item?.name}
+                    </Typography>
+                    <Typography
+                      color="#455570"
+                      sx={{ fontSize: "12px", fontWeight: "400" }}
+                    >
+                      {item?.email}
+                    </Typography>
                   </div>
-                  {/* <Box
+                </div>
+                {/* <Box
                     sx={{ mt: "2px", cursor: "pointer" }}
                     onClick={() => remove(index)}
                   >
                     <DeleteIcon />
                   </Box> */}
-                </div>
-              </Card>
-            ))}
+              </div>
+            </Card>
+          ))}
       </Stack>
     );
   };
@@ -236,19 +236,30 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
               if (selected?.length === 0) {
                 return (
                   <Button
-                    sx={{ width: "100%", textTransform: "none" }}
-                    startIcon={<PlusIcon />}
+                    sx={{
+                      width: "100%",
+                      textTransform: "none",
+                      color: "#1976D2",
+                      "&:hover": {
+                        bgcolor: "white",
+                      },
+                    }}
                   >
-                    Thêm cán bộ
+                    + Thêm cán bộ
                   </Button>
                 );
               }
               return (
                 <Button
-                  sx={{ width: "100%", textTransform: "none" }}
-                  startIcon={<PlusIcon />}
+                  sx={{
+                    width: "100%",
+                    textTransform: "none",
+                    "&:hover": {
+                      bgcolor: "white",
+                    },
+                  }}
                 >
-                  Thêm cán bộ
+                  + Thêm cán bộ
                 </Button>
               );
             }}

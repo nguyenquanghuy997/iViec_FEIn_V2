@@ -59,6 +59,7 @@ const EditForm  = ({item, open, setOpen }) => {
     formState: { errors, isSubmitting }
   } = methods;
 
+
   const [updateCalendar] = useUpdateCalendarMutation();
   // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
 
@@ -169,7 +170,6 @@ const EditForm  = ({item, open, setOpen }) => {
 
   useEffect(() => {
     if (!item?.id) return;
-    // setValue("bookingCalendarGroups", item?.bookingCalendarGroups);
     // setValue("recruitmentId", body.recruitmentId);
     // setValue("recruitmentPipelineStateId", body.recruitmentPipelineStateId);
     // setValue("onlineInterviewAddress", body.onlineInterviewAddress);
@@ -180,6 +180,7 @@ const EditForm  = ({item, open, setOpen }) => {
     // setValue("isSendMailApplicant", body.isSendMailApplicant);
 
   }, [item]);
+
   return (
     <BoxInnerStyle>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -230,7 +231,7 @@ const EditForm  = ({item, open, setOpen }) => {
                 <Grid container flexDirection={"row"} height={"100%"} flexWrap={"nowrap"} overflow={"hidden"}>
                   <Grid container sx={{ width: "600px", overflowY: "auto" }} p={3} height={"100%"} flexWrap={"nowrap"}
                         flexDirection={"column"}>
-                    <PersonalInterview item={item}/>
+                    <PersonalInterview item={item} isEditmode={true}/>
                   </Grid>
                   <Divider orientation="vertical"/>
                   <Grid p={3} sx={{

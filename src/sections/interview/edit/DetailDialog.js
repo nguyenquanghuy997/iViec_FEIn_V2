@@ -1,4 +1,6 @@
+import { CandidateState } from "../config";
 import { ButtonDS } from "@/components/DesignSystem";
+import useAuth from "@/hooks/useAuth";
 import {
   useDeleteCalendarMutation,
   useGetDetailCalendarsQuery,
@@ -16,17 +18,9 @@ import {
   Box,
   DialogActions,
 } from "@mui/material";
+import moment from "moment";
 import { useSnackbar } from "notistack";
-import PropTypes from "prop-types";
 import { RiLinkM } from "react-icons/ri";
-
-DetailDialog.propTypes = {
-  title: PropTypes.node.isRequired,
-  subheader: PropTypes.node,
-  open: PropTypes.bool,
-  actions: PropTypes.node,
-  onClose: PropTypes.func,
-};
 
 export default function DetailDialog({
   item,
@@ -85,18 +79,37 @@ export default function DetailDialog({
     );
   };
 
+  const time =
+    DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants?.map(
+      (item) => item?.interviewTime
+    );
+
+  const duration =
+    DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants?.map(
+      (item) => item?.interviewDuration
+    );
+  const convertDurationTimeToSeconds = (time) => {
+    const splitToString = time.split(":");
+    return (
+      +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+    );
+  };
+
+  const convertStoMs = (s) => {
+    const totalMinutes = Math.floor(s / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const newHours = hours < 10 ? "0" + hours : hours;
+    const minutes = totalMinutes % 60;
+    return `${newHours}:${minutes}`;
+  };
+  const startTime = convertStoMs(
+    convertDurationTimeToSeconds(moment(time[0]).format("HH:mm:ss")) -
+      convertDurationTimeToSeconds(duration[0])
+  );
+  const { user } = useAuth();
+
   return (
-    <Dialog
-      fullWidth
-      maxWidth="md"
-      open={open}
-      onClose={onClose}
-      sx={{
-        height: "100%",
-        bordeRadius: 0,
-        position: "relative",
-      }}
-    >
+    <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle
         sx={{
           display: "flex",
@@ -124,10 +137,7 @@ export default function DetailDialog({
           "Hình thức phỏng vấn:",
           DetailData?.interviewType == 0 ? "Online" : "Trực tiếp"
         )}
-        {/* {renderText(
-          "Thời gian:",
-          DetailData?.bookingCalendarGroups.map((item) => item?.interviewTime)
-        )} */}
+        {renderText("Thời gian:", `${moment(time[0]).format("HH:mm")}`)}
         {renderText(
           "Loại phỏng vấn:",
           DetailData?.bookingCalendarGroups.map(
@@ -138,7 +148,8 @@ export default function DetailDialog({
         )}
         {renderText(
           "Số lượng ứng viên:",
-          DetailData?.bookingCalendarGroups.length
+          DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants
+            .length
         )}
         {renderText("Trạng thái:", "")}
         {renderText("Lý do hủy:", DetailData?.removeReason)}
@@ -172,14 +183,14 @@ export default function DetailDialog({
               </ListItemText>
               <ListItemText>
                 <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                  15:00 - 18:00
+                  {startTime}- {moment(time[index]).format("HH:mm")}
                 </Typography>
               </ListItemText>
               <ListItemText
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                  Đồng ý tham gia
+                  {CandidateState(item?.applicantInterviewState)}
                 </Typography>
               </ListItemText>
             </ListItem>
@@ -187,7 +198,7 @@ export default function DetailDialog({
         )}
       </List>
       <Divider />
-      <List sx={{ px: 3, pt: 2, mb: "80px" }}>
+      <List sx={{ px: 3, pt: 2 }}>
         <Typography sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}>
           Hội đồng phỏng vấn
         </Typography>
@@ -216,8 +227,7 @@ export default function DetailDialog({
           borderTop: "1px solid #E7E9ED",
           display: "flex",
           justifyContent: "space-between",
-          bottom: -20,
-          position: "absolute",
+
           width: "100%",
         }}
       >
@@ -265,10 +275,19 @@ export default function DetailDialog({
               textTransform: "none",
             }}
           />
+
           <ButtonDS
-            tittle={"Tham gia phòng họp"}
-            type="button"
-            // onClick={() => setIsOpenSendOffer(true)}
+            onClick=""
+            tittle="Tham gia phòng họp"
+            href={
+              "phong-van.html?DisplayName=" +
+              user?.firstName +
+              "&&Email=" +
+              user?.email +
+              "&&RoomName=" +
+              DetailData?.id +
+              "&&Role=1"
+            }
             sx={{
               color: "white",
               backgroundColor: "#43A047",
@@ -279,6 +298,19 @@ export default function DetailDialog({
               textTransform: "none",
             }}
           />
+          {/* {check ? (
+          <ButtonDS
+            tittle="Tham gia"
+            sx={{
+              bgcolor: "#388E3C",
+              "&:hover": {
+                backgroundColor: "#43A047 !important",
+              },
+            }}
+          />
+        ) : (
+          ""
+        )} */}
         </Box>
       </DialogActions>
     </Dialog>
