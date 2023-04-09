@@ -1,17 +1,30 @@
+import { useState, useRef } from 'react';
+import {
+  Box,
+  TextField,
+  Stack,
+  InputAdornment,
+  useTheme,
+} from '@mui/material';
+import {
+  RiAddCircleFill,
+  RiSearch2Line,
+  RiFilterLine,
+} from 'react-icons/ri';
+import { useRouter } from 'next/router';
+
 import Content from "../Content";
-import FilterModal from "./FilterModal";
-import { HeaderStyle } from "./styles";
-import { Button } from "@/components/DesignSystem";
-import { Box, InputAdornment, Stack, TextField, useTheme } from "@mui/material";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import { RiAddCircleFill, RiFilterLine, RiSearch2Line } from "react-icons/ri";
+import { Button } from '@/components/DesignSystem';
+import FilterModal from './FilterModal';
+
+import { HeaderStyle } from './styles';
 
 export default function TableHeader({
   columns = [],
   createText = null,
   onClickCreate,
   onSubmitFilter,
+  isInside,
   display,
   headerProps,
   contentProps,
@@ -21,18 +34,19 @@ export default function TableHeader({
   const { palette } = useTheme();
   const [openFilter, setOpenFilter] = useState(false);
   const _timeoutSearch = useRef();
+  const buttonHeight = isInside ? 36 : 44;
 
   const onSubmit = (value, timeout = 0) => {
     clearTimeout(_timeoutSearch.current);
     _timeoutSearch.current = setTimeout(() => {
       onSubmitFilter({ SearchKey: value, PageIndex: 1, PageSize: 10 });
     }, timeout);
-  };
+  }
 
   if (display === "none") return null;
 
   return (
-    <HeaderStyle {...headerProps}>
+    <HeaderStyle className={isInside ? 'inside' : ''} {...headerProps}>
       <Content className="table-header-container" {...contentProps}>
         <Box display="flex">
           <Box flex={1}>
@@ -40,20 +54,20 @@ export default function TableHeader({
               <TextField
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment>
+                    <InputAdornment position='start'>
                       <RiSearch2Line size={16} color={palette.text.secondary} />
                     </InputAdornment>
-                  ),
+                  )
                 }}
                 placeholder="Tìm kiếm..."
                 className="search-input"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
                     onSubmit(e.target.value);
                   }
                 }}
                 defaultValue={query.SearchKey}
-                onChange={(e) => {
+                onChange={e => {
                   onSubmit(e.target.value, 500);
                 }}
                 {...inputProps}
@@ -65,6 +79,7 @@ export default function TableHeader({
                 onClick={() => {
                   setOpenFilter(true);
                 }}
+                height={buttonHeight}
               >
                 Bộ lọc
               </Button>
@@ -75,9 +90,10 @@ export default function TableHeader({
             <Box mr={1}>
               <Button
                 startIcon={<RiAddCircleFill size={18} color="#fff" />}
-                onClic={onClickCreate}
+                onClick={onClickCreate}
                 variant="contained"
                 color="primary"
+                height={buttonHeight}
               >
                 {createText}
               </Button>
@@ -92,9 +108,9 @@ export default function TableHeader({
           setOpenFilter(false);
         }}
         columns={columns}
-        onSubmit={onSubmitFilter}
+        onSubmitFilter={onSubmitFilter}
         width={384}
       />
     </HeaderStyle>
-  );
+  )
 }

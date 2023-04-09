@@ -104,12 +104,14 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
       providesTags: ["GetColumn"],
     }),
     updateListColumnApplicants: builder.mutation({
-      query: (data) => ({
-        url: `${API_UPDATE_COLUMN_PIPELINE}/${data.id}`,
-        method: "PATCH",
-        data: data.body,
-      }),
-      providesTags: ["UpdateColumn"],
+      query: (data) => {
+        const { id, ...restData } = data;
+        return {
+          url: `${API_UPDATE_COLUMN_PIPELINE}/${id}`,
+          method: "PATCH",
+          data: restData,
+        };
+      },
       invalidatesTags: ["GetColumn"],
     }),
   }),
@@ -124,5 +126,6 @@ export const {
   useAddPipelineMutation,
   useUpdatePipelineMutation,
   useDeletePipelineMutation,
-
+  useGetListColumnsQuery,
+  useUpdateListColumnApplicantsMutation,
 } = PipelineFormSlice;

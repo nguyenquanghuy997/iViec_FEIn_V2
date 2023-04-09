@@ -1,26 +1,20 @@
 import FilterModalRole from "../FilterModalRole";
-import RolegroupHeader from "../RolegroupHeader";
 import RoleDrawer from '../modals/RoleDrawer';
 import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import TextMaxLine from "@/components/TextMaxLine";
-import { filterSlice } from "@/redux/common/filterSlice";
-import { useDispatch, useSelector } from "@/redux/store";
 import {
-  useGetListColumnsQuery,
+  // useGetListColumnsQuery,
   useGetRoleGroupListQuery,
-  useUpdateListColumnsMutation,
+  // useUpdateListColumnsMutation,
   useRemoveRoleGroupMutation,
   useSetStatusRoleGroupMutation,
 } from "@/sections/rolegroup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Typography, useTheme } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+import { useState, useMemo } from "react";
 import BottomNavModal from '@/components/BaseComponents/BottomNavModal';
 import Switch from "@/components/form/Switch";
 import { useConfirmModal } from '@/components/modal';
@@ -37,44 +31,24 @@ import { getErrorMessage } from "@/utils/helper";
 
 import { RoleGroupStyle } from "../styles";
 
-const defaultValues = {
-  searchKey: "",
-};
-
 export const RoleContainer = () => {
   const { palette } = useTheme();
   const { confirmModal } = useConfirmModal();
   const { canAccess } = useRole();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const { query, isReady } = router;
-  const { data, isLoading } = useGetRoleGroupListQuery();
-  const dispatch = useDispatch();
-  // const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
-  const { data: {items: ColumnData =[]}={} } = useGetListColumnsQuery();
-  const dataFilter = useSelector((state) => state.filterReducer.data);
-  const [updateListColumn] = useUpdateListColumnsMutation();
+
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [paginationSize, setPaginationSize] = useState(10);
   const [editItem, setEditItem] = useState(null);
+
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const { data = {}, isLoading } = useGetRoleGroupListQuery(query, { skip: !isReady });
 
   const [removeRoleGroup] = useRemoveRoleGroupMutation();
   const [setStatusRoleGroup] = useSetStatusRoleGroupMutation();
 
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_ROLE), []);
 
-  const handleSetDataFilter = (data) =>
-    dispatch(filterSlice.actions.setAllDataFilter(data));
-  const handleChangePagination = (pageIndex, pageSize) => {
-    setPaginationSize(pageSize);
-    setPage(pageIndex);
-    handleSetDataFilter({
-      ...dataFilter,
-      pageSize: pageSize,
-      pageIndex: pageIndex,
-    });
-  };
   const columns = [
     {
       dataIndex: "id",
@@ -164,44 +138,6 @@ export const RoleContainer = () => {
     },
   ];
 
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues: useMemo(
-      () =>
-        query.searchKey
-          ? { ...defaultValues, searchKey: query.searchKey }
-          : { ...defaultValues },
-      [query.searchKey]
-    ),
-    // defaultValues: {...defaultValues, searchKey: query.searchKey},
-    resolver: yupResolver(Schema),
-  });
-
-  const { handleSubmit } = methods;
-
-  useEffect(() => {
-    if (!isReady) return;
-    // const queryParams = {
-    //   searchKey: query.searchKey,
-    //   isActive: query.isActive ? query.isActive : null,
-    //   createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-    //   createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-    //   creatorIds:
-    //     query.creatorIds && typeof query.creatorIds === "string"
-    //       ? query.creatorIds
-    //       : query.creatorIds && query.creatorIds,
-    // };
-    // if (query) {
-    //   getAllFilter(queryParams).unwrap();
-    // } else {
-    //   getAllFilter().unwrap();
-    // }
-  }, [isReady, query]);
-
   // open filter form
   const [isOpen, setIsOpen] = useState(false);
   const handleOpenFilterForm = () => {
@@ -212,40 +148,8 @@ export const RoleContainer = () => {
     setIsOpen(false);
   };
 
-  const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
-
-  // const onSubmit = async (data) => {
-  //   const body = { ...data, searchKey: data.searchKey };
-  //   await router.push(
-  //     {
-  //       pathname: router.pathname,
-  //       query: {
-  //         ...body,
-  //         createdTimeFrom: data.createdTimeFrom
-  //           ? new Date(data.createdTimeFrom).toISOString()
-  //           : null,
-  //         createdTimeTo: data.createdTimeTo
-  //           ? new Date(data.createdTimeTo).toISOString()
-  //           : null,
-  //       },
-  //     },
-  //     undefined,
-  //     { shallow: true }
-  //   );
-  //   handleCloseFilterForm();
-  // };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
-  const [columnsTable, setColumnsTable] = useState([]);
 
   const showActionStatus = useMemo(() => {
     if (!canEdit) {
@@ -344,13 +248,9 @@ export const RoleContainer = () => {
     <RoleGroupStyle>
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
-          page={page}
-          paginationSize={paginationSize}
-          handleChangePagination={handleChangePagination}
           columns={columns}
           source={data}
           loading={isLoading}
-          ColumnData={ColumnData[0]}
           settingName={"DANH SÁCH VAI TRÒ"}
           isSetting={true}
           nodata="Hiện chưa có vai trò"
@@ -358,20 +258,12 @@ export const RoleContainer = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          UpdateListColumn={updateListColumn}
-          columnsTable={columnsTable}
-          setColumnsTable={setColumnsTable}
-          filter={
-            <RolegroupHeader
-              methods={methods}
-              onSubmit={onSubmitSearch}
-              handleSubmit={handleSubmit}
-              onOpenFilterForm={handleOpenFilterForm}
-              onCloseFilterForm={handleCloseFilterForm}
-              onOpenAddForm={() => setOpen(true)}
-              canEdit={canEdit}
-            />
-          }
+          // useGetColumnsFunc={useGetListColumnsQuery}
+          // useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          createText="Thêm vai trò"
+          onClickCreate={() => {
+            setOpen(true);
+          }}
           tableProps={
             !canEdit && { rowSelection: false }
           }

@@ -1,47 +1,42 @@
-import ApplicantBottomNav from "./ApplicantBottomNav";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
-import { TBL_FILTER_TYPE } from "@/config";
-import useAuth from "@/hooks/useAuth";
-import {
-  API_GET_APPLICANT_SKILLS,
-  API_GET_JOB_CATEGORIES,
-  API_GET_LIST_JOB_SOURCE,
-  API_GET_LIST_RECRUITMENT,
-  API_GET_ORGANIZATION_WITH_CHILD,
-  API_GET_PROVINCE,
-  API_GET_USER_FROM_ORGANIZATION,
-} from "@/routes/api";
 import {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import {
-  Address,
-  MaritalStatus,
-  PipelineStateType,
-  Sex,
-  YearOfExperience,
-} from "@/utils/enum";
-import {
-  LIST_EXPERIENCE_NUMBER,
-  LIST_GENDER,
-  LIST_MARITAL_STATUSES,
-  LIST_STEP_RECRUITMENT,
-} from "@/utils/formatString";
+import { Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience, } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { Tag } from "antd";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
+import ApplicantBottomNav from "./ApplicantBottomNav";
+import useAuth from "@/hooks/useAuth";
+import { TBL_FILTER_TYPE } from "@/config";
+import {
+  LIST_GENDER,
+  LIST_MARITAL_STATUSES,
+  LIST_EXPERIENCE_NUMBER,
+  LIST_STEP_RECRUITMENT,
+} from "@/utils/formatString";
+import {
+  API_GET_LIST_RECRUITMENT,
+  API_GET_PROVINCE,
+  API_GET_LIST_JOB_SOURCE,
+  API_GET_USER_FROM_ORGANIZATION,
+  API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_JOB_CATEGORIES,
+  API_GET_APPLICANT_SKILLS,
+} from "@/routes/api";
 
 export const ApplicantItem = ({
   Data,
   isLoading,
-  PageSize,
-  PageIndex,
   hideTable,
   headerProps,
 }) => {
   const { user } = useAuth();
+  const router = useRouter();
+  const { query = { PageIndex: 1, PageSize: 10 } } = router;
 
   const columns = useMemo(() => {
     return [
@@ -61,9 +56,7 @@ export const ApplicantItem = ({
         title: "Họ và tên",
         fixed: "left",
         width: "220px",
-        render: (fullName) => (
-          <span style={{ fontWeight: 500 }}>{fullName}</span>
-        ),
+        render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
         filters: {
           type: TBL_FILTER_TYPE.TEXT,
         },
@@ -99,7 +92,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "recruitmentIds",
           remoteUrl: API_GET_LIST_RECRUITMENT,
-          remoteMethod: "POST",
+          remoteMethod: 'POST',
           placeholder: "Chọn một hoặc nhiều tin tuyển dụng",
         },
       },
@@ -107,16 +100,12 @@ export const ApplicantItem = ({
         dataIndex: "recruitmentPipelineState",
         title: "Bước tuyển dụng",
         width: "200px",
-        render: (item, record) =>
-          getStatusPipelineStateType(item, record?.pipelineStateResultType),
+        render: (item, record) => getStatusPipelineStateType(item, record?.pipelineStateResultType),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "recruitmentPipelineStates",
           placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
-          options: LIST_STEP_RECRUITMENT.map((item) => ({
-            value: item.value,
-            label: item.name,
-          })),
+          options: LIST_STEP_RECRUITMENT.map(item => ({ value: item.value, label: item.name })),
         },
       },
       {
@@ -126,8 +115,8 @@ export const ApplicantItem = ({
         render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
-          name: ["createdTimeFrom", "createdTimeTo"],
-          placeholder: "Chọn ngày",
+          name: ['createdTimeFrom', 'createdTimeTo'],
+          placeholder: 'Chọn ngày',
         },
       },
       {
@@ -136,9 +125,8 @@ export const ApplicantItem = ({
         width: "200px",
         label: "Đơn vị",
         filters: {
-          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: "organizationIds",
-          isTree: true,
+          type: TBL_FILTER_TYPE.SELECT_TREE,
+          name: 'organizationIds',
           placeholder: "Chọn một hoặc nhiều đơn vị",
           remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
         },
@@ -149,7 +137,7 @@ export const ApplicantItem = ({
         width: "200px",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: "jobSourceIds",
+          name: 'jobSourceIds',
           placeholder: "Chọn 1 hoặc nhiều nguồn",
           remoteUrl: API_GET_LIST_JOB_SOURCE,
         },
@@ -162,10 +150,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "ownerIds",
           placeholder: "Chọn 1 hoặc nhiều cán bộ",
-          remoteUrl:
-            API_GET_USER_FROM_ORGANIZATION +
-            "?OrganizationId=" +
-            user.organizations?.id,
+          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
         },
       },
       {
@@ -176,10 +161,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
-          remoteUrl:
-            API_GET_USER_FROM_ORGANIZATION +
-            "?OrganizationId=" +
-            user.organizations?.id,
+          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
         },
       },
       {
@@ -206,7 +188,7 @@ export const ApplicantItem = ({
         title: "Ngành nghề",
         width: "200px",
         render: (jobCats = []) => {
-          return jobCats.map((cat) => cat.name).join(", ");
+          return jobCats.map(cat => cat.name).join(', ');
         },
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
@@ -222,7 +204,7 @@ export const ApplicantItem = ({
         render: (item) => YearOfExperience(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          placeholder: "Chọn số năm kinh nghiệm",
+          placeholder: 'Chọn số năm kinh nghiệm',
           name: "yearsOfExperience",
           options: LIST_EXPERIENCE_NUMBER,
         },
@@ -272,9 +254,8 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT,
           name: "maritalStatuses",
           label: "Tình trạng hôn nhân",
-          options: [{ value: null, label: "Tất cả" }].concat(
-            LIST_MARITAL_STATUSES
-          ),
+          options: [{ value: '', label: 'Tất cả' }].concat(LIST_MARITAL_STATUSES),
+          placeholder: 'Tất cả',
         },
       },
       {
@@ -284,8 +265,8 @@ export const ApplicantItem = ({
         align: "center",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_NUMBER,
-          name: ["heightFrom", "heightTo"],
-          placeholder: "Nhập chiều cao",
+          name: ['heightFrom', 'heightTo'],
+          placeholder: 'Nhập chiều cao',
         },
       },
       {
@@ -298,8 +279,8 @@ export const ApplicantItem = ({
         align: "center",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_NUMBER,
-          name: ["weightFrom", "weightTo"],
-          placeholder: "Nhập cân nặng",
+          name: ['weightFrom', 'weightTo'],
+          placeholder: 'Nhập cân nặng',
         },
       },
       {
@@ -320,8 +301,8 @@ export const ApplicantItem = ({
         width: "240px",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_MONEY,
-          placeholder: "Nhập số tiền",
-          name: ["expectedSalaryFrom", "expectedSalaryTo"],
+          placeholder: 'Nhập số tiền',
+          name: ['expectedSalaryFrom', 'expectedSalaryTo'],
         },
       },
       {
@@ -331,7 +312,7 @@ export const ApplicantItem = ({
         render: (item) => Address(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_ADDRESS,
-          name: ["livingAddressProvinceIds", "livingAddressDistrictIds"],
+          name: ['livingAddressProvinceIds', 'livingAddressDistrictIds'],
         },
       },
       {
@@ -341,15 +322,14 @@ export const ApplicantItem = ({
         render: (item) => Address(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_ADDRESS,
-          name: ["homeTowerProvinceIds", "homeTowerDistrictIds"],
+          name: ['homeTowerProvinceIds', 'homeTowerDistrictIds'],
         },
       },
     ];
-  }, [PageIndex, PageSize]);
+  }, [query.PageIndex, query.PageSize]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
-  const [columnsTable, setColumnsTable] = useState([]);
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -427,8 +407,6 @@ export const ApplicantItem = ({
       <View>
         <DynamicColumnsTable
           columns={columns}
-          columnsTable={columnsTable}
-          setColumnsTable={setColumnsTable}
           source={Data}
           loading={isLoading}
           settingName={"DANH SÁCH ỨNG VIÊN"}
@@ -439,6 +417,7 @@ export const ApplicantItem = ({
           setItemSelected={setItemSelected}
           useGetColumnsFunc={useGetListColumnApplicantsQuery}
           useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+          searchInside={false}
           headerProps={headerProps}
           hideTable={hideTable}
         />
@@ -451,6 +430,7 @@ export const ApplicantItem = ({
         onOpenForm={toggleDrawer(true)}
         setSelectedList={setSelectedRowKeys}
         itemSelected={itemSelected}
+        setItemSelected={setItemSelected}
       />
     </View>
   );

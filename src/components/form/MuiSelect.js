@@ -66,7 +66,7 @@ const MuiSelect = forwardRef((
         }
 
         if (typeof selectValue === 'undefined') {
-            return null;
+            return '';
         }
         return selectValue;
     }, [selectValue, multiple]);

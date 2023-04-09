@@ -2,15 +2,15 @@ import {
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,
   useGetListColumnsQuery,
-  useLazyGetRecruitmentsQuery,
+  useGetRecruitmentsQuery,
   useUpdateListColumnsMutation,
 } from "../RecruitmentSlice";
-import RecruitmentFilterModal from "../modals/RecruitmentFilterModal";
+import { useGetOrganizationQuery } from "@/sections/report/reportSlice";
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
-import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import OrganizationSettingModal from "../modals/OrganizationSettingModal";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -22,7 +22,6 @@ import {
   AlertIcon,
   UnCheckedSwitchIcon,
 } from "@/sections/organization/component/Icon";
-import RecruitmentHeader from "@/sections/recruitment/RecruitmentHeader";
 import { handleExportExcel } from "@/sections/recruitment/helper/excel";
 import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
 import {
@@ -40,22 +39,15 @@ import {
 } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
 import { fDate } from "@/utils/formatTime";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Tooltip, Typography } from "@mui/material";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import React, { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-
-const defaultValues = {
-  searchKey: "",
-};
+import { useMemo, useState } from "react";
+import { get } from "lodash";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
-  const { query, isReady } = router;
   const { enqueueSnackbar } = useSnackbar();
 
   // modal redux
@@ -72,15 +64,9 @@ export const RecruitmentItem = () => {
   const [deleteRecruitments] = useDeleteRecruitmentMutation();
 
   // api get list
-  const [getAllFilter, { data: Data = {}, isLoading }] =
-    useLazyGetRecruitmentsQuery();
-  // api get list Column
-  const { data: { items: ColumnData = [] } = {} } = useGetListColumnsQuery();
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const { data: Data = {}, isLoading } = useGetRecruitmentsQuery(query, { skip: !isReady });
 
-  // api update list Column
-  const [updateListColumn] = useUpdateListColumnsMutation();
-  const [page, setPage] = useState(1);
-  const [paginationSize, setPaginationSize] = useState(10);
   const columns = useMemo(() => {
     return [
       {
@@ -303,7 +289,7 @@ export const RecruitmentItem = () => {
               if (index < 3) {
                 return (
                   <Tag
-                    key={p}
+                    key={index}
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
@@ -318,7 +304,7 @@ export const RecruitmentItem = () => {
                 var indexplus = coOwners.length - 3;
                 return (
                   <Tag
-                    key={p}
+                    key={index}
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
@@ -347,9 +333,9 @@ export const RecruitmentItem = () => {
           <>
             {recruitmentAddresses.map((item, index) => {
               if (index < recruitmentAddresses?.length - 1) {
-                return <span key={item}>{item.provinceName}, </span>;
+                return <span key={index}>{item.provinceName}, </span>;
               } else {
-                return <span key={item}>{item.provinceName}</span>;
+                return <span key={index}>{item.provinceName}</span>;
               }
               // let color = item.length > 5 ? 'geekblue' : 'green';
             })}
@@ -370,13 +356,13 @@ export const RecruitmentItem = () => {
             {recruitmentWorkingForms.map((item, index) => {
               if (index < recruitmentWorkingForms?.length - 1) {
                 return (
-                  <span key={item}>
+                  <span key={index}>
                     {RecruitmentWorkingForm(item.workingForm)},{" "}
                   </span>
                 );
               } else {
                 return (
-                  <span key={item}>
+                  <span key={index}>
                     {RecruitmentWorkingForm(item.workingForm)}
                   </span>
                 );
@@ -419,220 +405,21 @@ export const RecruitmentItem = () => {
         width: "160px",
       },
     ];
-  }, [page, paginationSize]);
-
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues: useMemo(
-      () =>
-        query.searchKey
-          ? { ...defaultValues, searchKey: query.searchKey }
-          : { ...defaultValues },
-      [query.searchKey]
-    ),
-    // defaultValues: {...defaultValues, searchKey: query.searchKey},
-    resolver: yupResolver(Schema),
-  });
-
-  const { handleSubmit } = methods;
-  let queryParams = {
-    ...query,
-    applicantSkillIds:
-      query.applicantSkillIds && typeof query.applicantSkillIds === "string"
-        ? [query.applicantSkillIds]
-        : query.applicantSkillIds && query.applicantSkillIds,
-    expectSalaryFrom: query.expectSalaryFrom
-      ? Number(query.expectSalaryFrom)
-      : null,
-    expectSalaryTo: query.expectSalaryTo ? Number(query.expectSalaryTo) : null,
-    yearsOfExperience: query.yearsOfExperience
-      ? [Number(query.yearsOfExperience)]
-      : null,
-    sexs: query.sexs ? [Number(query.sexs)] : null,
-    weightFrom: query.weightFrom ? Number(query.weightFrom) : null,
-    weightTo: query.weightTo ? Number(query.weightTo) : null,
-    heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
-    heightTo: query.heightTo ? Number(query.heightTo) : null,
-    maritalStatuses: query.maritalStatuses
-      ? [Number(query.maritalStatuses)]
-      : null,
-    education: query.education ? query.education : null,
-    homeTowerProvinceIds: query.homeTowerProvinceIds
-      ? [query.homeTowerProvinceIds]
-      : null,
-    homeTowerDistrictIds: query.homeTowerDistrictIds
-      ? [query.homeTowerDistrictIds]
-      : null,
-    livingAddressProvinceIds: query.livingAddressProvinceIds
-      ? [query.livingAddressProvinceIds]
-      : null,
-    livingAddressDistrictIds: query.livingAddressDistrictIds
-      ? [query.livingAddressDistrictIds]
-      : null,
-    expectWorkingAddressProvinceIds:
-      query.expectWorkingAddressProvinceIds &&
-      typeof query.expectWorkingAddressProvinceIds === "string"
-        ? [query.expectWorkingAddressProvinceIds]
-        : query.expectWorkingAddressProvinceIds &&
-          query.expectWorkingAddressProvinceIds,
-    organizationIds:
-      query.organizationIds && typeof query.organizationIds === "string"
-        ? [query.organizationIds]
-        : query.organizationIds && query.organizationIds,
-    recruitmentIds:
-      query.recruitmentIds && typeof query.recruitmentIds === "string"
-        ? [query.recruitmentIds]
-        : query.recruitmentIds && query.recruitmentIds,
-    ownerIds:
-      query.ownerIds && typeof query.ownerIds === "string"
-        ? [query.ownerIds]
-        : query.ownerIds && query.ownerIds,
-    councilIds:
-      query.councilIds && typeof query.councilIds === "string"
-        ? [query.councilIds]
-        : query.councilIds && query.councilIds,
-    creatorIds:
-      query.creatorIds && typeof query.creatorIds === "string"
-        ? [query.creatorIds]
-        : query.creatorIds && query.creatorIds,
-    createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-    createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-    recruitmentPipelineStates:
-      query.recruitmentPipelineStates &&
-      typeof query.recruitmentPipelineStates === "string"
-        ? [Number(query.recruitmentPipelineStates)]
-        : query.recruitmentPipelineStates &&
-          query.recruitmentPipelineStates?.map((pipe) => Number(pipe)),
-    jobCategoryIds:
-      query.jobCategoryIds && typeof query.jobCategoryIds === "string"
-        ? [query.jobCategoryIds]
-        : query.jobCategoryIds && query.jobCategoryIds,
-    jobSourceIds:
-      query.jobSourceIds && typeof query.jobSourceIds === "string"
-        ? [query.jobSourceIds]
-        : query.jobSourceIds && query.jobSourceIds,
-    pageSize: paginationSize,
-    pageIndex: page,
-  };
-  useEffect(() => {
-    if (!isReady) return;
-    if (query) {
-      getAllFilter(
-        JSON.stringify(
-          Object.entries(queryParams).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
-        )
-      ).unwrap();
-    } else {
-      getAllFilter({ pageSize: paginationSize, pageIndex: page }).unwrap();
-    }
-  }, [isReady, query]);
-
-  const handleChangePagination = (pageIndex, pageSize) => {
-    setPaginationSize(pageSize);
-    setPage(pageIndex);
-    if (query) {
-      getAllFilter(
-        JSON.stringify(
-          Object.entries({
-            ...queryParams,
-            pageSize: pageSize,
-            pageIndex: pageIndex,
-          }).reduce((a, [k, v]) => (v == null ? a : ((a[k] = v), a)), {})
-        )
-      ).unwrap();
-    } else {
-      getAllFilter({ pageSize: pageSize, pageIndex: pageIndex }).unwrap();
-    }
-  };
-  // open filter form
-  const [isOpen, setIsOpen] = useState(false);
-
-  // filter modal
-  const handleOpenFilterForm = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseFilterForm = () => {
-    setIsOpen(false);
-  };
-
-  const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
-
-  const onSubmit = async (data) => {
-    const body = { ...data, searchKey: data.searchKey };
-
-    if (query) {
-      queryParams = {
-        ...queryParams,
-        ...body,
-        pageSize: page,
-        pageIndex: paginationSize,
-      };
-      getAllFilter(
-        JSON.stringify(
-          Object.entries(queryParams).reduce(
-            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-            {}
-          )
-        )
-      ).unwrap();
-    } else {
-      getAllFilter({ pageSize: page, pageIndex: paginationSize }).unwrap();
-    }
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...body,
-          startDateFrom: data.startDateFrom
-            ? new Date(data.startDateFrom).toISOString()
-            : null,
-          startDateTo: data.startDateTo
-            ? new Date(data.startDateTo).toISOString()
-            : null,
-          endDateFrom: data.endDateFrom
-            ? new Date(data.endDateFrom).toISOString()
-            : null,
-          endDateTo: data.endDateTo
-            ? new Date(data.endDateTo).toISOString()
-            : null,
-          createdTimeFrom: data.createdTimeFrom
-            ? new Date(data.createdTimeFrom).toISOString()
-            : null,
-          createdTimeTo: data.createdTimeTo
-            ? new Date(data.createdTimeTo).toISOString()
-            : null,
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
-    handleCloseFilterForm();
-  };
-  const refreshData = () => {
-    getAllFilter().unwrap();
-  };
+  }, [query.PageIndex, query.PageSize]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
   const [itemSelected, setItemSelected] = useState([]);
-  const [columnsTable, setColumnsTable] = useState([]);
+  const [isOpenSettingOrganization, setIsOpenSettingOrganization] = useState(false);
+
+  const { data: Organization = {} } = useGetOrganizationQuery();
+
+  const handleCheckNavigate = () => {
+    if (get(Organization, 'isActivated')) {
+      return router.push(PATH_DASHBOARD.recruitment.create);
+    } else {
+      setIsOpenSettingOrganization(true)
+    }
+  }
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -728,7 +515,7 @@ export const RecruitmentItem = () => {
 
   return (
     <View>
-      <RecruitmentHeader
+      {/* <RecruitmentHeader
         data={Data.items}
         methods={methods}
         isOpen={isOpen}
@@ -736,39 +523,30 @@ export const RecruitmentItem = () => {
         handleSubmit={handleSubmit}
         onOpenFilterForm={handleOpenFilterForm}
         onCloseFilterForm={handleCloseFilterForm}
-      />
-      <Content>
-        <View mt={96}>
-          <DynamicColumnsTable
-            page={page}
-            paginationSize={paginationSize}
-            handleChangePagination={handleChangePagination}
-            columns={columns}
-            source={Data}
-            loading={isLoading}
-            ColumnData={ColumnData[0]}
-            columnsTable={columnsTable}
-            setColumnsTable={setColumnsTable}
-            UpdateListColumn={updateListColumn}
-            settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
-            scroll={{ x: 3954 }}
-            nodata="Hiện chưa có tin tuyển dụng nào"
-            selectedRowKeys={selectedRowKeys}
-            setSelectedRowKeys={setSelectedRowKeys}
-            itemSelected={itemSelected}
-            setItemSelected={setItemSelected}
-          />
-        </View>
-      </Content>
-      {isOpen && (
-        <RecruitmentFilterModal
-          columns={columnsTable}
-          isOpen={isOpen}
-          onClose={handleCloseFilterForm}
-          onSubmit={onSubmit}
-          onRefreshData={refreshData}
+      /> */}
+      
+      <View>
+        <DynamicColumnsTable
+          columns={columns}
+          source={Data}
+          loading={isLoading}
+          settingName={"DANH SÁCH TIN TUYỂN DỤNG"}
+          scroll={{ x: 3954 }}
+          nodata="Hiện chưa có tin tuyển dụng nào"
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
+          itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
+          useGetColumnsFunc={useGetListColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          searchInside={false}
+          createText="Đăng tin tuyển dụng"
+          onClickCreate={() => {
+            handleCheckNavigate();
+          }}
         />
-      )}
+      </View>
+
       {openClose && (
         <ConfirmModal
           open={openClose}
@@ -947,6 +725,11 @@ export const RecruitmentItem = () => {
             icon: <DeleteIcon />,
           },
         ].filter((item) => listKeyActions?.includes(item.key))}
+      />
+
+      <OrganizationSettingModal
+        onClose={() => setIsOpenSettingOrganization(false)}
+        isOpenSettingOrganization={isOpenSettingOrganization}
       />
     </View>
   );

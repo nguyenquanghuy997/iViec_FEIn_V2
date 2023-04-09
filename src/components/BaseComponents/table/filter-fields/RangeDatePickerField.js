@@ -1,12 +1,13 @@
+import { memo } from 'react';
 import { InputLabel } from "@mui/material";
 import RHFDatePicker from "@/components/hook-form/RHFDatePickerCustom";
 
-export default function RangeDatePickerField({
+const RangeDatePickerField = ({
   label,
   name,
   placeholder,
   ...props
-}) {
+}) => {
   return (
     <div className="date-fields">
       {label && (
@@ -36,3 +37,5 @@ export default function RangeDatePickerField({
     </div>
   )
 }
+
+export default memo(RangeDatePickerField);
