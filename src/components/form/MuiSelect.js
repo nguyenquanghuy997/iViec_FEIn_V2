@@ -60,6 +60,9 @@ const MuiSelect = forwardRef((
     const theme = useTheme();
     const value = useMemo(() => {
         if (multiple) {
+            if (typeof selectValue === 'number') {
+                selectValue = [selectValue];
+            }
             if (!selectValue) {
                 selectValue = [];
             }
@@ -69,7 +72,7 @@ const MuiSelect = forwardRef((
         }
 
         if (typeof selectValue === 'undefined') {
-            return '';
+            return null;
         }
         return selectValue;
     }, [selectValue, multiple]);
@@ -171,7 +174,7 @@ const MuiSelect = forwardRef((
 
     const displayedOptions = useMemo(() => {
         if (remoteUrl) {
-            return fetchedOptions.map(item => ({ value: item.id, label: item.name || item.email || item.lastName }));
+            return fetchedOptions.map(item => ({ value: item.id, label: showAvatar ? item.email || item.lastName : item.name }));
         }
         return options.filter((option) => containsText(option.label, filters.SearchKey));
     }, [filters.SearchKey, options, remoteUrl, fetchedOptions]);
@@ -213,19 +216,19 @@ const MuiSelect = forwardRef((
             }
             onChange(changedValue);
         }
-        setTimeout(() => {
-            setFilters({
-                ...filters,
-                SearchKey: ''
-            })
-        }, 500)
+        // setTimeout(() => {
+        //     setFilters({
+        //         ...filters,
+        //         SearchKey: ''
+        //     })
+        // }, 500)
     }
 
     const getSelectedItem = (val) => {
         let optionItem;
         if (remoteUrl) {
             optionItem = fetchedOptions.concat(selectedOptions).find(opt => opt.id === val);
-            return optionItem ? { value: optionItem.id, label: optionItem.label || optionItem.name || optionItem.email || optionItem.lastName } : { value: val, label: val };
+            return optionItem ? { value: optionItem.id, label: showAvatar ? optionItem.email || optionItem.lastName : optionItem.label || optionItem.name } : { value: val, label: val };
         }
         optionItem = options.find(opt => opt.value === val);
         return optionItem || { value: val, label: val };
@@ -404,7 +407,9 @@ const MuiSelect = forwardRef((
                     </InputAdornment>
                 )
             }
-            onOpen={() => setOpen(true)}
+            onOpen={() => {
+                setOpen(true);
+            }}
             onClose={(e) => {
                 setOpen(false);
                 if (resetOnClose) {

@@ -1,7 +1,6 @@
 import React from "react";
 import {useFieldArray, useFormContext, useWatch} from "react-hook-form";
 import {Box, Grid, IconButton} from "@mui/material";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {MinusIcon, PlusIcon} from "@/assets/ActionIcon";
 import RHFDropdownAvatarGroup from "@/components/hook-form/RHFDropdownAvatarGroup";
 import {
@@ -10,6 +9,7 @@ import {
 import {LIST_PROCESS_LEVEL_DETAIL_TYPE} from "@/utils/formatString";
 import {useGetApplicationByRoleGroupQuery} from "@/sections/auth/authSlice";
 import {useGetAllApplicantUserOrganizationByIdQuery} from "@/sections/organization/override/OverrideOrganizationSlice";
+import {RHFSelect} from "@/components/hook-form";
 
 const ConditionalInput = ({control, index, indexChild}) => {
     const value = useWatch({
@@ -29,8 +29,8 @@ const ConditionalInput = ({control, index, indexChild}) => {
         (value === 0 ?
                 <>
                     <Grid item xs={5} pr={2}>
-                        <RHFDropdown
-                            options={RoleGroups?.map(item => ({...item, value: item?.id, label: item?.name}))}
+                        <RHFSelect
+                            options={RoleGroups?.map(item => ({value: item?.id, label: item?.name}))}
                             name={`approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`}
                             isRequired
                             placeholder="Chọn nhóm phê duyệt"
@@ -114,9 +114,8 @@ export const ApproveProcessFormLevelItem = (props) => {
                     <Box className="box-content-inner" sx={{flex: 1}}>
                         <Grid container alignItems={"baseline"}>
                             <Grid item xs={3} pr={2}>
-                                <RHFDropdown
+                                <RHFSelect
                                     options={LIST_PROCESS_LEVEL_DETAIL_TYPE.map(item => ({
-                                        ...item,
                                         value: item?.id,
                                         label: item?.name
                                     }))}

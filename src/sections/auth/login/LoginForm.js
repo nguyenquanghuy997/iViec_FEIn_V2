@@ -38,8 +38,8 @@ export default function LoginForm() {
     });
 
     const defaultValues = {
-        email: "thuybon1@gmail.com",
-        password: "123123",
+        email: "",
+        password: "",
         remember: true,
     };
     

@@ -1,5 +1,5 @@
 import React from 'react'
-import vi from "date-fns/locale/vi";
+// import vi from "date-fns/locale/vi";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {FormHelperText, InputAdornment} from "@mui/material";
@@ -34,7 +34,7 @@ const DateFilter = React.forwardRef((props, ref) => {
           render={({field, fieldState: {error}}) => (
               <>
                 <LocalizationProvider
-                    adapterLocale={vi}
+                    // adapterLocale={vi}
                     dateAdapter={AdapterDateFns}
                     dateFormats={{ monthAndYear: 'MM-yyyy' }}
                 >

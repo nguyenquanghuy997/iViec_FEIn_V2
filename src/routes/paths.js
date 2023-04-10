@@ -19,11 +19,12 @@ export const PATH_AUTH = {
   newPassword: path(ROOTS_AUTH, "/new-password"),
   userActivate: path(ROOTS_AUTH, "/user-activate"),
   policy: path(ROOTS_AUTH, "/policy"),
+  changePassword: path(ROOTS_AUTH, "/change-password"),
 };
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
-  dashboard: path(ROOTS_DASHBOARD, "applicant"),
+  dashboard: path(ROOTS_DASHBOARD, "settings/companyinfor"),
   applicant: {
     root: path(ROOTS_DASHBOARD, "applicant"),
     view: (id) => path(ROOTS_DASHBOARD, `applicant/${id}`),

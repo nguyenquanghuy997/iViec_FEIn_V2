@@ -1,38 +1,47 @@
 import RHFSelectMultiple from "./RHFSelectMultiple";
-import { useGetApplicantByPipeLINEQuery } from "@/sections/interview/InterviewSlice";
-import {
-  Box,
-  Typography,
-} from "@mui/material";
+import { Label } from "@/components/hook-form/style";
+import { useGetApplicantByPipeLineQuery } from "@/sections/interview/InterviewSlice";
+import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React from "react";
+import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ item, watch, isEditmode }) => {
-  const res = useGetApplicantByPipeLINEQuery({ RecruitmentPipelineStateId: watch }, {skip: !watch, });
-  const { data: { items } = { items: [] }} = res;
 
+const ListCandidate = ({item, isEditmode, applicantId}) => {
+  const {watch} = useFormContext();
+  const {palette} = useTheme();
+  const res = useGetApplicantByPipeLineQuery(
+    {RecruitmentPipelineStateId: watch("recruitmentPipelineStateId")},
+    {skip: !watch("recruitmentPipelineStateId")}
+  );
+  const {data: {items} = {items: []}} = res;
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
-        Danh sách ứng viên
-      </Typography>
-      {watch && (
-        <RHFSelectMultiple
-          options={items?.map((i) => ({
-            id: i.id,
-            value: i.id,
-            label: i.fullName,
-            phone: i.phoneNumber,
-            name: i.fullName,
-          }))}
-          name="bookingCalendarGroups"
-          fullWidth
-          isEditmode={isEditmode}
-          defaultItem ={item}
-          multiple
-          isRequired
-          open={open}
-          
-        />
-      )}
+    <Box height={"100%"}>
+      <Label mb={3}>
+        <Typography variant={"subtitle2"} color={palette.text.primary}>
+          Danh sách ứng viên
+        </Typography>
+      </Label>
+      
+      <RHFSelectMultiple
+        options={items?.map((i) => ({
+          id: i.id,
+          value: i.id,
+          label: i.fullName,
+          phone: i.phoneNumber,
+          name: i.fullName,
+          image: `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${i?.portraitImage}`,
+        }))}
+        name={`applicantIdArray`}
+        fullWidth
+        disabled={!!applicantId || !watch("recruitmentPipelineStateId")}
+        isEditmode={isEditmode}
+        defaultValue={item}
+        multiple
+        isRequired
+        open={open}
+      />
+    
     </Box>
   );
 };

@@ -3,12 +3,13 @@ import { CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate, } 
 import { ButtonTreeStyle, CheckboxStyle, TreeItemStyle, TreeViewStyle } from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
 import { Box, Divider, IconButton, Link } from "@mui/material";
-import { DeleteIcon, EditIcon, ForwardIcon, PreviewIcon } from "@/assets/ActionIcon";
+import { AddIcon, DeleteIcon, EditIcon, ForwardIcon, PreviewIcon } from "@/assets/ActionIcon";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import NextLink from "next/link";
 import useRole from "@/hooks/useRole";
 import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
 export default function OrganizationTree({ selected, setSelected, treeData, dataRoot, data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType }) {
 
@@ -150,7 +151,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                     ><Iconify icon={"material-symbols:add"} /></IconButton>
                                 }
 
-                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px' }} variant="middle" />
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
 
                                 {
                                     (canEditUnit || canViewUnit) && <IconButton
@@ -159,7 +160,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                         onClick={() => handleOpenPreview(nodes)}
                                     ><PreviewIcon /></IconButton>
                                 }
-                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px' }} variant="middle" />
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
                                 {
                                     canEditUnit && <IconButton
                                         size='small'
@@ -170,7 +171,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                         }}
                                     ><EditIcon /></IconButton>
                                 }
-                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px' }} variant="middle" />
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
                                 {
                                     canEditUnit && <IconButton
                                         size='small'
@@ -180,7 +181,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                         }}
                                     ><DeleteIcon /></IconButton>
                                 }
-                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px' }} variant="middle" />
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
                                 {
                                     (canEditUnit || canViewUnit) && <NextLink href={PATH_DASHBOARD.organization.view(nodes.id)} passHref>
                                         <Link>
@@ -279,9 +280,11 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                 onNodeToggle={handleToggle}
                 expanded={expanded}
             >
-                {treeData?.map(item => renderTree({ ...item, isRoot: true }))}
+
+                {treeData && treeData?.map(item => renderTree({ ...item, isRoot: true }))}
+
                 {
-                    canEditUnit && <ButtonTreeStyle
+                    treeData && canEditUnit && <ButtonTreeStyle
                         onClick={() => {
                             handleOpenFormWithCurrentNode(dataRoot);
                             setActionType(0)
@@ -292,6 +295,30 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                         Thêm đơn vị
                     </ButtonTreeStyle>
                 }
+
+                {
+                    !treeData && <div style={{ margin: "40px 0", minHeight: "250px", textAlign: 'center' }}>
+                        <img
+                            src={`/assets/icons/candidate/notfound.png`}
+                            style={{ margin: "0 auto" }}
+                        />
+                        <p>Hiện chưa có đơn vị nào trực thuộc công ty của bạn</p>
+                        {
+                            canEditUnit && <div style={{display: 'flex', justifyContent: 'center', marginTop: '24px'}}>
+                                <MuiButton
+                                    title={"Thêm đơn vị"}
+                                    onClick={() => {
+                                        handleOpenFormWithCurrentNode(dataRoot);
+                                        setActionType(0)
+                                    }}
+                                    startIcon={<AddIcon />}
+                                    sx={{ fontWeight: 550 }}
+                                />
+                            </div>
+                        }
+                    </div>
+                }
+
 
             </TreeViewStyle>
         </Box>
