@@ -44,3 +44,37 @@ export const CandidateState = (item) => {
       return <span style={{ color: "#455570" }}>Đồng ý nhận việc</span>;
   }
 };
+
+export const toHhMmSs = (num) => {
+  let sec_num = parseInt(num * 60, 10);
+  let hours = Math.floor(sec_num / 3600);
+  let minutes = Math.floor((sec_num - hours * 3600) / 60);
+  let seconds = sec_num - hours * 3600 - minutes * 60;
+  
+  if (hours < 10) {
+    hours = "0" + hours;
+  }
+  if (minutes < 10) {
+    minutes = "0" + minutes;
+  }
+  if (seconds < 10) {
+    seconds = "0" + seconds;
+  }
+  return hours + ":" + minutes + ":" + seconds;
+};
+
+export const convertDurationTimeToSeconds = (time) => {
+  const splitToString = time.split(":");
+  return (
+    +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+  );
+};
+
+export const convertStoMs = (s) => {
+  const totalMinutes = Math.floor(s / 60);
+  const seconds = s % 60;
+  const newSeconds = seconds < 10 ? "0" + seconds : seconds;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${hours}:${minutes}:${newSeconds}`;
+};

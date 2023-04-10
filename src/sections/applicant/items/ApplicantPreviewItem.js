@@ -11,32 +11,18 @@ import { RejectApplicantModal } from "../modals/RejectApplicantModal";
 import { PipelineApplicant } from "../others";
 import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
 import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
-import {
-  AvatarDS,
-  ButtonDS,
-  NavGoBack,
-  SelectAutoCompleteDS,
-} from "@/components/DesignSystem";
+import { AvatarDS, ButtonDS, NavGoBack, SelectAutoCompleteDS, } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import { HEADER } from "@/config";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
-import CreateCalendar from "@/sections/interview/components/CreateCalendar";
 import { srcImage } from "@/utils/enum";
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, Container, Divider, Grid, Stack, Typography, } from "@mui/material";
 import { styled } from "@mui/styles";
 import React, { useEffect, useState } from "react";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 
 function ApplicantPreviewItem({
   ApplicantId,
@@ -531,7 +517,7 @@ function ApplicantPreviewItem({
             data={reviewFormCriterias}
           />
         )}
-         {open && <CreateCalendar open={open} setOpen={setOpen} options={selectedOption} currentApplicantPipelineState={pipelines?.currentApplicantPipelineState}/>}
+         {open && <FormCalendar open={open} setOpen={setOpen} options={selectedOption} currentApplicantPipelineState={pipelines?.currentApplicantPipelineState}/>}
       </Container>
     </div>
   );

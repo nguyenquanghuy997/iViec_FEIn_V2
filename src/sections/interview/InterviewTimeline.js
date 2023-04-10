@@ -1,13 +1,13 @@
 import InterviewSchedule from "./InterviewSchedule";
-import CreateCalendar from "./components/CreateCalendar";
 import InterviewHeader from "./components/InterviewHeader";
 import { View } from "@/components/FlexStyled";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import Content from '@/components/BaseComponents/Content'
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 
 const defaultValues = {
   searchKey: "",
@@ -52,13 +52,13 @@ export const InterviewTimeline = () => {
         <InterviewHeader
           methods={methods}
           isOpen={isOpen}
+          onOpenFilterForm={setIsOpen}
+          setOpen={setOpen}
           onSubmit={onSubmitSearch}
           handleSubmit={handleSubmit}
-          handleOpen={setOpen}
-          onOpenFilterForm={setIsOpen}
         />
         {open && (
-          <CreateCalendar
+          <FormCalendar
             open={open}
             setOpen={setOpen}
           />

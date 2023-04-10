@@ -19,7 +19,7 @@ const ListCandidate = ({ item, isEditmode, applicantId }) => {
 
   const { data: { items } = { items: [] } } = res;
   return (
-    <Box p={isEditmode ? 0 :3} height={"100%"}>
+    <Box height={"100%"}>
       <Label mb={3}>
         <Typography variant={"subtitle2"} color={palette.text.primary}>
           Danh sách ứng viên
@@ -35,7 +35,7 @@ const ListCandidate = ({ item, isEditmode, applicantId }) => {
             name: i.fullName,
             image: `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${i?.portraitImage}`,
           }))}
-          name={`applicantId`}
+          name={`applicantIdArray`}
           fullWidth 
           disabled= {applicantId || !watch("recruitmentPipelineStateId") ? true : false}
           isEditmode={isEditmode}

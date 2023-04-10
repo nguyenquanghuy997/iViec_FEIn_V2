@@ -1,12 +1,12 @@
 import { PERMISSIONS } from "@/config";
 import DetailDialog from "./edit/DetailDialog";
-import EditForm from "./edit/EditForm";
 import ViewSchedule from "./edit/ViewSchedule";
 import useRole from "@/hooks/useRole";
 import { useGetCalendarQuery } from "@/sections/interview/InterviewSlice";
 import { Typography, Box, Card, CardContent } from "@mui/material";
 import { useMemo } from "react";
 import { useState } from "react";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 
 export default function InterviewSchedule() {
   const {data: Data} = useGetCalendarQuery();
@@ -61,16 +61,16 @@ export default function InterviewSchedule() {
       {Data?.items.map((item) => (
         <ViewSchedule
           key={item.id}
-          id={item?.id}
+          data={item}
           check={check}
           handleClick={handleClick}
           handleClickDialog={handleClickDialog}
         />
       ))}
       {openForm && (
-        <EditForm
+        <FormCalendar
           open={openForm}
-          item={item}
+          data={item}
           setOpen={setOpenForm}
         />
       )}
