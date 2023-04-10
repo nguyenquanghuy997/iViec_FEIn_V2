@@ -1,6 +1,7 @@
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
 import {
+  useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
@@ -26,15 +27,19 @@ import {
   API_GET_JOB_CATEGORIES,
   API_GET_APPLICANT_SKILLS,
 } from "@/routes/api";
+import TextMaxLine from "@/components/TextMaxLine";
+import {PATH_DASHBOARD} from "@/routes/paths";
 
 export const ApplicantItem = ({
-  Data,
-  isLoading,
   hideTable,
   headerProps,
 }) => {
   const router = useRouter();
-  const { query = { PageIndex: 1, PageSize: 10 } } = router;
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+
+  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(query, {
+    skip: !isReady,
+  });
 
   const columns = useMemo(() => {
     return [
@@ -54,19 +59,25 @@ export const ApplicantItem = ({
         title: "Họ và tên",
         fixed: "left",
         width: "220px",
-        render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
-        filters: {
-          type: TBL_FILTER_TYPE.TEXT,
-        },
+        // render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
+        render: (item, record) => (
+            <TextMaxLine
+                sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
+                onClick={() => router.push({pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
+                    co: record?.correlationId,
+                    or: record?.organizationId,
+                    re: record?.recruitmentId,
+                  }}, undefined, { shallow: true })}
+            >
+              {item}
+            </TextMaxLine>
+        ),
       },
       {
         dataIndex: "phoneNumber",
         title: "Số điện thoại",
         fixed: "left",
         width: "120px",
-        filters: {
-          type: TBL_FILTER_TYPE.TEXT,
-        },
       },
       {
         dataIndex: "dateOfBirth",
@@ -78,9 +89,6 @@ export const ApplicantItem = ({
         dataIndex: "email",
         title: "Email",
         width: "214px",
-        filters: {
-          type: TBL_FILTER_TYPE.TEXT,
-        },
       },
       {
         dataIndex: "recruitmentName",

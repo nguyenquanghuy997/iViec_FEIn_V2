@@ -103,6 +103,17 @@ export const LIST_RECRUITMENT_SALARY_DISPLAY_TYPE = [
   {value: 1, name: "Lương thỏa thuận", label: "Lương thỏa thuận"},
   {value: 2, name: "Mức lương chi tiết", label: "Mức lương chi tiết"},
 ]
+export const LIST_RECRUITMENT_PROCESS_STATUS = [
+  {value: 0, label: "Bản nháp"},
+  {value: 1, label: "Chờ nội bộ phê duyệt"},
+  {value: 2, label: "Nội bộ từ chối"},
+  {value: 3, label: "Chờ iVIEC phê duyệt"},
+  {value: 4, label: "iVIEC từ chối"},
+  {value: 5, label: "Đang tuyển dụng"},
+  {value: 6, label: "Đã lên lịch"},
+  {value: 7, label: "Hết hạn"},
+  {value: 8, label: "Đóng"},
+]
 
 export const PipelineStateType = (item, description = '') => {
   switch (item) {

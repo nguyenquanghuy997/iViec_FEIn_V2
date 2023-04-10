@@ -46,7 +46,19 @@ import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
 import { get } from "lodash";
 import useRole from "@/hooks/useRole";
-import { PERMISSIONS } from "@/config";
+import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
+import TextMaxLine from "@/components/TextMaxLine";
+import {
+  API_GET_LIST_CANDIDATELEVEL, API_GET_LIST_LANGUAGE,
+  API_GET_ORGANIZATION_USERS,
+  API_GET_ORGANIZATION_WITH_CHILD, API_GET_PAGING_JOBTYPE,
+  API_GET_PROVINCE
+} from "@/routes/api";
+import {
+  LIST_EXPERIENCE_NUMBER,
+  LIST_RECRUITMENT_PROCESS_STATUS,
+  LIST_RECRUITMENT_WORKING_FORM,
+} from "@/utils/formatString";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -72,7 +84,7 @@ export const RecruitmentItem = () => {
 
   // api get list
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
-  const { data: Data = {}, isLoading } = useGetRecruitmentsQuery(query, { skip: !isReady });
+  const { data: Data = {}, isLoading } = useGetRecruitmentsQuery({...query, searchKey: query.SearchKey}, { skip: !isReady });
 
   const columns = useMemo(() => {
     return [
@@ -92,18 +104,43 @@ export const RecruitmentItem = () => {
         title: "Tin tuyển dụng",
         fixed: "left",
         width: "300px",
-        render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
+        render: (item, record) => (
+            <TextMaxLine
+                sx={{ width: 360, fontWeight: 500, fontSize: 14, ...(canView && { cursor: 'pointer' }) }}
+                onClick={(e) => {
+                  if (!canView) {
+                    return;
+                  }
+                  router.push(PATH_DASHBOARD.recruitment.view(record.id)),
+                  e.stopPropagation();
+                }}
+            >
+              {item}
+            </TextMaxLine>
+        ),
       },
       {
         dataIndex: "jobPosition",
         title: "Vị trí công việc",
         width: "214px",
         render: (item) => item?.name,
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          placeholder: 'Chọn 1 hoặc nhiều vị trí công việc',
+          name: 'jobPositionIds',
+          remoteUrl: API_GET_PAGING_JOBTYPE
+        },
       },
       {
         dataIndex: "organizationName",
         title: "Đơn vị",
         width: "200px",
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_TREE,
+          name: 'organizationIds',
+          placeholder: "Chọn một hoặc nhiều đơn vị",
+          remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
+        },
       },
       {
         dataIndex: "processStatus",
@@ -132,81 +169,45 @@ export const RecruitmentItem = () => {
             )}
           </div>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: 'processStatuses',
+          placeholder: 'Tất cả',
+          options: LIST_RECRUITMENT_PROCESS_STATUS.map(item => ({ value: item.value, label: item.label }),)
+        }
       },
       {
         dataIndex: "startDate",
         title: "Ngày bắt đầu",
         width: "180px",
-        type: "date",
-        label: "Ngày bắt đầu",
-        name: "startDate",
         render: (date) => fDate(date),
-        items: [
-          {
-            name: "startDateFrom",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Từ</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-          {
-            name: "startDateTo",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Đến</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_DATE,
+          name: ['queryStartFrom', 'queryStartTo'],
+          placeholder: 'Chọn ngày',
+        },
       },
       {
         dataIndex: "endDate",
         title: "Ngày hết hạn",
         width: "180px",
-        type: "date",
-        label: "Ngày hết hạn",
-        name: "endDate",
         render: (date) => fDate(date),
-        items: [
-          {
-            name: "endDateFrom",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Từ</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-          {
-            name: "endDateTo",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Đến</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_DATE,
+          name: ['queryEndFrom', 'queryEndTo'],
+          placeholder: 'Chọn ngày',
+        },
       },
       {
         dataIndex: "createdTime",
         title: "Ngày tạo tin",
         width: "180px",
-        type: "date",
-        label: "Ngày tạo tin",
-        name: "createdTime",
         render: (date) => fDate(date),
-        items: [
-          {
-            name: "createdTimeFrom",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Từ</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-          {
-            name: "createdTimeTo",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Đến</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_DATE,
+          name: ['createdFrom', 'createdTo'],
+          placeholder: 'Chọn ngày',
+        },
       },
       {
         dataIndex: "numOfApplied",
@@ -216,28 +217,17 @@ export const RecruitmentItem = () => {
         label: "Số lượng ứng tuyển",
         type: "number",
         align: "center",
-        items: [
-          {
-            name: "numberApplyFrom",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Từ</span>,
-            endIcon: <span>Người</span>,
-          },
-          {
-            name: "numberApplyTo",
-            type: "number",
-            placeholder: "Nhập số",
-            startIcon: <span>Đến</span>,
-            endIcon: <span>Người</span>,
-          },
-        ],
       },
       {
         dataIndex: "numberPosition",
         title: "SL cần tuyển",
         width: "160px",
         align: "center",
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_NUMBER,
+          name: ['numOfPositionFrom', 'numOfPositionTo'],
+          placeholder: 'Nhập số',
+        },
       },
       {
         dataIndex: "numOfPass",
@@ -255,11 +245,6 @@ export const RecruitmentItem = () => {
         dataIndex: "ownerEmail",
         title: "Cán bộ phụ trách",
         width: "220px",
-        name: "ownerIds",
-        label: "Cán bộ phụ trách",
-        placeholder: "Chọn 1 hoặc nhiều người",
-        // type: "select",
-        multiple: true,
         render: (text, record) => (
           <>
             {record?.ownerEmail && (
@@ -280,16 +265,18 @@ export const RecruitmentItem = () => {
             )}
           </>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: 'ownerIds',
+          placeholder: 'Chọn 1 hoặc nhiều cán bộ',
+          remoteUrl: API_GET_ORGANIZATION_USERS,
+          showAvatar: true
+        },
       },
       {
         dataIndex: "coOwners",
         title: "Đồng phụ trách",
         width: "340px",
-        name: "coOwnerIds",
-        label: "Đồng phụ trách",
-        placeholder: "Chọn 1 hoặc nhiều người",
-        // type: "select",
-        multiple: true,
         render: (_, { coOwners }) => (
           <>
             {coOwners?.map((p, index) => {
@@ -326,16 +313,18 @@ export const RecruitmentItem = () => {
             })}
           </>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: 'coOwnerIds',
+          placeholder: 'Chọn 1 hoặc nhiều cán bộ',
+          remoteUrl: API_GET_ORGANIZATION_USERS,
+          showAvatar: true
+        },
       },
       {
         dataIndex: "recruitmentAddresses",
         title: "Khu vực đăng tin",
         width: "300px",
-        name: "recruitmentAddresses",
-        label: "Khu vực đăng tin",
-        placeholder: "Chọn 1 hoặc nhiều khu vực",
-        // type: "select",
-        multiple: true,
         render: (_, { recruitmentAddresses }) => (
           <>
             {recruitmentAddresses.map((item, index) => {
@@ -348,16 +337,17 @@ export const RecruitmentItem = () => {
             })}
           </>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "provinceIds",
+          placeholder: "Chọn 1 hoặc nhiều khu vực",
+          remoteUrl: API_GET_PROVINCE,
+        },
       },
       {
         dataIndex: "recruitmentWorkingForms",
         title: "Hình thức làm việc",
         width: "216px",
-        name: "recruitmentWorkingForms",
-        label: "Hình thức làm việc",
-        placeholder: "Chọn 1 hoặc nhiều hình thức",
-        // type: "select",
-        multiple: true,
         render: (_, { recruitmentWorkingForms }) => (
           <>
             {recruitmentWorkingForms.map((item, index) => {
@@ -377,16 +367,17 @@ export const RecruitmentItem = () => {
             })}
           </>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "workingForms",
+          placeholder: "Chọn 1 hoặc nhiều hình thức",
+          options: LIST_RECRUITMENT_WORKING_FORM.map((item) => ({ value: item.value, label: item.label }))
+        },
       },
       {
         dataIndex: "salary",
         title: "Mức lương",
         width: "216px",
-        name: ["minSalary", "maxSalary"],
-        label: "Mức lương",
-        // type: "select",
-        multiple: false,
-        placeholder: "Chọn số năm kinh nghiệm",
         render: (text, record) => (
           <>
             {record?.minSalary != 0
@@ -394,22 +385,45 @@ export const RecruitmentItem = () => {
               : ""}
           </>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_MONEY,
+          name: ['minSalary', 'maxSalary'],
+          placeholder: 'Nhập số',
+        },
       },
       {
         dataIndex: "candidateLevelName",
         title: "Chức danh",
         width: "216px",
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "candidateLevelIds",
+          placeholder: "Chọn 1 hoặc nhiều chức danh",
+          remoteUrl: API_GET_LIST_CANDIDATELEVEL,
+        },
       },
       {
         dataIndex: "workExperience",
         title: "Số năm kinh nghiệm",
         width: "214px",
         render: (item) => YearOfExperience(item),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          placeholder: 'Chọn số năm kinh nghiệm',
+          name: 'workExperiences',
+          options: LIST_EXPERIENCE_NUMBER.map(item => ({ value: item.value, label: item.label }))
+        },
       },
       {
         dataIndex: "workingLanguageName",
         title: "Ngôn ngữ",
         width: "160px",
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          placeholder: 'Chọn 1 hoặc nhiều ngôn ngữ',
+          name: 'workingLanguageIds',
+          remoteUrl: API_GET_LIST_LANGUAGE
+        },
       },
     ];
   }, [query.PageIndex, query.PageSize]);

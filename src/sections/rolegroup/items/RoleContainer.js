@@ -26,10 +26,12 @@ import {
 } from 'react-icons/ri';
 import { useSnackbar } from "notistack";
 import useRole from "@/hooks/useRole";
-import { PERMISSIONS } from "@/config";
+import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
 import { getErrorMessage } from "@/utils/helper";
 
 import { RoleGroupStyle } from "../styles";
+import {LIST_STATUS} from "@/utils/formatString";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 export const RoleContainer = () => {
   const { palette } = useTheme();
@@ -100,10 +102,15 @@ export const RoleContainer = () => {
             fontSize: "12px",
           }}
         >
-          {isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+          {isActivated ? "Đang hoạt động" : "Không hoạt động"}
         </Typography>
       ),
       width: "160px",
+      filters: {
+        type: TBL_FILTER_TYPE.SELECT,
+        placeholder: 'Tất cả',
+        options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+      }
     },
     {
       title: "Ngày tạo",
@@ -113,6 +120,11 @@ export const RoleContainer = () => {
       render: (time) => (
         <>{time ? moment(time).format("DD/MM/YYYY") : null}</>
       ),
+      filters: {
+        type: TBL_FILTER_TYPE.RANGE_DATE,
+        name: ['createdTimeFrom', 'createdTimeTo'],
+        placeholder: 'Chọn ngày',
+      },
     },
     {
       dataIndex: "creatorFirstName",
@@ -135,6 +147,13 @@ export const RoleContainer = () => {
           </span>
         </div>
       ),
+      filters: {
+        type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+        name: "creatorIds",
+        placeholder: "Chọn 1 hoặc nhiều người",
+        remoteUrl: API_GET_ORGANIZATION_USERS,
+        showAvatar: true
+      },
     },
   ];
 
@@ -173,6 +192,16 @@ export const RoleContainer = () => {
     return isShow;
   }, [itemSelected]);
 
+  const showDeleteBtn = useMemo(()=>{
+    if (!canEdit) {
+      return false;
+    }
+    if (itemSelected.length < 1) {
+      return false;
+    }
+    return !itemSelected.some(x=>x.isDefault); 
+  },[itemSelected]);
+
   const selectedStatus = useMemo(() => {
     if (itemSelected.length < 1) {
       return true;
@@ -195,6 +224,7 @@ export const RoleContainer = () => {
         try {
           await removeRoleGroup(itemSelected.map(it => it.id)).unwrap();
           setItemSelected([]);
+          setSelectedRowKeys([])
           close();
           enqueueSnackbar('Xóa vai trò thành công!');
         } catch (err) {
@@ -299,7 +329,7 @@ export const RoleContainer = () => {
             },
             disabled: selectedRowKeys.length > 1,
           }] : []),
-          ...(canEdit ? [{
+          ...(showDeleteBtn ? [{
             icon: <RiDeleteBin6Line size={18} color={palette.text.warning} />,
             onClick: () => {
               handleConfirmDelete();

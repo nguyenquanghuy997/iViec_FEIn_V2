@@ -172,6 +172,7 @@ export const PipelineItem = () => {
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
           remoteUrl: API_GET_ORGANIZATION_USERS,
+          showAvatar: true
         },
       },
     ];
@@ -189,7 +190,13 @@ export const PipelineItem = () => {
   };
   return (
     <View>
-      <Content sx={{ padding: "0 !important" }}>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}

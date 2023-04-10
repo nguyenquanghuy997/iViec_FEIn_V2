@@ -3,167 +3,68 @@ import {
   useGetAllReviewFormQuery,
   useUpdateStatusReviewFormMutation,
 } from "../evaluationFormSlice";
-import EvaluationFilterModal from "../modals/EvaluationFilterModal";
 import { EvaluationFormModal } from "../modals/EvaluationFormModal";
 import EvaluationItemBlock from "./EvaluationItemBlock";
 import ActiveModal from "@/components/BaseComponents/ActiveModal";
 import DeleteModal from "@/components/BaseComponents/DeleteModal";
 import FormHeader from "@/sections/emailform/component/FormHeader";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import EvaluationFormHeader from "../EvaluationformHeader";
+import React, {useMemo, useState} from "react";
+import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
+import {LIST_STATUS} from "@/utils/formatString";
+import {isEmpty as _isEmpty} from "lodash";
+import {useRouter} from "next/router";
+import TableHeader from "@/components/BaseComponents/table/TableHeader";
+import useRole from "@/hooks/useRole";
+import LoadingScreen from "@/components/LoadingScreen";
 
-// data
-// const data = [
-//   {
-//     id: 1,
-//     title: "Mặc định",
-//     subtitle: "(Đã gửi 12)",
-//     user: "Đinh Tiến Thành",
-//     isActive: true,
-//     createdDate: "17/02/2023",
-//     reviewFormCriterias: [
-//       {
-//         name: "Ngoại hình",
-//         description: "Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn",
-//         isRequired: true,
-//       },
-//       {
-//         name: "Học vấn",
-//         description:
-//           "Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn Cao trên 1m70, ngoại hình cần ưa nhìn, nhanh nhẹn",
-//         isRequired: true,
-//       },
-//       {
-//         name: "Kinh nghiệm làm việc",
-//         description:
-//           "Cao trên 1m70, Cao trên 1m70,Cao trên 1m70,Cao trên 1m70,",
-//         isRequired: false,
-//       },
-//       {
-//         name: "Kỹ năng",
-//         description: "Biết lập trình, biết nói",
-//         isRequired: false,
-//       },
-//       {
-//         name: "Thái độ",
-//         description: "ChĂM CHỈ, cần cù",
-//         isRequired: true,
-//       },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     title: "Mẫu email mời nhận việc 1",
-//     subtitle: "(Đã gửi 12)",
-//     user: "Đinh Tiến Thành",
-//     isActive: true,
-//     createdDate: "17/02/2023",
-//   },
-//   {
-//     id: 3,
-//     title: "Mẫu email mời nhận việc 2",
-//     subtitle: "(Đã gửi 12)",
-//     user: "Đinh Tiến Thành",
-//     isActive: false,
-//     createdDate: "17/02/2023",
-//   },
-//   {
-//     id: 4,
-//     title: "Mẫu email mời nhận việc 3",
-//     subtitle: "(Đã gửi 12)",
-//     user: "Đinh Tiến Thành",
-//     isActive: false,
-//     createdDate: "17/02/2023",
-//   },
-//   {
-//     id: 5,
-//     title: "Mẫu email mời nhận việc 4",
-//     subtitle: "(Đã gửi 12)",
-//     user: "Đinh Tiến Thành",
-//     isActive: true,
-//     createdDate: "17/02/2023",
-//   },
-//   {
-//     id: 5,
-//     title: "Mẫu email mời nhận việc 5",
-//     subtitle: "(Đã gửi 12)",
-//     user: "Đinh Tiến Thành",
-//     isActive: false,
-//     createdDate: "17/02/2023",
-//   },
-// ];
+const columns = [
+  {
+    dataIndex: "createdTime",
+    title: "Ngày tạo",
+    colFilters: {
+      type: TBL_FILTER_TYPE.RANGE_DATE,
+      name: ['StartTime', 'EndTime'],
+      placeholder: 'Chọn ngày',
+    },
+  },
+  {
+    dataIndex: "creatorName",
+    title: "Người tạo",
+    colFilters: {
+      type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+      name: "CreatorIds",
+      placeholder: "Chọn 1 hoặc nhiều người",
+      remoteUrl: API_GET_ORGANIZATION_USERS,
+      showAvatar: true
+    },
+  },
+  {
+    dataIndex: "IsActivated",
+    title: "Trạng thái",
+    colFilters: {
+      type: TBL_FILTER_TYPE.SELECT,
+      placeholder: 'Tất cả',
+      options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+    }
+  }
+]
 
-const defaultValues = {
-  searchKey: "",
-};
 const EvaluationItem = () => {
   const { enqueueSnackbar } = useSnackbar();
-  // const [Data] = useState([...data]);
-  const {data: {items: Data = []} = {}} = useGetAllReviewFormQuery();
+  const { canAccess } = useRole();
+  const router = useRouter();
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+
+  const {data: {items: Data = []} = {}, isLoading} = useGetAllReviewFormQuery(query, { skip: !isReady });
   const [status] = useUpdateStatusReviewFormMutation();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
 
-  // const [expands, setExpands] = useState(Array(Data.length).fill(false));
-
-  // const [selected, setSelected] = useState(
-  //   Array(Data.length).fill(false)
-  // );
-  // const [selectedValue, setSelectedValue] = useState(
-  //   Array(Data.length).fill({ checked: false })
-  // );
-
-  // modal
   const [item, setItem] = useState(null);
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
-  const [isOpenFilter, setIsOpenFilter] = useState(false);
-
-  const handleOpenFilterForm = () => {
-    setIsOpenFilter(true);
-  };
-  const handleCloseFilterForm = () => {
-    setIsOpenFilter(false);
-  };
-
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues: { ...defaultValues },
-    resolver: yupResolver(Schema),
-  });
-
-  const { handleSubmit } = methods;
-
-  // expand card item
-  // const handleChangeExpand = (index) => {
-  //   const expandsNext = [...expands].map((item, idx) =>
-  //     idx === index ? !item : item
-  //   );
-  //   setExpands(expandsNext);
-  // };
-  // const handleSelected = (data, index) => {
-  //   const selectedNext = [...selected].map((i, idx) =>
-  //     idx === index ? !i : i
-  //   );
-  //   const selectedValueNext = [...selectedValue].map((i, idx) =>
-  //     idx === index
-  //       ? { ...i, checked: !i.checked }
-  //       : {
-  //           ...i,
-  //           checked: i.checked,
-  //         }
-  //   );
-  //   setSelected(selectedNext);
-  //   setSelectedValue(selectedValueNext);
-  // };
 
   const handleOpenModel = (event, data, type) => {
     event.stopPropagation();
@@ -176,6 +77,18 @@ const EvaluationItem = () => {
     setShowConfirmMultiple(false);
     setItem(null);
   };
+
+  const onSubmitFilter = (values = {}, reset = false, timeout = 1) => {
+    if (reset && _isEmpty(router.query)) {
+      return;
+    }
+
+    setTimeout(() => {
+      router.push({
+        query: reset ? {} : { ...router.query, ...values },
+      }, undefined, { shallow: false });
+    }, timeout);
+  }
 
   const handleChangeStatus = async (item) => {
     try {
@@ -207,6 +120,11 @@ const EvaluationItem = () => {
       });
     }
   };
+
+  if (isLoading) {
+    return <LoadingScreen />
+  }
+
   return (
     <>
       <Box>
@@ -215,24 +133,22 @@ const EvaluationItem = () => {
           buttonTitle="Thêm mẫu đánh giá"
           showButton={false}
         />
-        <EvaluationFormHeader
-          methods={methods}
-          handleSubmit={handleSubmit}
-          onOpenFilterForm={handleOpenFilterForm}
-          onCloseFilterForm={handleCloseFilterForm}
-          onOpenForm={handleOpenModel}
-        />
+        <Box sx={{mb: 2}}>
+          <TableHeader
+              columns={columns}
+              onSubmitFilter={onSubmitFilter}
+              onClickCreate={(e) => handleOpenModel(e,null,"form")}
+              createText={canEdit && "Thêm quy trình tuyển dụng"}
+              createText={'Thêm mẫu đánh giá'}
+              isInside={true}
+          />
+        </Box>
         {Data.map((column, index) => {
           return (
             <EvaluationItemBlock
-              // isCheckbox
               key={index}
               index={index}
               item={column}
-              // expanded={expands[index]}
-              // checked={selectedValue[index].checked}
-              // onChangeSelected={() => handleSelected(column, index)}
-              // onChangeExpand={() => handleChangeExpand(index)}
               onOpenModel={handleOpenModel}
             />
           );
@@ -260,13 +176,6 @@ const EvaluationItem = () => {
           show={showConfirmMultiple}
           onClose={handleCloseModel}
           id={item?.id}
-        />
-      )}
-      {isOpenFilter && (
-        <EvaluationFilterModal
-          isOpen={isOpenFilter}
-          onClose={handleCloseFilterForm}
-          onSubmit={handleCloseFilterForm}
         />
       )}
     </>

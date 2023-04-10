@@ -68,7 +68,7 @@ const renderOptions = (options) => {
   });
 };
 
-function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
+function SelectCouncils({ name, ...props }) {
   const { control } = useFormContext();
   const classes = useStyles();
   const { defaultValue, isRequired, title, options, disabled, multiple } =
@@ -139,63 +139,7 @@ function SelectCouncils({ name, isEditmode, defaultItem, ...props }) {
               </div>
             </Card>
           ))}
-        {isEditmode &&
-          defaultItem?.bookingCalendarCouncils.map((item) => (
-            <Card
-              sx={{
-                p: 2,
-                background: "#F2F4F5",
-                mb: 2,
-                borderRadius: "6px",
-              }}
-            >
-              <div
-                style={{
-                  marginBottom: 0,
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    alt=""
-                    style={{
-                      width: 42,
-                      height: 42,
-                      marginRight: "16px",
-                      borderRadius: "11px",
-                    }}
-                    src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
-                  />
-                  <div>
-                    <Typography
-                      component="div"
-                      sx={{ fontSize: "13px", fontWeight: "600" }}
-                    >
-                      {item?.name}
-                    </Typography>
-                    <Typography
-                      color="#455570"
-                      sx={{ fontSize: "12px", fontWeight: "400" }}
-                    >
-                      {item?.email}
-                    </Typography>
-                  </div>
-                </div>
-                {/* <Box
-                    sx={{ mt: "2px", cursor: "pointer" }}
-                    onClick={() => remove(index)}
-                  >
-                    <DeleteIcon />
-                  </Box> */}
-              </div>
-            </Card>
-          ))}
+       
       </Stack>
     );
   };

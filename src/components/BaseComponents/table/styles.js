@@ -37,7 +37,7 @@ export const HeaderStyle = styled('div')(() => ({
 
   '.drawer-filter': {
     '.MuiDrawer-paper': {
-      paddingLeft: 16,
+      // paddingLeft: 16,
       background: 'transparent',
       borderLeft: 'none',
     },

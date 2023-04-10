@@ -51,7 +51,7 @@ const RolegroupForm = ({ role, ...methods }) => {
 
       <Stack justifyContent="space-between" sx={{ mb: 3 }}>
         <View mb={24}>
-          <Label required={true}>Mô tả</Label>
+          <Label>Mô tả</Label>
           <TextAreaDS
             maxLength={255}
             placeholder="Nhập nội dung mô tả..."

@@ -25,7 +25,7 @@ const defaultValues = {
   onlineInterviewAddress: undefined,
   note: undefined,
   councilIds: [],
-  reviewFormId: "",
+  reviewFormId: undefined,
   isSendMailCouncil: false,
   isSendMailApplicant: false,
   bookingCalendarGroups: [{
@@ -45,6 +45,8 @@ export const FormCalendar = ({
   const isEditMode = !!data?.id;
   const {data: DetailData = {}} = useGetDetailCalendarsQuery({BookingCalendarId: data?.id}, {skip: !data?.id});
   const isLoading = isEditMode && !DetailData?.id;
+  const [addCalendar] = useAddCalendarMutation();
+  const [updateCalendar] = useUpdateCalendarMutation();
   
   const Schema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
@@ -52,14 +54,14 @@ export const FormCalendar = ({
       "Chưa nhập tên tiêu đề tin tuyển dụng"
     ),
     recruitmentPipelineStateId: Yup.string().required(),
-    interviewType: Yup.string().required("Nhập hình thức phỏng vấn"),
+    interviewType: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).required("Nhập hình thức phỏng vấn"),
     onlineInterviewAddress: Yup.string().nullable(),
     note: Yup.string().nullable(),
     councilIds: Yup.array().required(),
     reviewFormId: Yup.string().required(),
     isSendMailCouncil: Yup.bool(),
     isSendMailApplicant: Yup.bool(),
-    applicantIdArray: Yup.array().of(Yup.string().min(1)),
+    applicantIdArray: Yup.array().of(Yup.string().min(1)).required("Chọn ứng viên phỏng vấn"),
     bookingCalendarGroups: Yup.array().of(
       Yup.object().shape({
         name: Yup.string(),
@@ -89,9 +91,6 @@ export const FormCalendar = ({
     formState: {isSubmitting},
   } = methods;
   
-  const [addCalendar] = useAddCalendarMutation();
-  const [updateCalendar] = useUpdateCalendarMutation();
-  
   useEffect(() => {
     if (!DetailData?.id) return;
     setValue("name", DetailData.name ?? undefined);
@@ -100,11 +99,24 @@ export const FormCalendar = ({
     setValue("interviewType", DetailData.interviewType ?? undefined);
     setValue("onlineInterviewAddress", DetailData.onlineInterviewAddress ?? undefined);
     setValue("note", DetailData.note ?? undefined);
-    setValue("councilIds", DetailData.councilIds ?? undefined);
     setValue("reviewFormId", DetailData.reviewFormId ?? undefined);
     setValue("isSendMailCouncil", DetailData.isSendMailCouncil ?? undefined);
     setValue("isSendMailApplicant", DetailData.isSendMailApplicant ?? undefined);
     setValue("bookingCalendarGroups", DetailData.bookingCalendarGroups ?? undefined);
+
+    let arrayApplicant = [];
+    DetailData.bookingCalendarGroups.forEach(item => {
+      item?.bookingCalendarApplicants.forEach(itemData => {
+        arrayApplicant.push(itemData.applicant.id)
+      });
+    });
+    setValue("applicantIdArray", arrayApplicant);
+
+    let arrayCouncil = [];
+    DetailData.bookingCalendarCouncils.forEach(item => {
+      arrayCouncil.push(item.id);
+    });
+    setValue("councilIds", arrayCouncil);
   }, [DetailData]);
   
   const pressSave = handleSubmit(async (d) => {
@@ -194,7 +206,7 @@ export const FormCalendar = ({
       >
         <ViewModel sx={{width: "unset", height: "100%", justifyContent: "space-between"}}>
           {isLoading ?
-            <View flex="true" contentcenter="true">
+            <View flex="true" contentcenter="true" style={{minWidth: "600px"}}>
               <CircularProgress/>
             </View>
             :
@@ -242,6 +254,7 @@ export const FormCalendar = ({
                   <Grid container sx={{width: "600px", overflowY: "auto"}} p={3} height={"100%"} flexWrap={"nowrap"}
                         flexDirection={"column"}>
                     <PersonalInterview
+                      item={DetailData}
                       option={options}
                       currentApplicantPipelineState={
                         currentApplicantPipelineState
@@ -252,14 +265,14 @@ export const FormCalendar = ({
                   <Grid p={3} sx={{
                     minWidth: "400px"
                   }}>
-                    <ListCandidate applicantId={options?.applicantId}/>
+                    <ListCandidate model={DetailData.bookingCalendarGroups} isEditmode={isEditMode} option={options} applicantId={options?.applicantId}/>
                   </Grid>
                   <Divider orientation="vertical"/>
                   <Grid sx={{
                     minWidth: "400px",
                     overflowY: "auto"
                   }}>
-                    <InterviewCouncil/>
+                    <InterviewCouncil />
                   </Grid>
                 </Grid>
               </View>

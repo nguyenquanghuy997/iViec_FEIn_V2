@@ -71,7 +71,6 @@ export default function DrawerEdit({ selectedItem, onClose, ...props }) {
           .required('Tên vai trò không được bỏ trống')
           .max(50, 'Tên vai trò không được quá 50 ký tự'),
         description: Yup.string()
-          .required('Mô tả không được bỏ trống')
           .max(255, 'Mô tả không được quá 255 ký tự'),
         identityRoles: Yup.array()
           .min(1, 'Vui lòng chọn ít nhất một chức năng'),

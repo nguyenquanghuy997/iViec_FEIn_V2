@@ -38,6 +38,14 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+const defaultStyleRecruitmentStatus = {
+  borderRadius: "100px",
+  padding: "6px 10px",
+  marginLeft: "12px",
+  fontSize: "12px",
+  fontWeight: 600,
+}
+
 function RecruitmentPreviewItem({
   viewModeDefault,
   onChangeViewMode,
@@ -184,13 +192,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#455570",
               border: "1px solid #455570",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Bản nháp
@@ -200,13 +204,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#F77A0C",
               border: "1px solid #F77A0C",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Chờ nội bộ phê duyệt
@@ -216,13 +216,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#E53935",
               border: "1px solid #E53935",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Nội bộ từ chối
@@ -232,13 +228,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#F77A0C",
               border: "1px solid #F77A0C",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Chờ iVIEC phê duyệt
@@ -248,13 +240,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#E53935",
               border: "1px solid #E53935",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             iVIEC từ chối
@@ -264,13 +252,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#388E3C",
               border: "1px solid #388E3C",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Đang tuyển dụng
@@ -280,13 +264,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#388E3C",
               border: "1px solid #388E3C",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Đã lên lịch
@@ -296,13 +276,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#455570",
               border: "1px solid #455570",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Hết hạn
@@ -312,13 +288,9 @@ function RecruitmentPreviewItem({
         return (
           <span
             style={{
+              ...defaultStyleRecruitmentStatus,
               color: "#455570",
               border: "1px solid #455570",
-              borderRadius: "100px",
-              padding: "6px 10px",
-              marginLeft: "12px",
-              fontSize: "12px",
-              fontWeight: 600,
             }}
           >
             Đóng
@@ -382,7 +354,7 @@ function RecruitmentPreviewItem({
                           color: "#172B4D",
                           fontWeight: 700,
                         }}
-                        link={PATH_DASHBOARD.dashboard}
+                        link={PATH_DASHBOARD.recruitment.root}
                         name={RecruitmentData?.name}
                       ></NavGoBack>
                     </div>

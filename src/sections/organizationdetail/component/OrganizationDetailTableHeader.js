@@ -1,13 +1,13 @@
-import {View} from "@/components/FlexStyled";
+import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import {FormProvider, RHFTextField} from "@/components/hook-form";
-import {InputAdornment, Stack} from "@mui/material";
+import { FormProvider, RHFTextField } from "@/components/hook-form";
+import { InputAdornment, Stack } from "@mui/material";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import {AddIcon} from "@/assets/ActionIcon";
+import { AddIcon } from "@/assets/ActionIcon";
 import React from "react";
-import {FilterIcon} from "@/assets/FilterIcon";
+import { FilterIcon } from "@/assets/FilterIcon";
 
-const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, handleSubmit, setIsOpenInviteForm}) => {
+const OrganizationDetailTableHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit, onOpenInviteForm, onOpenListInvite }) => {
     return (
         <>
             <Stack
@@ -17,18 +17,25 @@ const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, han
                 padding="16px"
                 backgroundColor={"#FDFDFD"}
             >
-                <View style={{flexDirection: "row", alignItems: "center"}}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                         <RHFTextField
                             name="searchKey"
                             placeholder="Tìm kiếm theo tên, email hoặc SĐT..."
-                            sx={{minWidth: "360px"}}
+                            sx={{
+                                minWidth: "360px",
+                                backgroundColor: '#F2F4F5',
+                                borderRadius: '6px',
+                                '.MuiInput-root': {
+                                    border: 'none'
+                                }
+                            }}
                             InputProps={{
                                 startAdornment: (
-                                    <InputAdornment position="start" sx={{ml: 1.5}}>
+                                    <InputAdornment position="start" sx={{ ml: 1.5 }}>
                                         <Iconify
                                             icon={"eva:search-fill"}
-                                            sx={{color: "text.disabled", width: 20, height: 20}}
+                                            sx={{ color: "text.disabled", width: 20, height: 20 }}
                                         />
                                     </InputAdornment>
                                 ),
@@ -37,26 +44,26 @@ const OrganizationDetailTableHeader = ({methods, onOpenFilterForm, onSubmit, han
                     </FormProvider>
                     <MuiButton
                         color={"default"}
-                        startIcon={<FilterIcon/>}
+                        startIcon={<FilterIcon />}
                         title={"Bộ lọc"}
                         onClick={onOpenFilterForm}
-                        sx={{fontWeight: 550, ml: 2, height: '44px', "&:hover": {boxShadow: 'none'}}}
+                        sx={{ fontWeight: 550, ml: 2, height: '44px', "&:hover": { boxShadow: 'none' } }}
                     />
                 </View>
                 <Stack flexDirection="row" alignItems="center">
                     <MuiButton
                         title={"Danh sách mời"}
                         color={"default"}
-                        onClick={() => setIsOpenInviteForm(true)}
-                        startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
-                        sx={{fontWeight: 550, marginRight: 1, "&:hover": {boxShadow: 'none'}}}
+                        onClick={() => onOpenListInvite()}
+                        startIcon={<Iconify icon="mdi:folder-upload-outline" />}
+                        sx={{ fontWeight: 550, marginRight: 1, "&:hover": { boxShadow: 'none' } }}
                     />
                     <MuiButton
                         title={"Mời người dùng"}
                         color={"primary"}
-                        onClick={() => setIsOpenInviteForm(true)}
-                        startIcon={<AddIcon/>}
-                        sx={{fontWeight: 550}}
+                        onClick={() => onOpenInviteForm()}
+                        startIcon={<AddIcon />}
+                        sx={{ fontWeight: 550 }}
                     />
                 </Stack>
             </Stack>
