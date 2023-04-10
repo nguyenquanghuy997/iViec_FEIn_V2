@@ -26,7 +26,7 @@ const Common = ({ recruitment }) => {
                         name="name"
                         placeholder="Nhập tiêu đề tin hiển thị tại trang việc làm..."
                         fullWidth
-                        disabled={recruitment.processStatus === 5 || recruitment.processStatus === 6}
+                        disabled={recruitment?.processStatus === 5 || recruitment?.processStatus === 6}
                     />
                 </Box>
                 {/* Khu vực đăng tin */}
