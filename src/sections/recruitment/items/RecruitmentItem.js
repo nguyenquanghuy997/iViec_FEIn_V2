@@ -522,16 +522,6 @@ export const RecruitmentItem = () => {
 
   return (
     <View>
-      {/* <RecruitmentHeader
-        data={Data.items}
-        methods={methods}
-        isOpen={isOpen}
-        onSubmit={onSubmitSearch}
-        handleSubmit={handleSubmit}
-        onOpenFilterForm={handleOpenFilterForm}
-        onCloseFilterForm={handleCloseFilterForm}
-      /> */}
-
       <View>
         <DynamicColumnsTable
           columns={columns}

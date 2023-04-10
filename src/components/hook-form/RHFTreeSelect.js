@@ -4,7 +4,7 @@ import {LabelStyle,} from '@/components/hook-form/style';
 import MuiTreeSelect from "@/components/form/MuiTreeSelect";
 import HelperText from "@/components/BaseComponents/HelperText";
 
-function RHFTreeSelect({name, ...props}) {
+function RHFTreeSelect({name, onChange, ...props}) {
   const {control} = useFormContext();
   const {options, isRequired, title, ...other} = props;
   const handleDelete = (field, valueDelete) => {
@@ -16,18 +16,31 @@ function RHFTreeSelect({name, ...props}) {
       <Controller
           name={name}
           control={control}
-          render={({field, fieldState: {error}}) => (
-              <Stack direction="column">
-                {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
-                <MuiTreeSelect
-                    {...field}
-                    options={options}
-                    onDelete={(item) => handleDelete(field, item)}
-                    {...other}
-                />
-                <HelperText errorText={error?.message}/>
-              </Stack>
-          )}
+          render={({field, fieldState: {error}}) => {
+            const {onChange: onFieldChange, ...otherField} = field;
+            return (
+                <>
+                  <Stack direction="column">
+                    {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
+                    <MuiTreeSelect
+                        name={name}
+                        onChange={e => {
+                          if (onChange) {
+                            onChange(e);
+                          }
+                          onFieldChange(e);
+                        }}
+                        {...otherField}
+                        error={!!error}
+                        options={options}
+                        onDelete={(item) => handleDelete(field, item)}
+                        {...other}
+                    />
+                    <HelperText errorText={error?.message}/>
+                  </Stack>
+                </>
+            )
+          }}
       />
   );
 }

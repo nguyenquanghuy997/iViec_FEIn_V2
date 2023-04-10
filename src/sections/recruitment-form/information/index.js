@@ -29,7 +29,7 @@ const RecruitmentInformation = ({recruitment: Recruitment}) => {
   return (
       <BoxWrapperStyle className="wrapper">
         <Box className="box-item" sx={{width: '100%', backgroundColor: 'transparent', display: 'flex',}}>
-          <Common/>
+          <Common recruitment={Recruitment}/>
           <TextNote
               title="Lưu ý:"
               texts={['Tiêu đề tin tuyển dụng chỉ bao gồm tên vị trí tuyển dụng và khu vực cần tuyển']}
@@ -48,8 +48,7 @@ const RecruitmentInformation = ({recruitment: Recruitment}) => {
           <TextNote
               title="Lưu ý:"
               texts={[
-                'Vui lòng chọn vị trí công việc đã tạo sẵn trong phần thiết lập hoặc nhập tên vị trí công việc để thêm mới.',
-                'Hệ thống sẽ tự động lưu trữ vị trí công việc vừa được thiết lập sẵn.'
+                'Vui lòng chọn vị trí công việc để sử dụng mẫu mô tả công việc có sẵn.'
               ]}
           />
         </Box>

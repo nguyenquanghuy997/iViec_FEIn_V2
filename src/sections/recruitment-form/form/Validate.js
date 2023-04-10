@@ -25,11 +25,11 @@ const FormValidate = Yup.object().shape({
         }),
     minSalary: Yup.number()
         .transform(value => (isNaN(value) ? undefined : value))
-        .when("salaryDisplayType", (salaryDisplayType, schema) => {
-            if (salaryDisplayType === 2)
-                return schema.required("Mức lương tối thiểu không được bỏ trống")
-            return schema
-        })
+        // .when("salaryDisplayType", (salaryDisplayType, schema) => {
+        //     if (salaryDisplayType === 2)
+        //         return schema.required("Mức lương tối thiểu không được bỏ trống")
+        //     return schema
+        // })
         .when("currencyUnit", (currencyUnit, schema) => {
             if (currencyUnit === 0)
                 return schema.min(1000000, 'Mức lương tối thiểu ít nhất 7 chữ số')
@@ -40,11 +40,11 @@ const FormValidate = Yup.object().shape({
     maxSalary: Yup.number()
         .transform(value => (isNaN(value) ? undefined : value))
         .min(Yup.ref('minSalary'), 'Mức lương tối đa cần lớn hơn hoặc bằng mức lương tối thiểu')
-        .when("salaryDisplayType", (salaryDisplayType, schema) => {
-            if (salaryDisplayType === 2)
-                return schema.required("Mức lương tối đa không được bỏ trống")
-            return schema
-        })
+        // .when("salaryDisplayType", (salaryDisplayType, schema) => {
+        //     if (salaryDisplayType === 2)
+        //         return schema.required("Mức lương tối đa không được bỏ trống")
+        //     return schema
+        // })
         .when("currencyUnit", (currencyUnit, schema) => {
             if (currencyUnit === 0)
                 return schema.min(1000000, 'Mức lương tối đa ít nhất 7 chữ số')

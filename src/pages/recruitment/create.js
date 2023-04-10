@@ -32,6 +32,7 @@ import {TabContext} from "@mui/lab";
 import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
 import {isEmpty} from "lodash";
 import TabPanel from "@/sections/recruitment-form/components/TabPanel";
+import {View} from "@/components/FlexStyled";
 
 CreateRecruitment.getLayout = function getLayout(pageProps, page) {
   return <Layout permissions={PERMISSION_PAGES.createRecruitment} {...pageProps}>{page}</Layout>
@@ -47,6 +48,7 @@ export default function CreateRecruitment() {
 
   const [valueTab, setValueTab] = useState('1');
   const [showAlert, setShowAlert] = useState(false);
+  const [hState, sethState] = useState("top");
   const examinationDataRef = useRef(null);
 
   const goBackButtonHandler = () => {
@@ -75,6 +77,23 @@ export default function CreateRecruitment() {
     };
     window.addEventListener('popstate', unloadCallback);
     return () => window.removeEventListener('popstate', unloadCallback);
+  }, []);
+
+  useEffect(() => {
+    let lastVal = 0;
+    window.onscroll = function () {
+      let y = window.scrollY;
+      if (y > lastVal) {
+        sethState("down");
+      }
+      if (y < lastVal) {
+        sethState("up");
+      }
+      if (y === 0) {
+        sethState("top");
+      }
+      lastVal = y;
+    };
   }, []);
 
   const handleChangeTab = (event, newValue) => {
@@ -120,7 +139,7 @@ export default function CreateRecruitment() {
   }
 
   const methods = useForm({
-    mode: 'all',
+    mode: 'onBlur',
     resolver: openSaveDraft ? null : yupResolver(FormValidate),
     defaultValues: defaultValues,
     shouldUnregister: false,
@@ -182,31 +201,37 @@ export default function CreateRecruitment() {
 
   return (
       <Page title='Đăng tin tuyển dụng'>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <TabContext value={valueTab}>
-            <Grid container>
-              <Header
-                  title={'Đăng tin tuyển dụng'}
-                  onOpenConfirm={handleOpenConfirm}
-                  errors={isValid}
-                  setShowAlert={setShowAlert}
-              />
-              <TabList onChange={handleChangeTab}/>
-            </Grid>
-            <Content>
-              <Grid container columnSpacing={3}>
-                <Grid item md={12} className="profile-content">
-                  <TabPanel value="1">
-                    <Information />
-                  </TabPanel>
-                  <TabPanel value="2">
-                    <Pipeline ref={examinationDataRef}/>
+        <View mt={200} mb={36}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <TabContext value={valueTab}>
+              <Grid container>
+                <Header
+                    title={'Đăng tin tuyển dụng'}
+                    onOpenConfirm={handleOpenConfirm}
+                    errors={isValid}
+                    setShowAlert={setShowAlert}
+                />
+                <TabList
+                    onChange={handleChangeTab}
+                    className={hState}
+                    isValid={isValid}
+                />
+              </Grid>
+              <Content>
+                <Grid container columnSpacing={3}>
+                  <Grid item md={12} className="profile-content">
+                    <TabPanel value="1">
+                      <Information />
+                    </TabPanel>
+                    <TabPanel value="2">
+                      <Pipeline ref={examinationDataRef}/>
                     </TabPanel>
                   </Grid>
                 </Grid>
-            </Content>
-          </TabContext>
-        </FormProvider>
+              </Content>
+            </TabContext>
+          </FormProvider>
+        </View>
         {
             showAlert && <ConfirmModal
                 open={showAlert}
