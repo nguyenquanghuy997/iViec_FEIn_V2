@@ -8,6 +8,7 @@ import React, { memo, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 import { Divider } from "antd";
+import { FormCalendar } from "../interview/components/FormCalendar";
 function Item(props) {
   const { sx, ...other } = props;
   return (
@@ -97,6 +98,7 @@ function ExaminationItem(props) {
 
 function InterviewItem(props) {
   const { item } = props;
+  const [ open, setOpen] = useState(false)
   return (
     <div>
       <Baseitem item={item} />
@@ -146,6 +148,7 @@ function InterviewItem(props) {
                 padding: "6px 12px",
                 textTransform: "none",
               }}
+              onClick={()=> setOpen(true)}
             />
           </Box>
         </Box>
@@ -210,6 +213,7 @@ function InterviewItem(props) {
           </Box>
         </Box> */}
       </Box>
+      {open && <FormCalendar open={open} setOpen={setOpen}/>}
     </div>
   );
 }
@@ -543,6 +547,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                   ></Box>
                 </Stack>
               </Box>
+           
             </Paper>
           </div>
         );
