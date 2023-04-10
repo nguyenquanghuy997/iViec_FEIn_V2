@@ -167,6 +167,7 @@ export default function DetailDialog({
                 <ListItem sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}>
                   <ListItemAvatar>
                     <img
+                      alt=""
                       src="https://i.pinimg.com/236x/2e/13/99/2e139971c08795a9de247848cc2c3fd9.jpg"
                       style={{
                         width: "60px",
@@ -208,6 +209,7 @@ export default function DetailDialog({
               <ListItem sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}>
                 <ListItemAvatar>
                   <img
+                    alt=""
                     src="https://i.pinimg.com/236x/b0/52/90/b0529099591d1f7f70732fa5e4f60e83.jpg"
                     style={{ width: "60px", height: "60px" }}
                   />
