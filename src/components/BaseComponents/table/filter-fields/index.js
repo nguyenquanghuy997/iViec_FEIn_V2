@@ -52,6 +52,7 @@ const FilterFieldItem = ({
     placeholder = 'Tìm kiếm...',
     options = [],
     hasSearch = false,
+    showAvatar = false,
   } = filters;
 
   const fieldProps = {
@@ -69,6 +70,7 @@ const FilterFieldItem = ({
           options={options}
           remoteUrl={remoteUrl}
           remoteMethod={remoteMethod}
+          showAvatar={showAvatar}
         />
       )
     }
@@ -82,6 +84,7 @@ const FilterFieldItem = ({
           remoteUrl={remoteUrl}
           remoteMethod={remoteMethod}
           multiple={true}
+          showAvatar={showAvatar}
         />
       )
     }

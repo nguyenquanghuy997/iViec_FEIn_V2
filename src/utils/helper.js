@@ -90,7 +90,7 @@ export const toRequestFilterData = (data = {}, removeEmpty = true) => {
       val = val.toISOString();
     }
 
-    if (removeEmpty && typeof val === 'undefined' || val === '') {
+    if (removeEmpty && (typeof val === 'undefined' || val === '')) {
       continue;
     }
 
