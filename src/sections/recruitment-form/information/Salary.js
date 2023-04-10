@@ -1,6 +1,6 @@
 import React from "react";
 import {Box, InputAdornment} from "@mui/material";
-import {useWatch} from "react-hook-form";
+import {useFormContext, useWatch} from "react-hook-form";
 
 import {RHFSelect} from "@/components/hook-form";
 import MuiInputNumber from "@/components/form/MuiInputNumber";
@@ -13,8 +13,10 @@ import {BoxInnerStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
 
 const Salary = () => {
+    const { setValue, setError, clearErrors } = useFormContext();
     const salaryDisplayType = useWatch({name: 'salaryDisplayType'});
     const currencyUnit = useWatch({name: 'currencyUnit'});
+    const minSalary = useWatch({ name: 'minSalary' })
 
     return (
         <BoxInnerStyle>
@@ -49,7 +51,6 @@ const Salary = () => {
                                 name="minSalary"
                                 title="Mức lương tối thiểu"
                                 placeholder="Nhập số tiền"
-                                isRequired
                                 fullWidth
                                 InputProps={{
                                     endAdornment: (
@@ -65,7 +66,6 @@ const Salary = () => {
                                 name="maxSalary"
                                 title="Mức lương tối đa"
                                 placeholder="Nhập số tiền"
-                                isRequired
                                 fullWidth
                                 InputProps={{
                                     endAdornment: (
@@ -73,6 +73,14 @@ const Salary = () => {
                                             {Currency(currencyUnit)}
                                         </InputAdornment>
                                     ),
+                                }}
+                                onChange={(e) => {
+                                    if (Number(e.target.value) < Number(minSalary)) {
+                                        setError('maxSalary', { message: 'Mức lương tối đa cần lớn hơn mức lương tối thiểu' })
+                                    } else {
+                                        clearErrors('maxSalary');
+                                        setValue('maxSalary', e.target.value);
+                                    }
                                 }}
                             />
                         </div>

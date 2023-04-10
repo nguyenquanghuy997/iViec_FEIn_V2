@@ -19,6 +19,7 @@ export const PATH_AUTH = {
   newPassword: path(ROOTS_AUTH, "/new-password"),
   userActivate: path(ROOTS_AUTH, "/user-activate"),
   policy: path(ROOTS_AUTH, "/policy"),
+  changePassword: path(ROOTS_AUTH, "/change-password"),
 };
 
 export const PATH_DASHBOARD = {

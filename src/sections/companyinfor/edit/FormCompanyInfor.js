@@ -312,12 +312,11 @@ const FormCompanyInfor = ({ data, onClose }) => {
             />
           </Box>
           <Box sx={{ mb: 2, width: "100%" }}>
-            <LabelStyle required>Email</LabelStyle>
+            <LabelStyle required>Email doanh nghiệp</LabelStyle>
             <RHFTextField
               sx={{ minHeight: 44, width: "100%" }}
               name="email"
               placeholder="Nhập email doanh nghiệp"
-              disabled
             />
           </Box>
         </Stack>
