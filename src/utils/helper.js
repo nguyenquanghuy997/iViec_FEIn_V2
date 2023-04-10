@@ -70,15 +70,30 @@ export const toRequestFilterData = (data = {}, removeEmpty = true) => {
   let reqData = {};
   for (let f in data) {
     let val = data[f];
+
     if (isNumeric(data[f])) {
       val = parseInt(data[f]);
     }
+
+    if (Array.isArray(val)) {
+      let newVal = [];
+      val.map((itemVal, idx) => {
+        if (isNumeric(itemVal)) {
+          itemVal = parseInt(itemVal);
+        }
+        newVal[idx] = itemVal;
+      });
+      val = newVal;
+    }
+
     if (val instanceof moment) {
       val = val.toISOString();
     }
+
     if (removeEmpty && typeof val === 'undefined' || val === '') {
       continue;
     }
+
     reqData[f] = val;
   }
   return reqData;

@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { InputLabel } from "@mui/material";
 import { RHFAddress } from "@/components/hook-form";
 import { FormStyle } from "@/components/styles";
@@ -24,4 +23,4 @@ const AddressField = ({
   )
 }
 
-export default memo(AddressField);
+export default AddressField;
