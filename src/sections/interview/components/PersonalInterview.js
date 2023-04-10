@@ -18,21 +18,21 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
   });
   const {palette} = useTheme();
   
-  const [getPipeline, {data: {items: ListStep = []} = {}, isSuccess}] =
+  const [getPipeline, {data: {items: ListStep = []} = {}}] =
     useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
   
   const [getRelateCalendar, {data: relateCalendar}] =
     useLazyGetRelateCalendarQuery();
   const {data: {items: DataForm = []} = {}} = useGetReviewFormQuery();
   
-  const options = [
+  const interviewType = [
     {
-      id: 0,
-      name: "Online",
+      value: 0,
+      label: "Online",
     },
     {
-      id: 1,
-      name: "Trực tiếp",
+      value: 1,
+      label: "Trực tiếp",
     },
   ];
   
@@ -61,21 +61,12 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
   }, [!option]);
   
   useEffect(() => {
-    if (item) {
-      setValue("recruitmentId", item?.recruitmentId);
-      setValue("reviewFormId", item?.reviewFormId);
-      getPipeline({RecruitmentId: item?.recruitmentId});
-      getRelateCalendar({
-        RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
-      });
-    }
-  }, [!item]);
-  
-  useEffect(() => {
-    if (!isSuccess) {
-      setValue("recruitmentPipelineStateId", currentApplicantPipelineState);
-    }
-  }, [isSuccess]);
+    if (!item?.id) return;
+    getPipeline({RecruitmentId: item?.recruitmentId});
+    getRelateCalendar({
+      RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
+    });
+  }, [item]);
   
   return (
     <Grid>
@@ -103,7 +94,6 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
           name="recruitmentId"
           multiple={false}
           placeholder="Chọn tin tuyển dụng"
-          required
           disabled={option || item?.recruitmentId ? true : false}
           onChange={changeRecruitment}
         />
@@ -148,11 +138,7 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
             </Typography>
           </Label>
           <RHFSelect
-            options={options.map((i) => ({
-              value: i.id,
-              label: i.name,
-              name: i.name,
-            }))}
+            options={interviewType}
             name="interviewType"
             placeholder="Chọn hình thức phỏng vấn"
             disabled={watch("recruitmentId") ? false : true}
@@ -212,10 +198,9 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
           required
           name="reviewFormId"
           placeholder="Chọn mẫu đánh giá"
-          // disabled={watch("reviewFormId") || relateCalendar?.reviewFormId ? true : false}
+          disabled={item?.reviewFormId || relateCalendar?.reviewFormId ? true : false}
           multiple={false}
         />
-      
       </Grid>
     </Grid>
   );
