@@ -94,7 +94,7 @@ function RHFSelectMultiple({ name, ...props }) {
   const { remove } = useFieldArray({ control, name });
 
   const renderChipsSelect = (options, value) => {
-    console.log({options, value}, ';optioin')
+
     const [open, setOpen] = useState(false);
     const handleClose = () => {
       setOpen(false);
