@@ -32,7 +32,7 @@ export const JobTypeItem = () => {
   const columns = useMemo(() => {
     return [
       {
-        dataIndex: "organizationPositionVisibleId",
+        dataIndex: "id",
         title: "STT",
         key: "index",
         render: (item, record, index, page, paginationSize) => (
@@ -45,6 +45,7 @@ export const JobTypeItem = () => {
         dataIndex: "name",
         title: "Vị trí công việc",
         width: "240px",
+        fixed: "left",
         render: (name) => <span style={{ fontWeight: 500 }}>{name}</span>
       },
       {
@@ -65,15 +66,14 @@ export const JobTypeItem = () => {
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           name: 'isActive',
-          options: LIST_STATUS.map(item => ({ value: item.value, label: item.name })),
+          options: LIST_STATUS.map(item => ({ value: item.id, label: item.name })),
         },
       },
       {
-        dataIndex: "createTime",
-        updateName: 'createdTime',
+        dataIndex: "createdTime",
         title: "Ngày tạo",
         width: "180px",
-        render: (date, record) => fDate(record.createdTime),
+        render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
           name: ['createdTimeFrom', 'createdTimeTo'],
@@ -123,7 +123,13 @@ export const JobTypeItem = () => {
 
   return (
     <View>
-      <Content sx={{ padding: "0 !important" }}>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}

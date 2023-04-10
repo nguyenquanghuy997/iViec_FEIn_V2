@@ -21,6 +21,8 @@ export const HeaderStyle = styled('div')(() => ({
   },
 
   '&.inside': {
+    borderRadius: '4px',
+    boxShadow:'unset',
     background: '#FDFDFD',
     '.table-header-container': {
       padding: 16,
@@ -122,6 +124,7 @@ export const TableStyle = styled('div')(() => ({
   '&.inside': {
     '.ant-table-wrapper .ant-table': {
       borderRadius: 0,
+      paddingLeft: '10px'
     },
   },
 }));
