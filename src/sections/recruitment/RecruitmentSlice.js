@@ -53,7 +53,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'POST',
         data
       }),
-      invalidatesTags: (result) => [{type: 'RECRUITMENT', id: result}]
+      invalidatesTags: (result) => [{type: 'RECRUITMENT', id: result}, {type: 'RECRUITMENT', id: 'LIST'}]
     }),
     createApplicantRecruitment: builder.mutation({
       query: (data) => ({
@@ -68,7 +68,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.Id}]
+      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.Id}, {type: 'RECRUITMENT', id: 'LIST'}]
     }),
     updateRecruitmentDraft: builder.mutation({
       query: (data) => ({
@@ -76,7 +76,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.Id}]
+      invalidatesTags: (result, error, arg) => [{type: 'RECRUITMENT', id: arg.Id}, {type: 'RECRUITMENT', id: 'LIST'}]
     }),
     // đóng tin
     closeRecruitment: builder.mutation({

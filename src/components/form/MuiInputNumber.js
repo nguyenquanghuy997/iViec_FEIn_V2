@@ -30,24 +30,33 @@ const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
     );
 });
 
-const MuiInputNumber = ({ name, title, isRequired, variant= 'standard', ...other }) => {
+const MuiInputNumber = ({ name, title, isRequired, variant= 'standard', onChange, ...other }) => {
     const { control } = useFormContext()
     return (
         <Controller
             name={name}
             control={control}
-            render={({ field, fieldState: { error } }) => (
-                <>
+            render={({ field, fieldState: { error } }) => {
+              const {onChange: onFieldChange, ...otherField} = field;
+
+              return (
+                  <>
                     {title && (
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <LabelStyle required={isRequired}>
-                                {title}
-                            </LabelStyle>
-                            {other.otherTitle}
+                          <LabelStyle required={isRequired}>
+                            {title}
+                          </LabelStyle>
+                          {other.otherTitle}
                         </Box>
                     )}
                     <TextFieldStyle
-                        {...field}
+                        onChange={e => {
+                          if (onChange) {
+                            onChange(e);
+                          }
+                          onFieldChange(e);
+                        }}
+                        {...otherField}
                         fullWidth
                         sx={{mb: 2}}
                         placeholder={other.placeholder}
@@ -55,13 +64,14 @@ const MuiInputNumber = ({ name, title, isRequired, variant= 'standard', ...other
                         helperText={error?.message}
                         variant={variant}
                         InputProps={{
-                            ...other.InputProps,
-                            disableUnderline: true,
-                            inputComponent: NumericFormatCustom,
+                          ...other.InputProps,
+                          disableUnderline: true,
+                          inputComponent: NumericFormatCustom,
                         }}
                     />
-                </>
-            )}
+                  </>
+              )
+            }}
         />
     )
 }

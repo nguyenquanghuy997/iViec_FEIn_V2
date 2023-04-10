@@ -37,6 +37,7 @@ import {FormValidate} from "@/sections/recruitment-form/form/Validate";
 import moment from "moment/moment";
 import LoadingScreen from "@/components/LoadingScreen";
 import {isEmpty} from "lodash";
+import {View} from "@/components/FlexStyled";
 
 UpdateRecruitment.getLayout = function getLayout(pageProps, page) {
     return <Layout permissions={PERMISSION_PAGES.editRecruitment} {...pageProps}>{page}</Layout>
@@ -52,6 +53,7 @@ export default function UpdateRecruitment() {
     const stateOpenForm = useSelector((state) => state.modalReducer.openState);
     const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
     const [showAlert, setShowAlert] = useState(false);
+    const [hState, sethState] = useState("top");
     const examinationDataRef = useRef(null);
 
     const goBackButtonHandler = () => {
@@ -80,6 +82,23 @@ export default function UpdateRecruitment() {
         };
         window.addEventListener('popstate', unloadCallback);
         return () => window.removeEventListener('popstate', unloadCallback);
+    }, []);
+
+    useEffect(() => {
+        let lastVal = 0;
+        window.onscroll = function () {
+            let y = window.scrollY;
+            if (y > lastVal) {
+                sethState("down");
+            }
+            if (y < lastVal) {
+                sethState("up");
+            }
+            if (y === 0) {
+                sethState("top");
+            }
+            lastVal = y;
+        };
     }, []);
 
     const handleChangeTab = (event, newValue) => {
@@ -128,26 +147,28 @@ export default function UpdateRecruitment() {
     }
 
     const methods = useForm({
-        mode: 'all',
+        mode: 'onBlur',
         resolver: openSaveDraft ? null : yupResolver(FormValidate),
         defaultValues: defaultValues,
     });
 
-    const {handleSubmit, getValues, setValue, formState: {isValid}} = methods;
+    const {handleSubmit, getValues, reset, formState: {isValid}} = methods;
 
     useEffect(() => {
-        for (let i in defaultValues) {
-            setValue(i, Recruitment[i]);
-            setValue('organizationId', Recruitment?.organizationId || defaultOrganization?.id);
-            setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => item?.provinceId));
-            setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => item?.jobCategoryId));
-            setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => item?.workingForm));
-            setValue('jobPositionId', Recruitment?.jobPosition?.id);
-            setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item =>  item?.councilUserId));
-            setValue('coOwnerIds', Recruitment?.coOwners?.map(item => item?.id));
-            setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => item?.languageId));
-            setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
-        }
+        reset({
+            ...Recruitment,
+            minSalary:  Recruitment.salaryDisplayType === 0 || Recruitment.salaryDisplayType === 1 ? '' : Recruitment.minSalary,
+            maxSalary:  Recruitment.salaryDisplayType === 0 || Recruitment.salaryDisplayType === 1 ? '' : Recruitment.maxSalary,
+            organizationId: Recruitment?.organizationId || defaultOrganization?.id,
+            recruitmentAddressIds: Recruitment?.recruitmentAddresses?.map(item => item?.provinceId),
+            recruitmentJobCategoryIds: Recruitment?.recruitmentJobCategories?.map(item => item?.jobCategoryId),
+            recruitmentWorkingForms: Recruitment?.recruitmentWorkingForms?.map(item => item?.workingForm),
+            jobPositionId: Recruitment?.jobPosition?.id,
+            recruitmentCouncilIds: Recruitment?.recruitmentCouncils?.map(item => item?.councilUserId),
+            coOwnerIds: Recruitment?.coOwners?.map(item => item?.id),
+            recruitmentLanguageIds: Recruitment?.recruitmentLanguages?.map(item => item?.languageId),
+            organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId,
+        })
     }, [Recruitment, defaultOrganization])
 
     const onSubmit = async (data) => {
@@ -212,22 +233,24 @@ export default function UpdateRecruitment() {
 
     return (
         <Page title='Cập nhật tin tuyển dụng'>
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <TabContext value={valueTab}>
-                    <Grid container>
-                        <Header title={'Cập nhật tin tuyển dụng'} onOpenConfirm={handleOpenConfirm} errors={isValid} setShowAlert={setShowAlert}/>
-                        <TabList onChange={handleChangeTab}/>
-                    </Grid>
-                    <Content>
-                        <TabPanel value={'1'}>
-                            <Information recruitment={Recruitment}/>
-                        </TabPanel>
-                        <TabPanel value={'2'}>
-                            <Pipeline recruitment={Recruitment} ref={examinationDataRef}/>
-                        </TabPanel>
-                    </Content>
-                </TabContext>
-            </FormProvider>
+            <View mt={200} mb={36}>
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                    <TabContext value={valueTab}>
+                        <Grid container>
+                            <Header title={'Cập nhật tin tuyển dụng'} onOpenConfirm={handleOpenConfirm} errors={isValid} setShowAlert={setShowAlert}/>
+                            <TabList onChange={handleChangeTab} className={hState} isValid={isValid}/>
+                        </Grid>
+                        <Content>
+                            <TabPanel value={'1'}>
+                                <Information recruitment={Recruitment}/>
+                            </TabPanel>
+                            <TabPanel value={'2'}>
+                                <Pipeline recruitment={Recruitment} ref={examinationDataRef}/>
+                            </TabPanel>
+                        </Content>
+                    </TabContext>
+                </FormProvider>
+            </View>
             {
                 showAlert && <ConfirmModal
                     open={showAlert}
