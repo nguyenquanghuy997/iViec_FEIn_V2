@@ -47,6 +47,7 @@ import { useMemo, useState } from "react";
 import { get } from "lodash";
 import useRole from "@/hooks/useRole";
 import { PERMISSIONS } from "@/config";
+import TextMaxLine from "@/components/TextMaxLine";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -92,7 +93,21 @@ export const RecruitmentItem = () => {
         title: "Tin tuyển dụng",
         fixed: "left",
         width: "300px",
-        render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
+        // render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
+        render: (item, record) => (
+            <TextMaxLine
+                sx={{ width: 360, fontWeight: 500, fontSize: 14, ...(canView && { cursor: 'pointer' }) }}
+                onClick={(e) => {
+                  if (!canView) {
+                    return;
+                  }
+                  router.push(PATH_DASHBOARD.recruitment.view(record.id)),
+                  e.stopPropagation();
+                }}
+            >
+              {item}
+            </TextMaxLine>
+        ),
       },
       {
         dataIndex: "jobPosition",

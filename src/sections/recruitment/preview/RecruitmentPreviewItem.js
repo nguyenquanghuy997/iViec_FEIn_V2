@@ -382,7 +382,7 @@ function RecruitmentPreviewItem({
                           color: "#172B4D",
                           fontWeight: 700,
                         }}
-                        link={PATH_DASHBOARD.dashboard}
+                        link={PATH_DASHBOARD.recruitment.root}
                         name={RecruitmentData?.name}
                       ></NavGoBack>
                     </div>
