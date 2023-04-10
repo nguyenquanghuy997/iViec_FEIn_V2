@@ -12,7 +12,7 @@ const MuiButton = ({title, type, variant, size, color, startIcon, endIcon, sx, l
         contrastText: style.COLOR_WHITE,
       },
       default: {
-        main: "#F3F4F6",
+        main: "#F2F4F5",
         darker: '#053e85',
         contrastText: style.COLOR_TEXT_PRIMARY,
       },
