@@ -19,10 +19,10 @@ import moment from "moment";
 import { useSnackbar } from "notistack";
 import { RiLinkM } from "react-icons/ri";
 import { useState } from "react";
-import EditForm from "./EditForm";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import CloseIcon from "@/assets/CloseIcon";
 import { BoxFlex } from "@/sections/emailform/style";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 
 export default function DetailDialog({
   item,
@@ -296,7 +296,7 @@ export default function DetailDialog({
               }}
             />
             {openForm && (
-              <EditForm
+              <FormCalendar
                 open={openForm}
                 item={item}
                 setOpen={setOpenForm}

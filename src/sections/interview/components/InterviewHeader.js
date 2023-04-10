@@ -12,7 +12,7 @@ import { useMemo } from "react";
 
 const InterviewHeader = ({
   methods,
-  handleOpen,
+  setOpen,
   onOpenFilterForm,
   onSubmit,
   handleSubmit,
@@ -59,7 +59,7 @@ const InterviewHeader = ({
             canEdit && <MuiButton
               title="Đặt lịch phỏng vấn"
               startIcon={<AddIcon />}
-              onClick={handleOpen}
+              onClick={() => setOpen(true)}
             />
           }
         </Stack>
