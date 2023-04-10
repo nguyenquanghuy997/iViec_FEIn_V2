@@ -72,18 +72,12 @@ export const ApplicantItem = ({
               {item}
             </TextMaxLine>
         ),
-        filters: {
-          type: TBL_FILTER_TYPE.TEXT,
-        },
       },
       {
         dataIndex: "phoneNumber",
         title: "Số điện thoại",
         fixed: "left",
         width: "120px",
-        filters: {
-          type: TBL_FILTER_TYPE.TEXT,
-        },
       },
       {
         dataIndex: "dateOfBirth",
@@ -95,9 +89,6 @@ export const ApplicantItem = ({
         dataIndex: "email",
         title: "Email",
         width: "214px",
-        filters: {
-          type: TBL_FILTER_TYPE.TEXT,
-        },
       },
       {
         dataIndex: "recruitmentName",
