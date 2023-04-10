@@ -33,7 +33,7 @@ export const TYPES = [
       'ViewJob',
       'AddEditDeleteJob',
       'AddEditDeleteInterviewSchedule',
-      'SendOfferMail',
+      // 'SendOfferMail',
       'ApproveJob',
     ],
   },

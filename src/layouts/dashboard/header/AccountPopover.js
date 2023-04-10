@@ -55,8 +55,8 @@ export default function AccountPopover() {
   };
   const handleLogout = async () => {
     try {
+      window.location.href = PATH_AUTH.login;
       await logout();
-      location.reload()
       if (isMountedRef.current) {
         handleClose();
       }
