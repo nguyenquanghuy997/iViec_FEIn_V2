@@ -37,7 +37,7 @@ const ListCandidate = ({ item, isEditmode, applicantId }) => {
           }))}
           name={`applicantIdArray`}
           fullWidth 
-          disabled= {applicantId || !watch("recruitmentPipelineStateId") ? true : false}
+          disabled= {!!applicantId || !watch("recruitmentPipelineStateId")}
           isEditmode={isEditmode}
           defaultValue={item}
           multiple
