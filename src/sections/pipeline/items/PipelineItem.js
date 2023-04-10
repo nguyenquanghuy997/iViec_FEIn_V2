@@ -190,7 +190,13 @@ export const PipelineItem = () => {
   };
   return (
     <View>
-      <Content sx={{ padding: "0 !important" }}>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}

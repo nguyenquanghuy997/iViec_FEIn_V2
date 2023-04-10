@@ -83,13 +83,12 @@ function RHFSelectMultiple({ name, ...props }) {
   const classes = useStyles();
   const {
     defaultValue,
-    isEditmode,
     isRequired,
     title,
     options,
     disabled,
     multiple,
-    listApplicant
+    listApplicant,
   } = props;
   const { remove } = useFieldArray({ control, name });
 
@@ -127,7 +126,7 @@ function RHFSelectMultiple({ name, ...props }) {
       <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
           data={options?.filter((option) =>
-            (isEditmode ? [] : value).includes(option?.value)
+            value.includes(option?.value)
           )}
           open={open}
           onClose={handleClose}
@@ -146,6 +145,7 @@ function RHFSelectMultiple({ name, ...props }) {
       setFilterOptions(options);
     }
   }, [searchText, options]);
+
   return (
     <Controller
       name={name}
@@ -182,7 +182,6 @@ function RHFSelectMultiple({ name, ...props }) {
                         bgcolor: "white",
                       },
                     }}
-                    
                   >
                     + Thêm ứng viên
                   </Button>

@@ -102,7 +102,7 @@ export const RoleContainer = () => {
             fontSize: "12px",
           }}
         >
-          {isActivated ? "Đang hoạt động" : "Ngừng hoạt động"}
+          {isActivated ? "Đang hoạt động" : "Không hoạt động"}
         </Typography>
       ),
       width: "160px",
@@ -192,6 +192,16 @@ export const RoleContainer = () => {
     return isShow;
   }, [itemSelected]);
 
+  const showDeleteBtn = useMemo(()=>{
+    if (!canEdit) {
+      return false;
+    }
+    if (itemSelected.length < 1) {
+      return false;
+    }
+    return !itemSelected.some(x=>x.isDefault); 
+  },[itemSelected]);
+
   const selectedStatus = useMemo(() => {
     if (itemSelected.length < 1) {
       return true;
@@ -214,6 +224,7 @@ export const RoleContainer = () => {
         try {
           await removeRoleGroup(itemSelected.map(it => it.id)).unwrap();
           setItemSelected([]);
+          setSelectedRowKeys([])
           close();
           enqueueSnackbar('Xóa vai trò thành công!');
         } catch (err) {
@@ -318,7 +329,7 @@ export const RoleContainer = () => {
             },
             disabled: selectedRowKeys.length > 1,
           }] : []),
-          ...(canEdit ? [{
+          ...(showDeleteBtn ? [{
             icon: <RiDeleteBin6Line size={18} color={palette.text.warning} />,
             onClick: () => {
               handleConfirmDelete();

@@ -1,10 +1,15 @@
 import { CandidateState } from "../config";
+import { convertDurationTimeToSeconds, convertStoMs } from "../config";
+import CloseIcon from "@/assets/CloseIcon";
 import { ButtonDS } from "@/components/DesignSystem";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import useAuth from "@/hooks/useAuth";
+import { BoxFlex } from "@/sections/emailform/style";
 import {
   useDeleteCalendarMutation,
   useGetDetailCalendarsQuery,
 } from "@/sections/interview/InterviewSlice";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 import {
   Divider,
   List,
@@ -13,27 +18,20 @@ import {
   Typography,
   ListItemText,
   Button,
-  Modal
+  Modal,
 } from "@mui/material";
 import moment from "moment";
 import { useSnackbar } from "notistack";
-import { RiLinkM } from "react-icons/ri";
+import { forwardRef } from "react";
 import { useState } from "react";
-import { Text, View } from "@/components/DesignSystem/FlexStyled";
-import CloseIcon from "@/assets/CloseIcon";
-import { BoxFlex } from "@/sections/emailform/style";
-import { FormCalendar } from "@/sections/interview/components/FormCalendar";
+import { RiLinkM } from "react-icons/ri";
 
-export default function DetailDialog({
-  item,
-  title,
-  open,
-  onClose,
-}) {
-  const { data: DetailData } = useGetDetailCalendarsQuery({
-    BookingCalendarId: item?.id,
-  });
-  const [openForm, setOpenForm] = useState(false)
+const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
+  const { data: DetailData } = useGetDetailCalendarsQuery(
+    { BookingCalendarId: item?.id },
+    { skip: !item?.id }
+  );
+  const [openForm, setOpenForm] = useState(false);
   const [deleteCalendar] = useDeleteCalendarMutation();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -55,7 +53,7 @@ export default function DetailDialog({
   };
   const renderText = (title, content) => {
     return (
-      <ListItem disableGutters sx={{ my: 1.5 }}>
+      <ListItem disableGutters sx={{ my: 1 }}>
         <span
           style={{
             fontSize: 14,
@@ -81,31 +79,17 @@ export default function DetailDialog({
   };
 
   const time =
-    DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants?.map(
+    DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarGroupApplicants?.map(
       (item) => item?.interviewTime
     );
-
   const duration =
-    DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants?.map(
+    DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarGroupApplicants?.map(
       (item) => item?.interviewDuration
     );
-  const convertDurationTimeToSeconds = (time) => {
-    const splitToString = time.split(":");
-    return (
-      +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
-    );
-  };
 
-  const convertStoMs = (s) => {
-    const totalMinutes = Math.floor(s / 60);
-    const hours = Math.floor(totalMinutes / 60);
-    const newHours = hours < 10 ? "0" + hours : hours;
-    const minutes = totalMinutes % 60;
-    return `${newHours}:${minutes}`;
-  };
   const startTime = convertStoMs(
-    convertDurationTimeToSeconds(moment(time[0]).format("HH:mm:ss")) -
-    convertDurationTimeToSeconds(duration[0])
+    convertDurationTimeToSeconds(moment(time?.[0]).format("HH:mm:ss")) -
+      convertDurationTimeToSeconds(duration?.[0])
   );
   const { user } = useAuth();
 
@@ -114,30 +98,32 @@ export default function DetailDialog({
       open={open}
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       onBackdropClick={onClose}
+      ref={ref}
     >
       <View hidden width={800} borderradius={8} bgcolor={"#FDFDFD"}>
         <View flexrow="true" atcenter="true" pv={22} ph={24}>
           <Text flex fontsize={16} fontweight={"700"}>
             {title}
           </Text>
-          <Button onClick={onClose} sx={{
-            '&:hover': {
-              bgcolor: 'white'
-            }
-          }
-          }><CloseIcon /></Button>
+          <Button
+            onClick={onClose}
+            sx={{
+              "&:hover": {
+                bgcolor: "white",
+              },
+            }}
+          >
+            <CloseIcon />
+          </Button>
         </View>
         <Divider />
-        <View
-          style={{ overflowY: "auto", maxHeight: "600px", padding: 24 }}
-        >
-
+        <View style={{ overflowY: "auto", maxHeight: "600px", padding: 24 }}>
           <h3>{item?.name}</h3>
           {renderText(
             "Hình thức phỏng vấn:",
             DetailData?.interviewType == 0 ? "Online" : "Trực tiếp"
           )}
-          {renderText("Thời gian:", `${moment(time[0]).format("HH:mm")}`)}
+          {renderText("Thời gian:", `${moment(time?.[0]).format("HH:mm")}`)}
           {renderText(
             "Loại phỏng vấn:",
             DetailData?.bookingCalendarGroups.map(
@@ -154,17 +140,21 @@ export default function DetailDialog({
           {renderText("Trạng thái:", "")}
           {renderText("Lý do hủy:", DetailData?.removeReason)}
 
-
           <Divider />
 
           <List sx={{ pt: 2 }}>
-            <Typography sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}>
+            <Typography
+              sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}
+            >
               Danh sách ứng viên
             </Typography>
 
             {DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants.map(
               (item, index) => (
-                <ListItem sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}>
+                <ListItem
+                  sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}
+                  key={index}
+                >
                   <ListItemAvatar>
                     <img
                       alt=""
@@ -186,7 +176,7 @@ export default function DetailDialog({
                   </ListItemText>
                   <ListItemText>
                     <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                      {startTime}- {moment(time[index]).format("HH:mm")}
+                      {startTime}- {moment(time?.[index]).format("HH:mm")}
                     </Typography>
                   </ListItemText>
                   <ListItemText
@@ -202,7 +192,9 @@ export default function DetailDialog({
           </List>
           <Divider />
           <List sx={{ pt: 2 }}>
-            <Typography sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}>
+            <Typography
+              sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}
+            >
               Hội đồng phỏng vấn
             </Typography>
             {DetailData?.bookingCalendarCouncils.map((item, index) => (
@@ -227,22 +219,24 @@ export default function DetailDialog({
           </List>
         </View>
         <Divider />
-        <View pv={16} ph={24} flexrow="row" jcbetween="true" >
-          <BoxFlex justifyContent="start"><ButtonDS
-            tittle={" Copy link"}
-            type="button"
-            // onClick={() => setIsOpenSendOffer(true)}
-            sx={{
-              color: "#455570",
-              backgroundColor: "#F3F4F6",
-              boxShadow: "none",
-              ":hover": {
+        <View pv={16} ph={24} flexrow="row" jcbetween="true">
+          <BoxFlex justifyContent="start">
+            <ButtonDS
+              tittle={" Copy link"}
+              type="button"
+              // onClick={() => setIsOpenSendOffer(true)}
+              sx={{
+                color: "#455570",
                 backgroundColor: "#F3F4F6",
-              },
-              textTransform: "none",
-            }}
-            icon={<RiLinkM />}
-          /></BoxFlex>
+                boxShadow: "none",
+                ":hover": {
+                  backgroundColor: "#F3F4F6",
+                },
+                textTransform: "none",
+              }}
+              icon={<RiLinkM />}
+            />
+          </BoxFlex>
           <BoxFlex justifyContent="end" gap={2}>
             <ButtonDS
               tittle={"Hủy lịch"}
@@ -298,16 +292,12 @@ export default function DetailDialog({
               }}
             />
             {openForm && (
-              <FormCalendar
-                open={openForm}
-                item={item}
-                setOpen={setOpenForm}
-              />
+              <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
             )}
           </BoxFlex>
         </View>
       </View>
-
     </Modal>
   );
-}
+});
+export default DetailDialog;
