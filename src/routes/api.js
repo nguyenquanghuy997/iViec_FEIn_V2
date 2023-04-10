@@ -162,6 +162,7 @@ export const API_GET_APPLICANT_USERS_FILTER = "/organization/Organization/GetApp
 // API ApproveProcess
 export const API_CREATE_APPROVE_PROCESS = "/organization/ApprovalProcess/CreateApprovalProcess";
 export const API_UPDATE_APPROVE_PROCESS = "/organization/ApprovalProcess/UpdateApprovalProcess";
+export const API_SET_AVAILABLE_APPROVE_PROCESS = "/organization/ApprovalProcess/SetApprovalProcessAvailable";
 export const API_DELETE_APPROVE_PROCESS = "/organization/ApprovalProcess/RemoveApprovalProcess";
 export const API_GET_APPROVE_PROCESSES = "/organization/ApprovalProcess/GetApprovalProcesses";
 export const API_GET_APPROVE_PROCESS = "/organization/ApprovalProcess/GetApprovalProcess";

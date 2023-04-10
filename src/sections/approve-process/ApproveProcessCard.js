@@ -3,7 +3,7 @@ import { FormProvider } from "@/components/hook-form";
 import { ConnectCardStyle } from "@/sections/connect/style";
 import { Box, Card, Divider, FormControlLabel, Grid, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Controller, useForm, useFormContext } from "react-hook-form";
 import { DeleteIconGrey, EditIcon, PreviewIcon } from "@/assets/ActionIcon";
 import Iconify from "@/components/Iconify";
@@ -13,48 +13,48 @@ import IconEmpty from "../../../public/assets/icons/approveProcess/ic-empty";
 import { ApproveProcessFormModal, ApproveProcessViewModal } from "@/sections/approve-process/modals";
 import { fDate } from "@/utils/formatTime";
 import {
-  useDeleteApproveProcessMutation, useUpdateApproveProcessMutation
+  useDeleteApproveProcessMutation,
+  useSetApproveProcessAvailableMutation
 } from "@/sections/approve-process/ApproveProcessSlice";
 import { useSnackbar } from "notistack";
 import { GreenSwitch } from "@/utils/cssStyles";
 import useRole from "@/hooks/useRole";
-import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
 
 
-const SwitchForm = ({ name, handleChange, style, value, ...other }) => {
-  const { control } = useFormContext();
-
+const SwitchForm = ({name, handleChange, style, value, ...other}) => {
+  const {control} = useFormContext();
+  
   return (<FormControlLabel
-    sx={{ ...style }}
+    sx={{...style}}
     control={<Controller
       name={name}
       control={control}
-      render={({ field }) => {
+      render={({field}) => {
         return (<GreenSwitch
           {...field}
           checked={value}
           onChange={handleChange || field.onChange}
-          inputProps={{ "aria-label": "controlled" }}
+          inputProps={{"aria-label": "controlled"}}
         />);
       }}
     />}
     {...other}
   />);
 };
-const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm }) => {
+const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) => {
   const [hovered, setHovered] = useState(false);
   const [open, setOpen] = useState(false);
   const [openModelView, setOpenModelView] = useState(false);
   const [openActive, setOpenActive] = useState(false);
   const [removeItem] = useDeleteApproveProcessMutation();
-  const [updateItem] = useUpdateApproveProcessMutation();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { canAccess } = useRole();
+  const [setAvailable] = useSetApproveProcessAvailableMutation();
+  const {enqueueSnackbar} = useSnackbar();
+  
+  const {canAccess} = useRole();
   const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_APPR_PROCESS), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_APPR_PROCESS), []);
-
+  
   const handleMouseOver = () => {
     setHovered(true);
   };
@@ -75,12 +75,12 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
     }
   }
   const handleEdit = () => {
-    setData({ id: approveProcess.id });
+    setData({id: approveProcess.id});
     setShowForm(true);
   };
   const handleActiveClose = async (id) => {
     try {
-      await updateItem({
+      await setAvailable({
         id,
         isAvailable: !approveProcess.isAvailable
       }).unwrap();
@@ -94,9 +94,9 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
       });
     }
   }
-
+  
   return (
-
+    
     <Box sx={{
       display: "flex",
       width: "100%",
@@ -106,8 +106,8 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
       borderRadius: "6px",
       backgroundColor: "#F2F4F5"
     }}
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseOut}
+         onMouseOver={handleMouseOver}
+         onMouseLeave={handleMouseOut}
     >
       <Grid container direction="row" justifyContent="space-between">
         <Grid item>
@@ -126,7 +126,7 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
               {fDate(approveProcess?.createdTime, "dd/MM/yyyy")}
             </Typography>
             <Divider orientation="vertical" variant="middle" flexItem
-              sx={{ margin: "4px 8px 5px 8px", borderColor: "#A2AAB7" }} />
+                     sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
             <Typography variant="textSize13" color="#5C6A82" mr={1}>
               Người tạo:
             </Typography>
@@ -134,7 +134,7 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
               {approveProcess?.creatorName}
             </Typography>
             <Divider orientation="vertical" variant="middle" flexItem
-              sx={{ margin: "4px 8px 5px 8px", borderColor: "#A2AAB7" }} />
+                     sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
             <Typography variant="textSize13" color="#5C6A82" mr={1}>
               Đang áp dụng:
             </Typography>
@@ -142,7 +142,7 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
               {approveProcess?.appliedCounting}
             </Typography>
             <Divider orientation="vertical" variant="middle" flexItem
-              sx={{ margin: "4px 8px 5px 8px", borderColor: "#A2AAB7" }} />
+                     sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
             <Typography variant="textSize13" color="#5C6A82" mr={1}>
               Cấp phê duyệt:
             </Typography>
@@ -158,42 +158,42 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
                 handleChange={() => setOpenActive(!openActive)}
               />
             }
-
+            
             <ApproveProcessDialog open={openActive}
-              onClose={() => setOpenActive(!openActive)}
-              onAccept={() => handleActiveClose(approveProcess.id)}
-              content={approveProcess.name}
-              type={approveProcess.isAvailable ? 'approveProcessActive' : 'approveProcessDeActive'} />
+                                  onClose={() => setOpenActive(!openActive)}
+                                  onAccept={() => handleActiveClose(approveProcess.id)}
+                                  content={approveProcess.name}
+                                  type={approveProcess.isAvailable ? 'approveProcessActive' : 'approveProcessDeActive'}/>
             {hovered && <>
               {
                 canView && <Tooltip title="Xem" onClick={() => setOpenModelView(true)}>
                   <IconButton>
-                    <PreviewIcon width={16} height={16} />
+                    <PreviewIcon width={16} height={16}/>
                   </IconButton>
                 </Tooltip>
               }
               {
                 canEdit && <Tooltip title="Chỉnh sửa" onClick={handleEdit}>
                   <IconButton>
-                    <EditIcon width={16} height={16} />
+                    <EditIcon width={16} height={16}/>
                   </IconButton>
                 </Tooltip>
               }
               {
                 canEdit && <Tooltip title="Xóa" onClick={() => setOpen(!open)}>
                   <IconButton>
-                    <DeleteIconGrey width={16} height={16} />
+                    <DeleteIconGrey width={16} height={16}/>
                   </IconButton>
                 </Tooltip>
               }
             </>}
             <ApproveProcessDialog open={open} onAccept={() => handleClose(approveProcess.id)}
-              onClose={() => setOpen(!open)}
-              content={approveProcess.name}
-              type='approveProcessDelete' />
+                                  onClose={() => setOpen(!open)}
+                                  content={approveProcess.name}
+                                  type='approveProcessDelete'/>
             <ApproveProcessViewModal title={title} data={approveProcess}
-              show={openModelView} handleEdit={handleEdit}
-              setShow={setOpenModelView} />
+                                     show={openModelView} handleEdit={handleEdit}
+                                     setShow={setOpenModelView}/>
           </Grid>
         </Grid>
         <Grid item>
@@ -206,20 +206,20 @@ const ApproveProcessCardItem = ({ title, approveProcess, setData, setShowForm })
     ;
 };
 
-const ApproveProcessCard = ({ type, approveProcesses, color, title }) => {
+const ApproveProcessCard = ({type, approveProcesses, color, title}) => {
   const methods = useForm();
   const [data, setData] = useState(null);
-
+  
   const [showForm, setShowForm] = useState(false);
-
-  const { canAccess } = useRole();
+  
+  const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_APPR_PROCESS), []);
-
+  
   return (<Box>
     <Grid container
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="center">
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="center">
       <Typography
         sx={{
           display: "inline",
@@ -231,7 +231,7 @@ const ApproveProcessCard = ({ type, approveProcesses, color, title }) => {
       </Typography>
       <Tooltip title="Delete">
         <IconButton>
-          <InForIcon />
+          <InForIcon/>
         </IconButton>
       </Tooltip>
     </Grid>
@@ -253,9 +253,9 @@ const ApproveProcessCard = ({ type, approveProcesses, color, title }) => {
               />))
             ) : <>
               <Grid container direction="column" alignItems="center" justifyContent="center"
-                sx={{ marginY: "40px", }}>
-                <Grid sx={{ mb: "12px" }}>
-                  <IconEmpty />
+                    sx={{marginY: "40px",}}>
+                <Grid sx={{mb: "12px"}}>
+                  <IconEmpty/>
                 </Grid>
                 <Grid>
                   <Typography variant="textSize14500" color="#A2AAB7">
@@ -289,7 +289,7 @@ const ApproveProcessCard = ({ type, approveProcesses, color, title }) => {
                 />
               }
               <ApproveProcessFormModal type={type} data={data} setData={setData} title={title}
-                show={showForm} setShow={setShowForm} />
+                                       show={showForm} setShow={setShowForm}/>
             </Grid>
           </Grid>
         </Card>
