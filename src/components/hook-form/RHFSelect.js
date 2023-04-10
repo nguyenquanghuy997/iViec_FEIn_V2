@@ -1,45 +1,55 @@
-import {Controller, useFormContext} from "react-hook-form";
-import MuiSelect from "@/components/form/MuiSelect";
 import HelperText from "@/components/BaseComponents/HelperText";
+import MuiSelect from "@/components/form/MuiSelect";
+import { makeStyles } from "@mui/styles";
+import { Controller, useFormContext } from "react-hook-form";
 
-export default function RHFSelect({name, onChange, ...props}) {
-  const {control, setValue} = useFormContext();
+export default function RHFSelect({ name, onChange, ...props }) {
+  const { control, setValue } = useFormContext();
   const handleDelete = (field, valueDelete) => {
-    const newOptions = field.value.filter(item => item !== valueDelete);
+    const newOptions = field.value.filter((item) => item !== valueDelete);
     field.onChange(newOptions);
   };
 
   const handleClearValue = (name, value) => {
-      setValue(name, value);
-  }
-
+    setValue(name, value);
+  };
+  const useStyles = makeStyles({
+    readOnlySelect: {
+      "&.Mui-disabled": {
+        backgroundColor: "#EFF3F6",
+        fontSize: 14,
+      },
+    },
+  });
+  const classes = useStyles();
   return (
-      <Controller
-          name={name}
-          control={control}
-          render={({field, fieldState: {error}}) => {
-            const {onChange: onFieldChange, ...otherField} = field;
-            return (
-                <>
-                  <MuiSelect
-                      name={name}
-                      onChange={e => {
-                        if (onChange) {
-                          onChange(e);
-                        }
-                        onFieldChange(e);
-                      }}
-                      {...otherField}
-                      error={!!error}
-                      sx={{width: '100%'}}
-                      onDelete={(item) => handleDelete(field, item)}
-                      onClearValue={handleClearValue}
-                      {...props}
-                  />
-                  {error?.message && <HelperText errorText={error.message}/>}
-                </>
-            )
-          }}
-      />
-  )
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState: { error } }) => {
+        const { onChange: onFieldChange, ...otherField } = field;
+        return (
+          <>
+            <MuiSelect
+              className={classes.readOnlySelect}
+              name={name}
+              onChange={(e) => {
+                if (onChange) {
+                  onChange(e);
+                }
+                onFieldChange(e);
+              }}
+              {...otherField}
+              error={!!error}
+              sx={{ width: "100%" }}
+              onDelete={(item) => handleDelete(field, item)}
+              onClearValue={handleClearValue}
+              {...props}
+            />
+            {error?.message && <HelperText errorText={error.message} />}
+          </>
+        );
+      }}
+    />
+  );
 }

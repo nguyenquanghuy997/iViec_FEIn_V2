@@ -2,24 +2,24 @@ export const ACTION_CONTENT = {
     approveProcessDelete: {
         confirm: 'Xác nhận xóa quy trình phê duyệt',
         text: "Bạn có chắc chắn muốn xóa quy trình phê duyệt",
-        color: "#455570",
+        color: "#E53935",
         textButton: 'Xóa'
     },
     approveProcessLevelDelete: {
         confirm: 'Xác nhận xóa cấp phê duyệt',
-        text: "Bạn có chắc chắn muốn xóa cấp phê duyệt này?",
+        text: "Bạn có chắc chắn muốn xóa cấp phê duyệt này",
         color: "#E53935",
         textButton: 'Xóa'
     },
     approveProcessDeActive: {
-        confirm: 'Bạn có chắc chắn muốn bật hoạt động cho quy trình phê duyệt ',
-        text: "Bật trạng thái hoạt động cho quy trình phê duyệt",
+        confirm: "Bật trạng thái hoạt động cho quy trình phê duyệt",
+        text: 'Bạn có chắc chắn muốn bật hoạt động cho quy trình phê duyệt ',
         color: "#1976D2",
         textButton: 'Bật'
     },
     approveProcessActive: {
-        confirm: 'Bạn có chắc chắn muốn tắt hoạt động cho quy trình phê duyệt ',
-        text: "Tắt trạng thái hoạt động cho quy trình phê duyệt",
+        confirm: "Tắt trạng thái hoạt động cho quy trình phê duyệt",
+        text: 'Bạn có chắc chắn muốn tắt hoạt động cho quy trình phê duyệt ',
         color: "#455570",
         textButton: 'Tắt'
     },

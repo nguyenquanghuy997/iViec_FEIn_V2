@@ -4,7 +4,7 @@ import {
   API_UPDATE_APPROVE_PROCESS,
   API_DELETE_APPROVE_PROCESS,
   API_GET_APPROVE_PROCESSES,
-  API_GET_APPROVE_PROCESS
+  API_GET_APPROVE_PROCESS, API_SET_AVAILABLE_APPROVE_PROCESS
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -51,6 +51,14 @@ const approveProcessFormSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["AllProcess"]
     }),
+    setApproveProcessAvailable: builder.mutation({
+      query: (data) => ({
+        url: `${API_SET_AVAILABLE_APPROVE_PROCESS}/${data.id}`,
+        method: "PATCH",
+        data,
+      }),
+      invalidatesTags: ["AllProcess"]
+    }),
   }),
 });
 
@@ -60,4 +68,5 @@ export const {
   useDeleteApproveProcessMutation,
   useAddApproveProcessMutation,
   useUpdateApproveProcessMutation,
+  useSetApproveProcessAvailableMutation,
 } = approveProcessFormSlice;

@@ -6,7 +6,7 @@ import { Button, Typography, Box, Card, Collapse } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
+import { Label } from "@/components/hook-form/style";
 export const DragItem = styled("li")(() => ({
   "&::marker": {
     color: "white",
@@ -23,18 +23,19 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
     setCharacters([...data, items]);
   };
   const time = false;
-const today= new Date()
+  const today = new Date();
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="characters">
+        <Droppable sx={{ height: "100%" }} droppableId="characters">
           {(provided) => (
             <ul
+              style={{ overflowY: "auto", height: "calc(100% - 105px)" }}
               className="characters"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {newArr.map(({ id, name, phone }, index) => {
+              {newArr.map(({ id, name, phone, image }, index) => {
                 return (
                   <Draggable key={id} draggableId={id} index={index}>
                     {(provided) => (
@@ -76,13 +77,14 @@ const today= new Date()
                                 <MenuListIcon />
                                 <Box sx={{ display: "flex", ml: 1 }}>
                                   <img
+                                    alt={""}
                                     style={{
                                       width: 40,
                                       height: 40,
-                                      borderRadius: "11px",
+                                      borderRadius: "10px",
                                       marginRight: "16px",
                                     }}
-                                    src="https://i.pinimg.com/236x/a7/f5/40/a7f540b5e119822ff15075600b1d22dd.jpg"
+                                    src={image}
                                   />
                                   <div>
                                     <Typography
@@ -107,7 +109,12 @@ const today= new Date()
                               </div>
 
                               <Box
-                                sx={{ mt: "2px", cursor: "pointer" }}
+                                sx={{
+                                  mt: "2px",
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
                                 onClick={onDelete}
                               >
                                 <DeleteIcon />
@@ -117,12 +124,9 @@ const today= new Date()
                           {open ? (
                             <>
                               <Box sx={{ mb: 2, width: "100%" }}>
-                                <Typography>
-                                  Ngày phỏng vấn{" "}
-                                  <span style={{ color: "red" }}>*</span>
-                                </Typography>
+                                <Label required={true}>Ngày phỏng vấn</Label>
                                 <RHFDatePicker
-                                  name="date"
+                                  name={`date.${index}`}
                                   today={today}
                                   style={{
                                     background: "white",
@@ -135,17 +139,14 @@ const today= new Date()
                                   <div>
                                     <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
-                                        <Typography>
-                                          Giờ phỏng vấn{" "}
-                                          <span style={{ color: "red" }}>
-                                            *
-                                          </span>
-                                        </Typography>
+                                      <Label required={true}> Giờ phỏng vấn</Label>
+                                      
                                         <RHFTimePicker
-                                          name={`bookingCalendarApplicants.${id}.interviewTime`}
+                                          name={`bookingCalendarGroups.${index}.bookingCalendarApplicants.${index}.interviewTime`}
                                           style={{
                                             width: "100%",
                                             background: "white",
+                                            borderRadius: '8px'
                                           }}
                                         />
                                       </Box>
@@ -158,21 +159,17 @@ const today= new Date()
                                   <div>
                                     <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
-                                        <Typography>
-                                          Thời lượng phỏng vấn{" "}
-                                          <span style={{ color: "red" }}>
-                                            *
-                                          </span>
-                                        </Typography>
+                                      <Label required={true}>Thời lượng phỏng vấn</Label>
+
                                         <RHFTextField
                                           isRequired
                                           sx={{
                                             minHeight: 44,
                                             width: "100%",
                                             background: "white",
-                                            border: "8px",
+                                            borderRadius: '8px'
                                           }}
-                                          name={`bookingCalendarApplicants.${id}.interviewDuration`}
+                                          name={`bookingCalendarGroups.${index}.bookingCalendarApplicants.${index}.interviewDuration`}
                                           placeholder="Nhập số phút"
                                         />
                                       </Box>
@@ -188,7 +185,9 @@ const today= new Date()
                               >
                                 <Button
                                   onClick={onClose}
-                                  sx={{ color: "#172B4D" }}
+                                  sx={{ color: "#172B4D",'&:hover':{
+                                    bgcolor:'#F2F4F5'
+                                  } }}
                                 >
                                   Hủy
                                 </Button>
@@ -240,6 +239,9 @@ const today= new Date()
                                       textTransform: "none",
                                       fontWeight: 400,
                                       fontSize: 14,
+                                      '&:hover': {
+                                        bgcolor: 'white'
+                                      }
                                     }}
                                     onClick={onOpen}
                                   >

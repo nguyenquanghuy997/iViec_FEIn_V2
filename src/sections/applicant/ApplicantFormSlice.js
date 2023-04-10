@@ -83,7 +83,7 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
         data
       }),
     }),
-    getRecruitmentPipelineStatesByRecruitment1: builder.query({
+    getRecruitmentPipelineStatesByRecruitments: builder.query({
       query: (params) => ({
         url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
         method: "GET",
@@ -255,7 +255,8 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetRecruitmentsQuery,
-  useGetRecruitmentPipelineStatesByRecruitment1Query,
+  useGetRecruitmentPipelineStatesByRecruitmentsQuery,
+  useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
