@@ -53,6 +53,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
     await getRelateCalendar({ RecruitmentPipelineStateId: e });
     setValue("reviewFormId", relateCalendar?.reviewFormId);
   };
+  console.log('')
   useEffect(() => {
     if (option) {
       setValue("recruitmentId", option?.id);
@@ -204,7 +205,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
           required
           name="reviewFormId"
           placeholder="Chọn mẫu đánh giá"
-          disabled={item?.reviewFormId || relateCalendar?.reviewFormId ? true : false}
+          // disabled={item?.reviewFormId || relateCalendar?.reviewFormId ? true : false}
           multiple={false}
         />
       </Grid>
