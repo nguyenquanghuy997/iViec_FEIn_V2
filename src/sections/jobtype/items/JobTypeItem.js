@@ -105,6 +105,7 @@ export const JobTypeItem = () => {
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
           remoteUrl: API_GET_ORGANIZATION_USERS,
+          showAvatar: true
         },
       },
     ];

@@ -6,7 +6,8 @@ import { Controller, useFormContext } from "react-hook-form";
 export default function RHFSelect({ name, onChange, ...props }) {
   const { control, setValue } = useFormContext();
   const handleDelete = (field, valueDelete) => {
-    const newOptions = field.value.filter((item) => item !== valueDelete);
+    const value = Array.isArray(field.value) ? field.value : [field.value];
+    const newOptions = value.filter((item) => item !== valueDelete);
     field.onChange(newOptions);
   };
 

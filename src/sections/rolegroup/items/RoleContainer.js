@@ -26,10 +26,12 @@ import {
 } from 'react-icons/ri';
 import { useSnackbar } from "notistack";
 import useRole from "@/hooks/useRole";
-import { PERMISSIONS } from "@/config";
+import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
 import { getErrorMessage } from "@/utils/helper";
 
 import { RoleGroupStyle } from "../styles";
+import {LIST_STATUS} from "@/utils/formatString";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 export const RoleContainer = () => {
   const { palette } = useTheme();
@@ -104,6 +106,11 @@ export const RoleContainer = () => {
         </Typography>
       ),
       width: "160px",
+      filters: {
+        type: TBL_FILTER_TYPE.SELECT,
+        placeholder: 'Tất cả',
+        options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+      }
     },
     {
       title: "Ngày tạo",
@@ -113,6 +120,11 @@ export const RoleContainer = () => {
       render: (time) => (
         <>{time ? moment(time).format("DD/MM/YYYY") : null}</>
       ),
+      filters: {
+        type: TBL_FILTER_TYPE.RANGE_DATE,
+        name: ['createdTimeFrom', 'createdTimeTo'],
+        placeholder: 'Chọn ngày',
+      },
     },
     {
       dataIndex: "creatorFirstName",
@@ -135,6 +147,13 @@ export const RoleContainer = () => {
           </span>
         </div>
       ),
+      filters: {
+        type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+        name: "creatorIds",
+        placeholder: "Chọn 1 hoặc nhiều người",
+        remoteUrl: API_GET_ORGANIZATION_USERS,
+        showAvatar: true
+      },
     },
   ];
 
