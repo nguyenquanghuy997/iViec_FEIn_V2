@@ -41,13 +41,14 @@ const OrganizationInviteResultCard = ({item}) => {
               justifyContent: 'space-between',
               backgroundColor: status ? '#E8F5E9' : '#FFEBEE',
               padding: 2,
-              mb: 3
+              mb: 3,
+              borderRadius: '6px'
         }}>
           <Box>
             <NameStyle status={status}>{name}</NameStyle>
             <Box sx={{display: 'flex', alignItems: 'center'}}>
               <Typography sx={{ fontSize: 13, fontWeight: 400 }}>{email}</Typography>
-              <span style={{width: '3px', height: '3px', backgroundColor: '#172B4D', marginLeft: 4, marginRight: 4, borderRadius: '50%'}}/>
+              <span style={{width: '3px', height: '3px', backgroundColor: '#172B4D', marginLeft: 8, marginRight: 8, borderRadius: '50%'}}/>
               <Typography sx={{ fontSize: 13, fontWeight: 400 }}>{roleGroup}</Typography>
             </Box>
             <Box sx={{ mt: 3, display: 'flex', alignItems: 'center', flexWrap: 'wrap'}}>

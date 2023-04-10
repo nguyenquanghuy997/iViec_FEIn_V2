@@ -51,6 +51,17 @@ const OrganizationContent = () => {
   const [isOpenInviteForm, setIsOpenInviteForm] = useState(false);
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0)    // 1 active 0 inactive
+  const [valueTabInviteForm, setValueTabInviteForm] = useState(0);
+
+  const handleOpenListInvite = () => {
+    setValueTabInviteForm(1)
+    setIsOpenInviteForm(true)
+  }
+
+  const handleOpenInviteForm = () => {
+    setValueTabInviteForm(0)
+    setIsOpenInviteForm(true)
+  }
 
   // create form
   const handleOpenForm = () => {
@@ -139,7 +150,7 @@ const OrganizationContent = () => {
               (canViewUser || canViewUnit || canEditUser || canEditUnit || canApproveUser) && <MuiButton 
               title={"Danh sách mời"}
               color={"default"}
-              onClick={() => setIsOpenInviteForm(true)}
+              onClick={() => handleOpenListInvite()}
               startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
               sx={{ fontWeight: 550, marginRight: 1 }}
             />
@@ -149,7 +160,7 @@ const OrganizationContent = () => {
               (canEditUnit || canEditUser) && <MuiButton 
               title={"Mời người dùng"}
               color={"primary"}
-              onClick={() => setIsOpenInviteForm(true)}
+              onClick={() => handleOpenInviteForm()}
               startIcon={<AddIcon />}
               sx={{ fontWeight: 550 }}
             />
@@ -260,6 +271,7 @@ const OrganizationContent = () => {
             isOpenInviteForm={isOpenInviteForm}
             setIsOpenInviteForm={setIsOpenInviteForm}
             ListOrganization={ListOrganization}
+            valueTabDefault={valueTabInviteForm}
         />}
         {isOpenActive && <OrganizationActiveModal
             actionTypeActive={actionTypeActive}

@@ -10,8 +10,11 @@ import {LIST_EXPERIENCE_NUMBER, LIST_GENDER_RECRUITMENT, LIST_RECRUITMENT_WORKIN
 import useFetchDataCommon from "@/sections/recruitment-form/hooks/useFetchDataCommon";
 
 import {BoxInnerStyle} from "@/sections/recruitment-form/style";
-const Common = () => {
+import {useFormContext} from "react-hook-form";
+const Common = ({ recruitment }) => {
     const {ListOrganization, ListJobCategory, ListProvince, ListCandidateLevels, ListLanguage} = useFetchDataCommon();
+    const { setValue } = useFormContext();
+
     return (
         <BoxInnerStyle>
             <DividerCard title="THÔNG TIN CHUNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
@@ -23,6 +26,7 @@ const Common = () => {
                         name="name"
                         placeholder="Nhập tiêu đề tin hiển thị tại trang việc làm..."
                         fullWidth
+                        disabled={recruitment?.processStatus === 5 || recruitment?.processStatus === 6}
                     />
                 </Box>
                 {/* Khu vực đăng tin */}
@@ -51,6 +55,12 @@ const Common = () => {
                                 parentOrganizationId: item.parentOrganizationId
                             }))}
                             isRequired
+                            onChange={(e) => {
+                                setValue('organizationId', e);
+                                setValue('ownerId', '');
+                                setValue('coOwnerIds', []);
+                                setValue('recruitmentCouncilIds', []);
+                            }}
                         />
                     </div>
                     <div style={{flex: 1, marginLeft: 8}}>

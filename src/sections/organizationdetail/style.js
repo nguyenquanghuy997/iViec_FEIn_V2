@@ -1,17 +1,19 @@
-import {styled} from "@mui/styles";
-import {Box, Typography} from "@mui/material";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
+import { styled } from "@mui/styles";
+import { Box, Typography } from "@mui/material";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
 
-const OrganizationNameStyle = styled(Typography)(({theme}) => ({
+const OrganizationNameStyle = styled(Typography)(({ theme }) => ({
   "&.organization-title": {
     fontSize: 24,
     fontWeight: 600,
     color: '#172B4D',
-    mt: theme.spacing(2)
-  }
+    mt: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));
 
-const CardUserStyle = styled(Box)(({theme}) => ({
+const CardUserStyle = styled(Box)(({ theme }) => ({
   '&.card-user-item': {
     border: '1px solid #E7E9ED',
     backgroundColor: '#FDFDFD',
@@ -21,14 +23,14 @@ const CardUserStyle = styled(Box)(({theme}) => ({
   }
 }));
 
-const CardUserFormItemTitleStyle = styled(Box)(({theme}) => ({
+const CardUserFormItemTitleStyle = styled(Box)(({ theme }) => ({
   '&.card-user-item-title': {
     display: 'flex',
     alignItems: 'center',
     color: style.COLOR_TEXT_PRIMARY,
     fontSize: style.FONT_BASE,
     fontWeight: style.FONT_SEMIBOLD,
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
     "& .MuiCheckbox-root": {
       padding: 0,
       marginRight: theme.spacing(2)

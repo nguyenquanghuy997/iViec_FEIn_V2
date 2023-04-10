@@ -11,8 +11,8 @@ const ListCandidate = ({ option, isEditmode, applicantId }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
   const res = useGetApplicantByPipeLineQuery(
-    { RecruitmentPipelineStateId: watch("recruitmentPipelineStateId") },
-    { skip: !watch("recruitmentPipelineStateId") }
+    {RecruitmentPipelineStateId: watch("recruitmentPipelineStateId")},
+    {skip: !watch("recruitmentPipelineStateId")}
   );
 
   const { data: { items } = { items: [] } } = res;
@@ -31,6 +31,7 @@ const ListCandidate = ({ option, isEditmode, applicantId }) => {
         </Typography>
       </Label>
 
+      
       <RHFSelectMultiple
         options={items?.map((i) => ({
           id: i.id,
@@ -50,6 +51,7 @@ const ListCandidate = ({ option, isEditmode, applicantId }) => {
         isRequired
         open={open}
       />
+    
     </Box>
   );
 };

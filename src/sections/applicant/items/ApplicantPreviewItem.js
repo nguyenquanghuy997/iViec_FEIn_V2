@@ -307,7 +307,7 @@ function ApplicantPreviewItem({
         sx={{ ...(smDown && { padding: 0 }) }}
       >
         <NavGoBack
-          link={PATH_DASHBOARD.dashboard}
+          link={PATH_DASHBOARD.applicant.root}
           name={"Trở về danh sách ứng viên"}
         ></NavGoBack>
 

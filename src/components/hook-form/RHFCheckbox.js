@@ -25,7 +25,7 @@ export const RHFCheckbox = forwardRef(({name, labelPlacement, label, style, ...o
               {...field}
               ref={ref}
               style={other.style}
-              checked={field.value ? true : false}
+              checked={!!field.value}
             />
           )}
         />

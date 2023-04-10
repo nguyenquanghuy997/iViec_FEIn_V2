@@ -74,6 +74,7 @@ export default function Image({
           width: 1,
           height: 1,
           backgroundSize: 'cover !important',
+          backgroundPosition: 'center'
         },
         ...sx,
       }}

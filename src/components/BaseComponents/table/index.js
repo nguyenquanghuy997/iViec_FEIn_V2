@@ -98,9 +98,7 @@ const DynamicColumnsTable = (props) => {
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    setItemSelected(
-      source?.items.filter((item) => newSelectedRowKeys.includes(item.id))
-    );
+    setItemSelected(source?.items?.filter((item) => newSelectedRowKeys.includes(item.id)));
   };
 
   const rowSelection = {
@@ -108,29 +106,29 @@ const DynamicColumnsTable = (props) => {
     onChange: onSelectChange,
   };
 
-  const onTableRowClick = (record) => {
-    const selectedKey = record.id;
-    const selectedKeys = [...selectedRowKeys];
-    const selectedList = itemSelected ? [...itemSelected] : [];
+  // const onTableRowClick = (record) => {
+  //   const selectedKey = record.id;
+  //   const selectedKeys = [...selectedRowKeys];
+  //   const selectedList = itemSelected ? [...itemSelected] : [];
+  //
+  //   const index = selectedKeys.indexOf(selectedKey);
+  //   if (index === -1) {
+  //     selectedKeys.push(selectedKey);
+  //     selectedList.push(record);
+  //   } else {
+  //     selectedKeys.splice(index, 1);
+  //     selectedList.splice(index, 1);
+  //   }
+  //
+  //   setSelectedRowKeys(selectedKeys);
+  //   itemSelected ? setItemSelected(selectedList) : "";
+  // };
 
-    const index = selectedKeys.indexOf(selectedKey);
-    if (index === -1) {
-      selectedKeys.push(selectedKey);
-      selectedList.push(record);
-    } else {
-      selectedKeys.splice(index, 1);
-      selectedList.splice(index, 1);
-    }
-
-    setSelectedRowKeys(selectedKeys);
-    itemSelected ? setItemSelected(selectedList) : "";
-  };
-
-  const onRow = (record, e) => {
-    return {
-      onClick: () => onTableRowClick(record, e),
-    };
-  };
+  // const onRow = (record, e) => {
+  //   return {
+  //     onClick: () => onTableRowClick(record, e),
+  //   };
+  // };
 
   const onSubmitFilter = (values = {}, reset = false, timeout = 1) => {
     if (reset && _isEmpty(router.query)) {
@@ -228,7 +226,7 @@ const DynamicColumnsTable = (props) => {
             <Table
               locale={locale}
               rowSelection={rowSelection}
-              onRow={onRow}
+              // onRow={onRow}
               rowKey={(record) => record.id}
               rowClassName={(record) =>
                 selectedRowKeys?.includes(record.id) ? "ant-table-row-selected" : ""
