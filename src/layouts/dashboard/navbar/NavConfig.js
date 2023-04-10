@@ -8,7 +8,7 @@ export const headerMenuConfig = [
         title: "Duyệt tin",
         path: "/adrecruitment",
         // icon: ICONS.job,
-        permissions: [PERS.APPR_JOB],
+        permissions: [PERS.ADMINISTRATOR],
       },
       {
         title: "Tin tuyển dụng",
@@ -28,18 +28,18 @@ export const headerMenuConfig = [
         // icon: ICONS.interview,
         permissions: [PERS.VIEW_INTV_SCHE],
       },
-      {
-        title: "Kho ứng viên",
-        path: "/stores",
-        // icon: ICONS.client,
-        permissions: [],
-      },
-      {
-        title: "Báo cáo",
-        path: "/report",
-        // icon: ICONS.report,
-        permissions: [PERS.VIEW_REPORT],
-      },
+      // {
+      //   title: "Kho ứng viên",
+      //   path: "/stores",
+      //   // icon: ICONS.client,
+      //   permissions: [],
+      // },
+      // {
+      //   title: "Báo cáo",
+      //   path: "/report",
+      //   // icon: ICONS.report,
+      //   permissions: [PERS.VIEW_REPORT],
+      // },
     ],
   },
 ]
