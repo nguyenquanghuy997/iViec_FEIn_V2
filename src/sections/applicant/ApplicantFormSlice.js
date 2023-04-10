@@ -199,6 +199,11 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
           }
         });
 
+        reqData.pageSize = reqData.PageSize || 10;
+        reqData.pageIndex = reqData.PageIndex || 1;
+        delete reqData.PageSize;
+        delete reqData.PageIndex;
+
         return {
           url: API_GET_FILTER_ALL_APPLICANTS,
           method: "POST",
