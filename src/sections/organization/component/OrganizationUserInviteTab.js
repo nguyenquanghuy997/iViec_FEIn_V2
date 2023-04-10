@@ -111,7 +111,11 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
             onSubmit={handleResendMulti}
             title={"Xác nhận gửi yêu cầu active tài khoản"}
             titleProps={{
-              color: '#1976D2'
+              sx: {
+                color: '#1976D2',
+                fontWeight: 600,
+                marginBottom: 1
+              }
             }}
             icon={<EmailInviteIcon width={55} height={45} fill={"#1976D2"} />}
             subtitle={
@@ -119,7 +123,7 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
                   (
                       <>Bạn có chắc chắn muốn gửi yêu cầu active tài khoản tới <span>{selected.length} email</span> này?</>
                   ) : (
-                      <>Bạn có chắc chắn muốn gửi yêu cầu active tài khoản tới<span>{selected[0]?.email}</span>?</>
+                      <>Bạn có chắc chắn muốn gửi yêu cầu active tài khoản tới <span>{selected[0]?.email}</span>?</>
                   )
             }
             btnCancelProps={{
@@ -147,12 +151,19 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
             data={selected}
             onSubmit={handleDeleteMulti}
             title={"Xác nhận xóa lời mời"}
+            titleProps={{
+              sx: {
+                color: '#E53935',
+                fontWeight: 600,
+                marginBottom: 1
+              }
+            }}
             subtitle={
               selected.length > 1 ?
                   (
-                      <>Bạn có chắc chắn muốn xóa lời mời tới<span>{selected.length} email</span> này?</>
+                      <>Bạn có chắc chắn muốn xóa lời mời tới <span>{selected.length} email</span> này?</>
                   ) : (
-                      <>Bạn có chắc chắn muốn xóa lời mời tới<span>{selected[0]?.email}</span>?</>
+                      <>Bạn có chắc chắn muốn xóa lời mời tới <span>{selected[0]?.email}</span>?</>
                   )
             }
             btnCancelProps={{

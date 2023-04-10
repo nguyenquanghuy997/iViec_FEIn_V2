@@ -95,6 +95,7 @@ export const API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT = '/organization/Organi
 export const API_UPDATE_ORGANIZATION_PIPELINE ='organization/OrganizationProfilePipeline/UpdateOrganizationProfilePipelines'
 export const API_UPDATE_ORGANIZATION_ENDING = 'organization/Organization/UpdateOrganization'
 export const API_ADD_ORGANIZATION_BUSINESS='organization/OrganizationBusiness/CreateOrganizationBusiness'
+export const API_GET_ORGANIZATION_USERS = '/organization/Organization/GetApplicationUsersFilter';
 
 // Mẫu đánh giá
 export const API_GET_ALL_REVIEW_FORM = "/organization/ReviewForm/GetReviewForms";
@@ -153,6 +154,10 @@ export const API_REMOVE_RECRUITMENT = "/recruitment/Recruitment/RemoveRecruitmen
 // get user from organization
 export const API_GET_USER_FROM_ORGANIZATION = "/organization/Organization/GetApplicationUserByOrganization";
 export const API_GET_ADD_APPLICANT_TO_RECRUITMENT = "/applicant/ApplicantRecruitment/AddApplicantsToRecruitment";
+
+//Danh sách người tạo
+export const API_GET_APPLICANT_USERS_FILTER = "/organization/Organization/GetApplicationUsersFilter";
+
 // API ApproveProcess
 export const API_CREATE_APPROVE_PROCESS = "/organization/ApprovalProcess/CreateApprovalProcess";
 export const API_UPDATE_APPROVE_PROCESS = "/organization/ApprovalProcess/UpdateApprovalProcess";

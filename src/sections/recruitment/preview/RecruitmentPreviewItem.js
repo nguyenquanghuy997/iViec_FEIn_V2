@@ -50,171 +50,25 @@ function RecruitmentPreviewItem({
   const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
     Id: RecruitmentId,
   });
-  const defaultValues = {
-    name: "",
-  };
-  const methods = useForm({
-    defaultValues,
-  });
-
-  const recruitment = {
-    organizationId: "01000000-ac12-0242-b3cd-08db10c50f70",
-    organizationSlug: null,
-    name: "ten tin tuyen dung",
-    slug: "ten-tin-tuyen-dung-",
-    description: "mo ta tin tuyen dung",
-    benefit: "phuc loi ",
-    requirement: "yeu cau",
-    numberPosition: 4,
-    minSalary: 10000000,
-    maxSalary: 30000000,
-    salaryDisplayType: 1,
-    currencyUnit: 1,
-    sex: 1,
-    startDate: "2023-03-01T07:03:49.796Z",
-    endDate: "2023-03-22T07:03:49.796Z",
-    address: "dia chi cong ty",
-    workingLanguageId: "01000000-ac12-0242-3279-08db13f76068",
-    workingLanguageName: null,
-    jobPosition: {
-      name: "Công nhân",
-      description: "đây là công nhân",
-      requirement: "chắc chắn",
-      benefit: "ok",
-      isActivated: true,
-      id: "01000000-ac12-0242-8f06-08db1ebc7eec",
-    },
-    processStatus: 0,
-    createdTime: "2023-03-01T08:04:03.955822Z",
-    creatorId: "01000000-ac12-0242-caf3-08db10c50fcb",
-    creatorName: null,
-    ownerId: "3c3a0000-5996-a8a1-29f6-08db109e2a50",
-    ownerName: null,
-    numberView: 0,
-    numberApply: 0,
-    workExperience: 1,
-    candidateLevelId: "ac430000-5996-a8a1-bff1-08db189caa24",
-    coOwners: [
-      {
-        email: "quy.vu.0101@gmail.com",
-        name: "Vu Quy",
-        id: "01000000-ac12-0242-04a9-08db10c321c9",
-      },
-      {
-        email: "thuyboncon2@gmail.com",
-        name: "Con 2 Thuy",
-        id: "01000000-ac12-0242-0f99-08db10d71872",
-      },
-      {
-        email: "datdt44@fpt.com.vn",
-        name: "Dat Tuan",
-        id: "01000000-ac12-0242-1c2a-08db10c3229f",
-      },
-      {
-        email: "phuong1@gma.com",
-        name: " ",
-        id: "01000000-ac12-0242-71aa-08db163eda49",
-      },
-    ],
-    tags: null,
-    recruitmentJobCategories: [
-      {
-        name: null,
-        jobCategoryId: "ac430000-5996-a8a1-23ca-08db189c7f5b",
-        id: "01000000-ac12-0242-5f86-08db1a2b8625",
-      },
-      {
-        name: null,
-        jobCategoryId: "ac430000-5996-a8a1-b048-08db189c77ef",
-        id: "01000000-ac12-0242-62ef-08db1a2b8625",
-      },
-    ],
-    recruitmentAddresses: [
-      {
-        provinceId: "01000000-ac12-0242-046d-08db10c3ab36",
-        provinceName: null,
-        districtId: null,
-        districtName: null,
-        id: "01000000-ac12-0242-83a1-08db1a2b8625",
-      },
-    ],
-    recruitmentWorkingForms: [
-      {
-        workingForm: 1,
-        id: "01000000-ac12-0242-78dd-08db1a2b8625",
-      },
-      {
-        workingForm: 2,
-        id: "01000000-ac12-0242-7b87-08db1a2b8625",
-      },
-    ],
-    recruitmentCouncils: [
-      {
-        councilUserId: "f4230000-5996-a8a1-1031-08db0e38b780",
-        councilEmail: null,
-        councilName: null,
-        id: "01000000-ac12-0242-51bb-08db1a2b8625",
-      },
-      {
-        councilUserId: "f4230000-5996-a8a1-3320-08db0e38b846",
-        councilEmail: null,
-        councilName: null,
-        id: "01000000-ac12-0242-55ae-08db1a2b8625",
-      },
-    ],
-    recruitmentPipeline: {
-      recruitmentId: "01000000-ac12-0242-d386-08db1a2b8623",
-      recruitmentPipelineStates: [
-        {
-          examinationId: null,
-          previousPipelineStateId: null,
-          pipelineStateType: 0,
-          id: "01000000-ac12-0242-c3cb-08db1a2b8623",
-        },
-        {
-          examinationId: null,
-          previousPipelineStateId: "01000000-ac12-0242-c3cb-08db1a2b8623",
-          pipelineStateType: 2,
-          id: "01000000-ac12-0242-ce75-08db1a2b8623",
-        },
-        {
-          examinationId: null,
-          previousPipelineStateId: "01000000-ac12-0242-ce75-08db1a2b8623",
-          pipelineStateType: 3,
-          id: "01000000-ac12-0242-d1dc-08db1a2b8623",
-        },
-        {
-          examinationId: null,
-          previousPipelineStateId: "01000000-ac12-0242-d1dc-08db1a2b8623",
-          pipelineStateType: 4,
-          id: "01000000-ac12-0242-d1df-08db1a2b8623",
-        },
-      ],
-      isAutomaticStepChange: false,
-      id: "01000000-ac12-0242-810e-08db1a2b8622",
-    },
-    id: "01000000-ac12-0242-d386-08db1a2b8623",
-  };
-
   const inforRecruitment = `
   <div>
     <div class="content">
       <div class="content-title">Vị trí công việc: </div>
-      <div>${recruitment?.jobPosition?.name || "-"}</div>
+      <div>${RecruitmentData?.jobPosition?.name || "-"}</div>
     </div>
     <div class="content">
       <div class="content-title">Đơn vị: </div>
-      <div>${recruitment?.organizationName || "-"}</div>
+      <div>${RecruitmentData?.organizationName || "-"}</div>
     </div>
     <div class="content">
       <div class="content-title">Phụ trách: </div>
-      <div>${recruitment?.ownerName || "-"}</div>
+      <div>${RecruitmentData?.ownerName || "-"}</div>
     </div>
     <div class="content">
       <div class="content-title">Đồng phụ trách: </div>
       <div>
       ${
-        recruitment?.coOwners
+        RecruitmentData?.coOwners
           ?.map((p, index) => {
             if (index < 3) {
               return p.email;
@@ -222,14 +76,19 @@ function RecruitmentPreviewItem({
           })
           .join(", ") || "-"
       }
-      <span>+ ${recruitment?.coOwners?.length - 3 || ""}</span>
+      ${
+        RecruitmentData?.coOwners?.length > 3
+          ? `<span>+ ${RecruitmentData?.coOwners?.length - 3 || ""}</span>`
+          : ""
+      }
+
       </div>
     </div>
     <div class="content">
       <div class="content-title">Hội đồng tuyển dụng: </div>
       <div>
       ${
-        recruitment?.recruitmentCouncils
+        RecruitmentData?.recruitmentCouncils
           ?.map((p, index) => {
             if (index < 3) {
               return p.councilEmail;
@@ -237,14 +96,21 @@ function RecruitmentPreviewItem({
           })
           .join(", ") || "-"
       }
-      <span>+ ${recruitment?.recruitmentCouncils?.length - 3 || ""}</span>
+      ${
+        RecruitmentData?.recruitmentCouncils?.length > 3
+          ? `<span>+ ${
+              RecruitmentData?.recruitmentCouncils?.length - 3 || ""
+            }</span>`
+          : ""
+      }
+      
       </div>
     </div>
     <div class="content">
       <div class="content-title">Kênh tuyển dụng: </div>
       <div>
       ${
-        recruitment?.jobSource
+        RecruitmentData?.jobSource
           ?.map((p, index) => {
             if (index < 3) {
               return p.name;
@@ -252,15 +118,27 @@ function RecruitmentPreviewItem({
           })
           .join(", ") || "-"
       }
-      <span>+ ${recruitment?.jobSource?.length - 3 || ""}</span>
+      ${
+        RecruitmentData?.jobSource?.length > 3
+          ? `<span>+ ${RecruitmentData?.jobSource?.length - 3 || ""}</span>`
+          : ""
+      }
+      
       </div>
     </div>
     <div class="content">
       <div class="content-title">Số lượng cần tuyển: </div>
-      <div>${recruitment?.numberApply || "-"}</div>
+      <div>${RecruitmentData?.numberApply || "-"}</div>
     </div>
   </div>
   `;
+  const defaultValues = {
+    name: "",
+  };
+  const methods = useForm({
+    defaultValues,
+  });
+
   const recruitmentId = window.location.pathname.split("/")[2];
   const [tab, setTab] = useState(tabDefault);
   const [showDialogStage, setShowDialogStage] = useState(false);

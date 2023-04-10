@@ -170,11 +170,41 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
     // new
     // get all applicant with filter
     getAllFilterApplicant: builder.query({
-      query: (data = {}) => ({
-        url: API_GET_FILTER_ALL_APPLICANTS,
-        method: "POST",
-        data: toRequestFilterData(data),
-      }),
+      query: (data = {}) => {
+        let reqData = {...data};
+        const aryFields = [
+          'livingAddressProvinceIds',
+          'livingAddressDistrictIds',
+          'homeTowerProvinceIds',
+          'homeTowerDistrictIds',
+          'applicantSkillIds',
+          'yearsOfExperience',
+          'sexs',
+          'maritalStatuses',
+          'expectWorkingAddressProvinceIds',
+          'expectWorkingAddressDistrictIds',
+          'organizationIds',
+          'recruitmentIds',
+          'ownerIds',
+          'councilIds',
+          'creatorIds',
+          'recruitmentPipelineStates',
+          'jobCategoryIds',
+          'jobSourceIds',
+        ];
+
+        aryFields.map(f => {
+          if (typeof data[f] !== 'undefined' && !Array.isArray(data[f])) {
+            reqData[f] = [data[f]];
+          }
+        });
+
+        return {
+          url: API_GET_FILTER_ALL_APPLICANTS,
+          method: "POST",
+          data: toRequestFilterData(reqData),
+        }
+      },
       providesTags: ["GetListsApplicants"],
     }),
     getRecruitmentByOrganizationId: builder.query({

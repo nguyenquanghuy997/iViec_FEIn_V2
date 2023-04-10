@@ -10,7 +10,6 @@ import { Tag } from "antd";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import ApplicantBottomNav from "./ApplicantBottomNav";
-import useAuth from "@/hooks/useAuth";
 import { TBL_FILTER_TYPE } from "@/config";
 import {
   LIST_GENDER,
@@ -22,7 +21,7 @@ import {
   API_GET_LIST_RECRUITMENT,
   API_GET_PROVINCE,
   API_GET_LIST_JOB_SOURCE,
-  API_GET_USER_FROM_ORGANIZATION,
+  API_GET_ORGANIZATION_USERS,
   API_GET_ORGANIZATION_WITH_CHILD,
   API_GET_JOB_CATEGORIES,
   API_GET_APPLICANT_SKILLS,
@@ -34,7 +33,6 @@ export const ApplicantItem = ({
   hideTable,
   headerProps,
 }) => {
-  const { user } = useAuth();
   const router = useRouter();
   const { query = { PageIndex: 1, PageSize: 10 } } = router;
 
@@ -150,7 +148,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "ownerIds",
           placeholder: "Chọn 1 hoặc nhiều cán bộ",
-          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
+          remoteUrl: API_GET_ORGANIZATION_USERS,
         },
       },
       {
@@ -161,7 +159,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
-          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
+          remoteUrl: API_GET_ORGANIZATION_USERS,
         },
       },
       {
@@ -215,9 +213,9 @@ export const ApplicantItem = ({
         dataIndex: "applicantSkills",
         render: (_, { applicantSkills }) => (
           <>
-            {applicantSkills.map((item) => {
+            {applicantSkills.map((item, idx) => {
               // let color = item.length > 5 ? 'geekblue' : 'green';
-              return <Tag key={item}>{item.name.toUpperCase()}</Tag>;
+              return <Tag key={idx}>{item.name.toUpperCase()}</Tag>;
             })}
           </>
         ),

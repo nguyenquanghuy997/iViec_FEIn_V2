@@ -231,12 +231,9 @@ function ApplicantPreviewItem({
   const { themeStretch } = useSettings();
 
   // const [showRejectApplicant, setRejectApplicant] = useState(false);
-  // const { data: data } = useGetApplicantByIdQuery({
-  //   applicantId: ApplicantId,
-  // });
   const [fetchPipe, { data: pipelines = [], isSuccess }] =
     useGetApplicantCurrentStateWithRecruitmentStatesMutation();
-  const [fetchData, { data: logApplicant = [], isSuccess: isSuccessLog }] =
+  const [fetchData, { data: logApplicant = []}] =
     useGetApplicantRecruitmentMutation();
   const [fetchDataApplicant, { data: data = [] }] =
     useLazyGetApplicantByIdQuery();
@@ -244,15 +241,6 @@ function ApplicantPreviewItem({
     useLazyGetApplicantReviewFormQuery( {
       skip: pipelines?.recruitmentPipelineStates?.length > 0,
     });
-  // const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
-  //   {
-  //     RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-  //     ApplicantId: ApplicantId,
-  //   },
-  //   {
-  //     skip: !pipelines?.recruitmentPipelineStates?.length > 0,
-  //   }
-  // );
 
   const [actionId, setActionId] = useState();
   const [actionType, setActionType] = useState();
@@ -484,15 +472,13 @@ function ApplicantPreviewItem({
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV data={data} />
+                    <ApplicantPreviewCV data={data} dataLog={logApplicant}/>
                   </Grid>
                   <Grid item xs={5} md={5}>
-                    {isSuccessLog && (
                       <ApplicantPreviewLog
                         dataLog={logApplicant}
                         dataApplicant={data}
                       />
-                    )}
                   </Grid>
                 </Grid>
               </CardContent>
