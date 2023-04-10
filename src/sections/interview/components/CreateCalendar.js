@@ -1,13 +1,11 @@
-import CloseIcon from "../../../assets/CloseIcon";
-import {
-  useAddCalendarMutation,
-} from "../InterviewSlice";
-import InterviewCouncil from "./InterviewCouncil";
-import ListCandidate from "./ListCandidate";
+import { useAddCalendarMutation } from "../InterviewSlice";
 import PersonalInterview from "./PersonalInterview";
+import CloseIcon from "@/assets/CloseIcon";
 import { FormProvider } from "@/components/hook-form";
+import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
+import ListCandidate from "@/sections/interview/components/ListCandidate";
 import { LoadingButton } from "@mui/lab";
-import { Box, List, Button, Typography, Grid, Drawer } from "@mui/material";
+import { Grid, Box, List, Drawer, Typography, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { useSnackbar } from "notistack";
@@ -16,14 +14,19 @@ import { useForm } from "react-hook-form";
 
 export const BoxInnerStyle = styled("Box")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
-    width: "1000px",
+    width: "80%",
   },
   [theme.breakpoints.up("xl")]: {
     width: "1400px",
   },
 }));
 
-const CreateCalendar = ({ open, onClose, onOpen }) => {
+const CreateCalendar = ({
+  open,
+  setOpen,
+  options,
+  currentApplicantPipelineState,
+}) => {
   const defaultValues = {
     name: "",
     recruitmentId: "",
@@ -67,17 +70,11 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
   });
 
   const {
-    setError,
-    watch,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
 
-  const watchStep = watch("recruitmentId");
-  const watchPipelineStep = watch("recruitmentPipelineStateId");
-  const watchInterviewType = watch("interviewType");
   const [addCalendar] = useAddCalendarMutation();
-  // const { data: RelateCalendar } = useGetRelateCalendaraQuery({RecruitmentPipelineStateId:watchPipelineStep}, {skip:!watchPipelineStep});
 
   const toHHMMSS = (num) => {
     let sec_num = parseInt(num * 60, 10);
@@ -113,175 +110,163 @@ const CreateCalendar = ({ open, onClose, onOpen }) => {
     return `${hours}:${minutes}:${newSeconds}`;
   };
 
-  // convertStoMs(stringDurationTime + stringTime);
-
   const { enqueueSnackbar } = useSnackbar();
-  const onSubmit = async (d) => {
 
-    try {
-      const body = {
-        name: d.name,
-        recruitmentId: d.recruitmentId,
-        recruitmentPipelineStateId: d.recruitmentPipelineStateId,
-        reviewFormId: d.reviewFormId,
-        interviewType: d.interviewType,
-        onlineInterviewAddress: d.onlineInterviewAddress,
-        note: d?.note,
-        isSendMailCouncil: d.isSendMailApplicant,
-        isSendMailApplicant: d.isSendMailApplicant,
-        councilIds: d.councilIds,
-        bookingCalendarGroups: [
-          {
-            name: "person",
-            interviewGroupType: 0,
-            interviewTime: "",
-            interviewDuration: "",
-            bookingCalendarApplicants: d?.bookingCalendarGroups.map((item) => {
+  const onSubmit = async (d) => {
+    const body = {
+      name: d.name,
+      recruitmentId: d.recruitmentId,
+      recruitmentPipelineStateId: d.recruitmentPipelineStateId,
+      reviewFormId: d.reviewFormId,
+      interviewType: d.interviewType,
+      onlineInterviewAddress: d.onlineInterviewAddress,
+      note: d?.note,
+      isSendMailCouncil: d.isSendMailApplicant,
+      isSendMailApplicant: d.isSendMailApplicant,
+      councilIds: d.councilIds,
+      bookingCalendarGroups: [
+        {
+          name: "person",
+          interviewGroupType: 0,
+          interviewTime: "",
+          interviewDuration: "",
+          bookingCalendarApplicants: d?.bookingCalendarGroups.map(
+            (item, index) => {
               const dateTime = convertStoMs(
                 convertDurationTimeToSeconds(
-                  `${d?.bookingCalendarApplicants[item].interviewTime}:00`
+                  `${item?.bookingCalendarApplicants[index].interviewTime}:00`
                 ) +
-                  convertDurationTimeToSeconds(
-                    toHHMMSS(
-                      d?.bookingCalendarApplicants[item].interviewDuration
-                    )
+                convertDurationTimeToSeconds(
+                  toHHMMSS(
+                    item?.bookingCalendarApplicants[index].interviewDuration
                   )
+                )
               );
               return {
-                applicantId: item,
+                applicantId: d?.applicantId[index],
                 interviewTime: new Date(
-                  `${moment(d?.date).format("YYYY-MM-DD")} ${dateTime}`
+                  `${moment(d?.date[index]).format("YYYY-MM-DD")} ${dateTime}`
                 ).toISOString(),
                 interviewDuration: toHHMMSS(
-                  d?.bookingCalendarApplicants[item].interviewDuration
+                  item?.bookingCalendarApplicants[index].interviewDuration
                 ),
               };
-            }),
-          },
-        ],
-      };
-      try {
-        await addCalendar(body).unwrap();
-        enqueueSnackbar("Đặt lịch thành công!", {
-          autoHideDuration: 2000,
-        });
-        onClose();
-        // location.reload()
-      } catch (err) {
-        enqueueSnackbar(errors.afterSubmit?.message, {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
-      }
+            }
+          ),
+        },
+      ],
+    };
+    try {
+      await addCalendar(body).unwrap();
+      enqueueSnackbar("Đặt lịch thành công!", {
+        autoHideDuration: 2000,
+      });
+      onClose();
+      // location.reload()
     } catch (err) {
-      const message =
-        err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
-      setError("afterSubmit", { ...err, message });
-      enqueueSnackbar(errors.afterSubmit?.message);
+      enqueueSnackbar(errors.afterSubmit?.message, {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
     }
   };
 
-  // const handleClearField = (field) => {
-  //   if (!field) return;
-  //   else methods.resetField(field);
-  // };
-
-  // useEffect(() => {
-  //   if (!Data?.id) return;
-
-  //   setValue("name", body.name);
-
-  // }, [isEditMode, data, preview]);
-
-  const list = () => (
-    <BoxInnerStyle>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <List
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            p: 0,
-          }}
-        >
-          <Typography sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}>
-            Đặt lịch phỏng vấn
-          </Typography>
-          <Button
-            onClick={onClose}
-            sx={{
-              "&:hover": {
-                background: "white",
-              },
-            }}
-          >
-            <CloseIcon />
-          </Button>
-        </List>
-
-        <Box>
-          <Grid container border="1px solid #E7E9ED">
-            <Grid
-              item
-              xs={12}
-              md={6}
-              borderRight="1px solid #E7E9ED"
-              sx={{ padding: "24px 24px 0 24px" }}
-            >
-              <Box sx={{ width: "100%", typography: "body1", mb: 3 }}>
-                <PersonalInterview
-                  watchStep={watchStep}
-                  watchType={watchInterviewType}
-                  watchPipe={watchPipelineStep}
-                />
-              </Box>
-            </Grid>
-            <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
-              <ListCandidate watchStep={watchStep} watch={watchPipelineStep} />
-            </Grid>
-            <Grid item xs={5} md={3}>
-              <InterviewCouncil watchStep={watchStep} />
-            </Grid>
-          </Grid>
-        </Box>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 12,
-            position: "fixed",
-            bottom: 0,
-            background: "#FDFDFD",
-            width: "100%",
-            padding: "16px 24px",
-            border: "1px solid #EFF3F6",
-          }}
-        >
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
-          >
-            {"Lưu"}
-          </LoadingButton>
-          <div style={{ width: 8 }} />
-
-          <LoadingButton
-            variant="text"
-            sx={{ color: "#455570" }}
-            onClick={onClose}
-          >
-            {"Hủy"}
-          </LoadingButton>
-        </div>
-      </FormProvider>
-    </BoxInnerStyle>
-  );
+  const onClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div>
-      <Drawer anchor="right" open={open} onClose={onClose} onOpen={onOpen}>
-        {list("right")}
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={onClose}
+        onOpen={setOpen(true)}
+      >
+        <BoxInnerStyle>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <List
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                p: 0,
+              }}
+            >
+              <Typography
+                sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}
+              >
+                Đặt lịch phỏng vấn
+              </Typography>
+              <Button
+                onClick={onClose}
+                sx={{
+                  "&:hover": {
+                    background: "white",
+                  },
+                }}
+              >
+                <CloseIcon />
+              </Button>
+            </List>
+            <Box>
+              <Grid container border="1px solid #E7E9ED">
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  borderRight="1px solid #E7E9ED"
+                  sx={{ padding: "24px 24px 0 24px" }}
+                >
+                  <Box sx={{ width: "100%", typography: "body1", mb: 3 }}>
+                    <PersonalInterview
+                      option={options}
+                      currentApplicantPipelineState={
+                        currentApplicantPipelineState
+                      }
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={5} md={3} borderRight="1px solid #E7E9ED">
+                  <ListCandidate applicantId={options?.applicantId} />
+                </Grid>
+                <Grid item xs={5} md={3}>
+                  <InterviewCouncil />
+                </Grid>
+              </Grid>
+            </Box>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginTop: 12,
+                position: "fixed",
+                bottom: 0,
+                background: "#FDFDFD",
+                width: "100%",
+                padding: "16px 24px",
+                border: "1px solid #EFF3F6",
+              }}
+            >
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+                sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
+              >
+                {"Lưu"}
+              </LoadingButton>
+              <div style={{ width: 8 }} />
+
+              <LoadingButton
+                variant="text"
+                sx={{ color: "#455570" }}
+                onClick={onClose}
+              >
+                {"Hủy"}
+              </LoadingButton>
+            </div>
+          </FormProvider>
+        </BoxInnerStyle>
       </Drawer>
     </div>
   );

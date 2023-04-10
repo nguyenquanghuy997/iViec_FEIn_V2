@@ -23,6 +23,7 @@ import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
+import CreateCalendar from "@/sections/interview/components/CreateCalendar";
 import { srcImage } from "@/utils/enum";
 import {
   Box,
@@ -51,7 +52,7 @@ function ApplicantPreviewItem({
 
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
-
+  const [open, setOpen] = useState(false);
   const HearderApplicant = () => {
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
@@ -145,7 +146,9 @@ function ApplicantPreviewItem({
                 mr={1}
               />
             }
+            onClick={() => setOpen(true)}
           />
+
           <ButtonDS
             tittle={"Đánh giá"}
             type="submit"
@@ -528,6 +531,7 @@ function ApplicantPreviewItem({
             data={reviewFormCriterias}
           />
         )}
+         {open && <CreateCalendar open={open} setOpen={setOpen} options={selectedOption} currentApplicantPipelineState={pipelines?.currentApplicantPipelineState}/>}
       </Container>
     </div>
   );

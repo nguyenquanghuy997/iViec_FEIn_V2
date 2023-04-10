@@ -1,41 +1,38 @@
+import HelperText from "@/components/BaseComponents/HelperText";
 import { FormLabel, styled } from "@mui/material";
 import { Input } from "antd";
 import PropTypes from "prop-types";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import HelperText from "@/components/BaseComponents/HelperText";
 
 const { TextArea } = Input;
 const InputTextArea = styled(TextArea)`
-    .ant-input {
-      padding: 12px 16px 12px 12px;
-      font-weight: 400;
-      font-size: 14px;
-      color: #172b4d;
-      font-family: Inter,sans-serif;
-    }
-    .ant-input:hover {
-      border-color: #a2aab7;
-      border-inline-end-width: 1.5px;
-    }
-    .ant-input::placeholder {
-      color: #A2AAB7;
-      font-weight: 400;
-      font-size: 14px;
-    }
-    .ant-input:focus {
-      border-color: #1976d2;
-      border-inline-end-width: 1.5px;
-      box-shadow: unset;
-    }
-    .ant-input::-webkit-scrollbar {
-      width: 4px;
-    }
-    .ant-input::-webkit-scrollbar-thumb {
-      background: #b9bfc9;
-      border-radius: 30px;
-    }
-  `;
+  .ant-input {
+    padding: 12px 16px 12px 12px;
+    font-weight: 400;
+    font-size: 14px;
+    color: #172b4d;
+  }
+  .ant-input:hover {
+    border-color: #a2aab7;
+    border-inline-end-width: 1.5px;
+  }
+  .ant-input:placeholder {
+    color: #8a94a5;
+  }
+  .ant-input:focus {
+    border-color: #1976d2;
+    border-inline-end-width: 1.5px;
+    box-shadow: unset;
+  }
+  .ant-input::-webkit-scrollbar {
+    width: 4px;
+  }
+  .ant-input::-webkit-scrollbar-thumb {
+    background: #b9bfc9;
+    border-radius: 30px;
+  }
+`;
 
 export default function TextAreaDS(props) {
   const { name, placeholder, maxLength, ...other } = props;
@@ -61,7 +58,7 @@ export default function TextAreaDS(props) {
             />
           </FormLabel>
 
-          {error && <HelperText errorText={error?.message} /> }
+          {error && <HelperText errorText={error?.message} />}
         </>
       )}
     />

@@ -1,40 +1,34 @@
 import { TextAreaDS } from "@/components/DesignSystem";
-import { RHFTextField, RHFCheckbox, RHFSelect } from "@/components/hook-form";
-import { LabelStyle } from "@/components/hook-form/style";
+import { RHFCheckbox, RHFSelect, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
-import { useGetRecruitmentPipelineStatesByRecruitment1Query } from "@/sections/applicant/ApplicantFormSlice";
-import { useGetReviewFormQuery } from "@/sections/interview/InterviewSlice";
-import { useGetRelateCalendaraQuery } from "@/sections/interview/InterviewSlice";
+import { useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery } from "@/sections/applicant/ApplicantFormSlice";
+import {
+  useGetReviewFormQuery,
+  useLazyGetRelateCalendarQuery,
+} from "@/sections/interview/InterviewSlice";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
-import { Box, Stack, Typography, TextField } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 
-const PersonalInterview = ({ item,  }) => {
-  const { watch } = useFormContext();
-  const watchStep = watch("recruitmentId");
-  const watchPipe = watch("recruitmentPipelineStateId");
-  const watchType = watch("interviewType");
-  const { control } = useFormContext();
+const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
+  const { resetField, watch, setValue } = useFormContext();
   const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
     PageSize: 20,
   });
-  const { data: { items: ListStep = [] } = {}} =
-    useGetRecruitmentPipelineStatesByRecruitment1Query(
-      { RecruitmentId: watchStep },
-      {
-        skip: !watchStep,
-      }
-    );
-  const { data: relateCalendar } = useGetRelateCalendaraQuery(
-    { RecruitmentPipelineStateId: watchPipe },
-    { skip: !watchPipe }
-  );
+  const { palette } = useTheme();
+
+  const [getPipeline, { data: { items: ListStep = [] } = {}, isSuccess }] =
+    useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
+
+  const [getRelateCalendar, { data: relateCalendar }] =
+    useLazyGetRelateCalendarQuery();
   const { data: { items: DataForm = [] } = {} } = useGetReviewFormQuery();
 
-  
   const options = [
     {
       id: 0,
@@ -46,140 +40,155 @@ const PersonalInterview = ({ item,  }) => {
     },
   ];
 
-  const renderTitle = (title, required) => {
-    return <Label required={required}>{title}</Label>;
+  const changeRecruitment = (e) => {
+    getPipeline({ RecruitmentId: e });
+    resetField("recruitmentPipelineStateId");
+    resetField("reviewFormId");
+    resetField("interviewType");
+    resetField('onlineInterviewAddress')
   };
-  const id = item?.recruitmentId;
-  const idReviewForm = item?.reviewFormId;
+
+  const changePipelineRecruitment = (e) => {
+    getRelateCalendar({ RecruitmentPipelineStateId: e });
+  };
+  useEffect(() => {
+    if (option) {
+      setValue("recruitmentId", option?.id);
+      getPipeline({ RecruitmentId: option?.id });
+      getRelateCalendar({
+        RecruitmentPipelineStateId: currentApplicantPipelineState,
+      });
+    }
+  }, [!option]);
+
+  useEffect(() => {
+    if (item) {
+      setValue("recruitmentId", item?.recruitmentId);
+      getPipeline({ RecruitmentId: item?.recruitmentId });
+      getRelateCalendar({
+        RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
+      });
+    }
+  }, [!item]);
+
+  useEffect(() => {
+    if (!isSuccess) {
+      setValue("recruitmentPipelineStateId", currentApplicantPipelineState);
+    }
+  }, [isSuccess]);
+
   return (
-    <Stack spacing={3}>
-      <Stack>
+    <Grid spacing={3}>
+      <Grid mb={3}>
         <RHFTextField
           name="name"
           title="Tên buổi phỏng vấn"
           placeholder="VD: Phỏng vấn lập trình viên lần 1..."
           isRequired
-          sx={{ width: "100%", minHeight: 44 }}
         />
-      </Stack>
+      </Grid>
 
-      <Stack>
-        {item ? (
-          <Box sx={{ mb: 3, width: "100%", height: 44 }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500, mb: 1 }}>
-              Tin tuyển dụng <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <Box
-              sx={{
-                bgcolor: "#EFF3F6",
-                p: 2,
-                borderRadius: "6px",
-                fontSize: 14,
-              }}
-            >
-              {Data.filter((item) => item?.id.includes(id))[0]?.name}
-            </Box>
-          </Box>
-        ) : (
-          <Box sx={{ mb: 2, width: "100%", height: 44 }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-              Tin tuyển dụng <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <RHFSelect
-              options={Data?.map((i) => ({
-                value: i.id,
-                label: i.name,
-                name: i.name,
-              }))}
-              name="recruitmentId"
-              multiple={false}
-              placeholder="Chọn tin tuyển dụng"
-              required
-            />
-          </Box>
-        )}
-      </Stack>
+      <Grid mb={3}>
+        <Label required={true}>
+          <Typography variant={"textSize14500"} color={palette.text.primary}>
+            Tin tuyển dụng
+          </Typography>
+        </Label>
+        <RHFSelect
+          options={Data?.map((i) => ({
+            value: i.id,
+            label: i.name,
+            name: i.name,
+          }))}
+          name="recruitmentId"
+          multiple={false}
+          placeholder="Chọn tin tuyển dụng"
+          required
+          disabled={option || item?.recruitmentId ? true : false}
+          onChange={changeRecruitment}
+        />
+      </Grid>
 
-      {watchStep && (
-        <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
-          <Box sx={{ mb: 2, width: "50%", height: 44 }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-              Bước phỏng vấn <span style={{ color: "red" }}>*</span>
+      <Grid container mb={3} direction="row">
+        <Grid item xs={6} pr={"12px"}>
+          <Label required={true}>
+            <Typography variant={"textSize14500"} color={palette.text.primary}>
+              Bước phỏng vấn
             </Typography>
-            <RHFSelect
-              options={ListStep.filter(
-                (item) => item.pipelineStateType === 2
-              )?.map((i) => ({
-                value: i.id,
-                label: PipelineStateType(i.pipelineStateType),
-                name: i.name,
-              }))}
-              name="recruitmentPipelineStateId"
-              multiple={false}
-              required
-            />
-          </Box>
-          <Box sx={{ mb: 2, width: "50%", height: 44 }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-              Hình thức phỏng vấn <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <RHFSelect
-              options={options.map((i) => ({
-                value: i.id,
-                label: i.name,
-                name: i.name,
-              }))}
-              name="interviewType"
-              multiple={false}
-              required
-            />
-          </Box>
-        </Stack>
-      )}
-
-      {watchType === 1 && (
-        <Stack>
-          <Controller
-            name={"onlineInterviewAddress"}
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <>
-                  <LabelStyle required={true}>Địa điểm</LabelStyle>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows="2"
-                    defaultValue="Default Value"
-                    placeholder="Nội dung"
-                    variant="outlined"
-                    {...field}
-                    value={field.value || ""}
-                    error={!!error}
-                    helperText={error?.message}
-                    sx={{
-                      "& textarea": {
-                        p: "0!important",
-                        fontSize: 14,
-                      },
-                    }}
-                  />
-                </>
-              );
-            }}
+          </Label>
+          <RHFSelect
+            options={
+              ListStep.filter((item) => item.pipelineStateType === 2)?.map(
+                (i) => ({
+                  value: i.id,
+                  label: PipelineStateType(i.pipelineStateType),
+                })
+              ) || {
+                value: option.currentApplicantPipelineState,
+              }
+            }
+            name="recruitmentPipelineStateId"
+            multiple={false}
+            placeholder="Chọn bước phỏng vấn"
+            required
+            disabled={
+              currentApplicantPipelineState ||
+              item?.recruitmentPipelineStateId ||
+              !watch("recruitmentId")
+                ? true
+                : false
+            }
+            onChange={changePipelineRecruitment}
           />
-        </Stack>
-      )}
+        </Grid>
+        <Grid item xs={6} pl={"12px"}>
+          <Label required={true}>
+            <Typography variant={"textSize14500"} color={palette.text.primary}>
+              Hình thức phỏng vấn
+            </Typography>
+          </Label>
+          <RHFSelect
+            options={options.map((i) => ({
+              value: i.id,
+              label: i.name,
+              name: i.name,
+            }))}
+            name="interviewType"
+            placeholder="Chọn hình thức phỏng vấn"
+            disabled={watch("recruitmentId") ? false : true}
+            multiple={false}
+            required
+          />
+        </Grid>
+      </Grid>
 
-      <Stack>
-        {renderTitle("Lưu ý cho ứng viên")}
+      <Grid mb={3}>
+        <Label required={true}>
+          <Typography variant={"textSize14500"} color={palette.text.primary}>
+            Địa điểm
+          </Typography>
+        </Label>
+        <TextAreaDS
+          placeholder="Nhập nội dung lưu ý..."
+          name={"onlineInterviewAddress"}
+          style={{ height: "80px" }}
+          disabled={watch("interviewType") === 1 ? false : true}
+        />
+      </Grid>
+
+      <Grid mb={3}>
+        <Label>
+          <Typography variant={"textSize14500"} color={palette.text.primary}>
+            Lưu ý cho ứng viên
+          </Typography>
+        </Label>
         <TextAreaDS
           maxLength={1000}
           placeholder="Nhập nội dung lưu ý..."
           name={"note"}
         />
-      </Stack>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
+      </Grid>
+      <Grid mb={3} container flexDirection={"column"}>
         <RHFCheckbox
           name="isSendMailCouncil"
           label="Gửi email cho hội đồng tuyển dụng"
@@ -188,45 +197,39 @@ const PersonalInterview = ({ item,  }) => {
           name="isSendMailApplicant"
           label="Gửi email cho ứng viên"
         />
-      </Box>
-      <Stack spacing={2} direction="row" sx={{ width: "100%" }}>
+      </Grid>
+      <Grid mb={9} >
+        <Label required={true}>
+          <Typography variant={"textSize14500"} color={palette.text.primary}>
+            Mẫu đánh giá
+          </Typography>
+        </Label>
         {item?.reviewFormId || relateCalendar ? (
-          <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500, mb: 1 }}>
-              Mẫu đánh giá <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <Box
-              sx={{
-                bgColor: "#EFF3F6",
-                p: 2,
-                borderRadius: "6px",
-                fontSize: 14,
-              }}
-            >
-              {DataForm.filter((item) => item?.id.includes(idReviewForm))[0]
-                ?.name || relateCalendar?.reviewFormName}
-            </Box>
+          <Box
+            sx={{
+              backgroundColor: "#EFF3F6",
+              p: 2,
+              borderRadius: "6px",
+              fontSize: 14,
+            }}
+          >
+            {DataForm.filter((data) => data?.id.includes(item?.reviewFormId))[0]
+              ?.name || relateCalendar?.reviewFormName}
           </Box>
         ) : (
-          <Box sx={{ mb: "20vh", width: "100%", height: 44 }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-              Mẫu đánh giá <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <RHFSelect
-              options={DataForm.map((i) => ({
-                value: i.id,
-                label: i.name,
-                name: i.name,
-              }))}
-              required
-              name="reviewFormId"
-              placeholder="Chọn mẫu đánh giá"
-              multiple={false}
-            />
-          </Box>
+          <RHFSelect
+            options={DataForm.map((i) => ({
+              value: i.id,
+              label: i.name,
+            }))}
+            required
+            name="reviewFormId"
+            placeholder="Chọn mẫu đánh giá"
+            multiple={false}
+          />
         )}
-      </Stack>
-    </Stack>
+      </Grid>
+    </Grid>
   );
 };
 export default PersonalInterview;

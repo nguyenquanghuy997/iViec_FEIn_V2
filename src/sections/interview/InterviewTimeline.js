@@ -35,15 +35,6 @@ export const InterviewTimeline = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // filter modal
-  const handleOpenFilterForm = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseFilterForm = () => {
-    setIsOpen(false);
-  };
-
   const onSubmitSearch = async (data) => {
     await router.push(
       {
@@ -63,16 +54,13 @@ export const InterviewTimeline = () => {
           isOpen={isOpen}
           onSubmit={onSubmitSearch}
           handleSubmit={handleSubmit}
-          handleOpen={() => setOpen(true)}
-          handleClose={() => setOpen(false)}
-          onOpenFilterForm={handleOpenFilterForm}
-          onCloseFilterForm={handleCloseFilterForm}
+          handleOpen={setOpen}
+          onOpenFilterForm={setIsOpen}
         />
         {open && (
           <CreateCalendar
             open={open}
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
+            setOpen={setOpen}
           />
         )}
         <InterviewSchedule />

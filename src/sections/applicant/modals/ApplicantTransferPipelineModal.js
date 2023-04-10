@@ -1,5 +1,5 @@
 import {
-  useGetRecruitmentPipelineStatesByRecruitment1Query,
+  useGetRecruitmentPipelineStatesByRecruitmentsQuery,
   useUpdateApplicantRecruitmentToNextStateMutation,
 } from "../ApplicantFormSlice";
 import { ButtonDS } from "@/components/DesignSystem";
@@ -38,7 +38,7 @@ const ApplicantTransferPipelineModal = ({
   };
   const [tranfer] = useUpdateApplicantRecruitmentToNextStateMutation();
   const handleTranfer = handleSubmit(async () => {
-    var resultId = items.filter((p) => p.pipelineStateType == 3)[0]?.id;
+    var resultId = items.filter((p) => p.pipelineStateType === 3)[0]?.id;
     if (valueChecked == 0 || valueChecked == 1 || valueChecked == 2) {
       setActionId(resultId);
       setActionType(valueChecked);
@@ -83,7 +83,7 @@ const ApplicantTransferPipelineModal = ({
   };
 
   const { data: { items: items = [] } = {} } =
-    useGetRecruitmentPipelineStatesByRecruitment1Query({
+    useGetRecruitmentPipelineStatesByRecruitmentsQuery({
       RecruitmentId: itemSelected?.recruitmentId,
     });
 

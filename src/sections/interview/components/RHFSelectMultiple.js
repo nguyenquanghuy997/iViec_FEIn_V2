@@ -1,7 +1,6 @@
 import DragCandidate from "./DragCandidate";
-import PlusIcon from "@/assets/interview/PlusIcon";
+// import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
-// import { RHFCheckbox } from "@/components/hook-form";
 import {
   LabelStyle,
   MenuItemStyle,
@@ -20,9 +19,7 @@ import {
   Stack,
   Typography,
   Button,
-  Card,
 } from "@mui/material";
-import moment from "moment";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
@@ -50,6 +47,7 @@ const renderOptions = (options) => {
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
         <Box sx={{ display: "flex" }}>
           <img
+            alt={""}
             style={{
               width: 36,
               height: 36,
@@ -77,21 +75,23 @@ const renderOptions = (options) => {
   });
 };
 
-function RHFSelectMultiple({ name, isEditmode, ...props }) {
+function RHFSelectMultiple({ name, ...props }) {
   const [filterOptions, setFilterOptions] = useState([]);
   const [searchText, setSearchText] = useState("");
   const { control } = useFormContext();
 
   const classes = useStyles();
-  const { defaultValue, isRequired, title, options, disabled, multiple } = props;
+  const {
+    defaultValue,
+    isEditmode,
+    isRequired,
+    title,
+    options,
+    disabled,
+    multiple,
+    listApplicant
+  } = props;
   const { remove } = useFieldArray({ control, name });
-
-  // const convertDurationTimeToSeconds = (time) => {
-  //   const splitToString = time.split(":");
-  //   return (
-  //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
-  //   );
-  // };
 
   const renderChipsSelect = (options, value) => {
     const [open, setOpen] = useState(false);
@@ -101,245 +101,38 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
     const handleOpen = () => {
       setOpen(true);
     };
-    const time = false;
-    const test = value[0]?.bookingCalendarGroupApplicants?.map(
-      (item) => item?.interviewTime
-    );
+    // const time = true;
+    // const test = value[0]?.bookingCalendarGroupApplicants?.map(
+    //   (item) => item?.interviewTime
+    // );
+    // const duration = value[0]?.bookingCalendarGroupApplicants?.map(
+    //   (item) => item?.interviewDuration
+    // );
+    // const convertDurationTimeToSeconds = (time) => {
+    //   const splitToString = time.split(":");
+    //   return (
+    //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+    //   );
+    // };
+
+    // const convertStoMs = (s) => {
+    //   const totalMinutes = Math.floor(s / 60);
+    //   const hours = Math.floor(totalMinutes / 60);
+    //   const newHours = hours < 10 ? "0" + hours : hours;
+    //   const minutes = totalMinutes % 60;
+    //   return `${newHours}:${minutes}`;
+    // };
 
     return (
-      <Stack flexWrap="wrap" justifyContent="flex-start">
-        {/* <Box sx={{ display: "flex", justifyContent: "center", alignItems:'center',fontSize: 12 }}>
-          <RHFCheckbox
-            name="adjust"
-            label="Điều chỉnh hàng loạt"
-            style={{ fontSize: "12px" }}
-          />
-          <p>
-            <RiEqualizerFill color={"#1976D2"} size={'15'} />
-            Điều chỉnh
-          </p>
-  
-        </Box> */}
-
+      <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
           data={options?.filter((option) =>
-            (value || []).includes(option?.value)
+            (isEditmode ? [] : value).includes(option?.value)
           )}
           open={open}
           onClose={handleClose}
           onOpen={handleOpen}
         />
-        {isEditmode &&
-          value[0]?.bookingCalendarGroupApplicants?.map((item,index) => (
-            <div
-              style={{
-                background: "#F2F4F5",
-                padding: "16px",
-                marginBottom: "16px",
-                borderRadius: "6px ",
-                width: "100%",
-              }}
-            >
-              <Card
-                sx={{
-                  boxShadow: "none",
-                  border: "none",
-                  mb: 2,
-                  borderRadius: "6px",
-                  background: "#F2F4F5",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    {/* <MenuListIcon /> */}
-                    <Box sx={{ display: "flex", ml: 1 }}>
-                      <img
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: "10px",
-                          marginRight: "16px",
-                        }}
-                        src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.applicant?.portraitImage}`}
-                      />
-                      <div>
-                        <Typography
-                          sx={{
-                            fontSize: "13px",
-                            fontWeight: "600",
-                          }}
-                        >
-                          {item?.applicant?.fullName}
-                        </Typography>
-                        <Typography
-                          color="#455570"
-                          sx={{
-                            fontSize: "12px",
-                            fontWeight: "400",
-                          }}
-                        >
-                          {item?.applicant?.phoneNumber}
-                        </Typography>
-                      </div>
-                    </Box>
-                  </div>
-                </div>
-              </Card>
-              {open ? (
-                <>
-                  <Box sx={{ mb: 2, width: "100%" }}>
-                    <Typography>
-                      Ngày phỏng vấn <span style={{ color: "red" }}>*</span>
-                    </Typography>
-                    {/* <RHFDatePicker
-                    name="date"
-                    today={today}
-                    style={{
-                      background: "white",
-                      borderRadius: "8px",
-                    }}
-                  /> */}
-                  </Box>
-                  <Box sx={{ width: "100%" }}>
-                    <Box>
-                      <div>
-                        {/* <Collapse in={open}>
-                        <Box sx={{ mb: 2 }}>
-                          <Typography>
-                            Giờ phỏng vấn{" "}
-                            <span style={{ color: "red" }}>
-                              *
-                            </span>
-                          </Typography>
-                          <RHFTimePicker
-                            name={`bookingCalendarApplicants.${id}.interviewTime`}
-                            style={{
-                              width: "100%",
-                              background: "white",
-                            }}
-                          />
-                        </Box>
-                      </Collapse> */}
-                      </div>
-                    </Box>
-                  </Box>
-                  <Box sx={{ width: "100%" }}>
-                    <Box>
-                      <div>
-                        {/* <Collapse in={open}>
-                        <Box sx={{ mb: 2 }}>
-                          <Typography>
-                            Thời lượng phỏng vấn{" "}
-                            <span style={{ color: "red" }}>
-                              *
-                            </span>
-                          </Typography>
-                          <RHFTextField
-                            isRequired
-                            sx={{
-                              minHeight: 44,
-                              width: "100%",
-                              background: "white",
-                              border: "8px",
-                            }}
-                            name={`bookingCalendarApplicants.${id}.interviewDuration`}
-                            placeholder="Nhập số phút"
-                          />
-                        </Box>
-                      </Collapse> */}
-                      </div>
-                    </Box>
-                  </Box>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "end",
-                    }}
-                  >
-                    <Button
-                      // onClick={onClose}
-                      sx={{ color: "#172B4D" }}
-                    >
-                      Hủy
-                    </Button>
-                    <Button
-                      // onClick={onClose}
-                      variant="contained"
-                      sx={{ background: "#1976D2" }}
-                    >
-                      Lưu
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                ""
-              )}
-              {time ? (
-                <Card sx={{ textAlign: "center", py: 1, px: 2 }}>
-                  <Typography
-                    sx={{
-                      fontWeight: 600,
-                      m: "0 auto",
-                      fontSize: 13,
-                    }}
-                  >
-                    {time}
-                  </Typography>
-                  <Button sx={{ m: "0 auto", textTransform: "none" }}>
-                    {" "}
-                    Điều chỉnh
-                  </Button>{" "}
-                </Card>
-              ) : (
-                <>
-                  {test ? (
-                    <Card
-                      sx={{
-                        textAlign: "center",
-                        borderRadius: "6px",
-                        fontSize: 13,
-                        py: 2,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {moment(test[index]).format("hh:mm")}
-                      {` Ngày ${moment(test[index]).format("DD-MM-YYYY")}`}
-                    </Card>
-                  ) : (
-                    <Card
-                      sx={{
-                        textAlign: "center",
-                        px: 2,
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <Button
-                        sx={{
-                          m: "0 auto",
-                          textTransform: "none",
-                          fontWeight: 400,
-                          fontSize: 14,
-                        }}
-                        // onClick={onOpen}
-                      >
-                        Điều chỉnh ngày giờ phỏng vấn
-                      </Button>
-                    </Card>
-                  )}
-                </>
-              )}
-            </div>
-          ))}
       </Stack>
     );
   };
@@ -359,7 +152,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
       control={control}
       defaultValue={defaultValue || []}
       render={({ field, fieldState: { error } }) => (
-        <Stack direction="column">
+        <Stack height={"100%"} direction="column">
           {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
           <SelectFieldStyle
             sx={{
@@ -381,19 +174,31 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
               if (selected?.length === 0) {
                 return (
                   <Button
-                    sx={{ width: "100%", textTransform: "none" }}
-                    startIcon={<PlusIcon />}
+                    sx={{
+                      width: "100%",
+                      textTransform: "none",
+                      color: "#1976D2",
+                      "&:hover": {
+                        bgcolor: "white",
+                      },
+                    }}
+                    
                   >
-                    Thêm ứng viên
+                    + Thêm ứng viên
                   </Button>
                 );
               }
               return (
                 <Button
-                  sx={{ width: "100%", textTransform: "none" }}
-                  startIcon={<PlusIcon />}
+                  sx={{
+                    width: "100%",
+                    textTransform: "none",
+                    "&:hover": {
+                      bgcolor: "white",
+                    },
+                  }}
                 >
-                  Thêm ứng viên
+                  + Thêm ứng viên
                 </Button>
               );
             }}
@@ -412,6 +217,7 @@ function RHFSelectMultiple({ name, isEditmode, ...props }) {
             )}
             {renderOptions(filterOptions)}
           </SelectFieldStyle>
+          {listApplicant}
           {multiple && renderChipsSelect(options, field.value, remove)}
           <FormHelperText
             sx={{

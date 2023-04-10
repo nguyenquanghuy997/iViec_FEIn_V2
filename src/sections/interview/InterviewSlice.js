@@ -44,7 +44,7 @@ export const calendarServiceApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ["BookCalendar"],
   endpoints: (builder) => ({
-    getRelateCalendara: builder.query({
+    getRelateCalendar: builder.query({
       query: (params) => ({
         url: API_GET_RELATE_CALENDAR,
         method: "GET",
@@ -76,7 +76,7 @@ export const calendarServiceApi = createApi({
       }),
       providesTags: ["BookCalendar"],
     }),
-    getApplicantByPipeLINE: builder.query({
+    getApplicantByPipeLine: builder.query({
       query: (params) => ({
         url: API_GET_APPLICANT_BY_PIPELINES_STATE,
         mehtod: "GET",
@@ -114,10 +114,10 @@ export const calendarServiceApi = createApi({
 export const {
   useAddCalendarMutation,
   useGetReviewFormQuery,
-  useGetRelateCalendaraQuery,
+  useLazyGetRelateCalendarQuery,
   useGetCalendarQuery,
   useGetDetailCalendarsQuery,
-  useGetApplicantByPipeLINEQuery,
+  useGetApplicantByPipeLineQuery,
   useUpdateCalendarMutation,
   useDeleteCalendarMutation,
 } = calendarServiceApi;

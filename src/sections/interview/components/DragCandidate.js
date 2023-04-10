@@ -6,7 +6,7 @@ import { Button, Typography, Box, Card, Collapse } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
+import { Label } from "@/components/hook-form/style";
 export const DragItem = styled("li")(() => ({
   "&::marker": {
     color: "white",
@@ -27,9 +27,10 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="characters">
+        <Droppable sx={{ height: "100%" }} droppableId="characters">
           {(provided) => (
             <ul
+              style={{ overflowY: "auto", height: "calc(100% - 105px)" }}
               className="characters"
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -76,6 +77,7 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                 <MenuListIcon />
                                 <Box sx={{ display: "flex", ml: 1 }}>
                                   <img
+                                    alt={""}
                                     style={{
                                       width: 40,
                                       height: 40,
@@ -122,12 +124,9 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                           {open ? (
                             <>
                               <Box sx={{ mb: 2, width: "100%" }}>
-                                <Typography>
-                                  Ngày phỏng vấn{" "}
-                                  <span style={{ color: "red" }}>*</span>
-                                </Typography>
+                                <Label required={true}>Ngày phỏng vấn</Label>
                                 <RHFDatePicker
-                                  name={`bookingCalendarApplicants.${id}.date`}
+                                  name={`date.${index}`}
                                   today={today}
                                   style={{
                                     background: "white",
@@ -140,17 +139,14 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                   <div>
                                     <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
-                                        <Typography>
-                                          Giờ phỏng vấn{" "}
-                                          <span style={{ color: "red" }}>
-                                            *
-                                          </span>
-                                        </Typography>
+                                      <Label required={true}> Giờ phỏng vấn</Label>
+                                      
                                         <RHFTimePicker
-                                          name={`bookingCalendarApplicants.${id}.interviewTime`}
+                                          name={`bookingCalendarGroups.${index}.bookingCalendarApplicants.${index}.interviewTime`}
                                           style={{
                                             width: "100%",
                                             background: "white",
+                                            borderRadius: '8px'
                                           }}
                                         />
                                       </Box>
@@ -163,21 +159,17 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                   <div>
                                     <Collapse in={open}>
                                       <Box sx={{ mb: 2 }}>
-                                        <Typography>
-                                          Thời lượng phỏng vấn{" "}
-                                          <span style={{ color: "red" }}>
-                                            *
-                                          </span>
-                                        </Typography>
+                                      <Label required={true}>Thời lượng phỏng vấn</Label>
+
                                         <RHFTextField
                                           isRequired
                                           sx={{
                                             minHeight: 44,
                                             width: "100%",
                                             background: "white",
-                                            border: "8px",
+                                            borderRadius: '8px'
                                           }}
-                                          name={`bookingCalendarApplicants.${id}.interviewDuration`}
+                                          name={`bookingCalendarGroups.${index}.bookingCalendarApplicants.${index}.interviewDuration`}
                                           placeholder="Nhập số phút"
                                         />
                                       </Box>
@@ -193,7 +185,9 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                               >
                                 <Button
                                   onClick={onClose}
-                                  sx={{ color: "#172B4D" }}
+                                  sx={{ color: "#172B4D",'&:hover':{
+                                    bgcolor:'#F2F4F5'
+                                  } }}
                                 >
                                   Hủy
                                 </Button>
@@ -245,6 +239,9 @@ function DragCandidate({ data, onDelete, open, onClose, onOpen }) {
                                       textTransform: "none",
                                       fontWeight: 400,
                                       fontSize: 14,
+                                      '&:hover': {
+                                        bgcolor: 'white'
+                                      }
                                     }}
                                     onClick={onOpen}
                                   >
