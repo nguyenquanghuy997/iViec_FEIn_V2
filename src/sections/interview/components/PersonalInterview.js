@@ -204,7 +204,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
           required
           name="reviewFormId"
           placeholder="Chọn mẫu đánh giá"
-          disabled={item?.reviewFormId || relateCalendar?.reviewFormId ? true : false}
+          // disabled={item?.reviewFormId || relateCalendar?.reviewFormId ? true : false}
           multiple={false}
         />
       </Grid>
