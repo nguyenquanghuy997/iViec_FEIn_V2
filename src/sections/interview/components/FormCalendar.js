@@ -252,7 +252,7 @@ export const FormCalendar = ({
                   <Grid p={3} sx={{
                     minWidth: "400px"
                   }}>
-                    <ListCandidate applicantId={options?.applicantId}/>
+                    <ListCandidate option={options} applicantId={options?.applicantId}/>
                   </Grid>
                   <Divider orientation="vertical"/>
                   <Grid sx={{

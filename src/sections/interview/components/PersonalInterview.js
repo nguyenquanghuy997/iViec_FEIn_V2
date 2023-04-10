@@ -2,7 +2,10 @@ import { TextAreaDS } from "@/components/DesignSystem";
 import { RHFCheckbox, RHFSelect, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery } from "@/sections/applicant/ApplicantFormSlice";
-import { useGetReviewFormQuery, useLazyGetRelateCalendarQuery, } from "@/sections/interview/InterviewSlice";
+import {
+  useGetReviewFormQuery,
+  useLazyGetRelateCalendarQuery,
+} from "@/sections/interview/InterviewSlice";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
 import { Grid, Typography } from "@mui/material";
@@ -10,21 +13,21 @@ import { useTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
-  const {resetField, watch, setValue} = useFormContext();
-  const {data: {items: Data = []} = {}} = useGetRecruitmentsQuery({
+const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
+  const { resetField, watch, setValue } = useFormContext();
+  const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
     PageIndex: 1,
     PageSize: 20,
   });
-  const {palette} = useTheme();
-  
-  const [getPipeline, {data: {items: ListStep = []} = {}, isSuccess}] =
+  const { palette } = useTheme();
+
+  const [getPipeline, { data: { items: ListStep = [] } = {}, isSuccess }] =
     useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
-  
-  const [getRelateCalendar, {data: relateCalendar}] =
+
+  const [getRelateCalendar, { data: relateCalendar }] =
     useLazyGetRelateCalendarQuery();
-  const {data: {items: DataForm = []} = {}} = useGetReviewFormQuery();
-  
+  const { data: { items: DataForm = [] } = {} } = useGetReviewFormQuery();
+
   const options = [
     {
       id: 0,
@@ -35,48 +38,50 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
       name: "Trực tiếp",
     },
   ];
-  
+
   const changeRecruitment = (e) => {
-    getPipeline({RecruitmentId: e});
+    getPipeline({ RecruitmentId: e });
     resetField("recruitmentPipelineStateId");
     resetField("reviewFormId");
     resetField("interviewType");
-    resetField('onlineInterviewAddress');
-    resetField('applicantIdArray');
-    resetField('bookingCalendarGroups');
+    resetField("onlineInterviewAddress");
+    resetField("applicantIdArray");
+    resetField("bookingCalendarGroups");
   };
-  
+
   const changePipelineRecruitment = async (e) => {
-    await getRelateCalendar({RecruitmentPipelineStateId: e});
+    await getRelateCalendar({ RecruitmentPipelineStateId: e });
     setValue("reviewFormId", relateCalendar?.reviewFormId);
   };
   useEffect(() => {
     if (option) {
       setValue("recruitmentId", option?.id);
-      getPipeline({RecruitmentId: option?.id});
+      getPipeline({ RecruitmentId: option?.id });
       getRelateCalendar({
         RecruitmentPipelineStateId: currentApplicantPipelineState,
       });
     }
   }, [!option]);
-  
+
   useEffect(() => {
     if (item) {
       setValue("recruitmentId", item?.recruitmentId);
       setValue("reviewFormId", item?.reviewFormId);
-      getPipeline({RecruitmentId: item?.recruitmentId});
+      getPipeline({ RecruitmentId: item?.recruitmentId });
       getRelateCalendar({
         RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
       });
     }
   }, [!item]);
-  
+
   useEffect(() => {
     if (!isSuccess) {
       setValue("recruitmentPipelineStateId", currentApplicantPipelineState);
     }
   }, [isSuccess]);
-  
+
+  const dataRecruitment = Data.filter((item) => item.processStatus == 5);
+
   return (
     <Grid>
       <Grid mb={3}>
@@ -87,7 +92,7 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
           isRequired
         />
       </Grid>
-      
+
       <Grid mb={3}>
         <Label required={true}>
           <Typography variant={"textSize14500"} color={palette.text.primary}>
@@ -95,10 +100,10 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
           </Typography>
         </Label>
         <RHFSelect
-          options={Data?.map((i) => ({
-            value: i.id,
-            label: i.name,
-            name: i.name,
+          options={dataRecruitment.map((i) => ({
+            value: i?.id,
+            label: i?.name,
+            name: i?.name,
           }))}
           name="recruitmentId"
           multiple={false}
@@ -108,7 +113,7 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
           onChange={changeRecruitment}
         />
       </Grid>
-      
+
       <Grid container mb={3} direction="row">
         <Grid item xs={6} pr={"12px"}>
           <Label required={true}>
@@ -155,27 +160,30 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
             }))}
             name="interviewType"
             placeholder="Chọn hình thức phỏng vấn"
-            disabled={watch("recruitmentId") ? false : true}
             multiple={false}
             required
           />
         </Grid>
       </Grid>
-      
-      <Grid mb={3}>
-        <Label required={true}>
-          <Typography variant={"textSize14500"} color={palette.text.primary}>
-            Địa điểm
-          </Typography>
-        </Label>
-        <TextAreaDS
-          placeholder="Nhập nội dung lưu ý..."
-          name={"onlineInterviewAddress"}
-          style={{height: "80px"}}
-          disabled={watch("interviewType") === 1 ? false : true}
-        />
-      </Grid>
-      
+
+      {watch("interviewType") === 1 && (
+        <Grid mb={3}>
+          <Label required={true}>
+            <Typography variant={"textSize14500"} color={palette.text.primary}>
+              Địa điểm
+            </Typography>
+          </Label>
+          <TextAreaDS
+            placeholder="Nhập nội dung lưu ý..."
+            name={"onlineInterviewAddress"}
+            style={{ height: "80px",  resize: "none", '&.ant-input-data-count':{
+              display:'none'
+            } }}
+            
+          />
+        </Grid>
+      )}
+
       <Grid mb={3}>
         <Label>
           <Typography variant={"textSize14500"} color={palette.text.primary}>
@@ -215,7 +223,6 @@ const PersonalInterview = ({item, option, currentApplicantPipelineState}) => {
           // disabled={watch("reviewFormId") || relateCalendar?.reviewFormId ? true : false}
           multiple={false}
         />
-      
       </Grid>
     </Grid>
   );
