@@ -13,15 +13,13 @@ import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
 import { useRouter } from "next/router";
 import { useState, useMemo } from "react";
-import useAuth from "@/hooks/useAuth";
 import { LIST_STATUS } from "@/utils/formatString";
-import { API_GET_USER_FROM_ORGANIZATION } from "@/routes/api";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 import { JobTypeFormModal } from "@/sections/jobtype";
 import useRole from "@/hooks/useRole";
 
 export const JobTypeItem = () => {
   const router = useRouter();
-  const { user } = useAuth();
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllJobTypeQuery(query, { skip: !isReady });
@@ -34,7 +32,7 @@ export const JobTypeItem = () => {
   const columns = useMemo(() => {
     return [
       {
-        dataIndex: "organizationPositionVisibleId",
+        dataIndex: "id",
         title: "STT",
         key: "index",
         render: (item, record, index, page, paginationSize) => (
@@ -47,6 +45,7 @@ export const JobTypeItem = () => {
         dataIndex: "name",
         title: "Vị trí công việc",
         width: "240px",
+        fixed: "left",
         render: (name) => <span style={{ fontWeight: 500 }}>{name}</span>
       },
       {
@@ -67,15 +66,14 @@ export const JobTypeItem = () => {
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           name: 'isActive',
-          options: LIST_STATUS.map(item => ({ value: item.value, label: item.name })),
+          options: LIST_STATUS.map(item => ({ value: item.id, label: item.name })),
         },
       },
       {
-        dataIndex: "createTime",
-        updateName: 'createdTime',
+        dataIndex: "createdTime",
         title: "Ngày tạo",
         width: "180px",
-        render: (date, record) => fDate(record.createdTime),
+        render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
           name: ['createdTimeFrom', 'createdTimeTo'],
@@ -106,7 +104,7 @@ export const JobTypeItem = () => {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
-          remoteUrl: API_GET_USER_FROM_ORGANIZATION + '?OrganizationId=' + user.organizations?.id,
+          remoteUrl: API_GET_ORGANIZATION_USERS,
         },
       },
     ];
@@ -125,7 +123,13 @@ export const JobTypeItem = () => {
 
   return (
     <View>
-      <Content sx={{ padding: "0 !important" }}>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}

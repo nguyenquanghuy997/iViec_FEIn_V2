@@ -109,7 +109,6 @@ export default function TableHeader({
         }}
         columns={columns}
         onSubmitFilter={onSubmitFilter}
-        width={384}
       />
     </HeaderStyle>
   )

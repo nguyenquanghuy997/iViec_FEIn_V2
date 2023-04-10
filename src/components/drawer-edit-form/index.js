@@ -27,6 +27,7 @@ export default function DrawerEditForm({
   contentStyles = {},
   modalStyles = {},
   resetOnClose = true,
+  keepMounted = false,
   cancelCallback,
   children,
   ...props
@@ -96,6 +97,7 @@ export default function DrawerEditForm({
       }}
       ModalProps={{
         sx: modalStyles,
+        keepMounted: keepMounted,
       }}
       {...props}
     >

@@ -6,6 +6,7 @@ import {
   TextField,
   InputAdornment,
   IconButton,
+  ListSubheader,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState, useMemo } from "react";
@@ -133,6 +134,7 @@ export default function SelectAutoCompleteDS(props) {
           )
         }
       >
+         <ListSubheader style={{padding: 0}}>
         <TextField
           size="small"
           autoFocus
@@ -170,8 +172,9 @@ export default function SelectAutoCompleteDS(props) {
             if (e.key !== "Escape") {
               e.stopPropagation();
             }
-          }}
+          }}          
         />
+        </ListSubheader>
         {displayedOptions.map((option, i) => (
           <MenuItem
             key={i}
