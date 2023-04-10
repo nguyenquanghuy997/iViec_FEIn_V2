@@ -1,28 +1,28 @@
-import React, {memo, useRef, useState} from "react";
-import {Box, Dialog, DialogActions, DialogContent, Divider, IconButton, Tab, Tabs, Typography} from "@mui/material";
-import {FormProvider, RHFSelect, RHFTextField} from "@/components/hook-form";
-import {useFieldArray, useForm} from "react-hook-form";
-import {AddIcon, DeleteIcon} from "@/assets/ActionIcon";
+import React, { memo, useRef, useState } from "react";
+import { Box, Dialog, DialogActions, DialogContent, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
+import { DeleteIcon } from "@/assets/ActionIcon";
 import * as Yup from "yup";
-import {yupResolver} from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import RHFTreeSelect from "@/components/hook-form/RHFTreeSelect";
-import {useSnackbar} from "notistack";
+import { useSnackbar } from "notistack";
 import {
     useDeleteInviteUserMutation,
     useInviteUserMutation,
     useResendEmailMutation
 } from "@/sections/organization/override/OverrideOrganizationSlice";
-import ConfirmModal, {MuiDialogTitle} from "@/components/BaseComponents/ConfirmModal";
+import ConfirmModal, { MuiDialogTitle } from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import {LabelStyle} from "@/components/hook-form/style";
+import { LabelStyle } from "@/components/hook-form/style";
 import Iconify from "@/components/Iconify";
 import OrganizationInviteResultCard from "@/sections/organization/component/OrganizationInviteResultCard";
 import OrganizationUserInviteTab from "@/sections/organization/component/OrganizationUserInviteTab";
-import {AlertIcon, EmailInviteIcon} from "@/sections/organization/component/Icon";
-import {useGetRoleGroupListQuery} from "@/sections/rolegroup";
+import { AlertIcon, EmailInviteIcon } from "@/sections/organization/component/Icon";
+import { useGetRoleGroupListQuery } from "@/sections/rolegroup";
 
 function TabPanel(props) {
-    const {children, value, index, ...other} = props;
+    const { children, value, index, ...other } = props;
     return (
         <div
             role="tabpanel"
@@ -45,8 +45,9 @@ function a11yProps(index) {
     };
 }
 
-const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenInviteForm}) => {
-    const [valueTab, setValueTab] = useState(0);
+const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenInviteForm, valueTabDefault }) => {
+    const [valueTab, setValueTab] = useState(valueTabDefault);
+
     const [isShowResult, setIsShowResult] = useState(false);
     const [invitesResult, setInviteResult] = useState([])
 
@@ -68,13 +69,17 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
     const [inviteUser] = useInviteUserMutation();
     const [deleteInviteUser] = useDeleteInviteUserMutation();
     const [resendInviteUser] = useResendEmailMutation();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     const defaultValues = {
-        email: "",
-        fullName: "",
-        roleGroupId: "",
-        organizationIds: []
+        invite: [
+            {
+                email: "",
+                fullName: "",
+                roleGroupId: "",
+                organizationIds: []
+            }
+        ]
     }
 
     const FieldSchema = {
@@ -95,18 +100,18 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
         defaultValues,
     });
 
-    const {handleSubmit, control, formState: {isValid}} = methods;
+    const { handleSubmit, control, formState: { isValid } } = methods;
 
-    const {fields, append, remove} = useFieldArray({
-       control,
-        name: "invite"
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "invite",
     });
 
     const onSubmit = async (data) => {
         const dataSubmit = data.invite;
         dataSubmitRef.current = dataSubmit;
         try {
-            const res = await inviteUser({organizationUserInvites: dataSubmit}).unwrap();
+            const res = await inviteUser({ organizationUserInvites: dataSubmit }).unwrap();
             setInviteResult(res?.results)
             setIsShowResult(true);
         } catch (e) {
@@ -137,7 +142,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
     };
     const handleDeleteConfirm = async (data) => {
         try {
-            await deleteInviteUser({ ids: [data?.id]}).unwrap();
+            await deleteInviteUser({ ids: [data?.id] }).unwrap();
             handleCloseConfirmDelete();
             enqueueSnackbar("Xóa lời mời thành công!", {
                 autoHideDuration: 1000
@@ -152,7 +157,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
     }
     const handleResendEmailConfirm = async (data) => {
         try {
-            await resendInviteUser({ ids: [data?.id]}).unwrap();
+            await resendInviteUser({ ids: [data?.id] }).unwrap();
             handleCloseConfirmResend();
             enqueueSnackbar("Gửi yêu cầu active tài khoản thành công!", {
                 autoHideDuration: 1000
@@ -166,7 +171,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
         }
     }
 
-    const {data: {items: ListRoleGroup = []} = {}} = useGetRoleGroupListQuery();
+    const { data: { items: ListRoleGroup = [] } = {} } = useGetRoleGroupListQuery();
 
     return (
         <Dialog
@@ -193,12 +198,12 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                 {isShowResult && <IconButton edge="start" size={"small"} sx={{ mr: 2 }} onClick={() => setIsShowResult(false)}>
                     <Iconify icon="material-symbols:arrow-back" />
                 </IconButton>}
-                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
+                <Typography variant="body1" sx={{ fontSize: '16px', fontWeight: 600, color: "#455570" }}>
                     {isShowResult ? 'Kết quả' : 'Mời người dùng'}
                 </Typography>
             </MuiDialogTitle>
-            <Divider/>
-            <Box sx={{px: 3, pt: 3, pb: 0}}>
+            <Divider />
+            <Box sx={{ px: 3, pt: 3, pb: 0 }}>
                 <Tabs
                     value={valueTab}
                     onChange={handleChange}
@@ -254,7 +259,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                             alignItems: 'center',
                             flexDirection: 'column',
                         }}>
-                            <Box className="box-content-wrapper" sx={{width: '100%'}}>
+                            <Box className="box-content-wrapper" sx={{ width: '100%' }}>
                                 {invitesResult?.map((item, index) => {
                                     const userItem = dataSubmitRef.current?.find((field) => field.email === item?.email);
                                     const roleGroup = ListRoleGroup.find(role => role.id === userItem?.roleGroupId);
@@ -282,7 +287,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                 alignItems: 'center',
                                 flexDirection: 'column',
                             }}>
-                                <Box className="box-content-wrapper" sx={{width: '100%'}}>
+                                <Box className="box-content-wrapper" sx={{ width: '100%' }}>
                                     {fields.map((item, index) => {
                                         return (
                                             <Box key={item.id} sx={{
@@ -292,19 +297,20 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                 width: '100%',
                                                 backgroundColor: '#F2F4F5',
                                                 padding: 2,
-                                                mb: 2
+                                                mb: 2,
+                                                borderRadius: .5
                                             }}>
-                                                <Box className="box-content-inner" sx={{flex: 1}}>
+                                                <Box className="box-content-inner">
                                                     <Box
-                                                        sx={{display: 'flex', justifyContent: 'space-between', mb: 2, flex: 1}}>
-                                                        <Box sx={{minWidth: '276px'}}>
+                                                        sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, flex: 1 }}>
+                                                        <Box>
                                                             <RHFTextField
                                                                 name={`invite.${index}.email`}
                                                                 isRequired
                                                                 title="Email"
                                                                 placeholder="Nhập email người được mời"
                                                                 sx={{
-                                                                    minWidth: '276px',
+                                                                    minWidth: '248px',
                                                                     backgroundColor: '#FDFDFD',
                                                                     '& .MuiFormHelperText-root.Mui-error': {
                                                                         backgroundColor: '#F2F4F5',
@@ -314,14 +320,14 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                                 }}
                                                             />
                                                         </Box>
-                                                        <Box sx={{minWidth: '276px'}}>
+                                                        <Box padding={'0 16px'}>
                                                             <RHFTextField
                                                                 name={`invite.${index}.fullName`}
                                                                 isRequired
                                                                 title="Họ và tên"
                                                                 placeholder="Họ và tên người được mời"
                                                                 sx={{
-                                                                    minWidth: '276px',
+                                                                    minWidth: '248px',
                                                                     backgroundColor: '#FDFDFD',
                                                                     '& .MuiFormHelperText-root.Mui-error': {
                                                                         backgroundColor: '#F2F4F5',
@@ -331,7 +337,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                                 }}
                                                             />
                                                         </Box>
-                                                        <Box sx={{minWidth: '276px'}}>
+                                                        <Box >
                                                             <LabelStyle required>Vai trò</LabelStyle>
                                                             <RHFSelect
                                                                 options={ListRoleGroup?.map(item => ({
@@ -343,7 +349,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                                 name={`invite.${index}.roleGroupId`}
                                                                 placeholder="Chọn 1 vai trò"
                                                                 sx={{
-                                                                    minWidth: '276px',
+                                                                    minWidth: '248px',
                                                                     backgroundColor: '#FDFDFD',
                                                                     '& .MuiFormHelperText-root.Mui-error': {
                                                                         backgroundColor: '#F2F4F5',
@@ -367,7 +373,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                         multiple
                                                         placeholder="Chọn 1 hoặc nhiều đơn vị"
                                                         sx={{
-                                                            minWidth: '276px',
+                                                            // minWidth: '276px',
                                                             backgroundColor: '#FDFDFD',
                                                             '& .MuiFormHelperText-root.Mui-error': {
                                                                 backgroundColor: '#F2F4F5',
@@ -377,8 +383,8 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                                         }}
                                                     />
                                                 </Box>
-                                                <span style={{marginLeft: 16, display: 'block', padding: 8, cursor: 'pointer'}} onClick={() => remove(index)}>
-                                                    <DeleteIcon/>
+                                                <span style={{ marginLeft: 16, display: 'block', padding: 8, cursor: 'pointer' }} onClick={() => remove(index)}>
+                                                    <DeleteIcon />
                                                 </span>
                                             </Box>
                                         );
@@ -386,8 +392,8 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                     <MuiButton
                                         variant="outlined"
                                         title={"Thêm lời mời"}
-                                        sx={{ mt: 3 }}
-                                        startIcon={<AddIcon />}
+                                        sx={{ mt: 3, fontWeight: 600 }}
+                                        startIcon={<Iconify icon={'material-symbols:add'} width={20} height={20} />}
                                         onClick={() => append({ ...defaultValues })}
                                     />
                                 </Box>
@@ -396,7 +402,7 @@ const OrganizationInviteForm = ({ListOrganization, isOpenInviteForm, setIsOpenIn
                                 minHeight: '68px',
                                 borderTop: '1px solid #E7E9ED',
                                 '& .btn-actions': {
-                                height: '36px',
+                                    height: '36px',
                                 },
                             }}>
                                 <MuiButton
