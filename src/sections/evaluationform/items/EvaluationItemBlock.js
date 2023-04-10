@@ -1,6 +1,8 @@
 import { AvatarDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import { Label } from "@/components/hook-form/style";
+import { PERMISSIONS } from "@/config";
+import useRole from "@/hooks/useRole";
 import {
   BoxFlex,
   CardFormItemContentStyle,
@@ -18,9 +20,12 @@ import {
   AccordionSummary,
   Box,
   Divider,
+  IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
+import { useMemo } from "react";
 
 const EvaluationItemBlock = ({
   // isCheckbox,
@@ -32,9 +37,18 @@ const EvaluationItemBlock = ({
   item,
   onOpenModel,
 }) => {
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
+
   return (
     <CardFormItemStyle className="card-item">
       <AccordionSummary
+        sx={{
+          ".MuiAccordionSummary-content": {
+            width: '100%'
+          }
+        }}
         expandIcon={
           <ButtonIcon
             // onClick={onChangeExpand}
@@ -51,8 +65,8 @@ const EvaluationItemBlock = ({
         aria-controls={`panel${index}a-content`}
         id={`panel${index}a-header`}
       >
-        <BoxFlex style={{ marginBottom: 12 }}>
-          <CardFormItemTitleStyle className="card-item-title">
+        <BoxFlex style={{ marginBottom: 12, width: '100%' }}>
+          <CardFormItemTitleStyle className="card-item-title" sx={{ width: '70%' }}>
             {/* {isCheckbox && (
               <Checkbox
                 value={item}
@@ -62,8 +76,19 @@ const EvaluationItemBlock = ({
                 checkedIcon={<CheckboxIconChecked />}
               />
             )} */}
-            {item.name}
-            <Typography className="card-item-subtitle" component="span">
+            <Tooltip title={item?.name}>
+              <Typography sx={{
+                maxWidth: '70%',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden'
+              }}>
+                {item.name}
+              </Typography>
+            </Tooltip>
+
+
+            <Typography sx={{ maxWidth: '30%' }} className="card-item-subtitle" component="span">
               ({item?.numOfRecruitment} tin áp dụng)
             </Typography>
           </CardFormItemTitleStyle>
@@ -106,7 +131,7 @@ const EvaluationItemBlock = ({
             </CardFormItemContentStyle>
           </BoxFlex>
           <BoxFlex>
-            {!item?.isInternalDefault && (
+            {!item?.isInternalDefault && canEdit && (
               <>
                 <ButtonIcon
                   onClick={(e) => onOpenModel(e, item, "status")}
@@ -125,31 +150,32 @@ const EvaluationItemBlock = ({
                 />
                 {item?.numOfRecruitment == 0 && (
                   <>
-                    <ButtonIcon
-                      onClick={(e) => onOpenModel(e, item, "form")}
-                      sx={{
-                        marginRight: "16px",
-                      }}
-                      icon={
+                    <Tooltip title="Sửa">
+                      <IconButton
+                        style={{
+                          margin: '0 8px'
+                        }}
+                        onClick={(e) => onOpenModel(e, item, "form")}>
                         <Iconify
                           icon={"ri:edit-2-fill"}
                           width={16}
                           height={16}
                           color="#5C6A82"
                         />
-                      }
-                    />
-                    <ButtonIcon
-                      onClick={(e) => onOpenModel(e, item, "delete")}
-                      icon={
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Xóa">
+                      <IconButton
+                        onClick={(e) => onOpenModel(e, item, "delete")}>
                         <Iconify
                           icon={"material-symbols:delete-outline-rounded"}
                           width={16}
                           height={16}
                           color="#5C6A82"
                         />
-                      }
-                    />
+                      </IconButton>
+                    </Tooltip>
                   </>
                 )}
               </>

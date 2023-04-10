@@ -1,72 +1,44 @@
-import { useGetAllPipelineQuery } from "../PipelineFormSlice";
-import PipelineHeader from "../PipelineHeader";
-import PipelineFilterModal from "../modals/PipelineFilterModal";
+import {
+  useGetAllPipelineQuery,
+  // useGetListColumnsQuery,
+  // useUpdateListColumnApplicantsMutation,
+} from "../PipelineFormSlice";
 import PipelineBottomNav from "./PipelineBottomNav";
 import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import { filterSlice } from "@/redux/common/filterSlice";
-import { useDispatch, useSelector } from "@/redux/store";
+import { PipelineFormModal } from "../modals";
 import { PipelineStateType, Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
-import { cleanObject } from "@/utils/function";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
-
-const defaultValues = {
-  searchKey: "",
-};
+import { useState, useMemo } from "react";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import { TBL_FILTER_TYPE, PERMISSIONS } from "@/config";
+import { LIST_STATUS, LIST_STEP_RECRUITMENT } from "@/utils/formatString";
+import useRole from "@/hooks/useRole";
 
 export const PipelineItem = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { query, isReady } = router;
-  const toggleFormFilter = useSelector((state) => state.filterReducer.openForm);
-  const dataFilter = useSelector((state) => state.filterReducer.data);
-  const handleOpenFilterForm = () =>
-    dispatch(filterSlice.actions.openFilterModal());
-  const handleCloseFilterForm = () =>
-    dispatch(filterSlice.actions.closeModal());
-  const handleSetDataFilter = (data) =>
-    dispatch(filterSlice.actions.setAllDataFilter(data));
-  const handleClearDataFilter = () =>
-    dispatch(filterSlice.actions.clearDataFilter());
 
-  useEffect(() => {
-    if (!isReady) return;
-    handleClearDataFilter();
-  }, [isReady, query]);
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const { data: Data = {}, isLoading } = useGetAllPipelineQuery(query, { skip: !isReady });
 
-  const { data: Data, isLoading } = useGetAllPipelineQuery(
-    JSON.stringify(cleanObject(dataFilter))
-  );
-  // api get list Column
-  // const { data: { items: ColumnData = [] } = {} } = useGetListColumnApplicantsQuery();
-  // api update list Column
-  const [UpdateListColumnApplicants] = [];
-  const [page, setPage] = useState(1);
-  const [paginationSize, setPaginationSize] = useState(10);
+  const [showForm, setShowForm] = useState(false);
 
-  const handleChangePagination = (pageIndex, pageSize) => {
-    setPaginationSize(pageSize);
-    setPage(pageIndex);
-    handleSetDataFilter({
-      ...dataFilter,
-      pageSize: pageSize,
-      pageIndex: pageIndex,
-    });
-  };
+  const { canAccess } = useRole();
+  // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
 
   const columns = useMemo(() => {
     return [
       {
+        dataIndex: 'id',
         title: "STT",
         key: "index",
+        align: 'center',
         render: (item, record, index, page, paginationSize) => (
           <>{(page - 1) * paginationSize + index + 1}</>
         ),
@@ -78,19 +50,14 @@ export const PipelineItem = () => {
         title: "Quy trình tuyển dụng",
         width: "240px",
         fixed: "left",
-        render: (item,record) => (
-          <span style={{fontWeight: 500}}>{record.isDefault == true ? 'Quy trình mặc định iVIEC':item}</span>
+        render: (item, record) => (
+          <span style={{ fontWeight: 500 }}>{record.isDefault == true ? 'Quy trình mặc định iVIEC' : item}</span>
         ),
       },
       {
         dataIndex: "organizationPipelineStates",
         title: "Bước tuyển dụng",
         width: "440px",
-        name: "organizationPipelineStates",
-        type: "select",
-        label: "Bước tuyển dụng",
-        multiple: true,
-        placeholder: "Chọn một hoặc nhiều bước",
         render: (_, { organizationPipelineStates }) => (
           <div style={{ display: "flex", alignItems: "center" }}>
             {organizationPipelineStates?.map((p, index) => {
@@ -131,7 +98,7 @@ export const PipelineItem = () => {
                         color: "#172B4D",
                         border: "none",
                         marginLeft: "8px",
-                        fontWeight:500
+                        fontWeight: 500
                       }}
                     >
                       +{indexplus}
@@ -142,60 +109,48 @@ export const PipelineItem = () => {
             })}
           </div>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          placeholder: "Chọn một hoặc nhiều bước",
+          options: LIST_STEP_RECRUITMENT.map(item => ({ value: item.value, label: item.name })),
+        },
       },
       {
         dataIndex: "recruitmentAppliedCount",
         title: "Số tin áp dụng",
         width: "160px",
-        align: "center",
+        align: "left",
       },
       {
         dataIndex: "isActivated",
         title: "Trạng thái",
         width: "180px",
-        name: "isActivated",
-        type: "select",
-        label: "Trạng thái",
         render: (item) => (
           <span style={{ color: item ? "#388E3C" : "#455570" }}>
             {Status(item)}
           </span>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT,
+          placeholder: 'Tất cả',
+          options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+        }
       },
       {
         dataIndex: "createdTime",
         title: "Ngày tạo",
         width: "180px",
-        type: "date",
-        label: "Ngày tạo",
-        name: "createdTime",
         render: (date) => fDate(date),
-        items: [
-          {
-            name: "createdTimeFrom",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Từ</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-          {
-            name: "createdTimeTo",
-            type: "date",
-            placeholder: "Chọn ngày",
-            startIcon: <span>Đến</span>,
-            endIcon: <Iconify icon="material-symbols:calendar-today" />,
-          },
-        ],
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_DATE,
+          name: ['createdTimeFrom', 'createdTimeTo'],
+          placeholder: 'Chọn ngày',
+        },
       },
       {
         dataIndex: "creatorName",
         title: "Người tạo",
         width: "300px",
-        name: "creatorIds",
-        label: "Người tạo",
-        placeholder: "Chọn 1 hoặc nhiều người",
-        type: "select",
-        multiple: true,
         render: (item) => (
           <div style={{ display: "flex", alignItems: "center" }}>
             <AvatarDS
@@ -212,46 +167,18 @@ export const PipelineItem = () => {
             </span>
           </div>
         ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "creatorIds",
+          placeholder: "Chọn 1 hoặc nhiều người",
+          remoteUrl: API_GET_ORGANIZATION_USERS,
+        },
       },
     ];
-  }, [page, paginationSize]);
-
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
-
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues,
-  });
-  const { handleSubmit } = methods;
-
-  const onSubmit = async (data) => {
-    const body = {
-      ...data,
-      createdTimeFrom: data.createdTimeFrom
-        ? new Date(data.createdTimeFrom).toISOString()
-        : null,
-      createdTimeTo: data.createdTimeTo
-        ? new Date(data.createdTimeTo).toISOString()
-        : null,
-    };
-    handleSetDataFilter(body);
-    handleCloseFilterForm();
-  };
-
-  const onSubmitSearch = async (data) => {
-    handleSetDataFilter({ searchKey: data.searchKey });
-  };
+  }, [query.PageIndex, query.PageSize]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
-  const [columnsTable, setColumnsTable] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setIsOpenBottomNav(newOpen);
@@ -264,31 +191,24 @@ export const PipelineItem = () => {
     <View>
       <Content sx={{ padding: "0 !important" }}>
         <DynamicColumnsTable
-          page={page}
-          paginationSize={paginationSize}
-          handleChangePagination={handleChangePagination}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
           columns={columns}
           source={Data}
           loading={isLoading}
-          columnsTable={columnsTable}
-          setColumnsTable={setColumnsTable}
-          UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
           isSetting={true}
           nodata="Hiện chưa có quy trình tuyển dụng nào"
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          filter={
-            <PipelineHeader
-              methods={methods}
-              onSubmit={onSubmitSearch}
-              handleSubmit={handleSubmit}
-              onOpenFilterForm={handleOpenFilterForm}
-            />
-          }
+          // useGetColumnsFunc={useGetListColumnsQuery}
+          // useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+          createText={canEdit && "Thêm quy trình tuyển dụng"}
+          onClickCreate={() => {
+            setShowForm(true);
+          }}
         />
+
         <PipelineBottomNav
           open={itemSelected?.length > 0}
           onClose={toggleDrawer(false)}
@@ -298,14 +218,11 @@ export const PipelineItem = () => {
           setselectedList={setSelectedRowKeys}
         />
       </Content>
-      {toggleFormFilter && (
-        <PipelineFilterModal
-          columns={columns}
-          isOpen={toggleFormFilter}
-          onClose={handleCloseFilterForm}
-          onSubmit={onSubmit}
-        />
-      )}
+
+      <PipelineFormModal
+        show={showForm}
+        onClose={() => setShowForm(false)}
+      />
     </View>
   );
 };

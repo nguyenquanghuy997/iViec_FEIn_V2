@@ -24,12 +24,14 @@ import ChipDS from "@/components/DesignSystem/ChipDS";
 import {AvatarDS} from "@/components/DesignSystem";
 import {CloseIcon as RemoveIcon} from "@/theme/overrides/CustomIcons";
 import CloseIcon from '@/assets/CloseIcon';
+import { isEmpty, pick } from "lodash";
+import qs from 'query-string';
 
 const MuiSelect = forwardRef((
     {
         name,
         value: selectValue,
-        selectedOptions = [],
+        selectedOptions: initSelectedOptions = [],
         height = 44,
         multiple = false,
         options = [],
@@ -39,6 +41,7 @@ const MuiSelect = forwardRef((
         sx = {},
         onChange,
         remoteUrl = null,
+        remoteIdsField = 'Ids',
         method = 'GET',
         useQueryFilters = {
            PageSize: 20,
@@ -66,7 +69,7 @@ const MuiSelect = forwardRef((
         }
 
         if (typeof selectValue === 'undefined') {
-            return null;
+            return '';
         }
         return selectValue;
     }, [selectValue, multiple]);
@@ -80,10 +83,14 @@ const MuiSelect = forwardRef((
     });
     const [totalPage, setTotalPage] = useState(1);
     const [open, setOpen] = useState(false);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+
     const _timeoutSearch = useRef();
     const _timeoutFetch = useRef();
+    const _timeoutFetchInit = useRef();
     const _selectRef = useRef();
     const _lastPage = useRef(1);
+    const _firstInit = useRef(true);
 
     useImperativeHandle(ref, () => _selectRef.current);
 
@@ -91,6 +98,44 @@ const MuiSelect = forwardRef((
         setFetchedOptions([]);
     }, [remoteUrl]);
 
+    useEffect(() => {
+        if (!_firstInit.current) {
+            return;
+        }
+
+        if (!isEmpty(initSelectedOptions)) {
+            setSelectedOptions(initSelectedOptions);
+            _firstInit.current = false;
+            return;
+        }
+
+        if (!remoteUrl || isEmpty(value)) {
+            return;
+        }
+
+        let aryValue = Array.isArray(value) ? value : [value];
+        let reqData = { [remoteIdsField]: aryValue, PageSize: aryValue.length };
+        let reqMethod = method.toLowerCase();
+        let symConcat = remoteUrl.includes('?') ? '&' : '?';
+
+        const fetchInitData = async () => {
+            clearTimeout(_timeoutFetchInit.current);
+            _timeoutFetchInit.current = setTimeout(async () => {
+                const {
+                    data: { items } = { items: [] }
+                } = await axiosInstance({
+                    url: remoteUrl + (reqMethod === 'get' ? symConcat + qs.stringify(reqData) : ''),
+                    method: method,
+                    ...(reqMethod !== 'get' ? { data: reqData } : {}),
+                });
+
+                setSelectedOptions(items.map(it => pick(it, ['id', 'name', 'title'])));
+                _firstInit.current = false;
+            }, 300);
+        }
+
+        fetchInitData();
+    }, [remoteUrl, value, initSelectedOptions]);
 
     useEffect(() => {
         if (!remoteUrl) {
@@ -114,12 +159,7 @@ const MuiSelect = forwardRef((
             } = await axiosInstance({
                 url: remoteUrl,
                 method: method,
-                data: {
-                    ...filters
-                },
-                params: {
-                    ...filters,
-                },
+                ...(method.toLowerCase() === 'get' ? { params: filters } : { data: filters }),
             });
 
             setIsFetching(false);
@@ -185,7 +225,7 @@ const MuiSelect = forwardRef((
         let optionItem;
         if (remoteUrl) {
             optionItem = fetchedOptions.concat(selectedOptions).find(opt => opt.id === val);
-            return optionItem ? { value: optionItem.id, label: optionItem.name || optionItem.email || optionItem.lastName } : { value: val, label: val };
+            return optionItem ? { value: optionItem.id, label: optionItem.label || optionItem.name || optionItem.email || optionItem.lastName } : { value: val, label: val };
         }
         optionItem = options.find(opt => opt.value === val);
         return optionItem || { value: val, label: val };

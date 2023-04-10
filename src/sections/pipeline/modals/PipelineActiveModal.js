@@ -4,14 +4,17 @@ import {
   DialogContentTextModelStyle,
   DialogModelStyle,
   TitleModelStyle,
+  ButtonIcon
 } from "@/utils/cssStyles";
 import {
   DialogActions,
   DialogContent,
   Divider,
+  Box
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import React from "react";
+import Iconify from "@/components/Iconify";
 import { useUpdateStatusPipelineMutation } from "../PipelineFormSlice";
 
 const PipelineActiveModal = ({
@@ -47,58 +50,71 @@ const PipelineActiveModal = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-        <DialogContent
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          {isActivated != 1 && (
-            <>
-              <img
-                src={`/assets/icons/candidate/status-active.png`}
-                style={{ margin: "0 auto" }}
+      <DialogContent
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row-reverse' }}>
+          <ButtonIcon
+            onClick={() => setShowConfirmMultiple(false)}
+            icon={
+              <Iconify
+                width={20}
+                height={20}
+                icon="ic:baseline-close"
+                color="#455570"
               />
-              <TitleModelStyle className="title" style={{ color: "#1976D2" }}>
-                Bật trạng thái hoạt động cho quy trình tuyển dụng
-              </TitleModelStyle>
-              <DialogContentTextModelStyle
-                id="alert-dialog-description"
-                className="subtite"
-                style={{ fontWeight: 400 }}
-              >
-                Bạn có chắc chắn muốn bật hoạt động cho quy trình tuyển dụng ?
-              </DialogContentTextModelStyle>
-              <Divider />
-            </>
-          )}
-          {isActivated == 1 && (
-            <>
-              <img
-                src={`/assets/icons/candidate/status-inactive.png`}
-                style={{ margin: "0 auto" }}
-              />
-              <TitleModelStyle className="title" style={{ color: "#455570" }}>
-                Tắt trạng thái hoạt động cho quy trình tuyển dụng
-              </TitleModelStyle>
-              <DialogContentTextModelStyle
-                id="alert-dialog-description"
-                className="subtite"
-                style={{ fontWeight: 400 }}
-              >
-                Bạn có chắc chắn muốn tắt hoạt động cho quy trình tuyển dụng ?
-              </DialogContentTextModelStyle>
-              <Divider />
-            </>
-          )}
-        </DialogContent>
-        <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
-          <ButtonCancel tittle="Hủy" onClick={onClose} />
+            }
+          ></ButtonIcon>
+        </Box>
+        {isActivated != 1 && (
+          <>
+            <img
+              src={`/assets/icons/candidate/status-active.png`}
+              style={{ margin: "0 auto" }}
+            />
+            <TitleModelStyle className="title" style={{ color: "#1976D2" }}>
+              Bật trạng thái hoạt động cho quy trình tuyển dụng
+            </TitleModelStyle>
+            <DialogContentTextModelStyle
+              id="alert-dialog-description"
+              className="subtite"
+              style={{ fontWeight: 400 }}
+            >
+              Bạn có chắc chắn muốn bật hoạt động cho quy trình tuyển dụng ?
+            </DialogContentTextModelStyle>
+            <Divider />
+          </>
+        )}
+        {isActivated == 1 && (
+          <>
+            <img
+              src={`/assets/icons/candidate/status-inactive.png`}
+              style={{ margin: "0 auto" }}
+            />
+            <TitleModelStyle className="title" style={{ color: "#455570" }}>
+              Tắt trạng thái hoạt động cho quy trình tuyển dụng
+            </TitleModelStyle>
+            <DialogContentTextModelStyle
+              id="alert-dialog-description"
+              className="subtite"
+              style={{ fontWeight: 400 }}
+            >
+              Bạn có chắc chắn muốn tắt hoạt động cho quy trình tuyển dụng ?
+            </DialogContentTextModelStyle>
+            <Divider />
+          </>
+        )}
+      </DialogContent>
+      <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
+        <ButtonCancel tittle="Hủy" onClick={onClose} />
 
-          <ButtonDS tittle={isActivated != 1 ? "Bật" : "Tắt"} onClick={handleChangeStatus} />
-        </DialogActions>
+        <ButtonDS tittle={isActivated != 1 ? "Bật" : "Tắt"} onClick={handleChangeStatus} />
+      </DialogActions>
     </DialogModelStyle>
   );
 };

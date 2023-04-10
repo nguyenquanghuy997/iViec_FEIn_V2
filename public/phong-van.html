@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/logoIVIEC_top_16x16.png">
+    <title>Phỏng vấn</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body, #meet {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="meet"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+<script src="https://update.onmeeting.com.vn/lib/meeting-api.js"></script>
+<script>
+    const [, queryString = ""] = window.location.search.split("?");
+
+    const queryObj = queryString.split("&").reduce((prev, curr) => {
+        const [key, value] = curr.split("=");
+        prev.set(key, value);
+        return prev;
+    }, new Map());
+    const DisplayName = decodeURIComponent(queryObj.get('DisplayName'))
+    const Email = decodeURIComponent(queryObj.get('Email'))
+    const RoomName = decodeURIComponent(queryObj.get('RoomName'))
+    const Role = decodeURIComponent(queryObj.get('Role'))
+    const interview ={
+        DisplayName : decodeURIComponent(queryObj.get('DisplayName')),
+        Email : decodeURIComponent(queryObj.get('Email')),
+        RoomName : decodeURIComponent(queryObj.get('RoomName')),
+        Role : decodeURIComponent(queryObj.get('Role')),
+    }
+    console.log('interview', interview);
+    // Defining our token parts
+    var header = {
+        "alg": "HS256",
+        "typ": "JWT"
+    };
+
+    var secret = "iVi3c@2022";
+
+    function base64url(source) {
+        // Encode in classical base64
+        encodedSource = CryptoJS.enc.Base64.stringify(source);
+
+        // Remove padding equal characters
+        encodedSource = encodedSource.replace(/=+$/, '');
+
+        // Replace characters according to base64url specifications
+        encodedSource = encodedSource.replace(/\+/g, '-');
+        encodedSource = encodedSource.replace(/\//g, '_');
+
+        return encodedSource;
+    }
+
+    var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
+    var encodedHeader = base64url(stringifiedHeader);
+
+    var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(JSON.parse(JSON.stringify(interview))));
+    var encodedData = base64url(stringifiedData);
+
+    var signature = encodedHeader + "." + encodedData;
+    signature = CryptoJS.HmacSHA256(signature, secret);
+    signature = base64url(signature);
+    var token = encodedHeader + "." + encodedData + "." + signature;
+
+    console.log('token', token);
+
+    const openMeeting = async () => {
+        const result = await $onmeetingApi.init({
+            publicKey: "iviec", // Public key được OnMeeting cung cấp
+            accessToken: token,
+            parentNode: document.querySelector('#meet'),
+            width: "100%",
+            height: "100%",
+            lang: "vi",
+            readOnlyName: false,
+            hideRoomName: true,
+            onVideoConferenceLeft: function () {
+                window.location.href = '/interview';
+            }
+        });
+
+        console.log(result);
+    };
+    openMeeting();
+
+</script>
+</body>
+</html>

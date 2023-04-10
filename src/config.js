@@ -34,9 +34,9 @@ export const NAVBAR = {
   DASHBOARD_ITEM_HORIZONTAL_HEIGHT: 32,
   DASHBOARD_ITEM_HORIZONTAL_MENU_HEIGHT: 36,
   // color
-  DASHBOARD_MENU_ITEM_COLOR: '#B9BFC9',
-  DASHBOARD_MENU_ITEM_ACTIVE_COLOR: '#FDFDFD',
-  DASHBOARD_MENU_ITEM_BG_COLOR: '#5C6A82',
+  DASHBOARD_MENU_ITEM_COLOR: "#B9BFC9",
+  DASHBOARD_MENU_ITEM_ACTIVE_COLOR: "#FDFDFD",
+  DASHBOARD_MENU_ITEM_BG_COLOR: "#5C6A82",
   // DASHBOARD_: '',
   // DASHBOARD_: '',
   // DASHBOARD_: '',
@@ -48,8 +48,7 @@ export const NAVBAR = {
 export const ICON = {
   NAVBAR_ITEM: 22,
   NAVBAR_ITEM_HORIZONTAL: 20,
-  NAVBAR_ITEM_COLOR: '#455570',
-
+  NAVBAR_ITEM_COLOR: "#455570",
 };
 
 // SETTINGS
@@ -112,57 +111,58 @@ export const allLangs = [
 export const defaultLang = allLangs[0]; // English
 export const MAX_SIZE_FILEIMAGE = 5145728;
 
-export const API_KEY_EDITOR = "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189"
+export const API_KEY_EDITOR =
+  "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189";
 
 export const PERMISSIONS = {
-  ADMINISTRATOR: 'Administrator',
-  VIEW_CDD: 'ViewCandidate',
-  ADD_EDIT_CDD: 'AddEditCandidate',
-  EVALUATE_CDD: 'EvaluateCandidate',
-  CHANGE_STAGE_CDD: 'ChangeCandidateStage',
-  VIEW_JOB: 'ViewJob',
-  CRUD_JOB: 'AddEditDeleteJob',
-  VIEW_JOB_POS: 'ViewJobDescription',
-  CRUD_JOB_POS: 'AddEditDeleteJobDescription',
-  CRUD_INTV_SCHE: 'AddEditDeleteInterviewSchedule',
-  SEND_MAIL_OFFER: 'SendOfferMail',
-  APPR_JOB: 'ApproveJob',
-  VIEW_CAMPAIN: 'ViewCampaign',
-  CRUD_CAMPAIN: 'AddEditDeleteCampaign',
-  APPR_CAMPAIN: 'ApproveCampaign',
-  VIEW_INTV_SCHE: 'ViewInterviewSchedule',
-  PARTICIPATE_INTV_SCHE: 'ParticipateInterviewSchedule',
-  VIEW_REPORT: 'ViewReport',
-  VIEW_COMPANY: 'ViewCompanyInformation',
-  EDIT_COMPANY: 'EditCompanyInformation',
-  VIEW_USER: 'ViewUser',
-  VIEW_UNIT: 'ViewUnit',
-  CRUD_USER: 'AddEditDeleteUser',
-  CRUD_UNIT: 'AddEditDeleteUnit',
-  APPR_USER_INVITE: 'ApproveUserInvitation',
-  VIEW_ROLE: 'ViewRole',
-  CRUD_ROLE: 'AddEditDeleteRole',
-  VIEW_EVA_TPL: 'ViewEvaluationTemplate',
-  CRUD_EVA_TPL: 'AddEditDeleteEvaluationTemplate',
-  VIEW_RECRUIT_PROCESS: 'ViewRecruitmentProcess',
-  CRUD_RECRUIT_PROCESS: 'AddEditDeleteRecruitmentProcess',
-  VIEW_APPR_PROCESS: 'ViewApprovalProcess',
-  CRUD_APPR_PROCESS: 'AddEditDeleteApprovalProcess',
-  VIEW_QUESTION: 'ViewQuestion',
-  CRUD_QUESTION: 'AddEditDeleteQuestion',
-  VIEW_EXAM: 'ViewExam',
-  CRUD_EXAM: 'AddEditDeleteExam',
-  REPORT_EXAM_QUESTION: 'ReportExamQuestion',
-  VIEW_OFFER_TPL: 'ViewOfferTemplate',
-  CRUD_OFFER_TPL: 'AddEditDeleteOfferTemplate',
-  APPR_OFFER_TPL: 'ApproveOfferTemplate',
-  VIEW_EMAIL: 'ViewEmail',
-  CRUD_EMAIL: 'AddEditDeleteEmail',
-  VIEW_CONNECT: 'ViewConnect',
-  ADD_STOP_CONNECT: 'AddStopConnect',
+  ADMINISTRATOR: "Administrator",
+  VIEW_CDD: "ViewCandidate",
+  ADD_EDIT_CDD: "AddEditCandidate",
+  EVALUATE_CDD: "EvaluateCandidate",
+  CHANGE_STAGE_CDD: "ChangeCandidateStage",
+  VIEW_JOB: "ViewJob",
+  CRUD_JOB: "AddEditDeleteJob",
+  VIEW_JOB_POS: "ViewJobDescription",
+  CRUD_JOB_POS: "AddEditDeleteJobDescription",
+  CRUD_INTV_SCHE: "AddEditDeleteInterviewSchedule",
+  SEND_MAIL_OFFER: "SendOfferMail",
+  APPR_JOB: "ApproveJob",
+  VIEW_CAMPAIN: "ViewCampaign",
+  CRUD_CAMPAIN: "AddEditDeleteCampaign",
+  APPR_CAMPAIN: "ApproveCampaign",
+  VIEW_INTV_SCHE: "ViewInterviewSchedule",
+  PARTICIPATE_INTV_SCHE: "ParticipateInterviewSchedule",
+  VIEW_REPORT: "ViewReport",
+  VIEW_COMPANY: "ViewCompanyInformation",
+  EDIT_COMPANY: "EditCompanyInformation",
+  VIEW_USER: "ViewUser",
+  VIEW_UNIT: "ViewUnit",
+  CRUD_USER: "AddEditDeleteUser",
+  CRUD_UNIT: "AddEditDeleteUnit",
+  APPR_USER_INVITE: "ApproveUserInvitation",
+  VIEW_ROLE: "ViewRole",
+  CRUD_ROLE: "AddEditDeleteRole",
+  VIEW_EVA_TPL: "ViewEvaluationTemplate",
+  CRUD_EVA_TPL: "AddEditDeleteEvaluationTemplate",
+  VIEW_RECRUIT_PROCESS: "ViewRecruitmentProcess",
+  CRUD_RECRUIT_PROCESS: "AddEditDeleteRecruitmentProcess",
+  VIEW_APPR_PROCESS: "ViewApprovalProcess",
+  CRUD_APPR_PROCESS: "AddEditDeleteApprovalProcess",
+  VIEW_QUESTION: "ViewQuestion",
+  CRUD_QUESTION: "AddEditDeleteQuestion",
+  VIEW_EXAM: "ViewExam",
+  CRUD_EXAM: "AddEditDeleteExam",
+  REPORT_EXAM_QUESTION: "ReportExamQuestion",
+  VIEW_OFFER_TPL: "ViewOfferTemplate",
+  CRUD_OFFER_TPL: "AddEditDeleteOfferTemplate",
+  APPR_OFFER_TPL: "ApproveOfferTemplate",
+  VIEW_EMAIL: "ViewEmail",
+  CRUD_EMAIL: "AddEditDeleteEmail",
+  VIEW_CONNECT: "ViewConnect",
+  ADD_STOP_CONNECT: "AddStopConnect",
 };
 
-  // group
+// group
 export const PERMISSION_GROUPS = {
   ACCESS_DASHBOARD: [
     PERMISSIONS.VIEW_CDD,
@@ -217,5 +217,18 @@ export const PERMISSION_PAGES = {
   approveOfferTemplate: [PERMISSIONS.APPR_OFFER_TPL],
   recruitmentProcess: [PERMISSIONS.VIEW_RECRUIT_PROCESS],
   role: [PERMISSIONS.VIEW_ROLE],
+};
+
+export const TBL_FILTER_TYPE = {
+  TEXT: 'text',
+  SELECT: 'select',
+  SELECT_CHECKBOX: 'select_checkbox',
+  SELECT_ADDRESS: 'select_address',
+  SELECT_TREE: 'select_tree',
+  RANGE_DATE: 'range_date',
+  RANGE_MONEY: 'range_money',
+  RANGE_NUMBER: 'range_number',
+  CHECKBOX: 'checkbox',
+  RADIO: 'radio',
 };
 

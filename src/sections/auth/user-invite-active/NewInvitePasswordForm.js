@@ -8,17 +8,26 @@ import {LoadingButton} from "@mui/lab";
 import {Alert, IconButton, InputAdornment, Stack, Typography} from "@mui/material";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import {useRouter} from "next/router";
 import {PATH_AUTH} from "@/routes/paths";
 import {LabelStyle} from "@/components/hook-form/style";
+import useAuth from "@/hooks/useAuth";
 
 const InputStyle = {width: 440, minHeight: 44};
 
-export default function NewInivtePasswordForm({token}) {
+export default function NewInvitePasswordForm({token}) {
   const {enqueueSnackbar} = useSnackbar();
+  const {logout} = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    async function handleLogout() {
+      await logout();
+    }
+    handleLogout();
+  }, [])
 
   const [changePasswordWithToken] = useUserInviteSetPasswordMutation(); // result
 
@@ -59,14 +68,11 @@ export default function NewInivtePasswordForm({token}) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       await changePasswordWithToken(body).unwrap();
       await router.push(PATH_AUTH.login)
-      enqueueSnackbar("Cập nhật mật khẩu thành công!", {
-        autoHideDuration: 1000
-      });
+      enqueueSnackbar("Cập nhật mật khẩu thành công!");
     } catch (error) {
       const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
       setError("afterSubmit", {...error, message});
       enqueueSnackbar("Cập nhật mật khẩu không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
-        autoHideDuration: 1000,
         variant: 'error',
       });
     }

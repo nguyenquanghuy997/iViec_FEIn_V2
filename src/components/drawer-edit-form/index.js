@@ -19,7 +19,18 @@ export default function DrawerEditForm({
   statusField = 'isActivated',
   onSubmit,
   initing = false,
+  width,
+  activeText = 'Đang hoạt động',
+  inActiveText = 'Không hoạt động',
+  okText = 'Lưu',
+  cancelText = 'Hủy',
+  contentStyles = {},
+  modalStyles = {},
+  resetOnClose = true,
+  keepMounted = false,
+  cancelCallback,
   children,
+  ...props
 }) {
   const theme = useTheme();
 
@@ -49,7 +60,7 @@ export default function DrawerEditForm({
     return child;
   });
 
-  const toggleDrawer = (isOpen, event) => {
+  const toggleDrawer = (isOpen, event, btnClose = false) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
@@ -58,14 +69,21 @@ export default function DrawerEditForm({
       if (onClose) {
         onClose();
       }
-      reset(defaultValues);
+      if (resetOnClose) {
+        reset(defaultValues);
+      }
+      if (btnClose && cancelCallback) {
+        cancelCallback();
+      }
     }
   }
 
   const handleOnSubmit = (data) => {
     onSubmit(data, () => {
       if (onClose) onClose();
-      reset(defaultValues);
+      if (resetOnClose) {
+        reset(defaultValues);
+      }
     });
   }
 
@@ -75,8 +93,13 @@ export default function DrawerEditForm({
       open={open}
       onClose={(e) => toggleDrawer(false, e)}
       PaperProps={{
-        sx: drawerPaperStyle(theme),
+        sx: drawerPaperStyle({ ...theme, width, contentStyles }),
       }}
+      ModalProps={{
+        sx: modalStyles,
+        keepMounted: keepMounted,
+      }}
+      {...props}
     >
       <FormProvider methods={methods} onSubmit={handleSubmit(handleOnSubmit)}>
         <Box display="flex" alignItems="center" justifyContent="space-between" className="edit-header">
@@ -108,22 +131,22 @@ export default function DrawerEditForm({
               sx={{ mr: 1 }}
               disabled={initing}
             >
-              Lưu
+              {okText}
             </Button>
 
             <Button
               variant="text"
               color="basic"
-              onClick={e => toggleDrawer(false, e)}
+              onClick={e => toggleDrawer(false, e, true)}
               height={36}
             >
-              Hủy
+              {cancelText}
             </Button>
           </Box>
 
           <SwitchStatusDS
             name={statusField}
-            label={isActive ? 'Đang hoạt động' : 'Không hoạt động'}
+            label={isActive ? activeText : inActiveText}
           />
         </Box>
       </FormProvider>

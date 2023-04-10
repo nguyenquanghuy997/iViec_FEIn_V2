@@ -5,6 +5,8 @@ import {styled} from "@mui/styles";
 import Content from "@/components/BaseComponents/Content";
 
 import {STYLE_CONSTANT as style} from "@/theme/palette";
+import TabList from "@mui/lab/TabList";
+import Tab from "@mui/material/Tab";
 
 const renderLabelTab = (title, subtitle) => {
     return (
@@ -15,33 +17,43 @@ const renderLabelTab = (title, subtitle) => {
     )
 }
 
-const TabStyle = styled(Box)(({theme, selected}) => ({
-    "&.tab-item": {
-        cursor: 'pointer',
-        textAlign: 'left',
-        maxWidth: style.WIDTH_FULL,
-        backgroundColor: selected ? style.BG_PRIMARY : style.BG_GRAY,
-        color: selected ? style.COLOR_WHITE : style.COLOR_TEXT_BLACK,
-        borderRadius: "6px",
-        textTransform: 'unset',
-        minHeight: '76px',
-        padding: theme.spacing(2),
-        marginRight: '20px',
-    }
+const TabStyle = styled(Tab)(({theme}) => ({
+  "&.tab-item": {
+    textAlign: 'left',
+    maxWidth: style.WIDTH_FULL,
+    backgroundColor: style.BG_GRAY,
+    borderRadius: "6px",
+    "&.MuiTab-root": {
+      minHeight: '76px',
+      textTransform: 'unset',
+      padding: theme.spacing(2),
+      marginRight: '20px'
+    },
+    "&.Mui-selected": {
+      color: style.COLOR_WHITE,
+      backgroundColor: style.BG_PRIMARY,
+    },
+    "& .MuiTabs-indicator": {
+      display: "none",
+    },
+  }
+
 }));
 
 const tabs = [
     {
+        value: '1',
         title: 'Thông tin tuyển dụng',
         description: 'Các thông tin về việc làm và yêu cầu tuyển dụng'
     },
     {
+        value: '2',
         title: 'Quy trình tuyển dụng',
         description: 'Cài đặt quy trình tuyển dụng và các thiết lập tự động'
     }
 ]
 
-const TabList = ({ handleSelected, selected }) => {
+const RecruitmentTabList = ({ onChange }) => {
     return (
         <Box sx={{
             marginTop: '92px',
@@ -51,19 +63,25 @@ const TabList = ({ handleSelected, selected }) => {
             zIndex: 1000
         }}>
             <Content style={{ paddingTop: 14, paddingBottom: 14 }}>
-                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <TabList
+                    onChange={onChange}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        "& .MuiTabs-indicator": {
+                            display: "none",
+                        },
+                    }}>
                     {
-                        tabs.map((tab, index) => {
+                        tabs.map((tab) => {
                             return (
-                                <TabStyle selected={selected === index} key={index} onClick={() => handleSelected(index)} className="tab-item">
-                                    {renderLabelTab(tab.title, tab.description)}
-                                </TabStyle>
+                                <TabStyle label={renderLabelTab(tab.title, tab.description)} className="tab-item" value={tab.value} key={tab.value} />
                             )
                         })
                     }
-                </Box>
+                </TabList>
             </Content>
         </Box>
     )
 }
-export default memo(TabList);
+export default memo(RecruitmentTabList);

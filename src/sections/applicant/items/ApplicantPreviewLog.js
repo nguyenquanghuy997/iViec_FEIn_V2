@@ -11,10 +11,9 @@ export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   const dataHistoryMap = {
     ...dataLog,
-    events: dataLog?.events.map((p, index) => {
+    events: dataLog?.events?.map((p, index) => {
       var stagePrevious = "";
       var stageResultPrevious = "";
       if (index < dataLog?.events?.length) {
@@ -32,7 +31,7 @@ export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
   };
   const dataExamInterviewFilter = {
     ...dataHistoryMap,
-    events: dataHistoryMap.events.filter(
+    events: dataHistoryMap?.events?.filter(
       (p) =>
         p.recruitmentPipelineStateType == 1 ||
         p.recruitmentPipelineStateType == 2
@@ -40,7 +39,7 @@ export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
   };
   const dataResultOfferFilter = {
     ...dataHistoryMap,
-    events: dataHistoryMap.events.filter(
+    events: dataHistoryMap?.events?.filter(
       (p) =>
         p.eventType == "SendOfferTemplateToApplicantEvent" ||
         p.eventType == "CreateApplicantReviewEvent"

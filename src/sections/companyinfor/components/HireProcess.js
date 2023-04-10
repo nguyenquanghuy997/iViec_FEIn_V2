@@ -8,7 +8,6 @@ import {useState, Fragment} from "react";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import LoadingScreen from "@/components/LoadingScreen";
 import {useSnackbar} from "notistack";
-import {isEmpty} from "lodash";
 import {ApplyIcon, ExmainationIcon, InterviewIcon, OfferIcon, ResultIcon} from "@/sections/companyinfor/icon";
 
 export const renderIconByPipelineType = (type) => {
@@ -82,7 +81,7 @@ const HireProcess = ({data}) => {
               handleChange={handleChangeChecked}
               checked={checked}
           />
-          {!isEmpty(data) ? (
+          {data?.organizationProfilePipelines.length > 0 ? (
               <Box
                   sx={{
                     background: "#FDFDFD",
@@ -131,7 +130,7 @@ const HireProcess = ({data}) => {
                     </Fragment>
                 ))}
               </Box>
-          ) : <EmptyValue text={"Hiện chưa có nội dung Con người công ty"}/>}
+          ) : <EmptyValue text={"Hiện chưa có nội dung Quy trình tuyển dụng"}/>}
         </Box>
         {open && (
             <Drawer

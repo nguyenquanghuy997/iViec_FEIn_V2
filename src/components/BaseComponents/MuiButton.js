@@ -36,6 +36,10 @@ const MuiButton = ({title, type, variant, size, color, startIcon, endIcon, sx, l
         main: "#FBBD2B",
         contrastText: style.COLOR_WHITE,
       },
+      dark: {
+        main: "#455570",
+        contrastText: style.COLOR_WHITE,
+      },
     },
   });
 

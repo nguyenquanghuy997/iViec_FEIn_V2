@@ -1,19 +1,13 @@
 import {Box} from "@mui/material";
+import {useTabContext} from "@mui/lab";
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-      <div
-          role="tabpanel"
-          hidden={value !== index}
-          id={`simple-tabpanel-${index}`}
-          aria-labelledby={`simple-tab-${index}`}
-          {...other}
-      >
-        {value === index && <Box>{children}</Box>}
-      </div>
-  );
+const TabPanel = ({children, value}) => {
+    const {value: contextValue} = useTabContext() || {};
+    return (
+        <Box sx={{display: value === contextValue ? 'block' : 'none'}} key={value}>
+            {children}
+        </Box>
+    );
 }
 
 export default TabPanel;

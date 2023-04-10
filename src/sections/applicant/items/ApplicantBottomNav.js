@@ -17,6 +17,9 @@ import { fDate } from "@/utils/formatTime";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { RejectApplicantModal } from "../modals/RejectApplicantModal";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
+import { PERMISSIONS } from "@/config";
 
 const ApplicantBottomNav = ({
   selectedList,
@@ -29,6 +32,12 @@ const ApplicantBottomNav = ({
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
+
+  const { canAccess } = useRole();
+  const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_CDD), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_CDD), []);
+
+
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
@@ -128,7 +137,7 @@ const ApplicantBottomNav = ({
           }}
         >
           <Stack flexDirection="row" alignItems="center">
-            {selectedList.length === 1 && (
+            {selectedList.length === 1 && canEdit && (
               <>
                 <ButtonDS
                   tittle="Chuyển bước tuyển dụng"
@@ -147,73 +156,85 @@ const ApplicantBottomNav = ({
                     />
                   }
                 />
-                <ButtonIcon
-                  sx={{
-                    marginRight: "16px",
-                  }}
-                  href={
-                    "applicant/" +
-                    itemSelected[0]?.applicantId +
-                    "?co=" +
-                    itemSelected[0]?.correlationId +
-                    "&&or=" +
-                    itemSelected[0]?.organizationId +
-                    "&&re=" +
-                    itemSelected[0]?.recruitmentId
-                  }
-                  icon={
-                    <Iconify
-                      icon={"ri:eye-2-line"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                    />
-                  }
-                />
+                {
+                  canEdit && <ButtonIcon
+                    sx={{
+                      marginRight: "16px",
+                    }}
+                    href={
+                      "applicant/" +
+                      itemSelected[0]?.applicantId +
+                      "?co=" +
+                      itemSelected[0]?.correlationId +
+                      "&&or=" +
+                      itemSelected[0]?.organizationId +
+                      "&&re=" +
+                      itemSelected[0]?.recruitmentId
+                    }
+                    icon={
+                      <Iconify
+                        icon={"ri:eye-2-line"}
+                        width={20}
+                        height={20}
+                        color="#5C6A82"
+                      />
+                    }
+                  />
+                }
 
-                <ButtonIcon
-                  sx={{
-                    marginRight: "16px",
-                  }}
-                  onClick={() => handleOpenEditForm()}
-                  icon={
-                    <Iconify
-                      icon={"ri:edit-2-fill"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                    />
-                  }
-                />
-                <ButtonIcon
-                  sx={{
-                    marginRight: "16px",
-                  }}
-                  onClick={() => handleShowConfirmMultiple("tranferRe")}
-                  icon={
-                    <Iconify
-                      icon={"ri:share-forward-2-fill"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                    />
-                  }
-                />
+
+                {
+                  canEdit && <ButtonIcon
+                    sx={{
+                      marginRight: "16px",
+                    }}
+                    onClick={() => handleOpenEditForm()}
+                    icon={
+                      <Iconify
+                        icon={"ri:edit-2-fill"}
+                        width={20}
+                        height={20}
+                        color="#5C6A82"
+                      />
+                    }
+                  />
+                }
+
+                {
+                  canEdit && <ButtonIcon
+                    sx={{
+                      marginRight: "16px",
+                    }}
+                    onClick={() => handleShowConfirmMultiple("tranferRe")}
+                    icon={
+                      <Iconify
+                        icon={"ri:share-forward-2-fill"}
+                        width={20}
+                        height={20}
+                        color="#5C6A82"
+                      />
+                    }
+                  />
+                }
+
               </>
             )}
-            <ButtonIcon
-              sx={{
-                marginRight: "16px",
-              }}
-              onClick={() => exportExcel(itemSelected)}
-              icon={
-                <Iconify
-                  icon={"vscode-icons:file-type-excel"}
-                  width={20}
-                  height={20}
-                />
-              }
-            />
+            {
+              canEdit && canView && <ButtonIcon
+                sx={{
+                  marginRight: "16px",
+                }}
+                onClick={() => exportExcel(itemSelected)}
+                icon={
+                  <Iconify
+                    icon={"vscode-icons:file-type-excel"}
+                    width={20}
+                    height={20}
+                  />
+                }
+              />
+            }
+
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>

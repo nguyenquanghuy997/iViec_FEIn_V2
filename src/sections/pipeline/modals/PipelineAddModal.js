@@ -18,6 +18,7 @@ const defaultValuess = {
 };
 
 export const PipelineAddModal = ({
+  pipeLineSelected,
   show,
   setShow,
   editData,
@@ -46,10 +47,16 @@ export const PipelineAddModal = ({
     };
     if (selectedStatge == "") {
       setError(true);
-    } else {
-      onSubmit?.(data);
-      pressHide();
+      return;
     }
+    else if (pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length > 4) {
+      setError(true);
+      return;
+    }
+
+    onSubmit?.(data);
+    pressHide();
+
   });
 
   // render
@@ -111,20 +118,29 @@ export const PipelineAddModal = ({
                   placeholder="Chọn loại bước"
                   name={"stageType"}
                 />
-                {error && (
+                {error && selectedStatge == "" && (
                   <FormHelperText
                     error
-                    sx={{ px: 2, marginLeft: 0, textTransform: "capitalize" }}
+                    sx={{ marginLeft: 0 }}
                   >
                     Chưa chọn loại bước tuyển dụng
                   </FormHelperText>
                 )}
+                {
+                  error && pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length >= 5 && (
+                    <FormHelperText
+                      error
+                      sx={{ marginLeft: 0 }}
+                    >
+                      Tối đa có 5 bước {selectedStatge?.name.toLowerCase()}
+                    </FormHelperText>
+                  )
+                }
               </View>
               <View mb={24}>
                 {renderTitle("Mô tả")}
 
                 <TextAreaDS
-                  initialValue=""
                   maxLength={255}
                   placeholder="Nhập nội dung mô tả"
                   name={"des"}
