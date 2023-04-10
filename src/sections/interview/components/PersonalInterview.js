@@ -53,7 +53,6 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
     await getRelateCalendar({ RecruitmentPipelineStateId: e });
     setValue("reviewFormId", relateCalendar?.reviewFormId);
   };
-  console.log('')
   useEffect(() => {
     if (option) {
       setValue("recruitmentId", option?.id);
