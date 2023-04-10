@@ -2,7 +2,6 @@ import { PERMISSIONS } from "@/config";
 import DetailDialog from "./edit/DetailDialog";
 import EditForm from "./edit/EditForm";
 import ViewSchedule from "./edit/ViewSchedule";
-import CloseIcon from "@/assets/CloseIcon";
 import useRole from "@/hooks/useRole";
 import { useGetCalendarQuery } from "@/sections/interview/InterviewSlice";
 import { Typography, Box, Card, CardContent } from "@mui/material";
@@ -77,7 +76,6 @@ export default function InterviewSchedule() {
       )}
       {canEdit && openDialog && (
         <DetailDialog
-          subheader={<CloseIcon/>}
           title="Chi tiết lịch phỏng vấn"
           open={openDialog}
           item={itemDialog}

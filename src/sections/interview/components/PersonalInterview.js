@@ -43,6 +43,9 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
   const changeRecruitment = (e) => {
     getPipeline({ RecruitmentId: e });
     resetField("recruitmentPipelineStateId");
+    resetField("reviewFormId");
+    resetField("interviewType");
+    resetField('onlineInterviewAddress')
   };
 
   const changePipelineRecruitment = (e) => {
@@ -195,7 +198,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
           label="Gửi email cho ứng viên"
         />
       </Grid>
-      <Grid mb={3}>
+      <Grid mb={9} >
         <Label required={true}>
           <Typography variant={"textSize14500"} color={palette.text.primary}>
             Mẫu đánh giá
