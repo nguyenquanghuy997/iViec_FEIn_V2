@@ -3,11 +3,11 @@ import { Label } from "@/components/hook-form/style";
 import { useGetApplicantByPipeLineQuery } from "@/sections/interview/InterviewSlice";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ option, isEditmode, applicantId }) => {
+const ListCandidate = ({ option, model, isEditmode, applicantId }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
   const res = useGetApplicantByPipeLineQuery(
@@ -15,13 +15,25 @@ const ListCandidate = ({ option, isEditmode, applicantId }) => {
     {skip: !watch("recruitmentPipelineStateId")}
   );
 
-  const { data: { items } = { items: [] } } = res;
+  let { data: { items = [] } = {} } = res;
+  const [dataApplicant, setDataApplicant] = useState([]);
 
   useEffect(() => {
     if (option) {
       setValue("applicantIdArray", [option?.applicantId]);
     }
   }, [option]);
+
+  useEffect(() => {
+    setDataApplicant(items);
+    if(isEditmode && model) {
+      model.forEach(item => {
+        item.bookingCalendarApplicants.forEach(itemData => {
+          setDataApplicant(oldArray  => [...oldArray, itemData.applicant])
+        })
+      })
+    }
+  }, [items]);
 
   return (
     <Box height={"100%"}>
@@ -33,7 +45,7 @@ const ListCandidate = ({ option, isEditmode, applicantId }) => {
 
       
       <RHFSelectMultiple
-        options={items?.map((i) => ({
+        options={dataApplicant?.map((i) => ({
           id: i.id,
           value: i.id,
           label: i.fullName,
@@ -41,12 +53,11 @@ const ListCandidate = ({ option, isEditmode, applicantId }) => {
           name: i.fullName,
           image: `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${i?.portraitImage}`,
         }))}
-        name={`applicantIdArray`}
+        name={'applicantIdArray'}
         fullWidth
         disabled={
           applicantId || !watch("recruitmentPipelineStateId") ? true : false
         }
-        isEditmode={isEditmode}
         multiple
         isRequired
         open={open}

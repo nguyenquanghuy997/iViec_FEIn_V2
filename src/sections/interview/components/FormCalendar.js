@@ -99,11 +99,24 @@ export const FormCalendar = ({
     setValue("interviewType", DetailData.interviewType ?? undefined);
     setValue("onlineInterviewAddress", DetailData.onlineInterviewAddress ?? undefined);
     setValue("note", DetailData.note ?? undefined);
-    setValue("councilIds", DetailData.councilIds ?? undefined);
     setValue("reviewFormId", DetailData.reviewFormId ?? undefined);
     setValue("isSendMailCouncil", DetailData.isSendMailCouncil ?? undefined);
     setValue("isSendMailApplicant", DetailData.isSendMailApplicant ?? undefined);
     setValue("bookingCalendarGroups", DetailData.bookingCalendarGroups ?? undefined);
+
+    let arrayApplicant = [];
+    DetailData.bookingCalendarGroups.forEach(item => {
+      item?.bookingCalendarApplicants.forEach(itemData => {
+        arrayApplicant.push(itemData.applicant.id)
+      });
+    });
+    setValue("applicantIdArray", arrayApplicant);
+
+    let arrayCouncil = [];
+    DetailData.bookingCalendarCouncils.forEach(item => {
+      arrayCouncil.push(item.id);
+    });
+    setValue("councilIds", arrayCouncil);
   }, [DetailData]);
   
   const pressSave = handleSubmit(async (d) => {
@@ -252,14 +265,14 @@ export const FormCalendar = ({
                   <Grid p={3} sx={{
                     minWidth: "400px"
                   }}>
-                    <ListCandidate item={DetailData} option={options} applicantId={options?.applicantId}/>
+                    <ListCandidate model={DetailData.bookingCalendarGroups} isEditmode={isEditMode} option={options} applicantId={options?.applicantId}/>
                   </Grid>
                   <Divider orientation="vertical"/>
                   <Grid sx={{
                     minWidth: "400px",
                     overflowY: "auto"
                   }}>
-                    <InterviewCouncil/>
+                    <InterviewCouncil />
                   </Grid>
                 </Grid>
               </View>
