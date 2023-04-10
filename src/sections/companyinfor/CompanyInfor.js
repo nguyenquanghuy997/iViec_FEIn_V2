@@ -169,7 +169,7 @@ export default function CompanyInfor({ data }) {
               "Số điện thoại :",
               get(data, "organizationInformation.phoneNumber")
             )}
-            {renderText("Email :", get(data, "organizationInformation.email"))}
+            {renderText("Email doanh nghiệp :", get(data, "organizationInformation.email"))}
             {renderText(
               "Ngành nghề :",
               get(data, "organizationInformation.jobCategories")

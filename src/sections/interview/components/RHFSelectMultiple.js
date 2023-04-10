@@ -1,7 +1,6 @@
 import DragCandidate from "./DragCandidate";
-import PlusIcon from "@/assets/interview/PlusIcon";
+// import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
-// import { RHFCheckbox } from "@/components/hook-form";
 import {
   LabelStyle,
   MenuItemStyle,
@@ -23,8 +22,6 @@ import {
 } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-
-// import { RiEqualizerFill } from "react-icons/ri";
 
 const MenuProps = {
   PaperProps: {
@@ -50,16 +47,17 @@ const renderOptions = (options) => {
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
         <Box sx={{ display: "flex" }}>
           <img
+            alt={""}
             style={{
-              width: 28,
-              height: 28,
+              width: 36,
+              height: 36,
               borderRadius: "10px",
             }}
-            src="https://i.chungta.vn/2017/12/22/LogoFPT-2017-copy-3042-1513928399.jpg"
+            src={variant?.image}
           />
-          <Box sx={{ ml: 1 }}>
+          <Box sx={{ ml: 2 }}>
             <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-              {variant.name}
+              {variant?.name}
             </Typography>
             <Typography
               sx={{
@@ -68,7 +66,7 @@ const renderOptions = (options) => {
                 color: "#5C6A82",
               }}
             >
-              {variant.phone}
+              {variant?.phone}
             </Typography>
           </Box>
         </Box>
@@ -83,12 +81,19 @@ function RHFSelectMultiple({ name, ...props }) {
   const { control } = useFormContext();
 
   const classes = useStyles();
-  const { defaultValue, isRequired, title, options, disabled, multiple } =
-    props;
+  const {
+    defaultValue,
+    isEditmode,
+    isRequired,
+    title,
+    options,
+    disabled,
+    multiple,
+    listApplicant
+  } = props;
   const { remove } = useFieldArray({ control, name });
 
   const renderChipsSelect = (options, value) => {
-    // console.log("option-value", { options, value });
     const [open, setOpen] = useState(false);
     const handleClose = () => {
       setOpen(false);
@@ -96,25 +101,33 @@ function RHFSelectMultiple({ name, ...props }) {
     const handleOpen = () => {
       setOpen(true);
     };
+    // const time = true;
+    // const test = value[0]?.bookingCalendarGroupApplicants?.map(
+    //   (item) => item?.interviewTime
+    // );
+    // const duration = value[0]?.bookingCalendarGroupApplicants?.map(
+    //   (item) => item?.interviewDuration
+    // );
+    // const convertDurationTimeToSeconds = (time) => {
+    //   const splitToString = time.split(":");
+    //   return (
+    //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+    //   );
+    // };
+
+    // const convertStoMs = (s) => {
+    //   const totalMinutes = Math.floor(s / 60);
+    //   const hours = Math.floor(totalMinutes / 60);
+    //   const newHours = hours < 10 ? "0" + hours : hours;
+    //   const minutes = totalMinutes % 60;
+    //   return `${newHours}:${minutes}`;
+    // };
 
     return (
-      <Stack flexWrap="wrap" justifyContent="flex-start">
-        {/* <Box sx={{ display: "flex", justifyContent: "center", alignItems:'center',fontSize: 12 }}>
-          <RHFCheckbox
-            name="adjust"
-            label="Điều chỉnh hàng loạt"
-            style={{ fontSize: "12px" }}
-          />
-          <p>
-            <RiEqualizerFill color={"#1976D2"} size={'15'} />
-            Điều chỉnh
-          </p>
-  
-        </Box> */}
-
+      <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
           data={options?.filter((option) =>
-            (value || []).includes(option?.value)
+            (isEditmode ? [] : value).includes(option?.value)
           )}
           open={open}
           onClose={handleClose}
@@ -139,7 +152,7 @@ function RHFSelectMultiple({ name, ...props }) {
       control={control}
       defaultValue={defaultValue || []}
       render={({ field, fieldState: { error } }) => (
-        <Stack direction="column">
+        <Stack height={"100%"} direction="column">
           {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
           <SelectFieldStyle
             sx={{
@@ -161,19 +174,31 @@ function RHFSelectMultiple({ name, ...props }) {
               if (selected?.length === 0) {
                 return (
                   <Button
-                    sx={{ width: "100%", textTransform: "none" }}
-                    startIcon={<PlusIcon />}
+                    sx={{
+                      width: "100%",
+                      textTransform: "none",
+                      color: "#1976D2",
+                      "&:hover": {
+                        bgcolor: "white",
+                      },
+                    }}
+                    
                   >
-                    Thêm ứng viên
+                    + Thêm ứng viên
                   </Button>
                 );
               }
               return (
                 <Button
-                  sx={{ width: "100%", textTransform: "none" }}
-                  startIcon={<PlusIcon />}
+                  sx={{
+                    width: "100%",
+                    textTransform: "none",
+                    "&:hover": {
+                      bgcolor: "white",
+                    },
+                  }}
                 >
-                  Thêm ứng viên
+                  + Thêm ứng viên
                 </Button>
               );
             }}
@@ -192,6 +217,7 @@ function RHFSelectMultiple({ name, ...props }) {
             )}
             {renderOptions(filterOptions)}
           </SelectFieldStyle>
+          {listApplicant}
           {multiple && renderChipsSelect(options, field.value, remove)}
           <FormHelperText
             sx={{

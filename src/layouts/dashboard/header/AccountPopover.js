@@ -6,7 +6,7 @@ import MenuPopover from "@/components/MenuPopover";
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
 import useLocales from "@/hooks/useLocales";
-import {PATH_DASHBOARD} from "@/routes/paths";
+import {PATH_AUTH} from "@/routes/paths";
 import styled from "@emotion/styled";
 // @mui
 import {
@@ -35,12 +35,12 @@ export default function AccountPopover() {
 
   const MENU_OPTIONS = [
     {
-      label: "home",
+      label: "Thông tin công ty",
       linkTo: "/",
     },
     {
-      label: "setting",
-      linkTo: PATH_DASHBOARD.profile.root + user?.id,
+      label: "Đổi mật khẩu",
+      linkTo: PATH_AUTH.changePassword,
     },
   ];
   const isMountedRef = useIsMountedRef();
@@ -56,7 +56,7 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       await logout();
-
+      location.reload()
       if (isMountedRef.current) {
         handleClose();
       }
@@ -143,7 +143,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: "dashed" }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          {translate("logout") || "Logout"}
+          {translate("Đăng xuất") || "Logout"}
         </MenuItem>
       </MenuPopover>
     </>
