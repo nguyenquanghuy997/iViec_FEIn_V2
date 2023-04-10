@@ -319,8 +319,8 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
           {/* footer */}
           <View
             flexrow="true"
-            pv={12}
-            ph={16}
+            pv={16}
+            ph={24}
             boxshadow={"inset 0px 1px 0px #EBECF4"}
           >
             <ButtonDS
