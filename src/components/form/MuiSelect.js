@@ -66,7 +66,7 @@ const MuiSelect = forwardRef((
         }
 
         if (typeof selectValue === 'undefined') {
-            return '';
+            return null;
         }
         return selectValue;
     }, [selectValue, multiple]);
@@ -173,12 +173,12 @@ const MuiSelect = forwardRef((
             }
             onChange(changedValue);
         }
-        setTimeout(() => {
-            setFilters({
-                ...filters,
-                SearchKey: ''
-            })
-        }, 500)
+        // setTimeout(() => {
+        //     setFilters({
+        //         ...filters,
+        //         SearchKey: ''
+        //     })
+        // }, 500)
     }
 
     const getSelectedItem = (val) => {
@@ -364,7 +364,9 @@ const MuiSelect = forwardRef((
                     </InputAdornment>
                 )
             }
-            onOpen={() => setOpen(true)}
+            onOpen={() => {
+                setOpen(true);
+            }}
             onClose={(e) => {
                 setOpen(false);
                 if (resetOnClose) {
