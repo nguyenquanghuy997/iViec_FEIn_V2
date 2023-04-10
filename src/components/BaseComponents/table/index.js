@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Table } from "antd";
 import { useTheme } from "@mui/material";
-import { isEmpty as _isEmpty } from "lodash";
+import {isEmpty, isEmpty as _isEmpty} from "lodash";
 import { RiSettings3Fill } from 'react-icons/ri';
 import { useRouter } from "next/router";
 
@@ -154,7 +154,7 @@ const DynamicColumnsTable = (props) => {
       {!searchInside && (
         <TableHeader
           onSubmitFilter={onSubmitFilter}
-          columns={columnsDisplay}
+          columns={!isEmpty(columnsDisplay) ? columnsDisplay : columns}
           isInside={false}
           createText={createText}
           onClickCreate={onClickCreate}

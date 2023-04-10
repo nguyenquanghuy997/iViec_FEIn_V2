@@ -290,7 +290,7 @@ const ChipSelectStyle = {
   fontWeight: style.FONT_MEDIUM,
   borderRadius: "4px",
   mr: 1,
-  mt: 0.5,
+  my: 0.5,
 };
 
 export {

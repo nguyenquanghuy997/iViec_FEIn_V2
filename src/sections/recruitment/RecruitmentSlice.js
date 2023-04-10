@@ -53,7 +53,8 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: 'POST',
         data
       }),
-      invalidatesTags: (result) => [{type: 'RECRUITMENT', id: result}, {type: 'RECRUITMENT', id: 'LIST'}]
+      // invalidatesTags: (result) => [{type: 'RECRUITMENT', id: result}, {type: 'RECRUITMENT', id: 'LIST'}]
+      invalidatesTags: [{type: 'RECRUITMENT', id: 'LIST'}]
     }),
     createApplicantRecruitment: builder.mutation({
       query: (data) => ({
