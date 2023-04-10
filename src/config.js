@@ -8,6 +8,7 @@ import { enUS, viVN } from "@mui/material/locale";
 export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api";
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.dashboard;
+export const DOMAIN_OUTSIDE = "http://103.176.149.158:4000/";
 
 export const DASHBOARD_TABLE_HEIGHT = 500;
 

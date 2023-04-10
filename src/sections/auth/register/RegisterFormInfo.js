@@ -88,6 +88,7 @@ function RegisterForm() {
                 password: data.password,                                        // organization password
                 organizationName: data.organizationName.trim(),                 // organization name
                 organizationPhoneNumber: data.organizationPhoneNumber.trim(),   // organization phone number
+                organizationEmail: data.userName.trim(),                        // organization email
                 jobCategoryIds: data.jobCategoryIds?.map(item => item?.value),  // organization name
                 organizationSize: parseInt(data.organizationSize),              // organization size
                 organizationProvinceId: data.organizationProvinceId,            // organization province
