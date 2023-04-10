@@ -16,17 +16,18 @@ export default function
     headers: {Authorization: token},
     beforeUpload: (() => autoUpload),
     onChange(info) {
-      if(!autoUpload) return setFileList(info.fileList);
+      setFileList(info.fileList);
+      // if(!autoUpload) return setFileList(info.fileList);
       
-      const {status} = info.file;
-      if (status !== 'uploading') {
-        setFileList(info.fileList);
-      }
-      if (status === 'done') {
-        setFileList(info.fileList);
-      } else if (status === 'error') {
-        setFileList(info.fileList);
-      }
+      // const {status} = info.file;
+      // if (status === 'uploading') {
+      //   setFileList(info.fileList);
+      // }
+      // if (status === 'done') {
+      //   setFileList(info.fileList);
+      // } else if (status === 'error') {
+      //   setFileList(info.fileList);
+      // }
     },
     onDrop() {
       
