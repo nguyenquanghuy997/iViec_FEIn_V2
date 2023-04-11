@@ -48,7 +48,6 @@ export const FormCalendar = ({
   options,
   optionsFromCruit,
   item,
-  dataFormRecruiment,
   currentApplicantPipelineState,
 }) => {
 
@@ -325,7 +324,6 @@ export const FormCalendar = ({
                   >
                     <ListCandidate
                       detailCandidate={item}
-                      dataFormRecruiment={dataFormRecruiment}
                       option={options}
                       applicantId={options?.applicantId}
                       error={errors}

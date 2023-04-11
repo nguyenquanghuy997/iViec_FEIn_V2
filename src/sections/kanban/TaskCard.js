@@ -199,7 +199,7 @@ function InterviewItem(props) {
         </Box> */}
       </Box>
 
-      {open && <FormCalendar dataFormRecruiment={data} open={open} setOpen={setOpen} optionsFromCruit={data}/>}
+      {open && <FormCalendar options={data} open={open} setOpen={setOpen} optionsFromCruit={data}/>}
     </div>
   );
 }

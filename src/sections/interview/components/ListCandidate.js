@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ option,detailCandidate, applicantId,dataFormRecruiment,error }) => {
+const ListCandidate = ({ option,detailCandidate, applicantId,error }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
   const { data: { items: dataApplicant = [] } = {} } = useGetApplicantByPipeLineQuery(
@@ -26,12 +26,6 @@ const ListCandidate = ({ option,detailCandidate, applicantId,dataFormRecruiment,
       setValue("applicantIdArray", [detailCandidate?.id]);
     }
   }, [detailCandidate]);
-  
-  useEffect(() => {
-    if (dataFormRecruiment) {
-      setValue("applicantIdArray", [dataFormRecruiment?.applicantId]);
-    }
-  }, [dataFormRecruiment]);
 
   return (
     <Box height={"100%"}>
