@@ -6,6 +6,7 @@ export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) =
   overflow: 'hidden',
   '.edit-header': {
     padding: '15px 24px',
+    minHeight: '68px',
     borderBottom: "1px solid " + palette.text.border,
   },
   '> form': {
@@ -29,6 +30,7 @@ export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) =
   '.edit-footer': {
     background: "#FDFDFD",
     padding: "14px 24px",
+    minHeight: '68px',
     borderTop: '1px solid ' + palette.text.border,
   },
 });

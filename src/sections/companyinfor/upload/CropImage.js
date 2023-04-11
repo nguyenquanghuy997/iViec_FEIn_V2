@@ -21,7 +21,7 @@ const CropImage = ({ defaultImage, size, companyInfor }) => {
 
   return (
       <>
-        {size === "cover" ? (
+        {size === "cover" && (
               <Box className={"box-image"}
                    sx={{
                      width: "100%", height: "185px",
@@ -43,13 +43,21 @@ const CropImage = ({ defaultImage, size, companyInfor }) => {
                     </Box>
                 )}
               </Box>
-          ) : (
-              <img
-                  className={"avatar-image"}
-                  src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${defaultImage}`}
-                  onClick={() => setDialogOpen(true)}
-              />
-          )
+          )}
+        {
+          size === 'avatar' && (
+              <Box onClick={() => setDialogOpen(true)}>
+                {defaultImage ? <img
+                    className={"avatar-image"}
+                    src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${defaultImage}`}
+                /> : (
+                    <Box onClick={() => setDialogOpen(true)} className={"avatar-image"} sx={{display: 'flex', alignItems: "center", justifyContent: 'center'}}>
+                      <RiImageFill size={24} color="#8A94A5"/>
+                    </Box>
+                )}
+              </Box>
+
+            )
         }
         {
           dialogOpen && (

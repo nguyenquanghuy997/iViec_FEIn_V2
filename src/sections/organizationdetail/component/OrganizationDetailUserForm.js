@@ -1,14 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {isEmpty, get} from "lodash";
+import React, {useEffect} from "react";
+import {get, isEmpty} from "lodash";
 import * as Yup from "yup";
 import {useForm, useWatch} from "react-hook-form";
-import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Drawer, Stack, Typography, useTheme} from "@mui/material";
 import {FormProvider, RHFSelect, RHFSwitch} from "@/components/hook-form";
-import Iconify from "@/components/Iconify";
-import Scrollbar from "@/components/Scrollbar";
-import {OrganizationFromHeadStyle} from "@/sections/organization/style";
 import {yupResolver} from "@hookform/resolvers/yup";
-import MuiButton from "@/components/BaseComponents/MuiButton";
 import {AvatarDS} from "@/components/DesignSystem";
 import RHFTreeSelect from "@/components/hook-form/RHFTreeSelect";
 import {
@@ -18,23 +14,22 @@ import {
 import {LabelStyle} from "@/components/hook-form/style";
 import {useSnackbar} from "notistack";
 import {useGetRoleGroupListQuery} from "@/sections/rolegroup";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
 const OrganizationUserForm = ({isOpen, onClose, data}) => {
     const {enqueueSnackbar} = useSnackbar();
+    const theme = useTheme();
     const [updateUser] = useUpdateRoleUserMutation();
 
     const {data: {items: ListRoleGroup = []} = {}} = useGetRoleGroupListQuery();
     const {data: {items: ListOrganization = []} = {}} = useGetListOrganizationWithChildQuery();
 
-    const [, setIsScrolled] = useState(false);
     const defaultValues = {
         roleGroupId: '',
         organizationIds: [],
         isActive: true
-    };
-
-    const handleScroll = (e) => {
-        setIsScrolled(e.target.scrollTop > 10);
     };
 
     const OrganizationFormSchema = Yup.object().shape({
@@ -52,7 +47,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
     const {control, handleSubmit, setValue, formState: {isSubmitting}} = methods;
     const watchActive = useWatch({name: 'isActive', control})
 
-    useEffect(()=>{
+    useEffect(() => {
         if (!isEmpty(data)) {
             setValue('roleGroupId', get(data, 'applicationUserRoleGroups[0].id'));
             setValue('organizationIds', get(data, 'organizations')?.map(item => item.id));
@@ -77,11 +72,11 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
         } catch (e) {
             const {data} = e;
             if (data?.code === 'AUE_01') {
-              enqueueSnackbar("Người dùng không hoạt động.", {
-                autoHideDuration: 1000,
-                variant: 'error',
-              });
-              return;
+                enqueueSnackbar("Người dùng không hoạt động.", {
+                    autoHideDuration: 1000,
+                    variant: 'error',
+                });
+                return;
             }
             enqueueSnackbar("Chỉnh sửa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
                 autoHideDuration: 1000,
@@ -98,14 +93,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                 onClose={onClose}
                 anchor="right"
                 PaperProps={{
-                    sx: {
-                        width: {xs: 1, sm: 560, md: 800},
-                        boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-                        position: 'fixed',
-                        top: '64px',
-                        right: 0
-                    },
-                    onScroll: handleScroll
+                    sx: drawerPaperStyle({...theme, width: 800}),
                 }}
                 componentsProps={{
                     backdrop: {
@@ -116,17 +104,11 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                     }
                 }}
             >
-                <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
-                    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                        <OrganizationFromHeadStyle className="organization-form-head" width={800}>
-                            <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
-                                Chỉnh sửa người dùng
-                            </Typography>
-                            <IconButton size="small" onClick={onClose}><Iconify icon="ic:baseline-close"/></IconButton>
-                        </OrganizationFromHeadStyle>
-                        <Divider/>
-                        {/* content form */}
-                        <Box sx={{py: 2, px: 3, mb: 8}}>
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                    <FormModalHead title={'Chỉnh sửa người dùng'} onClose={onClose}/>
+                    {/* content form */}
+                    <div className="edit-container">
+                        <Box>
                             <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
                                 <AvatarDS
                                     sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
@@ -223,40 +205,15 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                 </Box>
                             </Box>
                         </Box>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginTop: 12,
-                                position: "fixed",
-                                bottom: 0,
-                                width: "800px",
-                                padding: "16px 24px",
-                                border: "1px solid #EFF3F6",
-                                zIndex: 1001,
-                            }}
-                        >
-                            <Stack flexDirection="row">
-                                <MuiButton
-                                    type="submit"
-                                    loading={isSubmitting}
-                                    title="Lưu"
-                                    sx={{height: 36, minWidth: 24}}
-                                />
-                                <MuiButton
-                                    title={"Hủy"}
-                                    onClick={onClose}
-                                    color={"basic"}
-                                    sx={{
-                                        height: 36,
-                                        color: '#455570',
-                                        fontWeight: 600,
-                                        ml: 1,
-                                        "&:hover": {backgroundColor: 'transparent', boxShadow: 'none'}
-                                    }}
-                                />
-                            </Stack>
+                    </div>
+                    <FormModalBottom
+                        onClose={onClose}
+                        loading={isSubmitting}
+                        btnConfirm={{
+                            title: 'Lưu',
+                            type: "submit",
+                        }}
+                        otherAction={<>
                             <RHFSwitch
                                 name="isActive"
                                 label={watchActive ? "Đang hoạt động" : "Không hoạt động"}
@@ -269,35 +226,9 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                     },
                                 }}
                             />
-                        </div>
-                        {/* end content form */}
-                        {/*<OrganizationFromFooterStyle className="organization-form-footer" width={800}>*/}
-                        {/*    <Stack flexDirection="row">*/}
-                        {/*        <MuiButton*/}
-                        {/*            type="submit"*/}
-                        {/*            loading={isSubmitting}*/}
-                        {/*            title="Lưu"*/}
-                        {/*            sx={{px: 2, py: 1, minWidth: 24}}*/}
-                        {/*        />*/}
-                        {/*        <MuiButton*/}
-                        {/*            title={"Hủy"}*/}
-                        {/*            onClick={onClose}*/}
-                        {/*            color={"basic"}*/}
-                        {/*            sx={{*/}
-                        {/*                color: '#455570',*/}
-                        {/*                fontWeight: 600,*/}
-                        {/*                ml: 1,*/}
-                        {/*                "&:hover": {backgroundColor: 'transparent', boxShadow: 'none'}*/}
-                        {/*            }}*/}
-                        {/*        />*/}
-                        {/*    </Stack>*/}
-                        {/*    <RHFSwitch*/}
-                        {/*        name="isActive"*/}
-                        {/*        label={watchActive ? "Đang hoạt động" : "Không hoạt động"}*/}
-                        {/*    />*/}
-                        {/*</OrganizationFromFooterStyle>*/}
-                    </FormProvider>
-                </Scrollbar>
+                        </>}
+                    />
+                </FormProvider>
             </Drawer>
         </>
     )

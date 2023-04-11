@@ -10,7 +10,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import { get } from "lodash";
 import { useMemo } from "react";
 import { Fragment } from "react";
-import { RiCheckboxBlankCircleFill, RiImageFill } from "react-icons/ri";
+import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 
 const renderText = (title, content) => {
   return (
@@ -88,17 +88,12 @@ export default function CompanyInfor({ data }) {
       {/* Avatar & name */}
       <BoxInfoStyle className={"box-info"}>
         <Box className={"box-image"}>
-          {get(data, "organizationInformation.avatar") ? (
             <CropImage
               defaultImage={get(data, "organizationInformation.avatar")}
               companyInfor={data}
+              size={"avatar"}
               className={"avatar-image"}
             />
-          ) : (
-            <Box className={"avatar-image avatar-placeholder"}>
-              <RiImageFill color={"#8A94A5"} size={"1.25em"} />
-            </Box>
-          )}
         </Box>
         <Box sx={{ flex: 1, pl: 3 }}>
           <Box
@@ -119,8 +114,7 @@ export default function CompanyInfor({ data }) {
                   mb: 1,
                 }}
               >
-                {get(data, "name") ||
-                  "Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic Group)"}
+                {get(data, "name")}
               </Typography>
               <Box
                 sx={{
@@ -165,25 +159,11 @@ export default function CompanyInfor({ data }) {
           </Box>
           <Divider />
           <Box>
-            {renderText(
-              "Số điện thoại :",
-              get(data, "organizationInformation.phoneNumber")
-            )}
+            {renderText("Số điện thoại :", get(data, "organizationInformation.phoneNumber"))}
             {renderText("Email doanh nghiệp :", get(data, "organizationInformation.email"))}
-            {renderText(
-              "Ngành nghề :",
-              get(data, "organizationInformation.jobCategories")
-                ?.map((item) => item?.name)
-                ?.join(", ")
-            )}
-            {renderText(
-              "Quy mô :",
-              OrganizationSize(
-                get(data, "organizationInformation.organizationSize")
-              )
-            )}
-            {renderText(
-              "Địa chỉ :",
+            {renderText("Ngành nghề :", get(data, "organizationInformation.jobCategories")?.map((item) => item?.name)?.join(", "))}
+            {renderText("Quy mô :", OrganizationSize(get(data, "organizationInformation.organizationSize")))}
+            {renderText("Địa chỉ :",
               <>
                 {get(data, "organizationInformation.address") &&
                   `${get(data, "organizationInformation.address")}, `}

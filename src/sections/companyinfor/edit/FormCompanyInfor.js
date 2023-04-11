@@ -66,22 +66,14 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const ProfileSchema = Yup.object().shape({
     // avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
     // coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-    phoneNumber: Yup.string().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng").nullable(),
-    email: Yup.string()
-      .email("Email không đúng định dạng")
-      .required("Email không được bỏ trống").nullable(),
-    jobCategoryIds: Yup.array()
-      .min(1, "Ngành nghề không được bỏ trống")
-      .max(3, "Chọn tối đa 3 ngành nghê"),
-    organizationSize: Yup.number().required(
-      "Quy mô nhân sự không được bỏ trống"
-    ).nullable(),
-    provinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống").nullable(),
-    districtId: Yup.string().required("Quận/Huyện không được bỏ trống").nullable(),
-    address: Yup.string().required("Địa chỉ không được bỏ trống").nullable(),
-    description: Yup.string().required(
-      "Giới thiệu công ty không được bỏ trống"
-    ).nullable(),
+    phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
+    email: Yup.string().nullable().email("Email không đúng định dạng").required("Email không được bỏ trống"),
+    jobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghê"),
+    organizationSize: Yup.number().nullable().required("Quy mô nhân sự không được bỏ trống"),
+    provinceId: Yup.string().nullable().required("Tỉnh/Thành phố không được bỏ trống"),
+    districtId: Yup.string().nullable().required("Quận/Huyện không được bỏ trống"),
+    address: Yup.string().nullable().required("Địa chỉ không được bỏ trống"),
+    description: Yup.string().nullable().required("Giới thiệu công ty không được bỏ trống"),
   });
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
@@ -138,12 +130,8 @@ const FormCompanyInfor = ({ data, onClose }) => {
       try {
         await updateCompanyInfo({
           id: get(data, "organizationInformation.id"),
-          avatar: imageRes
-            ? imageRes?.data
-            : get(data, "organizationInformation.avatar"),
-          coverPhoto: bgRes
-            ? bgRes?.data
-            : get(data, "organizationInformation.coverPhoto"),
+          avatar: imageRes ? imageRes?.data : get(data, "organizationInformation.avatar"),
+          coverPhoto: bgRes ? bgRes?.data : get(data, "organizationInformation.coverPhoto"),
           provinceId: provinceId,
           districtId: districtId,
           address: address,
@@ -178,7 +166,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
     setValue("districtId", get(data, "organizationInformation.districtId"));
     setValue("address", get(data, "organizationInformation.address"));
     setValue("description", get(data, "organizationInformation.description"));
-  }, [JSON.stringify(data)]);
+  }, [data]);
 
   useEffect(() => {
     if (get(data, "organizationInformation.avatar") || !isEmpty(imageFile)) {
@@ -198,8 +186,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
               color: style.COLOR_TEXT_BLACK,
             }}
           >
-            {get(data, "name") ||
-              "Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic Group)"}
+            {get(data, "name")}
           </Typography>
           <Typography
             sx={{
@@ -209,8 +196,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
               fontWeight: style.FONT_NORMAL,
             }}
           >
-            Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email
-            Support@iviec.com.vn
+            Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email Support@iviec.com.vn
           </Typography>
         </Box>
         <Stack>
@@ -233,8 +219,8 @@ const FormCompanyInfor = ({ data, onClose }) => {
               ref={register("avatar", { required: true })}
               type="avatar"
               style={{
-                width: 120,
-                height: 120,
+                width: 142,
+                height: 142,
                 borderRadius: "50%",
                 backgroundColor: "#EFF3F6",
                 marginTop: "16px",

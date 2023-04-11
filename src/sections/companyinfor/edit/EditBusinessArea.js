@@ -122,9 +122,9 @@ const EditBusinessArea = ({data: Data, onClose}) => {
 
   useEffect(() => {
     if (!Data) return;
-    setValue("organizationBusinessDatas", Data?.organizationBusiness.organizationBusinessDatas);
+    setValue("organizationBusinessDatas", Data?.organizationBusiness?.organizationBusinessDatas);
     setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto}`);
-  }, [JSON.stringify(Data)]);
+  }, [Data]);
 
   const handleDrag = ({source, destination}) => {
     if (destination) {
@@ -142,6 +142,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
               <EditUpload
                   title={'Tải lên ảnh nền'}
                   image={bg}
+                  imagePath={Data?.organizationBusiness?.businessPhoto}
                   ref={register("businessPhoto", {required: false})}
                   imageHandler={handleImage}
                   style={{
@@ -207,16 +208,18 @@ const EditBusinessArea = ({data: Data, onClose}) => {
               </Droppable>
             </ul>
           </DragDropContext>
-          <MuiButton
-              title={"Thêm lĩnh vực kinh doanh"}
-              variant="outlined"
-              disabled={!isValid}
-              onClick={() => {
-                append({...defaultValues});
-              }}
-              startIcon={<PlusIcon/>}
-              sx={{width: '100%'}}
-          />
+          <Box sx={{mt: 3}}>
+            <MuiButton
+                title={"Thêm lĩnh vực kinh doanh"}
+                variant="outlined"
+                disabled={!isValid}
+                onClick={() => {
+                  append({...defaultValues});
+                }}
+                startIcon={<PlusIcon/>}
+                sx={{width: '100%'}}
+            />
+          </Box>
         </Box>
         </div>
         <FormModalBottom

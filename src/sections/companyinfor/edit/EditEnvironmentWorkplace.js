@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useSnackbar} from "notistack";
 import {useFieldArray, useForm, useWatch} from "react-hook-form";
-import {RiDeleteBin6Line} from "react-icons/ri";
+import {RiDeleteBin6Line, RiImageFill} from "react-icons/ri";
 import * as Yup from "yup";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import PlusIcon from "@/assets/interview/PlusIcon";
@@ -181,14 +181,19 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                                 sx={{border: "1px dashed #1976D2", height: 400}}
                                                                             />
                                                                         )
-                                                                        : <Image
-                                                                            disabledEffect
-                                                                            visibleByDefault
-                                                                            src={'/assets/placeholder.png'}
-                                                                            id={index}
-                                                                            alt="image"
-                                                                            sx={{border: "1px dashed #1976D2", height: 400}}
-                                                                        />
+                                                                        : (
+                                                                            <Box sx={{minHeight: '400px', border: "1px dashed #1976D2", display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                                                                <RiImageFill color={"#8A94A5"} size={'1.25em'}/>
+                                                                            </Box>
+                                                                        )
+                                                                        // <Image
+                                                                        //     disabledEffect
+                                                                        //     visibleByDefault
+                                                                        //     src={'/assets/placeholder.png'}
+                                                                        //     id={index}
+                                                                        //     alt="image"
+                                                                        //     sx={{border: "1px dashed #1976D2", height: 400}}
+                                                                        // />
                                                                     }
                                                                     <Box sx={{
                                                                         display: "flex",

@@ -36,7 +36,7 @@ const EditUpload = forwardRef((
                   alt="image"
                   sx={{...style}}
               /> : (
-                  <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', ...style}}>
+                  <Box sx={{height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', ...style}}>
                     <RiImageFill color={"#8A94A5"} size={'1.25em'}/>
                   </Box>
               )
