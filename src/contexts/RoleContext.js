@@ -9,15 +9,21 @@ const RoleContext = createContext({
 
 const RoleProvider = ({ children }) => {
   const { permissions } = useAuth();
-  const AdminPermiss = PERMISSIONS.ADMINISTRATOR;
 
   const canAccess = useCallback((action) => {
-    if (!action || permissions.includes(AdminPermiss)) {
+    if (!action || permissions.includes(PERMISSIONS.IVIEC_ADMIN)) {
       return true;
     }
 
     if (!Array.isArray(action)) {
       action = [action];
+    }
+
+    if (
+      permissions.includes(PERMISSIONS.ADMINISTRATOR)
+      && !action.includes(PERMISSIONS.IVIEC_ADMIN)
+    ) {
+      return true;
     }
 
     let hasPermiss = false;

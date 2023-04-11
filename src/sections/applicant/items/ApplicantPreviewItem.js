@@ -1,9 +1,9 @@
 import {
-  useGetApplicantCurrentStateWithRecruitmentStatesMutation,
-  useGetApplicantRecruitmentMutation,
+  useGetApplicantByIdQuery,
+  useGetApplicantCurrentStateWithRecruitmentStatesQuery,
+  useGetApplicantRecruitmentQuery,
+  useGetApplicantReviewFormQuery,
   useGetRecruitmentsByApplicantQuery,
-  useLazyGetApplicantByIdQuery,
-  useLazyGetApplicantReviewFormQuery,
 } from "../ApplicantFormSlice";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
 import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
@@ -23,23 +23,42 @@ import { Box, Card, CardContent, Container, Divider, Grid, Stack, Typography, } 
 import { styled } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
+import {useRouter} from "next/router";
 
-function ApplicantPreviewItem({
-  ApplicantId,
-  OrganizationId,
-  ApplicantCorrelationId,
-  RecruitmentId,
-}) {
-  const { data: { items: options = [] } = {}, isFetching } =
-    useGetRecruitmentsByApplicantQuery({
-      ApplicantCorrelationId: ApplicantCorrelationId,
-      OrganizationId,
-    });
+function ApplicantPreviewItem() {
+
+  const router = useRouter();
+  const ApplicantId = router.query.applicantId ? router.query.applicantId : router.query.slug;
+  const ApplicantCorrelationId = router.query.correlationId;
+  const OrganizationId = router.query.organizationId;
+  const RecruitmentId = router.query.recruitmentId;
+
+  const { data: { items: options = [] } = {}, isFetching } = useGetRecruitmentsByApplicantQuery({
+    ApplicantCorrelationId: ApplicantCorrelationId,
+    OrganizationId,
+  });
+
+  // const [selectedState, setSelectedState] = useState({
+  //   applicantId: '',
+  //   recruitmentId: '',
+  //   applicantCorrelationId: '',
+  //   organizationId: ''
+  // })
+  //
+  // useEffect(() => {
+  //   setSelectedState((prev) => ({
+  //     ...prev,
+  //     applicantId: ApplicantId,
+  //     recruitmentId: RecruitmentId,
+  //     applicantCorrelationId: ApplicantCorrelationId,
+  //     organizationId: OrganizationId
+  //   }))
+  // }, [ApplicantId, RecruitmentId, ApplicantCorrelationId, OrganizationId])
 
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
   const [open, setOpen] = useState(false);
-  const HearderApplicant = () => {
+  const HeaderApplicant = () => {
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
         <Grid
@@ -219,19 +238,33 @@ function ApplicantPreviewItem({
   const smDown = useResponsive("down", "sm");
   const { themeStretch } = useSettings();
 
-  // const [showRejectApplicant, setRejectApplicant] = useState(false);
-  const [fetchPipe, { data: pipelines = [], isSuccess }] =
-    useGetApplicantCurrentStateWithRecruitmentStatesMutation();
-  const [fetchData, { data: logApplicant = []}] =
-    useGetApplicantRecruitmentMutation();
-  const [fetchDataApplicant, { data: data = [] }] =
-    useLazyGetApplicantByIdQuery();
-    const [fetchReviewForm, { data: reviewFormCriterias , isSuccess: isSuccessReview}] =
-    useLazyGetApplicantReviewFormQuery( {
-      skip: pipelines?.recruitmentPipelineStates?.length > 0,
-    });
+  const { data: pipelines = [], isSuccess } = useGetApplicantCurrentStateWithRecruitmentStatesQuery({
+    ApplicantId: ApplicantId,
+    RecruitmentId: RecruitmentId
+  }, { skip: !ApplicantId || !RecruitmentId });
 
-  const [actionId, setActionId] = useState();
+  const { data: logApplicant = []} = useGetApplicantRecruitmentQuery({
+      ApplicantId: ApplicantId,
+      RecruitmentId: RecruitmentId,
+      IsWithdrawHistory: true,
+  }, { skip: !ApplicantId || !RecruitmentId });
+
+  const { data: data = [] } = useGetApplicantByIdQuery({
+    applicantId: ApplicantId
+  }, { skip: !ApplicantId });
+
+  const { data: reviewFormCriterias , isSuccess: isSuccessReview} = useGetApplicantReviewFormQuery({
+    RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+    ApplicantId: ApplicantId
+  }, {skip: pipelines?.recruitmentPipelineStates?.length > 0 || !pipelines?.currentApplicantPipelineState || !ApplicantId});
+
+  // const [fetchData, { data: logApplicant = []}] = useGetApplicantRecruitmentMutation();
+  // const [fetchDataApplicant, { data: data = [] }] = useLazyGetApplicantByIdQuery();
+  // const [fetchReviewForm, { data: reviewFormCriterias , isSuccess: isSuccessReview}] = useLazyGetApplicantReviewFormQuery({
+  //   skip: pipelines?.recruitmentPipelineStates?.length > 0,
+  // });
+
+  const [actionId, setActionId] = useState('');
   const [actionType, setActionType] = useState();
   const [actionShow, setActionShow] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
@@ -242,82 +275,88 @@ function ApplicantPreviewItem({
   const onCloseModel = () => {
     setActionShow(false);
     setShowConfirmMultiple(false);
-    const recruiment = options.filter((p) => p.id == RecruitmentId);
-    fetchPipe({
-      ApplicantId: recruiment[0]?.applicantId,
-      RecruitmentId: recruiment[0]?.id,
-    }).unwrap();
+    // const recruiment = options.filter((p) => p.id == RecruitmentId);
+    // fetchPipe({
+    //   ApplicantId: recruiment[0]?.applicantId,
+    //   RecruitmentId: recruiment[0]?.id,
+    // }).unwrap();
   };
 
   useEffect(() => {
     if (!isFetching) {
-      const recruiment = options.filter((p) => p.id == RecruitmentId);
-      setSelectedOption(recruiment[0]);
-      setOwnerName(recruiment[0]?.ownerName?.trim());
-      fetchPipe({
-        ApplicantId: recruiment[0]?.applicantId,
-        RecruitmentId: recruiment[0]?.id,
-      }).unwrap();
-      fetchData({
-        ApplicantId: recruiment[0]?.applicantId,
-        RecruitmentId: recruiment[0]?.id,
-        IsWithdrawHistory: true,
-      }).unwrap();
-      fetchDataApplicant({
-        applicantId: recruiment[0]?.applicantId,
-      });
-      fetchReviewForm({
-        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-        ApplicantId: recruiment[0]?.applicantId,
-      });
+      const recruitment = options.filter((p) => p.id == RecruitmentId);
+      setSelectedOption(recruitment[0]);
+      setOwnerName(recruitment[0]?.ownerName?.trim());
+      // fetchPipe({
+      //   ApplicantId: recruiment[0]?.applicantId,
+      //   RecruitmentId: recruiment[0]?.id,
+      // }).unwrap();
+      // fetchData({
+      //   ApplicantId: recruiment[0]?.applicantId,
+      //   RecruitmentId: recruiment[0]?.id,
+      //   IsWithdrawHistory: true,
+      // }).unwrap();
+      // fetchDataApplicant({
+      //   applicantId: recruiment[0]?.applicantId,
+      // });
+      // fetchReviewForm({
+      //   RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      //   ApplicantId: recruiment[0]?.applicantId,
+      // });
     }
   }, [isFetching]);
-  useEffect(() => {
-    if (isSuccess) {
-      fetchReviewForm({
-        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-        ApplicantId: selectedOption?.applicantId,
-      });
-    }
-  }, [isSuccess]);
-  const onChangeRecruiment = (e) => {
+  // useEffect(() => {
+  //   if (isSuccess) {
+      // fetchReviewForm({
+      //   RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      //   ApplicantId: selectedOption?.applicantId,
+      // });
+    // }
+  // }, [isSuccess]);
+
+  const onChangeRecruitment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
-    fetchPipe({
-      ApplicantId: e.target.value.applicantId,
-      RecruitmentId: e.target.value.id,
-    }).unwrap();
-    fetchData({
-      ApplicantId: e.target.value.applicantId,
-      RecruitmentId: e.target.value.id,
-      IsWithdrawHistory: true,
-    }).unwrap();
-    fetchDataApplicant({
-      applicantId: e.target.value.applicantId,
-    });
+
+    return router.push({
+      pathname: PATH_DASHBOARD.applicant.view(ApplicantId),
+      query: {
+        ...router.query,
+        applicantId: e.target.value?.applicantId,
+        recruitmentId: e.target.value?.id,
+        organizationId: e.target.value?.organizationId,
+        ownerId: e.target.value?.ownerId,
+        ownerName: e.target.value?.ownerName
+      },
+    }, undefined, { shallow: false });
+
+    // fetchPipe({
+    //   ApplicantId: e.target.value.applicantId,
+    //   RecruitmentId: e.target.value.id,
+    // }).unwrap();
+    // fetchData({
+    //   ApplicantId: e.target.value.applicantId,
+    //   RecruitmentId: e.target.value.id,
+    //   IsWithdrawHistory: true,
+    // }).unwrap();
+    // fetchDataApplicant({
+    //   applicantId: e.target.value.applicantId,
+    // });
   };
 
   return (
     <div>
       <HeadingFixed>
-        <HearderApplicant setIsOpenSendOffer={setIsOpenSendOffer} />
+        <HeaderApplicant setIsOpenSendOffer={setIsOpenSendOffer} />
       </HeadingFixed>
-      <Container
-        maxWidth={themeStretch ? false : "xl"}
-        sx={{ ...(smDown && { padding: 0 }) }}
-      >
-        <NavGoBack
-          link={PATH_DASHBOARD.applicant.root}
-          name={"Trở về danh sách ứng viên"}
-        ></NavGoBack>
-
+      <Container maxWidth={themeStretch ? false : "xl"} sx={{ ...(smDown && { padding: 0 }) }}>
+        <NavGoBack link={PATH_DASHBOARD.applicant.root} name={"Trở về danh sách ứng viên"}></NavGoBack>
         <Grid>
           <Grid item xs={12} md={5}>
             <Card
               sx={{
                 borderRadius: "6px",
-                filter:
-                  "drop-shadow(0px 3px 5px rgba(9, 30, 66, 0.2)) drop-shadow(0px 0px 1px rgba(9, 30, 66, 0.3))",
+                filter: "drop-shadow(0px 3px 5px rgba(9, 30, 66, 0.2)) drop-shadow(0px 0px 1px rgba(9, 30, 66, 0.3))",
                 height: "fit-content",
                 "& .MuiCardContent-root": {
                   padding: 0,
@@ -326,14 +365,8 @@ function ApplicantPreviewItem({
               }}
             >
               <CardContent>
-                <Grid
-                  item
-                  xs={12}
-                  md={7}
-                  padding="32px 24px"
-                  borderBottom="1px solid #D0D4DB"
-                >
-                  <HearderApplicant />
+                <Grid item xs={12} md={7} padding="32px 24px" borderBottom="1px solid #D0D4DB">
+                  <HeaderApplicant />
                   <Grid marginTop={"32px"}>
                     <Grid>
                       {options ? (
@@ -341,7 +374,7 @@ function ApplicantPreviewItem({
                           width="35%"
                           selectedOption={selectedOption}
                           setSelectedOption={setSelectedOption}
-                          onChange={onChangeRecruiment}
+                          onChange={onChangeRecruitment}
                           data={options}
                           placeholder="Chọn tin tuyển dụng"
                           sx={{
@@ -366,18 +399,10 @@ function ApplicantPreviewItem({
                         />
                       ) : null}
                     </Grid>
-                    <Grid
-                      container
-                      justifyContent="space-between"
-                      alignItems="flex-end"
-                      marginTop="28px"
-                      minHeight="76px"
-                    >
+                    <Grid container justifyContent="space-between" alignItems="flex-end" marginTop="28px" minHeight="76px">
                       <Grid item md={10} container>
                         <Grid sx={{ width: "80%" }}>
-                          {isSuccess ? (
-                            <PipelineApplicant steps={pipelines} />
-                          ) : null}
+                          {isSuccess ? (<PipelineApplicant steps={pipelines} />) : null}
                         </Grid>
                         <Grid sx={{ display: "flex" }}>
                           <ButtonDS
@@ -393,15 +418,7 @@ function ApplicantPreviewItem({
                               textTransform: "none",
                             }}
                             onClick={() => setShowConfirmMultiple(true)}
-                            icon={
-                              <Iconify
-                                icon={"ci:transfer"}
-                                width={16}
-                                height={16}
-                                color="#455570"
-                                mr={1}
-                              />
-                            }
+                            icon={<Iconify icon={"ci:transfer"} width={16} height={16} color="#455570" mr={1}/>}
                           />
                           {/* <ButtonDS
                             type="submit"
@@ -430,12 +447,7 @@ function ApplicantPreviewItem({
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
                         <div>{"Phụ trách"}</div>
-                        <Grid
-                          sx={{
-                            display: "flex",
-                            marginTop: "8px",
-                          }}
-                        >
+                        <Grid sx={{display: "flex", marginTop: "8px",}}>
                           {isSuccess ? (
                             <AvatarDS
                               sx={{
@@ -447,11 +459,7 @@ function ApplicantPreviewItem({
                               name={ownerName}
                             ></AvatarDS>
                           ) : null}
-                          <Typography
-                            fontSize="14px"
-                            fontWeight="600"
-                            color="#172B4D"
-                          >
+                          <Typography sx={{ fontSize: 14, fontWeight: 600, color: '#172B4D' }}>
                             {ownerName}
                           </Typography>
                         </Grid>
@@ -461,7 +469,9 @@ function ApplicantPreviewItem({
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV data={data} dataLog={logApplicant}/>
+                    <ApplicantPreviewCV
+                        data={data}
+                        dataLog={logApplicant}/>
                   </Grid>
                   <Grid item xs={5} md={5}>
                       <ApplicantPreviewLog

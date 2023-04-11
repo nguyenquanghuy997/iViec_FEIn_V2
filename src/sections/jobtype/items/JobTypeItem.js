@@ -70,10 +70,10 @@ export const JobTypeItem = () => {
         },
       },
       {
-        dataIndex: "createdTime",
+        dataIndex: "createTime",
         title: "Ngày tạo",
         width: "180px",
-        render: (date) => fDate(date),
+        render: (date, record) => record?.createdTime ? fDate(record?.createdTime) : '',
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
           name: ['createdTimeFrom', 'createdTimeTo'],

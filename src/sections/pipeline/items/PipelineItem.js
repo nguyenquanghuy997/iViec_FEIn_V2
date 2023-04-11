@@ -1,5 +1,5 @@
 import {
-  useGetAllPipelineQuery,
+  useGetAllPipelineQuery, useGetListColumnsQuery, useUpdateListColumnApplicantsMutation,
   // useGetListColumnsQuery,
   // useUpdateListColumnApplicantsMutation,
 } from "../PipelineFormSlice";
@@ -208,8 +208,8 @@ export const PipelineItem = () => {
           nodata="Hiện chưa có quy trình tuyển dụng nào"
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          // useGetColumnsFunc={useGetListColumnsQuery}
-          // useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+          useGetColumnsFunc={useGetListColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
           createText={canEdit && "Thêm quy trình tuyển dụng"}
           onClickCreate={() => {
             setShowForm(true);

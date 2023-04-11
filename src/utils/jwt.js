@@ -90,10 +90,17 @@ const handleRefreshToken = async () => {
   }
 };
 
+const getAccessToken = () => {
+  return (typeof localStorage !== 'undefined')
+      ? (localStorage.getItem('accessToken') || null) : null;
+}
+
+
 export {
   isValidToken,
   setSession,
   setRefreshToken,
   setRememberMe,
   handleRefreshToken,
+  getAccessToken
 };

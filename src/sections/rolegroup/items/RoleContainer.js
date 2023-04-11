@@ -5,11 +5,13 @@ import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import TextMaxLine from "@/components/TextMaxLine";
 import {
+  useGetListColumnsQuery,
   // useGetListColumnsQuery,
   useGetRoleGroupListQuery,
   // useUpdateListColumnsMutation,
   useRemoveRoleGroupMutation,
   useSetStatusRoleGroupMutation,
+  useUpdateListColumnsMutation,
 } from "@/sections/rolegroup";
 import { Typography, useTheme } from "@mui/material";
 import moment from "moment";
@@ -87,8 +89,10 @@ export const RoleContainer = () => {
     {
       title: "Số nhân viên",
       key: "numOfPerson",
-      dataIndex: 'numOfPerson',
+      dataIndex: 'number',
       width: "140px",
+      align: "center",
+      render: (item, record) => (record?.numOfPerson)
     },
 
     {
@@ -115,11 +119,9 @@ export const RoleContainer = () => {
     {
       title: "Ngày tạo",
       key: "createdTime",
-      dataIndex: 'createdTime',
+      dataIndex: 'registerTime',
       width: "120px",
-      render: (time) => (
-        <>{time ? moment(time).format("DD/MM/YYYY") : null}</>
-      ),
+      render: (item, record) => record?.createdTime ? moment(record?.createdTime).format("DD/MM/YYYY") : null,
       filters: {
         type: TBL_FILTER_TYPE.RANGE_DATE,
         name: ['createdTimeFrom', 'createdTimeTo'],
@@ -127,11 +129,11 @@ export const RoleContainer = () => {
       },
     },
     {
-      dataIndex: "creatorFirstName",
+      dataIndex: "creatorName",
       title: "Người tạo",
       width: "300px",
       multiple: true,
-      render: (item) => (
+      render: (item, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <AvatarDS
             sx={{
@@ -140,10 +142,10 @@ export const RoleContainer = () => {
               borderRadius: "100px",
               fontSize: "12px",
             }}
-            name={item}
+            name={record?.isDefault == true ? "iVIEC" : record?.creatorEmail}
           ></AvatarDS>
           <span fontSize="14px" fontWeight="600" color="#172B4D">
-            {item}
+            {record?.isDefault == true ? "iVIEC" : record?.creatorEmail}
           </span>
         </div>
       ),
@@ -222,10 +224,13 @@ export const RoleContainer = () => {
       okText: 'Xóa',
       onOk: async (close) => {
         try {
+          close();
+          // router.push({
+          //   query: { },
+          // });
           await removeRoleGroup(itemSelected.map(it => it.id)).unwrap();
           setItemSelected([]);
           setSelectedRowKeys([])
-          close();
           enqueueSnackbar('Xóa vai trò thành công!');
         } catch (err) {
           enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
@@ -276,7 +281,13 @@ export const RoleContainer = () => {
 
   return (
     <RoleGroupStyle>
-      <Content sx={{ padding: "0 !important" }}>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
           columns={columns}
           source={data}
@@ -288,8 +299,8 @@ export const RoleContainer = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          // useGetColumnsFunc={useGetListColumnsQuery}
-          // useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          useGetColumnsFunc={useGetListColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListColumnsMutation}
           createText={canEdit && "Thêm vai trò"}
           onClickCreate={() => {
             setOpen(true);
@@ -353,6 +364,7 @@ export const RoleContainer = () => {
           setOpen(false);
         }}
         selectedItem={editItem}
+        setSelectedRowKeys={setSelectedRowKeys}
       />
     </RoleGroupStyle>
   );

@@ -138,8 +138,7 @@ const EvaluationItem = () => {
               columns={columns}
               onSubmitFilter={onSubmitFilter}
               onClickCreate={(e) => handleOpenModel(e,null,"form")}
-              createText={canEdit && "Thêm quy trình tuyển dụng"}
-              createText={'Thêm mẫu đánh giá'}
+              createText={canEdit && 'Thêm mẫu đánh giá'}
               isInside={true}
           />
         </Box>

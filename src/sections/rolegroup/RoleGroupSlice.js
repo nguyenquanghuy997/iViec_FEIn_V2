@@ -29,7 +29,7 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 
     getRoleGroupList: builder.query({
       query: (params) => {
-        const defaultParams = { pageIndex: 1, pageSize: 20 }
+        const defaultParams = { PageIndex: 1, PageSize: 10 }
         return {
           url: API_GET_LIST_ROLE_GROUP,
           method: "GET",

@@ -68,6 +68,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                 userId: data?.id,
                 roleGroupId: formData?.roleGroupId,
                 organizationIds: formData?.organizationIds,
+                isActive: formData?.isActive,
             }).unwrap();
             onClose();
             enqueueSnackbar("Chỉnh sửa người dùng thành công!", {
