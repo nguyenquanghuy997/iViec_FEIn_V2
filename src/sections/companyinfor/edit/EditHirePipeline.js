@@ -129,9 +129,12 @@ const EditHirePipeline = ({data, onClose}) => {
 
   return (
       <form onSubmit={onSubmit}>
-        <Box sx={{padding: 3, mb: 8}}>
+        <Box sx={{padding: 3, mb: 12}}>
           {pipeLineState?.map((pipeline, index) => {
-            if (pipeline.organizationProfilePipelineType !== 1 && pipeline.organizationProfilePipelineType !== 2) {
+            if (pipeline.organizationProfilePipelineType === 1) {
+              return null;
+            }
+            if (pipeline.organizationProfilePipelineType !== 2) {
               return (
                   <View key={index} mb={24} p={24} style={{background: style.BG_GRAY}}>
                     <div style={{display: "flex", justifyContent: "space-between"}}>

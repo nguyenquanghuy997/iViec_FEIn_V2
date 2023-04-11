@@ -20,6 +20,8 @@ import { RejectApplicantModal } from "../modals/RejectApplicantModal";
 import useRole from "@/hooks/useRole";
 import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
+import { PATH_DASHBOARD } from "@/routes/paths";
+import { useRouter } from "next/router";
 
 const ApplicantBottomNav = ({
   selectedList,
@@ -28,6 +30,8 @@ const ApplicantBottomNav = ({
   setSelectedList,
   itemSelected,
 }) => {
+  const router = useRouter();
+
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
@@ -162,16 +166,14 @@ const ApplicantBottomNav = ({
                       sx={{
                         marginRight: "16px",
                       }}
-                      href={
-                        "applicant/" +
-                        itemSelected[0]?.applicantId +
-                        "?co=" +
-                        itemSelected[0]?.correlationId +
-                        "&&or=" +
-                        itemSelected[0]?.organizationId +
-                        "&&re=" +
-                        itemSelected[0]?.recruitmentId
-                      }
+                      onClick={() => router.push({
+                        pathname: PATH_DASHBOARD.applicant.view(itemSelected[0]?.applicantId), query: {
+                          correlationId: itemSelected[0]?.correlationId,
+                          organizationId: itemSelected[0]?.organizationId,
+                          recruitmentId: itemSelected[0]?.recruitmentId,
+                          applicantId: itemSelected[0]?.applicantId,
+                        }
+                      }, undefined, { shallow: true })}
                     ><Iconify
                         icon={"ri:eye-2-line"}
                         width={20}
