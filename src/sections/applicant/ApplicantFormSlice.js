@@ -38,14 +38,14 @@ export const ApplicantFormSlice = createApi({
         params,
       }),
       providesTags: [{ type: 'APPLICANT', id: 'LIST' }],
-    }),                         // 1
+    }),
     getListColumnApplicants: builder.query({
       query: () => ({
         url: API_GET_COLUMN_APPLICANTS,
         method: "GET",
       }),
-      providesTags: [{ type: 'APPLICANT', id: 'LIST_COLUMN' }],     // 1
-    }),                   //
+      providesTags: [{ type: 'APPLICANT', id: 'LIST_COLUMN' }],
+    }),
     updateListColumnApplicants: builder.mutation({
       query: (data = {}) => {
         let { id, ...restData } = data;
@@ -55,8 +55,8 @@ export const ApplicantFormSlice = createApi({
           data: restData,
         };
       },
-      invalidatesTags: [{ type: 'APPLICANT', id: 'LIST_COLUMN' }],    // 1
-    }),             //
+      invalidatesTags: [{ type: 'APPLICANT', id: 'LIST_COLUMN' }],
+    }),
     updateApplicant: builder.mutation({
       query: (data) => ({
         url: `${API_UPDATE_APPLICANT}/${data.id}`,
@@ -64,7 +64,7 @@ export const ApplicantFormSlice = createApi({
         data: data,
       }),
     }),
-    getApplicantById: builder.query({                       //
+    getApplicantById: builder.query({
       query: ({applicantId}) => ({
         url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
         method: "GET",
@@ -175,7 +175,7 @@ export const ApplicantFormSlice = createApi({
         method: "POST",
         data: data,
       }),
-      invalidatesTags: ["GetListsApplicants"],
+      providesTags: [{ type: 'APPLICANT', id: 'LIST_FILTER' }],
     }),
     // new
     // get all applicant with filter

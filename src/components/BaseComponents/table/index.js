@@ -30,6 +30,7 @@ const DynamicColumnsTable = (props) => {
     useUpdateColumnsFunc,
     searchInside = true,
     createText = null,
+    searchTextHint,
     onClickCreate,
     headerProps,
     hideTable,
@@ -158,6 +159,7 @@ const DynamicColumnsTable = (props) => {
           isInside={false}
           createText={createText}
           onClickCreate={onClickCreate}
+          searchTextHint={searchTextHint}
           {...headerProps}
         />
       )}
