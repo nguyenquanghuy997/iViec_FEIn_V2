@@ -1,16 +1,13 @@
-import React, { useMemo, useState } from 'react'
-import { Box, IconButton, Link, Typography } from "@mui/material";
-import { get } from 'lodash';
+import React, {useEffect, useMemo, useState} from 'react'
+import {Box, IconButton, Link, Stack, Typography} from "@mui/material";
+import {get, isEmpty as _isEmpty} from 'lodash';
 import NextLink from "next/link";
-import { useForm } from "react-hook-form";
 import { OrganizationNameStyle } from "@/sections/organizationdetail/style";
 import Iconify from "@/components/Iconify";
 import { EmailIcon, MapIcon, PhoneIcon } from "@/sections/organizationdetail/component/Icon";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import OrganizationForm from "@/sections/organization/component/OrganizationForm";
-import OrganizationUserFilterModal from "@/sections/organizationdetail/component/OrganizationUserFilterModal";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
-import OrganizationDetailTableHeader from "@/sections/organizationdetail/component/OrganizationDetailTableHeader";
 import OrganizationCard from "@/sections/organizationdetail/component/OrganizationCard";
 import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -22,81 +19,82 @@ import {
 } from "@/sections/organization/component/Icon";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
-import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
+import {AddIcon, DeleteIcon, EditIcon} from "@/assets/ActionIcon";
 import OrganizationDetailUserForm from "@/sections/organizationdetail/component/OrganizationDetailUserForm";
-import { API_GET_RECRUITMENT_BY_ORGANIZATION } from "@/routes/api";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 import { useRouter } from "next/router";
-import { useDeleteUserMutation, useActiveUsersMutation } from "@/sections/organization/override/OverrideOrganizationSlice";
+import {
+  useDeleteUserMutation,
+  useActiveUsersMutation,
+  useGetOrganizationByIdQuery, useGetAllApplicantUserOrganizationByIdQuery, useGetListOrganizationWithChildQuery
+} from "@/sections/organization/override/OverrideOrganizationSlice";
 import { useSnackbar } from "notistack";
 import Switch from "@/components/form/Switch";
-
-const defaultValues = {
-  searchKey: "",
-};
+import {TBL_FILTER_TYPE} from "@/config";
+import {LIST_STATUS} from "@/utils/formatString";
+import TableHeader from "@/components/BaseComponents/table/TableHeader";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const columns = [
   {
-    dataIndex: "registrationTime",
+    dataIndex: "createdTime",
     title: "Ngày tham gia",
-    type: "date",
-    label: "Ngày tham gia",
-    name: "createdTime",
-    items: [
-      {
-        name: "createdTimeFrom",
-        type: "date",
-        placeholder: "Chọn ngày",
-        startIcon: <span>Từ</span>,
-        endIcon: <Iconify icon="material-symbols:calendar-today" />,
-      },
-      {
-        name: "createdTimeTo",
-        type: "date",
-        placeholder: "Chọn ngày",
-        startIcon: <span>Đến</span>,
-        endIcon: <Iconify icon="material-symbols:calendar-today" />,
-      },
-    ],
+    colFilters: {
+      type: TBL_FILTER_TYPE.RANGE_DATE,
+      name: ['StartTime', 'EndTime'],
+      placeholder: 'Chọn ngày',
+    },
   },
   {
-    dataIndex: "isActive",
+    dataIndex: "IsActivated",
     title: "Trạng thái",
-    name: "isActive",
-    type: "select",
-    label: "Trạng thái",
+    colFilters: {
+      type: TBL_FILTER_TYPE.SELECT,
+      placeholder: 'Tất cả',
+      options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+    }
   },
   {
     dataIndex: "creatorName",
-    title: "Người mời tham gia",
-    name: "creatorIds",
-    label: "Người mời",
-    placeholder: "Chọn 1 hoặc nhiều người",
-    type: "select",
-    multiple: true,
+    title: "Người tạo",
+    colFilters: {
+      type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+      name: "CreatorIds",
+      placeholder: "Chọn 1 hoặc nhiều người",
+      remoteUrl: API_GET_ORGANIZATION_USERS,
+      showAvatar: true
+    },
   },
-  {
-    dataIndex: "applicationUserRoleGroups",
-    title: "Vai trò",
-    name: "applicationUserRoleGroups",
-    label: "Vai trò",
-    placeholder: "Chọn 1 hoặc nhiều vai trò",
-    remoteUrl: API_GET_RECRUITMENT_BY_ORGANIZATION,
-    type: "select",
-    multiple: true,
-  },
-];
+]
 
-const OrganizationDetailContent = ({ organization, ListUser, ListOrganization }) => {
+const OrganizationDetailContent = () => {
   const router = useRouter();
-  const { asPath } = router;
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { query = { PageIndex: 1 }, isReady } = router;
+
+  const {data: organization = {}} = useGetOrganizationByIdQuery({
+    OrganizationId: query?.id
+  }, {skip: !query?.id});
+
+  const {data: {items: ListUser = []} = {}, isLoading: loadingUser} = useGetAllApplicantUserOrganizationByIdQuery({
+    OrganizationId: query?.id
+  }, {skip: !query?.id});
+
+  const {data: {items: ListOrganization = []} = {}} = useGetListOrganizationWithChildQuery();
 
   const [deleteUserMulti] = useDeleteUserMutation();
   const [activeUserMulti] = useActiveUsersMutation();
 
   const [selected, setSelected] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady])
+
+  if (loadingUser) return <LoadingScreen />;
 
   // modal redux
   const toggleFormUser = useSelector((state) => state.modalReducer.openForm);
@@ -116,34 +114,12 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
 
   const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
 
-  // const handleOpenForm = () => {
-  //   setIsOpen(true);
-  // }
-
   const handleCloseForm = () => {
     setIsOpen(false);
   }
 
-  const methods = useForm({
-    mode: "all",
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
-
-  // open filter form
-  const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [isOpenInviteForm, setIsOpenInviteForm] = useState(false);
   const [valueTabInviteForm, setValueTabInviteForm] = useState(0);
-
-  // filter modal
-  const handleOpenFilterForm = () => {
-    setIsOpenFilter(true);
-  };
-
-  const handleCloseFilterForm = () => {
-    setIsOpenFilter(false);
-  };
 
   const handleOpenListInvite = () => {
     setValueTabInviteForm(1)
@@ -154,19 +130,6 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
     setValueTabInviteForm(0)
     setIsOpenInviteForm(true)
   }
-
-  const onSubmitSearch = async (data) => {
-    return data;
-  };
-
-  const onSubmit = (data) => {
-    return router.push({
-      pathname: router.pathname,
-      query: {
-        isActive: data.isActive
-      },
-    }, asPath, { shallow: true })
-  };
 
   const handleSelected = (data) => {
     let findIndex = selected.map(i => i.id).indexOf(data.id);
@@ -261,6 +224,18 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
     }
     return selected[0].isActive;
   }, [selected]);
+
+  const onSubmitFilter = (values = {}, reset = false, timeout = 1) => {
+    if (reset && _isEmpty(router.query)) {
+      return;
+    }
+
+    setTimeout(() => {
+      router.push({
+        query: reset ? {} : { ...router.query, ...values },
+      }, undefined, { shallow: false });
+    }, timeout);
+  }
   
   return (
     <Box>
@@ -322,15 +297,33 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
       {/* End Sub info */}
       {/* Table */}
       <Box sx={{ mt: 2 }}>
-        <OrganizationDetailTableHeader
-          methods={methods}
-          isOpen={isOpenFilter}
-          onSubmit={onSubmitSearch}
-          handleSubmit={handleSubmit}
-          onOpenFilterForm={handleOpenFilterForm}
-          onCloseFilterForm={handleCloseFilterForm}
-          onOpenInviteForm={handleOpenInviteForm}
-          onOpenListInvite={handleOpenListInvite}
+        <TableHeader
+            columns={columns}
+            onSubmitFilter={onSubmitFilter}
+            // onClickCreate={(e) => handleOpenModel(e,null,"form")}
+            // createText={canEdit && "Thêm quy trình tuyển dụng"}
+            createText={'Thêm mẫu đánh giá'}
+            isInside={true}
+            actions={
+              <>
+                <Stack flexDirection="row" alignItems="center">
+                  <MuiButton
+                      title={"Danh sách mời"}
+                      color={"default"}
+                      onClick={handleOpenListInvite}
+                      startIcon={<Iconify icon="mdi:folder-upload-outline" />}
+                      sx={{ fontWeight: 550, marginRight: 1, "&:hover": { boxShadow: 'none' } }}
+                  />
+                  <MuiButton
+                      title={"Mời người dùng"}
+                      color={"primary"}
+                      onClick={handleOpenInviteForm}
+                      startIcon={<AddIcon />}
+                      sx={{ fontWeight: 550 }}
+                  />
+                </Stack>
+              </>
+            }
         />
         {ListUser.map((column, index) => {
           return <OrganizationCard
@@ -353,17 +346,7 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
         onClose={handleCloseForm}
         parentNode={organization}
       />
-      {/* Filer */}
-      {isOpenFilter &&
-        <OrganizationUserFilterModal
-          columns={columns}
-          isOpen={isOpenFilter}
-          onClose={handleCloseFilterForm}
-          onSubmit={onSubmit}
-        />
-      }
       {
-
         isOpenInviteForm && <OrganizationInviteForm
         ListOrganization={ListOrganization}
         isOpenInviteForm={isOpenInviteForm}
