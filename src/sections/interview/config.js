@@ -1,47 +1,47 @@
 export const CandidateState = (item) => {
   switch (item) {
     case 0: //"Draft"
-      return <span style={{ color: "#388E3C" }}>Ứng tuyển</span>;
+      return <span style={{color: "#388E3C"}}>Ứng tuyển</span>;
     case 1: //"WaitingOrganizationApproval":
-      return <span style={{ color: "#F77A0C" }}>Thi tuyển</span>;
+      return <span style={{color: "#F77A0C"}}>Thi tuyển</span>;
     case 2: //"OrganizationReject":
-      return <span style={{ color: "#E53935" }}>Kết thúc thi tuyển</span>;
+      return <span style={{color: "#E53935"}}>Kết thúc thi tuyển</span>;
     case 3: //"WaitingMedusaApproval":
-      return <span style={{ color: "#F77A0C" }}>Hết hạn</span>;
+      return <span style={{color: "#F77A0C"}}>Hết hạn</span>;
     case 4: //"MedusaReject":
-      return <span style={{ color: "#E53935" }}>Đạt</span>;
+      return <span style={{color: "#E53935"}}>Đạt</span>;
     case 5: //"Recruiting":
-      return <span style={{ color: "#388E3C" }}>Không đạt</span>;
+      return <span style={{color: "#388E3C"}}>Không đạt</span>;
     case 6: //"Calendared":
-      return <span style={{ color: "#388E3C" }}>Đang lên lịch</span>;
+      return <span style={{color: "#388E3C"}}>Đang lên lịch</span>;
     case 7: //"Expired":
-      return <span style={{ color: "#455570" }}>Chấp nhận</span>;
+      return <span style={{color: "#455570"}}>Chấp nhận</span>;
     case 8: //"Closed":
-      return <span style={{ color: "#E53935" }}>Từ chối</span>;
+      return <span style={{color: "#E53935"}}>Từ chối</span>;
     case 9: //"Draft"
-      return <span style={{ color: "#455570" }}>Đang phỏng vấn</span>;
+      return <span style={{color: "#455570"}}>Đang phỏng vấn</span>;
     case 10: //"WaitingOrganizationApproval":
-      return <span style={{ color: "#F77A0C" }}>Kết thúc phỏng vấn</span>;
+      return <span style={{color: "#F77A0C"}}>Kết thúc phỏng vấn</span>;
     case 11: //"OrganizationReject":
-      return <span style={{ color: "#E53935" }}>Hết hạn phỏng vấn</span>;
+      return <span style={{color: "#E53935"}}>Hết hạn phỏng vấn</span>;
     case 12: //"WaitingMedusaApproval":
-      return <span style={{ color: "#F77A0C" }}>Phỏng vấn với máy</span>;
+      return <span style={{color: "#F77A0C"}}>Phỏng vấn với máy</span>;
     case 13: //"MedusaReject":
       return (
-        <span style={{ color: "#E53935" }}>Kết thúc phỏng vấn với máy</span>
+        <span style={{color: "#E53935"}}>Kết thúc phỏng vấn với máy</span>
       );
     case 14: //"Recruiting":
-      return <span style={{ color: "#388E3C" }}>Kết quả đạt</span>;
+      return <span style={{color: "#388E3C"}}>Kết quả đạt</span>;
     case 15: //"Calendared":
-      return <span style={{ color: "#388E3C" }}>Kết quả cân nhắc</span>;
+      return <span style={{color: "#388E3C"}}>Kết quả cân nhắc</span>;
     case 16: //"Expired":
-      return <span style={{ color: "#455570" }}>Kết quả loại</span>;
+      return <span style={{color: "#455570"}}>Kết quả loại</span>;
     case 17: //"Closed":
-      return <span style={{ color: "#455570" }}>Mời nhận việc</span>;
+      return <span style={{color: "#455570"}}>Mời nhận việc</span>;
     case 18: //"Expired":
-      return <span style={{ color: "#455570" }}>Từ chối nhận việc</span>;
+      return <span style={{color: "#455570"}}>Từ chối nhận việc</span>;
     case 19: //"Closed":
-      return <span style={{ color: "#455570" }}>Đồng ý nhận việc</span>;
+      return <span style={{color: "#455570"}}>Đồng ý nhận việc</span>;
   }
 };
 
@@ -63,6 +63,27 @@ export const toHhMmSs = (num) => {
   return hours + ":" + minutes + ":" + seconds;
 };
 
+export const pushMin = (time, hour) => {
+  let times = time.split(":");
+  hour = hour % (24 * 60);
+  times[0] = (parseInt(times[0])) + parseInt(hour / 60);
+  times[1] = parseInt(times[1]) + hour % 60;
+  if (times[1] >= 60) {
+    times[1] = 0;
+    times[0]++
+  }
+  times[0] >= 24 ? times[0] -= 24 : null;
+  times[0] < 10 ? times[0] = "0" + times[0] : null;
+  times[1] < 10 ? times[1] = "0" + times[1] : null;
+  
+  return times.join(":");
+}
+
+export const timeToMinutes = (time) => {
+  let a = time.split(':');
+  return (+a[0]) * 60 + (+a[1]);
+};
+
 export const convertDurationTimeToSeconds = (time) => {
   const splitToString = time?.split(":");
   return (
@@ -78,3 +99,23 @@ export const convertStoMs = (s) => {
   const minutes = totalMinutes % 60;
   return `${hours}:${minutes}:${newSeconds}`;
 };
+
+export const convertDataGet = (model) => {
+  if (!model) return "";
+  return model.map(item => {
+    return {
+      ...item, bookingCalendarApplicants: item?.bookingCalendarApplicants.map(itemData => {
+        let dataDuration = timeToMinutes(itemData.interviewDuration);
+        let dataDate = new Date(itemData.interviewTime);
+        let dataTime = new Date(itemData.interviewTime).toLocaleTimeString('vi-VN', {hour12: false});
+        return {
+          ...itemData,
+          date: dataDate,
+          interviewTime: dataTime,
+          interviewDuration: dataDuration,
+        };
+      })
+    };
+  });
+  
+}

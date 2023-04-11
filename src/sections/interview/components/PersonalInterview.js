@@ -4,7 +4,7 @@ import { Label } from "@/components/hook-form/style";
 import { useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery } from "@/sections/applicant/ApplicantFormSlice";
 import {
   useGetReviewFormQuery,
-  useLazyGetRelateCalendarQuery,
+  useLazyGetRelateCalendarQuery
 } from "@/sections/interview/InterviewSlice";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
@@ -15,28 +15,26 @@ import { useFormContext } from "react-hook-form";
 
 const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
   const { resetField, watch, setValue } = useFormContext();
-  const { data: { items: dataRecruitment = [] } = {} } = useGetRecruitmentsQuery({
-    PageIndex: 1,
-    PageSize: 20,
-  });
-  const {palette} = useTheme();
-  
-  const [getPipeline, {data: {items: ListStep = []} = {}}] =
+  const { data: { items: dataRecruitment = [] } = {} } = useGetRecruitmentsQuery({ processStatuses: [5, 7] });
+
+  const { palette } = useTheme();
+
+  const [getPipeline, { data: { items: ListStep = [] } = {} }] =
     useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
 
   const [getRelateCalendar, { data: relateCalendar }] =
     useLazyGetRelateCalendarQuery();
-  const {data: {items: DataForm = []} = {}} = useGetReviewFormQuery();
-  
+  const { data: { items: DataForm = [] } = {} } = useGetReviewFormQuery();
+
   const interviewType = [
     {
       value: 0,
-      label: "Online",
+      label: "Online"
     },
     {
       value: 1,
-      label: "Trực tiếp",
-    },
+      label: "Trực tiếp"
+    }
   ];
 
   const changeRecruitment = (e) => {
@@ -49,28 +47,33 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
     resetField("bookingCalendarGroups");
   };
 
-  const changePipelineRecruitment = async (e) => {
-    await getRelateCalendar({ RecruitmentPipelineStateId: e });
-    setValue("reviewFormId", relateCalendar?.reviewFormId);
+  const changePipelineRecruitment = (e) => {
+    getRelateCalendar({ RecruitmentPipelineStateId: e });
   };
+
   useEffect(() => {
     if (option) {
       setValue("recruitmentId", option?.id);
       getPipeline({ RecruitmentId: option?.id });
       getRelateCalendar({
-        RecruitmentPipelineStateId: currentApplicantPipelineState,
+        RecruitmentPipelineStateId: currentApplicantPipelineState
       });
     }
   }, [!option]);
 
   useEffect(() => {
     if (!item?.id) return;
-    getPipeline({RecruitmentId: item?.recruitmentId});
+    getPipeline({ RecruitmentId: item?.recruitmentId });
     getRelateCalendar({
-      RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
+      RecruitmentPipelineStateId: item?.recruitmentPipelineStateId
     });
   }, [item]);
-  
+
+  useEffect(() => {
+    if (!relateCalendar) return;
+    setValue("reviewFormId", relateCalendar?.reviewFormId);
+  }, [relateCalendar]);
+
   return (
     <Grid>
       <Grid mb={3}>
@@ -92,12 +95,12 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
           options={dataRecruitment.map((i) => ({
             value: i?.id,
             label: i?.name,
-            name: i?.name,
+            name: i?.name
           }))}
           name="recruitmentId"
           multiple={false}
           placeholder="Chọn tin tuyển dụng"
-          disabled={option || item?.recruitmentId ? true : false}
+          disabled={!!(option || item?.recruitmentId)}
           onChange={changeRecruitment}
         />
       </Grid>
@@ -114,10 +117,10 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
               ListStep.filter((item) => item.pipelineStateType === 2)?.map(
                 (i) => ({
                   value: i.id,
-                  label: PipelineStateType(i.pipelineStateType),
+                  label: PipelineStateType(i.pipelineStateType)
                 })
               ) || {
-                value: option.currentApplicantPipelineState,
+                value: option.currentApplicantPipelineState
               }
             }
             name="recruitmentPipelineStateId"
@@ -125,11 +128,9 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
             placeholder="Chọn bước phỏng vấn"
             required
             disabled={
-              currentApplicantPipelineState ||
-              item?.recruitmentPipelineStateId ||
-              !watch("recruitmentId")
-                ? true
-                : false
+              !!(currentApplicantPipelineState ||
+                item?.recruitmentPipelineStateId ||
+                !watch("recruitmentId"))
             }
             onChange={changePipelineRecruitment}
           />
@@ -160,10 +161,12 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
           <TextAreaDS
             placeholder="Nhập nội dung lưu ý..."
             name={"onlineInterviewAddress"}
-            style={{ height: "80px",  resize: "none", '&.ant-input-data-count':{
-              display:'none'
-            } }}
-            
+            style={{
+              height: "80px", resize: "none", "&.antInputDataCount": {
+                display: "none"
+              }
+            }}
+
           />
         </Grid>
       )}
@@ -199,12 +202,11 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
         <RHFSelect
           options={DataForm.map((i) => ({
             value: i.id,
-            label: i.name,
+            label: i.name
           }))}
-          required
           name="reviewFormId"
           placeholder="Chọn mẫu đánh giá"
-          // disabled={item?.reviewFormId || relateCalendar?.reviewFormId ? true : false}
+          disabled={!!(item?.reviewFormId || relateCalendar?.reviewFormId)}
           multiple={false}
         />
       </Grid>

@@ -22,6 +22,7 @@ import { HeaderStyle } from './styles';
 export default function TableHeader({
   columns = [],
   createText = null,
+  searchTextHint = 'Tìm kiếm...',
   onClickCreate,
   onSubmitFilter,
   isInside,
@@ -59,7 +60,7 @@ export default function TableHeader({
                     </InputAdornment>
                   )
                 }}
-                placeholder="Tìm kiếm..."
+                placeholder={searchTextHint}
                 className="search-input"
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
