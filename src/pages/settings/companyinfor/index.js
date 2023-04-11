@@ -34,18 +34,19 @@ export default function Setting() {
           width: "100%",
           display: "flex",
           justifyContent: "space-between",
+          alignItems: 'center',
           py: 3,
           pt: 0,
         }}
       >
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" mb={0}>
           Thông tin công ty và cấu hình trang công ty
         </Typography>
         <Box>
           <MuiButton
             variant="outlined"
             title={"Xem trang công ty"}
-            sx={{ fontWeight: 600 }}
+            sx={{ fontWeight: 600, padding:'5px 12px' }}
             target="_blank"
             href={DOMAIN_OUTSIDE + "organizations/" + Data?.slug}
           />

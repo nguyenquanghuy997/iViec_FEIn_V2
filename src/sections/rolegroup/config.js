@@ -33,18 +33,18 @@ export const TYPES = [
       'ViewJob',
       'AddEditDeleteJob',
       'AddEditDeleteInterviewSchedule',
-      'SendOfferMail',
+      // 'SendOfferMail',
       'ApproveJob',
     ],
   },
-  {
-    name: CAMPAIGN,
-    actions: [
-      "ViewCampaign",
-      "AddEditDeleteCampaign",
-      "ApproveCampaign",
-    ],
-  },
+  // {
+  //   name: CAMPAIGN,
+  //   actions: [
+  //     "ViewCampaign",
+  //     "AddEditDeleteCampaign",
+  //     "ApproveCampaign",
+  //   ],
+  // },
   {
     name: INTERVIEW_SCHEDULE,
     actions: [
@@ -57,12 +57,12 @@ export const TYPES = [
     name: CANDIDATE_STORE,
     actions: [],
   },
-  {
-    name: REPORT,
-    actions: [
-      'ViewReport',
-    ],
-  },
+  // {
+  //   name: REPORT,
+  //   actions: [
+  //     'ViewReport',
+  //   ],
+  // },
   {
     name: COMPANY_INFO,
     actions: [
@@ -108,45 +108,45 @@ export const TYPES = [
       'AddEditDeleteRecruitmentProcess',
     ],
   },
-  {
-    name: APPROVE_PROCESS,
-    actions: [
-      'ViewApprovalProcess',
-      'AddEditDeleteApprovalProcess',
-    ],
-  },
-  {
-    name: COMPETITION,
-    actions: [
-      'ViewQuestion',
-      'AddEditDeleteQuestion',
-      'ViewExam',
-      'AddEditDeleteExam',
-      'ReportExamQuestion',
-    ],
-  },
-  {
-    name: OFFER_TEMPLATE,
-    actions: [
-      'ViewOfferTemplate',
-      'AddEditDeleteOfferTemplate',
-      'ApproveOfferTemplate',
-    ],
-  },
-  {
-    name: AUTOMAIL,
-    actions: [
-      'ViewEmail',
-      'AddEditDeleteEmail',
-    ],
-  },
-  {
-    name: CONNECT,
-    actions: [
-      'ViewConnect',
-      'AddStopConnect',
-    ],
-  },
+  // {
+  //   name: APPROVE_PROCESS,
+  //   actions: [
+  //     'ViewApprovalProcess',
+  //     'AddEditDeleteApprovalProcess',
+  //   ],
+  // },
+  // {
+  //   name: COMPETITION,
+  //   actions: [
+  //     'ViewQuestion',
+  //     'AddEditDeleteQuestion',
+  //     'ViewExam',
+  //     'AddEditDeleteExam',
+  //     'ReportExamQuestion',
+  //   ],
+  // },
+  // {
+  //   name: OFFER_TEMPLATE,
+  //   actions: [
+  //     'ViewOfferTemplate',
+  //     'AddEditDeleteOfferTemplate',
+  //     'ApproveOfferTemplate',
+  //   ],
+  // },
+  // {
+  //   name: AUTOMAIL,
+  //   actions: [
+  //     'ViewEmail',
+  //     'AddEditDeleteEmail',
+  //   ],
+  // },
+  // {
+  //   name: CONNECT,
+  //   actions: [
+  //     'ViewConnect',
+  //     'AddStopConnect',
+  //   ],
+  // },
 ];
 
 export const getActionName = (action) => {

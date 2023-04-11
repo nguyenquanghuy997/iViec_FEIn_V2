@@ -82,7 +82,7 @@ export const API_GET_ROLE_GROUP = '/identity/RoleGroup/GetRoleGroup';
 export const API_UPDATE_ROLE_GROUP = '/identity/RoleGroup/UpdateRoleGroup'
 export const API_REMOVE_ROLE_GROUP ='/Identity/RoleGroup/RemoveRoleGroups'
 export const API_GET_COLUMN_ROLE = "/aggregator/OrganizationRoleVisible/GetOrganizationsRoleVisible";
-export const API_UPDATE_COLUMN_ROLE = "/aggregator/OrganizationPositionVisible/UpdateOrganizationRoleVisible";
+export const API_UPDATE_COLUMN_ROLE = "/aggregator/OrganizationRoleVisible/UpdateOrganizationRoleVisible";
 export const API_SET_ACTIVE_ROLE_GROUP = '/identity/RoleGroup/SetRoleGroupsActive';
 
 // Thông tin công ty
@@ -129,8 +129,8 @@ export const API_SET_ORGANIZATION_PIPELINE_ACTIVE = "/organization/OrganizationP
 export const API_ADD_PIPELINE = "organization/OrganizationPipeline/CreateOrganizationPipeline";//new
 export const API_UPDATE_PIPELINE = "organization/OrganizationPipeline/UpdateOrganizationPipeline";//new
 export const API_DELETE_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipelines";//new
-export const API_GET_COLUMN_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipelines";//new
-export const API_UPDATE_COLUMN_PIPELINE = "organization/OrganizationPipeline/RemoveOrganizationPipelines";//new
+export const API_GET_COLUMN_PIPELINE = "aggregator/RecruitmentProcessingVisible/GetRecruitmentProcessingVisible";//cột
+export const API_UPDATE_COLUMN_PIPELINE = "aggregator/RecruitmentProcessingVisible/UpdateRecruitmentProcessingVisible";//update cột
 
 // API Application page
 // recruitment tin tuyển dụng

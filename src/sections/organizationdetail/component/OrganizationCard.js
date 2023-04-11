@@ -79,7 +79,7 @@ const OrganizationCard = (
                         {item?.applicationUserRoleGroups[0]?.name}
                     </CardUserFormItemContentStyle>
                     {
-                        item?.organizations?.length == 0 ?
+                        item?.organizations?.length == 1 ?
                             <Box
                                 sx={{ padding: '5px 8px', ml: 1, backgroundColor: '#EFF3F6', borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
                             >

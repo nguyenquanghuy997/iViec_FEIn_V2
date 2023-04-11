@@ -17,7 +17,7 @@ export const CandidateState = (item) => {
     case 7: //"Expired":
       return <span style={{ color: "#455570" }}>Chấp nhận</span>;
     case 8: //"Closed":
-      return <span style={{ color: "#455570" }}>Từ chối</span>;
+      return <span style={{ color: "#E53935" }}>Từ chối</span>;
     case 9: //"Draft"
       return <span style={{ color: "#455570" }}>Đang phỏng vấn</span>;
     case 10: //"WaitingOrganizationApproval":
@@ -64,9 +64,9 @@ export const toHhMmSs = (num) => {
 };
 
 export const convertDurationTimeToSeconds = (time) => {
-  const splitToString = time.split(":");
+  const splitToString = time?.split(":");
   return (
-    +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
+    +splitToString?.[0] * 60 * 60 + +splitToString?.[1] * 60 + +splitToString?.[2]
   );
 };
 

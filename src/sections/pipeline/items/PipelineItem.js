@@ -1,5 +1,5 @@
 import {
-  useGetAllPipelineQuery,
+  useGetAllPipelineQuery, useGetListColumnsQuery, useUpdateListColumnApplicantsMutation,
   // useGetListColumnsQuery,
   // useUpdateListColumnApplicantsMutation,
 } from "../PipelineFormSlice";
@@ -190,7 +190,13 @@ export const PipelineItem = () => {
   };
   return (
     <View>
-      <Content sx={{ padding: "0 !important" }}>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
@@ -202,8 +208,8 @@ export const PipelineItem = () => {
           nodata="Hiện chưa có quy trình tuyển dụng nào"
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          // useGetColumnsFunc={useGetListColumnsQuery}
-          // useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+          useGetColumnsFunc={useGetListColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
           createText={canEdit && "Thêm quy trình tuyển dụng"}
           onClickCreate={() => {
             setShowForm(true);
