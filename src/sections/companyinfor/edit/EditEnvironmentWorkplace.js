@@ -18,6 +18,7 @@ import {DOMAIN_SERVER_API} from "@/config";
 import {TextAreaDS} from "@/components/DesignSystem";
 import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {get, isEmpty} from "lodash";
 
 const EditEnvironmentWorkplace = ({data, onClose}) => {
 
@@ -26,8 +27,8 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
         const {enqueueSnackbar} = useSnackbar();
 
         const defaultValues = {
-            organizationWorkingEnvironments: data?.organizationWorkingEnvironments?.map(item => ({
-                image: item.image,
+            organizationWorkingEnvironments: isEmpty(get(data, 'organizationWorkingEnvironments')) ? [] : data?.organizationWorkingEnvironments?.map(item => ({
+                image: item.image ? item.image : '',
                 imagePreview: '',
                 name: item.name,
                 description: item.description
@@ -50,11 +51,11 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
 
         const organizationWorkingEnvironments = useWatch({ control, name: 'organizationWorkingEnvironments' });
         const onSubmit = async (formData) => {
-            const imageData = formData.organizationWorkingEnvironments?.filter(item => item.image !== null && typeof item.image === 'object')?.map(item => item.image?.[0]);
+            const imageData = formData?.organizationWorkingEnvironments?.filter(item => item.image !== null && typeof item.image === 'object')?.map(item => item.image?.[0]);
             if (imageData.length === 0) {
                 const body = {
                     organizationId: data?.id,
-                    organizationWorkingEnvironments: formData.organizationWorkingEnvironments.map(item => ({
+                    organizationWorkingEnvironments: formData?.organizationWorkingEnvironments?.map(item => ({
                         image: item.image,
                         name: item.name,
                         description: item.description,
@@ -87,12 +88,12 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                     if (imageRes) {
                         let dataSubmit = [];
                         let counter = 0;
-                        for (let i = 0; i < formData.organizationWorkingEnvironments.length; i++) {
-                            if (typeof formData.organizationWorkingEnvironments[i].image === 'string') {
-                                dataSubmit.push({...formData.organizationWorkingEnvironments[i]})
+                        for (let i = 0; i < formData?.organizationWorkingEnvironments?.length; i++) {
+                            if (typeof formData?.organizationWorkingEnvironments[i]?.image === 'string') {
+                                dataSubmit.push({...formData?.organizationWorkingEnvironments[i]})
                             } else {
                                 dataSubmit.push({
-                                    ...formData.organizationWorkingEnvironments[i],
+                                    ...formData?.organizationWorkingEnvironments[i],
                                     image: imageRes.map(item => item.data)[counter]
                                 })
                                 counter++;
@@ -124,7 +125,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
 
         useEffect(async () => {
             if (!data) return;
-            setValue("organizationWorkingEnvironments", data?.organizationWorkingEnvironments);
+            setValue("organizationWorkingEnvironments", data?.organizationWorkingEnvironments?.map(item => ({ ...item, image: item.image ? item.image : '' })));
         }, [data]);
 
         const handleDrag = ({source, destination}) => {
@@ -186,14 +187,6 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                                 <RiImageFill color={"#8A94A5"} size={'1.25em'}/>
                                                                             </Box>
                                                                         )
-                                                                        // <Image
-                                                                        //     disabledEffect
-                                                                        //     visibleByDefault
-                                                                        //     src={'/assets/placeholder.png'}
-                                                                        //     id={index}
-                                                                        //     alt="image"
-                                                                        //     sx={{border: "1px dashed #1976D2", height: 400}}
-                                                                        // />
                                                                     }
                                                                     <Box sx={{
                                                                         display: "flex",
@@ -244,7 +237,12 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                         title={"Thêm môi trường làm việc"}
                         variant="outlined"
                         onClick={() => {
-                            append({...defaultValues});
+                            append({
+                              image: '',
+                              imagePreview: '',
+                              name: '',
+                              description: ''
+                            });
                         }}
                         fullWidth
                         startIcon={<PlusIcon/>}
