@@ -107,11 +107,10 @@ const OrganizationContent = () => {
         let valueCodeToEng = convertViToEn(node?.code)?.toLowerCase();
         let valueQueryToEng = convertViToEn(query)?.toLowerCase();
         let isMatching = valueNameToEng?.indexOf(valueQueryToEng) > -1 || valueCodeToEng?.indexOf(valueQueryToEng) > -1;
-
         if (isMatching) return true;
         if (isLeaf) return false;
-
         const subtree = filterBy(node.children, query);
+        node.children = subtree;
         return Boolean(subtree.length);
       })
     }

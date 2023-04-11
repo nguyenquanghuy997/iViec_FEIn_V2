@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import PipelineTable from "./RolegroupTable";
 import { TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/DesignSystem/FlexStyled";
@@ -15,27 +15,31 @@ import { pick as _pick } from 'lodash';
 
 const InputStyle = { width: "100%", minHeight: 44 };
 
-const RolegroupForm = ({ role, ...methods }) => {
+const RolegroupForm = ({ role, selectedItem, ...methods }) => {
   const { setValue, formState: { errors } } = methods;
+  const _timeoutInit = useRef();
 
   const actions = useMemo(() => {
-    if (!role || !role.identityRoles || role.identityRoles.length < 1) {
+    if (!selectedItem || !role || !role.identityRoles || role.identityRoles.length < 1) {
       return [];
     }
     return role.identityRoles.map(r => r.name)
-  }, [role]);
+  }, [role, selectedItem]);
 
   useEffect(() => {
-    if (!role) {
+    if (!role || !selectedItem) {
       return;
     }
 
-    let fieldValues = _pick(role, ['id', 'name', 'description', 'isActivated']);
-    for (let f in fieldValues) {
-      setValue(f, fieldValues[f]);
-    }
-    setValue('identityRoles', role.identityRoles?.map(ac => ac.name));
-  }, [role]);
+    clearTimeout(_timeoutInit.current);
+    _timeoutInit.current = setTimeout(() => {
+      let fieldValues = _pick(role, ['id', 'name', 'description', 'isActivated']);
+      for (let f in fieldValues) {
+        setValue(f, fieldValues[f]);
+      }
+      setValue('identityRoles', role.identityRoles?.map(ac => ac.name));
+    }, 300);
+  }, [role, selectedItem]);
 
   return (
     <Box>

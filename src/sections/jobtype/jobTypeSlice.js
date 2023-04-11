@@ -87,14 +87,14 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
       invalidatesTags: ["JobPosition"],
     }),
     //settings
-    getListColumns: builder.query({
+    getListJobColumns: builder.query({
       query: () => ({
         url: API_GET_COLUMN_JOBTYPE,
         method: "GET",
       }),
       providesTags: ["GetColumn"],
     }),
-    updateListColumns: builder.mutation({
+    updateListJobColumns: builder.mutation({
       query: (data) => {
         const { id, ...restData } = data;
         return {
@@ -117,6 +117,6 @@ export const {
   useDeleteJobTypeMutation,
   useAddJobTypeMutation,
   useUpdateJobTypeMutation,
-  useGetListColumnsQuery,
-  useUpdateListColumnsMutation
+  useGetListJobColumnsQuery,
+  useUpdateListJobColumnsMutation
 } = evaluationFormSlice;

@@ -281,10 +281,9 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                 expanded={expanded}
             >
 
-                {treeData && treeData?.map(item => renderTree({ ...item, isRoot: true }))}
-
+                {treeData && treeData.length > 0 && treeData?.map(item => renderTree({ ...item, isRoot: true }))}
                 {
-                    treeData && canEditUnit && <ButtonTreeStyle
+                    treeData && treeData.length > 0 && canEditUnit && <ButtonTreeStyle
                         onClick={() => {
                             handleOpenFormWithCurrentNode(dataRoot);
                             setActionType(0)
@@ -297,14 +296,14 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                 }
 
                 {
-                    !treeData && <div style={{ margin: "40px 0", minHeight: "250px", textAlign: 'center' }}>
+                    (!treeData || treeData.length == 0) && <div style={{ margin: "40px 0", minHeight: "250px", textAlign: 'center' }}>
                         <img
                             src={`/assets/icons/candidate/notfound.png`}
                             style={{ margin: "0 auto" }}
                         />
                         <p>Hiện chưa có đơn vị nào trực thuộc công ty của bạn</p>
                         {
-                            canEditUnit && <div style={{display: 'flex', justifyContent: 'center', marginTop: '24px'}}>
+                            canEditUnit && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
                                 <MuiButton
                                     title={"Thêm đơn vị"}
                                     onClick={() => {

@@ -116,6 +116,7 @@ export const API_KEY_EDITOR =
   "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189";
 
 export const PERMISSIONS = {
+  IVIEC_ADMIN: 'IViecAdmin',
   ADMINISTRATOR: "Administrator",
   VIEW_CDD: "ViewCandidate",
   ADD_EDIT_CDD: "AddEditCandidate",

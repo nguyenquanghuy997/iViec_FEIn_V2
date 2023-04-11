@@ -75,6 +75,7 @@ export const filterBy = (tree, query) => {
     if (isLeaf) return false;
 
     const subtree = filterBy(node.children, query);
+    node.children = subtree;
     return Boolean(subtree.length);
   })
 }

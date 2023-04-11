@@ -14,12 +14,14 @@ import {
   YearOfExperience,
 } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
-import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
+import { Box, Divider, Drawer, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { RejectApplicantModal } from "../modals/RejectApplicantModal";
 import useRole from "@/hooks/useRole";
 import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
+import { PATH_DASHBOARD } from "@/routes/paths";
+import { useRouter } from "next/router";
 
 const ApplicantBottomNav = ({
   selectedList,
@@ -28,6 +30,8 @@ const ApplicantBottomNav = ({
   setSelectedList,
   itemSelected,
 }) => {
+  const router = useRouter();
+
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
@@ -157,82 +161,88 @@ const ApplicantBottomNav = ({
                   }
                 />
                 {
-                  canEdit && <ButtonIcon
-                    sx={{
-                      marginRight: "16px",
-                    }}
-                    href={
-                      "applicant/" +
-                      itemSelected[0]?.applicantId +
-                      "?co=" +
-                      itemSelected[0]?.correlationId +
-                      "&&or=" +
-                      itemSelected[0]?.organizationId +
-                      "&&re=" +
-                      itemSelected[0]?.recruitmentId
-                    }
-                    icon={
-                      <Iconify
+                  canEdit && <Tooltip title='Xem'>
+                    <IconButton
+                      sx={{
+                        marginRight: "16px",
+                      }}
+                      onClick={() => router.push({
+                        pathname: PATH_DASHBOARD.applicant.view(itemSelected[0]?.applicantId), query: {
+                          correlationId: itemSelected[0]?.correlationId,
+                          organizationId: itemSelected[0]?.organizationId,
+                          recruitmentId: itemSelected[0]?.recruitmentId,
+                          applicantId: itemSelected[0]?.applicantId,
+                        }
+                      }, undefined, { shallow: true })}
+                    ><Iconify
                         icon={"ri:eye-2-line"}
                         width={20}
                         height={20}
                         color="#5C6A82"
-                      />
-                    }
-                  />
+                      /></IconButton>
+                  </Tooltip>
+
                 }
 
 
                 {
-                  canEdit && <ButtonIcon
-                    sx={{
-                      marginRight: "16px",
-                    }}
-                    onClick={() => handleOpenEditForm()}
-                    icon={
+                  canEdit &&
+                  <Tooltip title='Chỉnh sửa'>
+                    <IconButton
+                      sx={{
+                        marginRight: "16px",
+                      }}
+                      onClick={() => handleOpenEditForm()}
+                    >
                       <Iconify
                         icon={"ri:edit-2-fill"}
                         width={20}
                         height={20}
                         color="#5C6A82"
                       />
-                    }
-                  />
+                    </IconButton>
+                  </Tooltip>
+
                 }
 
                 {
-                  canEdit && <ButtonIcon
-                    sx={{
-                      marginRight: "16px",
-                    }}
-                    onClick={() => handleShowConfirmMultiple("tranferRe")}
-                    icon={
+                  canEdit &&
+                  <Tooltip title='Thêm vào tin tuyển dụng'>
+                    <IconButton
+                      sx={{
+                        marginRight: "16px",
+                      }}
+                      onClick={() => handleShowConfirmMultiple("tranferRe")}
+                    >
                       <Iconify
                         icon={"ri:share-forward-2-fill"}
                         width={20}
                         height={20}
                         color="#5C6A82"
                       />
-                    }
-                  />
+                    </IconButton>
+                  </Tooltip>
                 }
 
               </>
             )}
             {
-              canEdit && canView && <ButtonIcon
-                sx={{
-                  marginRight: "16px",
-                }}
-                onClick={() => exportExcel(itemSelected)}
-                icon={
+              canEdit && canView &&
+              <Tooltip title='Excel'>
+                <IconButton
+                  sx={{
+                    marginRight: "16px",
+                  }}
+                  onClick={() => exportExcel(itemSelected)}
+                >
                   <Iconify
                     icon={"vscode-icons:file-type-excel"}
                     width={20}
                     height={20}
                   />
-                }
-              />
+                </IconButton>
+              </Tooltip>
+
             }
 
           </Stack>

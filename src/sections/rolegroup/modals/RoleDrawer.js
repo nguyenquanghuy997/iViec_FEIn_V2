@@ -62,6 +62,7 @@ export default function DrawerEdit({ selectedItem, onClose, ...props }) {
 
   return (
     <DrawerEditForm
+      key='role_edit'
       title={editRole ? 'Sửa vai trò' : 'Thêm mới vai trò'}
       onSubmit={onSubmit}
       onClose={onClose}
@@ -84,6 +85,7 @@ export default function DrawerEdit({ selectedItem, onClose, ...props }) {
       {...props}
     >
       <RolegroupForm
+        selectedItem={selectedItem}
         role={editRole}
         onClose={onClose}
       />

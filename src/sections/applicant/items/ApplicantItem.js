@@ -28,7 +28,7 @@ import {
   API_GET_APPLICANT_SKILLS,
 } from "@/routes/api";
 import TextMaxLine from "@/components/TextMaxLine";
-import {PATH_DASHBOARD} from "@/routes/paths";
+import { PATH_DASHBOARD } from "@/routes/paths";
 
 export const ApplicantItem = ({
   hideTable,
@@ -61,17 +61,19 @@ export const ApplicantItem = ({
         width: "220px",
         // render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
         render: (item, record) => (
-            <TextMaxLine
-                sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
-                onClick={() => router.push({pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
-                    correlationId: record?.correlationId,
-                    organizationId: record?.organizationId,
-                    recruitmentId: record?.recruitmentId,
-                    applicantId: record?.applicantId,
-                  }}, undefined, { shallow: true })}
-            >
-              {item}
-            </TextMaxLine>
+          <TextMaxLine
+            sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
+            onClick={() => router.push({
+              pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
+                correlationId: record?.correlationId,
+                organizationId: record?.organizationId,
+                recruitmentId: record?.recruitmentId,
+                applicantId: record?.applicantId,
+              }
+            }, undefined, { shallow: true })}
+          >
+            {item}
+          </TextMaxLine>
         ),
       },
       {
@@ -83,7 +85,7 @@ export const ApplicantItem = ({
       {
         dataIndex: "dateOfBirth",
         title: "Ngày sinh",
-        render: (date) => fDate(date),
+        render: (date) => date ? fDate(date) : '',
         width: "120px",
       },
       {
@@ -427,6 +429,7 @@ export const ApplicantItem = ({
           searchInside={false}
           headerProps={headerProps}
           hideTable={hideTable}
+          searchTextHint = 'Tìm kiếm theo họ tên, email, SĐT ứng viên...'
         />
       </View>
 

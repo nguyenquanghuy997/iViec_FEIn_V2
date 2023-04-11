@@ -34,6 +34,7 @@ export default function FilterModal({
 
   return (
     <DrawerEditForm
+      key={'drawer_filter'}
       title="Bộ lọc"
       okText="Áp dụng"
       cancelText="Bỏ lọc"
@@ -56,7 +57,7 @@ export default function FilterModal({
       cancelCallback={() => {
         handleSubmit({}, true);
       }}
-      variant="persistent"
+      // variant="persistent"
       className="drawer-filter"
       width={400}
       {...props}

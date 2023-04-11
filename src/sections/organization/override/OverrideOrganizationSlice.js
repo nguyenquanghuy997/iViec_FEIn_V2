@@ -17,44 +17,19 @@ import {
   API_USER_CONFIRM_INVITE
 } from "@/routes/api";
 import {createApi} from '@reduxjs/toolkit/query/react'
-import axios from "axios";
-import {DOMAIN_SERVER_API} from "@/config";
-const axiosBaseQuery = () => async ({url, method, data, params, headers}) => {
-  try {
-    const result = await axios({
-      baseURL: DOMAIN_SERVER_API,
-      url,
-      method,
-      data,
-      params,
-      headers: {
-        ...headers,
-        Authorization: "Bearer " + localStorage.getItem('accessToken')
-      }
-    })
-    return {data: result.data}
-  } catch (axiosError) {
-    return {
-      error: {
-        status: axiosError?.response?.status || axiosError?.code,
-        data:
-            axiosError.response?.data || axiosError?.data || axiosError.message,
-      },
-    }
-  }
-}
+import {axiosBaseQuery} from "@/redux/api/apiSlice";
 
 export const organizationServiceApi = createApi({
   reducerPath: 'organizationServiceApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['Organization', 'OrganizationById', "INVITE", 'ORGANIZATION_USER'],
+  tagTypes: ['ORGANIZATION'],
   endpoints: (build) => ({
     getListOrganizationWithChild: build.query({
       query: () => ({
         url: API_GET_ORGANIZATION_WITH_CHILD,
         method: 'GET',
       }),
-      providesTags: ['Organization']
+      providesTags: [{type: 'ORGANIZATION', id: 'LIST'}]
     }),
     getOrganizationById: build.query({
       query: (params) => ({
@@ -62,28 +37,29 @@ export const organizationServiceApi = createApi({
         method: 'GET',
         params
       }),
-      providesTags: ['OrganizationById']
+      providesTags: [{type: 'ORGANIZATION', id: 'ID'}]
     }),
     getOrganizationBySlug: build.query({
       query: (slug) => ({
         url: API_GET_ORGANIZATION_DETAIL_BY_SLUG + '?Slug=' + slug,
         method: 'GET',
       }),
+      providesTags: [{type: 'ORGANIZATION', id: 'SLUG'}]
     }),
     getOrganizationPreview: build.query({
       query: (slug) => ({
         url: API_GET_ORGANIZATION_PREVIEW + '?Id=' + slug,
         method: 'GET',
       }),
+      providesTags: [{type: 'ORGANIZATION', id: 'PREVIEW'}]
     }),
     getAllApplicantUserOrganizationById: build.query({
       query: (params) => ({
-        // url: API_GET_USER_FROM_ORGANIZATION,
         url: API_GET_LIST_USER_ORGANIZATION,
         method: 'GET',
         params
       }),
-      providesTags: ['ORGANIZATION_USER']
+      providesTags: [{type: 'ORGANIZATION', id: 'ORGANIZATION_USER'}]
     }),
     getAllAdminByOrganizationId: build.query({
       query: (params) => ({
@@ -91,6 +67,7 @@ export const organizationServiceApi = createApi({
         method: 'GET',
         params
       }),
+      providesTags: [{type: 'ORGANIZATION', id: 'ORGANIZATION_ADMIN'}]
     }),
     createChildOrganization: build.mutation({
       query: (data) => ({
@@ -98,7 +75,7 @@ export const organizationServiceApi = createApi({
         method: 'POST',
         data: data
       }),
-      invalidatesTags: ['Organization']
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'LIST'}]
     }),
     updateOrganization: build.mutation({
       query: (data) => ({
@@ -109,14 +86,16 @@ export const organizationServiceApi = createApi({
           "Content-Type": "application/json"
         }
       }),
-      invalidatesTags: ['Organization', 'OrganizationById']
+      invalidatesTags: (result, error, arg) => {
+        return [{type: 'ORGANIZATION', id: arg.organizationId}, {type: 'ORGANIZATION', id: 'LIST'}]
+      }
     }),
     deleteOrganization: build.mutation({
       query: (data) => ({
         url: `${API_DELETE_ORGANIZATION}/${data.id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Organization', 'OrganizationById']
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'LIST'}]
     }),
     deleteMultipleOrganization: build.mutation({
       query: (data) => ({
@@ -124,7 +103,7 @@ export const organizationServiceApi = createApi({
         method: 'DELETE',
         data
       }),
-      invalidatesTags: ['Organization', 'OrganizationById']
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'LIST'}]
     }),
     setActiveOrganization: build.mutation({
       query: (data) => ({
@@ -132,7 +111,7 @@ export const organizationServiceApi = createApi({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: ['Organization', 'OrganizationById']
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'LIST'}]
     }),
     // invite user
     inviteUser: build.mutation({
@@ -140,7 +119,8 @@ export const organizationServiceApi = createApi({
         url: API_INVITE_USER,
         method: 'POST',
         data
-      })
+      }),
+      invalidatesTags: [{ type: 'ORGANIZATION', id: 'INVITE' }]
     }),
     // confirm invite
     activeInviteUser: build.mutation({
@@ -148,7 +128,8 @@ export const organizationServiceApi = createApi({
         url: API_USER_CONFIRM_INVITE,
         method: 'POST',
         data
-      })
+      }),
+      invalidatesTags: [{ type: 'ORGANIZATION', id: 'INVITE' }]
     }),
     // get list user invite
     getListInviteUser: build.query({
@@ -160,7 +141,7 @@ export const organizationServiceApi = createApi({
           params: { ...defaultParams, ...params }
         }
       },
-      providesTags: ['INVITE']
+      providesTags: [{ type: 'ORGANIZATION', id: 'INVITE' }]
     }),
     // resend email
     resendEmail: build.mutation({
@@ -171,7 +152,7 @@ export const organizationServiceApi = createApi({
           data
         }
       },
-      invalidatesTags: ['INVITE']
+      invalidatesTags: [{ type: 'ORGANIZATION', id: 'INVITE' }]
     }),
     // delete invite
     deleteInviteUser: build.mutation({
@@ -182,7 +163,7 @@ export const organizationServiceApi = createApi({
           data
         }
       },
-      invalidatesTags: ['INVITE']
+      invalidatesTags: [{ type: 'ORGANIZATION', id: 'INVITE' }]
     }),
     // update user
     updateRoleUser: build.mutation({
@@ -193,7 +174,7 @@ export const organizationServiceApi = createApi({
           data
         }
       },
-      invalidatesTags: ['ORGANIZATION_USER']
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'ORGANIZATION_USER'}]
     }),
     // delete user
     deleteUser: build.mutation({
@@ -204,7 +185,7 @@ export const organizationServiceApi = createApi({
           data
         }
       },
-      invalidatesTags: ['ORGANIZATION_USER']
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'ORGANIZATION_USER'}]
     }),
     // active user
     activeUsers: build.mutation({
@@ -215,7 +196,7 @@ export const organizationServiceApi = createApi({
           data
         }
       },
-      invalidatesTags: ['ORGANIZATION_USER']
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'ORGANIZATION_USER'}]
     }),
   }),
 })
