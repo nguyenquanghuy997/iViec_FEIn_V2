@@ -334,7 +334,7 @@ const OrganizationDetailContent = () => {
             onChangeSelected={() => handleSelected(column)}
             onOpenConfirmDelete={() => handleOpenConfirm([column])}
             onOpenFormModal={() => handleOpenFormUser(column)}
-            handleOpenActive = {handleOpenActive}
+            handleOpenActive={handleOpenActive}
             selected={selected}
           />
         })}
@@ -348,10 +348,11 @@ const OrganizationDetailContent = () => {
       />
       {
         isOpenInviteForm && <OrganizationInviteForm
-        ListOrganization={ListOrganization}
-        isOpenInviteForm={isOpenInviteForm}
-        setIsOpenInviteForm={setIsOpenInviteForm}
-        valueTabDefault={valueTabInviteForm}
+          ListOrganization={ListOrganization}
+          isOpenInviteForm={isOpenInviteForm}
+          setIsOpenInviteForm={setIsOpenInviteForm}
+          valueTabDefault={valueTabInviteForm}
+          organizationId={organization.id}
         />
       }
       {toggleFormUser && <OrganizationDetailUserForm
