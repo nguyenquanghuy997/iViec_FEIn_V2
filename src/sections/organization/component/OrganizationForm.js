@@ -221,7 +221,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                   />
                 </View>
                 <View>
-                  <Label required={true}>Email đơn vị</Label>
+                  <Label>Email đơn vị</Label>
                   <RHFTextField
                       name="email"
                       placeholder="Nhập email đơn vị"
@@ -230,7 +230,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                   />
                 </View>
                 <View>
-                  <Label required={true}>Số điện thoại đơn vị</Label>
+                  <Label>Số điện thoại đơn vị</Label>
                   <RHFTextField
                       name="phoneNumber"
                       placeholder="Nhập SĐT đơn vị"
