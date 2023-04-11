@@ -29,7 +29,7 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
 
     getRoleGroupList: builder.query({
       query: (params) => {
-        const defaultParams = { pageIndex: 1, pageSize: 20 }
+        const defaultParams = { PageIndex: 1, PageSize: 10 }
         return {
           url: API_GET_LIST_ROLE_GROUP,
           method: "GET",
@@ -120,14 +120,14 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
     }),
 
     //settings
-    getListColumns: builder.query({
+    getListRoleColumns: builder.query({
       query: () => ({
         url: API_GET_COLUMN_ROLE,
         method: "GET",
       }),
       providesTags: ["GetColumn"],
     }),
-    updateListColumns: builder.mutation({
+    updateListRoleColumns: builder.mutation({
       query: (data) => {
         const { id, ...restData } = data;
         return {
@@ -146,8 +146,8 @@ export const {
   useGetRoleGroupListQuery,
   useAddRoleGroupMutation,
   useUpdateRolegroupMutation,
-  useGetListColumnsQuery,
-  useUpdateListColumnsMutation,
+  useGetListRoleColumnsQuery,
+  useUpdateListRoleColumnsMutation,
   useSaveRoleGroupMutation,
   useGetRoleDetailQuery,
   useLazyGetRoleDetailQuery,

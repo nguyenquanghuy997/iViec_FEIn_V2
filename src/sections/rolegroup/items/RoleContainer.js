@@ -5,13 +5,11 @@ import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import TextMaxLine from "@/components/TextMaxLine";
 import {
-  useGetListColumnsQuery,
-  // useGetListColumnsQuery,
+  useGetListRoleColumnsQuery,
   useGetRoleGroupListQuery,
-  // useUpdateListColumnsMutation,
   useRemoveRoleGroupMutation,
   useSetStatusRoleGroupMutation,
-  useUpdateListColumnsMutation,
+  useUpdateListRoleColumnsMutation,
 } from "@/sections/rolegroup";
 import { Typography, useTheme } from "@mui/material";
 import moment from "moment";
@@ -225,9 +223,9 @@ export const RoleContainer = () => {
       onOk: async (close) => {
         try {
           close();
-          router.push({
-            query: { },
-          });
+          // router.push({
+          //   query: { },
+          // });
           await removeRoleGroup(itemSelected.map(it => it.id)).unwrap();
           setItemSelected([]);
           setSelectedRowKeys([])
@@ -299,8 +297,8 @@ export const RoleContainer = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          useGetColumnsFunc={useGetListColumnsQuery}
-          useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          useGetColumnsFunc={useGetListRoleColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListRoleColumnsMutation}
           createText={canEdit && "Thêm vai trò"}
           onClickCreate={() => {
             setOpen(true);
@@ -364,6 +362,7 @@ export const RoleContainer = () => {
           setOpen(false);
         }}
         selectedItem={editItem}
+        setSelectedRowKeys={setSelectedRowKeys}
       />
     </RoleGroupStyle>
   );

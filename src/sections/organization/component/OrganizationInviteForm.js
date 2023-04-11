@@ -45,7 +45,7 @@ function a11yProps(index) {
     };
 }
 
-const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenInviteForm, valueTabDefault }) => {
+const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenInviteForm, valueTabDefault, organizationId }) => {
     const [valueTab, setValueTab] = useState(valueTabDefault);
 
     const [isShowResult, setIsShowResult] = useState(false);
@@ -77,7 +77,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                 email: "",
                 fullName: "",
                 roleGroupId: "",
-                organizationIds: []
+                organizationIds: organizationId?[organizationId]:[]
             }
         ]
     }

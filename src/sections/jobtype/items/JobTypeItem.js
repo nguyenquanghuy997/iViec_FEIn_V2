@@ -5,9 +5,9 @@ import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
 import {
-  useGetListColumnsQuery,
   useGetAllJobTypeQuery,
-  useUpdateListColumnsMutation,
+  useGetListJobColumnsQuery,
+  useUpdateListJobColumnsMutation,
 } from "@/sections/jobtype";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
@@ -142,8 +142,8 @@ export const JobTypeItem = () => {
           isSetting={true}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          useGetColumnsFunc={useGetListColumnsQuery}
-          useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          useGetColumnsFunc={useGetListJobColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListJobColumnsMutation}
           createText={canEdit && "Thêm vị trí công việc"}
           onClickCreate={() => {
             setOpenEdit(true);

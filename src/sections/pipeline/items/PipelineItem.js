@@ -1,44 +1,49 @@
 import {
-  useGetAllPipelineQuery, useGetListColumnsQuery, useUpdateListColumnApplicantsMutation,
-  // useGetListColumnsQuery,
-  // useUpdateListColumnApplicantsMutation,
+  useGetAllPipelineQuery,
+  useGetListPipelineColumnsQuery,
+  useUpdateListPipelineColumnsMutation,
 } from "../PipelineFormSlice";
+import { PipelineFormModal } from "../modals";
 import PipelineBottomNav from "./PipelineBottomNav";
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import { PipelineFormModal } from "../modals";
+import { TBL_FILTER_TYPE, PERMISSIONS } from "@/config";
+import useRole from "@/hooks/useRole";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 import { PipelineStateType, Status } from "@/utils/enum";
+import { LIST_STATUS, LIST_STEP_RECRUITMENT } from "@/utils/formatString";
 import { fDate } from "@/utils/formatTime";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
 import { useState, useMemo } from "react";
-import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
-import { TBL_FILTER_TYPE, PERMISSIONS } from "@/config";
-import { LIST_STATUS, LIST_STEP_RECRUITMENT } from "@/utils/formatString";
-import useRole from "@/hooks/useRole";
 
 export const PipelineItem = () => {
   const router = useRouter();
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
-  const { data: Data = {}, isLoading } = useGetAllPipelineQuery(query, { skip: !isReady });
+  const { data: Data = {}, isLoading } = useGetAllPipelineQuery(query, {
+    skip: !isReady,
+  });
 
   const [showForm, setShowForm] = useState(false);
 
   const { canAccess } = useRole();
   // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
-  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
+  const canEdit = useMemo(
+    () => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS),
+    []
+  );
 
   const columns = useMemo(() => {
     return [
       {
-        dataIndex: 'id',
+        dataIndex: "id",
         title: "STT",
         key: "index",
-        align: 'center',
+        align: "center",
         render: (item, record, index, page, paginationSize) => (
           <>{(page - 1) * paginationSize + index + 1}</>
         ),
@@ -51,7 +56,9 @@ export const PipelineItem = () => {
         width: "240px",
         fixed: "left",
         render: (item, record) => (
-          <span style={{ fontWeight: 500 }}>{record.isDefault == true ? 'Quy trình mặc định iVIEC' : item}</span>
+          <span style={{ fontWeight: 500 }}>
+            {record.isDefault == true ? "Quy trình mặc định iVIEC" : item}
+          </span>
         ),
       },
       {
@@ -98,7 +105,7 @@ export const PipelineItem = () => {
                         color: "#172B4D",
                         border: "none",
                         marginLeft: "8px",
-                        fontWeight: 500
+                        fontWeight: 500,
                       }}
                     >
                       +{indexplus}
@@ -112,7 +119,10 @@ export const PipelineItem = () => {
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           placeholder: "Chọn một hoặc nhiều bước",
-          options: LIST_STEP_RECRUITMENT.map(item => ({ value: item.value, label: item.name })),
+          options: LIST_STEP_RECRUITMENT.map((item) => ({
+            value: item.value,
+            label: item.name,
+          })),
         },
       },
       {
@@ -132,9 +142,12 @@ export const PipelineItem = () => {
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
-          placeholder: 'Tất cả',
-          options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
-        }
+          placeholder: "Tất cả",
+          options: LIST_STATUS.map((item) => ({
+            value: item.value,
+            label: item.name,
+          })),
+        },
       },
       {
         dataIndex: "createdTime",
@@ -143,8 +156,8 @@ export const PipelineItem = () => {
         render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
-          name: ['createdTimeFrom', 'createdTimeTo'],
-          placeholder: 'Chọn ngày',
+          name: ["createdTimeFrom", "createdTimeTo"],
+          placeholder: "Chọn ngày",
         },
       },
       {
@@ -172,7 +185,7 @@ export const PipelineItem = () => {
           name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
           remoteUrl: API_GET_ORGANIZATION_USERS,
-          showAvatar: true
+          showAvatar: true,
         },
       },
     ];
@@ -190,13 +203,14 @@ export const PipelineItem = () => {
   };
   return (
     <View>
-      <Content sx={{ 
-        padding: "0 !important",
-        "& .MuiBox-root": {
-          padding: 0,
-        }
+      <Content
+        sx={{
+          padding: "0 !important",
+          "& .MuiBox-root": {
+            padding: 0,
+          },
         }}
-        >
+      >
         <DynamicColumnsTable
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
@@ -208,8 +222,8 @@ export const PipelineItem = () => {
           nodata="Hiện chưa có quy trình tuyển dụng nào"
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          useGetColumnsFunc={useGetListColumnsQuery}
-          useUpdateColumnsFunc={useUpdateListColumnApplicantsMutation}
+          useGetColumnsFunc={useGetListPipelineColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListPipelineColumnsMutation}
           createText={canEdit && "Thêm quy trình tuyển dụng"}
           onClickCreate={() => {
             setShowForm(true);
@@ -226,10 +240,7 @@ export const PipelineItem = () => {
         />
       </Content>
 
-      <PipelineFormModal
-        show={showForm}
-        onClose={() => setShowForm(false)}
-      />
+      <PipelineFormModal show={showForm} onClose={() => setShowForm(false)} />
     </View>
   );
 };

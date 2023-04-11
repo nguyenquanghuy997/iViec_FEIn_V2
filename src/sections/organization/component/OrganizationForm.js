@@ -59,13 +59,12 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
         .required("Tên đơn vị không được bỏ trống")
         .max(50, "Tên đơn vị tối đa 50 ký tự"),
     code: Yup.string()
-        .nullable()
-        .required("Mã đơn vị không được bỏ trống")
-        .max(20, "Mã đơn vị tối đa 20 ký tự"),
-    email: Yup.string().nullable().required("Email không đúng định dạng"),
+      .nullable()
+      .required("Mã đơn vị không được bỏ trống")
+      .max(20, "Mã đơn vị tối đa 20 ký tự"),
+    email: Yup.string().nullable().matches(/^$|^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/, 'Email không đúng định dạng'),
     phoneNumber: Yup.string()
-        .required("Số điện thoại không được bỏ trống")
-        .matches(/(84|840|0)[3|5|7|8|9]+([0-9]{8})\b/, "Số điện thoại không đúng định dạng").nullable(),
+      .matches(/^(?:[0-9]{5}|[0-9]{10}|)$/, "Số điện thoại không đúng định dạng").nullable(),
     address: Yup.string()
         .nullable()
         .max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
