@@ -38,7 +38,7 @@ const RolegroupForm = ({ role, selectedItem, ...methods }) => {
         setValue(f, fieldValues[f]);
       }
       setValue('identityRoles', role.identityRoles?.map(ac => ac.name));
-    }, 300);
+    }, 200);
   }, [role, selectedItem]);
 
   return (

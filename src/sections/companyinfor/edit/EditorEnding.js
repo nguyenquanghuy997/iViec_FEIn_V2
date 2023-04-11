@@ -56,6 +56,7 @@ const EditorEnding = ({data, onClose}) => {
         <Box>
           <RHFTinyEditor
               name={"conclusion"}
+              placeholder={"Nhập nội dung lời kết"}
           />
         </Box>
         </div>
