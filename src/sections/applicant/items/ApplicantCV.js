@@ -1,7 +1,14 @@
+import NoCV from "@/assets/NoCV";
 import { View } from "@/components/FlexStyled";
 import { getExtension } from "@/utils/function";
 import { getFileUrl } from "@/utils/helper";
-import { Box, CircularProgress, Divider, Grid } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  Grid,
+  Typography,
+} from "@mui/material";
 import React, { Suspense, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -11,8 +18,8 @@ const defaultValues = {
 };
 const FileViewer = React.lazy(() => import("react-file-viewer"));
 
-export const ApplicantCV = ({dataLog}) => {
-  const [cv,] = useState(undefined);
+export const ApplicantCV = ({ dataLog }) => {
+  const [cv] = useState(undefined);
 
   const methods = useForm({
     defaultValues,
@@ -47,19 +54,20 @@ export const ApplicantCV = ({dataLog}) => {
           />
         </Grid> */}
         <Box sx={{ backgroundColor: "#F2F4F5", borderRadius: "4px", p: 2 }}>
-            <Divider orientation={"vertical"} />
-            <Grid
-              sx={{
-                minWidth: "580px",
-                "& .pg-viewer-wrapper": {
-                  overflowY: "auto",
-                },
-                "& .photo-viewer-container, & img": {
-                  width: "100% !important",
-                  height: "100% !important"
-                },
-              }}
-            >
+          <Divider orientation={"vertical"} />
+          <Grid
+            sx={{
+              minWidth: "580px",
+              "& .pg-viewer-wrapper": {
+                overflowY: "auto",
+              },
+              "& .photo-viewer-container, & img": {
+                width: "100% !important",
+                height: "100% !important",
+              },
+            }}
+          >
+            {watch("cvFile") ? (
               <Suspense
                 fallback={
                   <View flex="true" contentcenter="true">
@@ -72,7 +80,25 @@ export const ApplicantCV = ({dataLog}) => {
                   filePath={getFileUrl(watch("cvFile"))}
                 />
               </Suspense>
-            </Grid>
+            ) : (
+              <Box sx={{ minHeight: "1040px" }}>
+                <Box sx={{ textAlign: "center", marginTop:13 }}>
+                  <NoCV />
+                </Box>
+                <Typography
+                  sx={{
+                    mt: 2,
+                    textAlign: "center",
+                    fontSize: 14,
+                    fontWeight: 400,
+                    color: "#A2AAB7",
+                  }}
+                >
+                  {"Ứng viên chưa có CV cho tin tuyển dụng này."}
+                </Typography>
+              </Box>
+            )}
+          </Grid>
         </Box>
       </Grid>
     </FormProvider>

@@ -225,9 +225,9 @@ export const RoleContainer = () => {
       onOk: async (close) => {
         try {
           close();
-          router.push({
-            query: { },
-          });
+          // router.push({
+          //   query: { },
+          // });
           await removeRoleGroup(itemSelected.map(it => it.id)).unwrap();
           setItemSelected([]);
           setSelectedRowKeys([])
@@ -364,6 +364,7 @@ export const RoleContainer = () => {
           setOpen(false);
         }}
         selectedItem={editItem}
+        setSelectedRowKeys={setSelectedRowKeys}
       />
     </RoleGroupStyle>
   );

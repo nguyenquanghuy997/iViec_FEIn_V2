@@ -17,7 +17,7 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { useState } from "react";
+import React, {Fragment, useState} from "react";
 import { useForm } from "react-hook-form";
 
 const ApplicantTransferPipelineModal = ({
@@ -135,10 +135,10 @@ const ApplicantTransferPipelineModal = ({
               name="radio-buttons-group"
               onChange={handleChange}
             >
-              {items?.map((p) => {
+              {items?.map((p, index) => {
                 if (p?.pipelineStateType == 3) {
                   return (
-                    <>
+                    <Fragment key={index}>
                       <FormControlLabel
                         value={0}
                         control={<Radio />}
@@ -154,11 +154,12 @@ const ApplicantTransferPipelineModal = ({
                         control={<Radio />}
                         label={PipelineStateType(p?.pipelineStateType, 2)}
                       />
-                    </>
+                    </Fragment>
                   );
                 } else if (p?.pipelineStateType != 4) {
                   return (
                     <FormControlLabel
+                        key={index}
                       value={p?.id}
                       control={<Radio />}
                       label={PipelineStateType(p?.pipelineStateType)}

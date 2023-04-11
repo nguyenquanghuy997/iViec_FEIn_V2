@@ -1,7 +1,36 @@
-FROM registry.fke.fptcloud.com/b54a72e1-3693-4e3f-8f90-0638f7474357/next-fe:base as base
+# Build BASE
+FROM node:16-alpine as BASE
 
-FROM registry.fke.fptcloud.com/b54a72e1-3693-4e3f-8f90-0638f7474357/next-fe:builder as builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN apk add --no-cache git \
+    && yarn --frozen-lockfile \
+    && yarn cache clean
 
-FROM registry.fke.fptcloud.com/b54a72e1-3693-4e3f-8f90-0638f7474357/next-fe:runtime as runtime
+# Build Image
+FROM ductn4/node:16-alpine AS BUILD
 
-CMD ["server.js"]
+WORKDIR /app
+COPY --from=BASE /app/node_modules ./node_modules
+COPY . .
+RUN apk add --no-cache git curl \
+    && yarn build \
+    && cd .next/standalone \
+    # Follow https://github.com/ductnn/Dockerfile/blob/master/nodejs/node/16/alpine/Dockerfile
+    && node-prune
+
+# Build production
+FROM node:16-alpine AS PRODUCTION
+
+WORKDIR /app
+
+COPY --from=BUILD /app/public ./public
+COPY --from=BUILD /app/next.config.js ./
+
+# Set mode "standalone" in file "next.config.js"
+COPY --from=BUILD /app/.next/standalone ./
+COPY --from=BUILD /app/.next/static ./.next/static
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

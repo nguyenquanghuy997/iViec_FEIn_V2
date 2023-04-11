@@ -47,7 +47,7 @@ const axiosBaseQuery = () => async ({url, method, data, params, headers}) => {
 export const organizationServiceApi = createApi({
   reducerPath: 'organizationServiceApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['Organization', 'OrganizationById', "INVITE", 'ORGANIZATION_USER'],
+  tagTypes: ['Organization', 'OrganizationById', "INVITE", 'ORGANIZATION_USER','INVITE_USER'],
   endpoints: (build) => ({
     getListOrganizationWithChild: build.query({
       query: () => ({
@@ -140,7 +140,8 @@ export const organizationServiceApi = createApi({
         url: API_INVITE_USER,
         method: 'POST',
         data
-      })
+      }),
+      providesTags: ['INVITE_USER']
     }),
     // confirm invite
     activeInviteUser: build.mutation({
@@ -160,7 +161,8 @@ export const organizationServiceApi = createApi({
           params: { ...defaultParams, ...params }
         }
       },
-      providesTags: ['INVITE']
+      providesTags: ['INVITE'],
+      invalidatesTags: ['INVITE_USER']
     }),
     // resend email
     resendEmail: build.mutation({

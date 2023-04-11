@@ -5,13 +5,19 @@ import {
 } from "@/routes/api";
 import axiosInstance from "@/utils/axios";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import { getAccessToken } from '@/utils/jwt'
 
 export const axiosBaseQuery =
   () =>
   async ({ url, method, data, params }) => {
     try {
-      const result = await axiosInstance({ url, method, data, params });
-      return { data: result.data };
+      const token = getAccessToken();
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = 'Bearer ' + token;
+      }
+      const result = await axiosInstance({ url, method, data, params, headers });
+      return { data: result?.data }
     } catch (axiosError) {
       return {
         error: {

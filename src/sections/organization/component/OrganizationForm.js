@@ -71,10 +71,9 @@ const OrganizationForm = ({ isOpen, onClose, parentNode, actionType }) => {
       .nullable()
       .required("Mã đơn vị không được bỏ trống")
       .max(20, "Mã đơn vị tối đa 20 ký tự"),
-    email: Yup.string().nullable().required("Email không đúng định dạng"),
+    email: Yup.string().nullable().matches(/^$|^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/, 'Email không đúng định dạng'),
     phoneNumber: Yup.string()
-      .required("Số điện thoại không được bỏ trống")
-      .matches(/(84|840|0)[3|5|7|8|9]+([0-9]{8})\b/, "Số điện thoại không đúng định dạng").nullable(),
+      .matches(/^(?:[0-9]{5}|[0-9]{10}|)$/, "Số điện thoại không đúng định dạng").nullable(),
     address: Yup.string()
       .nullable()
       .max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
@@ -257,7 +256,7 @@ const OrganizationForm = ({ isOpen, onClose, parentNode, actionType }) => {
             </View>
 
             <View>
-              <Label required={true}>Email đơn vị</Label>
+              <Label>Email đơn vị</Label>
 
               <RHFTextField
                 name="email"
@@ -268,7 +267,7 @@ const OrganizationForm = ({ isOpen, onClose, parentNode, actionType }) => {
             </View>
 
             <View>
-              <Label required={true}>Số điện thoại đơn vị</Label>
+              <Label>Số điện thoại đơn vị</Label>
 
               <RHFTextField
                 name="phoneNumber"
@@ -329,7 +328,7 @@ const OrganizationForm = ({ isOpen, onClose, parentNode, actionType }) => {
               loading={isSubmitting}
               variant="contained"
               onClick={handleSubmit(onSubmit)}
-              tittle={actionType == 0  ? "Thêm" : "Sửa"}
+              tittle={actionType == 0 ? "Thêm" : "Sửa"}
             />
             <View width={8} />
             <MuiButton
