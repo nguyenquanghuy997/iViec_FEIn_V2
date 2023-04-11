@@ -11,7 +11,7 @@ const RoleProvider = ({ children }) => {
   const { permissions } = useAuth();
 
   const canAccess = useCallback((action) => {
-    if (!action || permissions.includes(PERMISSIONS.IVIEC_ADMIN)) {
+    if (!action || permissions.includes(PERMISSIONS.IVIEC_ADMIN) || action.includes(PERMISSIONS.VIEW_COMPANY)) {
       return true;
     }
 

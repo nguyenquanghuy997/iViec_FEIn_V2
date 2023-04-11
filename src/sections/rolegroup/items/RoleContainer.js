@@ -360,6 +360,7 @@ export const RoleContainer = () => {
         onClose={() => {
           setEditItem(null);
           setOpen(false);
+          setSelectedRowKeys([]);
         }}
         selectedItem={editItem}
         setSelectedRowKeys={setSelectedRowKeys}

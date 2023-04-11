@@ -1,7 +1,6 @@
 import {forwardRef, memo, useEffect, useImperativeHandle, useState} from 'react';
-import {useRouter} from "next/router";
 import {useFormContext, useWatch} from "react-hook-form";
-import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
+import {Box, CircularProgress, Divider, Typography} from "@mui/material";
 import {isEmpty} from "lodash";
 
 import {RHFCheckbox, RHFSelect} from "@/components/hook-form";
@@ -15,13 +14,10 @@ import useModal from "@/sections/recruitment-form/hooks/useModal";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {useGetAllPipelineByOrganizationQuery, useGetAllStepOfPipelineQuery} from "@/sections/pipeline";
 
-import {PATH_DASHBOARD} from "@/routes/paths";
-
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
 
 const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
-    const router = useRouter();
     const {setValue} = useFormContext();
 
     const {isOpen, selected, onOpen, onClose} = useModal();
@@ -182,13 +178,13 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
                             'Nếu chưa có quy trình tuyển dụng phù hợp, Hãy liên hệ Quản trị viên doanh nghiệp của bạn để thêm quy trình mới.',
                         ]}
                     >
-                        <Button
-                            variant="outlined"
-                            sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}
-                            onClick={() => router.push(PATH_DASHBOARD.pipeline.root)}
-                        >
-                            Thiết lập quy trình tuyển dụng
-                        </Button>
+                        {/*<Button*/}
+                        {/*    variant="outlined"*/}
+                        {/*    sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}*/}
+                        {/*    onClick={() => router.push(PATH_DASHBOARD.pipeline.root)}*/}
+                        {/*>*/}
+                        {/*    Thiết lập quy trình tuyển dụng*/}
+                        {/*</Button>*/}
                         <TextNote
                             title="Tự động chuyển bước sẽ thực hiện như sau:"
                             texts={[

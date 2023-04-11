@@ -293,18 +293,18 @@ function ApplicantPreviewItem() {
     { skip: !ApplicantId }
   );
 
-  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
-    {
-      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-      ApplicantId: ApplicantId,
-    },
-    {
-      skip:
-        pipelines?.recruitmentPipelineStates?.length > 0 ||
-        !pipelines?.currentApplicantPipelineState ||
-        !ApplicantId,
-    }
-  );
+  const { data: reviewFormCriterias } =
+    useGetApplicantReviewFormQuery(
+      {
+        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+        ApplicantId: ApplicantId,
+      },
+      {
+        skip:
+          !pipelines?.currentApplicantPipelineState ||
+          !ApplicantId,
+      }
+    );
 
   const { data: isReview } = useGetCheckReviewQuery(
     {

@@ -79,7 +79,7 @@ export default function DrawerEdit({ selectedItem, onClose, ...props }) {
       defaultValues={{
         name: '',
         description: '',
-        isActivated: true,
+        isActivated: editRole?.isActivated,
         identityRoles: [],
       }}
       {...props}
