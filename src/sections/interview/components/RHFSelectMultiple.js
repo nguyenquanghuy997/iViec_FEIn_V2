@@ -88,40 +88,11 @@ function RHFSelectMultiple({ name, ...props }) {
     options,
     disabled,
     multiple,
-    listApplicant,
+    listApplicant
   } = props;
   const { remove } = useFieldArray({ control, name });
 
   const renderChipsSelect = (options, value) => {
-    const [open, setOpen] = useState(false);
-    const handleClose = () => {
-      setOpen(false);
-    };
-    const handleOpen = () => {
-      setOpen(true);
-    };
-    // const time = true;
-    // const test = value[0]?.bookingCalendarGroupApplicants?.map(
-    //   (item) => item?.interviewTime
-    // );
-    // const duration = value[0]?.bookingCalendarGroupApplicants?.map(
-    //   (item) => item?.interviewDuration
-    // );
-    // const convertDurationTimeToSeconds = (time) => {
-    //   const splitToString = time.split(":");
-    //   return (
-    //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
-    //   );
-    // };
-
-    // const convertStoMs = (s) => {
-    //   const totalMinutes = Math.floor(s / 60);
-    //   const hours = Math.floor(totalMinutes / 60);
-    //   const newHours = hours < 10 ? "0" + hours : hours;
-    //   const minutes = totalMinutes % 60;
-    //   return `${newHours}:${minutes}`;
-    // };
-
     return (
       <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
@@ -129,8 +100,6 @@ function RHFSelectMultiple({ name, ...props }) {
             value.includes(option?.value)
           )}
           open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
         />
       </Stack>
     );
@@ -179,7 +148,7 @@ function RHFSelectMultiple({ name, ...props }) {
                       textTransform: "none",
                       color: "#1976D2",
                       "&:hover": {
-                        bgcolor: "white",
+                        backgroundColor: "white",
                       },
                     }}
                   >
@@ -193,7 +162,7 @@ function RHFSelectMultiple({ name, ...props }) {
                     width: "100%",
                     textTransform: "none",
                     "&:hover": {
-                      bgcolor: "white",
+                      backgroundColor: "white",
                     },
                   }}
                 >

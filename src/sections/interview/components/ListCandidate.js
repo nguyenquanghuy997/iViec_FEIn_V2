@@ -3,37 +3,22 @@ import { Label } from "@/components/hook-form/style";
 import { useGetApplicantByPipeLineQuery } from "@/sections/interview/InterviewSlice";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ option, model, isEditmode, applicantId }) => {
+const ListCandidate = ({ option, applicantId }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
-  const res = useGetApplicantByPipeLineQuery(
+  const { data: { items: dataApplicant = [] } = {} } = useGetApplicantByPipeLineQuery(
     {RecruitmentPipelineStateId: watch("recruitmentPipelineStateId")},
     {skip: !watch("recruitmentPipelineStateId")}
   );
-
-  let { data: { items = [] } = {} } = res;
-  const [dataApplicant, setDataApplicant] = useState([]);
 
   useEffect(() => {
     if (option) {
       setValue("applicantIdArray", [option?.applicantId]);
     }
   }, [option]);
-
-  useEffect(() => {
-    setDataApplicant(items);
-    if(isEditmode && model) {
-      model.forEach(item => {
-        item.bookingCalendarApplicants.forEach(itemData => {
-          setDataApplicant(oldArray  => [...oldArray, itemData.applicant])
-        })
-      })
-    }
-  }, [items]);
 
   return (
     <Box height={"100%"}>
@@ -56,7 +41,7 @@ const ListCandidate = ({ option, model, isEditmode, applicantId }) => {
         name={'applicantIdArray'}
         fullWidth
         disabled={
-          applicantId || !watch("recruitmentPipelineStateId") ? true : false
+          applicantId || !watch("recruitmentPipelineStateId")
         }
         multiple
         isRequired
