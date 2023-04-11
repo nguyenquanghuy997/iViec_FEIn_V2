@@ -138,7 +138,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               .length
           )}
           {renderText("Trạng thái:", "")}
-          {renderText("Lý do hủy:", DetailData?.removeReason)}
+          {renderText("Lý do hủy:", DetailData?.removeReason || 'Không có')}
 
           <Divider />
 
@@ -155,10 +155,11 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                   sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}
                   key={index}
                 >
+                
                   <ListItemAvatar>
                     <img
                       alt=""
-                      src="https://i.pinimg.com/236x/2e/13/99/2e139971c08795a9de247848cc2c3fd9.jpg"
+                      src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.applicant?.portraitImage}`}
                       style={{
                         width: "60px",
                         height: "60px",
@@ -292,7 +293,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               }}
             />
             {openForm && (
-              <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
+              <FormCalendar open={openForm} data={item} setOpen={setOpenForm} />
             )}
           </BoxFlex>
         </View>

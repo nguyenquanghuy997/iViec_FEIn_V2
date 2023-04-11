@@ -80,7 +80,6 @@ function ApplicantPreviewItem() {
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
 
-
   const HeaderApplicant = () => {
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
@@ -113,7 +112,7 @@ function ApplicantPreviewItem() {
 
               <ButtonIcon
                 sx={{
-                  marginLeft: 0.5
+                  marginLeft: 0.5,
                 }}
                 onClick={() => handleOpenEditForm()}
                 icon={
@@ -302,24 +301,20 @@ function ApplicantPreviewItem() {
       },
       {
         skip:
-          pipelines?.recruitmentPipelineStates?.length > 0 ||
           !pipelines?.currentApplicantPipelineState ||
           !ApplicantId,
       }
     );
 
-    const { data: isReview } =
-    useGetCheckReviewQuery(
-      {
-        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-        ApplicantId: ApplicantId,
-      },
-      {
-        skip:
-          !pipelines?.currentApplicantPipelineState ||
-          !ApplicantId,
-      }
-    );
+  const { data: isReview } = useGetCheckReviewQuery(
+    {
+      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      ApplicantId: ApplicantId,
+    },
+    {
+      skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
+    }
+  );
 
   // const [fetchData, { data: logApplicant = []}] = useGetApplicantRecruitmentMutation();
   // const [fetchDataApplicant, { data: data = [] }] = useLazyGetApplicantByIdQuery();
@@ -637,22 +632,24 @@ function ApplicantPreviewItem() {
             data={reviewFormCriterias}
           />
         )}
+
         {open && (
           <FormCalendar
             open={open}
             setOpen={setOpen}
+            item={data}
             options={selectedOption}
             currentApplicantPipelineState={
               pipelines?.currentApplicantPipelineState
             }
           />
         )}
-          <RecruitmentApplicantCreate
-        show={showModelCreate}
-        setShow={setShowModelCreate}
-        data={modelApplication}
-        setData={setModelApplication}
-      />
+        <RecruitmentApplicantCreate
+          show={showModelCreate}
+          setShow={setShowModelCreate}
+          data={modelApplication}
+          setData={setModelApplication}
+        />
       </Container>
     </div>
   );
