@@ -29,7 +29,7 @@ export const renderIconByPipelineType = (type) => {
 
 const HireProcess = ({data}) => {
   const {enqueueSnackbar} = useSnackbar();
-  const [open, setOpen] = useState();
+  const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(data?.isProfilePipelineVisible);
   const [loading, setLoading] = useState(false);
 
