@@ -1,67 +1,88 @@
-import * as Yup from "yup";
-import { useForm } from "react-hook-form";
-import { useAddCalendarMutation, useGetDetailCalendarsQuery, useUpdateCalendarMutation } from "@/sections/interview";
-import { useSnackbar } from "notistack";
-import { FormProvider } from "@/components/hook-form";
-import { CircularProgress, Divider, Grid, Modal } from "@mui/material";
-import { ViewModel } from "@/utils/cssStyles";
-import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import { ButtonDS } from "@/components/DesignSystem";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
-import PersonalInterview from "@/sections/interview/components/PersonalInterview";
-import ListCandidate from "@/sections/interview/components/ListCandidate";
+import { FormProvider } from "@/components/hook-form";
+import {
+  useAddCalendarMutation,
+  useGetDetailCalendarsQuery,
+  useUpdateCalendarMutation,
+} from "@/sections/interview";
 import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
-import { LoadingButton } from "@mui/lab";
-import React, { useEffect } from "react";
+import ListCandidate from "@/sections/interview/components/ListCandidate";
+import PersonalInterview from "@/sections/interview/components/PersonalInterview";
+import {
+  convertDurationTimeToSeconds,
+  convertStoMs,
+  toHhMmSs,
+} from "@/sections/interview/config";
+import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { convertDurationTimeToSeconds, convertStoMs, toHhMmSs } from "@/sections/interview/config";
+import { LoadingButton } from "@mui/lab";
+import { CircularProgress, Divider, Grid, Modal } from "@mui/material";
 import moment from "moment";
+import { useSnackbar } from "notistack";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
 
 const defaultValues = {
   name: undefined,
   recruitmentId: undefined,
   recruitmentPipelineStateId: undefined,
   interviewType: undefined,
-  onlineInterviewAddress: undefined,
+  offlineInterviewAddress: undefined,
   note: undefined,
   councilIds: [],
   reviewFormId: undefined,
   isSendMailCouncil: false,
   isSendMailApplicant: false,
-  bookingCalendarGroups: [{
-    applicantId: undefined,
-    interviewTime: undefined,
-    interviewDuration: undefined,
-  }],
+  bookingCalendarGroups: [
+    {
+      applicantId: undefined,
+      interviewTime: undefined,
+      interviewDuration: undefined,
+    },
+  ],
 };
 export const FormCalendar = ({
   open,
   setOpen,
   data,
   options,
-  currentApplicantPipelineState
+  optionsFromCruit,
+  item,
+  dataFormRecruiment,
+  currentApplicantPipelineState,
 }) => {
-  const {enqueueSnackbar} = useSnackbar();
+
+  const { enqueueSnackbar } = useSnackbar();
   const isEditMode = !!data?.id;
-  const {data: DetailData = {}} = useGetDetailCalendarsQuery({BookingCalendarId: data?.id}, {skip: !data?.id});
+  const { data: DetailData = {} } = useGetDetailCalendarsQuery(
+    { BookingCalendarId: data?.id },
+    { skip: !data?.id }
+  );
   const isLoading = isEditMode && !DetailData?.id;
   const [addCalendar] = useAddCalendarMutation();
   const [updateCalendar] = useUpdateCalendarMutation();
-  
+
   const Schema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
     recruitmentId: Yup.string().required(
       "Chưa nhập tên tiêu đề tin tuyển dụng"
     ),
     recruitmentPipelineStateId: Yup.string().required(),
-    interviewType: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).required("Nhập hình thức phỏng vấn"),
-    onlineInterviewAddress: Yup.string().nullable(),
+    interviewType: Yup.number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .required("Nhập hình thức phỏng vấn"),
+    offlineInterviewAddress: Yup.string().nullable(),
     note: Yup.string().nullable(),
     councilIds: Yup.array().required(),
     reviewFormId: Yup.string().required(),
     isSendMailCouncil: Yup.bool(),
     isSendMailApplicant: Yup.bool(),
-    applicantIdArray: Yup.array().of(Yup.string().min(1)).required("Chọn ứng viên phỏng vấn"),
+    applicantIdArray: Yup.array()
+      .of(Yup.string().min(1))
+      .required("Chọn ứng viên phỏng vấn"),
     bookingCalendarGroups: Yup.array().of(
       Yup.object().shape({
         name: Yup.string(),
@@ -73,52 +94,66 @@ export const FormCalendar = ({
             applicantId: Yup.string(),
             date: Yup.string().required("Chọn ngày phỏng vấn"),
             interviewTime: Yup.string().required("Chọn thời gian phỏng vấn"),
-            interviewDuration: Yup.string().required("Chọn thời lượng phỏng vấn"),
+            interviewDuration: Yup.string().required(
+              "Chọn thời lượng phỏng vấn"
+            ),
           })
         ),
       })
     ),
   });
-  
+
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  
+
   const {
     reset,
     setValue,
     handleSubmit,
-    formState: {isSubmitting},
+    formState: { isSubmitting,errors },
   } = methods;
   useEffect(() => {
     if (!DetailData?.id) return;
     setValue("name", DetailData.name ?? undefined);
     setValue("recruitmentId", DetailData.recruitmentId ?? undefined);
-    setValue("recruitmentPipelineStateId", DetailData.recruitmentPipelineStateId ?? undefined);
+    setValue(
+      "recruitmentPipelineStateId",
+      DetailData.recruitmentPipelineStateId ?? undefined
+    );
     setValue("interviewType", DetailData.interviewType ?? undefined);
-    setValue("onlineInterviewAddress", DetailData.onlineInterviewAddress ?? undefined);
+    setValue(
+      "offlineInterviewAddress",
+      DetailData.offlineInterviewAddress ?? undefined
+    );
     setValue("note", DetailData.note ?? undefined);
     setValue("reviewFormId", DetailData.reviewFormId ?? undefined);
     setValue("isSendMailCouncil", DetailData.isSendMailCouncil ?? undefined);
-    setValue("isSendMailApplicant", DetailData.isSendMailApplicant ?? undefined);
-    setValue("bookingCalendarGroups", DetailData.bookingCalendarGroups ?? undefined);
+    setValue(
+      "isSendMailApplicant",
+      DetailData.isSendMailApplicant ?? undefined
+    );
+    setValue(
+      "bookingCalendarGroups",
+      DetailData.bookingCalendarGroups ?? undefined
+    );
 
     let arrayApplicant = [];
-    DetailData.bookingCalendarGroups.forEach(item => {
-      item?.bookingCalendarApplicants.forEach(itemData => {
-        arrayApplicant.push(itemData.applicant.id)
+    DetailData.bookingCalendarGroups.forEach((item) => {
+      item?.bookingCalendarApplicants.forEach((itemData) => {
+        arrayApplicant.push(itemData.applicant.id);
       });
     });
     setValue("applicantIdArray", arrayApplicant);
 
     let arrayCouncil = [];
-    DetailData.bookingCalendarCouncils.forEach(item => {
+    DetailData.bookingCalendarCouncils.forEach((item) => {
       arrayCouncil.push(item.id);
     });
     setValue("councilIds", arrayCouncil);
   }, [DetailData]);
-  
+
   const pressSave = handleSubmit(async (d) => {
     const body = {
       name: d.name,
@@ -126,7 +161,7 @@ export const FormCalendar = ({
       recruitmentPipelineStateId: d.recruitmentPipelineStateId,
       reviewFormId: d.reviewFormId,
       interviewType: d.interviewType,
-      onlineInterviewAddress: d.onlineInterviewAddress,
+      offlineInterviewAddress: d.offlineInterviewAddress,
       note: d?.note,
       isSendMailCouncil: d.isSendMailApplicant,
       isSendMailApplicant: d.isSendMailApplicant,
@@ -143,16 +178,18 @@ export const FormCalendar = ({
                 convertDurationTimeToSeconds(
                   `${item?.bookingCalendarApplicants[index].interviewTime}:00`
                 ) +
-                convertDurationTimeToSeconds(
-                  toHhMmSs(
-                    item?.bookingCalendarApplicants[index].interviewDuration
+                  convertDurationTimeToSeconds(
+                    toHhMmSs(
+                      item?.bookingCalendarApplicants[index].interviewDuration
+                    )
                   )
-                )
               );
               return {
                 applicantId: d?.applicantIdArray[index],
                 interviewTime: new Date(
-                  `${moment(item?.bookingCalendarApplicants[index].date).format("YYYY-MM-DD")} ${dateTime}`
+                  `${moment(item?.bookingCalendarApplicants[index].date).format(
+                    "YYYY-MM-DD"
+                  )} ${dateTime}`
                 ).toISOString(),
                 interviewDuration: toHhMmSs(
                   item?.bookingCalendarApplicants[index].interviewDuration
@@ -164,53 +201,67 @@ export const FormCalendar = ({
       ],
     };
     if (isEditMode) {
-      return await updateCalendar(body).unwrap()
+      return await updateCalendar(body)
+        .unwrap()
+        .then(() => {
+          enqueueSnackbar("Thực hiện thành công!", {
+            autoHideDuration: 2000,
+          });
+          onClose();
+        })
+        .catch(() => {
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 2000,
+            variant: "error",
+          });
+        });
+    }
+
+    await addCalendar(body)
+      .unwrap()
       .then(() => {
         enqueueSnackbar("Thực hiện thành công!", {
           autoHideDuration: 2000,
         });
         onClose();
-      }).catch(() => {
+      })
+      .catch(() => {
         enqueueSnackbar("Thực hiện thất bại!", {
           autoHideDuration: 2000,
           variant: "error",
-        })
+        });
       });
-    }
-
-    await addCalendar(body).unwrap()
-    .then(() => {
-      enqueueSnackbar("Thực hiện thành công!", {
-        autoHideDuration: 2000,
-      });
-      onClose();
-    }).catch(() => {
-      enqueueSnackbar("Thực hiện thất bại!", {
-        autoHideDuration: 2000,
-        variant: "error",
-      })
-    });
   });
-  
+
   const onClose = () => {
     reset();
     setOpen(false);
   };
-  
+
   return (
     <FormProvider methods={methods}>
       <Modal
         open={open}
         onClose={onClose}
-        sx={{display: "flex", justifyContent: "flex-end"}}
+        sx={{ display: "flex", justifyContent: "flex-end" }}
       >
-        <ViewModel sx={{width: "unset", height: "100%", justifyContent: "space-between"}}>
-          {isLoading ?
-            <View flex="true" contentcenter="true" style={{minWidth: "600px"}}>
-              <CircularProgress/>
+        <ViewModel
+          sx={{
+            width: "unset",
+            height: "100%",
+            justifyContent: "space-between",
+          }}
+        >
+          {isLoading ? (
+            <View
+              flex="true"
+              contentcenter="true"
+              style={{ minWidth: "600px" }}
+            >
+              <CircularProgress />
             </View>
-            :
-            <View style={{overflow: "hidden"}}>
+          ) : (
+            <View style={{ overflow: "hidden" }}>
               <View>
                 <View
                   flexrow="true"
@@ -221,8 +272,8 @@ export const FormCalendar = ({
                 >
                   <Text flex="true" fontsize={16} fontweight={"600"}>
                     {isEditMode
-                      ? 'Chỉnh sửa lịch phỏng vấn'
-                      : 'Đặt lịch phỏng vấn'}
+                      ? "Chỉnh sửa lịch phỏng vấn"
+                      : "Đặt lịch phỏng vấn"}
                   </Text>
                   <ButtonDS
                     type="submit"
@@ -230,11 +281,11 @@ export const FormCalendar = ({
                       backgroundColor: "#fff",
                       boxShadow: "none",
                       ":hover": {
-                        backgroundColor: "#EFF3F7"
+                        backgroundColor: "#EFF3F7",
                       },
                       textTransform: "none",
                       padding: "12px",
-                      minWidth: "unset"
+                      minWidth: "unset",
                     }}
                     onClick={onClose}
                     icon={
@@ -247,37 +298,66 @@ export const FormCalendar = ({
                     }
                   />
                 </View>
-                <Divider/>
+                <Divider />
               </View>
-              <View style={{minWidth: "600px", maxWidth: "1400px", overflow: "hidden"}}>
-                <Grid container flexDirection={"row"} height={"100%"} flexWrap={"nowrap"} overflow={"hidden"}>
-                  <Grid container sx={{width: "600px", overflowY: "auto"}} p={3} height={"100%"} flexWrap={"nowrap"}
-                        flexDirection={"column"}>
+              <View
+                style={{
+                  minWidth: "600px",
+                  maxWidth: "1400px",
+                  overflow: "hidden",
+                }}
+              >
+                <Grid
+                  container
+                  flexDirection={"row"}
+                  height={"100%"}
+                  flexWrap={"nowrap"}
+                  overflow={"hidden"}
+                >
+                  <Grid
+                    container
+                    sx={{ width: "600px", overflowY: "auto" }}
+                    p={3}
+                    height={"100%"}
+                    flexWrap={"nowrap"}
+                    flexDirection={"column"}
+                  >
                     <PersonalInterview
+                      detailCandidate={item}
                       item={DetailData}
                       option={options}
-                      currentApplicantPipelineState={
-                        currentApplicantPipelineState
-                      }
+                      optionsFromCruit={optionsFromCruit}
+                      currentApplicantPipelineState={currentApplicantPipelineState}
                     />
                   </Grid>
-                  <Divider orientation="vertical"/>
-                  <Grid p={3} sx={{
-                    minWidth: "400px"
-                  }}>
-                    <ListCandidate option={options} applicantId={options?.applicantId}/>
+                  <Divider orientation="vertical" />
+                  <Grid
+                    p={3}
+                    sx={{
+                      minWidth: "400px",
+                    }}
+                  >
+                    <ListCandidate
+                      detailCandidate={item}
+                      dataFormRecruiment={dataFormRecruiment}
+                      option={options}
+                      applicantId={options?.applicantId}
+                      error={errors}
+                    />
                   </Grid>
-                  <Divider orientation="vertical"/>
-                  <Grid sx={{
-                    minWidth: "400px",
-                    overflowY: "auto"
-                  }}>
+                  <Divider orientation="vertical" />
+                  <Grid
+                    sx={{
+                      minWidth: "400px",
+                      overflowY: "auto",
+                    }}
+                  >
                     <InterviewCouncil />
                   </Grid>
                 </Grid>
               </View>
             </View>
-          }
+          )}
           <View
             flexrow="true"
             jcbetween="true"
@@ -291,15 +371,15 @@ export const FormCalendar = ({
                 variant="contained"
                 loading={isSubmitting}
                 onClick={pressSave}
-                sx={{backgroundColor: "#1976D2", p: 1, fontSize: 14}}
+                sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
               >
                 {"Lưu"}
               </LoadingButton>
-              <div style={{width: 8}}/>
-              
+              <div style={{ width: 8 }} />
+
               <LoadingButton
                 variant="text"
-                sx={{color: "#455570"}}
+                sx={{ color: "#455570" }}
                 onClick={onClose}
               >
                 {"Hủy"}
@@ -309,5 +389,5 @@ export const FormCalendar = ({
         </ViewModel>
       </Modal>
     </FormProvider>
-  )
+  );
 };

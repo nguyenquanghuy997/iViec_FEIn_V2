@@ -99,32 +99,17 @@ function ExaminationItem(props) {
 function InterviewItem(props) {
   const { item } = props;
   const [ open, setOpen] = useState(false)
+  const [ data, setData ] = useState()
+  const handleClick = (item) => {
+    setOpen(true)
+    setData(item)
+  }
+
   return (
     <div>
       <Baseitem item={item} />
 
       <Box style={{ margin: '12px 0px 0px 0px' }}>
-        {/* đã từng phỏng vấn */}
-        {/* <Box sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          background: '#F3F4F6',
-          padding: '4px 12px'
-        }}>
-          <Typography fontSize="12px" fontWeight="500">
-            {'Phỏng vấn lần 1'}
-          </Typography>
-
-          <Iconify
-            icon={"material-symbols:play-circle"}
-            width={20}
-            height={20}
-            color="#455570"
-          />
-        </Box> */}
-
-        {/* chưa có hẹn phỏng vấn */}
         <Box>
           <Divider style={{ margin: 0 }} />
 
@@ -148,7 +133,7 @@ function InterviewItem(props) {
                 padding: "6px 12px",
                 textTransform: "none",
               }}
-              onClick={()=> setOpen(true)}
+              onClick={()=>handleClick(item)}
             />
           </Box>
         </Box>
@@ -213,7 +198,8 @@ function InterviewItem(props) {
           </Box>
         </Box> */}
       </Box>
-      {open && <FormCalendar open={open} setOpen={setOpen}/>}
+
+      {open && <FormCalendar dataFormRecruiment={data} open={open} setOpen={setOpen} optionsFromCruit={data}/>}
     </div>
   );
 }
@@ -471,6 +457,7 @@ function OfferItem(props) {
 }
 
 function TaskCard({ item, index, pipelineStateType }) {
+  
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
       {(provided) => {

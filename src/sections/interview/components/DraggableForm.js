@@ -1,232 +1,240 @@
-import { Box, Button, Card, Collapse, Typography } from "@mui/material";
-import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { DeleteIcon } from "@/assets/ActionIcon";
-import { Label } from "@/components/hook-form/style";
+import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
 import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
-import { Draggable } from "react-beautiful-dnd";
-import React, { useState } from "react";
+import { Label } from "@/components/hook-form/style";
 import { DragItem } from "@/sections/interview/components/DragCandidate";
+import { Box, Button, Card, Collapse, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { useFormContext } from "react-hook-form";
 
-function DraggableForm({model, index, removeItem}) {
-  const {setValue} = useFormContext();
+function DraggableForm({ model, index, removeItem }) {
+  const { setValue } = useFormContext();
   const [open, setOpen] = useState(false);
   const time = false;
   // const [time, setTime] = useState(false);
   const today = new Date();
 
-  setValue(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.applicantId`, model.id);
+  setValue(
+    `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.applicantId`,
+    model.id
+  );
 
-  return <Draggable key={model.id} draggableId={model.id} index={index}>
-    {(provided) => (
-      <DragItem
-        ref={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
-      >
-        <div
-          style={{
-            background: "#F2F4F5",
-            padding: "16px",
-            marginBottom: "16px",
-            borderRadius: "6px ",
-            width: "100%"
-          }}
-        >
-          <Card
-            sx={{
-              boxShadow: "none",
-              border: "none",
-              mb: 2,
-              borderRadius: "6px",
-              background: "#F2F4F5"
-            }}
+  return (
+    // <FormProvider {...methods}>
+      <Draggable key={model.id} draggableId={model.id} index={index}>
+        {(provided) => (
+          <DragItem
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
           >
             <div
               style={{
-                display: "flex",
-                justifyContent: "space-between"
+                background: "#F2F4F5",
+                padding: "16px",
+                marginBottom: "16px",
+                borderRadius: "6px ",
+                width: "100%",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center"
-                }}
-              >
-                <MenuListIcon />
-                <Box sx={{ display: "flex", ml: 1 }}>
-                  <img
-                    alt={""}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "10px",
-                      marginRight: "16px"
-                    }}
-                    src={model.image}
-                  />
-                  <div>
-                    <Typography
-                      sx={{
-                        fontSize: "13px",
-                        fontWeight: "600"
-                      }}
-                    >
-                      {model.name}
-                    </Typography>
-                    <Typography
-                      color="#455570"
-                      sx={{
-                        fontSize: "12px",
-                        fontWeight: "400"
-                      }}
-                    >
-                      {model.phone}
-                    </Typography>
-                  </div>
-                </Box>
-              </div>
-
-              <Box
+              <Card
                 sx={{
-                  mt: "2px",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center"
+                  boxShadow: "none",
+                  border: "none",
+                  mb: 2,
+                  borderRadius: "6px",
+                  background: "#F2F4F5",
                 }}
-                onClick={() => removeItem(model.id)}
               >
-                <DeleteIcon />
-              </Box>
-            </div>
-          </Card>
-          {open ? (
-            <>
-              <Box sx={{ mb: 2, width: "100%" }}>
-                <Label required={true}>Ngày phỏng vấn</Label>
-                <RHFDatePicker
-                  name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`}
-                  today={today}
+                <div
                   style={{
-                    background: "white",
-                    borderRadius: "8px"
+                    display: "flex",
+                    justifyContent: "space-between",
                   }}
-                />
-              </Box>
-              <Box sx={{ width: "100%" }}>
-                <Box>
-                  <div>
-                    <Collapse in={open}>
-                      <Box sx={{ mb: 2 }}>
-                        <Label required={true}> Giờ phỏng vấn</Label>
-
-                        <RHFTimePicker
-                          name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`}
-                          style={{
-                            width: "100%",
-                            background: "white",
-                            borderRadius: "8px"
-                          }}
-                        />
-                      </Box>
-                    </Collapse>
-                  </div>
-                </Box>
-              </Box>
-              <Box sx={{ width: "100%" }}>
-                <Box>
-                  <div>
-                    <Collapse in={open}>
-                      <Box sx={{ mb: 2 }}>
-                        <Label required={true}>Thời lượng phỏng vấn</Label>
-
-                        <RHFTextField
-                          isRequired
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MenuListIcon />
+                    <Box sx={{ display: "flex", ml: 1 }}>
+                      <img
+                        alt={""}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: "10px",
+                          marginRight: "16px",
+                        }}
+                        src={model.image}
+                      />
+                      <div>
+                        <Typography
                           sx={{
-                            minHeight: 44,
-                            width: "100%",
-                            background: "white",
-                            borderRadius: "8px"
+                            fontSize: "13px",
+                            fontWeight: "600",
                           }}
-                          name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`}
-                          placeholder="Nhập số phút"
-                        />
-                      </Box>
-                    </Collapse>
+                        >
+                          {model.name}
+                        </Typography>
+                        <Typography
+                          color="#455570"
+                          sx={{
+                            fontSize: "12px",
+                            fontWeight: "400",
+                          }}
+                        >
+                          {model.phone}
+                        </Typography>
+                      </div>
+                    </Box>
                   </div>
-                </Box>
-              </Box>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "end"
-                }}
-              >
-                <Button
-                  onClick={() => setOpen(false)}
+
+                  <Box
+                    sx={{
+                      mt: "2px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    onClick={() => removeItem(model.id)}
+                  >
+                    <DeleteIcon />
+                  </Box>
+                </div>
+              </Card>
+              {open ? (
+                <>
+                  <Box sx={{ mb: 2, width: "100%" }}>
+                    <Label required={true}>Ngày phỏng vấn</Label>
+                    <RHFDatePicker
+                      name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`}
+                      today={today}
+                      style={{
+                        background: "white",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </Box>
+                  <Box sx={{ width: "100%" }}>
+                    <Box>
+                      <div>
+                        <Collapse in={open}>
+                          <Box sx={{ mb: 2 }}>
+                            <Label required={true}> Giờ phỏng vấn</Label>
+
+                            <RHFTimePicker
+                              name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`}
+                              style={{
+                                width: "100%",
+                                background: "white",
+                                borderRadius: "8px",
+                              }}
+                            />
+                          </Box>
+                        </Collapse>
+                      </div>
+                    </Box>
+                  </Box>
+                  <Box sx={{ width: "100%" }}>
+                    <Box>
+                      <div>
+                        <Collapse in={open}>
+                          <Box sx={{ mb: 2 }}>
+                            <Label required={true}>Thời lượng phỏng vấn</Label>
+
+                            <RHFTextField
+                              isRequired
+                              sx={{
+                                minHeight: 44,
+                                width: "100%",
+                                background: "white",
+                                borderRadius: "8px",
+                              }}
+                              name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`}
+                              placeholder="Nhập số phút"
+                            />
+                          </Box>
+                        </Collapse>
+                      </div>
+                    </Box>
+                  </Box>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                    }}
+                  >
+                    <Button
+                      onClick={() => setOpen(false)}
+                      sx={{
+                        color: "#172B4D",
+                        "&:hover": {
+                          bgcolor: "#F2F4F5",
+                        },
+                      }}
+                    >
+                      Hủy
+                    </Button>
+                    <Button
+                      onClick={() => setOpen(false)}
+                      variant="contained"
+                      sx={{ background: "#1976D2" }}
+                    >
+                      Lưu
+                    </Button>
+                  </div>
+                </>
+              ) : !time ? (
+                <Card
                   sx={{
-                    color: "#172B4D", "&:hover": {
-                      bgcolor: "#F2F4F5"
-                    }
+                    textAlign: "center",
+                    px: 2,
+                    borderRadius: "6px",
                   }}
                 >
-                  Hủy
-                </Button>
-                <Button
-                  onClick={() => setOpen(false)}
-                  variant="contained"
-                  sx={{ background: "#1976D2" }}
-                >
-                  Lưu
-                </Button>
-              </div>
-            </>
-          ) : !time ? <Card
-              sx={{
-                textAlign: "center",
-                px: 2,
-                borderRadius: "6px"
-              }}
-            >
-              <Button
-                sx={{
-                  m: "0 auto",
-                  textTransform: "none",
-                  fontWeight: 400,
-                  fontSize: 14,
-                  "&:hover": {
-                    backgroundColor: "white"
-                  }
-                }}
-                onClick={() => setOpen(true)}
-              >
-                Điều chỉnh ngày giờ phỏng vấn
-              </Button>
-            </Card> :
-            <Card sx={{ textAlign: "center", py: 1, px: 2 }}>
-              <Typography
-                sx={{
-                  fontWeight: 600,
-                  m: "0 auto",
-                  fontSize: 13
-                }}
-              >
-                {time}
-              </Typography>
-              <Button
-                sx={{ m: "0 auto", textTransform: "none" }}
-              >
-                {" "}
-                Điều chỉnh
-              </Button>{" "}
-            </Card>
-          }
-        </div>
-      </DragItem>
-    )}
-  </Draggable>;
+                  <Button
+                    sx={{
+                      m: "0 auto",
+                      textTransform: "none",
+                      fontWeight: 400,
+                      fontSize: 14,
+                      "&:hover": {
+                        backgroundColor: "white",
+                      },
+                    }}
+                    onClick={() => setOpen(true)}
+                  >
+                    Điều chỉnh ngày giờ phỏng vấn
+                  </Button>
+                </Card>
+              ) : (
+                <Card sx={{ textAlign: "center", py: 1, px: 2 }}>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      m: "0 auto",
+                      fontSize: 13,
+                    }}
+                  >
+                    {time}
+                  </Typography>
+                  <Button sx={{ m: "0 auto", textTransform: "none" }}>
+                    {" "}
+                    Điều chỉnh
+                  </Button>{" "}
+                </Card>
+              )}
+            </div>
+          </DragItem>
+        )}
+      </Draggable>
+    // </FormProvider>
+  );
 }
 
 export default DraggableForm;

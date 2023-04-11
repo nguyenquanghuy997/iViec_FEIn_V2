@@ -4,7 +4,7 @@ import { Label } from "@/components/hook-form/style";
 import { useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery } from "@/sections/applicant/ApplicantFormSlice";
 import {
   useGetReviewFormQuery,
-  useLazyGetRelateCalendarQuery
+  useLazyGetRelateCalendarQuery,
 } from "@/sections/interview/InterviewSlice";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
@@ -13,10 +13,15 @@ import { useTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
+const PersonalInterview = ({
+  item,
+  option,
+  currentApplicantPipelineState,
+  optionsFromCruit,
+}) => {
   const { resetField, watch, setValue } = useFormContext();
-  const { data: { items: dataRecruitment = [] } = {} } = useGetRecruitmentsQuery({ processStatuses: [5, 7] });
-
+  const { data: { items: dataRecruitment = [] } = {} } =
+    useGetRecruitmentsQuery({ processStatuses: [5, 7] });
   const { palette } = useTheme();
 
   const [getPipeline, { data: { items: ListStep = [] } = {} }] =
@@ -29,12 +34,12 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
   const interviewType = [
     {
       value: 0,
-      label: "Online"
+      label: "Online",
     },
     {
       value: 1,
-      label: "Trực tiếp"
-    }
+      label: "Trực tiếp",
+    },
   ];
 
   const changeRecruitment = (e) => {
@@ -42,7 +47,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
     resetField("recruitmentPipelineStateId");
     resetField("reviewFormId");
     resetField("interviewType");
-    resetField("onlineInterviewAddress");
+    resetField("offlineInterviewAddress");
     resetField("applicantIdArray");
     resetField("bookingCalendarGroups");
   };
@@ -54,18 +59,33 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
   useEffect(() => {
     if (option) {
       setValue("recruitmentId", option?.id);
-      getPipeline({ RecruitmentId: option?.id });
+      setValue("recruitmentPipelineStateId", currentApplicantPipelineState),
+        getPipeline({ RecruitmentId: option?.id });
       getRelateCalendar({
-        RecruitmentPipelineStateId: currentApplicantPipelineState
+        RecruitmentPipelineStateId: currentApplicantPipelineState,
       });
     }
   }, [!option]);
 
   useEffect(() => {
+    if (optionsFromCruit) {
+      setValue("recruitmentId", optionsFromCruit?.recruitmentId);
+      setValue(
+        "recruitmentPipelineStateId",
+        optionsFromCruit?.recruitmentPipelineStateId
+      );
+      getPipeline({ RecruitmentId: optionsFromCruit?.recruitmentId });
+    getRelateCalendar({
+      RecruitmentPipelineStateId: optionsFromCruit?.recruitmentPipelineStateId,
+    });
+    }
+  }, [optionsFromCruit]);
+
+  useEffect(() => {
     if (!item?.id) return;
     getPipeline({ RecruitmentId: item?.recruitmentId });
     getRelateCalendar({
-      RecruitmentPipelineStateId: item?.recruitmentPipelineStateId
+      RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
     });
   }, [item]);
 
@@ -73,6 +93,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
     if (!relateCalendar) return;
     setValue("reviewFormId", relateCalendar?.reviewFormId);
   }, [relateCalendar]);
+
 
   return (
     <Grid>
@@ -95,12 +116,12 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
           options={dataRecruitment.map((i) => ({
             value: i?.id,
             label: i?.name,
-            name: i?.name
+            name: i?.name,
           }))}
           name="recruitmentId"
           multiple={false}
           placeholder="Chọn tin tuyển dụng"
-          disabled={!!(option || item?.recruitmentId)}
+          disabled={!!(option || item?.recruitmentId || optionsFromCruit)}
           onChange={changeRecruitment}
         />
       </Grid>
@@ -117,20 +138,24 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
               ListStep.filter((item) => item.pipelineStateType === 2)?.map(
                 (i) => ({
                   value: i.id,
-                  label: PipelineStateType(i.pipelineStateType)
+                  label: PipelineStateType(i.pipelineStateType),
                 })
               ) || {
-                value: option.currentApplicantPipelineState
+                value: option.currentApplicantPipelineState,
               }
+              ||{
+               value: optionsFromCruit?.recruitmentPipelineStateId}
             }
             name="recruitmentPipelineStateId"
             multiple={false}
             placeholder="Chọn bước phỏng vấn"
             required
             disabled={
-              !!(currentApplicantPipelineState ||
+              !!(
+                currentApplicantPipelineState ||
                 item?.recruitmentPipelineStateId ||
-                !watch("recruitmentId"))
+                !watch("recruitmentId") || optionsFromCruit
+              )
             }
             onChange={changePipelineRecruitment}
           />
@@ -160,13 +185,14 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
           </Label>
           <TextAreaDS
             placeholder="Nhập nội dung lưu ý..."
-            name={"onlineInterviewAddress"}
+            name={"offlineInterviewAddress"}
             style={{
-              height: "80px", resize: "none", "&.ant-input-data-count": {
-                display: "none"
-              }
+              height: "80px",
+              resize: "none",
+              "&.ant-input-data-count": {
+                display: "none",
+              },
             }}
-
           />
         </Grid>
       )}
@@ -202,7 +228,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
         <RHFSelect
           options={DataForm.map((i) => ({
             value: i.id,
-            label: i.name
+            label: i.name,
           }))}
           name="reviewFormId"
           placeholder="Chọn mẫu đánh giá"

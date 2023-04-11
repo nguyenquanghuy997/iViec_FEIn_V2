@@ -88,17 +88,16 @@ function RHFSelectMultiple({ name, ...props }) {
     options,
     disabled,
     multiple,
-    listApplicant
+    listApplicant,
   } = props;
   const { remove } = useFieldArray({ control, name });
 
   const renderChipsSelect = (options, value) => {
+    
     return (
       <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
-          data={options?.filter((option) =>
-            value.includes(option?.value)
-          )}
+          data={options?.filter((option) => value.includes(option?.value))}
           open={open}
         />
       </Stack>
@@ -186,6 +185,8 @@ function RHFSelectMultiple({ name, ...props }) {
             {renderOptions(filterOptions)}
           </SelectFieldStyle>
           {listApplicant}
+          {/* {error.length > 0 && error?.bookingCalendarGroups[0]?.bookingCalendarApplicants.map((error) => error?.date?.message)
+              .toString()} */}
           {multiple && renderChipsSelect(options, field.value, remove)}
           <FormHelperText
             sx={{
