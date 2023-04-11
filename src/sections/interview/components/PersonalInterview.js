@@ -187,11 +187,9 @@ const PersonalInterview = ({
             placeholder="Nhập nội dung lưu ý..."
             name={"offlineInterviewAddress"}
             style={{
-              height: "80px",
-              resize: "none",
-              "&.ant-input-data-count": {
-                display: "none",
-              },
+              height: "80px", resize: "none", "&.antInputDataCount": {
+                display: "none"
+              }
             }}
           />
         </Grid>

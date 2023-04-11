@@ -10,15 +10,11 @@ import {
 import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
 import ListCandidate from "@/sections/interview/components/ListCandidate";
 import PersonalInterview from "@/sections/interview/components/PersonalInterview";
-import {
-  convertDurationTimeToSeconds,
-  convertStoMs,
-  toHhMmSs,
-} from "@/sections/interview/config";
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { CircularProgress, Divider, Grid, Modal } from "@mui/material";
+import { convertDataGet, convertDurationTimeToSeconds, convertStoMs, toHhMmSs } from "@/sections/interview/config";
 import moment from "moment";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
@@ -26,6 +22,7 @@ import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 const defaultValues = {
+  id: undefined,
   name: undefined,
   recruitmentId: undefined,
   recruitmentPipelineStateId: undefined,
@@ -66,6 +63,7 @@ export const FormCalendar = ({
   const [updateCalendar] = useUpdateCalendarMutation();
 
   const Schema = Yup.object().shape({
+    id: Yup.string().nullable(),
     name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
     recruitmentId: Yup.string().required(
       "Chưa nhập tên tiêu đề tin tuyển dụng"
@@ -85,7 +83,7 @@ export const FormCalendar = ({
       .required("Chọn ứng viên phỏng vấn"),
     bookingCalendarGroups: Yup.array().of(
       Yup.object().shape({
-        name: Yup.string(),
+        name: Yup.string().nullable(),
         interviewGroupType: Yup.string().nullable(),
         interviewTime: Yup.string().nullable(),
         interviewDuration: Yup.string().nullable(),
@@ -114,8 +112,10 @@ export const FormCalendar = ({
     handleSubmit,
     formState: { isSubmitting,errors },
   } = methods;
+  
   useEffect(() => {
     if (!DetailData?.id) return;
+    setValue("id", DetailData.id);
     setValue("name", DetailData.name ?? undefined);
     setValue("recruitmentId", DetailData.recruitmentId ?? undefined);
     setValue(
@@ -130,15 +130,9 @@ export const FormCalendar = ({
     setValue("note", DetailData.note ?? undefined);
     setValue("reviewFormId", DetailData.reviewFormId ?? undefined);
     setValue("isSendMailCouncil", DetailData.isSendMailCouncil ?? undefined);
-    setValue(
-      "isSendMailApplicant",
-      DetailData.isSendMailApplicant ?? undefined
-    );
-    setValue(
-      "bookingCalendarGroups",
-      DetailData.bookingCalendarGroups ?? undefined
-    );
-
+    setValue("isSendMailApplicant", DetailData.isSendMailApplicant ?? undefined);
+    setValue("bookingCalendarGroups", convertDataGet(DetailData.bookingCalendarGroups) ?? undefined);
+    
     let arrayApplicant = [];
     DetailData.bookingCalendarGroups.forEach((item) => {
       item?.bookingCalendarApplicants.forEach((itemData) => {
@@ -146,7 +140,7 @@ export const FormCalendar = ({
       });
     });
     setValue("applicantIdArray", arrayApplicant);
-
+    
     let arrayCouncil = [];
     DetailData.bookingCalendarCouncils.forEach((item) => {
       arrayCouncil.push(item.id);
@@ -156,6 +150,7 @@ export const FormCalendar = ({
 
   const pressSave = handleSubmit(async (d) => {
     const body = {
+      id: d.id,
       name: d.name,
       recruitmentId: d.recruitmentId,
       recruitmentPipelineStateId: d.recruitmentPipelineStateId,
@@ -168,33 +163,24 @@ export const FormCalendar = ({
       councilIds: d.councilIds,
       bookingCalendarGroups: [
         {
-          name: "person",
           interviewGroupType: "0",
-          interviewTime: "",
-          interviewDuration: "",
-          bookingCalendarApplicants: d?.bookingCalendarGroups.map(
-            (item, index) => {
+          bookingCalendarApplicants: d?.bookingCalendarGroups[0].bookingCalendarApplicants.map(
+            (item) => {
               const dateTime = convertStoMs(
                 convertDurationTimeToSeconds(
-                  `${item?.bookingCalendarApplicants[index].interviewTime}:00`
+                  `${item?.interviewTime}:00`
                 ) +
-                  convertDurationTimeToSeconds(
-                    toHhMmSs(
-                      item?.bookingCalendarApplicants[index].interviewDuration
-                    )
+                convertDurationTimeToSeconds(
+                  toHhMmSs(
+                    item?.interviewDuration
                   )
+                )
               );
-              return {
-                applicantId: d?.applicantIdArray[index],
-                interviewTime: new Date(
-                  `${moment(item?.bookingCalendarApplicants[index].date).format(
-                    "YYYY-MM-DD"
-                  )} ${dateTime}`
-                ).toISOString(),
-                interviewDuration: toHhMmSs(
-                  item?.bookingCalendarApplicants[index].interviewDuration
-                ),
-              };
+              item.interviewTime = new Date(
+                `${moment(item.date).format("YYYY-MM-DD")} ${dateTime}`
+              ).toISOString();
+              item.interviewDuration = toHhMmSs(item.interviewDuration);
+              return item;
             }
           ),
         },
@@ -345,14 +331,12 @@ export const FormCalendar = ({
                       error={errors}
                     />
                   </Grid>
-                  <Divider orientation="vertical" />
-                  <Grid
-                    sx={{
-                      minWidth: "400px",
-                      overflowY: "auto",
-                    }}
-                  >
-                    <InterviewCouncil />
+                  <Divider orientation="vertical"/>
+                  <Grid sx={{
+                    minWidth: "400px",
+                    overflowY: "auto"
+                  }}>
+                    <InterviewCouncil/>
                   </Grid>
                 </Grid>
               </View>

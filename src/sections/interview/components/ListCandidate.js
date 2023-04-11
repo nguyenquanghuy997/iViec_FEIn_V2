@@ -20,11 +20,13 @@ const ListCandidate = ({ option,detailCandidate, applicantId,dataFormRecruiment,
       setValue("applicantIdArray", [option?.applicantId]);
     }
   }, [option]);
+
   useEffect(() => {
     if (detailCandidate) {
       setValue("applicantIdArray", [detailCandidate?.id]);
     }
   }, [detailCandidate]);
+  
   useEffect(() => {
     if (dataFormRecruiment) {
       setValue("applicantIdArray", [dataFormRecruiment?.applicantId]);

@@ -96,14 +96,14 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["GetAllPipeline"],
     }),
-    getListColumns: builder.query({
+    getListPipelineColumns: builder.query({
       query: () => ({
         url: API_GET_COLUMN_PIPELINE,
         method: "GET",
       }),
       providesTags: ["GetColumn"],
     }),
-    updateListColumnApplicants: builder.mutation({
+    updateListPipelineColumns: builder.mutation({
       query: (data) => {
         const { id, ...restData } = data;
         return {
@@ -126,6 +126,6 @@ export const {
   useAddPipelineMutation,
   useUpdatePipelineMutation,
   useDeletePipelineMutation,
-  useGetListColumnsQuery,
-  useUpdateListColumnApplicantsMutation,
+  useGetListPipelineColumnsQuery,
+  useUpdateListPipelineColumnsMutation,
 } = PipelineFormSlice;

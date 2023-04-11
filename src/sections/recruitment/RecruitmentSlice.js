@@ -115,14 +115,14 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       invalidatesTags: [{ type: "RECRUITMENT", id: "LIST" }],
     }),
     //settings
-    getListColumns: builder.query({
+    getListRecruitmentColumns: builder.query({
       query: () => ({
         url: API_GET_COLUMN_RECRUITMENT,
         method: "GET",
       }),
       providesTags: ["GetColumn"],
     }),
-    updateListColumns: builder.mutation({
+    updateListRecruitmentColumns: builder.mutation({
       query: (data) => {
         const { id, ...restData } = data;
         return {
@@ -168,8 +168,8 @@ export const {
   useUpdateRecruitmentDraftMutation,
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,
-  useGetListColumnsQuery,
-  useUpdateListColumnsMutation,
+  useGetListRecruitmentColumnsQuery,
+  useUpdateListRecruitmentColumnsMutation,
   useAddRecruitmentMutation,
   useGetPreviewRecruitmentMutation,
   useUpdateRecruitmentMutation,

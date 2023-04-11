@@ -1,9 +1,9 @@
 import {
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,
-  useGetListColumnsQuery,
+  useGetListRecruitmentColumnsQuery,
   useGetRecruitmentsQuery,
-  useUpdateListColumnsMutation,
+  useUpdateListRecruitmentColumnsMutation,
 } from "../RecruitmentSlice";
 import { useGetOrganizationQuery } from "@/sections/report/reportSlice";
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
@@ -46,7 +46,7 @@ import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
 import { get } from "lodash";
 import useRole from "@/hooks/useRole";
-import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
+import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
 import TextMaxLine from "@/components/TextMaxLine";
 import {
   API_GET_LIST_CANDIDATELEVEL, API_GET_LIST_LANGUAGE,
@@ -84,7 +84,7 @@ export const RecruitmentItem = () => {
 
   // api get list
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
-  const { data: Data = {}, isLoading } = useGetRecruitmentsQuery({...query, searchKey: query.SearchKey}, { skip: !isReady });
+  const { data: Data = {}, isLoading } = useGetRecruitmentsQuery({ ...query, searchKey: query.SearchKey }, { skip: !isReady });
 
   const columns = useMemo(() => {
     return [
@@ -105,18 +105,18 @@ export const RecruitmentItem = () => {
         fixed: "left",
         width: "300px",
         render: (item, record) => (
-            <TextMaxLine
-                sx={{ width: 360, fontWeight: 500, fontSize: 14, ...(canView && { cursor: 'pointer' }) }}
-                onClick={(e) => {
-                  if (!canView) {
-                    return;
-                  }
-                  router.push(PATH_DASHBOARD.recruitment.view(record.id)),
-                  e.stopPropagation();
-                }}
-            >
-              {item}
-            </TextMaxLine>
+          <TextMaxLine
+            sx={{ width: 360, fontWeight: 500, fontSize: 14, ...(canView && { cursor: 'pointer' }) }}
+            onClick={(e) => {
+              if (!canView) {
+                return;
+              }
+              router.push(PATH_DASHBOARD.recruitment.view(record.id)),
+                e.stopPropagation();
+            }}
+          >
+            {item}
+          </TextMaxLine>
         ),
       },
       {
@@ -382,7 +382,7 @@ export const RecruitmentItem = () => {
           <>
             {record?.minSalary != 0
               ? `${fCurrency(record?.minSalary)} - ${fCurrency(record?.maxSalary)} ${Currency(record?.currencyUnit)}`
-              : ""}
+              : (record.salaryDisplayType == 0 ? 'Không lương' : 'Thỏa thuận')}
           </>
         ),
         filters: {
@@ -418,6 +418,42 @@ export const RecruitmentItem = () => {
         dataIndex: "workingLanguageName",
         title: "Ngôn ngữ",
         width: "160px",
+        render: (_, { recruitmentLanguages }) => (
+          <>
+            {recruitmentLanguages?.map((re, index) => {
+              if (index < 3) {
+                return (
+                  <Tag
+                    key={index}
+                    style={{
+                      background: "#EFF3F7",
+                      borderRadius: "4px",
+                      color: "#5C6A82",
+                      border: "none",
+                    }}
+                  >
+                    {re?.name}
+                  </Tag>
+                );
+              } else {
+                var indexplus = recruitmentLanguages.length - 3;
+                return (
+                  <Tag
+                    key={index}
+                    style={{
+                      background: "#EFF3F7",
+                      borderRadius: "4px",
+                      color: "#5C6A82",
+                      border: "none",
+                    }}
+                  >
+                    +{indexplus}
+                  </Tag>
+                );
+              }
+            })}
+          </>
+        ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           placeholder: 'Chọn 1 hoặc nhiều ngôn ngữ',
@@ -548,10 +584,11 @@ export const RecruitmentItem = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          useGetColumnsFunc={useGetListColumnsQuery}
-          useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          useGetColumnsFunc={useGetListRecruitmentColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListRecruitmentColumnsMutation}
           searchInside={false}
           createText={canEdit && "Đăng tin tuyển dụng"}
+          searchTextHint = 'Tìm kiếm theo tiêu đề tin tuyển dụng...'
           onClickCreate={() => {
             handleCheckNavigate();
           }}

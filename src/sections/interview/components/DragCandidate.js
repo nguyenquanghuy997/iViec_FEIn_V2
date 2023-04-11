@@ -10,10 +10,9 @@ export const DragItem = styled("li")(() => ({
   }
 }));
 
-function DragCandidate({ data }) {
-  const { setValue } = useFormContext();
+function DragCandidate({data}) {
+  const {setValue} = useFormContext();
   const [characters, setCharacters] = useState([]);
-  const newArr = data;
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
     const items = Array.from(characters);
@@ -21,27 +20,26 @@ function DragCandidate({ data }) {
     items.splice(result.destination.index, 0, reorderedItem);
     setCharacters([...data, items]);
   };
-
+  
   const RemoveItem = (id) => {
-    setValue("applicantIdArray", newArr.map(function(item) {
+    setValue("applicantIdArray", data.map(function (item) {
       if (item.id !== id)
         return item["id"];
     }));
   };
-
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable sx={{ height: "100%" }} droppableId="characters">
+        <Droppable sx={{height: "100%"}} droppableId="characters">
           {(provided) => (
             <ul
-              style={{ overflowY: "auto", height: "calc(100% - 105px)" }}
+              style={{overflowY: "auto", height: "calc(100% - 105px)"}}
               className="characters"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {newArr?.map((model, index) => {
-                return <DraggableForm model={model} index={index} removeItem={RemoveItem}/>
+              {data?.map((model, index) => {
+                return <DraggableForm key={model.id} model={model} index={index} removeItem={RemoveItem}/>
               })}
               {provided.placeholder}
             </ul>

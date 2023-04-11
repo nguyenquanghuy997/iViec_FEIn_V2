@@ -1,4 +1,5 @@
-import { apiSlice } from "@/redux/api/apiSlice";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { axiosBaseQuery } from "@/redux/api/apiSlice";
 import {
   API_GET_ROLE,
   API_GET_LIST_ROLE_GROUP,
@@ -13,11 +14,10 @@ import {
 } from "@/routes/api";
 import * as qs from "qs";
 
-const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["RoleGroup", "GetColumn"],
-});
-
-const PipelineFormSlice = apiWithTag.injectEndpoints({
+export const roleGroupSlice = createApi({
+  reducerPath: 'roleGroupApi',
+  tagTypes: ["RoleGroup", "GetColumn"],
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     getRoleList: builder.query({
       query: (params = {}) => ({
@@ -120,14 +120,14 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
     }),
 
     //settings
-    getListColumns: builder.query({
+    getListRoleColumns: builder.query({
       query: () => ({
         url: API_GET_COLUMN_ROLE,
         method: "GET",
       }),
       providesTags: ["GetColumn"],
     }),
-    updateListColumns: builder.mutation({
+    updateListRoleColumns: builder.mutation({
       query: (data) => {
         const { id, ...restData } = data;
         return {
@@ -146,11 +146,11 @@ export const {
   useGetRoleGroupListQuery,
   useAddRoleGroupMutation,
   useUpdateRolegroupMutation,
-  useGetListColumnsQuery,
-  useUpdateListColumnsMutation,
+  useGetListRoleColumnsQuery,
+  useUpdateListRoleColumnsMutation,
   useSaveRoleGroupMutation,
   useGetRoleDetailQuery,
   useLazyGetRoleDetailQuery,
   useRemoveRoleGroupMutation,
   useSetStatusRoleGroupMutation,
-} = PipelineFormSlice;
+} = roleGroupSlice;

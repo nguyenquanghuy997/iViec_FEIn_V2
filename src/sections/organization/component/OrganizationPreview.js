@@ -1,11 +1,12 @@
 import React from "react";
 import {get, isEmpty} from 'lodash'
-import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
+import {Box, CircularProgress, Divider, Drawer, IconButton, Stack, Typography, useTheme} from "@mui/material";
 import {OrganizationFromHeadStyle} from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
 import {useGetOrganizationByIdQuery} from "@/sections/organization/OrganizationSlice";
 import {useRouter} from "next/router";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
 const renderInfoOrganization = (key, value) => {
   return (
@@ -18,7 +19,8 @@ const renderInfoOrganization = (key, value) => {
 
 const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParentNode, onOpenForm, setActionType}) => {
   const router = useRouter();
-  const {data: organization} = useGetOrganizationByIdQuery({
+  const theme = useTheme();
+  const {data: organization, isLoading} = useGetOrganizationByIdQuery({
     OrganizationId: nodes?.id
   }, {skip: !nodes?.id});
 
@@ -46,14 +48,7 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
             onClose={onClose}
             anchor="right"
             PaperProps={{
-              sx: {
-                width: {xs: 1, sm: 560, md: 600},
-                boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-                position: 'fixed',
-                // height: 'calc(100% - 64px)',
-                top: '64px',
-                right: 0
-              },
+              sx: drawerPaperStyle({...theme, width: 600}),
             }}
             componentsProps={{
               backdrop: {
@@ -71,29 +66,40 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
             <IconButton size="small" onClick={onClose}><Iconify icon="ic:baseline-close"/></IconButton>
           </OrganizationFromHeadStyle>
           <Divider/>
-          <Box sx={{py: 2, px: 2, mt: 0}}>
-            <Typography sx={{fontSize: 24, fontWeight: 700, color: '#455570'}}>
-              {get(organization, 'name') && get(organization, 'name')}
-            </Typography>
-            {renderInfoOrganization('Mã đơn vị', get(organization, 'code') && get(organization, 'code'))}
-            {renderInfoOrganization('Email', get(organization, 'email') && get(organization, 'email'))}
-            {renderInfoOrganization('Số điện thoại', get(organization, 'phoneNumber') && get(organization, 'phoneNumber'))}
-            {renderInfoOrganization('Địa chỉ',
-                `${!isEmpty(get(organization, 'address')) ? `${get(organization, 'address')}, ` : ''}` +
-                `${!isEmpty(get(organization, 'districtName')) ? `${get(organization, 'districtName')}, ` : ''}` +
-                `${!isEmpty(get(organization, 'provinceName')) ? `${get(organization, 'provinceName')}` : ''}`
-              )}
-            {renderInfoOrganization('Trực thuộc', get(organization, 'parentOrganizationName') && get(organization, 'parentOrganizationName'))}
-            {renderInfoOrganization('Đơn vị trực thuộc', get(organization, 'subsidiaryNames')?.map((sub, index, arr) => index < arr.length - 1 ? `${sub}, ` : `${sub}`))}
-            <Box sx={{pt: 1}}>
-              <MuiButton
-                  title={"Danh sách người dùng"}
-                  onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
-                  endIcon={<Iconify icon='material-symbols:arrow-right'/>}
-                  sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
-              />
-            </Box>
-          </Box>
+
+          {
+            isLoading ? (
+                <>
+                  <Box textAlign="center" my={1}>
+                    <CircularProgress size={18} />
+                  </Box>
+                </>
+            ) : (
+                <Box sx={{py: 2, px: 2, mt: 0, mb: 8}}>
+                  <Typography sx={{fontSize: 24, fontWeight: 700, color: '#455570'}}>
+                    {get(organization, 'name') && get(organization, 'name')}
+                  </Typography>
+                  {renderInfoOrganization('Mã đơn vị', get(organization, 'code') && get(organization, 'code'))}
+                  {renderInfoOrganization('Email', get(organization, 'email') && get(organization, 'email'))}
+                  {renderInfoOrganization('Số điện thoại', get(organization, 'phoneNumber') && get(organization, 'phoneNumber'))}
+                  {renderInfoOrganization('Địa chỉ',
+                      `${!isEmpty(get(organization, 'address')) ? `${get(organization, 'address')}, ` : ''}` +
+                      `${!isEmpty(get(organization, 'districtName')) ? `${get(organization, 'districtName')}, ` : ''}` +
+                      `${!isEmpty(get(organization, 'provinceName')) ? `${get(organization, 'provinceName')}` : ''}`
+                  )}
+                  {renderInfoOrganization('Trực thuộc', get(organization, 'parentOrganizationName') && get(organization, 'parentOrganizationName'))}
+                  {renderInfoOrganization('Đơn vị trực thuộc', get(organization, 'subsidiaryNames')?.map((sub, index, arr) => index < arr.length - 1 ? `${sub}, ` : `${sub}`))}
+                  <Box sx={{pt: 1}}>
+                    <MuiButton
+                        title={"Danh sách người dùng"}
+                        onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
+                        endIcon={<Iconify icon='material-symbols:arrow-right'/>}
+                        sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
+                    />
+                  </Box>
+                </Box>
+            )
+          }
           <div
               style={{
                 display: "flex",
