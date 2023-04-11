@@ -56,7 +56,7 @@ export default function FilterModal({
       cancelCallback={() => {
         handleSubmit({}, true);
       }}
-      variant="persistent"
+      // variant="persistent"
       className="drawer-filter"
       width={400}
       {...props}

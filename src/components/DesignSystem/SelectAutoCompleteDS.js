@@ -22,8 +22,11 @@ const usePlaceholderStyles = makeStyles(() => ({
     lineHeight: "20px",
   },
   paper: {
-    borderRadius: "6px",
+    borderRadius: "4px !important",
     marginTop: "4px",
+    "& .MuiList-root": {
+      padding: 0,
+    },
     "& li": {
       fontFamily: "Inter",
       fontWeight: "500",
@@ -70,15 +73,7 @@ export default function SelectAutoCompleteDS(props) {
     [searchText, data]
   );
   return (
-    <FormControl
-      sx={{
-        width: { width },
-        "& .css-1wdrf03-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper":
-          {
-            borderRadius: "6px",
-          },
-      }}
-    >
+    <FormControl sx={{width: { width },}}>
       <Select
         MenuProps={{ autoFocus: false, classes: { paper: classes.paper } }}
         labelId="search-select-label"
