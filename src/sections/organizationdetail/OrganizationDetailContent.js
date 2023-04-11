@@ -261,7 +261,7 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
     }
     return selected[0].isActive;
   }, [selected]);
-  
+
   return (
     <Box>
       {/* Name */}
@@ -341,7 +341,7 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
             onChangeSelected={() => handleSelected(column)}
             onOpenConfirmDelete={() => handleOpenConfirm([column])}
             onOpenFormModal={() => handleOpenFormUser(column)}
-            handleOpenActive = {handleOpenActive}
+            handleOpenActive={handleOpenActive}
             selected={selected}
           />
         })}
@@ -363,12 +363,12 @@ const OrganizationDetailContent = ({ organization, ListUser, ListOrganization })
         />
       }
       {
-
         isOpenInviteForm && <OrganizationInviteForm
-        ListOrganization={ListOrganization}
-        isOpenInviteForm={isOpenInviteForm}
-        setIsOpenInviteForm={setIsOpenInviteForm}
-        valueTabDefault={valueTabInviteForm}
+          ListOrganization={ListOrganization}
+          isOpenInviteForm={isOpenInviteForm}
+          setIsOpenInviteForm={setIsOpenInviteForm}
+          valueTabDefault={valueTabInviteForm}
+          organizationId={organization.id}
         />
       }
       {toggleFormUser && <OrganizationDetailUserForm
