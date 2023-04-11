@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
+import { forwardRef, useEffect, useRef, useImperativeHandle, useState } from 'react';
 import {
   Typography,
   useTheme,
@@ -12,9 +12,12 @@ import { isEmpty } from 'lodash';
 export default function FilterModal({
   columns = [],
   onSubmitFilter,
+  _filterBtn,
   ...props
 }) {
   const _fields = useRef();
+  // change key to refresh drawer
+  const [modalKey, setModalKey] = useState('drawer_filter');
 
   const handleSubmit = (data, isReset = false) => {
     /* eslint-disable */
@@ -34,7 +37,7 @@ export default function FilterModal({
 
   return (
     <DrawerEditForm
-      key={'drawer_filter'}
+      key={modalKey}
       title="Bộ lọc"
       okText="Áp dụng"
       cancelText="Bỏ lọc"
@@ -54,12 +57,17 @@ export default function FilterModal({
         auto: false,
       }}
       resetOnClose={false}
-      cancelCallback={() => {
+      onCancel={() => {
+        _fields.current.reset();
         handleSubmit({}, true);
+        setTimeout(() => {
+          setModalKey('drawer_filter_' + Date.now());
+        }, 300);
       }}
       variant="persistent"
       className="drawer-filter"
       width={400}
+      _btnOpen={_filterBtn}
       {...props}
     >
       <DrawerContent

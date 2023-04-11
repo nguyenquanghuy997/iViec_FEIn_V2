@@ -5,6 +5,7 @@ import {
   Stack,
   InputAdornment,
   useTheme,
+  Badge,
 } from '@mui/material';
 import {
   RiAddCircleFill,
@@ -34,6 +35,7 @@ export default function TableHeader({
   const { palette } = useTheme();
   const [openFilter, setOpenFilter] = useState(false);
   const _timeoutSearch = useRef();
+  const _filterBtn = useRef();
   const buttonHeight = isInside ? 36 : 44;
 
   const onSubmit = (value, timeout = 0) => {
@@ -41,6 +43,13 @@ export default function TableHeader({
     _timeoutSearch.current = setTimeout(() => {
       onSubmitFilter({ SearchKey: value, PageIndex: 1, PageSize: 10 });
     }, timeout);
+  }
+
+  const countFilter = () => {
+    /* eslint-disable */
+    let { PageSize, PageIndex, SearchKey, ...restQuery } = query;
+    /* eslint-enable */
+    return Object.keys(restQuery).length;
   }
 
   if (display === "none") return null;
@@ -72,17 +81,21 @@ export default function TableHeader({
                 }}
                 {...inputProps}
               />
-              <Button
-                variant="contained"
-                color="default"
-                startIcon={<RiFilterLine size={18} color={palette.text.sub} />}
-                onClick={() => {
-                  setOpenFilter(true);
-                }}
-                height={buttonHeight}
-              >
-                Bộ lọc
-              </Button>
+
+              <Badge badgeContent={countFilter()} color="secondary">
+                <Button
+                  onRef={ref => _filterBtn.current = ref}
+                  variant="contained"
+                  color="default"
+                  startIcon={<RiFilterLine size={18} color={palette.text.sub} />}
+                  onClick={() => {
+                    setOpenFilter(true);
+                  }}
+                  height={buttonHeight}
+                >
+                  Bộ lọc
+                </Button>
+              </Badge>
             </Stack>
           </Box>
 
@@ -110,6 +123,7 @@ export default function TableHeader({
         }}
         columns={columns}
         onSubmitFilter={onSubmitFilter}
+        _filterBtn={_filterBtn}
       />
     </HeaderStyle>
   )
