@@ -22,7 +22,14 @@ import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/router";
-
+import { DeleteIcon } from "@/assets/ActionIcon";
+import { modalSlice } from "@/redux/common/modalSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
+import { AlertIcon } from "@/sections/organization/component/Icon";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
+import { useSnackbar } from "notistack";
+import { useDeleteApplicantsMutation } from "../ApplicantFormSlice";
 const ApplicantBottomNav = ({
   selectedList,
   open,
@@ -31,7 +38,7 @@ const ApplicantBottomNav = ({
   itemSelected,
 }) => {
   const router = useRouter();
-
+  const { enqueueSnackbar } = useSnackbar();
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
@@ -41,7 +48,33 @@ const ApplicantBottomNav = ({
   const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_CDD), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_CDD), []);
 
+  const dispatch = useDispatch();
+  const toggleModalState = useSelector((state) => state.modalReducer.openState);
+  const { openDelete } = toggleModalState;
+  const handleOpenModalState = (data) =>
+    dispatch(modalSlice.actions.openStateModal(data));
+  const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
+  const [deleteApplicants] = useDeleteApplicantsMutation();
 
+  const handleDeleteApplicantsSubmit = async (data) => {
+    try {
+      await deleteApplicants({ applicationIds: data }).unwrap();
+      enqueueSnackbar("Xóa ứng viên thành công!", {
+        autoHideDuration: 1000,
+      });
+      setSelectedList([]);
+      handleCloseModal();
+    } catch (e) {
+      enqueueSnackbar(
+        "Xóa ứng viên không thành công. Vui lòng kiểm tra và thử lại!",
+        {
+          autoHideDuration: 1000,
+          variant: "error",
+        }
+      );
+      throw e;
+    }
+  };
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
@@ -245,6 +278,21 @@ const ApplicantBottomNav = ({
 
             }
 
+            {
+              canEdit &&
+              <Tooltip title='Xóa'>
+                <IconButton
+                  sx={{
+                    marginRight: "16px",
+                  }}
+                  onClick={() => handleOpenModalState({ openDelete: true })}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+
+            }
+
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
@@ -303,6 +351,51 @@ const ApplicantBottomNav = ({
           show={actionShow}
           setShow={setActionShow}
           onClose={onCloseModel}
+        />
+      )}
+
+      {openDelete && (
+        <ConfirmModal
+          open={openDelete}
+          onClose={handleCloseModal}
+          icon={<AlertIcon />}
+          title={
+            <Typography
+              sx={{
+                textAlign: "center",
+                width: "100%",
+                fontSize: style.FONT_BASE,
+                fontWeight: style.FONT_SEMIBOLD,
+                color: style.COLOR_TEXT_DANGER,
+                marginTop: 2,
+              }}
+            >
+              Xác nhận xóa ứng viên
+            </Typography>
+          }
+          subtitle={
+            selectedList.length > 1 ? (
+              <>
+                Bạn có chắc chắn muốn xóa {selectedList.length} ứng viên?
+              </>
+            ) : (
+              <>
+                Bạn có chắc chắn muốn xóa ứng viên
+                <span className="subtitle-confirm-name">
+                  {itemSelected[0]?.name}
+                </span>{" "}
+                ?
+              </>
+            )
+          }
+          data={selectedList}
+          onSubmit={handleDeleteApplicantsSubmit}
+          btnCancelProps={{
+            title: "Hủy",
+          }}
+          btnConfirmProps={{
+            title: "Xác nhận",
+          }}
         />
       )}
 

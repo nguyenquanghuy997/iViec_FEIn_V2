@@ -43,13 +43,13 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
 
   const defaultValues = {
     id: "",
-    parentOrganizationId: "",
+    parentOrganizationId: null,
     name: "",
     code: "",
     email: "",
     phoneNumber: "",
-    provinceId: "",
-    districtId: "",
+    provinceId: null,
+    districtId: null,
     address: "",
   };
 

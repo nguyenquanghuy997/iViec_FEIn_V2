@@ -77,7 +77,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                 email: "",
                 fullName: "",
                 roleGroupId: "",
-                organizationIds: organizationId?[organizationId]:[]
+                organizationIds: organizationId ? [organizationId] : []
             }
         ]
     }
@@ -340,7 +340,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                                                         <Box >
                                                             <LabelStyle required>Vai trò</LabelStyle>
                                                             <RHFSelect
-                                                                options={ListRoleGroup?.map(item => ({
+                                                                options={ListRoleGroup?.filter(x => x.isActivated).map(item => ({
                                                                     ...item,
                                                                     value: item?.id,
                                                                     label: item?.name

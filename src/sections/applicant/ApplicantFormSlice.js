@@ -19,7 +19,8 @@ import {
   API_GET_LIST_RECRUITMENT,
   API_GET_ADD_APPLICANT_TO_RECRUITMENT,
   API_APPLICANT_REVIEW_FORM,
-  API_ADD_APPLICANT_REVIEW
+  API_ADD_APPLICANT_REVIEW,
+  API_DELETE_APPLICANT
 } from "@/routes/api";
 import qs from 'query-string';
 import { convertArrayToObject, toRequestFilterData } from '@/utils/helper'
@@ -265,6 +266,15 @@ export const ApplicantFormSlice = createApi({
       }),
       providesTags: [{ type: 'APPLICANT', id: 'APPLICANT_REVIEW'}]
     }),
+
+    deleteApplicants: builder.mutation({
+      query: (data) => ({
+        url: API_DELETE_APPLICANT,
+        method: "DELETE",
+        data: data,
+      }),
+      invalidatesTags: [{ type: 'APPLICANT', id: 'LIST_FILTER' }],
+    }),
   }),
 });
 
@@ -287,5 +297,6 @@ export const {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useUpdateApplicantFormMutation,
   useGetApplicantReviewFormQuery,
-  useAddApplicantReviewMutation
+  useAddApplicantReviewMutation,
+  useDeleteApplicantsMutation,
 } = ApplicantFormSlice;
