@@ -64,9 +64,10 @@ export const ApplicantItem = ({
             <TextMaxLine
                 sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
                 onClick={() => router.push({pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
-                    co: record?.correlationId,
-                    or: record?.organizationId,
-                    re: record?.recruitmentId,
+                    correlationId: record?.correlationId,
+                    organizationId: record?.organizationId,
+                    recruitmentId: record?.recruitmentId,
+                    applicantId: record?.applicantId,
                   }}, undefined, { shallow: true })}
             >
               {item}

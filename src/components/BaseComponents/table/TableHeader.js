@@ -28,7 +28,7 @@ export default function TableHeader({
   display,
   headerProps,
   contentProps,
-  inputProps,
+  inputProps, actions,
 }) {
   const { query = {} } = useRouter();
   const { palette } = useTheme();
@@ -99,6 +99,7 @@ export default function TableHeader({
               </Button>
             </Box>
           )}
+          {actions && <>{actions}</>}
         </Box>
       </Content>
 
