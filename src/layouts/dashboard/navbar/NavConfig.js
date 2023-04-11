@@ -8,7 +8,7 @@ export const headerMenuConfig = [
         title: "Duyệt tin",
         path: "/adrecruitment",
         // icon: ICONS.job,
-        permissions: [PERS.ADMINISTRATOR],
+        permissions: [PERS.IVIEC_ADMIN],
       },
       {
         title: "Tin tuyển dụng",
