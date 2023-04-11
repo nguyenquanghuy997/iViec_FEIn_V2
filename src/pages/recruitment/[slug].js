@@ -1,13 +1,9 @@
-// utils
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
-// componentsf
 import Page from "@/components/Page";
 import SvgIcon from "@/components/SvgIcon";
 import { FormProvider } from "@/components/hook-form";
-// config
 import { PERMISSION_PAGES } from "@/config";
-// layouts
 import Layout from "@/layouts";
 import {
   ApplicantItem,
@@ -15,6 +11,7 @@ import {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useUpdateApplicantRecruitmentToNextStateMutation,
 } from "@/sections/applicant";
+import InterviewSchedule from "@/sections/interview/InterviewSchedule";
 import { Column } from "@/sections/kanban";
 import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
 import RecruitmentPreviewItem from "@/sections/recruitment/preview/RecruitmentPreviewItem";
@@ -456,7 +453,16 @@ export default function Recruitment() {
       )}
 
       {/* lịch phỏng vấn */}
-      {tab == 2 && <View></View>}
+      {tab == 2 && (
+        <View
+          style={{
+            paddingLeft: "256px",
+            paddingRight: "256px",
+          }}
+        >
+          <InterviewSchedule idSlg={RecruitmentId}/>
+        </View>
+      )}
     </Page>
   );
 }
