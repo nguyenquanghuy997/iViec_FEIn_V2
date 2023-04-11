@@ -1,8 +1,7 @@
 import HeaderCard from "../HeaderCard";
 import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import EditBusinessArea from "../edit/EditBusinessArea";
-import CloseIcon from "@/assets/CloseIcon";
-import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
+import {Box, Drawer, Typography, useTheme} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import React, {useState} from "react";
 import SwiperCore, {Autoplay, Navigation, Pagination, Virtual,} from "swiper/core";
@@ -13,6 +12,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import {useSnackbar} from "notistack";
 import {get} from "lodash";
 import { DOMAIN_SERVER_API } from "@/config";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
 
@@ -33,6 +33,7 @@ export const SliderStyle = styled("div")(() => ({
 
 const BusinessArea = ({ data }) => {
     const {enqueueSnackbar} = useSnackbar();
+    const theme = useTheme();
     const [open, setOpen] = useState();
     const [checked, setChecked] = useState(data?.isBusinessesVisible);
     const [loading, setLoading] = useState(false);
@@ -124,27 +125,16 @@ const BusinessArea = ({ data }) => {
                     anchor="right"
                     open={open}
                     onClose={handleClose}
-                    PaperProps={{sx: {width: 800, position: 'fixed', top: '64px', right: 0}}}
+                    PaperProps={{
+                        sx: drawerPaperStyle({...theme, width: 800}),
+                    }}
                     componentsProps={{
                         backdrop: {
                             sx: {background: 'rgba(9, 30, 66, 0.25) !important', boxShadow: 'none !important'}
                         }
                     }}
                 >
-                    <Box sx={{width: 800}}>
-                        <List sx={{display: "flex", justifyContent: "space-between", p: 0,}}>
-                            <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
-                                Chỉnh sửa Lĩnh vực kinh doanh
-                            </Typography>
-                            <Button onClick={handleClose} sx={{"&:hover": {background: "#FDFDFD"}}}>
-                                <CloseIcon/>
-                            </Button>
-                        </List>
-                        <Divider/>
-                        <div>
-                            <EditBusinessArea data={data} onClose={handleClose}/>
-                        </div>
-                    </Box>
+                    <EditBusinessArea data={data} onClose={handleClose}/>
                 </Drawer>
             )}
         </>
