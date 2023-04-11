@@ -302,7 +302,6 @@ function ApplicantPreviewItem() {
       },
       {
         skip:
-          pipelines?.recruitmentPipelineStates?.length > 0 ||
           !pipelines?.currentApplicantPipelineState ||
           !ApplicantId,
       }
