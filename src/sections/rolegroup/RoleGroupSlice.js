@@ -120,14 +120,14 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
     }),
 
     //settings
-    getListColumns: builder.query({
+    getListRoleColumns: builder.query({
       query: () => ({
         url: API_GET_COLUMN_ROLE,
         method: "GET",
       }),
       providesTags: ["GetColumn"],
     }),
-    updateListColumns: builder.mutation({
+    updateListRoleColumns: builder.mutation({
       query: (data) => {
         const { id, ...restData } = data;
         return {
@@ -146,8 +146,8 @@ export const {
   useGetRoleGroupListQuery,
   useAddRoleGroupMutation,
   useUpdateRolegroupMutation,
-  useGetListColumnsQuery,
-  useUpdateListColumnsMutation,
+  useGetListRoleColumnsQuery,
+  useUpdateListRoleColumnsMutation,
   useSaveRoleGroupMutation,
   useGetRoleDetailQuery,
   useLazyGetRoleDetailQuery,

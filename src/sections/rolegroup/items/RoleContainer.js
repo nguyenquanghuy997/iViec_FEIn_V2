@@ -5,13 +5,11 @@ import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import TextMaxLine from "@/components/TextMaxLine";
 import {
-  useGetListColumnsQuery,
-  // useGetListColumnsQuery,
+  useGetListRoleColumnsQuery,
   useGetRoleGroupListQuery,
-  // useUpdateListColumnsMutation,
   useRemoveRoleGroupMutation,
   useSetStatusRoleGroupMutation,
-  useUpdateListColumnsMutation,
+  useUpdateListRoleColumnsMutation,
 } from "@/sections/rolegroup";
 import { Typography, useTheme } from "@mui/material";
 import moment from "moment";
@@ -299,8 +297,8 @@ export const RoleContainer = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          useGetColumnsFunc={useGetListColumnsQuery}
-          useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          useGetColumnsFunc={useGetListRoleColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListRoleColumnsMutation}
           createText={canEdit && "Thêm vai trò"}
           onClickCreate={() => {
             setOpen(true);

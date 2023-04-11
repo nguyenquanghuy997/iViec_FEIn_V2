@@ -1,9 +1,9 @@
 import {
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,
-  useGetListColumnsQuery,
+  useGetListRecruitmentColumnsQuery,
   useGetRecruitmentsQuery,
-  useUpdateListColumnsMutation,
+  useUpdateListRecruitmentColumnsMutation,
 } from "../RecruitmentSlice";
 import { useGetOrganizationQuery } from "@/sections/report/reportSlice";
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
@@ -548,8 +548,8 @@ export const RecruitmentItem = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          useGetColumnsFunc={useGetListColumnsQuery}
-          useUpdateColumnsFunc={useUpdateListColumnsMutation}
+          useGetColumnsFunc={useGetListRecruitmentColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListRecruitmentColumnsMutation}
           searchInside={false}
           createText={canEdit && "Đăng tin tuyển dụng"}
           onClickCreate={() => {
