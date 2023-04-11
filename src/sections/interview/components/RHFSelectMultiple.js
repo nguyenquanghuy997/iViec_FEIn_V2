@@ -11,17 +11,9 @@ import {
 } from "@/components/hook-form/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { containsText } from "@/utils/function";
-import {
-  Box,
-  FormHelperText,
-  InputAdornment,
-  MenuItem,
-  Stack,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Box, Button, FormHelperText, InputAdornment, MenuItem, Stack, Typography, } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 const MenuProps = {
   PaperProps: {
@@ -88,49 +80,16 @@ function RHFSelectMultiple({ name, ...props }) {
     options,
     disabled,
     multiple,
-    listApplicant,
+    listApplicant
   } = props;
-  const { remove } = useFieldArray({ control, name });
 
   const renderChipsSelect = (options, value) => {
-    const [open, setOpen] = useState(false);
-    const handleClose = () => {
-      setOpen(false);
-    };
-    const handleOpen = () => {
-      setOpen(true);
-    };
-    // const time = true;
-    // const test = value[0]?.bookingCalendarGroupApplicants?.map(
-    //   (item) => item?.interviewTime
-    // );
-    // const duration = value[0]?.bookingCalendarGroupApplicants?.map(
-    //   (item) => item?.interviewDuration
-    // );
-    // const convertDurationTimeToSeconds = (time) => {
-    //   const splitToString = time.split(":");
-    //   return (
-    //     +splitToString[0] * 60 * 60 + +splitToString[1] * 60 + +splitToString[2]
-    //   );
-    // };
-
-    // const convertStoMs = (s) => {
-    //   const totalMinutes = Math.floor(s / 60);
-    //   const hours = Math.floor(totalMinutes / 60);
-    //   const newHours = hours < 10 ? "0" + hours : hours;
-    //   const minutes = totalMinutes % 60;
-    //   return `${newHours}:${minutes}`;
-    // };
-
     return (
       <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
           data={options?.filter((option) =>
             value.includes(option?.value)
           )}
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
         />
       </Stack>
     );
@@ -179,7 +138,7 @@ function RHFSelectMultiple({ name, ...props }) {
                       textTransform: "none",
                       color: "#1976D2",
                       "&:hover": {
-                        bgcolor: "white",
+                        backgroundColor: "white",
                       },
                     }}
                   >
@@ -193,7 +152,7 @@ function RHFSelectMultiple({ name, ...props }) {
                     width: "100%",
                     textTransform: "none",
                     "&:hover": {
-                      bgcolor: "white",
+                      backgroundColor: "white",
                     },
                   }}
                 >
@@ -217,7 +176,7 @@ function RHFSelectMultiple({ name, ...props }) {
             {renderOptions(filterOptions)}
           </SelectFieldStyle>
           {listApplicant}
-          {multiple && renderChipsSelect(options, field.value, remove)}
+          {multiple && renderChipsSelect(options, field.value)}
           <FormHelperText
             sx={{
               color: style.COLOR_TEXT_DANGER,

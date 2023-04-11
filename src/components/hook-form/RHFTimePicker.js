@@ -9,14 +9,14 @@ export default function RHFTimePicker({
   name,
   style
 }) {
-  const { control } = useFormContext();
+  const {control} = useFormContext();
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => (
+      render={({field, fieldState: {error}}) => (
         <TextField
-        sx={{...style}}
+          sx={{...style}}
           {...field}
           value={field.value || ""}
           error={!!error}

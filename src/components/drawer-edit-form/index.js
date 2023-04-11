@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Drawer, Box, Alert, Typography, IconButton, useTheme } from "@mui/material";
 import { Button, SwitchStatusDS } from "../DesignSystem";
 import { useForm } from "react-hook-form";
@@ -37,10 +37,7 @@ export default function DrawerEditForm({
   const validateSchema = Yup.object().shape(validateFields);
   const methods = useForm({
     resolver: yupResolver(validateSchema),
-    defaultValues: {
-      [statusField]: true,
-      ...defaultValues,
-    },
+    defaultValues: useMemo(() => defaultValues, [defaultValues]),
   });
   const {
     formState: { isSubmitting, errors },
