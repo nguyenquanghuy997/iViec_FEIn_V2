@@ -199,8 +199,8 @@ export const ApplicantFormSlice = apiWithTag.injectEndpoints({
           }
         });
 
-        // reqData.pageSize = reqData.PageSize || 10;
-        // reqData.pageIndex = reqData.PageIndex || 1;
+        reqData.pageSize = reqData.PageSize || 10;
+        reqData.pageIndex = reqData.PageIndex || 1;
         delete reqData.PageSize;
         delete reqData.PageIndex;
 

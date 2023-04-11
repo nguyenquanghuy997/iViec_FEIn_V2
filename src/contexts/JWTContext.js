@@ -1,4 +1,4 @@
-import { DOMAIN_SERVER_API } from "@/config";
+import { DOMAIN_SERVER_API, PERMISSIONS } from "@/config";
 import { API_LOGIN, API_USER_INFO } from "@/routes/api";
 // utils
 import { _postApi } from "@/utils/axios";
@@ -71,9 +71,14 @@ function AuthProvider({ children }) {
           const user = await getUserInfoByToken(accessToken);
           setSession(accessToken);
 
-          let { role: permissions = [] } = jwtDecode(accessToken) || {};
+          let tokenDecode = jwtDecode(accessToken) || {};
+          let { role: permissions = [] } = tokenDecode;
           if (!Array.isArray(permissions)) {
             permissions = [permissions];
+          }
+          // Is admin iviec
+          if (tokenDecode['internal.perform']) {
+            permissions.push(PERMISSIONS.IVIEC_ADMIN);
           }
 
           dispatch({
@@ -136,9 +141,14 @@ function AuthProvider({ children }) {
     });
     const response = await _postApi(API_LOGIN, data);
     const userData = await getUserInfoByToken(response.token);
-    let { role: permissions = [] } = jwtDecode(response.token) || {};
+    let tokenDecode = jwtDecode(response.token) || {};
+    let { role: permissions = [] } = tokenDecode;
     if (!Array.isArray(permissions)) {
       permissions = [permissions];
+    }
+    // Is admin iviec
+    if (tokenDecode['internal.perform']) {
+      permissions.push(PERMISSIONS.IVIEC_ADMIN);
     }
 
     setRememberMe(remember);
