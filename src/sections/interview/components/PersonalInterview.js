@@ -162,7 +162,7 @@ const PersonalInterview = ({ item, option, currentApplicantPipelineState }) => {
             placeholder="Nhập nội dung lưu ý..."
             name={"onlineInterviewAddress"}
             style={{
-              height: "80px", resize: "none", "&.ant-input-data-count": {
+              height: "80px", resize: "none", "&.antInputDataCount": {
                 display: "none"
               }
             }}

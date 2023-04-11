@@ -11,17 +11,9 @@ import {
 } from "@/components/hook-form/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { containsText } from "@/utils/function";
-import {
-  Box,
-  FormHelperText,
-  InputAdornment,
-  MenuItem,
-  Stack,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Box, Button, FormHelperText, InputAdornment, MenuItem, Stack, Typography, } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 const MenuProps = {
   PaperProps: {
@@ -90,7 +82,6 @@ function RHFSelectMultiple({ name, ...props }) {
     multiple,
     listApplicant
   } = props;
-  const { remove } = useFieldArray({ control, name });
 
   const renderChipsSelect = (options, value) => {
     return (
@@ -99,7 +90,6 @@ function RHFSelectMultiple({ name, ...props }) {
           data={options?.filter((option) =>
             value.includes(option?.value)
           )}
-          open={open}
         />
       </Stack>
     );
@@ -186,7 +176,7 @@ function RHFSelectMultiple({ name, ...props }) {
             {renderOptions(filterOptions)}
           </SelectFieldStyle>
           {listApplicant}
-          {multiple && renderChipsSelect(options, field.value, remove)}
+          {multiple && renderChipsSelect(options, field.value)}
           <FormHelperText
             sx={{
               color: style.COLOR_TEXT_DANGER,

@@ -19,7 +19,7 @@ const ListCandidate = ({ option, applicantId }) => {
       setValue("applicantIdArray", [option?.applicantId]);
     }
   }, [option]);
-
+  
   return (
     <Box height={"100%"}>
       <Label mb={3}>

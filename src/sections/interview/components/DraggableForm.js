@@ -5,19 +5,35 @@ import { Label } from "@/components/hook-form/style";
 import { RHFDatePicker, RHFTextField } from "@/components/hook-form";
 import RHFTimePicker from "@/components/hook-form/RHFTimePicker";
 import { Draggable } from "react-beautiful-dnd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DragItem } from "@/sections/interview/components/DragCandidate";
 import { useFormContext } from "react-hook-form";
+import { pushMin } from "@/sections/interview/config";
 
 function DraggableForm({model, index, removeItem}) {
-  const {setValue} = useFormContext();
+  const {setValue, getValues, watch} = useFormContext();
   const [open, setOpen] = useState(false);
-  const time = false;
-  // const [time, setTime] = useState(false);
+  const [first, setFirst] = useState(false);
+  const [time, setTime] = useState(false);
   const today = new Date();
-
-  setValue(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.applicantId`, model.id);
-
+  
+  useEffect(() => {
+    if (first) return;
+    if (!getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`)) {
+      setValue(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`, new Date())
+    }
+    setValue(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.applicantId`, model.id);
+    setFirst(true);
+  }, [first]);
+  
+  const checkForm = () => {
+    if (!getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`)
+      || !getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`)
+      || !getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`)) return;
+    setTime(true);
+    setOpen(false);
+  };
+  
   return <Draggable key={model.id} draggableId={model.id} index={index}>
     {(provided) => (
       <DragItem
@@ -55,8 +71,8 @@ function DraggableForm({model, index, removeItem}) {
                   alignItems: "center"
                 }}
               >
-                <MenuListIcon />
-                <Box sx={{ display: "flex", ml: 1 }}>
+                <MenuListIcon/>
+                <Box sx={{display: "flex", ml: 1}}>
                   <img
                     alt={""}
                     style={{
@@ -88,7 +104,7 @@ function DraggableForm({model, index, removeItem}) {
                   </div>
                 </Box>
               </div>
-
+              
               <Box
                 sx={{
                   mt: "2px",
@@ -98,13 +114,13 @@ function DraggableForm({model, index, removeItem}) {
                 }}
                 onClick={() => removeItem(model.id)}
               >
-                <DeleteIcon />
+                <DeleteIcon/>
               </Box>
             </div>
           </Card>
           {open ? (
             <>
-              <Box sx={{ mb: 2, width: "100%" }}>
+              <Box sx={{mb: 2, width: "100%"}}>
                 <Label required={true}>Ngày phỏng vấn</Label>
                 <RHFDatePicker
                   name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`}
@@ -115,13 +131,13 @@ function DraggableForm({model, index, removeItem}) {
                   }}
                 />
               </Box>
-              <Box sx={{ width: "100%" }}>
+              <Box sx={{width: "100%"}}>
                 <Box>
                   <div>
                     <Collapse in={open}>
-                      <Box sx={{ mb: 2 }}>
+                      <Box sx={{mb: 2}}>
                         <Label required={true}> Giờ phỏng vấn</Label>
-
+                        
                         <RHFTimePicker
                           name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`}
                           style={{
@@ -135,13 +151,13 @@ function DraggableForm({model, index, removeItem}) {
                   </div>
                 </Box>
               </Box>
-              <Box sx={{ width: "100%" }}>
+              <Box sx={{width: "100%"}}>
                 <Box>
                   <div>
                     <Collapse in={open}>
-                      <Box sx={{ mb: 2 }}>
+                      <Box sx={{mb: 2}}>
                         <Label required={true}>Thời lượng phỏng vấn</Label>
-
+                        
                         <RHFTextField
                           isRequired
                           sx={{
@@ -175,9 +191,9 @@ function DraggableForm({model, index, removeItem}) {
                   Hủy
                 </Button>
                 <Button
-                  onClick={() => setOpen(false)}
+                  onClick={checkForm}
                   variant="contained"
-                  sx={{ background: "#1976D2" }}
+                  sx={{background: "#1976D2"}}
                 >
                   Lưu
                 </Button>
@@ -205,7 +221,7 @@ function DraggableForm({model, index, removeItem}) {
                 Điều chỉnh ngày giờ phỏng vấn
               </Button>
             </Card> :
-            <Card sx={{ textAlign: "center", py: 1, px: 2 }}>
+            <Card sx={{textAlign: "center", py: 1, px: 2}}>
               <Typography
                 sx={{
                   fontWeight: 600,
@@ -213,10 +229,13 @@ function DraggableForm({model, index, removeItem}) {
                   fontSize: 13
                 }}
               >
-                {time}
+                {watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`)} -
+                {pushMin(watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`), watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`))}
+                {" "}Ngày {watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`).toLocaleDateString()}
               </Typography>
               <Button
-                sx={{ m: "0 auto", textTransform: "none" }}
+                sx={{m: "0 auto", textTransform: "none"}}
+                onClick={() => setOpen(true)}
               >
                 {" "}
                 Điều chỉnh
