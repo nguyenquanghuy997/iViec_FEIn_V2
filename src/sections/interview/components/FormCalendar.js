@@ -2,7 +2,6 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useAddCalendarMutation, useGetDetailCalendarsQuery, useUpdateCalendarMutation } from "@/sections/interview";
 import { useSnackbar } from "notistack";
-import moment from "moment/moment";
 import { FormProvider } from "@/components/hook-form";
 import { CircularProgress, Divider, Grid, Modal } from "@mui/material";
 import { ViewModel } from "@/utils/cssStyles";
@@ -14,8 +13,9 @@ import ListCandidate from "@/sections/interview/components/ListCandidate";
 import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
 import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
-import { convertDurationTimeToSeconds, convertStoMs, toHhMmSs } from "@/sections/interview/config";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { convertDurationTimeToSeconds, convertStoMs, toHhMmSs } from "@/sections/interview/config";
+import moment from "moment";
 
 const defaultValues = {
   name: undefined,
@@ -66,13 +66,14 @@ export const FormCalendar = ({
       Yup.object().shape({
         name: Yup.string(),
         interviewGroupType: Yup.string().nullable(),
-        interviewTime: Yup.string(),
-        interviewDuration: Yup.string(),
+        interviewTime: Yup.string().nullable(),
+        interviewDuration: Yup.string().nullable(),
         bookingCalendarApplicants: Yup.array().of(
           Yup.object().shape({
             applicantId: Yup.string(),
-            interviewTime: Yup.string(),
-            interviewDuration: Yup.string(),
+            date: Yup.string().required("Chọn ngày phỏng vấn"),
+            interviewTime: Yup.string().required("Chọn thời gian phỏng vấn"),
+            interviewDuration: Yup.string().required("Chọn thời lượng phỏng vấn"),
           })
         ),
       })
@@ -90,7 +91,6 @@ export const FormCalendar = ({
     handleSubmit,
     formState: {isSubmitting},
   } = methods;
-  
   useEffect(() => {
     if (!DetailData?.id) return;
     setValue("name", DetailData.name ?? undefined);
@@ -152,7 +152,7 @@ export const FormCalendar = ({
               return {
                 applicantId: d?.applicantIdArray[index],
                 interviewTime: new Date(
-                  `${moment(d?.date[index]).format("YYYY-MM-DD")} ${dateTime}`
+                  `${moment(item?.bookingCalendarApplicants[index].date).format("YYYY-MM-DD")} ${dateTime}`
                 ).toISOString(),
                 interviewDuration: toHhMmSs(
                   item?.bookingCalendarApplicants[index].interviewDuration
@@ -177,7 +177,7 @@ export const FormCalendar = ({
         })
       });
     }
-    
+
     await addCalendar(body).unwrap()
     .then(() => {
       enqueueSnackbar("Thực hiện thành công!", {
@@ -265,7 +265,7 @@ export const FormCalendar = ({
                   <Grid p={3} sx={{
                     minWidth: "400px"
                   }}>
-                    <ListCandidate model={DetailData.bookingCalendarGroups} isEditmode={isEditMode} option={options} applicantId={options?.applicantId}/>
+                    <ListCandidate option={options} applicantId={options?.applicantId}/>
                   </Grid>
                   <Divider orientation="vertical"/>
                   <Grid sx={{
