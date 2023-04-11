@@ -14,6 +14,7 @@ import {Box, Stack} from "@mui/material";
 import {useSnackbar} from "notistack";
 import React, {useEffect, useState} from "react";
 import {useFieldArray, useForm} from "react-hook-form";
+import {get} from 'lodash';
 import * as Yup from "yup";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {DOMAIN_SERVER_API} from "@/config";
@@ -26,7 +27,7 @@ import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBot
 const InputStyle = {width: "100%", minHeight: 40, background: "white"};
 
 const EditBusinessArea = ({data: Data, onClose}) => {
-  const isEditMode = !!Data?.organizationBusiness?.id;
+  const isEditMode = !!get(Data, 'organizationBusiness.id');
   const [addOrganizationBusiness] = useAddOrganizationBusinessMutation();
   const [updateCompanyBusiness] = useUpdateCompanyBusinessMutation();
   const [uploadImage] = useUploadImageCompanyMutation();
@@ -82,9 +83,9 @@ const EditBusinessArea = ({data: Data, onClose}) => {
     });
 
     const res = {
-      organizationId: isEditMode ? Data?.organizationBusiness?.id : Data?.id,
-      businessPhoto: bgRes.data,
-      organizationBusinessDatas: d.organizationBusinessDatas,
+      organizationId: isEditMode ? get(Data, 'organizationBusiness.id') : get(Data, 'id'),
+      businessPhoto: get(bgRes, 'data'),
+      organizationBusinessDatas: get(d, 'organizationBusinessDatas'),
     };
 
     if (isEditMode) {
@@ -122,8 +123,8 @@ const EditBusinessArea = ({data: Data, onClose}) => {
 
   useEffect(() => {
     if (!Data) return;
-    setValue("organizationBusinessDatas", Data?.organizationBusiness?.organizationBusinessDatas);
-    setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto}`);
+    setValue("organizationBusinessDatas", get(Data, 'organizationBusiness.organizationBusinessDatas'));
+    setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(Data, 'organizationBusiness.businessPhoto')}`);
   }, [Data]);
 
   const handleDrag = ({source, destination}) => {
@@ -142,7 +143,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
               <EditUpload
                   title={'Tải lên ảnh nền'}
                   image={bg}
-                  imagePath={Data?.organizationBusiness?.businessPhoto}
+                  imagePath={get(Data, 'organizationBusiness.businessPhoto')}
                   ref={register("businessPhoto", {required: false})}
                   imageHandler={handleImage}
                   style={{
