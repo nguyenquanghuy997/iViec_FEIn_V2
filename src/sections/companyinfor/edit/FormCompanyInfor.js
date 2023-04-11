@@ -1,6 +1,5 @@
 import EditUpload from "./EditUpload";
 import HelperText from "@/components/BaseComponents/HelperText";
-import MuiButton from "@/components/BaseComponents/MuiButton";
 import RHFTinyEditor from "@/components/editor/RHFTinyEditor";
 import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook-form";
 import { LabelStyle } from "@/components/hook-form/style";
@@ -18,9 +17,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { get, isEmpty } from "lodash";
 import { useSnackbar } from "notistack";
-import { useEffect, useState, memo } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const InputStyle = { width: "100%", minHeight: 40 };
 
@@ -65,9 +66,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const ProfileSchema = Yup.object().shape({
     // avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
     // coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-    phoneNumber: Yup.string()
-      .required("Số điện thoại không được bỏ trống")
-      .matches(/(84|840|0)[3|5|7|8|9]+([0-9]{8})\b/, "Số điện thoại không đúng định dạng").nullable(),
+    phoneNumber: Yup.string().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng").nullable(),
     email: Yup.string()
       .email("Email không đúng định dạng")
       .required("Email không được bỏ trống").nullable(),
@@ -169,30 +168,12 @@ const FormCompanyInfor = ({ data, onClose }) => {
 
   useEffect(() => {
     if (!data) return;
-    setImage(
-      `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
-        data,
-        "organizationInformation.avatar"
-      )}`
-    );
-    setBg(
-      `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
-        data,
-        "organizationInformation.coverPhoto"
-      )}`
-    );
+    setImage(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(data, "organizationInformation.avatar")}`);
+    setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(data, "organizationInformation.coverPhoto")}`);
     setValue("phoneNumber", get(data, "organizationInformation.phoneNumber"));
     setValue("email", get(data, "organizationInformation.email"));
-    setValue(
-      "jobCategoryIds",
-      get(data, "organizationInformation.jobCategories")?.map(
-        (item) => item.jobCategoryId
-      )
-    );
-    setValue(
-      "organizationSize",
-      get(data, "organizationInformation.organizationSize")
-    );
+    setValue("jobCategoryIds", get(data, "organizationInformation.jobCategories")?.map((item) => item.jobCategoryId));
+    setValue("organizationSize", get(data, "organizationInformation.organizationSize"));
     setValue("provinceId", get(data, "organizationInformation.provinceId"));
     setValue("districtId", get(data, "organizationInformation.districtId"));
     setValue("address", get(data, "organizationInformation.address"));
@@ -207,17 +188,8 @@ const FormCompanyInfor = ({ data, onClose }) => {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        sx={{
-          flex: 1,
-          borderRadius: 8,
-          paddingBottom: 36,
-          overflow: "hidden",
-          background: style.BG_WHITE,
-          padding: 3,
-          mb: 8,
-        }}
-      >
+      <FormModalHead title={'Chỉnh sửa Thông tin công ty'} onClose={onClose}/>
+      <div className="edit-container">
         <Box sx={{ mb: 3 }}>
           <Typography
             sx={{
@@ -401,24 +373,15 @@ const FormCompanyInfor = ({ data, onClose }) => {
             placeholder={"Nhập nội dung giới thiệu công ty..."}
           />
         </Box>
-      </Box>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          marginTop: 12,
-          position: "fixed",
-          bottom: 0,
-          background: "#FDFDFD",
-          width: "100%",
-          padding: "16px 24px",
-          border: "1px solid #EFF3F6",
-          zIndex: 1001,
-        }}
-      >
-        <MuiButton title={"Lưu"} type="submit" loading={isSubmitting} />
-        <MuiButton title={"Hủy"} color={"basic"} onClick={onClose} />
       </div>
+      <FormModalBottom
+          onClose={onClose}
+          loading={isSubmitting}
+          btnConfirm={{
+            title: 'Lưu',
+            type: "submit",
+          }}
+      />
     </FormProvider>
   );
 };
