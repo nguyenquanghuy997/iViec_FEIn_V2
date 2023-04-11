@@ -157,13 +157,6 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
     if (!isEditMode) {
       reset(defaultValues);
       setIsDisabled(false);
-      setListForm([
-        {
-          name: "Tiêu chí mặc định",
-          isRequired: true,
-          des: "Mô tả tiêu chí mặc định",
-        },
-      ]);
       setError("");
       return;
     }

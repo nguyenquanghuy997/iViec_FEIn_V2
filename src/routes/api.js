@@ -43,6 +43,7 @@ export const API_UPDATE_APPLICANT_RECRUITMENT_TO_NEXT_STATE = "/applicant/Applic
 export const API_UPLOAD_FILE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/UploadApplicantRecruitmentCv";
 export const API_GET_APPLICANT_BY_PIPELINESTETEID ="/applicant/ApplicantRecruitment/GetApplicantByPipelineStateId"
 export const API_UPDATE_APPLICANT = "/applicant/Applicant/UpdateApplicant";
+export const API_DELETE_APPLICANT = "/applicant/Applicant/RemoveApplicants";
 
 export const API_GET_APPLICANT_SKILLS = "/applicant/ApplicantSkill/GetApplicantSkills";
 

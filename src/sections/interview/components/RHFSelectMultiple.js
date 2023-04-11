@@ -80,10 +80,11 @@ function RHFSelectMultiple({ name, ...props }) {
     options,
     disabled,
     multiple,
-    listApplicant
+    listApplicant,
   } = props;
 
   const renderChipsSelect = (options, value) => {
+    
     return (
       <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate

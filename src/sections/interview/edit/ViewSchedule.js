@@ -111,7 +111,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
                 Địa chỉ
               </Typography>
               <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {data?.onlineInterviewAddress}
+                {data?.offlineInterviewAddress}
               </Typography>
             </Box>
           ) : (

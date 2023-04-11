@@ -278,7 +278,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
           <p
             style={{ display: "flex", width: "100%", justifyContent: "center" }}
           >
-            Ứng viên chưa có CV cho tin tuyển dụng này.
+            Danh sách hoạt động tạm ẩn.
           </p>
         </div>
       )}
