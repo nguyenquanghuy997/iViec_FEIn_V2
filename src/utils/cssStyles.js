@@ -255,6 +255,9 @@ export const ReviewForm = styled("div")(() => ({
     color: '#fff',
     borderColor: '#1976D2'
   },
+  "& .ant-rate .ant-rate-star-first": {
+    width:'100%'
+  },
   "& .ant-rate .ant-rate-star >div:hover": {
     transform: 'unset'
   },
