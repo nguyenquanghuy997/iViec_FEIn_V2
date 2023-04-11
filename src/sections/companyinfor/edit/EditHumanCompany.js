@@ -18,6 +18,7 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import RHFUploadImage from "@/sections/companyinfor/upload/RHFUploadImage";
 import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {isEmpty, get} from "lodash";
 
 const EditHumanCompany = ({data, onClose}) => {
 
@@ -25,15 +26,27 @@ const EditHumanCompany = ({data, onClose}) => {
       const [uploadImage] = useUploadImageCompanyMutation();
       const {enqueueSnackbar} = useSnackbar();
 
+      // const defaultValues = {
+      //   organizationHumans: data?.organizationHumans?.map(item => ({
+      //     id: item.id,
+      //     avatar: item.avatar ? item.avatar : '',
+      //     imagePreview: '',
+      //     name: item.name,
+      //     description: item.description
+      //   }))
+      // };
+
       const defaultValues = {
-        organizationHumans: data?.organizationHumans?.map(item => ({
-          id: item.id,
-          avatar: item.avatar,
-          imagePreview: '',
-          name: item.name,
-          description: item.description
-        }))
+        organizationHumans: isEmpty(get(data, 'organizationHumans')) ? []
+            : data?.organizationHumans?.map(item => ({
+              id: item.id,
+              avatar: item.avatar ? item.avatar : '',
+              imagePreview: '',
+              name: item.name,
+              description: item.description
+            }))
       };
+
       const Schema = {
         name: Yup.string().nullable().required('Họ và tên không được bỏ trống'),
         description: Yup.string().nullable().required('Chức vụ không được bỏ trống'),
@@ -46,13 +59,13 @@ const EditHumanCompany = ({data, onClose}) => {
         resolver: yupResolver(ProfileSchema),
         defaultValues,
       });
-      const {setValue, handleSubmit, control, formState: {isSubmitting, isValid}} = methods;
+      const {setValue, handleSubmit, control, formState: {isSubmitting}} = methods;
       const {fields, append, move, remove} = useFieldArray({control, name: "organizationHumans"});
 
       const organizationHumans = useWatch({ control, name: 'organizationHumans' });
 
       const onSubmit = async (formData) => {
-        const imageData = formData.organizationHumans?.filter(item => item.avatar !== null && typeof item.avatar === 'object')?.map(item => item.avatar?.[0]);
+        const imageData = formData?.organizationHumans?.filter(item => item.avatar !== null && typeof item.avatar === 'object')?.map(item => item.avatar?.[0]);
         const form = new FormData();
         const promises = imageData.map((file) => {
           form.append("avatar", file);
@@ -66,11 +79,11 @@ const EditHumanCompany = ({data, onClose}) => {
           if (avatarRes) {
             let dataSubmit = [];
             let counter = 0;
-            for(let i = 0; i < formData.organizationHumans.length; i++) {
-              if (typeof formData.organizationHumans[i].avatar === 'string') {
-                dataSubmit.push({ ...formData.organizationHumans[i] })
+            for(let i = 0; i < formData?.organizationHumans?.length; i++) {
+              if (typeof formData?.organizationHumans[i]?.avatar === 'string') {
+                dataSubmit.push({ ...formData?.organizationHumans[i] })
               } else {
-                dataSubmit.push({ ...formData.organizationHumans[i], avatar: avatarRes.map(item => item.data)[counter] })
+                dataSubmit.push({ ...formData?.organizationHumans[i], avatar: avatarRes?.map(item => item.data)[counter] })
                 counter++;
               }
             }
@@ -99,7 +112,7 @@ const EditHumanCompany = ({data, onClose}) => {
 
       useEffect(async () => {
         if (!data) return;
-        setValue("organizationHumans", data?.organizationHumans);
+        setValue("organizationHumans", data?.organizationHumans?.map(item => ({ ...item, avatar: item.avatar ? item.avatar : '' })));
       }, [data]);
 
       const handleDrag = ({source, destination}) => {
@@ -216,9 +229,13 @@ const EditHumanCompany = ({data, onClose}) => {
               <MuiButton
                   title={"Thêm cán bộ"}
                   variant="outlined"
-                  disabled={!isValid}
                   onClick={() => {
-                    append({...defaultValues});
+                    append({
+                      avatar: '',
+                      imagePreview: '',
+                      name: '',
+                      description: ''
+                    });
                   }}
                   startIcon={<PlusIcon/>}
                   sx={{width: '100%'}}
