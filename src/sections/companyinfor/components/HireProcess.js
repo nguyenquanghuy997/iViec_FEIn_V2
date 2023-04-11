@@ -1,14 +1,14 @@
 import HeaderCard from "../HeaderCard";
 import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import EditHirePipeline from "../edit/EditHirePipeline";
-import CloseIcon from "@/assets/CloseIcon";
 import {PipelineStateType} from "@/utils/enum";
-import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
+import {Box, Divider, Drawer, Typography, useTheme} from "@mui/material";
 import {useState, Fragment} from "react";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import LoadingScreen from "@/components/LoadingScreen";
 import {useSnackbar} from "notistack";
 import {ApplyIcon, ExmainationIcon, InterviewIcon, OfferIcon, ResultIcon} from "@/sections/companyinfor/icon";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
 export const renderIconByPipelineType = (type) => {
   switch (type) {
@@ -29,6 +29,7 @@ export const renderIconByPipelineType = (type) => {
 
 const HireProcess = ({data}) => {
   const {enqueueSnackbar} = useSnackbar();
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(data?.isProfilePipelineVisible);
   const [loading, setLoading] = useState(false);
@@ -137,25 +138,16 @@ const HireProcess = ({data}) => {
                 anchor="right"
                 open={open}
                 onClose={handleClose}
-                PaperProps={{sx: {width: 800, position: 'fixed', top: '64px', right: 0}}}
+                PaperProps={{
+                  sx: drawerPaperStyle({...theme, width: 800}),
+                }}
                 componentsProps={{
                   backdrop: {
                     sx: {background: 'rgba(9, 30, 66, 0.25) !important', boxShadow: 'none !important'}
                   }
                 }}
             >
-              <Box sx={{width: 800}}>
-                <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
-                  <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
-                    Chỉnh sửa Quy trình tuyển dụng
-                  </Typography>
-                  <Button onClick={handleClose} sx={{"&:hover": {background: "#FDFDFD"}}}>
-                    <CloseIcon/>
-                  </Button>
-                </List>
-                <Divider/>
-                <EditHirePipeline data={data} onClose={handleClose}/>
-              </Box>
+              <EditHirePipeline data={data} onClose={handleClose}/>
             </Drawer>
         )}
       </>

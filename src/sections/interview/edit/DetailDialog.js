@@ -79,11 +79,11 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   };
 
   const time =
-    DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarGroupApplicants?.map(
+    DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarApplicants?.map(
       (item) => item?.interviewTime
     );
   const duration =
-    DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarGroupApplicants?.map(
+    DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarApplicants?.map(
       (item) => item?.interviewDuration
     );
 
@@ -128,13 +128,13 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             "Loại phỏng vấn:",
             DetailData?.bookingCalendarGroups.map(
               (item) => item?.interviewGroupType
-            ) == 0
+            ) === "0"
               ? "Phỏng vấn cá nhân"
               : "Phỏng vấn nhóm"
           )}
           {renderText(
             "Số lượng ứng viên:",
-            DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants
+            DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants
               .length
           )}
           {renderText("Trạng thái:", "")}
@@ -149,7 +149,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               Danh sách ứng viên
             </Typography>
 
-            {DetailData?.bookingCalendarGroups[0]?.bookingCalendarGroupApplicants.map(
+            {DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants.map(
               (item, index) => (
                 <ListItem
                   sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}

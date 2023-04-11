@@ -2,7 +2,6 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useAddCalendarMutation, useGetDetailCalendarsQuery, useUpdateCalendarMutation } from "@/sections/interview";
 import { useSnackbar } from "notistack";
-import moment from "moment/moment";
 import { FormProvider } from "@/components/hook-form";
 import { CircularProgress, Divider, Grid, Modal } from "@mui/material";
 import { ViewModel } from "@/utils/cssStyles";
@@ -14,10 +13,12 @@ import ListCandidate from "@/sections/interview/components/ListCandidate";
 import InterviewCouncil from "@/sections/interview/components/InterviewCouncil";
 import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
-import { convertDurationTimeToSeconds, convertStoMs, toHhMmSs } from "@/sections/interview/config";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { convertDataGet, convertDurationTimeToSeconds, convertStoMs, toHhMmSs } from "@/sections/interview/config";
+import moment from "moment";
 
 const defaultValues = {
+  id: undefined,
   name: undefined,
   recruitmentId: undefined,
   recruitmentPipelineStateId: undefined,
@@ -49,6 +50,7 @@ export const FormCalendar = ({
   const [updateCalendar] = useUpdateCalendarMutation();
   
   const Schema = Yup.object().shape({
+    id: Yup.string().nullable(),
     name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
     recruitmentId: Yup.string().required(
       "Chưa nhập tên tiêu đề tin tuyển dụng"
@@ -64,15 +66,16 @@ export const FormCalendar = ({
     applicantIdArray: Yup.array().of(Yup.string().min(1)).required("Chọn ứng viên phỏng vấn"),
     bookingCalendarGroups: Yup.array().of(
       Yup.object().shape({
-        name: Yup.string(),
+        name: Yup.string().nullable(),
         interviewGroupType: Yup.string().nullable(),
-        interviewTime: Yup.string(),
-        interviewDuration: Yup.string(),
+        interviewTime: Yup.string().nullable(),
+        interviewDuration: Yup.string().nullable(),
         bookingCalendarApplicants: Yup.array().of(
           Yup.object().shape({
             applicantId: Yup.string(),
-            interviewTime: Yup.string(),
-            interviewDuration: Yup.string(),
+            date: Yup.string().required("Chọn ngày phỏng vấn"),
+            interviewTime: Yup.string().required("Chọn thời gian phỏng vấn"),
+            interviewDuration: Yup.string().required("Chọn thời lượng phỏng vấn"),
           })
         ),
       })
@@ -93,6 +96,7 @@ export const FormCalendar = ({
   
   useEffect(() => {
     if (!DetailData?.id) return;
+    setValue("id", DetailData.id);
     setValue("name", DetailData.name ?? undefined);
     setValue("recruitmentId", DetailData.recruitmentId ?? undefined);
     setValue("recruitmentPipelineStateId", DetailData.recruitmentPipelineStateId ?? undefined);
@@ -102,8 +106,8 @@ export const FormCalendar = ({
     setValue("reviewFormId", DetailData.reviewFormId ?? undefined);
     setValue("isSendMailCouncil", DetailData.isSendMailCouncil ?? undefined);
     setValue("isSendMailApplicant", DetailData.isSendMailApplicant ?? undefined);
-    setValue("bookingCalendarGroups", DetailData.bookingCalendarGroups ?? undefined);
-
+    setValue("bookingCalendarGroups", convertDataGet(DetailData.bookingCalendarGroups) ?? undefined);
+    
     let arrayApplicant = [];
     DetailData.bookingCalendarGroups.forEach(item => {
       item?.bookingCalendarApplicants.forEach(itemData => {
@@ -111,7 +115,7 @@ export const FormCalendar = ({
       });
     });
     setValue("applicantIdArray", arrayApplicant);
-
+    
     let arrayCouncil = [];
     DetailData.bookingCalendarCouncils.forEach(item => {
       arrayCouncil.push(item.id);
@@ -121,6 +125,7 @@ export const FormCalendar = ({
   
   const pressSave = handleSubmit(async (d) => {
     const body = {
+      id: d.id,
       name: d.name,
       recruitmentId: d.recruitmentId,
       recruitmentPipelineStateId: d.recruitmentPipelineStateId,
@@ -133,31 +138,24 @@ export const FormCalendar = ({
       councilIds: d.councilIds,
       bookingCalendarGroups: [
         {
-          name: "person",
           interviewGroupType: "0",
-          interviewTime: "",
-          interviewDuration: "",
-          bookingCalendarApplicants: d?.bookingCalendarGroups.map(
-            (item, index) => {
+          bookingCalendarApplicants: d?.bookingCalendarGroups[0].bookingCalendarApplicants.map(
+            (item) => {
               const dateTime = convertStoMs(
                 convertDurationTimeToSeconds(
-                  `${item?.bookingCalendarApplicants[index].interviewTime}:00`
+                  `${item?.interviewTime}:00`
                 ) +
                 convertDurationTimeToSeconds(
                   toHhMmSs(
-                    item?.bookingCalendarApplicants[index].interviewDuration
+                    item?.interviewDuration
                   )
                 )
               );
-              return {
-                applicantId: d?.applicantIdArray[index],
-                interviewTime: new Date(
-                  `${moment(d?.date[index]).format("YYYY-MM-DD")} ${dateTime}`
-                ).toISOString(),
-                interviewDuration: toHhMmSs(
-                  item?.bookingCalendarApplicants[index].interviewDuration
-                ),
-              };
+              item.interviewTime = new Date(
+                `${moment(item.date).format("YYYY-MM-DD")} ${dateTime}`
+              ).toISOString();
+              item.interviewDuration = toHhMmSs(item.interviewDuration);
+              return item;
             }
           ),
         },
@@ -177,7 +175,7 @@ export const FormCalendar = ({
         })
       });
     }
-    
+
     await addCalendar(body).unwrap()
     .then(() => {
       enqueueSnackbar("Thực hiện thành công!", {
@@ -265,14 +263,14 @@ export const FormCalendar = ({
                   <Grid p={3} sx={{
                     minWidth: "400px"
                   }}>
-                    <ListCandidate model={DetailData.bookingCalendarGroups} isEditmode={isEditMode} option={options} applicantId={options?.applicantId}/>
+                    <ListCandidate option={options} applicantId={options?.applicantId}/>
                   </Grid>
                   <Divider orientation="vertical"/>
                   <Grid sx={{
                     minWidth: "400px",
                     overflowY: "auto"
                   }}>
-                    <InterviewCouncil />
+                    <InterviewCouncil/>
                   </Grid>
                 </Grid>
               </View>

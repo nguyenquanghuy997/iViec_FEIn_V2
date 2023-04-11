@@ -12,7 +12,7 @@ import {
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Stack} from "@mui/material";
 import {useSnackbar} from "notistack";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useFieldArray, useForm} from "react-hook-form";
 import * as Yup from "yup";
 import MuiButton from "@/components/BaseComponents/MuiButton";
@@ -20,7 +20,8 @@ import {DOMAIN_SERVER_API} from "@/config";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import Iconify from "@/components/Iconify";
 import {RiDeleteBin6Line} from "react-icons/ri";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const InputStyle = {width: "100%", minHeight: 40, background: "white"};
 
@@ -133,13 +134,9 @@ const EditBusinessArea = ({data: Data, onClose}) => {
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{
-          px: 3,
-          mb: '120px',
-          overflow: "hidden",
-          background: style.BG_WHITE,
-          "& ul": {listStyle: 'none'} }}
-        >
+        <FormModalHead title={'Chỉnh sửa Lĩnh vực kinh doanh'} onClose={onClose}/>
+        <div className="edit-container">
+        <Box>
           <Stack>
             <Box>
               <EditUpload
@@ -163,7 +160,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
             </Box>
           </Stack>
           <DragDropContext onDragEnd={handleDrag}>
-            <ul>
+            <ul style={{ listStyle: 'none' }}>
               <Droppable droppableId="organizationBusinessDatas-items">
                 {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -221,30 +218,39 @@ const EditBusinessArea = ({data: Data, onClose}) => {
               sx={{width: '100%'}}
           />
         </Box>
-        <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              position: "fixed",
-              bottom: 0,
-              background: "#FDFDFD",
-              width: "100%",
-              padding: "16px 24px",
-              border: "1px solid #EFF3F6",
-              zIndex: 1001,
-            }}
-        >
-          <MuiButton
-              title={"Lưu"}
-              type="submit"
-              loading={isSubmitting}
-          />
-          <MuiButton
-              title={"Hủy"}
-              color={"basic"}
-              onClick={onClose}
-          />
         </div>
+        <FormModalBottom
+            onClose={onClose}
+            loading={isSubmitting}
+            btnConfirm={{
+              title: 'Lưu',
+              type: "submit",
+            }}
+        />
+        {/*<div*/}
+        {/*    style={{*/}
+        {/*      display: "flex",*/}
+        {/*      flexDirection: "row",*/}
+        {/*      position: "fixed",*/}
+        {/*      bottom: 0,*/}
+        {/*      background: "#FDFDFD",*/}
+        {/*      width: "100%",*/}
+        {/*      padding: "16px 24px",*/}
+        {/*      border: "1px solid #EFF3F6",*/}
+        {/*      zIndex: 1001,*/}
+        {/*    }}*/}
+        {/*>*/}
+        {/*  <MuiButton*/}
+        {/*      title={"Lưu"}*/}
+        {/*      type="submit"*/}
+        {/*      loading={isSubmitting}*/}
+        {/*  />*/}
+        {/*  <MuiButton*/}
+        {/*      title={"Hủy"}*/}
+        {/*      color={"basic"}*/}
+        {/*      onClick={onClose}*/}
+        {/*  />*/}
+        {/*</div>*/}
       </FormProvider>
   );
 };

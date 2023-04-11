@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {useSnackbar} from "notistack";
 import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {RiDeleteBin6Line} from "react-icons/ri";
@@ -12,11 +12,12 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Stack} from "@mui/material";
 import {LabelStyle} from "@/components/hook-form/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
 import RHFUploadImage from "@/sections/companyinfor/upload/RHFUploadImage";
 import Image from "@/components/Image";
 import {DOMAIN_SERVER_API} from "@/config";
 import {TextAreaDS} from "@/components/DesignSystem";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const EditEnvironmentWorkplace = ({data, onClose}) => {
 
@@ -134,14 +135,9 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
 
         return (
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <Box sx={{
-                    px: 3, flex: 1,
-                    paddingBottom: 36,
-                    overflow: "hidden",
-                    background: style.BG_WHITE,
-                    padding: 3,
-                    mb: 8, "& ul": {listStyle: 'none'}
-                }}>
+              <FormModalHead title={'Chỉnh sửa Môi trường làm việc'} onClose={onClose}/>
+              <div className="edit-container">
+              <Box sx={{"& ul": {listStyle: 'none'}}}>
                     <DragDropContext onDragEnd={handleDrag}>
                         <ul>
                             <Droppable droppableId="organizationWorkingEnvironments-items">
@@ -154,7 +150,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                         <li key={item.id}
                                                             ref={provided.innerRef} {...provided.draggableProps}>
                                                             <Box sx={{
-                                                                my: 3,
+                                                                mb: 3,
                                                                 px: 3,
                                                                 py: 2,
                                                                 background: "#F2F4F5",
@@ -250,31 +246,15 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                         sx={{width: '100%'}}
                     />
                 </Box>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        marginTop: 0,
-                        position: "fixed",
-                        bottom: 0,
-                        background: "#FDFDFD",
-                        width: "100%",
-                        padding: "16px 24px",
-                        border: "1px solid #EFF3F6",
-                        zIndex: 1001,
-                    }}
-                >
-                    <MuiButton
-                        title={"Lưu"}
-                        type="submit"
-                        loading={isSubmitting}
-                    />
-                    <MuiButton
-                        title={"Hủy"}
-                        color={"basic"}
-                        onClick={onClose}
-                    />
-                </div>
+              </div>
+              <FormModalBottom
+                  onClose={onClose}
+                  loading={isSubmitting}
+                  btnConfirm={{
+                    title: 'Lưu',
+                    type: "submit",
+                  }}
+              />
             </FormProvider>
         );
     }

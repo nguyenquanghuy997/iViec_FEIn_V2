@@ -1,14 +1,14 @@
 import HeaderCard from "../HeaderCard";
 import {useUpdateCompanyEndingMutation} from "../companyInforSlice";
 import EditorEnding from "../edit/EditorEnding";
-import CloseIcon from "@/assets/CloseIcon";
-import {Box, Button, Divider, Drawer, List, Typography} from "@mui/material";
+import {Box, Drawer, Typography, useTheme} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import React, {useState} from "react";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import {useSnackbar} from "notistack";
 import LoadingScreen from "@/components/LoadingScreen";
 import {QuoteIcon} from "@/sections/companyinfor/icon";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
 const PlaceholderStyle = styled("div")(() => ({
     background: "white",
@@ -33,7 +33,7 @@ const PlaceholderStyle = styled("div")(() => ({
 
 const Ending = ({data}) => {
     const {enqueueSnackbar} = useSnackbar();
-
+    const theme = useTheme();
     const [open, setOpen] = useState(false);
 
     const [checked, setChecked] = useState(data?.isConclusionVisible);
@@ -104,25 +104,16 @@ const Ending = ({data}) => {
                     anchor="right"
                     open={open}
                     onClose={handleClose}
-                    PaperProps={{sx: {width: 800, position: 'fixed', top: '64px', right: 0}}}
+                    PaperProps={{
+                        sx: drawerPaperStyle({...theme, width: 800}),
+                    }}
                     componentsProps={{
                         backdrop: {
                             sx: {background: 'rgba(9, 30, 66, 0.25) !important', boxShadow: 'none !important'}
                         }
                     }}
                 >
-                    <Box sx={{width: 800}}>
-                        <List sx={{display: "flex", justifyContent: "space-between", p: 0}}>
-                            <Typography sx={{p: "22px 24px", fontSize: 16, fontWeight: 600}}>
-                                Chỉnh sửa Lời kết
-                            </Typography>
-                            <Button onClick={handleClose} sx={{"&:hover": {background: "#FDFDFD"}}}>
-                                <CloseIcon/>
-                            </Button>
-                        </List>
-                        <Divider/>
-                        <EditorEnding data={data} onClose={handleClose}/>
-                    </Box>
+                    <EditorEnding data={data} onClose={handleClose}/>
                 </Drawer>
             )}
         </>

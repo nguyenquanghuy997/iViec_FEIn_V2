@@ -3,6 +3,7 @@ import {
   useGetApplicantCurrentStateWithRecruitmentStatesQuery,
   useGetApplicantRecruitmentQuery,
   useGetApplicantReviewFormQuery,
+  useGetCheckReviewQuery,
   useGetRecruitmentsByApplicantQuery,
 } from "../ApplicantFormSlice";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
@@ -188,7 +189,7 @@ function ApplicantPreviewItem() {
             tittle={"Đánh giá"}
             type="submit"
             onClick={() => setIsOpenReview(true)}
-            isDisabled={isSuccessReview ? false : true}
+            isDisabled={isReview ? false : true}
             mr={2}
             sx={{
               ":hover": {
@@ -203,7 +204,7 @@ function ApplicantPreviewItem() {
                 icon={"ph:user-focus-fill"}
                 width={20}
                 height={20}
-                color={reviewFormCriterias ? "fff" : "#8A94A5"}
+                color={isReview ? "fff" : "#8A94A5"}
                 mr={1}
               />
             }
@@ -293,7 +294,7 @@ function ApplicantPreviewItem() {
     { skip: !ApplicantId }
   );
 
-  const { data: reviewFormCriterias, isSuccess: isSuccessReview } =
+  const { data: reviewFormCriterias } =
     useGetApplicantReviewFormQuery(
       {
         RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
@@ -302,6 +303,19 @@ function ApplicantPreviewItem() {
       {
         skip:
           pipelines?.recruitmentPipelineStates?.length > 0 ||
+          !pipelines?.currentApplicantPipelineState ||
+          !ApplicantId,
+      }
+    );
+
+    const { data: isReview } =
+    useGetCheckReviewQuery(
+      {
+        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+        ApplicantId: ApplicantId,
+      },
+      {
+        skip:
           !pipelines?.currentApplicantPipelineState ||
           !ApplicantId,
       }

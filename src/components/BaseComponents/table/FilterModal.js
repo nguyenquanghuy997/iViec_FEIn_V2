@@ -34,6 +34,7 @@ export default function FilterModal({
 
   return (
     <DrawerEditForm
+      key={'drawer_filter'}
       title="Bộ lọc"
       okText="Áp dụng"
       cancelText="Bỏ lọc"

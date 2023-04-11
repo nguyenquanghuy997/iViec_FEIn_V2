@@ -4,7 +4,7 @@ import {LabelStyle} from "@/components/hook-form/style";
 import {PipelineStateType} from "@/utils/enum";
 import {Box, Stack, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {RiDeleteBin6Line, RiLock2Line,} from "react-icons/ri";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {renderIconByPipelineType} from "@/sections/companyinfor/components/HireProcess";
@@ -13,6 +13,8 @@ import {get, isEmpty} from "lodash";
 import AntdTextArea from "@/components/form/AntdTextArea";
 import {AddIcon} from "@/assets/ActionIcon";
 import HelperText from "@/components/BaseComponents/HelperText";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const LIST_PIPELINE = [
   {description: "", organizationProfilePipelineType: 0, type: 0, isFixed: true, isOpen: true},
@@ -26,7 +28,7 @@ const EditHirePipeline = ({data, onClose}) => {
   const {enqueueSnackbar} = useSnackbar();
   const [pipeLineState, setPipeLineState] = useState(LIST_PIPELINE);
 
-  const [updatePipeline] = useUpdateCompanyPipelineMutation();
+  const [updatePipeline, { isLoading: isSubmitting }] = useUpdateCompanyPipelineMutation();
 
   useEffect(() => {
     if (!data) return;
@@ -129,7 +131,9 @@ const EditHirePipeline = ({data, onClose}) => {
 
   return (
       <form onSubmit={onSubmit}>
-        <Box sx={{padding: 3, mb: 12}}>
+        <FormModalHead title={'Chỉnh sửa Quy trình tuyển dụng'} onClose={onClose}/>
+        <div className="edit-container">
+        <Box>
           {pipeLineState?.map((pipeline, index) => {
             if (pipeline.organizationProfilePipelineType === 1) {
               return null;
@@ -218,30 +222,15 @@ const EditHirePipeline = ({data, onClose}) => {
             }
           })}
         </Box>
-        <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              position: "fixed",
-              bottom: 0,
-              background: "#FDFDFD",
-              width: "100%",
-              padding: "16px 24px",
-              border: "1px solid #EFF3F6",
-              zIndex: 1001,
-            }}
-        >
-          <MuiButton
-              title={"Lưu"}
-              type="submit"
-              // loading={isSubmitting}
-          />
-          <MuiButton
-              title={"Hủy"}
-              color={"basic"}
-              onClick={onClose}
-          />
         </div>
+        <FormModalBottom
+            onClose={onClose}
+            loading={isSubmitting}
+            btnConfirm={{
+              title: 'Lưu',
+              type: "submit",
+            }}
+        />
       </form>
   );
 };

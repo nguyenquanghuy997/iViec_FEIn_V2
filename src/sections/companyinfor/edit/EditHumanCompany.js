@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {useSnackbar} from "notistack";
 import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {RiDeleteBin6Line} from "react-icons/ri";
@@ -15,8 +15,9 @@ import {Box, Stack} from "@mui/material";
 import {DOMAIN_SERVER_API} from "@/config";
 import {LabelStyle} from "@/components/hook-form/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
 import RHFUploadImage from "@/sections/companyinfor/upload/RHFUploadImage";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const EditHumanCompany = ({data, onClose}) => {
 
@@ -28,7 +29,7 @@ const EditHumanCompany = ({data, onClose}) => {
         organizationHumans: data?.organizationHumans?.map(item => ({
           id: item.id,
           avatar: item.avatar,
-            imagePreview: '',
+          imagePreview: '',
           name: item.name,
           description: item.description
         }))
@@ -109,16 +110,11 @@ const EditHumanCompany = ({data, onClose}) => {
 
       return (
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{
-              px: 3, flex: 1,
-              paddingBottom: 36,
-              overflow: "hidden",
-              background: style.BG_WHITE,
-              padding: 3,
-              mb: 8, "& ul": {listStyle: 'none'}
-            }}>
+            <FormModalHead title={'Chỉnh sửa Con người công ty'} onClose={onClose}/>
+            <div className="edit-container">
+            <Box>
               <DragDropContext onDragEnd={handleDrag}>
-                <ul>
+                <ul style={{ listStyle: 'none' }}>
                   <Droppable droppableId="organizationHumans-items">
                     {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -128,7 +124,7 @@ const EditHumanCompany = ({data, onClose}) => {
                                   {(provided) => (
                                       <li key={item.id} ref={provided.innerRef} {...provided.draggableProps}>
                                         <Box sx={{
-                                          my: 3,
+                                          mb: 3,
                                           px: 3,
                                           py: 2,
                                           background: "#F2F4F5",
@@ -228,31 +224,15 @@ const EditHumanCompany = ({data, onClose}) => {
                   sx={{width: '100%'}}
               />
             </Box>
-            <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  marginTop: 0,
-                  position: "fixed",
-                  bottom: 0,
-                  background: "#FDFDFD",
-                  width: "100%",
-                  padding: "16px 24px",
-                  border: "1px solid #EFF3F6",
-                  zIndex: 1001,
-                }}
-            >
-              <MuiButton
-                  title={"Lưu"}
-                  type="submit"
-                  loading={isSubmitting}
-              />
-              <MuiButton
-                  title={"Hủy"}
-                  color={"basic"}
-                  onClick={onClose}
-              />
             </div>
+            <FormModalBottom
+                onClose={onClose}
+                loading={isSubmitting}
+                btnConfirm={{
+                  title: 'Lưu',
+                  type: "submit",
+                }}
+            />
           </FormProvider>
       );
     }

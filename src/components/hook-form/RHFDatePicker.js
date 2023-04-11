@@ -1,9 +1,9 @@
 import { DATE_FORMAT } from "@/config";
 import { TextField } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
 import PropTypes from "prop-types";
 // form
 import { Controller, useFormContext } from "react-hook-form";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 RHFDatePicker.propTypes = {
   name: PropTypes.string,
@@ -34,7 +34,6 @@ export default function RHFDatePicker({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <DatePicker
-          defaultProp={null}
           minDate={today}
           {...field}
           error={!!error}
