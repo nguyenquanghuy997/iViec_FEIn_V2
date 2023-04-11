@@ -13,6 +13,7 @@ import {
   useSelector as useAppSelector,
 } from "react-redux";
 import {ApplicantFormSlice} from "@/sections/applicant";
+import { roleGroupSlice } from '@/sections/rolegroup/RoleGroupSlice';
 
 const store = configureStore({
   reducer: {
@@ -33,6 +34,7 @@ const store = configureStore({
     pipelineFilterReducer: pipelineFilterSlice.reducer,
     [masterDataSlice.reducerPath]: masterDataSlice.reducer,
     [ApplicantFormSlice.reducerPath]: ApplicantFormSlice.reducer,
+    [roleGroupSlice.reducerPath]: roleGroupSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -44,7 +46,8 @@ const store = configureStore({
       .concat(companyServiceApi.middleware)
       .concat(calendarServiceApi.middleware)
       .concat(masterDataSlice.middleware)
-      .concat(ApplicantFormSlice.middleware),
+      .concat(ApplicantFormSlice.middleware)
+      .concat(roleGroupSlice.middleware)
 });
 
 const { dispatch } = store;
