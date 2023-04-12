@@ -151,7 +151,6 @@ export default function CloneRecruitment() {
     const {handleSubmit, getValues, reset, formState: {isValid}} = methods;
 
     useEffect(() => {
-        // for (let i in defaultValues) {
         reset({
             ...Recruitment,
             minSalary:  Recruitment.salaryDisplayType === 0 || Recruitment.salaryDisplayType === 1 ? '' : Recruitment.minSalary,
@@ -161,21 +160,13 @@ export default function CloneRecruitment() {
             recruitmentJobCategoryIds: Recruitment?.recruitmentJobCategories?.map(item => item?.jobCategoryId),
             recruitmentWorkingForms: Recruitment?.recruitmentWorkingForms?.map(item => item?.workingForm),
             jobPositionId: Recruitment?.jobPosition?.id,
+            sex: Recruitment?.sex === 3 ? '' : Recruitment.sex,
             recruitmentCouncilIds: Recruitment?.recruitmentCouncils?.map(item => item?.councilUserId),
             coOwnerIds: Recruitment?.coOwners?.map(item => item?.id),
             recruitmentLanguageIds: Recruitment?.recruitmentLanguages?.map(item => item?.languageId),
             organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId,
+            isAutomaticStepChange: Recruitment?.recruitmentPipeline?.isAutomaticStepChange,
         })
-            // setValue('organizationId', Recruitment?.organizationId || defaultOrganization?.id)
-            // setValue('recruitmentAddressIds', Recruitment?.recruitmentAddresses?.map(item => item?.provinceId))
-            // setValue('recruitmentJobCategoryIds', Recruitment?.recruitmentJobCategories?.map(item => item?.jobCategoryId))
-            // setValue('recruitmentWorkingForms', Recruitment?.recruitmentWorkingForms?.map(item => item?.workingForm))
-            // setValue('jobPositionId', Recruitment?.jobPosition?.id)
-            // setValue('recruitmentCouncilIds', Recruitment?.recruitmentCouncils?.map(item => item?.councilUserId))
-            // setValue('coOwnerIds', Recruitment?.coOwners?.map(item => item?.id))
-            // setValue('recruitmentLanguageIds', Recruitment?.recruitmentLanguages?.map(item => item?.languageId))
-            // setValue('organizationPipelineId', Recruitment?.recruitmentPipeline?.organizationPipelineId);
-        // }
     }, [Recruitment, defaultOrganization])
 
     const onSubmit = async (data) => {
@@ -197,7 +188,7 @@ export default function CloneRecruitment() {
             recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
             minSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 || !data.minSalary ? null : Number(data.minSalary),
             maxSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 || !data.maxSalary ? null : Number(data.maxSalary),
-            sex: (data.sex || data.sex === 0) ? data.sex : null,
+            sex: (data.sex || data.sex === 0) ? data.sex : 3,
             recruitmentCreationType: openSaveDraft ? 0 : 1,
             organizationPipelineStateDatas: !hasExaminationValue ? [] : pipelineStateDatas?.filter(item => item?.examinationId !== null)?.map(item => ({
                 organizationPipelineStateId: item.organizationPipelineStateId,

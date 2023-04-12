@@ -21,9 +21,6 @@ const Description = () => {
     const { setValue } = useFormContext();
     const jobPositionId = useWatch({name: 'jobPositionId'});
     const {data: JobPosition = {}} = useGetJobPositionByIdQuery({Id: jobPositionId}, {skip: !jobPositionId})
-    const {data: selectedJobPosition = {}} = useGetJobPositionByIdQuery({
-        Id: jobPositionId,
-    }, { skip: !jobPositionId });
 
     useEffect(() => {
         if (!isEmpty(JobPosition)) {
@@ -32,14 +29,18 @@ const Description = () => {
             setValue('benefit', JobPosition?.benefit)
         }
     }, [JobPosition])
-
+  
     return (
         <BoxInnerStyle>
             <DividerCard title="MÔ TẢ CÔNG VIỆC"/>
             <Box sx={{px: 4, py: 3}}>
                 <LabelStyle>Vị trí công việc có sẵn</LabelStyle>
                 <RHFSelect
-                    selectedOptions={selectedJobPosition}
+                    selectedOptions={[{
+                      ...JobPosition,
+                      value: JobPosition?.id,
+                      label: JobPosition?.name
+                    }]}
                     remoteUrl={API_GET_PAGING_JOBTYPE}
                     name="jobPositionId"
                     placeholder="Chọn vị trí công việc có sẵn"

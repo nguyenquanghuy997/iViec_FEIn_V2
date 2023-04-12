@@ -14,7 +14,7 @@ import {Box, Stack} from "@mui/material";
 import {useSnackbar} from "notistack";
 import React, {useEffect, useState} from "react";
 import {useFieldArray, useForm} from "react-hook-form";
-import {get} from 'lodash';
+import {get, isEmpty} from 'lodash';
 import * as Yup from "yup";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {DOMAIN_SERVER_API} from "@/config";
@@ -46,14 +46,20 @@ const EditBusinessArea = ({data: Data, onClose}) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const defaultValues = {};
+  const defaultValues = {
+    organizationBusinessDatas: isEmpty(get(Data, 'organizationBusinessDatas')) ? []
+        : Data?.organizationBusinessDatas?.map(item => ({
+          name: item.name,
+          description: item.description
+        }))
+  };
 
   const ProfileSchema = Yup.object().shape({
     businessPhoto: Yup.string(),
     organizationBusinessDatas: Yup.array().of(
         Yup.object().shape({
-          name: Yup.string(),
-          description: Yup.string(),
+          name: Yup.string().nullable().required('Tên lĩnh vực kinh doanh không được bỏ trống'),
+          description: Yup.string().nullable().required('Mô tả không được bỏ trống'),
         })
     ),
   });
@@ -68,7 +74,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
     register,
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid},
+    formState: {isSubmitting},
   } = methods;
 
   const {fields, append, move, remove} = useFieldArray({
@@ -77,42 +83,57 @@ const EditBusinessArea = ({data: Data, onClose}) => {
   });
 
   const onSubmit = async (d) => {
-    const bgRes = await uploadImage({
-      OrganizationId: Data?.id,
-      File: imageBg,
-    });
+    if (imageBg) {
+      const bgRes = await uploadImage({
+        OrganizationId: Data?.id,
+        File: imageBg,
+      });
 
-    const res = {
-      organizationId: isEditMode ? get(Data, 'organizationBusiness.id') : get(Data, 'id'),
-      businessPhoto: get(bgRes, 'data'),
-      organizationBusinessDatas: get(d, 'organizationBusinessDatas'),
-    };
+      const res = {
+        organizationId: isEditMode ? get(Data, 'organizationBusiness.id') : get(Data, 'id'),
+        businessPhoto: get(bgRes, 'data') ? get(bgRes, 'data') : get(Data, 'organizationBusiness.businessPhoto'),
+        organizationBusinessDatas: get(d, 'organizationBusinessDatas'),
+      };
 
-    if (isEditMode) {
-      try {
-        await updateCompanyBusiness(res).unwrap();
-        enqueueSnackbar("Chỉnh sửa Lĩnh vực công ty thành công!", {
-          autoHideDuration: 2000,
-        });
-        onClose();
-      } catch (err) {
-        enqueueSnackbar("Thực hiện thất bại!", {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
+      if (isEditMode) {
+        try {
+          await updateCompanyBusiness(res).unwrap();
+          enqueueSnackbar("Chỉnh sửa Lĩnh vực công ty thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", {variant: "error"});
+        }
+      } else {
+        try {
+          await addOrganizationBusiness(res).unwrap();
+          enqueueSnackbar("Thêm Lĩnh vực công ty mới thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", {variant: "error"});
+        }
       }
     } else {
-      try {
-        await addOrganizationBusiness(res).unwrap();
-        enqueueSnackbar("Thêm Lĩnh vực công ty mới thành công!", {
-          autoHideDuration: 2000,
-        });
-        onClose();
-      } catch (err) {
-        enqueueSnackbar("Thực hiện thất bại!", {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
+      const res = {
+        organizationId: isEditMode ? get(Data, 'organizationBusiness.id') : get(Data, 'id'),
+        businessPhoto: get(Data, 'organizationBusiness.businessPhoto'),
+        organizationBusinessDatas: get(d, 'organizationBusinessDatas'),
+      };
+      if (isEditMode) {
+        try {
+          await updateCompanyBusiness(res).unwrap();
+          enqueueSnackbar("Chỉnh sửa Lĩnh vực công ty thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", { variant: "error" });
+        }
+      } else {
+        try {
+          await addOrganizationBusiness(res).unwrap();
+          enqueueSnackbar("Thêm Lĩnh vực công ty mới thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", {variant: "error",});
+        }
       }
     }
   };
@@ -143,7 +164,6 @@ const EditBusinessArea = ({data: Data, onClose}) => {
               <EditUpload
                   title={'Tải lên ảnh nền'}
                   image={bg}
-                  imagePath={get(Data, 'organizationBusiness.businessPhoto')}
                   ref={register("businessPhoto", {required: false})}
                   imageHandler={handleImage}
                   style={{
@@ -185,11 +205,19 @@ const EditBusinessArea = ({data: Data, onClose}) => {
                                             isRequired
                                             placeholder="Nhập lĩnh vực kinh doanh"
                                             style={{...InputStyle}}
+                                            sx={{
+                                              backgroundColor: '#FDFDFD',
+                                              '& .MuiFormHelperText-root.Mui-error': {
+                                                backgroundColor: '#F2F4F5',
+                                                marginTop: 0,
+                                                paddingTop: 1
+                                              }
+                                            }}
                                         />
                                       </Stack>
                                       <Stack justifyContent="space-between" sx={{mb: 3}}>
                                         <View mb={24}>
-                                          {renderTitle("Mô tả")}
+                                          {renderTitle("Mô tả", true)}
                                           <TextAreaDS
                                               maxLength={150}
                                               placeholder="Nhập nội dung mô tả lĩnh vực kinh doanh..."
@@ -213,7 +241,6 @@ const EditBusinessArea = ({data: Data, onClose}) => {
             <MuiButton
                 title={"Thêm lĩnh vực kinh doanh"}
                 variant="outlined"
-                disabled={!isValid}
                 onClick={() => {
                   append({
                     name: '',
