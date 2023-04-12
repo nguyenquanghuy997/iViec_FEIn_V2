@@ -5,7 +5,7 @@ export const DOMAIN_SERVER_API = process.env.NEXT_PUBLIC_DOMAIN_SERVER_API || "h
 // "http://103.176.149.158:5001/api";
 
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.dashboard;
-export const DOMAIN_OUTSIDE = "http://103.176.149.158:4000/";
+export const DOMAIN_OUTSIDE = "https://iviec.vn/";
 
 export const DASHBOARD_TABLE_HEIGHT = 500;
 
