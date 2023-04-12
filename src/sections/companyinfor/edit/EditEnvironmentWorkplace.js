@@ -89,7 +89,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                         let dataSubmit = [];
                         let counter = 0;
                         for (let i = 0; i < formData?.organizationWorkingEnvironments?.length; i++) {
-                            if (typeof formData?.organizationWorkingEnvironments[i]?.image === 'string') {
+                            if (typeof formData?.organizationWorkingEnvironments[i]?.image === 'string' || !formData?.organizationWorkingEnvironments[i]?.image) {
                                 dataSubmit.push({...formData?.organizationWorkingEnvironments[i]})
                             } else {
                                 dataSubmit.push({

@@ -80,7 +80,7 @@ const EditHumanCompany = ({data, onClose}) => {
             let dataSubmit = [];
             let counter = 0;
             for(let i = 0; i < formData?.organizationHumans?.length; i++) {
-              if (typeof formData?.organizationHumans[i]?.avatar === 'string') {
+              if (typeof formData?.organizationHumans[i]?.avatar === 'string' || !formData?.organizationHumans[i]?.avatar) {
                 dataSubmit.push({ ...formData?.organizationHumans[i] })
               } else {
                 dataSubmit.push({ ...formData?.organizationHumans[i], avatar: avatarRes?.map(item => item.data)[counter] })
