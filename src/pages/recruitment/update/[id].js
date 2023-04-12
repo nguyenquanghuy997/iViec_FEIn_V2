@@ -20,7 +20,7 @@ import Preview from "@/sections/recruitment-form/preview/Preview";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 
-import {PERMISSION_PAGES} from '@/config'
+import {PERMISSION_PAGES, SALARY_TYPE, SEX_TYPE, RECRUITMENT_CREATE_TYPE, RECRUITMENT_STATUS, PIPELINE_TYPE} from '@/config'
 import {useGetOrganizationInfoQuery} from "@/sections/organizationdetail/OrganizationDetailSlice";
 import {
     useGetRecruitmentByIdQuery,
@@ -36,7 +36,7 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {FormValidate} from "@/sections/recruitment-form/form/Validate";
 import moment from "moment/moment";
 import LoadingScreen from "@/components/LoadingScreen";
-import {isEmpty} from "lodash";
+import {isEmpty, pick} from "lodash";
 import {View} from "@/components/FlexStyled";
 
 UpdateRecruitment.getLayout = function getLayout(pageProps, page) {
@@ -157,14 +157,14 @@ export default function UpdateRecruitment() {
     useEffect(() => {
         reset({
             ...Recruitment,
-            minSalary:  Recruitment.salaryDisplayType === 0 || Recruitment.salaryDisplayType === 1 ? '' : Recruitment.minSalary,
-            maxSalary:  Recruitment.salaryDisplayType === 0 || Recruitment.salaryDisplayType === 1 ? '' : Recruitment.maxSalary,
+            minSalary:  Recruitment.salaryDisplayType === SALARY_TYPE.NO_SALARY || Recruitment.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? '' : Recruitment.minSalary,
+            maxSalary:  Recruitment.salaryDisplayType === SALARY_TYPE.NO_SALARY || Recruitment.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? '' : Recruitment.maxSalary,
             organizationId: Recruitment?.organizationId || defaultOrganization?.id,
             recruitmentAddressIds: Recruitment?.recruitmentAddresses?.map(item => item?.provinceId),
             recruitmentJobCategoryIds: Recruitment?.recruitmentJobCategories?.map(item => item?.jobCategoryId),
             recruitmentWorkingForms: Recruitment?.recruitmentWorkingForms?.map(item => item?.workingForm),
             jobPositionId: Recruitment?.jobPosition?.id,
-            sex: Recruitment?.sex === 3 ? '' : Recruitment.sex,
+            sex: Recruitment?.sex === SEX_TYPE.NOT_REQUIRED ? '' : Recruitment.sex,
             recruitmentCouncilIds: Recruitment?.recruitmentCouncils?.map(item => item?.councilUserId),
             coOwnerIds: Recruitment?.coOwners?.map(item => item?.id),
             recruitmentLanguageIds: Recruitment?.recruitmentLanguages?.map(item => item?.languageId),
@@ -176,7 +176,7 @@ export default function UpdateRecruitment() {
     const onSubmit = async (data) => {
         const hasExaminationValue = examinationDataRef.current.getHasValue();
         const examinationSize = examinationDataRef.current?.getSize();
-        const pipelineStateDatas = examinationDataRef.current?.getPipeLineStateData()?.filter(item => item.pipelineStateType === 1 && !isEmpty(item.examinationId));
+        const pipelineStateDatas = examinationDataRef.current?.getPipeLineStateData()?.filter(item => item.pipelineStateType === PIPELINE_TYPE.EXAMINATION && !isEmpty(item.examinationId));
         const pipelineStateDatasSize = pipelineStateDatas.length;
         if (hasExaminationValue && examinationSize !== pipelineStateDatasSize) {
             enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng chọn đề thi!", {
@@ -190,27 +190,62 @@ export default function UpdateRecruitment() {
             startDate: moment(data?.startDate).toISOString(),
             endDate: moment(data?.endDate).toISOString(),
             recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
-            minSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.minSalary),
-            maxSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.maxSalary),
-            sex: (data.sex || data.sex === 0) ? data.sex : 3,
-            recruitmentCreationType: openSaveDraft ? 0 : 1,
+            minSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.minSalary),
+            maxSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.maxSalary),
+            sex: (data.sex || data.sex === SEX_TYPE.MALE) ? data.sex : SEX_TYPE.NOT_REQUIRED,
+            recruitmentCreationType: openSaveDraft ? RECRUITMENT_CREATE_TYPE.DRAFT : RECRUITMENT_CREATE_TYPE.OFFICIAL,
+            jobPositionId: data?.jobPositionId ? data?.jobPositionId : null,
             organizationPipelineStateDatas: !hasExaminationValue ? [] : pipelineStateDatas?.filter(item => item?.examinationId !== null)?.map(item => ({
                 organizationPipelineStateId: item.organizationPipelineStateId,
                 examinationId: item.examinationId,
                 examinationExpiredDays: Number(item.expiredTime),
             }))
         }
-        if (Recruitment.processStatus === 0) {
+        const dataSubmit = pick(body, [
+            'id',
+            'name',
+            'organizationId',
+            'description',
+            'benefit',
+            'requirement',
+            'numberPosition',
+            'minSalary',
+            'maxSalary',
+            'salaryDisplayType',
+            'sex',
+            'startDate',
+            'endDate',
+            'address',
+            'recruitmentLanguageIds',
+            'coOwnerIds',
+            'tags',
+            'jobPositionId',
+            'ownerId',
+            'workExperience',
+            'currencyUnit',
+            "candidateLevelId",
+            "organizationPipelineId",
+            "isAutomaticStepChange",
+            "recruitmentCouncilIds",
+            "recruitmentJobCategoryIds",
+            "recruitmentAddressIds",
+            "recruitmentWorkingForms",
+            'organizationPipelineStateDatas'
+        ]);
+
+        if (Recruitment.processStatus === RECRUITMENT_STATUS.DRAFT) {
             try {
                 await updateRecruitmentDraft({
-                    ...body,
-                    recruitmentCreationType: 0
+                    ...dataSubmit,
+                    recruitmentCreationType: RECRUITMENT_CREATE_TYPE.DRAFT
                 }).unwrap();
                 handleCloseConfirm();
                 enqueueSnackbar("Cập nhật tin tuyển dụng thành công!");
                 await router.push(PATH_DASHBOARD.recruitment.root);
             } catch (e) {
-                enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!");
+                enqueueSnackbar("Cập nhật tin tuyển dụng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!", {
+                    variant: 'error',
+                });
                 handleCloseConfirm();
                 throw e;
             }

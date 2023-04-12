@@ -10,7 +10,7 @@ import {
     useGetJobCategoriesQuery,
     useGetProvinceQuery,
 } from "@/sections/companyinfor/companyInforSlice";
-import {errorMessages} from "@/utils/errorMessages";
+import {errorMessages, AUTH_ERROR_TYPE} from "@/utils/errorMessages";
 import {LIST_ORGANIZATION_SIZE} from "@/utils/formatString";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Alert, Box, Divider, FormHelperText, IconButton, InputAdornment, Link, Stack, Typography,} from "@mui/material";
@@ -100,7 +100,7 @@ function RegisterForm() {
         } catch (error) {
             const {status} = error;
             const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
-            if (status === "AUE_06") {
+            if (status === AUTH_ERROR_TYPE.AUE_06) {
                 setError('userName', {type: "custom", message: errorMessages[`${error.status}`]})
             } else setError("afterSubmit", {...error, message});
         }

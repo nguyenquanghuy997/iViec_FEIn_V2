@@ -57,23 +57,6 @@ function ApplicantPreviewItem() {
       OrganizationId,
     });
 
-  // const [selectedState, setSelectedState] = useState({
-  //   applicantId: '',
-  //   recruitmentId: '',
-  //   applicantCorrelationId: '',
-  //   organizationId: ''
-  // })
-  //
-  // useEffect(() => {
-  //   setSelectedState((prev) => ({
-  //     ...prev,
-  //     applicantId: ApplicantId,
-  //     recruitmentId: RecruitmentId,
-  //     applicantCorrelationId: ApplicantCorrelationId,
-  //     organizationId: OrganizationId
-  //   }))
-  // }, [ApplicantId, RecruitmentId, ApplicantCorrelationId, OrganizationId])
-
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
   const [open, setOpen] = useState(false);
@@ -365,12 +348,6 @@ function ApplicantPreviewItem() {
     }
   );
 
-  // const [fetchData, { data: logApplicant = []}] = useGetApplicantRecruitmentMutation();
-  // const [fetchDataApplicant, { data: data = [] }] = useLazyGetApplicantByIdQuery();
-  // const [fetchReviewForm, { data: reviewFormCriterias , isSuccess: isSuccessReview}] = useLazyGetApplicantReviewFormQuery({
-  //   skip: pipelines?.recruitmentPipelineStates?.length > 0,
-  // });
-
   const [actionId, setActionId] = useState("");
   const [actionType, setActionType] = useState();
   const [actionShow, setActionShow] = useState(false);
@@ -382,11 +359,6 @@ function ApplicantPreviewItem() {
   const onCloseModel = () => {
     setActionShow(false);
     setShowConfirmMultiple(false);
-    // const recruiment = options.filter((p) => p.id == RecruitmentId);
-    // fetchPipe({
-    //   ApplicantId: recruiment[0]?.applicantId,
-    //   RecruitmentId: recruiment[0]?.id,
-    // }).unwrap();
   };
 
   useEffect(() => {
@@ -394,22 +366,6 @@ function ApplicantPreviewItem() {
       const recruitment = options.filter((p) => p.id == RecruitmentId);
       setSelectedOption(recruitment[0]);
       setOwnerName(recruitment[0]?.ownerName?.trim());
-      // fetchPipe({
-      //   ApplicantId: recruiment[0]?.applicantId,
-      //   RecruitmentId: recruiment[0]?.id,
-      // }).unwrap();
-      // fetchData({
-      //   ApplicantId: recruiment[0]?.applicantId,
-      //   RecruitmentId: recruiment[0]?.id,
-      //   IsWithdrawHistory: true,
-      // }).unwrap();
-      // fetchDataApplicant({
-      //   applicantId: recruiment[0]?.applicantId,
-      // });
-      // fetchReviewForm({
-      //   RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-      //   ApplicantId: recruiment[0]?.applicantId,
-      // });
     }
   }, [isFetching]);
 
@@ -422,14 +378,6 @@ function ApplicantPreviewItem() {
     });
     setShowModelCreate(true);
   };
-  // useEffect(() => {
-  //   if (isSuccess) {
-  // fetchReviewForm({
-  //   RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-  //   ApplicantId: selectedOption?.applicantId,
-  // });
-  // }
-  // }, [isSuccess]);
 
   const onChangeRecruitment = (e) => {
     setSelectedOption(e.target.value);
@@ -450,19 +398,6 @@ function ApplicantPreviewItem() {
       undefined,
       { shallow: false }
     );
-
-    // fetchPipe({
-    //   ApplicantId: e.target.value.applicantId,
-    //   RecruitmentId: e.target.value.id,
-    // }).unwrap();
-    // fetchData({
-    //   ApplicantId: e.target.value.applicantId,
-    //   RecruitmentId: e.target.value.id,
-    //   IsWithdrawHistory: true,
-    // }).unwrap();
-    // fetchDataApplicant({
-    //   applicantId: e.target.value.applicantId,
-    // });
   };
 
   return (

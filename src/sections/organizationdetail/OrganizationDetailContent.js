@@ -227,7 +227,6 @@ const OrganizationDetailContent = () => {
     if (reset && _isEmpty(router.query)) {
       return;
     }
-
     setTimeout(() => {
       router.push({
         query: reset ? {} : {...router.query, ...values},
@@ -265,10 +264,6 @@ const OrganizationDetailContent = () => {
                 </Typography>
             }
           </OrganizationNameStyle>
-
-          {/* <IconButton onClick={handleOpenForm} size='small' sx={{ color: '#8A94A5', ml: 1 }}>
-          <Iconify icon="ri:edit-2-fill" />
-        </IconButton> */}
         </Box>
         {/* End Name */}
         {/* Sub info */}

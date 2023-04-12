@@ -11,7 +11,6 @@ import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 
 export const ApplicantInfo = ({ data }) => {
-  console.log(data);
   const renderText = (title, value) => {
     return (
       <div>

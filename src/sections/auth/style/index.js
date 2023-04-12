@@ -1,18 +1,6 @@
 import {Paper} from "@mui/material";
-import {makeStyles, styled} from "@mui/styles";
+import {styled} from "@mui/styles";
 import { STYLE_CONSTANT as style } from '@/theme/palette'
-
-const useStyles = makeStyles(() => ({
-    input: {
-        border: '1px solid red',
-        "&:focus": {
-            borderWidth: '1px',
-        }
-    },
-    paperItem: {
-        backgroundColor: 'blue'
-    }
-}));
 
 const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
     "&.MuiPaper-root.MuiAutocomplete-paper": {
@@ -100,7 +88,6 @@ const CardSubInfoLabelStyle = {
 };
 
 export {
-    useStyles,
     PaperAutocompleteStyle,
     BoxWrapperStyle,
     BoxInnerStyle,
