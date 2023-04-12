@@ -9,7 +9,7 @@ import { Typography, Box, Card, CardContent } from "@mui/material";
 import { useMemo } from "react";
 import { useState } from "react";
 
-export default function InterviewSchedule() {
+export default function InterviewSchedule({idSlg}) {
   const { data: Data } = useGetCalendarQuery();
   const check = false;
   const { palette } = useTheme();
@@ -32,7 +32,7 @@ export default function InterviewSchedule() {
   };
 
   return (
-    <Card sx={{ m: "140px 0", borderRadius: "6px", border: "none", p: 3 }}>
+    <Card sx={{ m: idSlg ?'40px 0' :"140px 0", borderRadius: "6px", border: "none", p: 3 }}>
       <CardContent sx={{ display: "flex", p: 0 }}>
         <Box
           sx={{
