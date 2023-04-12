@@ -234,3 +234,26 @@ export const TBL_FILTER_TYPE = {
   RADIO: 'radio',
 };
 
+export const RECRUITMENT_STATUS = {
+  DRAFT: 0,
+  WAITING_ORGANIZATION_APPROVAL: 1,
+  ORGANIZATION_REJECT: 2,
+  WAITING_IVIEC_APPROVAL: 3,
+  IVIEC_REJECT: 4,
+  RECRUITING: 5,
+  CALENDARED: 6,
+  EXPIRED: 7,
+  CLOSED: 8
+}
+
+export const PIPELINE_TYPE = {
+  APPLY: 0,
+  EXAMINATION: 1,
+  INTERVIEW: 2,
+  RESULT: 3,
+  OFFER: 4,
+}
+
+export const SALARY_TYPE = {
+
+}

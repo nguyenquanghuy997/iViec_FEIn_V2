@@ -11,18 +11,21 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {JobTitleStyle} from "@/sections/recruitment-form/style";
 import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
+import {RECRUITMENT_STATUS} from '@/config'
 
 const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
   const name = useWatch({name: 'name'});
   const router= useRouter();
 
   const handleSetShowAlert = (data) => {
-    if (data?.processStatus === 7 || data?.processStatus === 8) {
+    if (data?.processStatus === RECRUITMENT_STATUS.EXPIRED || data?.processStatus === RECRUITMENT_STATUS.CLOSED) {
       return router.push(PATH_DASHBOARD.recruitment.root);
     } else {
       setShowAlert(true)
     }
   }
+
+  const isDisabled = recruitment?.processStatus === RECRUITMENT_STATUS.EXPIRED || recruitment?.processStatus === RECRUITMENT_STATUS.CLOSED;
 
   return (
       <HeadingBar style={{
@@ -51,7 +54,7 @@ const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
             <MuiButton
                 title="Lưu nháp"
                 color="default"
-                disabled={!name || recruitment?.processStatus === 7 || recruitment?.processStatus === 8}
+                disabled={!name || isDisabled}
                 onClick={() => onOpenConfirm({openSaveDraft: true})}
                 startIcon={<DraftIcon/>}
                 sx={{
@@ -71,7 +74,7 @@ const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
                   color="default"
                   onClick={() => onOpenConfirm({openPreview: true})}
                   startIcon={<PreviewIcon/>}
-                  disabled={!name || recruitment?.processStatus === 7 || recruitment?.processStatus === 8}
+                  disabled={!name || isDisabled}
                   sx={{
                     fontWeight: 500,
                     "&:hover": {
@@ -88,7 +91,7 @@ const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
                 title="Gửi phê duyệt"
                 color="default"
                 onClick={() => onOpenConfirm({openSaveApprove: true})}
-                disabled={!errors || recruitment?.processStatus === 7 || recruitment?.processStatus === 8}
+                disabled={!errors || isDisabled}
                 startIcon={<Iconify icon="majesticons:send"/>}
                 sx={{
                   fontWeight: 500,

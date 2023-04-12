@@ -38,7 +38,7 @@ import PropTypes from "prop-types";
 import {useEffect, useMemo, useState} from "react";
 import { useForm } from "react-hook-form";
 import useRole from "@/hooks/useRole";
-import {PERMISSIONS} from "@/config";
+import {PERMISSIONS, RECRUITMENT_STATUS} from "@/config";
 import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
 
 const defaultStyleRecruitmentStatus = {
@@ -368,7 +368,7 @@ function RecruitmentPreviewItem({
                   </Tooltip>
 
                   {
-                      RecruitmentData?.processStatus === 7 || RecruitmentData?.processStatus === 8 ? null : (
+                      RecruitmentData?.processStatus === RECRUITMENT_STATUS.EXPIRED || RecruitmentData?.processStatus === RECRUITMENT_STATUS.CLOSED ? null : (
                           <ButtonIcon
                               onClick={(e) => {
                                 if (!canEdit) {

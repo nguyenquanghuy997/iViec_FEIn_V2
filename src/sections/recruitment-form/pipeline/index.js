@@ -16,6 +16,7 @@ import {useGetAllPipelineByOrganizationQuery, useGetAllStepOfPipelineQuery} from
 
 import {BoxInnerStyle, BoxWrapperStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
+import {PIPELINE_TYPE} from "@/config";
 
 const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
     const {setValue} = useFormContext();
@@ -63,7 +64,7 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
 
     useEffect(() => {
         if (!isEmpty(ListStepPipeline)) {
-            const listStepPipelineSize = ListStepPipeline?.filter(item => item.pipelineStateType === 1)?.length;
+            const listStepPipelineSize = ListStepPipeline?.filter(item => item.pipelineStateType === PIPELINE_TYPE.EXAMINATION)?.length;
             setHasExamination({
                 hasValue: listStepPipelineSize > 0 ? true : false,
                 size: listStepPipelineSize
@@ -145,7 +146,7 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
                             <Box sx={{mt: 1}}>
                                 {ListStepPipeline?.map((item, index) => {
                                     const examination = pipelineStateDatas?.find(pipeline => pipeline?.organizationPipelineStateId === item?.id);
-                                    return (
+                                    return item.pipelineStateType === PIPELINE_TYPE.OFFER ? null : (
                                         <PipelineCard
                                             key={index}
                                             index={index}
