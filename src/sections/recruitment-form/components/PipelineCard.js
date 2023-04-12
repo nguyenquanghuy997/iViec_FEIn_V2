@@ -7,6 +7,7 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 
 import {PipelineStateType} from "@/utils/formatString";
+import {PIPELINE_TYPE} from "@/config";
 
 const useStyles = makeStyles(() => ({
     truncate: {
@@ -53,7 +54,7 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
     return (
         <BoxItemStyle
             className="card-pipeline-item"
-            borderColor={isEmpty(examination?.examinationId) && pipelineStateType === 1 ? 'red' : '#B9BFC9'}
+            borderColor={isEmpty(examination?.examinationId) && pipelineStateType === PIPELINE_TYPE.EXAMINATION ? '#E53935' : '#B9BFC9'}
         >
             <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
                 <Box>
@@ -71,7 +72,7 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
                             fontSize: style.FONT_XS,
                             fontWeight: style.FONT_SEMIBOLD,
                             py: 0.5,
-                        }}>{pipelineStateType === 1 ? !isEmpty(examination) ? examination?.examinationName : 'Chưa chọn đề thi' : ''}</Typography>
+                        }}>{pipelineStateType === PIPELINE_TYPE.EXAMINATION ? !isEmpty(examination) ? examination?.examinationName : 'Chưa chọn đề thi' : ''}</Typography>
                     <Typography
                         className={classes.truncate}
                         sx={{

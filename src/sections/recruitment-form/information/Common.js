@@ -11,6 +11,7 @@ import useFetchDataCommon from "@/sections/recruitment-form/hooks/useFetchDataCo
 
 import {BoxInnerStyle} from "@/sections/recruitment-form/style";
 import {useFormContext} from "react-hook-form";
+import {RECRUITMENT_STATUS} from "@/config";
 const Common = ({ recruitment }) => {
     const {ListOrganization, ListJobCategory, ListProvince, ListCandidateLevels, ListLanguage} = useFetchDataCommon();
     const { setValue } = useFormContext();
@@ -26,7 +27,7 @@ const Common = ({ recruitment }) => {
                         name="name"
                         placeholder="Nhập tiêu đề tin hiển thị tại trang việc làm..."
                         fullWidth
-                        disabled={recruitment?.processStatus === 5 || recruitment?.processStatus === 6}
+                        disabled={recruitment?.processStatus === RECRUITMENT_STATUS.RECRUITING || recruitment?.processStatus === RECRUITMENT_STATUS.CALENDARED}
                     />
                 </Box>
                 {/* Khu vực đăng tin */}
