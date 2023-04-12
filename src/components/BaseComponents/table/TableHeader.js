@@ -8,7 +8,6 @@ import {
   Badge,
 } from '@mui/material';
 import {
-  RiAddCircleFill,
   RiSearch2Line,
   RiFilterLine,
 } from 'react-icons/ri';
@@ -19,6 +18,8 @@ import { Button } from '@/components/DesignSystem';
 import FilterModal from './FilterModal';
 
 import { HeaderStyle } from './styles';
+import {isEmpty} from "lodash";
+import {AddIcon} from "@/assets/ActionIcon";
 
 export default function TableHeader({
   columns = [],
@@ -83,27 +84,29 @@ export default function TableHeader({
                 {...inputProps}
               />
 
-              <Badge badgeContent={countFilter()} color="secondary">
-                <Button
-                  onRef={ref => _filterBtn.current = ref}
-                  variant="contained"
-                  color="default"
-                  startIcon={<RiFilterLine size={18} color={palette.text.sub} />}
-                  onClick={() => {
-                    setOpenFilter(true);
-                  }}
-                  height={buttonHeight}
-                >
-                  Bộ lọc
-                </Button>
-              </Badge>
+              {!isEmpty(columns) && (
+                  <Badge badgeContent={countFilter()} color="secondary">
+                    <Button
+                        onRef={ref => _filterBtn.current = ref}
+                        variant="contained"
+                        color="default"
+                        startIcon={<RiFilterLine size={18} color={palette.text.sub} />}
+                        onClick={() => {
+                          setOpenFilter(true);
+                        }}
+                        height={buttonHeight}
+                    >
+                      Bộ lọc
+                    </Button>
+                  </Badge>
+              )}
             </Stack>
           </Box>
 
           {createText && (
             <Box mr={1}>
               <Button
-                startIcon={<RiAddCircleFill size={18} color="#fff" />}
+                startIcon={<AddIcon />}
                 onClick={onClickCreate}
                 variant="contained"
                 color="primary"
