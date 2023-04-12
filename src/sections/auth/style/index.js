@@ -35,7 +35,7 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
         }
     },
     "& ::-webkit-scrollbar": {
-        width: "4px",
+        width: "8px",
         borderRadius: '6px'
     },
     "& ::-webkit-scrollbar-track": {

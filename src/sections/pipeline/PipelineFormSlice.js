@@ -11,7 +11,6 @@ import {
   API_GET_COLUMN_PIPELINE,
   API_UPDATE_COLUMN_PIPELINE,
 } from "@/routes/api";
-import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["Pipeline","GetAllPipeline"],
@@ -21,10 +20,14 @@ const PipelineFormSlice = apiWithTag.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({  
     getAllPipeline: builder.query({
-      query: (params) => ({
-        url: `${API_GET_ALL_PIPELINE}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
-        method: "GET",
-      }),
+      query: (params) => {
+        const defaultParams = { PageIndex: 1, PageSize: 10 }
+        return {
+          url: API_GET_ALL_PIPELINE,
+          method: "GET",
+          params: { ...defaultParams, ...params }
+        }
+      },
       providesTags:["GetAllPipeline"],
     }),
     getPipelineById: builder.query({

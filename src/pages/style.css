@@ -19,16 +19,16 @@ input:-webkit-autofill:active {
     z-index: 3001!important;
 }
 
-*::-webkit-scrollbar-thumb {
-    background: #B9BFC9;
-    margin-right: 3px;
-    border-radius: 30px;
-}
+/**::-webkit-scrollbar-thumb {*/
+/*    background: #B9BFC9;*/
+/*    margin-right: 3px;*/
+/*    border-radius: 30px;*/
+/*}*/
 
-*::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
+/**::-webkit-scrollbar {*/
+/*    width: 6px;*/
+/*    height: 6px;*/
+/*}*/
 .top {
     top: 156px;
 }

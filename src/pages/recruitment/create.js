@@ -218,7 +218,7 @@ export default function CreateRecruitment() {
                     isValid={isValid}
                 />
               </Grid>
-              <Content>
+              <Content style={{ marginBottom: 64 }}>
                 <Grid container columnSpacing={3}>
                   <Grid item md={12} className="profile-content">
                     <TabPanel value="1">
