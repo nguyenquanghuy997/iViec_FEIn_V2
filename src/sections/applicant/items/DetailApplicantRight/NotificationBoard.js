@@ -1,8 +1,8 @@
 import CloseIcon from "../../../../../public/assets/icons/candidate/CloseIcon";
 import ExpanLess from "../../../../../public/assets/icons/candidate/ExpanLess";
 import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
-import ModalReload from "./ModalReload";
 import { AvatarDS } from "@/components/DesignSystem";
+import { PipelineStateType } from "@/utils/enum";
 import { fTimeDate } from "@/utils/formatTime";
 import { Button } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
@@ -15,7 +15,6 @@ import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { Container } from "@mui/system";
@@ -55,7 +54,7 @@ const NotificationBoard = ({
     },
   }));
 
-  const renderText = (title, reason, resultType) => {
+  const renderText = (title, reason) => {
     return (
       <div style={{ marginTop: "16px" }}>
         <span
@@ -80,7 +79,7 @@ const NotificationBoard = ({
         >
           {reason}
         </span>
-        {resultType && <ModalReload />}
+        {/* {resultType && <ModalReload />} */}
       </div>
     );
   };
@@ -189,30 +188,44 @@ const NotificationBoard = ({
             sx={{
               backgroundColor: "#F2F4F5",
               pb: 2,
+              pt: 2,
               "& .MuiButtonBase-root:hover": {
                 backgroundColor: "#F2F4F5",
               },
             }}
           >
             <List component="div" disablePadding>
-              <ListItemText sx={{ fontSize: "13px" }}>
-                Đánh giá: <span style={{ marginLeft: "16px" }}>Đạt</span>
-              </ListItemText>
-            </List>
-            <List>
-              <ListItemText sx={{ fontSize: "13px" }}>
-                Điểm TB: <span style={{ marginLeft: "16px" }}> 10</span>
-              </ListItemText>
-            </List>
-            <List>
-              <ListItemText sx={{ fontSize: "13px" }}>
-                Kết luận:
-                <span style={{ marginLeft: "16px" }}>
-                  {" "}
-                  Ứng viên khá sáng giá, tuyển thẳng luôn không cần phỏng vấn
-                  lần 2.
+              <Typography fontSize={13}>
+                Đánh giá:
+                <span
+                  style={{
+                    marginLeft: "13px",
+                    fontWeight: 600,
+                    color:
+                      data?.applicantReviewResultType == 2 &&
+                      (data?.applicantReviewResultType == 0
+                        ? "#388E3C"
+                        : data?.applicantReviewResultType == 1
+                        ? "#F77A0C"
+                        : "#E53935"),
+                  }}
+                >
+                  {PipelineStateType(2, data?.applicantReviewResultType)}
                 </span>
-              </ListItemText>
+              </Typography>
+            </List>
+            <List>
+              <Typography fontSize={13}>
+                Điểm TB: <span style={{ marginLeft: "13px", fontWeight: 600 }}>{data?.averagePoint?.toFixed(2)}</span>
+              </Typography>
+            </List>
+            <List component="div" disablePadding>
+              <Typography fontSize={13}>
+                Kết luận:
+                <span style={{ marginLeft: "13px", fontWeight: 600 }}>
+                {data?.comment}
+                </span>
+              </Typography>
             </List>
             {option?.includes("Xem chi tiết đánh giá") && (
               <ListItemButton
@@ -249,57 +262,10 @@ const NotificationBoard = ({
                       eros.
                     </Typography>
                   </DialogContent>
-                  {/* <DialogActions>
-          <Button autoFocus onClick={handleCloseModal}>
-            Save changes
-          </Button>
-        </DialogActions> */}
                 </BootstrapDialog>
               </ListItemButton>
             )}
-            {option?.includes("Tái khai thác ứng viên") && (
-              <ListItemButton
-                sx={{
-                  "& .MuiButtonBase-root:hover": {
-                    backgroundColor: "#F2F4F5",
-                  },
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ width: "100%" }}
-                  onClick={handleOpenModal}
-                >
-                  {"Xem chi tiết đánh giá"}
-                </Button>
-                <BootstrapDialog
-                  onClose={handleCloseModal}
-                  aria-labelledby="customized-dialog-title"
-                  open={openModal}
-                >
-                  <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleCloseModal}
-                  >
-                    {"Xem chi tiết đánh giá"}
-                  </BootstrapDialogTitle>
-                  <Divider />
-                  <DialogContent>
-                    <Typography gutterBottom>
-                      Cras mattis consectetur purus sit amet fermentum. Cras
-                      justo odio, dapibus ac facilisis in, egestas eget quam.
-                      Morbi leo risus, porta ac consectetur ac, vestibulum at
-                      eros.
-                    </Typography>
-                  </DialogContent>
-                  {/* <DialogActions>
-          <Button autoFocus onClick={handleCloseModal}>
-            Save changes
-          </Button>
-        </DialogActions> */}
-                </BootstrapDialog>
-              </ListItemButton>
-            )}
+
           </Collapse>
         </div>
         <div style={{ margin: "auto" }}>

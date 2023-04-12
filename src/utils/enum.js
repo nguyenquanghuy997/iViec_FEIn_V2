@@ -8,7 +8,16 @@ export const PipelineStateType = (item, result) => {
     case 1:
       return "Thi tuyển";
     case 2:
-      return "Phỏng Vấn";
+      switch (result) {
+        case 0:
+          return "Đạt";
+        case 1:
+          return "Cân nhắc";
+        case 2:
+          return "Không đạt";
+        default:
+          return "Phỏng Vấn";
+      }
     case 3:
       switch (result) {
         case 0:

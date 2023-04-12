@@ -9,7 +9,6 @@ import { useMemo } from "react";
 import { useState } from "react";
 
 export default function InterviewSchedule({ Data }) {
-
   const check = false;
   const { palette } = useTheme();
   const [openForm, setOpenForm] = useState(false);

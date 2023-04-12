@@ -101,6 +101,21 @@ function ApplicantPreviewItem() {
             name={data?.fullName}
             src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
           ></AvatarDS>
+          {/* <BoxFlex
+                color={
+                  mediumScore.toFixed(2) < 4.9
+                    ? "#E53935"
+                    : mediumScore.toFixed(2) < 6.9
+                    ? "#F77A0C"
+                    : "#388E3C"
+                }
+              >
+                <span style={{ fontSize: "15px", fontWeight: 600 }}>
+                  Trung bình
+                </span>
+                
+              </BoxFlex> */}
+
           <Box pl={1}>
             <Typography
               display="flex"
@@ -135,9 +150,46 @@ function ApplicantPreviewItem() {
               <Typography fontSize="14px">{data?.email}</Typography>
             </Stack>
           </Box>
+          {logApplicant?.averagePointReviewPoint && (
+            <Box
+              ml={1}
+              color={
+                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                  ? "#E53935"
+                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                  ? "#F77A0C"
+                  : "#388E3C"
+              }
+              border={"1px solid #388E3C"}
+              padding="6px 8px"
+              borderRadius="4px"
+              textAlign={"center"}
+              borderColor={
+                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                  ? "#E53935"
+                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                  ? "#F77A0C"
+                  : "#388E3C"
+              }
+            >
+              <Typography fontSize="12px" fontWeight="600">
+                {"Trung bình"}
+              </Typography>
+              <p
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  paddingTop: "2px",
+                }}
+                name="mediumScore"
+              >
+                {logApplicant?.averagePointReviewPoint?.toFixed(2)}
+              </p>
+            </Box>
+          )}
         </Grid>
         <Grid display="flex">
-          <ButtonDS
+          {/* <ButtonDS
             tittle={"Thêm vào tin khác"}
             type="submit"
             sx={{
@@ -160,7 +212,7 @@ function ApplicantPreviewItem() {
                 mr={1}
               />
             }
-          />
+          /> */}
           <ButtonDS
             tittle={"Đặt lịch phỏng vấn"}
             type="submit"
@@ -293,18 +345,15 @@ function ApplicantPreviewItem() {
     { skip: !ApplicantId }
   );
 
-  const { data: reviewFormCriterias } =
-    useGetApplicantReviewFormQuery(
-      {
-        RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-        ApplicantId: ApplicantId,
-      },
-      {
-        skip:
-          !pipelines?.currentApplicantPipelineState ||
-          !ApplicantId,
-      }
-    );
+  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
+    {
+      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      ApplicantId: ApplicantId,
+    },
+    {
+      skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
+    }
+  );
 
   const { data: isReview } = useGetCheckReviewQuery(
     {
