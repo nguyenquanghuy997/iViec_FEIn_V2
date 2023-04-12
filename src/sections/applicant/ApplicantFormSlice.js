@@ -64,6 +64,10 @@ export const ApplicantFormSlice = createApi({
         method: "PATCH",
         data: data,
       }),
+      invalidatesTags: [
+        { type: 'APPLICANT', id: 'LIST_FILTER' },
+        { type: 'APPLICANT', id: 'ID' }
+      ],
     }),
     getApplicantById: builder.query({
       query: ({ applicantId }) => ({

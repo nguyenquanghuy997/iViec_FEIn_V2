@@ -32,8 +32,10 @@ Recruitment.getLayout = function getLayout(pageProps, page) {
 };
 
 export default function Recruitment() {
+  const [pipelineStateResultType, setPipelineStateResultType] = useState(0);
+  
   const Schema = Yup.object().shape({
-    note: Yup.string().required("Chưa nhập lý do"),
+    note: (pipelineStateResultType == 0 || pipelineStateResultType == 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
   });
 
   const methods = useForm({
@@ -53,7 +55,6 @@ export default function Recruitment() {
   const [recruitmentPipelineStateId, setRecruitmentPipelineStateId] =
     useState();
   const [resultNew, setResultNew] = useState();
-  const [pipelineStateResultType, setPipelineStateResultType] = useState(0);
 
   const handleOk = handleSubmit(async (e) => {
     let body = {
