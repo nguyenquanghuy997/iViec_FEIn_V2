@@ -150,41 +150,43 @@ function ApplicantPreviewItem() {
               <Typography fontSize="14px">{data?.email}</Typography>
             </Stack>
           </Box>
-          <Box
-            ml={1}
-            color={
-              logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
-                ? "#E53935"
-                : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                ? "#F77A0C"
-                : "#388E3C"
-            }
-            border={"1px solid #388E3C"}
-            padding="6px 8px"
-            borderRadius="4px"
-            textAlign={"center"}
-            borderColor={
-              logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
-                ? "#E53935"
-                : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                ? "#F77A0C"
-                : "#388E3C"
-            }
-          >
-            <Typography fontSize="12px" fontWeight="600">
-              {"Trung bình"}
-            </Typography>
-            <p
-              style={{
-                fontSize: "16px",
-                fontWeight: 600,
-                paddingTop: "2px",
-              }}
-              name="mediumScore"
+          {logApplicant?.averagePointReviewPoint && (
+            <Box
+              ml={1}
+              color={
+                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                  ? "#E53935"
+                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                  ? "#F77A0C"
+                  : "#388E3C"
+              }
+              border={"1px solid #388E3C"}
+              padding="6px 8px"
+              borderRadius="4px"
+              textAlign={"center"}
+              borderColor={
+                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                  ? "#E53935"
+                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                  ? "#F77A0C"
+                  : "#388E3C"
+              }
             >
-              {logApplicant?.averagePointReviewPoint?.toFixed(2)}
-            </p>
-          </Box>
+              <Typography fontSize="12px" fontWeight="600">
+                {"Trung bình"}
+              </Typography>
+              <p
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  paddingTop: "2px",
+                }}
+                name="mediumScore"
+              >
+                {logApplicant?.averagePointReviewPoint?.toFixed(2)}
+              </p>
+            </Box>
+          )}
         </Grid>
         <Grid display="flex">
           {/* <ButtonDS
