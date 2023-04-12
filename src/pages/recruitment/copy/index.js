@@ -261,7 +261,7 @@ export default function CloneRecruitment() {
                 />
                 <TabList onChange={handleChangeTab} className={hState} isValid={isValid}/>
               </Grid>
-              <Content>
+              <Content style={{ marginBottom: 64 }}>
                 <TabPanel value={'1'}>
                   <Information recruitment={Recruitment}/>
                 </TabPanel>

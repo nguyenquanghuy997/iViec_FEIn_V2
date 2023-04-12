@@ -175,7 +175,7 @@ const MuiSelect = forwardRef((
 
     const displayedOptions = useMemo(() => {
         if (remoteUrl) {
-            return fetchedOptions.map(item => ({ value: item.id, label: showAvatar ? item.email || item.lastName : item.name }));
+            return fetchedOptions.map(item => ({ value: item.id, label: item.email || item.lastName || item.name }));
         }
         return options.filter((option) => containsText(option.label, filters.SearchKey));
     }, [filters.SearchKey, options, remoteUrl, fetchedOptions]);
@@ -229,7 +229,7 @@ const MuiSelect = forwardRef((
         let optionItem;
         if (remoteUrl) {
             optionItem = fetchedOptions.concat(selectedOptions).find(opt => opt.id === val);
-            return !isEmpty(optionItem) ? { value: optionItem.id, label: optionItem.label || optionItem.name || optionItem.email || optionItem.lastName} : { value: val, label: val };
+            return !isEmpty(optionItem) ? { value: optionItem.id, label: optionItem.label || optionItem.email || optionItem.name || optionItem.lastName} : { value: val, label: val };
         }
         optionItem = options.find(opt => opt.value === val);
         return optionItem || { value: val, label: val };
@@ -312,13 +312,12 @@ const MuiSelect = forwardRef((
         '.MuiList-root': {
             paddingTop: 0,
             paddingBottom: 0,
-            backgroundColor: '#fff',
             '.list-options': {
                 maxHeight: 320,
                 overflow: 'auto',
             },
             "& ::-webkit-scrollbar": {
-                width: "4px",
+                width: "8px",
                 borderRadius: '6px'
             },
             "& ::-webkit-scrollbar-track": {

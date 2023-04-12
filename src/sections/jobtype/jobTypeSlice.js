@@ -22,10 +22,14 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     //Danh sách vị trí
     getAllJobType: builder.query({
-      query: (params) => ({
-        url: `${API_GET_PAGING_JOBTYPE}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
-        method: "GET",
-      }),
+      query: (params) => {
+        const defaultParams = { PageIndex: 1, PageSize: 10 }
+        return {
+          url: API_GET_PAGING_JOBTYPE,
+          method: "GET",
+          params: { ...defaultParams, ...params }
+        }
+      },
       providesTags:["JobPosition"],
     }),
     getJobPositionById: builder.query({
@@ -110,9 +114,7 @@ const evaluationFormSlice = apiWithTag.injectEndpoints({
 
 export const {
   useGetJobPositionByIdQuery,
-  useLazyGetAllJobTypeQuery,
   useGetAllJobTypeQuery,
-  useLazyGetApplicantUsersOnJobtypeQuery,
   useUpdateStatusJobTypeMutation,
   useDeleteJobTypeMutation,
   useAddJobTypeMutation,

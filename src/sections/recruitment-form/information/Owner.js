@@ -5,7 +5,7 @@ import {useWatch} from "react-hook-form";
 import {RHFSelect} from "@/components/hook-form";
 import DividerCard from "@/sections/recruitment-form/components/DividerCard";
 
-import {API_GET_LIST_USER_ORGANIZATION} from "@/routes/api";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 import {BoxInnerStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
@@ -23,7 +23,7 @@ const Owner = ({ recruitment }) => {
                 <Box sx={{mb: 2, width: '50%'}}>
                     <LabelStyle required>Cán bộ tuyển dụng</LabelStyle>
                     <RHFSelect
-                        remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
+                        remoteUrl={`${API_GET_ORGANIZATION_USERS}?OrganizationId=${organizationId}`}
                         selectedOptions={[{
                             id: recruitment?.ownerId,
                             value: recruitment?.ownerId,
@@ -39,7 +39,7 @@ const Owner = ({ recruitment }) => {
                 <Box sx={{mb: 2}}>
                     <LabelStyle>Đồng phụ trách</LabelStyle>
                     <RHFSelect
-                        remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
+                        remoteUrl={`${API_GET_ORGANIZATION_USERS}?OrganizationId=${organizationId}`}
                         selectedOptions={recruitment?.coOwners?.map(coOwner => ({
                             id: coOwner?.id,
                             label: coOwner?.email || coOwner?.name,
@@ -55,7 +55,7 @@ const Owner = ({ recruitment }) => {
                 <Box sx={{mb: 2}}>
                     <LabelStyle>Thành viên hội đồng tuyển dụng</LabelStyle>
                     <RHFSelect
-                        remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
+                        remoteUrl={`${API_GET_ORGANIZATION_USERS}?OrganizationId=${organizationId}`}
                         selectedOptions={recruitment?.recruitmentCouncils?.map(coOwner => ({
                             id: coOwner?.councilUserId,
                             label: coOwner?.councilEmail || coOwner?.councilName,
