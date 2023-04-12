@@ -58,6 +58,7 @@ const MuiSelect = forwardRef((
         ...selectProps
     }, ref) => {
     const theme = useTheme();
+
     const value = useMemo(() => {
         if (multiple) {
             if (typeof selectValue === 'number') {
@@ -228,7 +229,7 @@ const MuiSelect = forwardRef((
         let optionItem;
         if (remoteUrl) {
             optionItem = fetchedOptions.concat(selectedOptions).find(opt => opt.id === val);
-            return optionItem ? { value: optionItem.id, label: showAvatar ? optionItem.email || optionItem.lastName : optionItem.label || optionItem.name } : { value: val, label: val };
+            return !isEmpty(optionItem) ? { value: optionItem.id, label: optionItem.label || optionItem.name || optionItem.email || optionItem.lastName} : { value: val, label: val };
         }
         optionItem = options.find(opt => opt.value === val);
         return optionItem || { value: val, label: val };

@@ -9,8 +9,7 @@ import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
 import RHFTinyEditor from "@/components/editor/RHFTinyEditor";
 import DividerCard from "@/sections/recruitment-form/components/DividerCard";
 
-import {API_GET_PAGING_JOBTYPE} from "@/routes/api";
-import {useGetJobPositionByIdQuery} from "@/sections/jobtype";
+import {useGetAllJobTypeQuery, useGetJobPositionByIdQuery} from "@/sections/jobtype";
 
 import {BoxInnerStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
@@ -21,9 +20,7 @@ const Description = () => {
     const { setValue } = useFormContext();
     const jobPositionId = useWatch({name: 'jobPositionId'});
     const {data: JobPosition = {}} = useGetJobPositionByIdQuery({Id: jobPositionId}, {skip: !jobPositionId})
-    const {data: selectedJobPosition = {}} = useGetJobPositionByIdQuery({
-        Id: jobPositionId,
-    }, { skip: !jobPositionId });
+    const {data: { items: ListJobPosition = []} = {}} = useGetAllJobTypeQuery();
 
     useEffect(() => {
         if (!isEmpty(JobPosition)) {
@@ -32,15 +29,14 @@ const Description = () => {
             setValue('benefit', JobPosition?.benefit)
         }
     }, [JobPosition])
-
+  
     return (
         <BoxInnerStyle>
             <DividerCard title="MÔ TẢ CÔNG VIỆC"/>
             <Box sx={{px: 4, py: 3}}>
                 <LabelStyle>Vị trí công việc có sẵn</LabelStyle>
                 <RHFSelect
-                    selectedOptions={selectedJobPosition}
-                    remoteUrl={API_GET_PAGING_JOBTYPE}
+                    options={ListJobPosition?.map(item => ({value: item?.id, label: item?.name}))}
                     name="jobPositionId"
                     placeholder="Chọn vị trí công việc có sẵn"
                     allowClear

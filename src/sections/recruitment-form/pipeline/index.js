@@ -114,7 +114,7 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
                                 name="organizationPipelineId"
                                 placeholder="Chọn 1 quy trình tuyển dụng"
                                 fullWidth
-                                options={ListPipeline.map(item => ({
+                                options={ListPipeline?.filter(item => item.isActivated === true)?.map(item => ({
                                     id: item.id,
                                     value: item.id,
                                     name: item.name,
