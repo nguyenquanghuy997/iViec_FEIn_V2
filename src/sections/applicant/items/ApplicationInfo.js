@@ -11,6 +11,7 @@ import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 
 export const ApplicantInfo = ({ data }) => {
+  console.log(data);
   const renderText = (title, value) => {
     return (
       <div>
@@ -101,35 +102,35 @@ export const ApplicantInfo = ({ data }) => {
         >
           {data?.jobCategories?.length > 0
             ? data?.jobCategories.map((p, index) => {
-                return (
-                  <div key={index}>
-                    <ListItemText
-                      primary={p?.name}
-                      sx={{
-                        "& .MuiTypography-root": {
-                          fontSize: 13,
-                          fontWeight: 600,
-                          color: "#172B4D",
-                        },
-                      }}
-                    />
-                    {data?.jobCategories.length - 1 > index ? (
-                      <span style={{ marginRight: 5 }}>,</span>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                );
-              })
+              return (
+                <div key={index}>
+                  <ListItemText
+                    primary={p?.name}
+                    sx={{
+                      "& .MuiTypography-root": {
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "#172B4D",
+                      },
+                    }}
+                  />
+                  {data?.jobCategories.length - 1 > index ? (
+                    <span style={{ marginRight: 5 }}>,</span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              );
+            })
             : "-"}
         </span>
       </div>
       {renderText("Nguồn:", data?.jobSourceName)}
-      {renderText("Ngày sinh:", data?.dateOfBirth ? fDate(data?.dateOfBirth):'')}
+      {renderText("Ngày sinh:", data?.dateOfBirth ? fDate(data?.dateOfBirth) : '')}
       {renderText("Giới tính", Sex(data?.sex))}
       {renderText("Tình trạng hôn nhân:", MaritalStatus(data?.maritalStatus))}
-      {renderText("Chiều cao:", `${data?.height + "  cm"}`)}
-      {renderText("Cân nặng:", `${data?.weight + "  kg"}`)}
+      {renderText("Chiều cao:", `${data?.height ? data?.height + "  cm" : ''}`)}
+      {renderText("Cân nặng:", `${data?.weight ? data?.weight + "  kg" : ''}`)}
       {renderText("Nơi ở hiện tại:", Address(data?.livingAddress))}
       {renderText("Quê quán:", Address(data?.homeTower))}
       {renderText("Số CMND/CCCD:", data?.identityNumber)}
@@ -167,26 +168,26 @@ export const ApplicantInfo = ({ data }) => {
         >
           {data?.applicantSkills?.length > 0
             ? data?.applicantSkills.map((p, index) => {
-                return (
-                  <div key={index}>
-                    <ListItemText
-                      primary={p?.name}
-                      sx={{
-                        "& .MuiTypography-root": {
-                          fontSize: 13,
-                          fontWeight: 600,
-                          color: "#172B4D",
-                        },
-                      }}
-                    />
-                    {data?.applicantSkills.length - 1 > index ? (
-                      <span style={{ marginRight: 5 }}>,</span>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                );
-              })
+              return (
+                <div key={index}>
+                  <ListItemText
+                    primary={p?.name}
+                    sx={{
+                      "& .MuiTypography-root": {
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "#172B4D",
+                      },
+                    }}
+                  />
+                  {data?.applicantSkills.length - 1 > index ? (
+                    <span style={{ marginRight: 5 }}>,</span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              );
+            })
             : "-"}
         </span>
       </div>
@@ -261,17 +262,16 @@ export const ApplicantInfo = ({ data }) => {
         })}
 
       <DividerInfo text="HỌC VẤN" />
-      {renderText("2014 - 2019", data?.fullName)}
-      {renderText("2019 - 2023", data?.fullName)}
+      {renderText("Học vấn:", data?.education)}
+      {/* {renderText("2019 - 2023", data?.fullName)} */}
 
       <DividerInfo text="KỲ VỌNG Ở CÔNG VIỆC MỚI" />
       {renderText(
         "Mức lương mong muốn:",
-        `${
-          fCurrency(data?.expectedSalaryFrom) +
-          "  -  " +
-          fCurrency(data?.expectedSalaryTo) +
-          " VNĐ"
+        `${fCurrency(data?.expectedSalaryFrom) +
+        "  -  " +
+        fCurrency(data?.expectedSalaryTo) +
+        " VNĐ"
         }`
       )}
       {renderText("Nơi làm mong muốn:", Address(data?.expectedWorkingAddress))}

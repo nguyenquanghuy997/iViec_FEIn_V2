@@ -39,7 +39,7 @@ export const RejectApplicantModal = ({
 
   // form
   const Schema = Yup.object().shape({
-    note: Yup.string().required("Chưa nhập ghi chú"),
+    note: (currentAction == 0 || currentAction == 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
   });
   const methods = useForm({
     resolver: yupResolver(Schema),

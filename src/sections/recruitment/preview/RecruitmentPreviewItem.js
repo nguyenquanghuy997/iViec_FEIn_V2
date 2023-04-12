@@ -775,7 +775,7 @@ function RecruitmentPreviewItem({
                     />
                     Thêm ứng viên
                   </Button>
-                  <LightTooltip
+                  {/* <LightTooltip
                     placement="bottom-start"
                     onClose={handleCloseGroup}
                     disableFocusListener
@@ -830,7 +830,7 @@ function RecruitmentPreviewItem({
                         color="#fff"
                       />
                     </Button>
-                  </LightTooltip>
+                  </LightTooltip> */}
                 </ButtonGroup>
                 <RecruitmentApplicantChooseStage
                   data={

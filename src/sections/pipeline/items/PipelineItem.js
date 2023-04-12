@@ -68,7 +68,7 @@ export const PipelineItem = () => {
         render: (_, { organizationPipelineStates }) => (
           <div style={{ display: "flex", alignItems: "center" }}>
             {organizationPipelineStates?.map((p, index) => {
-              if (index < 6) {
+              if (index < 6 && p?.pipelineStateType != 4) {
                 if (index < 5) {
                   return (
                     <span
@@ -84,7 +84,7 @@ export const PipelineItem = () => {
                     >
                       {PipelineStateType(p?.pipelineStateType)}
 
-                      {index < organizationPipelineStates.length - 1 &&
+                      {index < organizationPipelineStates.length - 2 &&
                         index < 4 && (
                           <Iconify
                             width={16}

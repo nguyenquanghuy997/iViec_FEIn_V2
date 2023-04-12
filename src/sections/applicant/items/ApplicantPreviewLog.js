@@ -79,8 +79,8 @@ export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
                   },
                 }}
               />
-              {/* <Tab label="Thi tuyển và phỏng vấn" value="2" />
-              <Tab label="Đánh giá và Offer" value="3" /> */}
+              <Tab label="Thi tuyển và phỏng vấn" value="2" />
+              {/* <Tab label="Đánh giá và Offer" value="3" /> */}
             </TabList>
           </Box>
           <TabPanel value="1">
