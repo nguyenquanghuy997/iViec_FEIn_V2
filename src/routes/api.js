@@ -83,7 +83,7 @@ export const API_ADD_ROLE_GROUP = "/identity/RoleGroup/CreateRoleGroup"
 export const API_GET_ROLE_GROUP = '/identity/RoleGroup/GetRoleGroup';
 export const API_UPDATE_ROLE_GROUP = '/identity/RoleGroup/UpdateRoleGroup'
 export const API_REMOVE_ROLE_GROUP ='/Identity/RoleGroup/RemoveRoleGroups'
-export const API_GET_COLUMN_ROLE = "/aggregator/OrganizationRoleVisible/GetOrganizationsRoleVisible";
+export const API_GET_COLUMN_ROLE = "/aggregator/OrganizationRoleVisible/GetOrganizationRoleVisible";
 export const API_UPDATE_COLUMN_ROLE = "/aggregator/OrganizationRoleVisible/UpdateOrganizationRoleVisible";
 export const API_SET_ACTIVE_ROLE_GROUP = '/identity/RoleGroup/SetRoleGroupsActive';
 
@@ -119,7 +119,7 @@ export const API_DELETE_JOBTYPE = "/recruitment/JobPosition/RemoveJobPositions";
 export const API_ADD_JOBTYPE = "/recruitment/JobPosition/CreateJobPosition";
 export const API_UPDATE_JOBTYPE = "/recruitment/JobPosition/UpdateJobPosition";
 export const API_GET_APPLICANT_USERS_ON_JOBTYPE = "/recruitment/JobPosition/GetApplicationUsersOnJobPosition";
-export const API_GET_COLUMN_JOBTYPE = "/aggregator/OrganizationPositionVisible/GetOrganizationPositionsVisible";//new
+export const API_GET_COLUMN_JOBTYPE = "/aggregator/OrganizationPositionVisible/GetOrganizationPositionVisible";//new
 export const API_UPDATE_COLUMN_JOBTYPE = "/aggregator/OrganizationPositionVisible/UpdateOrganizationPositionVisible";//new
 
 // Pipeline
