@@ -7,7 +7,7 @@ import EditEnvironmentWorkplace from "@/sections/companyinfor/edit/EditEnvironme
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import {Box, Drawer, Typography, useTheme} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { get } from "lodash";
+import {get} from "lodash";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { RiTreasureMapLine } from "react-icons/ri";
@@ -89,7 +89,7 @@ const EnvironmentWorkplace = ({ data }) => {
           handleChange={handleChangeChecked}
           checked={checked}
         />
-        {data?.organizationWorkingEnvironments.length > 0 ? (
+        {get(data, 'organizationWorkingEnvironments')?.length > 0 ? (
           <Box
             sx={{
               px: 12,
@@ -106,7 +106,7 @@ const EnvironmentWorkplace = ({ data }) => {
                 spaceBetween={50}
                 pagination
               >
-                {data?.organizationWorkingEnvironments.map((item, index) => (
+                {get(data, 'organizationWorkingEnvironments')?.map((item, index) => (
                   <SwiperSlide
                     key={`slide-${index}`}
                     style={{ listStyle: "none" }}
@@ -114,7 +114,7 @@ const EnvironmentWorkplace = ({ data }) => {
                     <Box
                       sx={{
                         minHeight: "465px",
-                        backgroundImage: `url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
+                        backgroundImage: !get(item, "image") ? `url(/assets/placeholder.png)` :`url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
                           item,
                           "image"
                         )})`,
@@ -129,8 +129,7 @@ const EnvironmentWorkplace = ({ data }) => {
                           maxWidth: "400px",
                           width: "100%",
                           padding: 2,
-                          background:
-                            "linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)",
+                          background: "linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)",
                           color: style.COLOR_WHITE,
                           borderRadius: "4px 0px 0px 4px",
                           position: "absolute",
