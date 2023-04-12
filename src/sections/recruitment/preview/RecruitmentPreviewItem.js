@@ -35,8 +35,11 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { useForm } from "react-hook-form";
+import useRole from "@/hooks/useRole";
+import {PERMISSIONS} from "@/config";
+import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
 
 const defaultStyleRecruitmentStatus = {
   borderRadius: "100px",
@@ -53,6 +56,9 @@ function RecruitmentPreviewItem({
   onChangeTab,
   children,
 }) {
+  const { canAccess } = useRole();
+  const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_JOB), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB), []);
   const router = useRouter();
   const RecruitmentId = router.query.slug;
   const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
@@ -152,6 +158,7 @@ function RecruitmentPreviewItem({
   const [showDialogStage, setShowDialogStage] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [isFullHeader, setIsFullHeader] = useState(true);
+  const [openPreview, setOpenPreview] = useState(false);
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -360,19 +367,30 @@ function RecruitmentPreviewItem({
                     </div>
                   </Tooltip>
 
-                  <ButtonIcon
-                    style={{
-                      marginLeft: "12px",
-                    }}
-                    icon={
-                      <Iconify
-                        icon={"ri:edit-2-fill"}
-                        width={20}
-                        height={20}
-                        color="#8A94A5"
-                      />
-                    }
-                  />
+                  {
+                      RecruitmentData?.processStatus === 7 || RecruitmentData?.processStatus === 8 ? null : (
+                          <ButtonIcon
+                              onClick={(e) => {
+                                if (!canEdit) {
+                                  return;
+                                }
+                                router.push(PATH_DASHBOARD.recruitment.update(RecruitmentData?.id)),
+                                    e.stopPropagation();
+                              }}
+                              style={{
+                                marginLeft: "12px",
+                              }}
+                              icon={
+                                <Iconify
+                                    icon={"ri:edit-2-fill"}
+                                    width={20}
+                                    height={20}
+                                    color="#8A94A5"
+                                />
+                              }
+                          />
+                      )
+                  }
 
                   <Box>
                     {DivRecruitmentDataProcessStatus(
@@ -389,7 +407,12 @@ function RecruitmentPreviewItem({
                       fontSize: "12px",
                       fontWeight: 600,
                     }}
-                    // onClick={() => handleShowConfirmMultiple("CloseRecruitment")}
+                    onClick={() => {
+                      if (!canView) {
+                        return;
+                      }
+                      setOpenPreview(true)
+                    }}
                     icon={
                       <Iconify
                         icon={"ri:share-box-line"}
@@ -752,7 +775,7 @@ function RecruitmentPreviewItem({
                     />
                     Thêm ứng viên
                   </Button>
-                  <LightTooltip
+                  {/* <LightTooltip
                     placement="bottom-start"
                     onClose={handleCloseGroup}
                     disableFocusListener
@@ -807,7 +830,7 @@ function RecruitmentPreviewItem({
                         color="#fff"
                       />
                     </Button>
-                  </LightTooltip>
+                  </LightTooltip> */}
                 </ButtonGroup>
                 <RecruitmentApplicantChooseStage
                   data={
@@ -860,6 +883,14 @@ function RecruitmentPreviewItem({
         data={modelApplication}
         setData={setModelApplication}
       />
+
+      {openPreview && (
+          <RecruitmentPreview
+              data={RecruitmentData}
+              open={openPreview}
+              onClose={() => setOpenPreview(false)}
+          />
+      )}
     </div>
   );
 }

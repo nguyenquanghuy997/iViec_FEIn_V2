@@ -305,7 +305,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
                 ]}
                 isDefault={true}
               />
-              <PipelineDraggableItem
+              {/* <PipelineDraggableItem
                 data={[
                   {
                     name: "Mời nhận việc",
@@ -313,7 +313,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
                   },
                 ]}
                 isDefault={true}
-              />
+              /> */}
             </View>
           </View>
           {/* footer */}

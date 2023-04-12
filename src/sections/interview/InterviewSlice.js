@@ -54,9 +54,10 @@ export const calendarServiceApi = createApi({
     }),
 
     getCalendar: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: API_GET_CALENDAR,
         method: "GET",
+        params
       }),
       providesTags: ["BookCalendar"],
     }),

@@ -240,7 +240,7 @@ export default function UpdateRecruitment() {
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <TabContext value={valueTab}>
                         <Grid container>
-                            <Header title={'Cập nhật tin tuyển dụng'} onOpenConfirm={handleOpenConfirm} errors={isValid} setShowAlert={setShowAlert}/>
+                            <Header recruitment={Recruitment} title={'Cập nhật tin tuyển dụng'} onOpenConfirm={handleOpenConfirm} errors={isValid} setShowAlert={setShowAlert}/>
                             <TabList onChange={handleChangeTab} className={hState} isValid={isValid}/>
                         </Grid>
                         <Content>
