@@ -1,7 +1,7 @@
 import * as XLSX from "xlsx";
 import FileSaver from 'file-saver';
 import * as XLSXSTYLE from "xlsx-js-style";
-import { tableColumns } from "../others/columns";
+import { tableColumns } from "./columns";
 
 const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 const fileExtension = ".xlsx";

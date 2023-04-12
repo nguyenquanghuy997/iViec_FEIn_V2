@@ -1,7 +1,7 @@
 import { ButtonDS } from "@/components/DesignSystem";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { useForgotPasswordMutation } from "@/sections/auth/authSlice";
-import {errorMessages} from "@/utils/errorMessages";
+import {AUTH_ERROR_TYPE, errorMessages} from "@/utils/errorMessages";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Stack, Alert } from "@mui/material";
 import { useRouter } from "next/router";
@@ -45,9 +45,9 @@ export default function ResetPasswordForm({ setStatusResetPass }) {
     } catch (error) {
       const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
       const {status} = error;
-      if (status === "AUE_01") {
+      if (status === AUTH_ERROR_TYPE.AUE_01) {
         setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"}, {shouldFocus: true})
-      } else if (status === "IDE_12") {
+      } else if (status === AUTH_ERROR_TYPE.IDE_12) {
         setError('email', {type: "custom", message: "Email chưa được xác thực"}, {shouldFocus: true})
       } else setError("afterSubmit", { ...error, message });
     }

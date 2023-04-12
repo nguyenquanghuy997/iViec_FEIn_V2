@@ -2,7 +2,7 @@ import {useChangePasswordMutation} from "../authSlice";
 import {STYLE_CONSTANT} from "../register/constants";
 import Iconify from "@/components/Iconify";
 import {FormProvider, RHFTextField} from "@/components/hook-form";
-import {errorMessages} from "@/utils/errorMessages";
+import {AUTH_ERROR_TYPE, errorMessages} from "@/utils/errorMessages";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoadingButton} from "@mui/lab";
 import {Alert, Divider, IconButton, InputAdornment, Stack, Typography} from "@mui/material";
@@ -63,7 +63,7 @@ export default function ChangePasswordForm() {
     } catch (error) {
       const message = errorMessages[`${error.status}`] || 'Lỗi hệ thống'
       const {status} = error;
-      if (status === "IDE_05") {
+      if (status === AUTH_ERROR_TYPE.IDE_05) {
         setError('currentPassword', {type: "custom", message: "Mật khẩu cũ không chính xác"})
       } else setError("afterSubmit", {...error, message});
     }

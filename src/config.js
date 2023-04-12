@@ -1,12 +1,9 @@
-// @mui
-// routes
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { enUS, viVN } from "@mui/material/locale";
 
-// export const DOMAIN_SERVER_API = process?.env?.NEXT_PUBLIC_HOST_API_KEY || "";
-// export const DOMAIN_SERVER_API = "https://api.iviec.vn/api";
-export const DOMAIN_SERVER_API = "http://103.176.149.158:5001/api";
-// ROOT PATH AFTER LOGIN SUCCESSFUL
+export const DOMAIN_SERVER_API = process.env.NEXT_PUBLIC_DOMAIN_SERVER_API || "https://api.iviec.vn/api";
+// "http://103.176.149.158:5001/api";
+
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.dashboard;
 export const DOMAIN_OUTSIDE = "http://103.176.149.158:4000/";
 
@@ -38,12 +35,6 @@ export const NAVBAR = {
   DASHBOARD_MENU_ITEM_COLOR: "#B9BFC9",
   DASHBOARD_MENU_ITEM_ACTIVE_COLOR: "#FDFDFD",
   DASHBOARD_MENU_ITEM_BG_COLOR: "#5C6A82",
-  // DASHBOARD_: '',
-  // DASHBOARD_: '',
-  // DASHBOARD_: '',
-  // DASHBOARD_: '',
-  // DASHBOARD_: '',
-  // DASHBOARD_: '',
 };
 
 export const ICON = {
@@ -51,9 +42,6 @@ export const ICON = {
   NAVBAR_ITEM_HORIZONTAL: 20,
   NAVBAR_ITEM_COLOR: "#455570",
 };
-
-// SETTINGS
-// Please remove `localStorage` when you change settings.
 
 export const cookiesExpires = 3;
 
@@ -112,8 +100,7 @@ export const allLangs = [
 export const defaultLang = allLangs[0]; // English
 export const MAX_SIZE_FILEIMAGE = 5145728;
 
-export const API_KEY_EDITOR =
-  "0oiczdkt4b8lgo9kjmvrzsscibe0knl9d1cru6fr22ie2189";
+export const API_KEY_EDITOR = "4np9fd7la2pq868zg1e875ev3avyqm95riwn0f4d9d8uq7k6";
 
 export const PERMISSIONS = {
   IVIEC_ADMIN: 'IViecAdmin',
@@ -234,6 +221,11 @@ export const TBL_FILTER_TYPE = {
   RADIO: 'radio',
 };
 
+export const RECRUITMENT_CREATE_TYPE = {
+  DRAFT: 0,
+  OFFICIAL: 1,
+}
+
 export const RECRUITMENT_STATUS = {
   DRAFT: 0,
   WAITING_ORGANIZATION_APPROVAL: 1,
@@ -255,5 +247,14 @@ export const PIPELINE_TYPE = {
 }
 
 export const SALARY_TYPE = {
+  NO_SALARY: 0,
+  NEGOTIABLE_SALARY: 1,
+  DETAILED_SALARY: 2
+}
 
+export const SEX_TYPE = {
+  MALE: 0,
+  FEMALE: 1,
+  OTHER: 2,
+  NOT_REQUIRED: 3
 }

@@ -1,15 +1,11 @@
-// components
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFCheckbox, RHFTextField, } from "@/components/hook-form";
 import { STYLE_CONSTANT } from "../register/constants";
-// hooks
 import useAuth from "@/hooks/useAuth";
-// import useIsMountedRef from "@/hooks/useIsMountedRef";
 import { PATH_AUTH } from "@/routes/paths";
-// form
 import { LabelStyle } from "@/components/hook-form/style";
-import { errorMessages } from '@/utils/errorMessages';
+import { errorMessages, AUTH_ERROR_TYPE } from '@/utils/errorMessages';
 import { CHECK_EMAIL } from '@/utils/regex';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, IconButton, Link, Stack, Typography, } from "@mui/material";
@@ -18,15 +14,10 @@ import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-// routes
-// import { PATH_AUTH } from '@/routes/paths'
 
 export default function LoginForm() {
     const {login} = useAuth();
     const {enqueueSnackbar} = useSnackbar();
-
-    // const isMountedRef = useIsMountedRef();
-
     const [showPassword, setShowPassword] = useState(false);
 
     const LoginSchema = Yup.object().shape({
@@ -63,11 +54,11 @@ export default function LoginForm() {
         } catch (error) {
             const message = errorMessages[`${error.code}`] || 'Lỗi hệ thống'
             const {code} = error;
-            if (code === "AUE_01") {
+            if (code === AUTH_ERROR_TYPE.AUE_01) {
                 setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"})
-            } else if (code === "IDE_12") {
+            } else if (code === AUTH_ERROR_TYPE.IDE_12) {
                 setError('email', {type: "custom", message: "Email chưa được kích hoạt"})
-            } else if (code === "IDE_06") {
+            } else if (code === AUTH_ERROR_TYPE.IDE_06) {
                 setError('password', {type: "custom", message: "Mật khẩu không chính xác"})
             } else setError("afterSubmit", {...error, message});
         }

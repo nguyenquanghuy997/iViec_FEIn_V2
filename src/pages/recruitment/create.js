@@ -19,7 +19,7 @@ import Preview from "@/sections/recruitment-form/preview/Preview";
 import {useDispatch, useSelector} from "@/redux/store";
 import {modalSlice} from "@/redux/common/modalSlice";
 
-import {PERMISSION_PAGES} from '@/config'
+import {PERMISSION_PAGES, RECRUITMENT_CREATE_TYPE, SALARY_TYPE, SEX_TYPE, PIPELINE_TYPE} from '@/config'
 import {useCreateRecruitmentMutation} from "@/sections/recruitment";
 
 import {PATH_DASHBOARD} from "@/routes/paths";
@@ -156,7 +156,7 @@ export default function CreateRecruitment() {
   const onSubmit = async (data) => {
     const hasExaminationValue = examinationDataRef.current.getHasValue();
     const examinationSize = examinationDataRef.current?.getSize();
-    const pipelineStateDatas = examinationDataRef.current?.getPipeLineStateData()?.filter(item => item.pipelineStateType === 1 && !isEmpty(item.examinationId));
+    const pipelineStateDatas = examinationDataRef.current?.getPipeLineStateData()?.filter(item => item.pipelineStateType === PIPELINE_TYPE.EXAMINATION && !isEmpty(item.examinationId));
     const pipelineStateDatasSize = pipelineStateDatas.length;
 
     if (hasExaminationValue && examinationSize !== pipelineStateDatasSize) {
@@ -172,10 +172,11 @@ export default function CreateRecruitment() {
       startDate: moment(data?.startDate).toISOString(),
       endDate: moment(data?.endDate).toISOString(),
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
-      minSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.minSalary),
-      maxSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.maxSalary),
-      sex: (data.sex || data.sex === 0) ? data.sex : 3,
-      recruitmentCreationType: openSaveDraft ? 0 : 1,
+      minSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.minSalary),
+      maxSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.maxSalary),
+      sex: (data.sex || data.sex === SEX_TYPE.MALE) ? data.sex : SEX_TYPE.NOT_REQUIRED,
+      recruitmentCreationType: openSaveDraft ? RECRUITMENT_CREATE_TYPE.DRAFT : RECRUITMENT_CREATE_TYPE.OFFICIAL,
+      jobPositionId: data?.jobPositionId ? data?.jobPositionId : null,
       organizationPipelineStateDatas: !hasExaminationValue ? [] : pipelineStateDatas?.filter(item => item?.examinationId !== null)?.map(item => ({
         organizationPipelineStateId: item.organizationPipelineStateId,
         examinationId: item.examinationId,
@@ -185,7 +186,7 @@ export default function CreateRecruitment() {
     try {
       await createRecruitment({
         ...body,
-        recruitmentCreationType: openSaveDraft ? 0 : 1
+        recruitmentCreationType: openSaveDraft ? RECRUITMENT_CREATE_TYPE.DRAFT : RECRUITMENT_CREATE_TYPE.OFFICIAL,
       }).unwrap();
       handleCloseConfirm();
       enqueueSnackbar("Thêm tin tuyển dụng thành công!");
