@@ -16,25 +16,27 @@ const FormModalBottom = ({ onSubmit, loading, onClose, btnConfirm, btnClose, oth
 
   return (
       <Box className={'edit-footer'} {...props}>
-        <Stack flexDirection={'row'}>
-          <MuiButton
-              type="submit"
-              loading={loading}
-              variant="contained"
-              onClick={onSubmit}
-              title={titleConfirm || 'Xác nhận'}
-              sx={{...sxConfirmProps}}
-              {...otherConfirm}
-          />
-          <MuiButton
-              title={titleClose || "Hủy"}
-              color={"basic"}
-              onClick={onClose}
-              sx={{...sxCloseProps}}
-              {...otherClose}
-          />
-        </Stack>
-        {otherAction && <>{otherAction}</>}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Stack flexDirection={'row'}>
+            <MuiButton
+                type="submit"
+                loading={loading}
+                variant="contained"
+                onClick={onSubmit}
+                title={titleConfirm || 'Xác nhận'}
+                sx={{...sxConfirmProps}}
+                {...otherConfirm}
+            />
+            <MuiButton
+                title={titleClose || "Hủy"}
+                color={"basic"}
+                onClick={onClose}
+                sx={{...sxCloseProps}}
+                {...otherClose}
+            />
+          </Stack>
+          {otherAction && <>{otherAction}</>}
+        </Box>
       </Box>
   )
 }

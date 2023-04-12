@@ -9,9 +9,21 @@ import {DraftIcon, PreviewIcon} from "@/sections/recruitment-form/icon/HeaderIco
 
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {JobTitleStyle} from "@/sections/recruitment-form/style";
+import {useRouter} from "next/router";
+import {PATH_DASHBOARD} from "@/routes/paths";
 
-const Header = ({title, errors, onOpenConfirm, setShowAlert}) => {
+const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
   const name = useWatch({name: 'name'});
+  const router= useRouter();
+
+  const handleSetShowAlert = (data) => {
+    if (data?.processStatus === 7 || data?.processStatus === 8) {
+      return router.push(PATH_DASHBOARD.recruitment.root);
+    } else {
+      setShowAlert(true)
+    }
+  }
+
   return (
       <HeadingBar style={{
         position: 'fixed',
@@ -26,7 +38,7 @@ const Header = ({title, errors, onOpenConfirm, setShowAlert}) => {
               <IconButton
                   size='small'
                   sx={{color: style.COLOR_TEXT_BLACK, mr: 1}}
-                  onClick={() => setShowAlert(true)}
+                  onClick={() => handleSetShowAlert(recruitment)}
               >
                 <Iconify icon="material-symbols:arrow-back"/>
               </IconButton>
@@ -39,7 +51,7 @@ const Header = ({title, errors, onOpenConfirm, setShowAlert}) => {
             <MuiButton
                 title="Lưu nháp"
                 color="default"
-                disabled={!name}
+                disabled={!name || recruitment?.processStatus === 7 || recruitment?.processStatus === 8}
                 onClick={() => onOpenConfirm({openSaveDraft: true})}
                 startIcon={<DraftIcon/>}
                 sx={{
@@ -59,11 +71,16 @@ const Header = ({title, errors, onOpenConfirm, setShowAlert}) => {
                   color="default"
                   onClick={() => onOpenConfirm({openPreview: true})}
                   startIcon={<PreviewIcon/>}
+                  disabled={!name || recruitment?.processStatus === 7 || recruitment?.processStatus === 8}
                   sx={{
                     fontWeight: 500,
                     "&:hover": {
                       boxShadow: 'none'
                     },
+                    "&.Mui-disabled": {
+                      color: "#8a94a5",
+                      backgroundColor: "#d0d4db",
+                    }
                   }}
               />
             </Box>
@@ -71,7 +88,7 @@ const Header = ({title, errors, onOpenConfirm, setShowAlert}) => {
                 title="Gửi phê duyệt"
                 color="default"
                 onClick={() => onOpenConfirm({openSaveApprove: true})}
-                disabled={!errors}
+                disabled={!errors || recruitment?.processStatus === 7 || recruitment?.processStatus === 8}
                 startIcon={<Iconify icon="majesticons:send"/>}
                 sx={{
                   fontWeight: 500,

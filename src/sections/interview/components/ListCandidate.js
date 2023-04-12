@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ option, applicantId }) => {
+const ListCandidate = ({ option,detailCandidate, applicantId,error }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
   const { data: { items: dataApplicant = [] } = {} } = useGetApplicantByPipeLineQuery(
@@ -14,12 +14,19 @@ const ListCandidate = ({ option, applicantId }) => {
     {skip: !watch("recruitmentPipelineStateId")}
   );
 
+
   useEffect(() => {
     if (option) {
       setValue("applicantIdArray", [option?.applicantId]);
     }
   }, [option]);
-  
+
+  useEffect(() => {
+    if (detailCandidate) {
+      setValue("applicantIdArray", [detailCandidate?.id]);
+    }
+  }, [detailCandidate]);
+
   return (
     <Box height={"100%"}>
       <Label mb={3}>
@@ -43,6 +50,7 @@ const ListCandidate = ({ option, applicantId }) => {
         disabled={
           applicantId || !watch("recruitmentPipelineStateId")
         }
+        error={error}
         multiple
         isRequired
         open={open}

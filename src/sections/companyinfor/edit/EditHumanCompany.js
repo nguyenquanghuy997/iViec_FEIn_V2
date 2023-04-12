@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {useSnackbar} from "notistack";
 import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {RiDeleteBin6Line} from "react-icons/ri";
@@ -15,8 +15,10 @@ import {Box, Stack} from "@mui/material";
 import {DOMAIN_SERVER_API} from "@/config";
 import {LabelStyle} from "@/components/hook-form/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
 import RHFUploadImage from "@/sections/companyinfor/upload/RHFUploadImage";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {isEmpty, get} from "lodash";
 
 const EditHumanCompany = ({data, onClose}) => {
 
@@ -24,15 +26,27 @@ const EditHumanCompany = ({data, onClose}) => {
       const [uploadImage] = useUploadImageCompanyMutation();
       const {enqueueSnackbar} = useSnackbar();
 
+      // const defaultValues = {
+      //   organizationHumans: data?.organizationHumans?.map(item => ({
+      //     id: item.id,
+      //     avatar: item.avatar ? item.avatar : '',
+      //     imagePreview: '',
+      //     name: item.name,
+      //     description: item.description
+      //   }))
+      // };
+
       const defaultValues = {
-        organizationHumans: data?.organizationHumans?.map(item => ({
-          id: item.id,
-          avatar: item.avatar,
-            imagePreview: '',
-          name: item.name,
-          description: item.description
-        }))
+        organizationHumans: isEmpty(get(data, 'organizationHumans')) ? []
+            : data?.organizationHumans?.map(item => ({
+              id: item.id,
+              avatar: item.avatar ? item.avatar : '',
+              imagePreview: '',
+              name: item.name,
+              description: item.description
+            }))
       };
+
       const Schema = {
         name: Yup.string().nullable().required('Họ và tên không được bỏ trống'),
         description: Yup.string().nullable().required('Chức vụ không được bỏ trống'),
@@ -45,13 +59,13 @@ const EditHumanCompany = ({data, onClose}) => {
         resolver: yupResolver(ProfileSchema),
         defaultValues,
       });
-      const {setValue, handleSubmit, control, formState: {isSubmitting, isValid}} = methods;
+      const {setValue, handleSubmit, control, formState: {isSubmitting}} = methods;
       const {fields, append, move, remove} = useFieldArray({control, name: "organizationHumans"});
 
       const organizationHumans = useWatch({ control, name: 'organizationHumans' });
 
       const onSubmit = async (formData) => {
-        const imageData = formData.organizationHumans?.filter(item => item.avatar !== null && typeof item.avatar === 'object')?.map(item => item.avatar?.[0]);
+        const imageData = formData?.organizationHumans?.filter(item => item.avatar !== null && typeof item.avatar === 'object')?.map(item => item.avatar?.[0]);
         const form = new FormData();
         const promises = imageData.map((file) => {
           form.append("avatar", file);
@@ -65,11 +79,11 @@ const EditHumanCompany = ({data, onClose}) => {
           if (avatarRes) {
             let dataSubmit = [];
             let counter = 0;
-            for(let i = 0; i < formData.organizationHumans.length; i++) {
-              if (typeof formData.organizationHumans[i].avatar === 'string') {
-                dataSubmit.push({ ...formData.organizationHumans[i] })
+            for(let i = 0; i < formData?.organizationHumans?.length; i++) {
+              if (typeof formData?.organizationHumans[i]?.avatar === 'string' || !formData?.organizationHumans[i]?.avatar) {
+                dataSubmit.push({ ...formData?.organizationHumans[i] })
               } else {
-                dataSubmit.push({ ...formData.organizationHumans[i], avatar: avatarRes.map(item => item.data)[counter] })
+                dataSubmit.push({ ...formData?.organizationHumans[i], avatar: avatarRes?.map(item => item.data)[counter] })
                 counter++;
               }
             }
@@ -98,7 +112,7 @@ const EditHumanCompany = ({data, onClose}) => {
 
       useEffect(async () => {
         if (!data) return;
-        setValue("organizationHumans", data?.organizationHumans);
+        setValue("organizationHumans", data?.organizationHumans?.map(item => ({ ...item, avatar: item.avatar ? item.avatar : '' })));
       }, [data]);
 
       const handleDrag = ({source, destination}) => {
@@ -109,16 +123,11 @@ const EditHumanCompany = ({data, onClose}) => {
 
       return (
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{
-              px: 3, flex: 1,
-              paddingBottom: 36,
-              overflow: "hidden",
-              background: style.BG_WHITE,
-              padding: 3,
-              mb: 8, "& ul": {listStyle: 'none'}
-            }}>
+            <FormModalHead title={'Chỉnh sửa Con người công ty'} onClose={onClose}/>
+            <div className="edit-container">
+            <Box>
               <DragDropContext onDragEnd={handleDrag}>
-                <ul>
+                <ul style={{ listStyle: 'none' }}>
                   <Droppable droppableId="organizationHumans-items">
                     {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -128,7 +137,7 @@ const EditHumanCompany = ({data, onClose}) => {
                                   {(provided) => (
                                       <li key={item.id} ref={provided.innerRef} {...provided.draggableProps}>
                                         <Box sx={{
-                                          my: 3,
+                                          mb: 3,
                                           px: 3,
                                           py: 2,
                                           background: "#F2F4F5",
@@ -220,39 +229,27 @@ const EditHumanCompany = ({data, onClose}) => {
               <MuiButton
                   title={"Thêm cán bộ"}
                   variant="outlined"
-                  disabled={!isValid}
                   onClick={() => {
-                    append({...defaultValues});
+                    append({
+                      avatar: '',
+                      imagePreview: '',
+                      name: '',
+                      description: ''
+                    });
                   }}
                   startIcon={<PlusIcon/>}
                   sx={{width: '100%'}}
               />
             </Box>
-            <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  marginTop: 0,
-                  position: "fixed",
-                  bottom: 0,
-                  background: "#FDFDFD",
-                  width: "100%",
-                  padding: "16px 24px",
-                  border: "1px solid #EFF3F6",
-                  zIndex: 1001,
-                }}
-            >
-              <MuiButton
-                  title={"Lưu"}
-                  type="submit"
-                  loading={isSubmitting}
-              />
-              <MuiButton
-                  title={"Hủy"}
-                  color={"basic"}
-                  onClick={onClose}
-              />
             </div>
+            <FormModalBottom
+                onClose={onClose}
+                loading={isSubmitting}
+                btnConfirm={{
+                  title: 'Lưu',
+                  type: "submit",
+                }}
+            />
           </FormProvider>
       );
     }

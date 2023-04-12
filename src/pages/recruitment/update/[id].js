@@ -164,10 +164,12 @@ export default function UpdateRecruitment() {
             recruitmentJobCategoryIds: Recruitment?.recruitmentJobCategories?.map(item => item?.jobCategoryId),
             recruitmentWorkingForms: Recruitment?.recruitmentWorkingForms?.map(item => item?.workingForm),
             jobPositionId: Recruitment?.jobPosition?.id,
+            sex: Recruitment?.sex === 3 ? '' : Recruitment.sex,
             recruitmentCouncilIds: Recruitment?.recruitmentCouncils?.map(item => item?.councilUserId),
             coOwnerIds: Recruitment?.coOwners?.map(item => item?.id),
             recruitmentLanguageIds: Recruitment?.recruitmentLanguages?.map(item => item?.languageId),
             organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId,
+            isAutomaticStepChange: Recruitment?.recruitmentPipeline?.isAutomaticStepChange,
         })
     }, [Recruitment, defaultOrganization])
 
@@ -188,8 +190,9 @@ export default function UpdateRecruitment() {
             startDate: moment(data?.startDate).toISOString(),
             endDate: moment(data?.endDate).toISOString(),
             recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
-            minSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? 0 : Number(data.minSalary),
-            maxSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? 0 : Number(data.maxSalary),
+            minSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.minSalary),
+            maxSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.maxSalary),
+            sex: (data.sex || data.sex === 0) ? data.sex : 3,
             recruitmentCreationType: openSaveDraft ? 0 : 1,
             organizationPipelineStateDatas: !hasExaminationValue ? [] : pipelineStateDatas?.filter(item => item?.examinationId !== null)?.map(item => ({
                 organizationPipelineStateId: item.organizationPipelineStateId,
@@ -237,7 +240,7 @@ export default function UpdateRecruitment() {
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <TabContext value={valueTab}>
                         <Grid container>
-                            <Header title={'Cập nhật tin tuyển dụng'} onOpenConfirm={handleOpenConfirm} errors={isValid} setShowAlert={setShowAlert}/>
+                            <Header recruitment={Recruitment} title={'Cập nhật tin tuyển dụng'} onOpenConfirm={handleOpenConfirm} errors={isValid} setShowAlert={setShowAlert}/>
                             <TabList onChange={handleChangeTab} className={hState} isValid={isValid}/>
                         </Grid>
                         <Content>

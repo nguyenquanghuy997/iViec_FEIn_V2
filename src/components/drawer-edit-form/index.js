@@ -1,5 +1,13 @@
 import React, { useMemo } from 'react';
-import { Drawer, Box, Alert, Typography, IconButton, useTheme } from "@mui/material";
+import {
+  Drawer,
+  Box,
+  Alert,
+  Typography,
+  IconButton,
+  useTheme,
+  ClickAwayListener,
+} from "@mui/material";
 import { Button, SwitchStatusDS } from "../DesignSystem";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -12,7 +20,8 @@ import { drawerPaperStyle } from "./styles";
 
 export default function DrawerEditForm({
   open,
-  onClose,
+  onClose, // on close
+  onCancel, // custom on btn cancel click
   validateFields = {},
   defaultValues = {},
   title = '',
@@ -28,7 +37,7 @@ export default function DrawerEditForm({
   modalStyles = {},
   resetOnClose = true,
   keepMounted = false,
-  cancelCallback,
+  _btnOpen,
   children,
   ...props
 }) {
@@ -57,8 +66,8 @@ export default function DrawerEditForm({
     return child;
   });
 
-  const toggleDrawer = (isOpen, event, btnClose = false) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+  const toggleDrawer = (isOpen, event) => {
+    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
 
@@ -68,9 +77,6 @@ export default function DrawerEditForm({
       }
       if (resetOnClose) {
         reset(defaultValues);
-      }
-      if (btnClose && cancelCallback) {
-        cancelCallback();
       }
     }
   }
@@ -84,69 +90,88 @@ export default function DrawerEditForm({
     });
   }
 
+  const handleCancel = (e) => {
+    if (onCancel) {
+      return onCancel();
+    }
+    toggleDrawer(false, e, true)
+  }
+
   return (
-    <Drawer
-      anchor="right"
-      open={open}
-      onClose={(e) => toggleDrawer(false, e)}
-      PaperProps={{
-        sx: drawerPaperStyle({ ...theme, width, contentStyles }),
+    <ClickAwayListener
+      onClickAway={(e) => {
+        if (props.variant !== 'persistent') {
+          return;
+        }
+        if (e.target.contains(_btnOpen.current)) {
+          return;
+        }
+        toggleDrawer(false);
       }}
-      ModalProps={{
-        sx: modalStyles,
-        keepMounted: keepMounted,
-      }}
-      {...props}
     >
-      <FormProvider methods={methods} onSubmit={handleSubmit(handleOnSubmit)}>
-        <Box display="flex" alignItems="center" justifyContent="space-between" className="edit-header">
-          <Typography fontSize={pxToRem(16)} fontWeight={600}>
-            {title}
-          </Typography>
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={(e) => toggleDrawer(false, e)}
+        PaperProps={{
+          sx: drawerPaperStyle({ ...theme, width, contentStyles }),
+        }}
+        ModalProps={{
+          sx: modalStyles,
+          keepMounted: keepMounted,
+        }}
+        {...props}
+      >
+        <FormProvider methods={methods} onSubmit={handleSubmit(handleOnSubmit)}>
+          <Box display="flex" alignItems="center" justifyContent="space-between" className="edit-header">
+            <Typography fontSize={pxToRem(16)} fontWeight={600}>
+              {title}
+            </Typography>
 
-          <IconButton onClick={e => toggleDrawer(false, e)}>
-            <RiCloseLine size={20} />
-          </IconButton>
-        </Box>
-
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit?.message}</Alert>
-        )}
-
-        <div className="edit-container">
-          {childrenWithProps}
-        </div>
-
-        <Box display="flex" className="edit-footer">
-          <Box flex={1}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              loading={isSubmitting}
-              height={36}
-              sx={{ mr: 1 }}
-              disabled={initing}
-            >
-              {okText}
-            </Button>
-
-            <Button
-              variant="text"
-              color="basic"
-              onClick={e => toggleDrawer(false, e, true)}
-              height={36}
-            >
-              {cancelText}
-            </Button>
+            <IconButton onClick={e => toggleDrawer(false, e)}>
+              <RiCloseLine size={20} />
+            </IconButton>
           </Box>
 
-          <SwitchStatusDS
-            name={statusField}
-            label={isActive ? activeText : inActiveText}
-          />
-        </Box>
-      </FormProvider>
-    </Drawer>
+          {!!errors.afterSubmit && (
+            <Alert severity="error">{errors.afterSubmit?.message}</Alert>
+          )}
+
+          <div className="edit-container">
+            {childrenWithProps}
+          </div>
+
+          <Box display="flex" className="edit-footer">
+            <Box flex={1}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                loading={isSubmitting}
+                height={36}
+                sx={{ mr: 1 }}
+                disabled={initing}
+              >
+                {okText}
+              </Button>
+
+              <Button
+                variant="text"
+                color="basic"
+                onClick={handleCancel}
+                height={36}
+              >
+                {cancelText}
+              </Button>
+            </Box>
+
+            <SwitchStatusDS
+              name={statusField}
+              label={isActive ? activeText : inActiveText}
+            />
+          </Box>
+        </FormProvider>
+      </Drawer>
+    </ClickAwayListener>
   )
 }

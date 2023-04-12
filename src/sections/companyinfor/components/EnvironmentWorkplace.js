@@ -1,19 +1,19 @@
 import HeaderCard from "../HeaderCard";
 import { useUpdateCompanyEndingMutation } from "../companyInforSlice";
-import CloseIcon from "@/assets/CloseIcon";
 import LoadingScreen from "@/components/LoadingScreen";
 import { DOMAIN_SERVER_API } from "@/config";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import EditEnvironmentWorkplace from "@/sections/companyinfor/edit/EditEnvironmentWorkplace";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
-import { Box, Button, Divider, Drawer, List, Typography } from "@mui/material";
+import {Box, Drawer, Typography, useTheme} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { get } from "lodash";
+import {get} from "lodash";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { RiTreasureMapLine } from "react-icons/ri";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
 export const SliderStyle = styled("div")(() => ({
   "& .swiper-pagination": {
@@ -34,6 +34,7 @@ export const SliderStyle = styled("div")(() => ({
 
 const EnvironmentWorkplace = ({ data }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   const [checked, setChecked] = useState(data?.isWorkingEnvironmentVisible);
@@ -88,7 +89,7 @@ const EnvironmentWorkplace = ({ data }) => {
           handleChange={handleChangeChecked}
           checked={checked}
         />
-        {data?.organizationWorkingEnvironments.length > 0 ? (
+        {get(data, 'organizationWorkingEnvironments')?.length > 0 ? (
           <Box
             sx={{
               px: 12,
@@ -105,7 +106,7 @@ const EnvironmentWorkplace = ({ data }) => {
                 spaceBetween={50}
                 pagination
               >
-                {data?.organizationWorkingEnvironments.map((item, index) => (
+                {get(data, 'organizationWorkingEnvironments')?.map((item, index) => (
                   <SwiperSlide
                     key={`slide-${index}`}
                     style={{ listStyle: "none" }}
@@ -113,7 +114,7 @@ const EnvironmentWorkplace = ({ data }) => {
                     <Box
                       sx={{
                         minHeight: "465px",
-                        backgroundImage: `url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
+                        backgroundImage: !get(item, "image") ? `url(/assets/placeholder.png)` :`url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
                           item,
                           "image"
                         )})`,
@@ -128,8 +129,7 @@ const EnvironmentWorkplace = ({ data }) => {
                           maxWidth: "400px",
                           width: "100%",
                           padding: 2,
-                          background:
-                            "linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)",
+                          background: "linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)",
                           color: style.COLOR_WHITE,
                           borderRadius: "4px 0px 0px 4px",
                           position: "absolute",
@@ -181,7 +181,7 @@ const EnvironmentWorkplace = ({ data }) => {
           open={open}
           onClose={handleClose}
           PaperProps={{
-            sx: { width: 800, position: "fixed", top: "64px", right: 0 },
+            sx: drawerPaperStyle({...theme, width: 800}),
           }}
           componentsProps={{
             backdrop: {
@@ -192,25 +192,7 @@ const EnvironmentWorkplace = ({ data }) => {
             },
           }}
         >
-          <Box sx={{ width: 800 }}>
-            <List
-              sx={{ display: "flex", justifyContent: "space-between", p: 0 }}
-            >
-              <Typography
-                sx={{ p: "22px 24px", fontSize: 16, fontWeight: 600 }}
-              >
-                Chỉnh sửa Môi trường làm việc
-              </Typography>
-              <Button
-                onClick={handleClose}
-                sx={{ "&:hover": { background: "#FDFDFD" } }}
-              >
-                <CloseIcon />
-              </Button>
-            </List>
-            <Divider />
-            <EditEnvironmentWorkplace data={data} onClose={handleClose} />
-          </Box>
+          <EditEnvironmentWorkplace data={data} onClose={handleClose} />
         </Drawer>
       )}
     </>

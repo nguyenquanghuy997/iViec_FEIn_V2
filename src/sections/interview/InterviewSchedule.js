@@ -2,15 +2,13 @@ import DetailDialog from "./edit/DetailDialog";
 import ViewSchedule from "./edit/ViewSchedule";
 import { PERMISSIONS } from "@/config";
 import useRole from "@/hooks/useRole";
-import { useGetCalendarQuery } from "@/sections/interview/InterviewSlice";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 import { useTheme } from "@emotion/react";
 import { Typography, Box, Card, CardContent } from "@mui/material";
 import { useMemo } from "react";
 import { useState } from "react";
 
-export default function InterviewSchedule() {
-  const { data: Data } = useGetCalendarQuery();
+export default function InterviewSchedule({ Data }) {
   const check = false;
   const { palette } = useTheme();
   const [openForm, setOpenForm] = useState(false);
@@ -32,7 +30,7 @@ export default function InterviewSchedule() {
   };
 
   return (
-    <Card sx={{ m: "140px 0", borderRadius: "6px", border: "none", p: 3 }}>
+    <Card sx={{borderRadius: "6px", border: "none", p: 3 }}>
       <CardContent sx={{ display: "flex", p: 0 }}>
         <Box
           sx={{

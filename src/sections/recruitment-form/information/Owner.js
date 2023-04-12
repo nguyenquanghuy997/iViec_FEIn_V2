@@ -26,7 +26,9 @@ const Owner = ({ recruitment }) => {
                         remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
                         selectedOptions={[{
                             id: recruitment?.ownerId,
-                            label: recruitment?.ownerEmail || recruitment?.ownerName
+                            value: recruitment?.ownerId,
+                            label: recruitment?.ownerEmail || recruitment?.ownerName,
+                            name: recruitment?.ownerEmail || recruitment?.ownerName,
                         }]}
                         name="ownerId"
                         placeholder="Chọn 1 cán bộ"
@@ -40,7 +42,8 @@ const Owner = ({ recruitment }) => {
                         remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
                         selectedOptions={recruitment?.coOwners?.map(coOwner => ({
                             id: coOwner?.id,
-                            label: coOwner?.email || coOwner?.name
+                            label: coOwner?.email || coOwner?.name,
+                            name: coOwner?.email || coOwner?.name,
                         }))}
                         name="coOwnerIds"
                         placeholder="Chọn 1 hoặc nhiều cán bộ"
@@ -55,7 +58,8 @@ const Owner = ({ recruitment }) => {
                         remoteUrl={`${API_GET_LIST_USER_ORGANIZATION}?OrganizationId=${organizationId}`}
                         selectedOptions={recruitment?.recruitmentCouncils?.map(coOwner => ({
                             id: coOwner?.councilUserId,
-                            label: coOwner?.councilEmail || coOwner?.councilName
+                            label: coOwner?.councilEmail || coOwner?.councilName,
+                            name: coOwner?.councilEmail || coOwner?.councilName,
                         }))}
                         name="recruitmentCouncilIds"
                         placeholder="Chọn 1 hoặc nhiều cán bộ"

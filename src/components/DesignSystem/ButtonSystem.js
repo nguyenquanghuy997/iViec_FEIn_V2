@@ -12,6 +12,7 @@ const ButtonSystem = ({
   hoverColor,
   variant,
   width,
+  onRef,
   children,
   ...props
 }) => {
@@ -84,6 +85,7 @@ const ButtonSystem = ({
           ...styles,
           ...sx,
         }}
+        {...(onRef && {ref: (ref) => onRef(ref)})}
         {...props}
       >
         {children}

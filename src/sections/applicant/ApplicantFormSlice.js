@@ -1,4 +1,4 @@
-import {axiosBaseQuery} from "@/redux/api/apiSlice";
+import { axiosBaseQuery } from "@/redux/api/apiSlice";
 import {
   API_GET_ALL_APPLICANTS,
   API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
@@ -20,11 +20,12 @@ import {
   API_GET_ADD_APPLICANT_TO_RECRUITMENT,
   API_APPLICANT_REVIEW_FORM,
   API_ADD_APPLICANT_REVIEW,
+  API_DELETE_APPLICANT,
   API_CHECK_REVIEW
 } from "@/routes/api";
 import qs from 'query-string';
 import { convertArrayToObject, toRequestFilterData } from '@/utils/helper'
-import {createApi} from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const ApplicantFormSlice = createApi({
   reducerPath: 'applicantApi',
@@ -65,7 +66,7 @@ export const ApplicantFormSlice = createApi({
       }),
     }),
     getApplicantById: builder.query({
-      query: ({applicantId}) => ({
+      query: ({ applicantId }) => ({
         url: `${API_GET_APPLICANTS_BY_ID}?Id=${applicantId}`,
         method: "GET",
       }),
@@ -101,7 +102,7 @@ export const ApplicantFormSlice = createApi({
         method: "GET",
         params,
       }),
-      providesTags: [{ type: 'APPLICANT', id: 'APPLICANT_STATE_WITH_RECRUITMENT_STATE'}],
+      providesTags: [{ type: 'APPLICANT', id: 'APPLICANT_STATE_WITH_RECRUITMENT_STATE' }],
     }),
     getApplicantRecruitment: builder.query({
       query: (params) => ({
@@ -113,7 +114,7 @@ export const ApplicantFormSlice = createApi({
         response.events = response.events.reverse();
         return response;
       },
-      providesTags: [{ type: 'APPLICANT', id: 'LOG_APPLICANT'}],
+      providesTags: [{ type: 'APPLICANT', id: 'LOG_APPLICANT' }],
     }),
     getApplicantByPipelineStateId: builder.query({
       query: (PipelineStateId) => ({
@@ -126,28 +127,28 @@ export const ApplicantFormSlice = createApi({
         const listPipeline = await fetchWithBQ({
           url: API_GET_RECRUITMENT_PIPELINE_STATES_BY_RECRUITMENT,
           method: "GET",
-          params:{"RecruitmentId":_arg},
+          params: { "RecruitmentId": _arg },
         })
 
-        let data=await Promise.all(listPipeline.data.items.map(async(item)=>{
-             const listTask = await fetchWithBQ({
+        let data = await Promise.all(listPipeline.data.items.map(async (item) => {
+          const listTask = await fetchWithBQ({
             url: `${API_GET_APPLICANT_BY_PIPELINESTETEID}?PipelineStateId=${item.id}`,
             method: "GET",
           })
-          
-          let newItem ={
-            id:item.id,
-            pipelineStateType:item.pipelineStateType,
-            items:listTask.data.items
+
+          let newItem = {
+            id: item.id,
+            pipelineStateType: item.pipelineStateType,
+            items: listTask.data.items
           }
           return newItem
         })
         )
         const presponseModified = convertArrayToObject(data, 'id');
 
-        return {data:presponseModified}
+        return { data: presponseModified }
       },
-      providesTags: [{ type: 'APPLICANT', id: 'LIST_APPLICANT_PIPELINE'}],
+      providesTags: [{ type: 'APPLICANT', id: 'LIST_APPLICANT_PIPELINE' }],
     }),
     updateApplicantRecruitmentToNextState: builder.mutation({
       query: (data) => ({
@@ -156,9 +157,9 @@ export const ApplicantFormSlice = createApi({
         data: data,
       }),
       invalidatesTags: [
-          { type: 'APPLICANT', id: 'LOG_APPLICANT'},
-          { type: 'APPLICANT', id: 'APPLICANT_STATE_WITH_RECRUITMENT_STATE'},
-          { type: 'APPLICANT', id: 'APPLICANT_REVIEW'},
+        { type: 'APPLICANT', id: 'LOG_APPLICANT' },
+        { type: 'APPLICANT', id: 'APPLICANT_STATE_WITH_RECRUITMENT_STATE' },
+        { type: 'APPLICANT', id: 'APPLICANT_REVIEW' },
       ],
     }),
     addApplicantReview: builder.mutation({
@@ -167,7 +168,7 @@ export const ApplicantFormSlice = createApi({
         method: "POST",
         data: data,
       }),
-      invalidatesTags: [{ type: 'APPLICANT', id: 'LOG_APPLICANT'}],
+      invalidatesTags: [{ type: 'APPLICANT', id: 'LOG_APPLICANT' }],
     }),
     addApplicantRecruitment: builder.mutation({
       query: (data) => ({
@@ -181,7 +182,7 @@ export const ApplicantFormSlice = createApi({
     // get all applicant with filter
     getAllFilterApplicant: builder.query({
       query: (data = {}) => {
-        let reqData = {...data};
+        let reqData = { ...data };
         const aryFields = [
           'livingAddressProvinceIds',
           'livingAddressDistrictIds',
@@ -264,14 +265,24 @@ export const ApplicantFormSlice = createApi({
       query: (data) => ({
         url: API_APPLICANT_REVIEW_FORM + '?' + qs.stringify(data),
       }),
-      providesTags: [{ type: 'APPLICANT', id: 'APPLICANT_REVIEW'}]
+      providesTags: [{ type: 'APPLICANT', id: 'APPLICANT_REVIEW' }]
     }),
+
+    deleteApplicants: builder.mutation({
+      query: (data) => ({
+        url: API_DELETE_APPLICANT,
+        method: "DELETE",
+        data: data,
+      }),
+      invalidatesTags: [{ type: 'APPLICANT', id: 'LIST_FILTER' }],
+    }),
+
     // mẫu đánh giá theo ứng viên
     getCheckReview: builder.query({
       query: (data) => ({
         url: API_CHECK_REVIEW + '?' + qs.stringify(data),
       }),
-      providesTags: [{ type: 'APPLICANT', id: 'APPLICANT_REVIEW'}]
+      providesTags: [{ type: 'APPLICANT', id: 'APPLICANT_REVIEW' }]
     }),
   }),
 });
@@ -295,6 +306,7 @@ export const {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useUpdateApplicantFormMutation,
   useGetApplicantReviewFormQuery,
+  useDeleteApplicantsMutation,
   useGetCheckReviewQuery,
   useAddApplicantReviewMutation
 } = ApplicantFormSlice;

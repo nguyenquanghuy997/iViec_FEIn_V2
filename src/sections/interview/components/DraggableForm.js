@@ -26,6 +26,15 @@ function DraggableForm({model, index, removeItem}) {
     setFirst(true);
   }, [first]);
   
+  useEffect(() => {
+    if (getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`)
+      && getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`)
+      && getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`)) {
+      return setTime(true);
+    }
+    setTime(false);
+  }, [open]);
+  
   const checkForm = () => {
     if (!getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`)
       || !getValues(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`)

@@ -1,7 +1,7 @@
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {useSnackbar} from "notistack";
 import {useFieldArray, useForm, useWatch} from "react-hook-form";
-import {RiDeleteBin6Line} from "react-icons/ri";
+import {RiDeleteBin6Line, RiImageFill} from "react-icons/ri";
 import * as Yup from "yup";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import PlusIcon from "@/assets/interview/PlusIcon";
@@ -12,11 +12,13 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Stack} from "@mui/material";
 import {LabelStyle} from "@/components/hook-form/style";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
 import RHFUploadImage from "@/sections/companyinfor/upload/RHFUploadImage";
 import Image from "@/components/Image";
 import {DOMAIN_SERVER_API} from "@/config";
 import {TextAreaDS} from "@/components/DesignSystem";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {get, isEmpty} from "lodash";
 
 const EditEnvironmentWorkplace = ({data, onClose}) => {
 
@@ -25,8 +27,8 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
         const {enqueueSnackbar} = useSnackbar();
 
         const defaultValues = {
-            organizationWorkingEnvironments: data?.organizationWorkingEnvironments?.map(item => ({
-                image: item.image,
+            organizationWorkingEnvironments: isEmpty(get(data, 'organizationWorkingEnvironments')) ? [] : data?.organizationWorkingEnvironments?.map(item => ({
+                image: item.image ? item.image : '',
                 imagePreview: '',
                 name: item.name,
                 description: item.description
@@ -49,11 +51,11 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
 
         const organizationWorkingEnvironments = useWatch({ control, name: 'organizationWorkingEnvironments' });
         const onSubmit = async (formData) => {
-            const imageData = formData.organizationWorkingEnvironments?.filter(item => item.image !== null && typeof item.image === 'object')?.map(item => item.image?.[0]);
+            const imageData = formData?.organizationWorkingEnvironments?.filter(item => item.image !== null && typeof item.image === 'object')?.map(item => item.image?.[0]);
             if (imageData.length === 0) {
                 const body = {
                     organizationId: data?.id,
-                    organizationWorkingEnvironments: formData.organizationWorkingEnvironments.map(item => ({
+                    organizationWorkingEnvironments: formData?.organizationWorkingEnvironments?.map(item => ({
                         image: item.image,
                         name: item.name,
                         description: item.description,
@@ -86,12 +88,12 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                     if (imageRes) {
                         let dataSubmit = [];
                         let counter = 0;
-                        for (let i = 0; i < formData.organizationWorkingEnvironments.length; i++) {
-                            if (typeof formData.organizationWorkingEnvironments[i].image === 'string') {
-                                dataSubmit.push({...formData.organizationWorkingEnvironments[i]})
+                        for (let i = 0; i < formData?.organizationWorkingEnvironments?.length; i++) {
+                            if (typeof formData?.organizationWorkingEnvironments[i]?.image === 'string' || !formData?.organizationWorkingEnvironments[i]?.image) {
+                                dataSubmit.push({...formData?.organizationWorkingEnvironments[i]})
                             } else {
                                 dataSubmit.push({
-                                    ...formData.organizationWorkingEnvironments[i],
+                                    ...formData?.organizationWorkingEnvironments[i],
                                     image: imageRes.map(item => item.data)[counter]
                                 })
                                 counter++;
@@ -123,7 +125,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
 
         useEffect(async () => {
             if (!data) return;
-            setValue("organizationWorkingEnvironments", data?.organizationWorkingEnvironments);
+            setValue("organizationWorkingEnvironments", data?.organizationWorkingEnvironments?.map(item => ({ ...item, image: item.image ? item.image : '' })));
         }, [data]);
 
         const handleDrag = ({source, destination}) => {
@@ -134,14 +136,9 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
 
         return (
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <Box sx={{
-                    px: 3, flex: 1,
-                    paddingBottom: 36,
-                    overflow: "hidden",
-                    background: style.BG_WHITE,
-                    padding: 3,
-                    mb: 8, "& ul": {listStyle: 'none'}
-                }}>
+              <FormModalHead title={'Chỉnh sửa Môi trường làm việc'} onClose={onClose}/>
+              <div className="edit-container">
+              <Box sx={{"& ul": {listStyle: 'none'}}}>
                     <DragDropContext onDragEnd={handleDrag}>
                         <ul>
                             <Droppable droppableId="organizationWorkingEnvironments-items">
@@ -154,7 +151,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                         <li key={item.id}
                                                             ref={provided.innerRef} {...provided.draggableProps}>
                                                             <Box sx={{
-                                                                my: 3,
+                                                                mb: 3,
                                                                 px: 3,
                                                                 py: 2,
                                                                 background: "#F2F4F5",
@@ -185,14 +182,11 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                                 sx={{border: "1px dashed #1976D2", height: 400}}
                                                                             />
                                                                         )
-                                                                        : <Image
-                                                                            disabledEffect
-                                                                            visibleByDefault
-                                                                            src={'/assets/placeholder.png'}
-                                                                            id={index}
-                                                                            alt="image"
-                                                                            sx={{border: "1px dashed #1976D2", height: 400}}
-                                                                        />
+                                                                        : (
+                                                                            <Box sx={{minHeight: '400px', border: "1px dashed #1976D2", display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                                                                <RiImageFill color={"#8A94A5"} size={'1.25em'}/>
+                                                                            </Box>
+                                                                        )
                                                                     }
                                                                     <Box sx={{
                                                                         display: "flex",
@@ -243,38 +237,27 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                         title={"Thêm môi trường làm việc"}
                         variant="outlined"
                         onClick={() => {
-                            append({...defaultValues});
+                            append({
+                              image: '',
+                              imagePreview: '',
+                              name: '',
+                              description: ''
+                            });
                         }}
                         fullWidth
                         startIcon={<PlusIcon/>}
                         sx={{width: '100%'}}
                     />
                 </Box>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        marginTop: 0,
-                        position: "fixed",
-                        bottom: 0,
-                        background: "#FDFDFD",
-                        width: "100%",
-                        padding: "16px 24px",
-                        border: "1px solid #EFF3F6",
-                        zIndex: 1001,
-                    }}
-                >
-                    <MuiButton
-                        title={"Lưu"}
-                        type="submit"
-                        loading={isSubmitting}
-                    />
-                    <MuiButton
-                        title={"Hủy"}
-                        color={"basic"}
-                        onClick={onClose}
-                    />
-                </div>
+              </div>
+              <FormModalBottom
+                  onClose={onClose}
+                  loading={isSubmitting}
+                  btnConfirm={{
+                    title: 'Lưu',
+                    type: "submit",
+                  }}
+              />
             </FormProvider>
         );
     }

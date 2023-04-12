@@ -172,8 +172,9 @@ export default function CreateRecruitment() {
       startDate: moment(data?.startDate).toISOString(),
       endDate: moment(data?.endDate).toISOString(),
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
-      minSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? 0 : Number(data.minSalary),
-      maxSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? 0 : Number(data.maxSalary),
+      minSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.minSalary),
+      maxSalary: data.salaryDisplayType === 0 || data.salaryDisplayType === 1 ? null : Number(data.maxSalary),
+      sex: (data.sex || data.sex === 0) ? data.sex : 3,
       recruitmentCreationType: openSaveDraft ? 0 : 1,
       organizationPipelineStateDatas: !hasExaminationValue ? [] : pipelineStateDatas?.filter(item => item?.examinationId !== null)?.map(item => ({
         organizationPipelineStateId: item.organizationPipelineStateId,
@@ -184,7 +185,6 @@ export default function CreateRecruitment() {
     try {
       await createRecruitment({
         ...body,
-        id: null,
         recruitmentCreationType: openSaveDraft ? 0 : 1
       }).unwrap();
       handleCloseConfirm();

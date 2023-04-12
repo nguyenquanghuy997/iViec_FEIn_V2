@@ -12,20 +12,22 @@ import {
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Box, Stack} from "@mui/material";
 import {useSnackbar} from "notistack";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useFieldArray, useForm} from "react-hook-form";
+import {get, isEmpty} from 'lodash';
 import * as Yup from "yup";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {DOMAIN_SERVER_API} from "@/config";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import Iconify from "@/components/Iconify";
 import {RiDeleteBin6Line} from "react-icons/ri";
-import {STYLE_CONSTANT as style} from "@/theme/palette";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const InputStyle = {width: "100%", minHeight: 40, background: "white"};
 
 const EditBusinessArea = ({data: Data, onClose}) => {
-  const isEditMode = !!Data?.organizationBusiness?.id;
+  const isEditMode = !!get(Data, 'organizationBusiness.id');
   const [addOrganizationBusiness] = useAddOrganizationBusinessMutation();
   const [updateCompanyBusiness] = useUpdateCompanyBusinessMutation();
   const [uploadImage] = useUploadImageCompanyMutation();
@@ -44,14 +46,20 @@ const EditBusinessArea = ({data: Data, onClose}) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const defaultValues = {};
+  const defaultValues = {
+    organizationBusinessDatas: isEmpty(get(Data, 'organizationBusinessDatas')) ? []
+        : Data?.organizationBusinessDatas?.map(item => ({
+          name: item.name,
+          description: item.description
+        }))
+  };
 
   const ProfileSchema = Yup.object().shape({
     businessPhoto: Yup.string(),
     organizationBusinessDatas: Yup.array().of(
         Yup.object().shape({
-          name: Yup.string(),
-          description: Yup.string(),
+          name: Yup.string().nullable().required('Tên lĩnh vực kinh doanh không được bỏ trống'),
+          description: Yup.string().nullable().required('Mô tả không được bỏ trống'),
         })
     ),
   });
@@ -66,7 +74,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
     register,
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid},
+    formState: {isSubmitting},
   } = methods;
 
   const {fields, append, move, remove} = useFieldArray({
@@ -75,42 +83,57 @@ const EditBusinessArea = ({data: Data, onClose}) => {
   });
 
   const onSubmit = async (d) => {
-    const bgRes = await uploadImage({
-      OrganizationId: Data?.id,
-      File: imageBg,
-    });
+    if (imageBg) {
+      const bgRes = await uploadImage({
+        OrganizationId: Data?.id,
+        File: imageBg,
+      });
 
-    const res = {
-      organizationId: isEditMode ? Data?.organizationBusiness?.id : Data?.id,
-      businessPhoto: bgRes.data,
-      organizationBusinessDatas: d.organizationBusinessDatas,
-    };
+      const res = {
+        organizationId: isEditMode ? get(Data, 'organizationBusiness.id') : get(Data, 'id'),
+        businessPhoto: get(bgRes, 'data') ? get(bgRes, 'data') : get(Data, 'organizationBusiness.businessPhoto'),
+        organizationBusinessDatas: get(d, 'organizationBusinessDatas'),
+      };
 
-    if (isEditMode) {
-      try {
-        await updateCompanyBusiness(res).unwrap();
-        enqueueSnackbar("Chỉnh sửa Lĩnh vực công ty thành công!", {
-          autoHideDuration: 2000,
-        });
-        onClose();
-      } catch (err) {
-        enqueueSnackbar("Thực hiện thất bại!", {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
+      if (isEditMode) {
+        try {
+          await updateCompanyBusiness(res).unwrap();
+          enqueueSnackbar("Chỉnh sửa Lĩnh vực công ty thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", {variant: "error"});
+        }
+      } else {
+        try {
+          await addOrganizationBusiness(res).unwrap();
+          enqueueSnackbar("Thêm Lĩnh vực công ty mới thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", {variant: "error"});
+        }
       }
     } else {
-      try {
-        await addOrganizationBusiness(res).unwrap();
-        enqueueSnackbar("Thêm Lĩnh vực công ty mới thành công!", {
-          autoHideDuration: 2000,
-        });
-        onClose();
-      } catch (err) {
-        enqueueSnackbar("Thực hiện thất bại!", {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
+      const res = {
+        organizationId: isEditMode ? get(Data, 'organizationBusiness.id') : get(Data, 'id'),
+        businessPhoto: get(Data, 'organizationBusiness.businessPhoto'),
+        organizationBusinessDatas: get(d, 'organizationBusinessDatas'),
+      };
+      if (isEditMode) {
+        try {
+          await updateCompanyBusiness(res).unwrap();
+          enqueueSnackbar("Chỉnh sửa Lĩnh vực công ty thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", { variant: "error" });
+        }
+      } else {
+        try {
+          await addOrganizationBusiness(res).unwrap();
+          enqueueSnackbar("Thêm Lĩnh vực công ty mới thành công!");
+          onClose();
+        } catch (err) {
+          enqueueSnackbar("Thực hiện thất bại!", {variant: "error",});
+        }
       }
     }
   };
@@ -121,9 +144,9 @@ const EditBusinessArea = ({data: Data, onClose}) => {
 
   useEffect(() => {
     if (!Data) return;
-    setValue("organizationBusinessDatas", Data?.organizationBusiness.organizationBusinessDatas);
-    setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${Data?.organizationBusiness?.businessPhoto}`);
-  }, [JSON.stringify(Data)]);
+    setValue("organizationBusinessDatas", get(Data, 'organizationBusiness.organizationBusinessDatas'));
+    setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(Data, 'organizationBusiness.businessPhoto')}`);
+  }, [Data]);
 
   const handleDrag = ({source, destination}) => {
     if (destination) {
@@ -133,13 +156,9 @@ const EditBusinessArea = ({data: Data, onClose}) => {
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{
-          px: 3,
-          mb: '120px',
-          overflow: "hidden",
-          background: style.BG_WHITE,
-          "& ul": {listStyle: 'none'} }}
-        >
+        <FormModalHead title={'Chỉnh sửa Lĩnh vực kinh doanh'} onClose={onClose}/>
+        <div className="edit-container">
+        <Box>
           <Stack>
             <Box>
               <EditUpload
@@ -163,7 +182,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
             </Box>
           </Stack>
           <DragDropContext onDragEnd={handleDrag}>
-            <ul>
+            <ul style={{ listStyle: 'none' }}>
               <Droppable droppableId="organizationBusinessDatas-items">
                 {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -186,11 +205,19 @@ const EditBusinessArea = ({data: Data, onClose}) => {
                                             isRequired
                                             placeholder="Nhập lĩnh vực kinh doanh"
                                             style={{...InputStyle}}
+                                            sx={{
+                                              backgroundColor: '#FDFDFD',
+                                              '& .MuiFormHelperText-root.Mui-error': {
+                                                backgroundColor: '#F2F4F5',
+                                                marginTop: 0,
+                                                paddingTop: 1
+                                              }
+                                            }}
                                         />
                                       </Stack>
                                       <Stack justifyContent="space-between" sx={{mb: 3}}>
                                         <View mb={24}>
-                                          {renderTitle("Mô tả")}
+                                          {renderTitle("Mô tả", true)}
                                           <TextAreaDS
                                               maxLength={150}
                                               placeholder="Nhập nội dung mô tả lĩnh vực kinh doanh..."
@@ -210,41 +237,30 @@ const EditBusinessArea = ({data: Data, onClose}) => {
               </Droppable>
             </ul>
           </DragDropContext>
-          <MuiButton
-              title={"Thêm lĩnh vực kinh doanh"}
-              variant="outlined"
-              disabled={!isValid}
-              onClick={() => {
-                append({...defaultValues});
-              }}
-              startIcon={<PlusIcon/>}
-              sx={{width: '100%'}}
-          />
+          <Box sx={{mt: 3}}>
+            <MuiButton
+                title={"Thêm lĩnh vực kinh doanh"}
+                variant="outlined"
+                onClick={() => {
+                  append({
+                    name: '',
+                    description: ''
+                  });
+                }}
+                startIcon={<PlusIcon/>}
+                sx={{width: '100%'}}
+            />
+          </Box>
         </Box>
-        <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              position: "fixed",
-              bottom: 0,
-              background: "#FDFDFD",
-              width: "100%",
-              padding: "16px 24px",
-              border: "1px solid #EFF3F6",
-              zIndex: 1001,
-            }}
-        >
-          <MuiButton
-              title={"Lưu"}
-              type="submit"
-              loading={isSubmitting}
-          />
-          <MuiButton
-              title={"Hủy"}
-              color={"basic"}
-              onClick={onClose}
-          />
         </div>
+        <FormModalBottom
+            onClose={onClose}
+            loading={isSubmitting}
+            btnConfirm={{
+              title: 'Lưu',
+              type: "submit",
+            }}
+        />
       </FormProvider>
   );
 };

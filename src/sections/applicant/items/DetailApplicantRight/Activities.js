@@ -181,7 +181,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                           action="add"
                           avatarName={p?.updaterName}
                           data={p}
-                          isShow={true}
+                          
                         />
                       ) : (
                         <NotificationBoard
@@ -216,56 +216,47 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                           data={p}
                         />
                       ))}
+                      {p.eventType.includes("CreateApplicantReviewEvent") && (
+                      <NotificationBoard
+                      isShow={true}
+                      icon={iconLogPipe('review',p.recruitmentPipelineStateType)}
+                        title={
+                          <div>
+                            <p>
+                              <span style={{ fontWeight: 600 }}>
+                                {p?.creatorName}
+                              </span>
+                              {" đã đánh giá ứng viên "}
+                              <span style={{ fontWeight: 600 }}>
+                                {dataApplicant?.fullName}
+                              </span>
+                              {" với kết quả "}
+                              <span
+                                  style={{
+                                    fontWeight: 600,
+                                    color:
+                                      p?.recruitmentPipelineStateType == 2 &&
+                                      (p?.applicantReviewResultType == 0
+                                        ? "#388E3C"
+                                        : p?.applicantReviewResultType == 1? "#F77A0C": "#E53935"),
+                                  }}
+                                >
+                                  {PipelineStateType(
+                                    p?.recruitmentPipelineStateType,
+                                    p?.applicantReviewResultType
+                                  )}
+                                </span>
+                            </p>
+                          </div>
+                        }
+                        action="add"
+                        avatarName={p?.creatorName}
+                        data={p}
+                      />
+                    )}
                   </div>
                 );
               })}
-            {/* 
-            <NotificationBoard
-              icon={ICONS.apply}
-              candidate="Ứng viên Đinh Tiến Thành"
-              action="apply"
-            />
-            <NotificationBoard
-              icon={ICONS.ownerApply}
-              candidate="Phạm Xuân Chung đã thêm ứng viên Đinh Tiến Thành vào bước Ứng tuyển."
-              action="ownerApply"
-            />
-            <NotificationBoard
-              icon={ICONS.success}
-              competition="Ứng viên Đinh Tiến Thành đã tự động chuyển sang bước Thi tuyển"
-              action="competition"
-            /> */}
-
-            {/* <NotificationBoard
-              icon={ICONS.success}
-              manager="Phạm Xuân Chung"
-              action="success"
-            />
-            <NotificationBoard
-              icon={ICONS.fail}
-              manager="Phạm Xuân Chung"
-              action="fail"
-            /> */}
-            {/* <NotificationBoard
-              icon={ICONS.consider}
-              manager="Phạm Xuân Chung"
-              action="consider"
-            /> */}
-            {/* <NotificationBoard
-              icon={ICONS.interview}
-              manager="Phạm Xuân Chung"
-              action="interview"
-            />
-            <NotificationBoard
-              icon={ICONS.success}
-              manager="Phạm Xuân Chung"
-              action="success"
-            />
-            <NotificationBoard
-              icon={ICONS.aiInterview}
-              manager="Phạm Xuân Chung"
-              action="interview"
-            /> */}
           </List>
         </Box>
       ) : (
@@ -278,7 +269,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
           <p
             style={{ display: "flex", width: "100%", justifyContent: "center" }}
           >
-            Ứng viên chưa có CV cho tin tuyển dụng này.
+            Danh sách hoạt động tạm ẩn.
           </p>
         </div>
       )}

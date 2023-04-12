@@ -1,6 +1,5 @@
 import EditUpload from "./EditUpload";
 import HelperText from "@/components/BaseComponents/HelperText";
-import MuiButton from "@/components/BaseComponents/MuiButton";
 import RHFTinyEditor from "@/components/editor/RHFTinyEditor";
 import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook-form";
 import { LabelStyle } from "@/components/hook-form/style";
@@ -18,9 +17,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { get, isEmpty } from "lodash";
 import { useSnackbar } from "notistack";
-import { useEffect, useState, memo } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const InputStyle = { width: "100%", minHeight: 40 };
 
@@ -65,24 +66,14 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const ProfileSchema = Yup.object().shape({
     // avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
     // coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-    phoneNumber: Yup.string()
-      .required("Số điện thoại không được bỏ trống")
-      .matches(/(84|840|0)[3|5|7|8|9]+([0-9]{8})\b/, "Số điện thoại không đúng định dạng").nullable(),
-    email: Yup.string()
-      .email("Email không đúng định dạng")
-      .required("Email không được bỏ trống").nullable(),
-    jobCategoryIds: Yup.array()
-      .min(1, "Ngành nghề không được bỏ trống")
-      .max(3, "Chọn tối đa 3 ngành nghê"),
-    organizationSize: Yup.number().required(
-      "Quy mô nhân sự không được bỏ trống"
-    ).nullable(),
-    provinceId: Yup.string().required("Tỉnh/Thành phố không được bỏ trống").nullable(),
-    districtId: Yup.string().required("Quận/Huyện không được bỏ trống").nullable(),
-    address: Yup.string().required("Địa chỉ không được bỏ trống").nullable(),
-    description: Yup.string().required(
-      "Giới thiệu công ty không được bỏ trống"
-    ).nullable(),
+    phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
+    email: Yup.string().nullable().email("Email không đúng định dạng").required("Email không được bỏ trống"),
+    jobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghê"),
+    organizationSize: Yup.number().nullable().required("Quy mô nhân sự không được bỏ trống"),
+    provinceId: Yup.string().nullable().required("Tỉnh/Thành phố không được bỏ trống"),
+    districtId: Yup.string().nullable().required("Quận/Huyện không được bỏ trống"),
+    address: Yup.string().nullable().required("Địa chỉ không được bỏ trống"),
+    description: Yup.string().nullable().required("Giới thiệu công ty không được bỏ trống"),
   });
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
@@ -139,12 +130,8 @@ const FormCompanyInfor = ({ data, onClose }) => {
       try {
         await updateCompanyInfo({
           id: get(data, "organizationInformation.id"),
-          avatar: imageRes
-            ? imageRes?.data
-            : get(data, "organizationInformation.avatar"),
-          coverPhoto: bgRes
-            ? bgRes?.data
-            : get(data, "organizationInformation.coverPhoto"),
+          avatar: imageRes ? imageRes?.data : get(data, "organizationInformation.avatar"),
+          coverPhoto: bgRes ? bgRes?.data : get(data, "organizationInformation.coverPhoto"),
           provinceId: provinceId,
           districtId: districtId,
           address: address,
@@ -169,35 +156,17 @@ const FormCompanyInfor = ({ data, onClose }) => {
 
   useEffect(() => {
     if (!data) return;
-    setImage(
-      `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
-        data,
-        "organizationInformation.avatar"
-      )}`
-    );
-    setBg(
-      `${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
-        data,
-        "organizationInformation.coverPhoto"
-      )}`
-    );
+    setImage(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(data, "organizationInformation.avatar")}`);
+    setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(data, "organizationInformation.coverPhoto")}`);
     setValue("phoneNumber", get(data, "organizationInformation.phoneNumber"));
     setValue("email", get(data, "organizationInformation.email"));
-    setValue(
-      "jobCategoryIds",
-      get(data, "organizationInformation.jobCategories")?.map(
-        (item) => item.jobCategoryId
-      )
-    );
-    setValue(
-      "organizationSize",
-      get(data, "organizationInformation.organizationSize")
-    );
+    setValue("jobCategoryIds", get(data, "organizationInformation.jobCategories")?.map((item) => item.jobCategoryId));
+    setValue("organizationSize", get(data, "organizationInformation.organizationSize"));
     setValue("provinceId", get(data, "organizationInformation.provinceId"));
     setValue("districtId", get(data, "organizationInformation.districtId"));
     setValue("address", get(data, "organizationInformation.address"));
     setValue("description", get(data, "organizationInformation.description"));
-  }, [JSON.stringify(data)]);
+  }, [data]);
 
   useEffect(() => {
     if (get(data, "organizationInformation.avatar") || !isEmpty(imageFile)) {
@@ -207,17 +176,8 @@ const FormCompanyInfor = ({ data, onClose }) => {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        sx={{
-          flex: 1,
-          borderRadius: 8,
-          paddingBottom: 36,
-          overflow: "hidden",
-          background: style.BG_WHITE,
-          padding: 3,
-          mb: 8,
-        }}
-      >
+      <FormModalHead title={'Chỉnh sửa Thông tin công ty'} onClose={onClose}/>
+      <div className="edit-container">
         <Box sx={{ mb: 3 }}>
           <Typography
             sx={{
@@ -226,8 +186,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
               color: style.COLOR_TEXT_BLACK,
             }}
           >
-            {get(data, "name") ||
-              "Tập đoàn Giáo dục và Đào tạo Quốc tế Đại Tây Dương (Atlantic Group)"}
+            {get(data, "name")}
           </Typography>
           <Typography
             sx={{
@@ -237,8 +196,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
               fontWeight: style.FONT_NORMAL,
             }}
           >
-            Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email
-            Support@iviec.com.vn
+            Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email Support@iviec.com.vn
           </Typography>
         </Box>
         <Stack>
@@ -261,8 +219,8 @@ const FormCompanyInfor = ({ data, onClose }) => {
               ref={register("avatar", { required: true })}
               type="avatar"
               style={{
-                width: 120,
-                height: 120,
+                width: 142,
+                height: 142,
                 borderRadius: "50%",
                 backgroundColor: "#EFF3F6",
                 marginTop: "16px",
@@ -401,24 +359,15 @@ const FormCompanyInfor = ({ data, onClose }) => {
             placeholder={"Nhập nội dung giới thiệu công ty..."}
           />
         </Box>
-      </Box>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          marginTop: 12,
-          position: "fixed",
-          bottom: 0,
-          background: "#FDFDFD",
-          width: "100%",
-          padding: "16px 24px",
-          border: "1px solid #EFF3F6",
-          zIndex: 1001,
-        }}
-      >
-        <MuiButton title={"Lưu"} type="submit" loading={isSubmitting} />
-        <MuiButton title={"Hủy"} color={"basic"} onClick={onClose} />
       </div>
+      <FormModalBottom
+          onClose={onClose}
+          loading={isSubmitting}
+          btnConfirm={{
+            title: 'Lưu',
+            type: "submit",
+          }}
+      />
     </FormProvider>
   );
 };
