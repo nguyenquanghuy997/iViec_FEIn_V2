@@ -50,7 +50,6 @@ export const FormCalendar = ({
   item,
   currentApplicantPipelineState,
 }) => {
-
   const { enqueueSnackbar } = useSnackbar();
   const isEditMode = !!data?.id;
   const { data: DetailData = {} } = useGetDetailCalendarsQuery(
@@ -67,14 +66,17 @@ export const FormCalendar = ({
     recruitmentId: Yup.string().required(
       "Chưa nhập tên tiêu đề tin tuyển dụng"
     ),
-    recruitmentPipelineStateId: Yup.string().required(),
+    recruitmentPipelineStateId: Yup.string().required('Chưa nhập hình thức phỏng vấn'),
     interviewType: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .required("Nhập hình thức phỏng vấn"),
-    offlineInterviewAddress: Yup.string().nullable(),
+    offlineInterviewAddress: Yup.string().nullable().when("interviewType", {
+      is: (interviewType) => interviewType === 1,
+      then: Yup.string().required('Chưa nhập địa điểm phỏng vấn')
+    }),
     note: Yup.string().nullable(),
     councilIds: Yup.array().required(),
-    reviewFormId: Yup.string().required(),
+    reviewFormId: Yup.string().required('Chưa nhập mẫu đánh giá'),
     isSendMailCouncil: Yup.bool(),
     isSendMailApplicant: Yup.bool(),
     applicantIdArray: Yup.array()
@@ -109,9 +111,9 @@ export const FormCalendar = ({
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting,errors },
+    formState: { isSubmitting, errors },
   } = methods;
-  
+
   useEffect(() => {
     if (!DetailData?.id) return;
     setValue("id", DetailData.id);
@@ -131,7 +133,7 @@ export const FormCalendar = ({
     setValue("isSendMailCouncil", DetailData.isSendMailCouncil ?? undefined);
     setValue("isSendMailApplicant", DetailData.isSendMailApplicant ?? undefined);
     setValue("bookingCalendarGroups", convertDataGet(DetailData.bookingCalendarGroups) ?? undefined);
-    
+
     let arrayApplicant = [];
     DetailData.bookingCalendarGroups.forEach((item) => {
       item?.bookingCalendarApplicants.forEach((itemData) => {
@@ -139,7 +141,7 @@ export const FormCalendar = ({
       });
     });
     setValue("applicantIdArray", arrayApplicant);
-    
+
     let arrayCouncil = [];
     DetailData.bookingCalendarCouncils.forEach((item) => {
       arrayCouncil.push(item.id);
@@ -329,12 +331,12 @@ export const FormCalendar = ({
                       error={errors}
                     />
                   </Grid>
-                  <Divider orientation="vertical"/>
+                  <Divider orientation="vertical" />
                   <Grid sx={{
                     minWidth: "400px",
                     overflowY: "auto"
                   }}>
-                    <InterviewCouncil/>
+                    <InterviewCouncil />
                   </Grid>
                 </Grid>
               </View>

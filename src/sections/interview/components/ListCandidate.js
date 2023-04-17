@@ -1,17 +1,18 @@
 import RHFSelectMultiple from "./RHFSelectMultiple";
 import { Label } from "@/components/hook-form/style";
+import { DOMAIN_SERVER_API } from "@/config";
 import { useGetApplicantByPipeLineQuery } from "@/sections/interview/InterviewSlice";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ option,detailCandidate, applicantId,error }) => {
+const ListCandidate = ({ option, detailCandidate, applicantId, error }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
   const { data: { items: dataApplicant = [] } = {} } = useGetApplicantByPipeLineQuery(
-    {RecruitmentPipelineStateId: watch("recruitmentPipelineStateId")},
-    {skip: !watch("recruitmentPipelineStateId")}
+    { RecruitmentPipelineStateId: watch("recruitmentPipelineStateId") },
+    { skip: !watch("recruitmentPipelineStateId") }
   );
 
 
@@ -35,7 +36,7 @@ const ListCandidate = ({ option,detailCandidate, applicantId,error }) => {
         </Typography>
       </Label>
 
-      
+
       <RHFSelectMultiple
         options={dataApplicant?.map((i) => ({
           id: i.id,
@@ -43,7 +44,7 @@ const ListCandidate = ({ option,detailCandidate, applicantId,error }) => {
           label: i.fullName,
           phone: i.phoneNumber,
           name: i.fullName,
-          image: `http://103.176.149.158:5001/api/Image/GetImage?imagePath=${i?.portraitImage}`,
+          image:`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${i?.portraitImage}`,
         }))}
         name={'applicantIdArray'}
         fullWidth
@@ -55,7 +56,7 @@ const ListCandidate = ({ option,detailCandidate, applicantId,error }) => {
         isRequired
         open={open}
       />
-    
+
     </Box>
   );
 };
