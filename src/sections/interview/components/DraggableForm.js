@@ -1,4 +1,4 @@
-import { Box, Button, Card, Collapse, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, Collapse, Typography } from "@mui/material";
 import MenuListIcon from "@/assets/interview/MenuListIcon";
 import { DeleteIcon } from "@/assets/ActionIcon";
 import { Label } from "@/components/hook-form/style";
@@ -82,7 +82,7 @@ function DraggableForm({model, index, removeItem}) {
               >
                 <MenuListIcon/>
                 <Box sx={{display: "flex", ml: 1}}>
-                  <img
+                  <Avatar
                     alt={""}
                     style={{
                       width: 40,
