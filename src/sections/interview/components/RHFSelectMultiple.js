@@ -11,7 +11,7 @@ import {
 } from "@/components/hook-form/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { containsText } from "@/utils/function";
-import { Box, Button, FormHelperText, InputAdornment, MenuItem, Stack, Typography, } from "@mui/material";
+import { Avatar, Box, Button, FormHelperText, InputAdornment, MenuItem, Stack, Typography, } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -38,7 +38,7 @@ const renderOptions = (options) => {
     return (
       <MenuItem sx={{ ...MenuItemStyle }} key={i} value={variant.value}>
         <Box sx={{ display: "flex" }}>
-          <img
+          <Avatar
             alt={""}
             style={{
               width: 36,
