@@ -8,11 +8,14 @@ import SettingLayout from "@/layouts/setting";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import {
+  useCreateQuestionGroupMutation,
   useLazyGetQuestionGroupQuery,
   useRemoveQuestionGroupMutation,
   useUpdateActiveQuestionGroupMutation,
+  useUpdateQuestionGroupMutation,
 } from "@/sections/exam/ExamSlice";
 import QuestionGalleryBottomNav from "@/sections/exam/components/QuestionGalleryBottomNav";
+import { QuestionGalleryFormModal } from "@/sections/exam/components/QuestionGalleryFormModal";
 import QuestionGalleryHeader from "@/sections/exam/components/QuestionGalleryHeader";
 import QuestionGalleryItem from "@/sections/exam/components/QuestionGalleryItem";
 import { CircularProgress } from "@mui/material";
@@ -31,6 +34,7 @@ export default function Setting() {
   // state
   const [currentItem, setCurrentItem] = useState(null);
   const [listSelected, setListSelected] = useState([]);
+  const [showFrom, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showConfirmSwitchActive, setShowConfirmSwitchActive] = useState(false);
 
@@ -38,15 +42,23 @@ export default function Setting() {
   const [getQuestionGroup, { isLoading, data: { items = [] } = {} }] =
     useLazyGetQuestionGroupQuery();
   const list = Array.isArray(items) ? items : [];
+  const [createQuestionGroup] = useCreateQuestionGroupMutation();
+  const [updateQuestionGroup] = useUpdateQuestionGroupMutation();
   const [updateActiveQuestionGroup] = useUpdateActiveQuestionGroupMutation();
   const [removeQuestionGroup] = useRemoveQuestionGroupMutation();
 
   // variable
   const isMulti = !currentItem && !!listSelected.length;
-  const { name = "", isActive } =
-    (isMulti
-      ? { ...list.find((i) => i.id === listSelected[0]), name: "" }
-      : currentItem) || {};
+  const {
+    id,
+    name = "",
+    description,
+    isActive,
+  } = (isMulti
+    ? { ...list.find((i) => i.id === listSelected[0]) }
+    : currentItem) || {};
+
+  const _name = isMulti ? "" : name;
 
   // form
   const methods = useForm({
@@ -58,6 +70,15 @@ export default function Setting() {
   const searchKey = useDebounce(methods.watch("searchKey"), 500);
 
   // callback
+  const onSubmitForm = async (e) => {
+    const body = {
+      ...e,
+      description: e.des,
+    };
+    await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body));
+    onHandleFinish();
+  };
+
   const onCloseConfirmDelete = () => {
     setCurrentItem(null);
     setShowConfirmDelete(false);
@@ -108,6 +129,7 @@ export default function Setting() {
         isSelected={isSelected}
         pressCheckbox={pressCheckbox}
         setCurrentItem={setCurrentItem}
+        setShowForm={setShowForm}
         setShowConfirmDelete={setShowConfirmDelete}
         setShowConfirmSwitchActive={setShowConfirmSwitchActive}
       />
@@ -118,6 +140,11 @@ export default function Setting() {
   useEffect(() => {
     getQuestionGroup({ searchKey });
   }, [searchKey]);
+
+  useEffect(() => {
+    if (showFrom) return;
+    setCurrentItem(null);
+  }, [showFrom]);
 
   return (
     <PageWrapper title={"Kho đề thi doanh nghiệp"}>
@@ -130,6 +157,7 @@ export default function Setting() {
         <QuestionGalleryHeader
           methods={methods}
           handleSubmit={methods.handleSubmit}
+          pressAddQuestionGallery={() => setShowForm(true)}
         />
 
         <View flex1>
@@ -155,6 +183,7 @@ export default function Setting() {
           list={list}
           listSelected={listSelected}
           setListSelected={setListSelected}
+          setShowForm={setShowForm}
           setShowConfirmDelete={setShowConfirmDelete}
           setShowConfirmSwitchActive={setShowConfirmSwitchActive}
         />
@@ -162,7 +191,7 @@ export default function Setting() {
         <ConfirmModal
           confirmDelete={showConfirmDelete}
           title="Xác nhận xóa nhóm câu hỏi"
-          subtitle={`Bạn có chắc chắn muốn xóa nhóm câu hỏi ${name}`.trim()}
+          subtitle={`Bạn có chắc chắn muốn xóa nhóm câu hỏi ${_name}`.trim()}
           onSubmit={handleDelete}
           onCloseConfirmDelete={onCloseConfirmDelete}
         />
@@ -177,12 +206,21 @@ export default function Setting() {
           }
           subtitle={
             isActive
-              ? `Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi ${name}`.trim()
-              : `Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi ${name}`.trim()
+              ? `Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi ${_name}`.trim()
+              : `Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi ${_name}`.trim()
           }
           onSubmit={handleActive}
           onCloseActiveModal={onCloseActiveModal}
         />
+
+        {showFrom && (
+          <QuestionGalleryFormModal
+            show={showFrom}
+            editData={{ id, name, description, isActive }}
+            setShow={setShowForm}
+            onSubmit={onSubmitForm}
+          />
+        )}
       </Page>
     </PageWrapper>
   );
