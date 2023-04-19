@@ -141,11 +141,12 @@ export const API_GET_RECRUITMENT_BY_SLUG = "/recruitment/Recruitment/GetRecruitm
 export const API_GET_LIST_RECRUITMENT = "/recruitment/Recruitment/GetRecruitments"; // get all recruitment
 export const API_GET_RECRUITMENT_BY_ORGANIZATION = "/recruitment/Recruitment/GetRecruitmentByOrganizationId" // new - get recruitment by organization
 export const API_CREATE_RECRUITMENT = "/recruitment/Recruitment/CreateRecruitment" // new - create recruitment
-export const API_UPDATE_RECRUITMENT_OFFICIAL = "/recruitment/Recruitment/UpdateRecruitment" // new - update recruitment official
+export const API_UPDATE_RECRUITMENT = "/recruitment/Recruitment/UpdateRecruitment" // new - update recruitment official
 export const API_UPDATE_RECRUITMENT_DRAFT = "/recruitment/Recruitment/SetRecruitmentDraftOrOfficial" // new - update recruitment draft
 export const API_CREATE_APPLICANT_RECRUITMENT = "/applicant/ApplicantRecruitment/CreateApplicantRecruitment"
 export const API_GET_COLUMN_RECRUITMENT = "/aggregator/RecruitmentVisible/GetRecruitmentVisible";
 export const API_UPDATE_COLUMN_RECRUITMENT = "/aggregator/RecruitmentVisible/UpdateARecruitmentVisible";
+export const API_GET_RECRUITMENT_PERSON_IN_CHARGE_IDS = "/recruitment/Recruitment/GetRecruitmentPersonInChargeIds";
 
 // duyệt tin
 export const API_GET_INTERNAL_GET_WAITING_APPROVAL_RECRUITMANT = "/recruitment/Recruitment/InternalGetWaitingApprovalRecruitments"; // list tin cần iviec duyệt

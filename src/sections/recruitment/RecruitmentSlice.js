@@ -4,7 +4,6 @@ import {
   API_GET_LIST_RECRUITMENT,
   API_GET_RECRUITMENT_BY_ID,
   API_UPDATE_RECRUITMENT_DRAFT,
-  API_UPDATE_RECRUITMENT_OFFICIAL,
   API_CREATE_APPLICANT_RECRUITMENT,
   API_CLOSE_RECRUITMENT,
   API_REMOVE_RECRUITMENT,
@@ -14,6 +13,7 @@ import {
   API_GET_APPLICANT_RECRUITMENT,
   API_UPLOAD_FILE_APPLICANTS,
   API_UPLOAD_FILE_APPLICANT_RECRUITMENT,
+  API_UPDATE_RECRUITMENT,
 } from "@/routes/api";
 import { toRequestFilterData } from "@/utils/helper";
 
@@ -37,7 +37,6 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
           data: toRequestFilterData(reqData),
         };
       },
-
       providesTags: [{ type: "RECRUITMENT", id: "LIST" }],
     }),
     getRecruitmentById: builder.query({
@@ -74,9 +73,10 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         data,
       }),
     }),
-    updateRecruitmentOfficial: builder.mutation({
+    //Sửa tin tuyển dụng
+    updateRecruitment: builder.mutation({
       query: (data) => ({
-        url: `${API_UPDATE_RECRUITMENT_OFFICIAL}/${data?.id}`,
+        url: `${API_UPDATE_RECRUITMENT}/${data?.id}`,
         method: "PATCH",
         data,
       }),
@@ -91,8 +91,7 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "RECRUITMENT", id: arg.Id },
+      invalidatesTags: () => [
         { type: "RECRUITMENT", id: "LIST" },
       ],
     }),
@@ -164,7 +163,6 @@ export const {
   useCreateApplicantRecruitmentMutation,
   useGetRecruitmentsQuery,
   useCreateRecruitmentMutation,
-  useUpdateRecruitmentOfficialMutation,
   useUpdateRecruitmentDraftMutation,
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,

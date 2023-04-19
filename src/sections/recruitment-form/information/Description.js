@@ -15,13 +15,12 @@ import {BoxInnerStyle} from "@/sections/recruitment-form/style";
 import {LabelStyle} from "@/components/hook-form/style";
 
 
-const Description = () => {
+const Description = ({recruitment: Recruitment}) => {
 
     const { setValue } = useFormContext();
     const jobPositionId = useWatch({name: 'jobPositionId'});
     const {data: JobPosition = {}} = useGetJobPositionByIdQuery({Id: jobPositionId}, {skip: !jobPositionId})
     const {data: { items: ListJobPosition = []} = {}} = useGetAllJobTypeQuery();
-
     useEffect(() => {
         if (!isEmpty(JobPosition)) {
             setValue('description', JobPosition?.description)
@@ -29,7 +28,13 @@ const Description = () => {
             setValue('benefit', JobPosition?.benefit)
         }
     }, [JobPosition])
-  
+    useEffect(() => {
+        if (!isEmpty(Recruitment)) {
+            setValue('description', Recruitment?.description)
+            setValue('requirement', Recruitment?.requirement)
+            setValue('benefit', Recruitment?.benefit)
+        }
+    }, [])
     return (
         <BoxInnerStyle>
             <DividerCard title="MÔ TẢ CÔNG VIỆC"/>
