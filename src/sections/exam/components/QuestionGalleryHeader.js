@@ -3,7 +3,12 @@ import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonAddStyle } from "@/sections/emailform/style";
 import { Box, InputAdornment, Stack } from "@mui/material";
 
-export default ({ methods, onSubmit, handleSubmit }) => {
+export default ({
+  methods,
+  onSubmit,
+  handleSubmit,
+  pressAddQuestionGallery,
+}) => {
   return (
     <>
       <Box
@@ -45,6 +50,7 @@ export default ({ methods, onSubmit, handleSubmit }) => {
           <ButtonAddStyle
             className="button-add"
             startIcon={<Iconify icon="material-symbols:add" />}
+            onClick={pressAddQuestionGallery}
           >
             Thêm nhóm câu hỏi
           </ButtonAddStyle>

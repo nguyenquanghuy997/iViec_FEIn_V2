@@ -15,6 +15,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
+const __DEV__ = process.env.NODE_ENV === 'development';
+
 export default function LoginForm() {
     const {login} = useAuth();
     const {enqueueSnackbar} = useSnackbar();
@@ -29,8 +31,8 @@ export default function LoginForm() {
     });
 
     const defaultValues = {
-        email: "",
-        password: "",
+        email: __DEV__ ? "thuybon1@gmail.com" : "",
+        password: __DEV__ ? "123123" : "",
         remember: true,
     };
     

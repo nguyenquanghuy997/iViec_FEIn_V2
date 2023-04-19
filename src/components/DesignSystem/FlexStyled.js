@@ -33,9 +33,9 @@ const StyledProps = {
   jcend: PropTypes.any,
   jcaround: PropTypes.any,
   jcbetween: PropTypes.any,
-  asstart: PropTypes.any,
-  ascenter: PropTypes.any,
-  asend: PropTypes.any,
+  asStart: PropTypes.any,
+  asCenter: PropTypes.any,
+  asEnd: PropTypes.any,
   atstart: PropTypes.any,
   atcenter: PropTypes.any,
   atend: PropTypes.any,
@@ -145,7 +145,6 @@ const getJCStyle = (props) => {
 };
 
 const getStyle = (props) => ({
-
   display: "flex",
   flex: props.flex ? 1 : undefined,
   flexWrap: props.flexwrap ? "wrap" : undefined,
@@ -181,7 +180,7 @@ const getStyle = (props) => ({
   paddingLeft: props.p || props.ph || props.pl,
   paddingRight: props.p || props.ph || props.pr,
   //
-  
+
   ...(props.absolutefill
     ? {
         top: props.t || 0,
@@ -193,7 +192,7 @@ const getStyle = (props) => ({
     : {}),
   //
   cursor: props.onclick ? "pointer" : undefined,
- 
+
   //
   ...props.style,
 });
@@ -223,7 +222,7 @@ const getTextStyle = (props) => {
   };
 };
 const useStyles = makeStyles(() => ({
-scroll: {
+  scroll: {
     "&::-webkit-scrollbar": {
       width: "6px",
       marginRight: "3px",
@@ -239,7 +238,12 @@ scroll: {
 export const View = (props) => {
   const classes = useStyles();
   return (
-    <div {...props} className={classes.scroll} style={{ ...getStyle(props)}} onClick={props.onclick}>
+    <div
+      {...props}
+      className={classes.scroll}
+      style={{ ...getStyle(props) }}
+      onClick={props.onclick}
+    >
       {props.children}
     </div>
   );

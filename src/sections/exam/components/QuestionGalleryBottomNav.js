@@ -18,6 +18,7 @@ export default ({
   list,
   listSelected,
   setListSelected,
+  setShowForm,
   setShowConfirmDelete,
   setShowConfirmSwitchActive,
 }) => {
@@ -80,7 +81,7 @@ export default ({
                 <IconButton
                   size="small"
                   sx={{ color: "#8A94A5", mx: 1 }}
-                  onClick={() => {}}
+                  onClick={() => setShowForm(true)}
                 >
                   <EditIcon />
                 </IconButton>

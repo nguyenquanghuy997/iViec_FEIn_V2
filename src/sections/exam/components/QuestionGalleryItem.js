@@ -17,6 +17,7 @@ export default ({
   isSelected,
   pressCheckbox,
   setCurrentItem,
+  setShowForm,
   setShowConfirmDelete,
   setShowConfirmSwitchActive,
 }) => {
@@ -39,10 +40,12 @@ export default ({
 
   const pressView = () => {
     setCurrentItem(data);
+    setShowForm(true);
   };
 
   const pressEdit = () => {
     setCurrentItem(data);
+    setShowForm(true);
   };
 
   const pressDelete = () => {

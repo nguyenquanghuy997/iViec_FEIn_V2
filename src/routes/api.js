@@ -197,5 +197,7 @@ export const API_GET_EXAMINATION_BY_ID = "/examination/Examination/GetExaminatio
 
 // QuestionGroup
 export const API_GET_QUESTION_GROUP = "/examination/QuestionGroup/GetQuestionGroups";
+export const API_CREATE_QUESTION_GROUP = "/examination/QuestionGroup/CreateQuestionGroup";
+export const API_UPDATE_QUESTION_GROUP = "/examination/QuestionGroup/UpdateQuestionGroup";
 export const API_UPDATE_ACTIVE_QUESTION_GROUP = "/examination/QuestionGroup/UpdateActiveQuestionGroups";
 export const API_REMOVE_QUESTION_GROUP = "/examination/QuestionGroup/RemoveQuestionGroups";
