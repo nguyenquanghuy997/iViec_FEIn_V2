@@ -61,6 +61,37 @@ export const getWorkingFormName = (workingForm) => {
   return 'Khác';
 }
 
+export const getYearOfExperience = (year) => {
+  let value = undefined;
+  switch (true) {
+    case 0:
+      value = 0;
+      break;
+    case year < 1:
+      value = 1;
+      break;
+    case year >= 1 && year < 2:
+      value = 2;
+      break;
+    case year >= 2 && year < 3:
+      value = 3;
+      break;
+    case year >= 3 && year < 5:
+      value = 4;
+      break;
+    case year >= 5 && year < 7:
+      value = 5;
+      break;
+    case year >= 7 && year < 10:
+      value = 6;
+      break;
+    case year >= 10:
+      value = 7;
+      break;
+  }
+  return value
+}
+
 export const getWorkingFormNames = (aryWorkingForms = []) => {
   return aryWorkingForms.map(wf => getWorkingFormName(wf.workingForm)).join(', ');
 }
@@ -72,27 +103,26 @@ export const setValueFieldScan = (setValue, objectScan) => {
   setValue("livingAddress.address", undefined);
   setValue("experience", undefined);
   setValue("education", undefined);
+  setValue("weight", undefined);
+  setValue("height", undefined);
+  setValue("education", undefined);
+  setValue("sex", undefined);
+  setValue("identityNumber", undefined);
+  setValue("yearOfExperience", undefined);
+  setValue("rawApplicantSkills", undefined);
   
-  if (objectScan.personalInformation) {
-    setValue("fullName", objectScan.personalInformation.fullName);
-    setValue("email", objectScan.personalInformation.email);
-    setValue("phoneNumber", objectScan.personalInformation.phoneNumber);
-    setValue("livingAddress.address", objectScan.personalInformation.address);
-  }
-  
-  if (objectScan.experience && objectScan.experience.length > 0) {
-    let addressInfo = "";
-    objectScan.experience.forEach(item => {
-      addressInfo += "- " + item.date + (item.jobTitle ? ", làm " + item.jobTitle : "") + (item.employer ? ", ở " + item.employer : "") + (item.address ? ", tại " + item.address : "") + "\n"
-    });
-    setValue("experience", addressInfo);
-  }
-  
-  if (objectScan.education && objectScan.education.length > 0) {
-    let educationInfo = "";
-    objectScan.education.forEach(item => {
-      educationInfo += "- " + item.graduationDate + (item.institution ? ", học " + item.institution : "") + (item.accreditation ? ", " + item.accreditation : "") + (item.grade ? ", " + item.grade : "") + "\n"
-    });
-    setValue("education", educationInfo);
+  if (objectScan) {
+    setValue("fullName", objectScan.fullName);
+    setValue("email", objectScan.email);
+    setValue("phoneNumber", objectScan.phoneNumber);
+    setValue("livingAddress.address", objectScan.homeTower);
+    setValue("experience", objectScan.experience);
+    setValue("education", objectScan.education);
+    setValue("weight", objectScan.weight);
+    setValue("height", objectScan.height);
+    setValue("identityNumber", objectScan.identityNumber);
+    setValue("rawApplicantSkills", objectScan.rawApplicantSkills);
+    setValue("yearOfExperience", objectScan.yearOfExperience ? getYearOfExperience(objectScan.yearOfExperience) : "");
+    setValue("sex", objectScan.sex && objectScan.sex === "Nữ" ? 1 : 0);
   }
 };
