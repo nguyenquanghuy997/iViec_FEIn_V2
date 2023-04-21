@@ -12,7 +12,7 @@ const MuiButton = ({title, type, variant, size, color, startIcon, endIcon, sx, l
         contrastText: style.COLOR_WHITE,
       },
       default: {
-        main: "#F3F4F6",
+        main: "#F2F4F5",
         darker: '#053e85',
         contrastText: style.COLOR_TEXT_PRIMARY,
       },
@@ -36,6 +36,10 @@ const MuiButton = ({title, type, variant, size, color, startIcon, endIcon, sx, l
         main: "#FBBD2B",
         contrastText: style.COLOR_WHITE,
       },
+      dark: {
+        main: "#455570",
+        contrastText: style.COLOR_WHITE,
+      },
     },
   });
 
@@ -51,6 +55,10 @@ const MuiButton = ({title, type, variant, size, color, startIcon, endIcon, sx, l
     fontSize: style.FONT_SM,
     fontWeight: style.FONT_MEDIUM,
     boxShadow: 'none',
+    "&.MuiLoadingButton-loading": {
+      color: 'rgba(0, 0, 0, 0.26)',
+      backgroundColor: 'rgba(0, 0, 0, 0.12)',
+    },
     "&:hover": {
       backgroundColor: {theme},
       boxShadow: "none",
@@ -76,7 +84,7 @@ const MuiButton = ({title, type, variant, size, color, startIcon, endIcon, sx, l
             sx={{...sxProps}}
             {...props}
         >
-          {title}
+          <span>{title}</span>
         </LoadingButton>
       </ThemeProvider>
   )

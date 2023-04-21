@@ -1,11 +1,13 @@
-import React from "react";
 import {get, isEmpty} from 'lodash'
-import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
-import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
-import Iconify from "@/components/Iconify";
+import {Box, CircularProgress, Drawer, IconButton, Typography, useTheme} from "@mui/material";
 import {useGetOrganizationByIdQuery} from "@/sections/organization/OrganizationSlice";
 import {useRouter} from "next/router";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {FaRegTrashAlt} from "react-icons/fa";
+import {RiArrowRightLine} from "react-icons/ri";
 
 const renderInfoOrganization = (key, value) => {
   return (
@@ -18,7 +20,8 @@ const renderInfoOrganization = (key, value) => {
 
 const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParentNode, onOpenForm, setActionType}) => {
   const router = useRouter();
-  const {data: organization} = useGetOrganizationByIdQuery({
+  const theme = useTheme();
+  const {data: organization, isLoading} = useGetOrganizationByIdQuery({
     OrganizationId: nodes?.id
   }, {skip: !nodes?.id});
 
@@ -46,62 +49,71 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
             onClose={onClose}
             anchor="right"
             PaperProps={{
-              sx: {
-                width: {xs: 1, sm: 560, md: 600},
-                boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-              },
+              sx: drawerPaperStyle({...theme, width: 600}),
+            }}
+            componentsProps={{
+              backdrop: {
+                sx: {
+                  background: 'transparent !important',
+                  boxShadow: 'none !important'
+                }
+              }
             }}
         >
-          <OrganizationFromHeadStyle className="organization-form-head">
-            <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
-              Xem chi tiết đơn vị
-            </Typography>
-            <IconButton size="small" onClick={onClose}><Iconify icon="ic:baseline-close"/></IconButton>
-          </OrganizationFromHeadStyle>
-          <Divider/>
-          <Box sx={{py: 2, px: 2, mt: 8}}>
-            <Typography sx={{fontSize: 24, fontWeight: 700, color: '#455570'}}>
-              {get(organization, 'name') && get(organization, 'name')}
-            </Typography>
-            {renderInfoOrganization('Mã đơn vị', get(organization, 'code') && get(organization, 'code'))}
-            {renderInfoOrganization('Email', get(organization, 'email') && get(organization, 'email'))}
-            {renderInfoOrganization('Số điện thoại', get(organization, 'phoneNumber') && get(organization, 'phoneNumber'))}
-            {renderInfoOrganization('Địa chỉ',
-                `${!isEmpty(get(organization, 'address')) ? `${get(organization, 'address')}, ` : ''}` +
-                `${!isEmpty(get(organization, 'districtName')) ? `${get(organization, 'districtName')}, ` : ''}` +
-                `${!isEmpty(get(organization, 'provinceName')) ? `${get(organization, 'provinceName')}` : ''}`
-              )}
-            {renderInfoOrganization('Trực thuộc', get(organization, 'parentOrganizationName') && get(organization, 'parentOrganizationName'))}
-            {renderInfoOrganization('Đơn vị trực thuộc', get(organization, 'subsidiaryNames')?.map((sub, index, arr) => index < arr.length - 1 ? `${sub}, ` : `${sub}`))}
-            <MuiButton
-              title={"Danh sách người dùng"}
-              onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
-              endIcon={<Iconify icon='material-symbols:arrow-right'/>}
-              sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
+            <FormModalHead
+                title={'Xem chi tiết đơn vị'}
+                onClose={onClose}
             />
-          </Box>
-          <OrganizationFromFooterStyle className="organization-form-footer">
-            <Stack flexDirection="row">
-              <MuiButton
-                  type="button"
-                  title="Chỉnh sửa"
-                  onClick={() => handleOpenFormWithCurrentNode(organization)}
-                  sx={{ px: 2, py: 1, minWidth: 24 }}
-              />
-              <MuiButton
-                  title={"Đóng"}
-                  onClick={onClose}
-                  color={"basic"}
-                  sx={{ color: '#455570', fontWeight: 600, ml: 1 }}
-              />
-            </Stack>
-            <IconButton>
-              <Iconify icon="ci:trash-full" onClick={() => handleShowDelete(organization)} />
-            </IconButton>
-          </OrganizationFromFooterStyle>
+          {
+            isLoading ? (
+                <>
+                  <Box textAlign="center" my={1}>
+                    <CircularProgress size={18} />
+                  </Box>
+                </>
+            ) : (
+                <div className="edit-container">
+                    <Box>
+                        <Typography sx={{fontSize: 24, fontWeight: 700, color: '#455570'}}>
+                            {get(organization, 'name') && get(organization, 'name')}
+                        </Typography>
+                        {renderInfoOrganization('Mã đơn vị', get(organization, 'code') && get(organization, 'code'))}
+                        {renderInfoOrganization('Email', get(organization, 'email') && get(organization, 'email'))}
+                        {renderInfoOrganization('Số điện thoại', get(organization, 'phoneNumber') && get(organization, 'phoneNumber'))}
+                        {renderInfoOrganization('Địa chỉ',
+                            `${!isEmpty(get(organization, 'address')) ? `${get(organization, 'address')}, ` : ''}` +
+                            `${!isEmpty(get(organization, 'districtName')) ? `${get(organization, 'districtName')}, ` : ''}` +
+                            `${!isEmpty(get(organization, 'provinceName')) ? `${get(organization, 'provinceName')}` : ''}`
+                        )}
+                        {renderInfoOrganization('Trực thuộc', get(organization, 'parentOrganizationName') && get(organization, 'parentOrganizationName'))}
+                        {renderInfoOrganization('Đơn vị trực thuộc', get(organization, 'subsidiaryNames')?.map((sub, index, arr) => index < arr.length - 1 ? `${sub}, ` : `${sub}`))}
+                        <Box sx={{pt: 1}}>
+                            <MuiButton
+                                title={"Danh sách người dùng"}
+                                onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
+                                endIcon={<RiArrowRightLine color={'#FFF'}/>}
+                                sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
+                            />
+                        </Box>
+                    </Box>
+                </div>
+            )
+          }
+            <FormModalBottom
+                onClose={onClose}
+                onSubmit={() => handleOpenFormWithCurrentNode(organization)}
+                btnConfirm={{
+                    title: 'Chỉnh sửa'
+                }}
+                otherAction={<>
+                    <IconButton onClick={() => handleShowDelete(organization)}>
+                        <FaRegTrashAlt />
+                    </IconButton>
+                </>}
+            />
         </Drawer>
       </>
   )
 }
 
-export default React.memo(OrganizationPreview);
+export default OrganizationPreview;

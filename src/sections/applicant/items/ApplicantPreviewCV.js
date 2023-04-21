@@ -7,8 +7,8 @@ import { Grid, Box } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import React, { useState } from "react";
 
-export const ApplicantPreviewCV = ({data}) => {
-  const [value, setValue] = useState("2");
+export const ApplicantPreviewCV = ({data, dataLog}) => {
+  const [value, setValue] = useState("1");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -51,7 +51,7 @@ export const ApplicantPreviewCV = ({data}) => {
               <Tab label="Thông tin ứng viên" value="2" />
             </TabList>
           </Box>
-          <TabPanel value="1"><ApplicantCV /></TabPanel>
+          <TabPanel value="1"><ApplicantCV dataLog={dataLog}/></TabPanel>
           <TabPanel value="2">
             <ApplicantInfo data={data} />
           </TabPanel>

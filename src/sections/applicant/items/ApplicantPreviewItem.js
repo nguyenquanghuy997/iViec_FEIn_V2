@@ -1,34 +1,69 @@
-//import { RejectApplicantModal } from "../modals";
 import {
-  useGetApplicantCurrentStateWithRecruitmentStatesMutation,
-  useGetApplicantRecruitmentMutation,
+  useGetApplicantByIdQuery,
+  useGetApplicantCurrentStateWithRecruitmentStatesQuery,
+  useGetApplicantRecruitmentQuery,
+  useGetApplicantReviewFormQuery,
+  useGetCheckReviewQuery,
   useGetRecruitmentsByApplicantQuery,
 } from "../ApplicantFormSlice";
-import {PipelineApplicant} from "../others";
-import {ApplicantPreviewCV} from "./ApplicantPreviewCV";
-import {ApplicantPreviewLog} from "./ApplicantPreviewLog";
-import {AvatarDS, ButtonDS, NavGoBack, SelectAutoCompleteDS,} from "@/components/DesignSystem";
+import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
+import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
+import { RejectApplicantModal } from "../modals/RejectApplicantModal";
+import { PipelineApplicant } from "../others";
+import { ApplicantPreviewCV } from "./ApplicantPreviewCV";
+import { ApplicantPreviewLog } from "./ApplicantPreviewLog";
+import {
+  AvatarDS,
+  ButtonDS,
+  NavGoBack,
+  SelectAutoCompleteDS,
+} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
+import { HEADER } from "@/config";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
-import {PATH_DASHBOARD} from "@/routes/paths";
-import {Box, Card, CardContent, Container, Divider, Grid, Stack, Typography,} from "@mui/material";
-import {styled} from "@mui/styles";
-import React, {useEffect, useState} from "react";
-import {HEADER} from "@/config";
-import {RejectApplicantModal} from "../modals";
+import { PATH_DASHBOARD } from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
+import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
+import { ButtonIcon } from "@/utils/cssStyles";
+import { srcImage } from "@/utils/enum";
+import {
+  Box,
+  Card,
+  CardContent,
+  Container,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/styles";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
-function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
-  const {data: {items: options = []} = {}, isFetching} =
+function ApplicantPreviewItem() {
+  const router = useRouter();
+  const ApplicantId = router.query.applicantId
+    ? router.query.applicantId
+    : router.query.slug;
+  const ApplicantCorrelationId = router.query.correlationId;
+  const OrganizationId = router.query.organizationId;
+  const RecruitmentId = router.query.recruitmentId;
+
+  const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
-      ApplicantId,
+      ApplicantCorrelationId: ApplicantCorrelationId,
       OrganizationId,
     });
 
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
+  const [isOpenReview, setIsOpenReview] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [showModelCreate, setShowModelCreate] = useState(false);
+  const [modelApplication, setModelApplication] = useState(undefined);
 
-  const HearderApplicant = () => {
+  const HeaderApplicant = () => {
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
         <Grid
@@ -45,11 +80,25 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
           }}
         >
           <AvatarDS
-            sx={{height: "60px", width: "60px", borderRadius: "14px"}}
-            src={
-              "https://freedesignfile.com/upload/2016/03/Abstract-geometric-petals-vector-graphic-03.jpg"
-            }
+            sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
+            name={data?.fullName}
+            src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
           ></AvatarDS>
+          {/* <BoxFlex
+                color={
+                  mediumScore.toFixed(2) < 4.9
+                    ? "#E53935"
+                    : mediumScore.toFixed(2) < 6.9
+                    ? "#F77A0C"
+                    : "#388E3C"
+                }
+              >
+                <span style={{ fontSize: "15px", fontWeight: 600 }}>
+                  Trung bình
+                </span>
+                
+              </BoxFlex> */}
+
           <Box pl={1}>
             <Typography
               display="flex"
@@ -58,17 +107,25 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
               alignItems="center"
             >
               {data?.fullName}
-              <Iconify
-                icon={"ri:edit-2-fill"}
-                width={20}
-                height={20}
-                color="#8A94A5"
-                ml={1}
+
+              <ButtonIcon
+                sx={{
+                  marginLeft: 0.5,
+                }}
+                onClick={() => handleOpenEditForm()}
+                icon={
+                  <Iconify
+                    icon={"ri:edit-2-fill"}
+                    width={20}
+                    height={20}
+                    color="#8A94A5"
+                  />
+                }
               />
             </Typography>
             <Stack
               direction="row"
-              divider={<Divider orientation="vertical" flexItem/>}
+              divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
               color="#172B4D"
             >
@@ -76,9 +133,46 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
               <Typography fontSize="14px">{data?.email}</Typography>
             </Stack>
           </Box>
+          {logApplicant?.averagePointReviewPoint && (
+            <Box
+              ml={1}
+              color={
+                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                  ? "#E53935"
+                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                  ? "#F77A0C"
+                  : "#388E3C"
+              }
+              border={"1px solid #388E3C"}
+              padding="6px 8px"
+              borderRadius="4px"
+              textAlign={"center"}
+              borderColor={
+                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                  ? "#E53935"
+                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                  ? "#F77A0C"
+                  : "#388E3C"
+              }
+            >
+              <Typography fontSize="12px" fontWeight="600">
+                {"Trung bình"}
+              </Typography>
+              <p
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  paddingTop: "2px",
+                }}
+                name="mediumScore"
+              >
+                {logApplicant?.averagePointReviewPoint?.toFixed(2)}
+              </p>
+            </Box>
+          )}
         </Grid>
         <Grid display="flex">
-          <ButtonDS
+          {/* <ButtonDS
             tittle={"Thêm vào tin khác"}
             type="submit"
             sx={{
@@ -101,21 +195,17 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                 mr={1}
               />
             }
-          />
+          /> */}
           <ButtonDS
             tittle={"Đặt lịch phỏng vấn"}
             type="submit"
             sx={{
-              color: "#fdfdfd",
-              backgroundColor: "#1976D2",
-              boxShadow: "none",
               ":hover": {
                 backgroundColor: "#1565C0",
               },
               marginRight: "12px",
               fontSize: "14px",
               padding: "6px 12px",
-              textTransform: "none",
             }}
             icon={
               <Iconify
@@ -126,33 +216,34 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                 mr={1}
               />
             }
+            onClick={() => setOpen(true)}
           />
+
           <ButtonDS
             tittle={"Đánh giá"}
             type="submit"
-            isDisabled={true}
+            onClick={() => setIsOpenReview(true)}
+            isDisabled={isReview ? false : true}
             mr={2}
             sx={{
-              color: "#8A94A5",
-              backgroundColor: "#1976D2",
-              boxShadow: "none",
               ":hover": {
-                backgroundColor: "#01B6A7",
+                backgroundColor: "#1565C0",
               },
               marginRight: "12px",
-              textTransform: "none",
+              fontSize: "14px",
+              padding: "6px 12px",
             }}
             icon={
               <Iconify
                 icon={"ph:user-focus-fill"}
                 width={20}
                 height={20}
-                color="#8A94A5"
+                color={isReview ? "fff" : "#8A94A5"}
                 mr={1}
               />
             }
           />
-          <ButtonDS
+          {/* <ButtonDS
             tittle={"Gửi offer"}
             type="button"
             // isDisabled={true}
@@ -175,7 +266,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                 mr={1}
               />
             }
-          />
+          /> */}
         </Grid>
       </Grid>
     );
@@ -210,60 +301,118 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
     };
   }, []);
   const smDown = useResponsive("down", "sm");
-  const {themeStretch} = useSettings();
+  const { themeStretch } = useSettings();
 
-  // const [showRejectApplicant, setRejectApplicant] = useState(false);
-  const [fetchPipe, {data: pipelines = [], isSuccess}] =
-    useGetApplicantCurrentStateWithRecruitmentStatesMutation();
-  const [fetchData, {data: logApplicant = [], isSuccess: isSuccessLog}] =
-    useGetApplicantRecruitmentMutation();
+  const { data: pipelines = [], isSuccess } =
+    useGetApplicantCurrentStateWithRecruitmentStatesQuery(
+      {
+        ApplicantId: ApplicantId,
+        RecruitmentId: RecruitmentId,
+      },
+      { skip: !ApplicantId || !RecruitmentId }
+    );
+
+  const { data: logApplicant = [] } = useGetApplicantRecruitmentQuery(
+    {
+      ApplicantId: ApplicantId,
+      RecruitmentId: RecruitmentId,
+      IsWithdrawHistory: true,
+    },
+    { skip: !ApplicantId || !RecruitmentId }
+  );
+
+  const { data: data = [] } = useGetApplicantByIdQuery(
+    {
+      applicantId: ApplicantId,
+    },
+    { skip: !ApplicantId }
+  );
+
+  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
+    {
+      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      ApplicantId: ApplicantId,
+    },
+    {
+      skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
+    }
+  );
+
+  const { data: isReview } = useGetCheckReviewQuery(
+    {
+      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      ApplicantId: ApplicantId,
+    },
+    {
+      skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
+    }
+  );
+
+  const [actionId, setActionId] = useState("");
+  const [actionType, setActionType] = useState();
+  const [actionShow, setActionShow] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
-  const [rejectApplicant, setRejectApplicant] = useState(false);
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+
   const [ownerName, setOwnerName] = useState();
+
+  const onCloseModel = () => {
+    setActionShow(false);
+    setShowConfirmMultiple(false);
+  };
 
   useEffect(() => {
     if (!isFetching) {
-      setSelectedOption(options[0]);
-      setOwnerName(options[0]?.ownerName?.trim());
-      fetchPipe({
-        ApplicantId,
-        RecruitmentId: options[0]?.id,
-      }).unwrap();
-      fetchData({
-        ApplicantId,
-        RecruitmentId: options[0]?.id,
-        IsWithdrawHistory: true,
-      }).unwrap();
+      const recruitment = options.filter((p) => p.id == RecruitmentId);
+      setSelectedOption(recruitment[0]);
+      setOwnerName(recruitment[0]?.ownerName?.trim());
     }
   }, [isFetching]);
 
-  const onChangeRecruiment = (e) => {
+  const handleOpenEditForm = () => {
+    setModelApplication({
+      ...modelApplication,
+      id: ApplicantId,
+      recruitmentId: RecruitmentId,
+      recruitmentTitle: selectedOption?.name,
+    });
+    setShowModelCreate(true);
+  };
+
+  const onChangeRecruitment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
-    fetchPipe({
-      ApplicantId,
-      RecruitmentId: e.target.value.id,
-    }).unwrap();
-    fetchData({
-      ApplicantId,
-      RecruitmentId: e.target.value.id,
-      IsWithdrawHistory: true,
-    }).unwrap();
+
+    return router.push(
+      {
+        pathname: PATH_DASHBOARD.applicant.view(ApplicantId),
+        query: {
+          ...router.query,
+          applicantId: e.target.value?.applicantId,
+          recruitmentId: e.target.value?.id,
+          organizationId: e.target.value?.organizationId,
+          ownerId: e.target.value?.ownerId,
+          ownerName: e.target.value?.ownerName,
+        },
+      },
+      undefined,
+      { shallow: false }
+    );
   };
+
   return (
     <div>
       <HeadingFixed>
-        <HearderApplicant setIsOpenSendOffer={setIsOpenSendOffer}/>
+        <HeaderApplicant setIsOpenSendOffer={setIsOpenSendOffer} />
       </HeadingFixed>
       <Container
         maxWidth={themeStretch ? false : "xl"}
-        sx={{...(smDown && {padding: 0})}}
+        sx={{ ...(smDown && { padding: 0 }) }}
       >
         <NavGoBack
-          link={PATH_DASHBOARD.dashboard}
+          link={PATH_DASHBOARD.applicant.root}
           name={"Trở về danh sách ứng viên"}
         ></NavGoBack>
-
         <Grid>
           <Grid item xs={12} md={5}>
             <Card
@@ -286,7 +435,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                   padding="32px 24px"
                   borderBottom="1px solid #D0D4DB"
                 >
-                  <HearderApplicant/>
+                  <HeaderApplicant />
                   <Grid marginTop={"32px"}>
                     <Grid>
                       {options ? (
@@ -294,15 +443,15 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                           width="35%"
                           selectedOption={selectedOption}
                           setSelectedOption={setSelectedOption}
-                          onChange={onChangeRecruiment}
+                          onChange={onChangeRecruitment}
                           data={options}
                           placeholder="Chọn tin tuyển dụng"
                           sx={{
-                            fontSize: '14px',
+                            fontSize: "14px",
                             background: "#F3F4F6",
                             fontWeight: 500,
                             "&.MuiOutlinedInput-root": {
-                              minHeight: '36px'
+                              minHeight: "36px",
                             },
                             "& .MuiOutlinedInput-notchedOutline": {
                               borderColor: "#F3F4F6",
@@ -327,12 +476,12 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                       minHeight="76px"
                     >
                       <Grid item md={10} container>
-                        <Grid sx={{width: "80%"}}>
+                        <Grid sx={{ width: "80%" }}>
                           {isSuccess ? (
-                            <PipelineApplicant steps={pipelines}/>
+                            <PipelineApplicant steps={pipelines} />
                           ) : null}
                         </Grid>
-                        <Grid sx={{display: "flex"}}>
+                        <Grid sx={{ display: "flex" }}>
                           <ButtonDS
                             tittle={"Chuyển bước"}
                             type="submit"
@@ -345,7 +494,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                               },
                               textTransform: "none",
                             }}
-
+                            onClick={() => setShowConfirmMultiple(true)}
                             icon={
                               <Iconify
                                 icon={"ci:transfer"}
@@ -356,7 +505,7 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                               />
                             }
                           />
-                          <ButtonDS
+                          {/* <ButtonDS
                             type="submit"
                             sx={{
                               padding: "8px",
@@ -378,17 +527,12 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                                 color="#D32F2F"
                               />
                             }
-                          />
+                          /> */}
                         </Grid>
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
                         <div>{"Phụ trách"}</div>
-                        <Grid
-                          sx={{
-                            display: "flex",
-                            marginTop: "8px",
-                          }}
-                        >
+                        <Grid sx={{ display: "flex", marginTop: "8px" }}>
                           {isSuccess ? (
                             <AvatarDS
                               sx={{
@@ -401,9 +545,11 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                             ></AvatarDS>
                           ) : null}
                           <Typography
-                            fontSize="14px"
-                            fontWeight="600"
-                            color="#172B4D"
+                            sx={{
+                              fontSize: 14,
+                              fontWeight: 600,
+                              color: "#172B4D",
+                            }}
                           >
                             {ownerName}
                           </Typography>
@@ -414,36 +560,80 @@ function ApplicantPreviewItem({data, ApplicantId, OrganizationId}) {
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV data={data}/>
+                    <ApplicantPreviewCV data={data} dataLog={logApplicant} />
                   </Grid>
                   <Grid item xs={5} md={5}>
-                    {isSuccessLog && <ApplicantPreviewLog
+                    <ApplicantPreviewLog
                       dataLog={logApplicant}
                       dataApplicant={data}
-                    />}
-
+                    />
                   </Grid>
                 </Grid>
               </CardContent>
-
-              <RejectApplicantModal
-                applicantId={data?.id}
-                recruimentId={selectedOption?.id}
-                stage={pipelines}
-                show={rejectApplicant}
-                setShow={setRejectApplicant}
-              />
+              {showConfirmMultiple && (
+                <ApplicantTransferPipelineModal
+                  showConfirmMultiple={showConfirmMultiple}
+                  setShowConfirmMultiple={setShowConfirmMultiple}
+                  onClose={onCloseModel}
+                  itemSelected={{
+                    applicantId: ApplicantId,
+                    recruitmentId: RecruitmentId,
+                  }}
+                  setActionId={setActionId}
+                  setActionType={setActionType}
+                  setActionShow={setActionShow}
+                />
+              )}
+              {actionShow && (
+                <RejectApplicantModal
+                  applicantId={ApplicantId}
+                  recruimentId={RecruitmentId}
+                  stage={pipelines}
+                  actionId={actionId}
+                  actionType={actionType}
+                  show={actionShow}
+                  setShow={setActionShow}
+                  onClose={onCloseModel}
+                />
+              )}
             </Card>
           </Grid>
         </Grid>
-        {
-          isOpenSendOffer && <ApplicantSendOfferModal
+        {isOpenSendOffer && (
+          <ApplicantSendOfferModal
             isOpen={isOpenSendOffer}
             onClose={() => setIsOpenSendOffer(false)}
             showUploadFile={true}
             title="Tạo thư mời nhận việc"
           />
-        }
+        )}
+        {isOpenReview && (
+          <ApplicantReviewModal
+            show={isOpenReview}
+            setShow={setIsOpenReview}
+            applicantId={data?.id}
+            recruitmentId={selectedOption?.id}
+            data={reviewFormCriterias}
+          />
+        )}
+
+        {open && (
+          <FormCalendar
+            open={open}
+            setOpen={setOpen}
+            item={data}
+            options={selectedOption}
+            currentApplicantPipelineState={
+              pipelines?.currentApplicantPipelineState
+            }
+          />
+        )}
+        <RecruitmentApplicantCreate
+          show={showModelCreate}
+          setShow={setShowModelCreate}
+          data={modelApplication}
+          setData={setModelApplication}
+        />
       </Container>
     </div>
   );

@@ -1,96 +1,104 @@
-import React, {useEffect, useState} from "react";
-import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
-import {FormProvider, RHFTextField} from "@/components/hook-form";
-import Iconify from "@/components/Iconify";
-import Scrollbar from "@/components/Scrollbar";
-import {useForm} from "react-hook-form";
-import {OrganizationFromFooterStyle, OrganizationFromHeadStyle} from "@/sections/organization/style";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import {useGetDistrictByProvinceIdQuery, useGetProvinceQuery} from "@/sections/companyinfor/companyInforSlice";
-import * as Yup from "yup";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {convertViToEn} from "@/utils/function";
-import {isEmpty, pick} from 'lodash';
-import {useSnackbar} from "notistack";
-import {LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
+import {View} from "@/components/DesignSystem/FlexStyled";
+import {FormProvider, RHFSelect, RHFTextField} from "@/components/hook-form";
+import {Label, TextFieldStyle,} from "@/components/hook-form/style";
+import {useGetDistrictByProvinceIdQuery, useGetProvinceQuery,} from "@/sections/companyinfor/companyInforSlice";
 import {
   useCreateChildOrganizationMutation,
   useGetOrganizationByIdQuery,
-  useUpdateOrganizationMutation
+  useUpdateOrganizationMutation,
 } from "@/sections/organization/override/OverrideOrganizationSlice";
-import MuiButton from "@/components/BaseComponents/MuiButton";
+import {convertViToEn} from "@/utils/function";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {Box, CircularProgress, Divider, Drawer, Stack, useTheme} from "@mui/material";
+import {isEmpty, pick} from "lodash";
+import {useSnackbar} from "notistack";
+import React, {useEffect} from "react";
+import {useForm} from "react-hook-form";
+import * as Yup from "yup";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
 const InputStyle = {
   minHeight: 44,
-  minWidth: 552,
-  marginBottom: 24
-}
+  maxWidth: 552,
+  marginBottom: 24,
+};
 
 const SelectStyle = {
   minHeight: 44,
-  width: 264,
-}
+  maxWidth: 264,
+};
 
 const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
-
-  const { data: organization } = useGetOrganizationByIdQuery({
-    OrganizationId: parentNode?.id
-  }, { skip: !parentNode?.id || actionType === 0 });
+  const theme = useTheme();
+  const {data: organization, isLoading} = useGetOrganizationByIdQuery(
+      {OrganizationId: parentNode?.id}, {skip: !parentNode?.id || actionType === 0}
+  );
 
   const {enqueueSnackbar} = useSnackbar();
 
   const [createChildOrganization] = useCreateChildOrganizationMutation();
   const [updateOrganization] = useUpdateOrganizationMutation();
 
-  const [, setIsScrolled] = useState(false);
-
   const defaultValues = {
     id: "",
-    parentOrganizationId: "",
+    parentOrganizationId: null,
     name: "",
     code: "",
     email: "",
     phoneNumber: "",
-    provinceId: "",
-    districtId: "",
+    provinceId: null,
+    districtId: null,
     address: "",
   };
 
-  const handleScroll = (e) => {
-    setIsScrolled(e.target.scrollTop > 10);
-  };
-
   const OrganizationFormSchema = Yup.object().shape({
-    name: Yup.string().nullable().required("Tên đơn vị không được bỏ trống").max(50, "Tên đơn vị tối đa 50 ký tự"),
-    code: Yup.string().nullable().required("Mã đơn vị không được bỏ trống").max(20, "Mã đơn vị tối đa 20 ký tự"),
-    email: Yup.string().nullable().email('Email không đúng định dạng').required("Email không được bỏ trống"),
-    phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
-    address: Yup.string().nullable().max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
+    name: Yup.string()
+        .nullable()
+        .required("Tên đơn vị không được bỏ trống")
+        .max(50, "Tên đơn vị tối đa 50 ký tự"),
+    code: Yup.string()
+      .nullable()
+      .required("Mã đơn vị không được bỏ trống")
+      .max(20, "Mã đơn vị tối đa 20 ký tự"),
+    email: Yup.string().nullable().matches(/^$|^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/, 'Email không đúng định dạng'),
+    phoneNumber: Yup.string()
+      .matches(/^(?:[0-9]{5}|[0-9]{10}|)$/, "Số điện thoại không đúng định dạng").nullable(),
+    address: Yup.string()
+        .nullable()
+        .max(255, "Địa chỉ đơn vị tối đa 255 ký tự"),
   });
 
   // form
   const methods = useForm({
-    mode: 'all',
+    mode: "onSubmit",
     resolver: yupResolver(OrganizationFormSchema),
     defaultValues,
   });
 
-  const { watch, handleSubmit, formState: {isSubmitting} } = methods;
+  const {
+    watch,
+    handleSubmit,
+    formState: {isSubmitting},
+  } = methods;
 
   const watchProvinceId = watch("provinceId");
 
   const {data: {items: ProvinceList = []} = {}} = useGetProvinceQuery();
-  const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: !watchProvinceId });
+  const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(
+      watchProvinceId, {skip: !watchProvinceId}
+  );
 
-  useEffect(()=>{
+  useEffect(() => {
     if (organization && actionType === 1) {
-      for(let i in defaultValues) {
+      for (let i in defaultValues) {
         methods.setValue(i, organization[i]);
       }
     } else {
-      methods.reset(defaultValues)
+      methods.reset(defaultValues);
     }
-  }, [organization, actionType])
+  }, [organization, actionType]);
 
   const onSubmit = async (data) => {
     const body = {...data};
@@ -99,20 +107,37 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
         body.parentOrganizationId = parentNode?.id ? parentNode.id : null;
         await createChildOrganization(body).unwrap();
         enqueueSnackbar("Thêm đơn vị thành công!", {
-          autoHideDuration: 1000
+          autoHideDuration: 1000,
         });
         onClose();
       } catch (err) {
         enqueueSnackbar("Thêm đơn vị không thành công!", {
           autoHideDuration: 1000,
-          variant: 'error',
+          variant: "error",
         });
         throw err;
       }
     } else {
       try {
-        const dataSubmit = pick(body, ['id', 'name', 'code', 'email', 'phoneNumber', 'provinceId', 'districtId', 'address']);
-        const { name, code, phoneNumber, email, provinceId, districtId, address} = dataSubmit;
+        const dataSubmit = pick(body, [
+          "id",
+          "name",
+          "code",
+          "email",
+          "phoneNumber",
+          "provinceId",
+          "districtId",
+          "address",
+        ]);
+        const {
+          name,
+          code,
+          phoneNumber,
+          email,
+          provinceId,
+          districtId,
+          address,
+        } = dataSubmit;
         await updateOrganization({
           organizationId: organization?.id,
           name,
@@ -121,166 +146,139 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
           email,
           provinceId,
           districtId,
-          address
+          address,
         }).unwrap();
         enqueueSnackbar("Chỉnh sửa đơn vị thành công!");
         onClose();
       } catch (err) {
         enqueueSnackbar("Chỉnh sửa đơn vị không thành công!", {
           autoHideDuration: 1000,
-          variant: 'error',
+          variant: "error",
         });
         throw err;
       }
     }
-  }
+  };
 
   return (
-      <>
-        <Drawer
-            open={isOpen}
-            onClose={onClose}
-            anchor="right"
-            PaperProps={{
+      <Drawer
+          open={isOpen}
+          onClose={onClose}
+          anchor="right"
+          PaperProps={{
+            sx: drawerPaperStyle({...theme, width: 600}),
+          }}
+          componentsProps={{
+            backdrop: {
               sx: {
-                width: {xs: 1, sm: 560, md: 600},
-                boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-              },
-              onScroll: handleScroll
-            }}
-            componentsProps={{
-              backdrop: {
-                sx: {
-                  background: 'transparent !important',
-                  boxShadow: 'none !important'
-                }
+                background: 'transparent !important',
+                boxShadow: 'none !important'
               }
-            }}
-        >
-          <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-              <OrganizationFromHeadStyle className="organization-form-head">
-                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
-                  {actionType === 0 ? 'Thêm mới đơn vị' : 'Chỉnh sửa đơn vị'}
-                </Typography>
-                <IconButton size="small" onClick={onClose}><Iconify icon="ic:baseline-close"/></IconButton>
-              </OrganizationFromHeadStyle>
-              <Divider/>
-              {/* content form */}
-              <Box sx={{py: 2, px: 2, my: 8}}>
-                {!isEmpty(parentNode) && <>
-                  <LabelStyle required={true}>
-                    Trực thuộc
-                  </LabelStyle>
-                  <TextFieldStyle
-                      name="parentOrganizationId"
-                      placeholder="Nhập tên đơn vị Trực thuộc"
-                      style={{...InputStyle, backgroundColor: '#EFF3F6'}}
-                      value={actionType === 0 ? parentNode?.name : organization?.parentOrganizationName}
-                      disabled
-                      variant="standard"
-                      InputProps={{ disableUnderline: true}}
+            }
+          }}
+      >
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <FormModalHead
+              title={actionType === 0 ? "Thêm mới đơn vị" : "Chỉnh sửa đơn vị"}
+              onClose={onClose}
+          />
+          {isLoading ? (
+              <>
+                <Box textAlign="center" my={1}>
+                  <CircularProgress size={18}/>
+                </Box>
+              </>
+          ) : (
+              <div className="edit-container">
+                {!isEmpty(parentNode) && (
+                    <View>
+                      <Label required={true}>Trực thuộc</Label>
+                      <TextFieldStyle
+                          name="parentOrganizationId"
+                          placeholder="Nhập tên đơn vị Trực thuộc"
+                          style={{...InputStyle, backgroundColor: "#EFF3F6"}}
+                          value={actionType === 0 ? parentNode?.name : organization?.parentOrganizationName}
+                          disabled
+                          variant="standard"
+                          InputProps={{disableUnderline: true}}
+                      />
+                    </View>
+                )}
+                <View>
+                  <Label required={true}>Tên đơn vị</Label>
+                  <RHFTextField
+                      name="name"
+                      placeholder="Nhập tên đơn vị"
+                      style={{...InputStyle}}
                   />
-                </>}
-                <RHFTextField
-                    name="name"
-                    title="Tên đơn vị"
-                    placeholder="Nhập tên đơn vị"
-                    isRequired
-                    style={{...InputStyle}}
-                />
-                <RHFTextField
-                    name="code"
-                    title="Mã đơn vị"
-                    placeholder="Nhập mã đơn vị"
-                    isRequired
-                    style={{...InputStyle}}
-                />
-                <RHFTextField
-                    name="email"
-                    title="Email đơn vị"
-                    placeholder="Nhập email đơn vị"
-                    isRequired
-                    beforeChange={() => convertViToEn(watch('email'), false)}
-                    style={{...InputStyle}}
-                />
-                <RHFTextField
-                    name="phoneNumber"
-                    title="Số điện thoại đơn vị"
-                    placeholder="Nhập SĐT đơn vị"
-                    isRequired
-                    style={{...InputStyle}}
-                />
-
+                </View>
+                <View>
+                  <Label required={true}>Mã đơn vị</Label>
+                  <RHFTextField
+                      name="code"
+                      placeholder="Nhập mã đơn vị"
+                      style={{...InputStyle}}
+                  />
+                </View>
+                <View>
+                  <Label>Email đơn vị</Label>
+                  <RHFTextField
+                      name="email"
+                      placeholder="Nhập email đơn vị"
+                      beforeChange={() => convertViToEn(watch("email"), false)}
+                      style={{...InputStyle}}
+                  />
+                </View>
+                <View>
+                  <Label>Số điện thoại đơn vị</Label>
+                  <RHFTextField
+                      name="phoneNumber"
+                      placeholder="Nhập SĐT đơn vị"
+                      style={{...InputStyle}}
+                  />
+                </View>
                 <Divider sx={{mb: 2}}/>
-
-                <Stack direction="row" justifyContent="space-between" maxWidth={'552px'} mb={3}>
-                  <div style={{...SelectStyle}}>
-                    <RHFDropdown
-                        options={
-                          [...ProvinceList, { id: '', value: "", name: "" }]?.map((i) => ({
-                            ...i,
-                            value: i.id,
-                            label: i.name,
-                            name: i.name,
-                          }))
-                        }
-                        style={{...SelectStyle}}
+                <Stack direction="row" justifyContent="space-between" sx={{my: 2.5}}>
+                  <Box sx={{mb: 2, width: "100%",}}>
+                    <Label>Tỉnh/Thành phố</Label>
+                    <RHFSelect
+                        options={ProvinceList?.map((i) => ({value: i.id, label: i.name,}))}
                         name="provinceId"
                         placeholder="Chọn Tỉnh/Thành phố"
-                        title="Tỉnh/Thành phố"
-                    />
-                  </div>
-                  <div style={{...SelectStyle}}>
-                    <RHFDropdown
-                        options={
-                          [...DistrictList, { id: '', value: "", name: "" }]?.map((i) => ({
-                            ...i,
-                            value: i.id,
-                            label: i.name,
-                            name: i.name,
-                          }))
-                        }
                         style={{...SelectStyle}}
+                    />
+                  </Box>
+                  <Box sx={{mb: 2, width: "100%"}}>
+                    <Label>Quận/Huyện</Label>
+                    <RHFSelect
+                        options={DistrictList?.map((i) => ({value: i.id, label: i.name,}))}
                         name="districtId"
                         disabled={!watchProvinceId}
                         placeholder="Chọn Quận/Huyện"
-                        title="Quận/Huyện"
+                        style={{...SelectStyle}}
                     />
-                  </div>
+                  </Box>
                 </Stack>
+                <View>
+                  <Label>Địa chỉ chi tiết</Label>
+                  <RHFTextField
+                      name="address"
+                      placeholder="Số nhà, Tên đường, Xã/Phường ...."
+                      style={{...InputStyle}}/>
+                </View>
+              </div>
+          )}
+          <FormModalBottom
+              onClose={onClose}
+              onSubmit={handleSubmit(onSubmit)}
+              loading={isSubmitting}
+              btnConfirm={{
+                title: actionType == 0 ? "Thêm" : "Sửa"
+              }}
+          />
+        </FormProvider>
+      </Drawer>
+  );
+};
 
-                <RHFTextField
-                    name="address"
-                    title="Địa chỉ chi tiết"
-                    placeholder="Số nhà, Tên đường, Xã/Phường ...."
-                    style={{...InputStyle}}
-                />
-              </Box>
-
-              {/* end content form */}
-
-              <OrganizationFromFooterStyle className="organization-form-footer">
-                <Stack flexDirection="row">
-                  <MuiButton
-                      type="submit"
-                      loading={isSubmitting}
-                      title="Lưu"
-                      sx={{ px: 2, py: 1, minWidth: 24 }}
-                  />
-                  <MuiButton
-                    title={"Hủy"}
-                    onClick={onClose}
-                    color={"basic"}
-                    sx={{ color: '#455570', fontWeight: 600, ml: 1 }}
-                  />
-                </Stack>
-              </OrganizationFromFooterStyle>
-            </FormProvider>
-          </Scrollbar>
-        </Drawer>
-      </>
-  )
-}
-
-export default React.memo(OrganizationForm);
+export default OrganizationForm;

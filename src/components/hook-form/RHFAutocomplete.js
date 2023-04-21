@@ -6,7 +6,6 @@ import {Controller, useFormContext} from "react-hook-form";
 import {AutocompleteFieldStyle, LabelStyle, TextFieldStyle} from "@/components/hook-form/style";
 import ChipDS from "@/components/DesignSystem/ChipDS";
 import {PaperAutocompleteStyle} from "@/sections/auth/style";
-import Iconify from "@/components/Iconify";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {Checkbox, MenuItem} from "@mui/material";
 import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
@@ -18,7 +17,7 @@ RHFAutocomplete.propTypes = {
   name: PropTypes.string, options: PropTypes.array, AutocompleteProps: PropTypes.object,
 };
 
-const CustomPaper = (props) => {
+export const CustomPaper = (props) => {
   return <PaperAutocompleteStyle className="paper-autocomplete" elevation={8} {...props} />;
 };
 
@@ -27,7 +26,7 @@ export default function RHFAutocomplete(
         name,
         options = [],
         title = '',
-        disabledOption,
+        disabledOption = 3,
         multiple = false,
         isRequired = false,
         showAvatar = false,
@@ -80,17 +79,8 @@ export default function RHFAutocomplete(
             PaperComponent={CustomPaper}
             disableCloseOnSelect
             renderOption={(props, option, {selected}) => (
-                <MenuItem {...props} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} disabled={disabledOption}>
+                <MenuItem {...props} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} disabled={disabledOption && field.value?.length >= disabledOption}>
                   <div>
-                    {showCheckbox && (
-                        <Checkbox
-                            sx={{ p: 0.25 }}
-                            icon={<CheckboxIconDefault/>}
-                            checkedIcon={<CheckboxIconChecked/>}
-                            style={{marginRight: 8}}
-                            checked={selected}
-                        />
-                    )}
                     <BoxFlex justifyContent="flex-start">
                       {showAvatar && (
                           <AvatarDS
@@ -101,7 +91,16 @@ export default function RHFAutocomplete(
                       {option.label}
                     </BoxFlex>
                   </div>
-                  {props['aria-selected'] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}
+                  {/*{props['aria-selected'] && <Iconify color="#1e5ef3" icon="material-symbols:check" sx={{width: 24, height: 24}}/>}*/}
+                  {showCheckbox && (
+                      <Checkbox
+                          sx={{ p: 0.25 }}
+                          icon={<CheckboxIconDefault/>}
+                          checkedIcon={<CheckboxIconChecked/>}
+                          style={{marginRight: 8}}
+                          checked={selected}
+                      />
+                  )}
                 </MenuItem>
             )}
             isOptionEqualToValue={(option, value) => value === "" || typeof value === 'string' ? isEqual(option, value) : isEqual(option.value, value.value)}

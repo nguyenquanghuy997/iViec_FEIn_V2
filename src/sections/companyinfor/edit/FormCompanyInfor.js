@@ -1,43 +1,33 @@
-import { useUploadImageCompanyMutation } from "../companyInforSlice";
 import EditUpload from "./EditUpload";
+import HelperText from "@/components/BaseComponents/HelperText";
+import RHFTinyEditor from "@/components/editor/RHFTinyEditor";
+import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook-form";
+import { LabelStyle } from "@/components/hook-form/style";
+import { DOMAIN_SERVER_API } from "@/config";
 import {
-  FormProvider,
-  RHFAutocomplete,
-  RHFTextField,
-} from "@/components/hook-form";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import RHFListImage from "@/components/hook-form/RHFListImage";
-import {
+  useGetDistrictByProvinceIdQuery,
   useGetJobCategoriesQuery,
-  useLazyGetDistrictByProvinceIdQuery,
-  useLazyGetProvinceQuery,
+  useGetProvinceQuery,
   useUpdateCompanyInfoMutation,
+  useUploadImageCompanyMutation,
 } from "@/sections/companyinfor/companyInforSlice";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { LIST_ORGANIZATION_SIZE } from "@/utils/formatString";
-import { LoadingButton } from "@mui/lab";
-import {
-  Box,
-  Divider,
-  InputLabel,
-  Stack,
-  Typography,
-} from "@mui/material";
-import dynamic from "next/dynamic";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Divider, Stack, Typography } from "@mui/material";
+import { get, isEmpty } from "lodash";
 import { useSnackbar } from "notistack";
-import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import React, { useEffect, useState, memo } from "react";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
+import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
+import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 
-const InputStyle = { width: 265, minHeight: 40 };
-const Editor = dynamic(() => import("./editor"), {
-  ssr: false,
-});
+const InputStyle = { width: "100%", minHeight: 40 };
 
 const FormCompanyInfor = ({ data, onClose }) => {
-  const refAvatar = useRef(null);
-  const refBackground = useRef(null);
-
-  const [image, setImage] = useState(data?.organizationInformation.avatar);
-  const [bg, setBg] = useState(data?.organizationInformation.coverPhoto);
+  const [image, setImage] = useState(null);
+  const [bg, setBg] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imageBg, setImageBg] = useState(null);
   const imageHandler = (e) => {
@@ -63,187 +53,202 @@ const FormCompanyInfor = ({ data, onClose }) => {
   };
   const [uploadImage] = useUploadImageCompanyMutation();
   const { enqueueSnackbar } = useSnackbar();
-  const [description, setDescription] = useState(null);
-  const defaultValues = { ...data?.organizationInformation };
-  // const ProfileSchema = Yup.object().shape({
-  //   provinceId: Yup.string().required("Chưa chọn Tỉnh / Thành phố"),
-  //   districtId: Yup.string().required("Chưa chọn Quận / Huyện"),
-  //   address: Yup.string().required("Chưa nhập Địa chỉ"),
-  //   email: Yup.string()
-  //     .email("Email không đúng định dạng")
-  //     .matches(CHECK_EMAIL, "Email không đúng định dạng")
-  //     .required("Email không được bỏ trống"),
-  //   phoneNumber: Yup.number().required("Chưa nhập Số điện thoại"),
-  //   jobCategoryIds: Yup.array()
-  //     .min(1, "Ngành nghề không được bỏ trống")
-  //     .max(3, "Chọn tối đa 3 ngành nghê"),
-  //   organizationSize: Yup.string().required("Chưa chọn Quy mô nhân sự"),
-  //   description: Yup.string(),
-  //   avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-  //   coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
-  // });
+  const defaultValues = {
+    phoneNumber: "",
+    email: "",
+    jobCategoryIds: [],
+    organizationSize: "",
+    provinceId: "",
+    districtId: "",
+    address: "",
+    description: "",
+  };
+  const ProfileSchema = Yup.object().shape({
+    // avatar: Yup.mixed().required("Tải lên hình ảnh đại diện"),
+    // coverPhoto: Yup.mixed().required("Tải lên hình ảnh đại diện"),
+    phoneNumber: Yup.string().nullable().required("Số điện thoại không được bỏ trống").matches(/\d+\b/, "Số điện thoại không đúng định dạng"),
+    email: Yup.string().nullable().email("Email không đúng định dạng").required("Email không được bỏ trống"),
+    jobCategoryIds: Yup.array().min(1, "Ngành nghề không được bỏ trống").max(3, "Chọn tối đa 3 ngành nghê"),
+    organizationSize: Yup.number().nullable().required("Quy mô nhân sự không được bỏ trống"),
+    provinceId: Yup.string().nullable().required("Tỉnh/Thành phố không được bỏ trống"),
+    districtId: Yup.string().nullable().required("Quận/Huyện không được bỏ trống"),
+    address: Yup.string().nullable().required("Địa chỉ không được bỏ trống"),
+    description: Yup.string().nullable().required("Giới thiệu công ty không được bỏ trống"),
+  });
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
-  const { data: { items: JobCategoryList = [] } = {} } =
-    useGetJobCategoriesQuery();
-
-  const [fetchProvice, { data: { items: ProviceList = [] } = {} }] =
-    useLazyGetProvinceQuery();
-  const [getDistrictByProvinceId, { data: { items: DistrictList = [] } = {} }] =
-    useLazyGetDistrictByProvinceIdQuery();
-
   const methods = useForm({
-    // resolver: yupResolver(ProfileSchema),
+    mode: "onSubmit",
+    resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
 
   const {
     setValue,
     setError,
+    register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
   } = methods;
-  const watchProvinceId = watch("provinceId");
+  const provinceId = watch("provinceId");
 
-  useEffect(() => {
-    fetchProvice().unwrap();
-  }, []);
+  const { data: { items: JobCategoryList = [] } = {} } =
+    useGetJobCategoriesQuery();
+  const { data: { items: ProvinceList = [] } = {} } = useGetProvinceQuery();
+  const { data: { items: DistrictList = [] } = {} } =
+    useGetDistrictByProvinceIdQuery(provinceId, { skip: !provinceId });
 
-  useEffect(() => {
-    if (watchProvinceId) {
-      getDistrictByProvinceId(watchProvinceId).unwrap();
-      methods.resetField("organizationDistrictId");
-    }
-  }, [watchProvinceId]);
-
-  const onSubmit = async (d) => {
+  const onSubmit = async (formData) => {
+    const {
+      address,
+      avatar,
+      description,
+      districtId,
+      email,
+      jobCategoryIds,
+      organizationSize,
+      phoneNumber,
+      provinceId,
+    } = formData;
     const imageRes = await uploadImage({
       File: imageFile,
-      OrganizationId: d?.id,
+      OrganizationId: data?.id,
     });
+    const bgRes = await uploadImage({ File: imageBg, OrganizationId: data.id });
 
-    const bgRes = await uploadImage({
-      File: imageBg,
-      OrganizationId: d.id,
-    });
-    try {
-      if (imageRes) {
-        const res = {
-          id: data?.organizationInformation?.id,
-          avatar: imageRes?.data,
-          coverPhoto: bgRes?.data,
-          provinceId: d.provinceId,
-          districtId: d.districtId,
-          address: d.address,
-          email: d.email,
-          description: d.description,
-          phoneNumber: d.phoneNumber,
-          jobCategoryIds: d.jobCategoryIds?.map((item) => item?.value),
-          organizationSize: d.organizationSize,
-        };
-        try {
-          await updateCompanyInfo(res).unwrap();
-          enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
-            autoHideDuration: 2000,
-          });
-          onClose()
-          // location.reload()
-        } catch (err) {
-          enqueueSnackbar(errors.afterSubmit?.message, {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
-        }
+    if (
+      isEmpty(get(data, "organizationInformation.avatar")) &&
+      isEmpty(avatar) &&
+      !imageRes?.data
+    ) {
+      setError("avatar", {
+        type: "custom",
+        message: "Avatar không được bỏ trống",
+      });
+    } else {
+      try {
+        await updateCompanyInfo({
+          id: get(data, "organizationInformation.id"),
+          avatar: imageRes ? imageRes?.data : get(data, "organizationInformation.avatar"),
+          coverPhoto: bgRes ? bgRes?.data : get(data, "organizationInformation.coverPhoto"),
+          provinceId: provinceId,
+          districtId: districtId,
+          address: address,
+          email: email,
+          description: description,
+          phoneNumber: phoneNumber,
+          jobCategoryIds: jobCategoryIds,
+          organizationSize: organizationSize,
+        }).unwrap();
+        enqueueSnackbar("Chỉnh sửa thông tin công ty thành công!", {
+          autoHideDuration: 2000,
+        });
+        onClose();
+      } catch (err) {
+        enqueueSnackbar(errors.afterSubmit?.message, {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
       }
-    } catch (err) {
-      const message =
-        err?.Errors?.[0]?.Description || err?.data?.message || err?.message;
-      setError("afterSubmit", { ...err, message });
-      enqueueSnackbar(errors.afterSubmit?.message);
     }
   };
 
-  // const EmptyImage = () => {
-  //   const obj = [];
-  //   let i = 0;
-  //   while (i < 6 - itemData.length) {
-  //     obj.push(<FileUpload />);
-  //     i++;
-  //   }
-
   useEffect(() => {
     if (!data) return;
+    setImage(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(data, "organizationInformation.avatar")}`);
+    setBg(`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(data, "organizationInformation.coverPhoto")}`);
+    setValue("phoneNumber", get(data, "organizationInformation.phoneNumber"));
+    setValue("email", get(data, "organizationInformation.email"));
+    setValue("jobCategoryIds", get(data, "organizationInformation.jobCategories")?.map((item) => item.jobCategoryId));
+    setValue("organizationSize", get(data, "organizationInformation.organizationSize"));
+    setValue("provinceId", get(data, "organizationInformation.provinceId"));
+    setValue("districtId", get(data, "organizationInformation.districtId"));
+    setValue("address", get(data, "organizationInformation.address"));
+    setValue("description", get(data, "organizationInformation.description"));
+  }, [data]);
 
-    refAvatar.current = data.avatar;
-    refBackground.current = data.coverPhoto;
-
-    setDescription(data.description);
-
-    setValue("description", data.description);
-  }, [JSON.stringify(data)]);
+  useEffect(() => {
+    if (get(data, "organizationInformation.avatar") || !isEmpty(imageFile)) {
+      setError("avatar", null);
+    }
+  }, [data, imageFile]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {/* {!!errors.afterSubmit && (
-            <Alert severity="error">{errors.afterSubmit?.message}</Alert>
-        )} */}
-      <div
-        style={{
-          flex: 1,
-          paddingLeft: "24px",
-          paddingRight: "24px",
-          borderRadius: 8,
-          paddingBottom: 30,
-          overflow: "hidden",
-          background: "#fff",
-        }}
-      >
-        <Box sx={{ py: 3 }}>
+      <FormModalHead title={'Chỉnh sửa Thông tin công ty'} onClose={onClose}/>
+      <div className="edit-container">
+        <Box sx={{ mb: 3 }}>
           <Typography
             sx={{
-              fontSize: 20,
-              fontWeight: "600",
-              color: "#393B3E",
-              mr: 1,
+              fontSize: style.FONT_XL,
+              fontWeight: style.FONT_BOLD,
+              color: style.COLOR_TEXT_BLACK,
             }}
           >
-            {data?.name}
+            {get(data, "name")}
           </Typography>
-          <Typography sx={{ color: "#455570", fontSize: 14 }}>
-            Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email
-            Support@iviec.com.vn
+          <Typography
+            sx={{
+              mt: 0.5,
+              color: style.COLOR_TEXT_PRIMARY,
+              fontSize: style.FONT_SM,
+              fontWeight: style.FONT_NORMAL,
+            }}
+          >
+            Để chỉnh sửa tên công ty, vui lòng liên hệ admin qua email Support@iviec.com.vn
           </Typography>
         </Box>
         <Stack>
-          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            Ảnh đại diện
+          <Typography
+            sx={{
+              fontSize: style.FONT_SM,
+              fontWeight: style.FONT_MEDIUM,
+              color: style.COLOR_TEXT_BLACK,
+            }}
+          >
+            Ảnh đại diện{" "}
+            <span style={{ color: style.COLOR_TEXT_SECONDARY }}>
+              (142x142px)
+            </span>
           </Typography>
-
           <Box>
             <EditUpload
               image={image}
               imageHandler={imageHandler}
-              ref={refAvatar}
+              ref={register("avatar", { required: true })}
               type="avatar"
               style={{
-                width: 120,
-                height: 120,
-                borderRadius: 120,
+                width: 142,
+                height: 142,
+                borderRadius: "50%",
+                backgroundColor: "#EFF3F6",
                 marginTop: "16px",
                 marginRight: "24px",
               }}
             />
+            {errors?.avatar?.message && (
+              <HelperText errorText={errors?.avatar?.message} />
+            )}
           </Box>
         </Stack>
         <Stack sx={{ py: 3 }}>
-          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            Ảnh nền
+          <Typography
+            sx={{
+              fontSize: style.FONT_SM,
+              fontWeight: style.FONT_MEDIUM,
+              color: style.COLOR_TEXT_BLACK,
+            }}
+          >
+            Ảnh nền{" "}
+            <span style={{ color: style.COLOR_TEXT_SECONDARY }}>
+              (1372x249px)
+            </span>
           </Typography>
           <Box>
             <EditUpload
               image={bg}
-              ref={refBackground}
+              ref={register("coverPhoto", { required: true })}
               imageHandler={handleImage}
               style={{
                 width: "100%",
@@ -257,22 +262,16 @@ const FormCompanyInfor = ({ data, onClose }) => {
         <Divider />
         <Stack direction="row" justifyContent="space-between" sx={{ my: 2.5 }}>
           <Box sx={{ mb: 2, width: "100%", mr: "4%" }}>
-            <Typography sx={{ fontSize: 14 }}>
-              Số điện thoại <span style={{ color: "red" }}> *</span>
-            </Typography>
+            <LabelStyle required>Số điện thoại</LabelStyle>
             <RHFTextField
-              isRequired
               sx={{ minHeight: 44, width: "100%" }}
               name="phoneNumber"
               placeholder="Nhập SĐT doanh nghiệp"
             />
           </Box>
           <Box sx={{ mb: 2, width: "100%" }}>
-            <Typography sx={{ fontSize: 14 }}>
-              Email <span style={{ color: "red" }}> *</span>
-            </Typography>
+            <LabelStyle required>Email doanh nghiệp</LabelStyle>
             <RHFTextField
-              isRequired
               sx={{ minHeight: 44, width: "100%" }}
               name="email"
               placeholder="Nhập email doanh nghiệp"
@@ -282,86 +281,57 @@ const FormCompanyInfor = ({ data, onClose }) => {
 
         <Stack direction="row" justifyContent="space-between" sx={{ my: 2.5 }}>
           <div style={{ width: "100%", minHeight: 40 }}>
-            <RHFAutocomplete
+            <LabelStyle required>Ngành nghề</LabelStyle>
+            <RHFSelect
               options={JobCategoryList?.map((i) => ({
                 value: i?.id,
                 label: i?.name,
-                name: i?.name,
               }))}
+              disabledOption={3}
               name="jobCategoryIds"
-              title="Ngành nghề"
-              isRequired
               placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"
               multiple
-              AutocompleteProps={{
-                multiple: true,
-              }}
             />
           </div>
         </Stack>
-        <Stack direction="row" justifyContent="space-between" sx={{ my: 2.5 }}>
+        <Stack direction="row" sx={{ my: 2.5, width: "50%" }}>
           <div style={{ ...InputStyle }}>
-            <Typography sx={{ fontSize: 14 }}>
-              Quy mô nhân sự <span style={{ color: "red" }}> *</span>
-            </Typography>
-            <RHFDropdown
+            <LabelStyle required>Quy mô nhân sự</LabelStyle>
+            <RHFSelect
               options={LIST_ORGANIZATION_SIZE.map((i) => ({
-                value: i.id,
+                value: i.value,
                 label: i.name,
-                name: i.name,
               }))}
               style={{ ...InputStyle }}
               name="organizationSize"
-              multiple={false}
               placeholder="Chọn quy mô nhân sự"
-              required
             />
           </div>
         </Stack>
         <Divider />
-
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          sx={{ mb: 2.5, mt: 2.5 }}
-        >
-          <Stack>
-            <div style={{ ...InputStyle }}>
-              <Typography sx={{ fontSize: 14 }}>
-                Tỉnh/Thành phố <span style={{ color: "red" }}> *</span>
-              </Typography>
-              <RHFDropdown
-                options={ProviceList.map((i) => ({
-                  value: i.id,
-                  label: i.name,
-                  name: i.name,
-                }))}
-                name="provinceId"
-                multiple={false}
-                placeholder="Chọn Tỉnh/Thành phố"
-                required
-              />
-            </div>
+        <Stack direction="row" justifyContent="space-between" sx={{ my: 2.5 }}>
+          <Stack sx={{ minHeight: "44px", width: "49%" }}>
+            <LabelStyle required>Tỉnh/Thành phố</LabelStyle>
+            <RHFSelect
+              options={ProvinceList.map((i) => ({
+                value: i.id,
+                label: i.name,
+              }))}
+              name="provinceId"
+              placeholder="Chọn Tỉnh/Thành phố"
+            />
           </Stack>
-          <Stack>
-            <div style={{ ...InputStyle }}>
-              <Typography sx={{ fontSize: 14 }}>
-                Quận/Huyện <span style={{ color: "red" }}> *</span>
-              </Typography>
-              <RHFDropdown
-                options={DistrictList.map((i) => ({
-                  value: i.id,
-                  label: i.name,
-                  name: i.name,
-                }))}
-                style={{ ...InputStyle }}
-                name="districtId"
-                multiple={false}
-                disabled={!watchProvinceId}
-                placeholder="Chọn Quận/Huyện"
-                required
-              />
-            </div>
+          <Stack sx={{ minHeight: "44px !important", width: "49%" }}>
+            <LabelStyle required>Quận/Huyện</LabelStyle>
+            <RHFSelect
+              options={DistrictList.map((i) => ({
+                value: i.id,
+                label: i.name,
+              }))}
+              name="districtId"
+              disabled={!provinceId}
+              placeholder="Chọn Quận/Huyện"
+            />
           </Stack>
         </Stack>
 
@@ -369,79 +339,36 @@ const FormCompanyInfor = ({ data, onClose }) => {
           direction="row"
           justifyContent="space-between"
           width={"100%"}
-          sx={{ mb: 2.5 }}
+          sx={{ mb: 3 }}
         >
           <Stack sx={{ width: "100%" }}>
-            <Typography sx={{ fontSize: 14 }}>Địa chỉ chi tiết</Typography>
+            <LabelStyle required>Địa chỉ chi tiết</LabelStyle>
             <RHFTextField
               name="address"
               placeholder="Số nhà, tên đường, xã/phường..."
             />
           </Stack>
         </Stack>
+
         <Divider />
 
-        <Controller
-          name="text"
-          render={() => (
-            <Stack sx={{ mb: 4 }}>
-              <InputLabel
-                sx={{
-                  color: "#5C6A82",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  mt: 2,
-                  mb: 1,
-                }}
-              >
-                Giới thiệu công ty
-              </InputLabel>
-              <Editor
-                data={description}
-                onChange={(_, e) => {
-                  const text = e.getData();
-                  setValue("description", text);
-                }}
-              />
-              <RHFTextField
-                name={"introduce"}
-                variant={"standard"}
-                sx={{ display: "none" }}
-              />
-            </Stack>
-          )}
-        />
-        <RHFListImage name="organizationImages" />
-        <Divider sx={{ pt: 3 }} />
+        <Box sx={{ mt: 3 }}>
+          <LabelStyle required>Giới thiệu công ty</LabelStyle>
+          <RHFTinyEditor
+            name="description"
+            placeholder={"Nhập nội dung giới thiệu công ty..."}
+          />
+        </Box>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          marginTop: 12,
-          position: "fixed",
-          bottom: 0,
-          background: "#FDFDFD",
-          width: "100%",
-          padding: "16px 24px",
-          border: "1px solid #EFF3F6",
-        }}
-      >
-        <LoadingButton
-          type="submit"
-          variant="contained"
+      <FormModalBottom
+          onClose={onClose}
           loading={isSubmitting}
-          sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
-        >
-          {"Lưu"}
-        </LoadingButton>
-        <div style={{ width: 8 }} />
-
-        <LoadingButton variant="text" sx={{ color: "#455570" }}>
-          {"Hủy"}
-        </LoadingButton>
-      </div>
+          btnConfirm={{
+            title: 'Lưu',
+            type: "submit",
+          }}
+      />
     </FormProvider>
   );
 };
-export default FormCompanyInfor;
+export default memo(FormCompanyInfor);

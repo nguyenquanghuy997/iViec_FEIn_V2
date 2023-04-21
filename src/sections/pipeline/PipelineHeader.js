@@ -12,7 +12,6 @@ const PipelineHeader = ({
   onOpenFilterForm,
   onSubmit,
   handleSubmit,
-  onRefreshData
 }) => {
   const [showForm, setShowForm] = useState(false);
   return (
@@ -28,15 +27,23 @@ const PipelineHeader = ({
             <RHFTextField
               name="searchKey"
               placeholder="Tìm kiếm quy trình tuyển dụng"
-              sx={{ minWidth: "360px", height: '36px','.MuiInput-root':{
-                height: '36px', minHeight:"36px"
-              } }}
+              sx={{
+                minWidth: "360px",
+                height: '36px',
+                background: 'rgb(243, 244, 246)',
+                borderRadius: '6px',
+                '.MuiInput-root': {
+                  height: '36px',
+                  minHeight: "36px",
+                  border: 'none'
+                }
+              }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                  <InputAdornment position="start" sx={{ ml: 0.5, mr:0 }}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "text.disabled", width: 20, height: 20 }}
+                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
                     />
                   </InputAdornment>
                 ),
@@ -44,7 +51,10 @@ const PipelineHeader = ({
             />
           </FormProvider>
           <ButtonFilterStyle
-          style={{height:36}}
+            style={{
+              height: 36,
+              fontWeight: 500
+            }}
             onClick={onOpenFilterForm}
             startIcon={
               <Iconify
@@ -63,7 +73,7 @@ const PipelineHeader = ({
             textTransform: "none",
             boxShadow: "none",
           }}
-           onClick={() => setShowForm(true)}
+          onClick={() => setShowForm(true)}
           icon={
             <Iconify
               icon={"material-symbols:add"}
@@ -75,7 +85,7 @@ const PipelineHeader = ({
           }
         />
       </Stack>
-      <PipelineFormModal show={showForm} setShow={setShowForm} onRefreshData={onRefreshData}/>
+      <PipelineFormModal show={showForm} onClose={() => setShowForm(false)} />
     </>
   );
 };

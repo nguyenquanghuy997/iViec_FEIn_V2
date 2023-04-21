@@ -90,11 +90,11 @@ SideBarWrapper.propTypes = {
   onCloseSidebar: PropTypes.func,
 };
 
-export default function SettingLayout({ roles, children }) {
+export default function SettingLayout({ permissions, children }) {
   const isdesktop = useResponsive("up", "lg");
   return (
     <AuthGuard>
-      <DashboardLayout roles={roles}>
+      <DashboardLayout permissions={permissions}>
         <BoxWrapper>
           {isdesktop && <SideBarWrapper />}
           <BoxContentStyle isdesktop={isdesktop.toString()}>{children}</BoxContentStyle>

@@ -4,7 +4,8 @@ import _ from "lodash";
 const dfsSearchTree = (node, term, foundIDS) => {
   // Implement your search functionality
   let isMatching = node.name && convertViToEn(node.name).toLowerCase().indexOf(convertViToEn(term).toLowerCase()) > -1
-      || node.code && convertViToEn(node.code).toLowerCase().indexOf(convertViToEn(term).toLowerCase()) > -1;
+      || node.code && convertViToEn(node.code).toLowerCase().indexOf(convertViToEn(term).toLowerCase()) > -1
+      || node.label && convertViToEn(node.label).toLowerCase().indexOf(convertViToEn(term).toLowerCase()) > -1;
 
   if (Array.isArray(node.children)) {
     node.children.forEach((child) => {
@@ -74,6 +75,7 @@ export const filterBy = (tree, query) => {
     if (isLeaf) return false;
 
     const subtree = filterBy(node.children, query);
+    node.children = subtree;
     return Boolean(subtree.length);
   })
 }

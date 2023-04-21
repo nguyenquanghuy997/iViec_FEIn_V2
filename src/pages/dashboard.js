@@ -8,7 +8,7 @@ import '@fullcalendar/react/dist/vdom'
 import HeaderBreadcrumbs from '@/components/HeaderBreadcrumbs'
 import Page from '@/components/Page'
 // config
-import { DASHBOARD_TABLE_HEIGHT, PAGES } from '@/config'
+import { DASHBOARD_TABLE_HEIGHT, PERMISSION_PAGES } from '@/config'
 // hooks
 import useLocales from '@/hooks/useLocales'
 import useRole from '@/hooks/useRole'
@@ -23,18 +23,9 @@ import MemberActivities from '@/sections/dashboard/member-activities'
 import Performance from '@/sections/dashboard/performance'
 import RecruitementProgress from '@/sections/dashboard/recruitement-progress'
 import WeeklyTask from '@/sections/dashboard/weekly-task'
-// utils
-import { getRolesByPage } from '@/utils/role'
 
-Dashboard.getLayout = function getLayout({ roles = [] }, page) {
-  return <Layout roles={roles}>{page}</Layout>
-}
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Dashboard),
-    },
-  }
+Dashboard.getLayout = function getLayout(pageProps, page) {
+  return <Layout permissions={PERMISSION_PAGES.dasboard} {...pageProps}>{page}</Layout>
 }
 
 export default function Dashboard() {

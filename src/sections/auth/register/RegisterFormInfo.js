@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {RegisterFormSectionLabel} from ".";
 import {STYLE_CONSTANT} from "./constants";
 import Iconify from "@/components/Iconify";
-import {FormProvider, RHFAutocomplete, RHFCheckbox, RHFTextField,} from "@/components/hook-form";
-// hooks
+import {FormProvider, RHFCheckbox, RHFSelect, RHFTextField,} from "@/components/hook-form";
 import {PATH_AUTH} from "@/routes/paths";
 import {useRegisterMutation,} from "@/sections/auth/authSlice";
 import {
@@ -11,19 +10,18 @@ import {
     useGetJobCategoriesQuery,
     useGetProvinceQuery,
 } from "@/sections/companyinfor/companyInforSlice";
-import {errorMessages} from "@/utils/errorMessages";
+import {errorMessages, AUTH_ERROR_TYPE} from "@/utils/errorMessages";
 import {LIST_ORGANIZATION_SIZE} from "@/utils/formatString";
 import {yupResolver} from "@hookform/resolvers/yup";
-// @mui
-import {LoadingButton} from "@mui/lab";
 import {Alert, Box, Divider, FormHelperText, IconButton, InputAdornment, Link, Stack, Typography,} from "@mui/material";
-// next
 import NextLink from "next/link";
 import {useRouter} from "next/router";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import {CHECK_EMAIL} from '@/utils/regex'
+import {LabelStyle} from "@/components/hook-form/style";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
 
 const InputStyle = {width: 440, minHeight: 44};
 
@@ -76,7 +74,7 @@ function RegisterForm() {
         setError,
         handleSubmit,
         watch,
-        formState: {isSubmitting, errors},
+        formState: {isSubmitting, errors, isValid},
     } = methods;
 
     const watchHasEmailValue = watch("userName");
@@ -90,6 +88,7 @@ function RegisterForm() {
                 password: data.password,                                        // organization password
                 organizationName: data.organizationName.trim(),                 // organization name
                 organizationPhoneNumber: data.organizationPhoneNumber.trim(),   // organization phone number
+                organizationEmail: data.userName.trim(),                        // organization email
                 jobCategoryIds: data.jobCategoryIds?.map(item => item?.value),  // organization name
                 organizationSize: parseInt(data.organizationSize),              // organization size
                 organizationProvinceId: data.organizationProvinceId,            // organization province
@@ -101,8 +100,8 @@ function RegisterForm() {
         } catch (error) {
             const {status} = error;
             const message = errorMessages[`${error.status}`] || "Lỗi hệ thống";
-            if (status === "AUE_06") {
-                setError('userName', {type: "custom", message: "Tài khoản chưa được kích hoạt"}, {shouldFocus: true})
+            if (status === AUTH_ERROR_TYPE.AUE_06) {
+                setError('userName', {type: "custom", message: errorMessages[`${error.status}`]})
             } else setError("afterSubmit", {...error, message});
         }
     };
@@ -112,7 +111,7 @@ function RegisterForm() {
         else methods.resetField(field);
     };
 
-    const {data: {items: ProviceList = []} = {}} = useGetProvinceQuery();
+    const {data: {items: ProvinceList = []} = {}} = useGetProvinceQuery();
     const {data: {items: DistrictList = []} = {}} = useGetDistrictByProvinceIdQuery(watchProvinceId, { skip: !watchProvinceId });
     const {data: {items: JobCategoryList = []} = {}} = useGetJobCategoriesQuery();
 
@@ -135,15 +134,14 @@ function RegisterForm() {
                     <Stack>
                         <Stack direction="row" justifyContent="space-between" sx={{mb: 2.5}}>
                             <Stack>
+                                <LabelStyle required={true}>Email đăng nhập</LabelStyle>
                                 <RHFTextField
                                     name="userName"
-                                    title="Email đăng nhập"
                                     placeholder="Bắt buộc"
-                                    isRequired
                                     style={{...InputStyle}}
                                     InputProps={{
                                         endAdornment: watchHasEmailValue && (
-                                            <InputAdornment position="end" sx={{mr: 1.5}}>
+                                            <InputAdornment position="end" sx={{mr: 1}}>
                                                 <IconButton edge="end" onClick={() => handleClearField("userName")}>
                                                     <Iconify icon="ic:baseline-highlight-off"/>
                                                 </IconButton>
@@ -155,19 +153,17 @@ function RegisterForm() {
                         </Stack>
                         <Stack direction="row" justifyContent="space-between">
                             <Stack>
+                                <LabelStyle required={true}>Mật khẩu</LabelStyle>
                                 <RHFTextField
                                     name="password"
-                                    title="Mật khẩu"
                                     placeholder="Bắt buộc"
-                                    isRequired
                                     type={showPassword ? "text" : "password"}
                                     style={{...InputStyle}}
                                     InputProps={{
                                         endAdornment: (
-                                            <InputAdornment position="end" sx={{mr: 1.5}}>
+                                            <InputAdornment position="end" sx={{mr: 1}}>
                                                 <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
-                                                    <Iconify
-                                                        icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
+                                                    <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
                                                 </IconButton>
                                             </InputAdornment>
                                         )
@@ -188,16 +184,15 @@ function RegisterForm() {
                                 )}
                             </Stack>
                             <Stack>
+                                <LabelStyle required={true}>Xác nhận lại mật khẩu</LabelStyle>
                                 <RHFTextField
                                     name="rePassword"
-                                    title="Xác nhận lại mật khẩu"
                                     placeholder="Bắt buộc"
-                                    isRequired
                                     type={showPassword ? "text" : "password"}
                                     style={{...InputStyle}}
                                     InputProps={{
                                         endAdornment: (
-                                            <InputAdornment position="end" sx={{mr: 1.5}}>
+                                            <InputAdornment position="end" sx={{mr: 1}}>
                                                 <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
                                                     <Iconify
                                                         icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
@@ -213,20 +208,18 @@ function RegisterForm() {
                     <Stack>
                         <Stack direction="row" justifyContent="space-between" sx={{mb: 2.5}}>
                             <Stack>
+                                <LabelStyle required={true}>Tên doanh nghiệp</LabelStyle>
                                 <RHFTextField
                                     name="organizationName"
                                     placeholder="Bắt buộc"
-                                    title="Tên doanh nghiệp"
-                                    isRequired
                                     style={{...InputStyle}}
                                 />
                             </Stack>
                             <Stack>
+                                <LabelStyle required={true}>Số điện thoại doanh nghiệp</LabelStyle>
                                 <RHFTextField
                                     name="organizationPhoneNumber"
-                                    isRequired
                                     placeholder="Bắt buộc"
-                                    title="Số điện thoại doanh nghiệp"
                                     style={{...InputStyle}}
                                 />
                             </Stack>
@@ -237,12 +230,13 @@ function RegisterForm() {
                             sx={{mb: 2.5}}
                         >
                             <div style={{...InputStyle}}>
-                                <RHFAutocomplete
+                                <RHFMuiAutocomplete
                                     options={JobCategoryList?.map((i) => ({
                                         value: i.id,
                                         label: `${i.name[0].toUpperCase()}${i.name.slice(1)}`,
                                         name: i?.name,
                                     }))}
+                                    disabledOption={3}
                                     name="jobCategoryIds"
                                     title="Ngành nghề"
                                     isRequired
@@ -252,7 +246,8 @@ function RegisterForm() {
                             </div>
 
                             <div style={{...InputStyle}}>
-                                <RHFDropdown
+                                <LabelStyle required={true}>Quy mô nhân sự</LabelStyle>
+                                <RHFSelect
                                     options={
                                         LIST_ORGANIZATION_SIZE.map((i) => ({
                                             value: i.value,
@@ -263,8 +258,6 @@ function RegisterForm() {
                                     style={{...InputStyle}}
                                     name="organizationSize"
                                     placeholder="Bắt buộc"
-                                    title="Quy mô nhân sự"
-                                    isRequired
                                 />
                             </div>
                         </Stack>
@@ -272,38 +265,34 @@ function RegisterForm() {
                         <Stack direction="row" justifyContent="space-between" sx={{mb: 2.5, mt: 2.5}}>
                             <Stack>
                                 <div style={{...InputStyle}}>
-                                    <RHFDropdown
+                                    <LabelStyle required={true}>Tỉnh/Thành phố</LabelStyle>
+                                    <RHFSelect
                                         options={
-                                            ProviceList.map((i) => ({
+                                            ProvinceList?.map((i) => ({
                                                 value: i.id,
                                                 label: i.name,
-                                                name: i.name,
                                             }))
                                         }
                                         style={{...InputStyle}}
                                         name="organizationProvinceId"
                                         placeholder="Bắt buộc"
-                                        title="Tỉnh/Thành phố"
-                                        isRequired
                                     />
                                 </div>
                             </Stack>
                             <Stack>
                                 <div style={{...InputStyle}}>
-                                    <RHFDropdown
+                                    <LabelStyle required={true}>Quận/Huyện</LabelStyle>
+                                    <RHFSelect
                                         options={
-                                            DistrictList.map((i) => ({
+                                            DistrictList?.map((i) => ({
                                                 value: i.id,
                                                 label: i.name,
-                                                name: i.name,
                                             }))
                                         }
                                         style={{...InputStyle}}
                                         name="organizationDistrictId"
-                                        disabled={!watchProvinceId}
                                         placeholder="Bắt buộc"
-                                        title="Quận/Huyện"
-                                        isRequired
+                                        disabled={!watchProvinceId}
                                     />
                                 </div>
                             </Stack>
@@ -312,10 +301,10 @@ function RegisterForm() {
                         <Stack direction="row" justifyContent="space-between" width={STYLE_CONSTANT.WIDTH_FULL}
                                sx={{mb: 2.5}}>
                             <Stack sx={{width: STYLE_CONSTANT.WIDTH_FULL}}>
+                                <LabelStyle>Địa chỉ chi tiết doanh nghiệp</LabelStyle>
                                 <RHFTextField
                                     name="organizationAddress"
                                     placeholder="Số nhà, tên đường, xã/phường..."
-                                    title="Địa chỉ chi tiết doanh nghiệp"
                                 />
                             </Stack>
                         </Stack>
@@ -360,20 +349,20 @@ function RegisterForm() {
                         </Stack>
                     </Stack>
                     <Stack sx={{mt: 2}}>
-                        <LoadingButton
-                            fullWidth
-                            size="large"
+                        <MuiButton
+                            disabled={!isValid}
+                            title={"Đăng ký"}
                             type="submit"
-                            variant="contained"
                             loading={isSubmitting}
+                            loadingPosition="end"
                             sx={{
                                 backgroundColor: STYLE_CONSTANT.COLOR_PRIMARY,
                                 textTransform: "none",
                                 borderRadius: 0.75,
+                                fontSize: 16,
+                                fontWeight: 600
                             }}
-                        >
-                            Đăng ký
-                        </LoadingButton>
+                        />
                     </Stack>
                 </Stack>
             </FormProvider>

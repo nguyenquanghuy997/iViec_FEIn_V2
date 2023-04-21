@@ -15,33 +15,56 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import { checkSameValue } from "@/utils/formatString";
+import PipelineDeleteModal from "../modals/PipelineDeleteModal";
+import { PipelineFormModal } from "../modals";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
+import { PERMISSIONS } from "@/config";
 
 const PipelineBottomNav = ({
-  selectedList,
   open,
   onClose,
-  setselectedList,
+  itemSelected,
+  setItemSelected,
+  setselectedList
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
 
+  const { canAccess } = useRole();
+  // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
+
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
+    setItemSelected([]);
     setselectedList([]);
   };
 
   const { data: pipeline } = useGetPipelineByIdQuery(
     {
-      Id: selectedList[0],
+      Id: itemSelected[0]?.id,
     },
-    { skip: selectedList.length !== 1 }
+    { skip: itemSelected.length !== 1 }
   );
 
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
   };
-
+  let item = itemSelected.map((p) => p.isActivated);
+  let isDefault = itemSelected.map((p) => p.isDefault);
+  let ids = itemSelected.map((p) => p.id);
+  let itemApply = itemSelected.map((p) => p.recruitmentAppliedCount);
+  function checkSameApply(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
   return (
     <Drawer
       anchor={"bottom"}
@@ -59,46 +82,50 @@ const PipelineBottomNav = ({
           }}
         >
           <Stack flexDirection="row" alignItems="center">
-            {selectedList.length === 1 && (
-              <>
-                {pipeline?.isActivated && pipeline?.recruitmentAppliedCount == 0 ? (
-                  <>
-                    <ButtonIcon
-                      onClick={() => handleShowConfirmMultiple("status")}
-                      sx={{
-                        backgroundColor: "unset !important",
-                      }}
-                      icon={<ActionSwitchCheckedIcon />}
-                    />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "#388E3C", fontSize: 13 }}
-                    >
-                      Đang hoạt động
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                   <ButtonIcon
-                      onClick={() => handleShowConfirmMultiple("status")}
-                      sx={{
-                        backgroundColor: "unset !important",
-                      }}
-                      icon={<ActionSwitchUnCheckedIcon />}
-                    />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "#5C6A82", fontSize: 13 }}
-                    >
-                      Dừng hoạt động
-                    </Typography>
-                  </>
-                )}
+            {itemSelected[0]?.isDefault == false && checkSameValue(isDefault) && (<>
+              {checkSameValue(item) && (
+                <>
+                  {item.includes(true) ? (
+                    <>
+                      <ButtonIcon
+                        onClick={() => handleShowConfirmMultiple("status")}
+                        sx={{
+                          backgroundColor: "unset !important",
+                        }}
+                        icon={<ActionSwitchCheckedIcon />}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#388E3C", fontSize: 13 }}
+                      >
+                        Đang hoạt động
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      <ButtonIcon
+                        onClick={() => handleShowConfirmMultiple("status")}
+                        sx={{
+                          backgroundColor: "unset !important",
+                        }}
+                        icon={<ActionSwitchUnCheckedIcon />}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#5C6A82", fontSize: 13 }}
+                      >
+                        Không hoạt động
+                      </Typography>
+                    </>
+                  )}
+                </>
+              )}
+              {itemSelected.length === 1 && itemSelected[0]?.recruitmentAppliedCount == 0 && canEdit && (
                 <ButtonIcon
-                sx={{
-                  marginLeft:"16px"
-                }}
-                  onClick={() => handleShowConfirmMultiple("approve")}
+                  sx={{
+                    marginLeft: "16px",
+                  }}
+                  onClick={() => handleShowConfirmMultiple("edit")}
                   icon={
                     <Iconify
                       icon={"ri:edit-2-fill"}
@@ -108,11 +135,13 @@ const PipelineBottomNav = ({
                     />
                   }
                 />
-                 <ButtonIcon
+              )}
+              {checkSameApply(itemApply) && canEdit && (
+                <ButtonIcon
                   sx={{
-                    marginLeft:"16px"
+                    marginLeft: "16px",
                   }}
-                  onClick={onClose}
+                  onClick={() => handleShowConfirmMultiple("delete")}
                   icon={
                     <Iconify
                       icon={"material-symbols:delete-outline-rounded"}
@@ -122,12 +151,13 @@ const PipelineBottomNav = ({
                     />
                   }
                 />
-              </>
+              )}
+            </>
             )}
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
-              Đã chọn: {selectedList.length}
+              Đã chọn: {itemSelected.length}
             </Typography>
             <Divider
               orientation="vertical"
@@ -155,40 +185,28 @@ const PipelineBottomNav = ({
         <PipelineActiveModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
-          ids={selectedList}
+          ids={ids}
+          onClose={onCloseModel}
+          isActivated={item[0]}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple.includes("edit") && (
+        <PipelineFormModal
+          show={showConfirmMultiple}
+          setShow={setShowConfirmMultiple}
+          onClose={onCloseModel}
+          data={pipeline}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple.includes("delete") && (
+        <PipelineDeleteModal
+          showConfirmMultiple={showConfirmMultiple}
+          setShowConfirmMultiple={setShowConfirmMultiple}
+          selectedListIds={ids}
           onClose={onCloseModel}
           isActivated={pipeline?.isActivated}
         />
       )}
-      {/* {showConfirmMultiple && typeConfirmMultiple.includes("approve") && (
-        <RecruitmentAdConfirmMultipleModal
-          showConfirmMultiple={showConfirmMultiple}
-          setShowConfirmMultiple={setShowConfirmMultiple}
-          recruitmentIds={selectedList}
-          onClose={onCloseModel}
-        />
-      )}
-      {showConfirmMultiple && typeConfirmMultiple.includes("reject") && (
-        <RecruitmentAdRejectModal
-          showConfirmMultiple={showConfirmMultiple}
-          setShowConfirmMultiple={setShowConfirmMultiple}
-          recruitmentId={selectedList[0]}
-          onClose={onCloseModel}
-        />
-      )}
-      {showConfirmMultiple && typeConfirmMultiple.includes("preview") && (
-        // <RecruitmentAdRejectModal
-        //   showConfirmMultiple={showConfirmMultiple}
-        //   setShowConfirmMultiple={setShowConfirmMultiple}
-        //   recruitmentId={selectedList[0]}
-        //   setselectedList={setselectedList}
-        // />
-        <RecruitmentAdPreviewModal
-          showConfirmMultiple={showConfirmMultiple}
-          setShowConfirmMultiple={setShowConfirmMultiple}
-          onClose={onCloseModel}
-        />
-      )} */}
     </Drawer>
   );
 };

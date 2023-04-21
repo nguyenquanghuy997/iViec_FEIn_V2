@@ -1,18 +1,6 @@
 import {Paper} from "@mui/material";
-import {makeStyles, styled} from "@mui/styles";
+import {styled} from "@mui/styles";
 import { STYLE_CONSTANT as style } from '@/theme/palette'
-
-const useStyles = makeStyles(() => ({
-    input: {
-        border: '1px solid red',
-        "&:focus": {
-            borderWidth: '1px',
-        }
-    },
-    paperItem: {
-        backgroundColor: 'blue'
-    }
-}));
 
 const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
     "&.MuiPaper-root.MuiAutocomplete-paper": {
@@ -21,7 +9,8 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
         width: '100%',
         border: '1px solid #D0D4DB',
         borderTop: theme.spacing(0),
-        borderRadius: '0 !important'
+        borderRadius: '0 !important',
+        backgroundColor: '#FDFDFD'
     },
     "& .MuiAutocomplete-listbox": {
         padding: 0,
@@ -46,7 +35,7 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
         }
     },
     "& ::-webkit-scrollbar": {
-        width: "4px",
+        width: "8px",
         borderRadius: '6px'
     },
     "& ::-webkit-scrollbar-track": {
@@ -99,7 +88,6 @@ const CardSubInfoLabelStyle = {
 };
 
 export {
-    useStyles,
     PaperAutocompleteStyle,
     BoxWrapperStyle,
     BoxInnerStyle,

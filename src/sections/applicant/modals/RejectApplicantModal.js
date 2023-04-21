@@ -1,14 +1,20 @@
 import { useUpdateApplicantRecruitmentToNextStateMutation } from "../ApplicantFormSlice";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
-import Iconify from "@/components/Iconify";
+import SvgIcon from "@/components/SvgIcon";
 import { FormProvider } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Grid, Modal, Typography } from "@mui/material";
-import React from "react";
+import { useSnackbar } from "notistack";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { useSnackbar } from "notistack";
+
+const LIST_ACTION = [
+  { id: 0, name: "Đạt", color: "#4CAF50" },
+  { id: 1, name: "Cân nhắc", color: "#FF9800" },
+  { id: 2, name: "Loại", color: "#F44336" },
+];
 
 export const RejectApplicantModal = ({
   applicantId,
@@ -16,15 +22,24 @@ export const RejectApplicantModal = ({
   stage,
   show,
   setShow,
-  rejectid,
+  actionId,
+  actionType,
+  onClose,
 }) => {
+  // data
   const recruitmentPipelineStateId = stage?.recruitmentPipelineStates?.filter(
     (i) => i.pipelineStateType == 3
   )[0]?.id;
 
+  // other
+  const { enqueueSnackbar } = useSnackbar();
+
+  // state
+  const [currentAction, setCurrentAction] = useState(actionType);
+
   // form
   const Schema = Yup.object().shape({
-    note: Yup.string().required("Chưa nhập lý do loại ứng viên"),
+    note: (currentAction == 0 || currentAction == 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
   });
   const methods = useForm({
     resolver: yupResolver(Schema),
@@ -33,31 +48,31 @@ export const RejectApplicantModal = ({
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const { enqueueSnackbar } = useSnackbar();
+
+  // api
   const [addForm] = useUpdateApplicantRecruitmentToNextStateMutation();
+
+  // handle
   const pressSave = handleSubmit(async (e) => {
     try {
       const body = {
         applicantId: applicantId,
         recruitmentId: recruimentId,
-        recruitmentPipelineStateId: rejectid
-          ? rejectid
-          : recruitmentPipelineStateId,
-        pipelineStateResultType: 2,
+        recruitmentPipelineStateId: actionId ?? recruitmentPipelineStateId,
+        pipelineStateResultType: currentAction,
         note: e?.note,
       };
       await addForm(body).unwrap();
-      enqueueSnackbar("Loại ứng viên thành công");
-      location.reload()
+      enqueueSnackbar("Chuyên bước thành công");
+      onClose();
     } catch (err) {
-      enqueueSnackbar("Loại ứng viên thất bại", {
+      enqueueSnackbar("Chuyên bước thất bại", {
         autoHideDuration: 1000,
         variant: "error",
       });
     }
   });
 
-  // const [text, setText] = React.useState('');
   return (
     <Modal
       open={show}
@@ -66,36 +81,88 @@ export const RejectApplicantModal = ({
     >
       <FormProvider methods={methods}>
         <View width={600} borderRadius={8} bgColor={"#fff"}>
-          <View pt={24} pb={36} ph={24}>           
+          <View pt={20} pb={36} ph={24}>
+            {/* button close */}
+            <View asEnd mr={12} onPress={() => setShow(false)}>
+              <SvgIcon>
+                {
+                  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.0001 8.82178L14.1251 4.69678L15.3034 5.87511L11.1784 10.0001L15.3034 14.1251L14.1251 15.3034L10.0001 11.1784L5.87511 15.3034L4.69678 14.1251L8.82178 10.0001L4.69678 5.87511L5.87511 4.69678L10.0001 8.82178Z" fill="#455570"/></svg>'
+                }
+              </SvgIcon>
+            </View>
+
+            {/* icon */}
+            <View asCenter mt={25}>
+              <SvgIcon>
+                {
+                  '<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M40.1255 30.125L52.5005 42.5L40.1255 54.875L36.5905 51.34L42.9305 44.9975L10.0005 45V40H42.9305L36.5905 33.66L40.1255 30.125ZM19.8755 5.125L23.4105 8.66L17.0705 15H50.0005V20H17.0705L23.4105 26.34L19.8755 29.875L7.50049 17.5L19.8755 5.125Z" fill="#455570"/></svg>'
+                }
+              </SvgIcon>
+            </View>
+
+            {/* title */}
             <Typography
-              fontSize={20}
-              fontWeight={"700"}
-              color="#E53935"
+              mt={"12px"}
+              fontSize={16}
+              fontWeight={"600"}
+              color="#455570"
               textAlign={"center"}
             >
-              <Iconify
-                icon={"mdi:alert-circle-outline"}
-                width={60}
-                height={60}
-                color="#E53935"
-              />
-              <br />
-              {"Xác nhận loại ứng viên"}
+              {"Chuyển ứng viên sang bước kết quả"}
             </Typography>
-            <Typography fontSize={15} color="#455570" textAlign={"center"}>
-              {`Sau khi bị loại ứng viên sẽ được chuyển sang bước `}
-              <strong>{`Kết quả - Loại.`}</strong>
+
+            {/* des */}
+            <Typography
+              mt={"8px"}
+              fontSize={14}
+              color="#455570"
+              textAlign={"center"}
+            >
+              {`Lưu ý: Bạn chỉ có thể gửi Offer khi ứng viên ở trạng thái `}
+              <strong>{`Kết quả - Đạt`}</strong>
             </Typography>
+
+            <View
+              hidden
+              flexRow
+              mt={24}
+              borderRadius={6}
+              borderWidth={1}
+              borderColor={"#D0D4DB"}
+            >
+              {LIST_ACTION.map((item) => {
+                const isActive = item.id == currentAction;
+                return (
+                  <View
+                    flex1
+                    pv={16}
+                    key={item.id}
+                    bgColor={isActive ? item.color : undefined}
+                    onPress={() => setCurrentAction(item.id)}
+                  >
+                    <Typography
+                      fontSize={14}
+                      fontWeight={"600"}
+                      color={isActive ? "#FDFDFD" : "#455570"}
+                      textAlign={"center"}
+                    >
+                      {item.name}
+                    </Typography>
+                  </View>
+                );
+              })}
+            </View>
+
             <Typography fontWeight={"600"} color="#5C6A82" mt="24px" mb="8px">
-              {"Lý do loại ứng viên"}{" "}
-              <span style={{ color: "#E53935" }}>*</span>
+              {"Ghi chú"}
             </Typography>
             <TextAreaDS
               maxLength={150}
-              placeholder="Nhập lý do..."
+              placeholder="Nhập nội dung ghi chú..."
               name="note"
             />
           </View>
+
           <Grid
             container
             padding="16px 24px"
@@ -119,17 +186,14 @@ export const RejectApplicantModal = ({
               }}
               onClick={() => setShow(false)}
             />
+
             <ButtonDS
-              tittle={"Loại ứng viên"}
+              tittle={"Chuyển"}
               type="submit"
               sx={{
                 textTransform: "unset",
                 color: "#fff",
-                backgroundColor: "#D32F2F",
                 boxShadow: "none",
-                ":hover": {
-                  backgroundColor: "#c31410",
-                },
                 fontSize: "14px",
                 padding: "6px 12px",
               }}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -12,7 +12,7 @@ import {
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {LIST_PIPELINESTATE} from "@/utils/formatString";
+import {PipelineStateType} from "@/utils/enum";
 
 export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow}) => {
   const onClose = () => {
@@ -20,16 +20,21 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
     setShow(false);
   }
   const [valueChecked, setValueChecked] = useState(undefined);
-
+  
   const handleChange = (event) => {
     setValueChecked(event.target.value);
   };
-
+  
   const handleAccept = () => {
-    setStage(model => ({...model, stage: valueChecked}));
+    if (valueChecked.indexOf(",")) {
+      let valueSplit = valueChecked.split(",");
+      setStage(model => ({...model, stage: valueSplit[0], stageResult: valueSplit[1]}))
+    } else {
+      setStage(model => ({...model, stage: valueChecked}));
+    }
     onClose();
   };
-
+  
   return (
     <Dialog
       open={show}
@@ -75,8 +80,24 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
           onChange={handleChange}
         >
           {data?.filter(item => item.pipelineStateType !== 4).map(item => (
-            <FormControlLabel value={item.id} sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
-                              control={<Radio/>} label={LIST_PIPELINESTATE.find(x => x.value === item.pipelineStateType).name}/>
+            item.pipelineStateType === 3 ? <Fragment key={item.id}>
+                <FormControlLabel value={item.id+ ",0"}
+                                  sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
+                                  control={<Radio/>}
+                                  label={PipelineStateType(item.pipelineStateType, 0)}/>
+                <FormControlLabel value={item.id + ",1"}
+                                  sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
+                                  control={<Radio/>}
+                                  label={PipelineStateType(item.pipelineStateType, 1)}/>
+                <FormControlLabel value={item.id + ",2"}
+                                  sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
+                                  control={<Radio/>}
+                                  label={PipelineStateType(item.pipelineStateType, 2)}/>
+              </Fragment> :
+              <FormControlLabel key={item.id} value={item.id}
+                                sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
+                                control={<Radio/>}
+                                label={PipelineStateType(item.pipelineStateType)}/>
           ))}
         </RadioGroup>
       </DialogContent>

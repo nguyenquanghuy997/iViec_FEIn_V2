@@ -4,25 +4,32 @@ import AuthGuard from "@/guards/AuthGurad";
 // components
 import DashboardLayout from "@/layouts/dashboard";
 import PropTypes from "prop-types";
+import { PERMISSION_GROUPS } from "@/config";
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   variant: PropTypes.oneOf(["dashboard", "logoOnly"]),
-  roles: PropTypes.arrayOf(PropTypes.string), // Example ['Admin', 'Leader']
+  permissions: PropTypes.arrayOf(PropTypes.string), // Ex: ['ViewJob', 'ViewCandidate', ...]
 };
 
 Layout.defaultProps = {
   variant: "dashboard",
-  roles: "Admin",
+  permissions: [
+    ...PERMISSION_GROUPS.ACCESS_DASHBOARD,
+    ...PERMISSION_GROUPS.ACCESS_SETTINGS,
+  ],
 };
 
-export default function Layout({ variant = "dashboard", roles, children }) {
+export default function Layout({ variant = "dashboard", permissions, children }) {
   if (variant === "logoOnly") {
     return <LogoOnlyLayout> {children} </LogoOnlyLayout>;
   }
+
   return (
     <AuthGuard>
-      <DashboardLayout roles={roles}> {children} </DashboardLayout>
+      <DashboardLayout permissions={permissions}>
+        {children}
+      </DashboardLayout>
     </AuthGuard>
   );
 }

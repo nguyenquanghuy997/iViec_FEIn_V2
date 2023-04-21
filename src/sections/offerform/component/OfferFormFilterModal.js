@@ -2,14 +2,14 @@ import React, {memo, useEffect} from "react";
 import {Box, Divider, Drawer, IconButton, Stack, Typography} from "@mui/material";
 import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
-import DynamicFilterForm from "@/sections/dynamic-filter/DynamicFilterForm";
+import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import {isArray} from 'lodash';
 import {useForm} from "react-hook-form";
 import {FormProvider} from "@/components/hook-form";
 import {useRouter} from "next/router";
 import {
-  ApplicantModalFooterStyle,
-  ApplicantModalHeadStyle,
+  FilterModalFooterStyle,
+  FilterModalHeadStyle,
   ButtonCancelStyle,
   HelperTextTypography
 } from "@/sections/applicant/style";
@@ -108,23 +108,18 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
             sx: {
               width: {xs: 1, sm: 560, md: 384},
               boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
-              zIndex: 999,
-              position: 'fixed',
-              height: 'calc(100% - 64px)',
-              top: '64px',
-              right: 0,
             }
           }}
       >
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <ApplicantModalHeadStyle>
+          <FilterModalHeadStyle>
             <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
               Bộ lọc
             </Typography>
             <IconButton size="small" onClick={onClose}>
               <Iconify icon="ic:baseline-close"/>
             </IconButton>
-          </ApplicantModalHeadStyle>
+          </FilterModalHeadStyle>
           <Divider/>
           <Box sx={{py: 2, mt: 0}}>
             <HelperTextTypography variant="body2">Để thêm/bớt bộ lọc, vui lòng chọn cài đặt quản lý cột ở bảng dữ
@@ -142,7 +137,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
           </Box>
 
           <Divider/>
-          <ApplicantModalFooterStyle>
+          <FilterModalFooterStyle>
             <Stack flexDirection="row">
               <ButtonDS
                   type="submit"
@@ -153,7 +148,7 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
               />
               <ButtonCancelStyle onClick={handleCloseModal}>Hủy</ButtonCancelStyle>
             </Stack>
-          </ApplicantModalFooterStyle>
+          </FilterModalFooterStyle>
         </FormProvider>
       </Drawer>
   );

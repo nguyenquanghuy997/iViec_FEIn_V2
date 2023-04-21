@@ -1,16 +1,15 @@
+import { AvatarDS } from "@/components/DesignSystem";
 import MenuPopover from "@/components/MenuPopover";
 // components
-import { DOMAIN_SERVER_API } from "@/config";
+// import {DOMAIN_SERVER_API} from "@/config";
 // hooks
 import useAuth from "@/hooks/useAuth";
 import useIsMountedRef from "@/hooks/useIsMountedRef";
 import useLocales from "@/hooks/useLocales";
-import { useSelector } from "@/redux/store";
-import { PATH_DASHBOARD } from "@/routes/paths";
+import {PATH_AUTH} from "@/routes/paths";
 import styled from "@emotion/styled";
 // @mui
 import {
-  Avatar,
   Box,
   Divider,
   IconButton,
@@ -21,8 +20,8 @@ import {
 import { alpha } from "@mui/material/styles";
 // next
 import NextLink from "next/link";
-import { useSnackbar } from "notistack";
-import { useState } from "react";
+import {useSnackbar} from "notistack";
+import {useState} from "react";
 
 const TypographyStyle = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -36,12 +35,12 @@ export default function AccountPopover() {
 
   const MENU_OPTIONS = [
     {
-      label: "home",
+      label: "Thông tin công ty",
       linkTo: "/",
     },
     {
-      label: "setting",
-      linkTo: PATH_DASHBOARD.profile.root + user?.id,
+      label: "Đổi mật khẩu",
+      linkTo: PATH_AUTH.changePassword,
     },
   ];
   const isMountedRef = useIsMountedRef();
@@ -54,11 +53,10 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
-  const avatar = useSelector((state) => state.avatar);
   const handleLogout = async () => {
     try {
+      window.location.href = PATH_AUTH.login;
       await logout();
-
       if (isMountedRef.current) {
         handleClose();
       }
@@ -82,6 +80,9 @@ export default function AccountPopover() {
         sx={{
           p: 0,
           ...(open && {
+            '& .MuiBadge-root':{
+              marginRight: 0,
+            },
             "&:before": {
               zIndex: 1,
               content: "''",
@@ -94,19 +95,11 @@ export default function AccountPopover() {
           }),
         }}
       >
-        {Object.keys(avatar.avatar).length === 0 ? (
-          <Avatar
-            sx={{ borderRadius: '10px' }}
-            src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
-            alt={user?.displayName}
+        <AvatarDS
+            sx={{ borderRadius: '10px',  marginRight:0 }}
+            // src={`${DOMAIN_SERVER_API}/${user?.linkAvatar}`}
+            name={user?.firstName}
           />
-        ) : (
-          <Avatar
-            sx={{ borderRadius: '10px' }}
-            src={`${DOMAIN_SERVER_API}/${avatar?.avatar}`}
-            alt={user?.displayName}
-          />
-        )}
       </IconButton>
 
       <MenuPopover
@@ -150,7 +143,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: "dashed" }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          {translate("logout") || "Logout"}
+          {translate("Đăng xuất") || "Logout"}
         </MenuItem>
       </MenuPopover>
     </>

@@ -13,6 +13,7 @@ const ICONS = {
   consider: getIcon("ic_consider",'#FB8906'),
   assessment: getIcon("ic_assessment"),
   interview: getIcon("ic_interview"),
+  review: getIcon("ic_review"),
   // aiInterview: getIcon("ic_ai"),
   apply: getIcon("ic_apply"),
   ownerApply: getIcon("icon_owner_apply"),
@@ -30,7 +31,12 @@ export const iconLogPipe = (type, stage, result ) => {
     case 1:
       return ICONS.assessment;
     case 2:
-      return ICONS.interview;
+      switch (type) {
+        case 'review':
+          return ICONS.review;
+          default:
+            return ICONS.interview;
+      }
     case 3:
       switch (type) {
         case 'result':

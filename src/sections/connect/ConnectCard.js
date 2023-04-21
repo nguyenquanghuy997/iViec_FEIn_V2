@@ -1,6 +1,6 @@
 import InforIcon from "../../assets/InforIcon";
 import ConnectForm from "./ConnectForm";
-import DeleteIcon from "@/assets/DeleteIcon";
+import {DeleteIcon} from "@/assets/ActionIcon";
 import { FormProvider } from "@/components/hook-form";
 import ConnectDialog from "@/sections/connect/ConnectDialog";
 import { ConnectCardStyle } from "@/sections/connect/style";
@@ -15,25 +15,14 @@ import {
   Tooltip,
   Avatar,
 } from "@mui/material";
-import { FormControlLabel, Switch } from "@mui/material";
+import { FormControlLabel } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { alpha, styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Controller, useFormContext } from "react-hook-form";
+import { GreenSwitch } from "@/utils/cssStyles";
 
-const GreenSwitch = styled(Switch)(({ theme }) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C",
-    "&:hover": {
-      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
-    },
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
 
 const SwitchForm = ({ name, handleChange, style, ...other }) => {
   const { control } = useFormContext();

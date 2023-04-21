@@ -17,3 +17,13 @@ export const errorMessagesRe = {
     REC_08:'Tin tuyển dụng không ở trạng thái chờ phê duyệt',
     REC_09:'Tin tuyển dụng đã được phê duyệt bởi đơn vị tổ chức',
 }
+
+export const AUTH_ERROR_TYPE = {
+    AUE_01: 'AUE_01',
+    AUE_06: 'AUE_06',
+    IDE_05: 'IDE_05',
+    IDE_06: 'IDE_06',
+    IDE_09: 'IDE_09',
+    IDE_12: 'IDE_12',
+    IDE_18: 'IDE_18',
+}

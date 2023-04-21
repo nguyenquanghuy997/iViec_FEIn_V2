@@ -1,5 +1,6 @@
 import {
   ButtonDS,
+  SelectAutoCompleteDS,
   TextAreaDS,
 } from "@/components/DesignSystem";
 import { View, Text } from "@/components/DesignSystem/FlexStyled";
@@ -8,34 +9,25 @@ import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { ButtonIcon } from "@/utils/cssStyles";
-import { LoadingButton } from "@mui/lab";
-import { Modal } from "@mui/material";
-import { useEffect } from "react";
+import { Divider, FormHelperText, Modal } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import RHFDropdown from "@/components/hook-form/RHFDropdown";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 const defaultValuess = {
   des: "",
 };
 
 export const PipelineAddModal = ({
+  pipeLineSelected,
   show,
   setShow,
   editData,
   onSubmit,
-  onDelete,
 }) => {
-  const isEdit = !!editData.name;
+  const isEdit = !!editData.stageType?.name;
   // form
-  const ProfileSchema = Yup.object().shape({
-    // stageType: Yup.string().required("Chưa chọn bước"),
-    stageType: Yup.string().required("Chưa chọn bước tuyển dụng"),
-  });
   const methodss = useForm({
     defaultValuess,
-    resolver: yupResolver(ProfileSchema),
   });
 
   const {
@@ -47,20 +39,25 @@ export const PipelineAddModal = ({
   const pressHide = () => {
     setShow(false);
   };
-
+  const [error, setError] = useState(false);
   const pressSave = handleSubmit(async (d) => {
     const data = {
-      stageType: d.stageType,
+      stageType: selectedStatge,
       des: d.des,
     };
-      onSubmit?.(data);
-      pressHide();
-    
-  });
-  const pressDelete = () => {
-    onDelete?.();
+    if (selectedStatge == "") {
+      setError(true);
+      return;
+    }
+    else if (pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length > 4) {
+      setError(true);
+      return;
+    }
+
+    onSubmit?.(data);
     pressHide();
-  };
+
+  });
 
   // render
   const renderTitle = (title, required) => {
@@ -68,14 +65,21 @@ export const PipelineAddModal = ({
   };
 
   const LIST_PIPELINE_STAGE = [
-    { id: "0", value: "0", name: "Thi tuyển" },
+    // { id: "0", value: "0", name: "Thi tuyển" },
     { id: "1", value: "1", name: "Phỏng vấn" },
   ];
-
+  const [selectedStatge, setSelectedStatge] = useState("");
+  const onChangeStage = (e) => {
+    setSelectedStatge(e.target.value);
+  };
   useEffect(() => {
-    setValue("stageType", ""), setValue("des", "");
-    return;
-  }, [setValue]);
+    if (!isEdit) {
+      setSelectedStatge(""), setValue("des", "");
+      return;
+    } else {
+      setSelectedStatge(editData.stageType), setValue("des", editData.des);
+    }
+  }, []);
   return (
     <Modal
       open={show}
@@ -84,74 +88,67 @@ export const PipelineAddModal = ({
     >
       <>
         <FormProvider methods={methodss}>
-          <View hidden width={668} borderradius={8} bgcolor={"#fff"}>
-            <View p={24}>
-              <View flexrow="true" atcenter="true" mb={24}>
-                <Text flex fontsize={22} fontweight={"700"}>
-                  {isEdit ? "Sửa bước tuyển dụng" : "Thêm bước tuyển dụng"}
-                </Text>
+          <View hidden width={668} borderradius={8} bgcolor={"#FDFDFD"}>
+            <View flexrow="true" atcenter="true" pv={22} ph={24}>
+              <Text flex fontsize={16} fontweight={"700"}>
+                {isEdit ? "Sửa bước tuyển dụng" : "Thêm bước tuyển dụng"}
+              </Text>
 
-                <ButtonIcon
-                  sx={{
-                    textTransform: "none",
-                  }}
-                  onClick={pressHide}
-                  icon={
-                    <Iconify
-                      icon={"ic:baseline-close"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                    />
-                  }
-                />
-              </View>
+              <ButtonIcon
+                onClick={pressHide}
+                icon={
+                  <Iconify
+                    icon={"ic:baseline-close"}
+                    width={20}
+                    height={20}
+                    color="#455570"
+                  />
+                }
+              />
+            </View>
+            <Divider />
+            <View p={24}>
               <View mb={24}>
                 {renderTitle("Loại bước", true)}
-                <RHFDropdown
-                  options={LIST_PIPELINE_STAGE.map(i => ({
-                    id: i.id,
-                    value: i.id,
-                    name: i.name,
-                  }))}
-                  name="stageType"
+                <SelectAutoCompleteDS
+                  selectedOption={selectedStatge}
+                  setSelectedOption={setSelectedStatge}
+                  onChange={onChangeStage}
+                  data={LIST_PIPELINE_STAGE}
                   placeholder="Chọn loại bước"
-                  allowClear={true}
-              />
+                  name={"stageType"}
+                />
+                {error && selectedStatge == "" && (
+                  <FormHelperText
+                    error
+                    sx={{ marginLeft: 0 }}
+                  >
+                    Chưa chọn loại bước tuyển dụng
+                  </FormHelperText>
+                )}
+                {
+                  error && pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length >= 5 && (
+                    <FormHelperText
+                      error
+                      sx={{ marginLeft: 0 }}
+                    >
+                      Tối đa có 5 bước {selectedStatge?.name.toLowerCase()}
+                    </FormHelperText>
+                  )
+                }
               </View>
               <View mb={24}>
-                {renderTitle("Mô tả", true)}
+                {renderTitle("Mô tả")}
 
                 <TextAreaDS
-                  initialValue=""
                   maxLength={255}
                   placeholder="Nhập nội dung mô tả"
                   name={"des"}
                 />
               </View>
             </View>
-
-            <View
-              flexrow="true"
-              jcend="true"
-              pv={12}
-              ph={16}
-              bgcolor={"#F8F8F9"}
-              boxshadow={"inset 0px 1px 0px #EBECF4"}
-            >
-              {!!isEdit && (
-                <>
-                  <LoadingButton
-                    size="large"
-                    variant="text"
-                    color="error"
-                    onClick={pressDelete}
-                  >
-                    {"Xóa"}
-                  </LoadingButton>
-                  <View flex="true" />
-                </>
-              )}
+            <Divider />
+            <View flexrow="true" jcend="true" pv={16} ph={24}>
               <ButtonCancelStyle
                 sx={{ marginRight: "8px" }}
                 onClick={pressHide}
@@ -163,7 +160,7 @@ export const PipelineAddModal = ({
                 type="submit"
                 variant="contained"
                 loading={isSubmitting}
-                tittle={isEdit ? "Sửa" : "Thêm"}
+                tittle={isEdit ? "Lưu" : "Thêm"}
                 onClick={pressSave}
               />
             </View>

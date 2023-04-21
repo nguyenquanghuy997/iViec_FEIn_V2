@@ -1,47 +1,66 @@
 import FilterModalRole from "../FilterModalRole";
-import RolegroupHeader from "../RolegroupHeader";
-import DetailDrawer from "../modals/DetailDrawer";
+import RoleDrawer from '../modals/RoleDrawer';
 import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
-import { View } from "@/components/FlexStyled";
 import TextMaxLine from "@/components/TextMaxLine";
 import {
-  useGetListColumnApplicantsQuery,
-  useUpdateListColumnApplicantsMutation,
-} from "@/sections/applicant";
-import {
-  // useGetAllFilterPipelineMutation,
+  useGetListRoleColumnsQuery,
   useGetRoleGroupListQuery,
+  useRemoveRoleGroupMutation,
+  useSetStatusRoleGroupMutation,
+  useUpdateListRoleColumnsMutation,
 } from "@/sections/rolegroup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Typography } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+import { useState, useMemo } from "react";
+import BottomNavModal from '@/components/BaseComponents/BottomNavModal';
+import Switch from "@/components/form/Switch";
+import { useConfirmModal } from '@/components/modal';
+import {
+  RiEdit2Fill,
+  RiDeleteBin6Line,
+  RiToggleFill,
+  RiToggleLine,
+} from 'react-icons/ri';
+import { useSnackbar } from "notistack";
+import useRole from "@/hooks/useRole";
+import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
+import { getErrorMessage } from "@/utils/helper";
 
-const defaultValues = {
-  searchKey: "",
-};
+import { RoleGroupStyle } from "../styles";
+import {LIST_STATUS} from "@/utils/formatString";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 export const RoleContainer = () => {
+  const { palette } = useTheme();
+  const { confirmModal } = useConfirmModal();
+  const { canAccess } = useRole();
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const { query, isReady } = router;
-  const { data, isLoading } = useGetRoleGroupListQuery();
-  // const { data: Data, isLoading } = useGetAllFilterPipelineMutation();
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
-  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
+
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [paginationSize, setPaginationSize] = useState(10);
+  const [editItem, setEditItem] = useState(null);
+
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const { data = {}, isLoading } = useGetRoleGroupListQuery(query, { skip: !isReady });
+
+  const [removeRoleGroup] = useRemoveRoleGroupMutation();
+  const [setStatusRoleGroup] = useSetStatusRoleGroupMutation();
+
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_ROLE), []);
+
   const columns = [
     {
+      dataIndex: "id",
       title: "STT",
       key: "index",
-      render: (item, record, index) => (page - 1) * paginationSize + index + 1,
-      width: "60px",
+      align: "center",
+      render: (item, record, index, page, paginationSize) => (
+        <>{(page - 1) * paginationSize + index + 1}</>
+      ),
+      width: "8%",
       fixed: "left",
     },
     {
@@ -49,10 +68,17 @@ export const RoleContainer = () => {
       title: "Vai trò",
       width: "220px",
       fixed: "left",
-      render: (item) => (
+      render: (item, record) => (
         <TextMaxLine
-          sx={{ width: 220, fontWeight: "normal", fontSize: 14 }}
-          onClick={() => setOpen(true)}
+          sx={{ width: 220, fontWeight: "normal", fontSize: 14, ...(canEdit && { cursor: 'pointer' }) }}
+          onClick={(e) => {
+            if (!canEdit) {
+              return;
+            }
+            setEditItem(record);
+            setOpen(true);
+            e.stopPropagation();
+          }}
         >
           {item}
         </TextMaxLine>
@@ -60,35 +86,52 @@ export const RoleContainer = () => {
     },
     {
       title: "Số nhân viên",
-      key: "number",
-      render: () => <>20</>,
+      key: "numOfPerson",
+      dataIndex: 'number',
       width: "140px",
+      align: "center",
+      render: (item, record) => (record?.numOfPerson)
     },
 
     {
+      dataIndex: "isActivated",
       title: "Trạng thái",
-      key: "status",
-      render: () => (
-        <Typography sx={{ color: "#388E3C", fontSize: "12px" }}>
-          Đang hoạt động
+      key: "isActivated",
+      render: (isActivated) => (
+        <Typography
+          sx={{
+            color: isActivated ? "#388E3C" : "red",
+            fontSize: "12px",
+          }}
+        >
+          {isActivated ? "Đang hoạt động" : "Không hoạt động"}
         </Typography>
       ),
       width: "160px",
+      filters: {
+        type: TBL_FILTER_TYPE.SELECT,
+        placeholder: 'Tất cả',
+        options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+      }
     },
     {
       title: "Ngày tạo",
-      key: "registerTime",
+      key: "createdTime",
+      dataIndex: 'registerTime',
       width: "120px",
-      render: (record) => (
-        <>{moment(record?.registerTime).format("DD/MM/YYYY")}</>
-      ),
+      render: (item, record) => record?.createdTime ? moment(record?.createdTime).format("DD/MM/YYYY") : null,
+      filters: {
+        type: TBL_FILTER_TYPE.RANGE_DATE,
+        name: ['createdTimeFrom', 'createdTimeTo'],
+        placeholder: 'Chọn ngày',
+      },
     },
     {
       dataIndex: "creatorName",
       title: "Người tạo",
       width: "300px",
       multiple: true,
-      render: (item) => (
+      render: (item, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <AvatarDS
             sx={{
@@ -97,76 +140,25 @@ export const RoleContainer = () => {
               borderRadius: "100px",
               fontSize: "12px",
             }}
-            name={item}
+            name={record?.isDefault == true ? "iVIEC" : record?.creatorEmail}
           ></AvatarDS>
           <span fontSize="14px" fontWeight="600" color="#172B4D">
-            {item}
+            {record?.isDefault == true ? "iVIEC" : record?.creatorEmail}
           </span>
         </div>
       ),
+      filters: {
+        type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+        name: "creatorIds",
+        placeholder: "Chọn 1 hoặc nhiều người",
+        remoteUrl: API_GET_ORGANIZATION_USERS,
+        showAvatar: true
+      },
     },
   ];
 
-  const menuItemText = {
-    name: "Vị trí công việc",
-    organizationName: "Đơn vị",
-    numberOfRecruitmentApplied: "Số tin áp dụng",
-    isActivated: "Trạng thái",
-    createdTime: "Ngày tạo",
-    creatorName: "Người tạo",
-  };
-
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
-
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues: useMemo(
-      () =>
-        query.searchKey
-          ? { ...defaultValues, searchKey: query.searchKey }
-          : { ...defaultValues },
-      [query.searchKey]
-    ),
-    // defaultValues: {...defaultValues, searchKey: query.searchKey},
-    resolver: yupResolver(Schema),
-  });
-
-  const { handleSubmit } = methods;
-
-  useEffect(() => {
-    if (!isReady) return;
-    // const queryParams = {
-    //   searchKey: query.searchKey,
-    //   isActive: query.isActive ? query.isActive : null,
-    //   createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-    //   createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-    //   creatorIds:
-    //     query.creatorIds && typeof query.creatorIds === "string"
-    //       ? query.creatorIds
-    //       : query.creatorIds && query.creatorIds,
-    // };
-    // if (query) {
-    //   getAllFilter(queryParams).unwrap();
-    // } else {
-    //   getAllFilter().unwrap();
-    // }
-  }, [isReady, query]);
-
   // open filter form
   const [isOpen, setIsOpen] = useState(false);
-
-  // filter modal
   const handleOpenFilterForm = () => {
     setIsOpen(true);
   };
@@ -175,65 +167,186 @@ export const RoleContainer = () => {
     setIsOpen(false);
   };
 
-  const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [itemSelected, setItemSelected] = useState([]);
 
-  // const onSubmit = async (data) => {
-  //   const body = { ...data, searchKey: data.searchKey };
-  //   await router.push(
-  //     {
-  //       pathname: router.pathname,
-  //       query: {
-  //         ...body,
-  //         createdTimeFrom: data.createdTimeFrom
-  //           ? new Date(data.createdTimeFrom).toISOString()
-  //           : null,
-  //         createdTimeTo: data.createdTimeTo
-  //           ? new Date(data.createdTimeTo).toISOString()
-  //           : null,
-  //       },
-  //     },
-  //     undefined,
-  //     { shallow: true }
-  //   );
-  //   handleCloseFilterForm();
-  // };
+  const showActionStatus = useMemo(() => {
+    if (!canEdit) {
+      return false;
+    }
+    if (itemSelected.length < 1) {
+      return false;
+    }
+    if (itemSelected.length < 2) {
+      return true;
+    }
+
+    let isShow = true;
+    let isActive = itemSelected[0].isActivated;
+    for (let i = 1; i < itemSelected.length; i++) {
+      if (itemSelected[i].isActivated !== isActive) {
+        isShow = false;
+        break;
+      }
+    }
+    return isShow;
+  }, [itemSelected]);
+
+  const showDeleteBtn = useMemo(()=>{
+    if (!canEdit) {
+      return false;
+    }
+    if (itemSelected.length < 1) {
+      return false;
+    }
+    return !itemSelected.some(x=>x.isDefault); 
+  },[itemSelected]);
+
+  const selectedStatus = useMemo(() => {
+    if (itemSelected.length < 1) {
+      return true;
+    }
+    return itemSelected[0].isActivated;
+  }, [itemSelected]);
+
+  const handleConfirmDelete = () => {
+    confirmModal({
+      title: 'Xác nhận xóa vai trò',
+      confirmType: 'warning',
+      content: (
+        <Typography variant="body2" color={palette.text.sub}>
+          Bạn có chắc chắn muốn xóa {' '}
+          <strong>{getConfirmItemTitle()}</strong>?
+        </Typography>
+      ),
+      okText: 'Xóa',
+      onOk: async (close) => {
+        try {
+          close();
+          // router.push({
+          //   query: { },
+          // });
+          await removeRoleGroup(itemSelected.map(it => it.id)).unwrap();
+          setItemSelected([]);
+          setSelectedRowKeys([])
+          enqueueSnackbar('Xóa vai trò thành công!');
+        } catch (err) {
+          enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
+        }
+      },
+    });
+  }
+
+  const getConfirmItemTitle = () => {
+    if (itemSelected.length < 1) {
+      return null;
+    }
+    if (itemSelected.length === 1) {
+      return itemSelected[0].name;
+    }
+    return itemSelected.length + ' vai trò đã chọn';
+  }
+
+  const handleChangeStatus = (isChecked) => {
+    confirmModal({
+      title: isChecked ? 'Bật trạng thái hoạt động cho vai trò' : 'Tắt trạng thái hoạt động cho vai trò',
+      confirmType: 'info',
+      confirmIcon: isChecked ? <RiToggleFill size={55} color="#1976D2" />
+        : <RiToggleLine size={55} color="#455570" />,
+      content: (
+        <Typography variant="body2" color={palette.text.sub}>
+          Bạn chắc chắn muốn { isChecked ? 'bật' : 'tắt' } {' '}
+          trạng thái hoạt động cho <strong>{getConfirmItemTitle()}</strong>?
+        </Typography>
+      ),
+      okText: isChecked ? 'Bật' : 'Tắt',
+      onOk: async (close) => {
+        try {
+          await setStatusRoleGroup({
+            Ids: itemSelected.map(it => it.id),
+            IsActive: isChecked,
+          }).unwrap();
+
+          setItemSelected(itemSelected.map(it => ({ ...it, isActivated: isChecked })));
+          close();
+          enqueueSnackbar((isChecked ? 'Bật' : 'Tắt') + ' trạng thái thành công!');
+        } catch (err) {
+          enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
+        }
+      },
+    });
+  }
 
   return (
-    <View>
-      <Content sx={{ padding: "0 !important" }}>
+    <RoleGroupStyle>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
           columns={columns}
           source={data}
           loading={isLoading}
-          ColumnData={ColumnData}
-          menuItemText={menuItemText}
-          UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VAI TRÒ"}
           isSetting={true}
-          nodata="Hiện chưa có quy trình tuyển dụng nào"
-          setPaginationSize={setPaginationSize}
-          setPage={setPage}
-          filter={
-            <RolegroupHeader
-              methods={methods}
-              isOpen={isOpen}
-              onSubmit={onSubmitSearch}
-              handleSubmit={handleSubmit}
-              onOpenFilterForm={handleOpenFilterForm}
-              onCloseFilterForm={handleCloseFilterForm}
-            />
+          nodata="Hiện chưa có vai trò"
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
+          itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
+          useGetColumnsFunc={useGetListRoleColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListRoleColumnsMutation}
+          createText={canEdit && "Thêm vai trò"}
+          onClickCreate={() => {
+            setOpen(true);
+          }}
+          tableProps={
+            !canEdit && { rowSelection: false }
           }
         />
       </Content>
+
+      <BottomNavModal
+        open={selectedRowKeys.length > 0}
+        onClose={() => {
+          setSelectedRowKeys([]);
+        }}
+        data={selectedRowKeys}
+        actions={[
+          ...(showActionStatus ? [{
+            component: (
+              <Switch
+                label={selectedStatus ? 'Đang hoạt động' : 'Không hoạt động'}
+                checked={selectedStatus}
+                onClick={e => {
+                  handleChangeStatus(e.target.checked);
+                }}
+              />
+            ),
+          }] : []),
+          ...((canEdit && itemSelected.length === 1) ? [{
+            icon: <RiEdit2Fill size={18} color={palette.text.secondary} />,
+            onClick: () => {
+              if (itemSelected.length > 1) {
+                return;
+              }
+              setEditItem(itemSelected[0]);
+              setOpen(true);
+            },
+            disabled: selectedRowKeys.length > 1,
+          }] : []),
+          ...(showDeleteBtn ? [{
+            icon: <RiDeleteBin6Line size={18} color={palette.text.warning} />,
+            onClick: () => {
+              handleConfirmDelete();
+            },
+          }] : []),
+        ]}
+      />
+
       {isOpen && (
         <FilterModalRole
           open={isOpen}
@@ -242,13 +355,16 @@ export const RoleContainer = () => {
         />
       )}
 
-      {open && (
-        <DetailDrawer
-          open={open}
-          onClose={() => setOpen(false)}
-          onOpen={() => setOpen(true)}
-        />
-      )}
-    </View>
+      <RoleDrawer 
+        open={open} 
+        onClose={() => {
+          setEditItem(null);
+          setOpen(false);
+          setSelectedRowKeys([]);
+        }}
+        selectedItem={editItem}
+        setSelectedRowKeys={setSelectedRowKeys}
+      />
+    </RoleGroupStyle>
   );
 };

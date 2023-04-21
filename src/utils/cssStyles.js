@@ -1,8 +1,13 @@
 import { ButtonDS } from "@/components/DesignSystem";
-import { Box, Dialog, DialogContentText } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogContentText,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
-import { Typography } from "antd";
 
 function getDirection(value = "bottom") {
   return {
@@ -73,13 +78,13 @@ export const ButtonIcon = styled(ButtonDS)(() => ({
   textTransform: "none",
 }));
 export const ButtonCancel = styled(ButtonDS)(() => ({
+  color: "#455570",
+  backgroundColor: "transparent",
+  borderRadius: 6,
+  "&:hover": {
     color: "#455570",
     backgroundColor: "transparent",
-    borderRadius: 6,
-    "&:hover": {
-      color: "#455570",
-      backgroundColor: "transparent",
-    },
+  },
 }));
 export const ButtonGray = styled(ButtonDS)(() => ({
   color: "#455570",
@@ -117,56 +122,167 @@ export const DialogModel = styled(Dialog)(() => ({
     "& .MuiPaper-root": {
       padding: 0,
       borderRadius: "6px",
-      width: 'max-content',
+      width: "max-content",
       maxWidth: "600px !important",
     },
   },
 }));
-export const DialogContentTextModelStyle = styled(DialogContentText)(({ theme }) => ({
-  "&.subtite": {
-    textAlign: "center",
-    width: "100%",
-    fontSize: "14px",
-    fontWeight: 700,
-    display: "block",
-    color:"#455570",
-    marginTop: theme.spacing(1),
-    "& .subtitle-name": {
-      fontWeight: 600,
+export const DialogContentTextModelStyle = styled(DialogContentText)(
+  ({ theme }) => ({
+    "&.subtite": {
+      textAlign: "center",
+      width: "100%",
+      fontSize: "14px",
+      fontWeight: 700,
+      display: "block",
+      color: "#455570",
+      marginTop: theme.spacing(1),
+      "& .subtitle-name": {
+        fontWeight: 600,
+      },
     },
-  },
-}));
-export const HeaderPreviewStyle = styled(Box)(({theme}) => ({
+  })
+);
+export const HeaderPreviewStyle = styled(Box)(({ theme }) => ({
   "&.form-head": {
     position: "fixed",
     top: 0,
     right: 0,
     width: `600px`,
-    backgroundColor: '#FDFDFD',
+    backgroundColor: "#FDFDFD",
     zIndex: 1,
-    borderBottom: '1px solid #E7E9ED',
+    borderBottom: "1px solid #E7E9ED",
     padding: theme.spacing(2),
     height: theme.spacing(8),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  }
-
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
 }));
 
-export const FooterPreviewStyle  = styled(Box)(({theme}) => ({
+export const FooterPreviewStyle = styled(Box)(({ theme }) => ({
   "&.form-footer": {
     position: "fixed",
     bottom: 0,
     right: 0,
     width: 600,
-    backgroundColor: '#FDFDFD',
+    backgroundColor: "#FDFDFD",
     zIndex: 1,
-    borderTop: '1px solid #E7E9ED',
+    borderTop: "1px solid #E7E9ED",
     padding: theme.spacing(2),
     height: theme.spacing(8),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  }
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+}));
+export const GreenSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: "#388E3C",
+    "&:hover": {
+      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: "#388E3C",
+  },
+}));
+
+export const TextElipsis = styled(Typography)(() => ({
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  width: "100%",
+}));
+export const ReviewForm = styled("div")(() => ({
+  "&.block-review": {
+    background: "#F2F4F5",
+    borderRadius: "6px",
+    padding: "16px",
+    marginBottom: "28px",
+  },
+  "&.block-review .title": {
+    fontWeight: 600,
+    fontSize: "14px",
+    lineHeight: "20px",
+    color: "#172B4D;",
+    marginBottom: "8px",
+  },
+  "&.block-review .subTitleForm ": {
+    fontWeight: 400,
+    fontSize: "13px",
+    lineHeight: "20px",
+    color: "#455570;",
+    marginBottom: "16px",
+  },
+  "& .MuiBox-root": {
+    width: "100%",
+    marginTop: "16px",
+  },
+  "& .ant-rate": {
+    width: "100%",
+    display: "flex",
+  },
+  "& .ant-rate li, & .pagination-review li": {
+    marginInlineEnd: "0 !important",
+    display: "flex",
+    cursor: "pointer",
+    transition: "all 0.32s",
+    width: "100%",
+    height: "40px",
+    border: "1px solid #ebecf4",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#393b3e",
+    fontWeight: "600",
+    fontSize: "14px",
+    lineHeight: "24px",
+    background: "#fff",
+  },
+  "& .ant-rate .ant-rate-star-second": {
+    color: "#393b3e",
+    fontWeight: "600",
+    fontSize: "14px",
+  },
+  "& .ant-rate li:first-of-type, & .pagination-review li:first-of-type": {
+    borderRadius: "4px 0 0 4px",
+  },
+  "& .ant-rate li:last-child, & .pagination-review li:last-child": {
+    borderRadius: "0 4px 4px 0",
+  },
+  "& .ant-rate .ant-rate-star-full": {
+    background: "#1976D2 !important",
+    color: '#fff',
+    borderColor: '#1976D2'
+  },
+  "& .ant-rate .ant-rate-star-first": {
+    width:'100%'
+  },
+  "& .ant-rate .ant-rate-star >div:hover": {
+    transform: 'unset'
+  },
+  "& .ant-rate .ant-rate-star-full .ant-rate-star-second": {
+    color: '#fff'
+  },
+  "& .pagination-review": {
+    display: "flex",
+    marginBottom: 0,
+    marginTop: "16px",
+  },
+  "&.block-review-result .MuiBox-root": {
+    width: 'unset',
+    marginTop: 0,
+  },
+  "&.block-review-result .pagination-review li:hover": {
+    background: "#F2F4F5",
+  },
+  "&.block-review-result .pagination-review li": {
+    border: "1px solid #C9D9E0",
+  },
+  "&.block-review-result .pagination-review li:first-of-type": {
+    borderRadius: "4px 0 0 0",
+  },
+  "&.block-review-result .pagination-review li:last-child": {
+    borderRadius: "0 4px 0 0",
+  },
 }));

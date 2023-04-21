@@ -1,10 +1,8 @@
-import RoleDrawer from "./modals/RoleDrawer";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { InputAdornment, Stack, Button } from "@mui/material";
-import { useState } from "react";
 import SvgIcon from "@/components/SvgIcon";
 
 const RolegroupHeader = ({
@@ -12,11 +10,9 @@ const RolegroupHeader = ({
   onOpenFilterForm,
   onSubmit,
   handleSubmit,
+  onOpenAddForm,
+  canEdit,
 }) => {
-  // const [showForm, setShowForm] = useState(false);
-  const[openAdd, setOpenAdd] = useState(false)
-  const handleClose =() => setOpenAdd(false)
-  const handleOpen =() => setOpenAdd(true)
   return (
     <>
       <Stack
@@ -30,13 +26,23 @@ const RolegroupHeader = ({
             <RHFTextField
               name="searchKey"
               placeholder="Tìm kiếm quy trình tuyển dụng"
-              sx={{ minWidth: "510px" }}
+              sx={{
+                minWidth: "360px",
+                borderRadius: '6px',
+                background: '#F2F4F5',
+                height: "36px",
+                ".MuiInput-root": {
+                  height: "36px",
+                  minHeight: "36px",
+                  border:'none'
+                },
+              }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                  <InputAdornment position="start" sx={{ ml: 0.5, mr:0 }}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "text.disabled", width: 20, height: 20 }}
+                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
                     />
                   </InputAdornment>
                 ),
@@ -45,6 +51,7 @@ const RolegroupHeader = ({
           </FormProvider>
 
           <ButtonFilterStyle
+            style={{height:36}}
             onClick={onOpenFilterForm}
             startIcon={
               <Iconify
@@ -56,6 +63,8 @@ const RolegroupHeader = ({
             Bộ lọc
           </ButtonFilterStyle>
         </View>
+
+        {canEdit && (
         <Button
           style={{
             padding: "8px 12px 8px 14px",
@@ -66,7 +75,7 @@ const RolegroupHeader = ({
             background: "#1976D2",
             textDecoration: "none",
           }}
-          onClick={handleOpen}
+          onClick={onOpenAddForm}
         >
           <SvgIcon>
             {`
@@ -83,19 +92,14 @@ const RolegroupHeader = ({
               lineHeight: 20 / 15,
               marginLeft: 8,
               color: "white",
+              textTransform:'none'
             }}
           >
             {"Thêm vai trò"}
           </span>
         </Button>
+        )}
       </Stack>
-
-      <RoleDrawer 
-      open={openAdd} 
-      onClose={handleClose} 
-      onOpen={handleOpen} 
-      />
-      {/* <PipelineFormModal show={showForm} setShow={setShowForm} /> */}
     </>
   );
 };

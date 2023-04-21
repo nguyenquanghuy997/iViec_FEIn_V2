@@ -1,26 +1,19 @@
-import {
-  Box,
-  Typography,
-  FormControlLabel,
-  Button,
-  Switch,
-} from "@mui/material";
-import { styled } from "@mui/styles";
+import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import React from "react";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
+import { PERMISSIONS } from "@/config";
 
-const ActiveSwitch = styled(Switch)(() => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C",
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
+const HeaderCard = ({ text, onOpen, checked, handleChange }) => {
 
-const HeaderCard = ({ text, onOpen }) => {
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.EDIT_COMPANY), []);
+
   return (
     <Box
       sx={{
-        background: "white",
+        background: "#FDFDFD",
         mt: 3,
         py: 2.5,
         px: 5,
@@ -28,27 +21,37 @@ const HeaderCard = ({ text, onOpen }) => {
         justifyContent: "space-between",
       }}
     >
-      <Typography sx={{ m: "auto 0" , fontSize:16, fontWeight:600}}>{text}</Typography>
-      <Box>
-        <FormControlLabel
-          control={<ActiveSwitch defaultChecked />}
-          label="Hiển thị"
-        />
-        <Button
-          sx={{
-            padding: "8px 12px 8px 14px",
-            background: "#F3F4F6",
-            textDecoration: "none",
-            color: "#455570",
-            ml:2,
-            fontWeight:500
-          }}
-          onClick={onOpen}
-        >
-          {"Chỉnh sửa "}
-        </Button>
-       
-      </Box>
+      <Typography sx={{ m: "auto 0", fontSize: 16, fontWeight: 600 }}>
+        {text}
+      </Typography>
+      {
+        canEdit && <Box sx={{ display: 'flex' }}>
+          <FormControlLabel
+            control={<Switch
+              color={"success"}
+              checked={checked}
+              onChange={handleChange}
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked': {
+                  color: '#388E3C',
+                },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: '#A5D6A7',
+                },
+              }}
+            />}
+            label={checked ? "Hiển thị" : "Không hiển thị"}
+          />
+          <Box>
+            <MuiButton
+              color={"default"}
+              title={"Chỉnh sửa"}
+              onClick={onOpen}
+              sx={{ fontWeight: 500, height: '36px' }}
+            />
+          </Box>
+        </Box>
+      }
     </Box>
   );
 };

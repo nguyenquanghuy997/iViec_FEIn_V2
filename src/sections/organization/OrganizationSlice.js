@@ -1,12 +1,14 @@
 import {apiSlice} from "@/redux/api/apiSlice";
 import {
-  API_CREATE_CHILD_ORGANIZATION, API_DELETE_ORGANIZATION, API_GET_LIST_ROLE_GROUP,
+  API_CREATE_CHILD_ORGANIZATION,
+  API_DELETE_ORGANIZATION,
   API_GET_ORGANIZATION_DETAIL_BY_ID,
-  API_GET_ORGANIZATION_WITH_CHILD, API_UPDATE_ORGANIZATION
+  API_GET_ORGANIZATION_WITH_CHILD,
+  API_UPDATE_ORGANIZATION
 } from "@/routes/api";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Organization", 'GetOrganization'],
+  addTagTypes: ["Organization"],
 });
 
 const OrganizationAPI = apiWithTag.injectEndpoints({
@@ -17,7 +19,7 @@ const OrganizationAPI = apiWithTag.injectEndpoints({
         method: 'GET',
         params
       }),
-      providesTags: ['GetOrganization']
+      providesTags: ['Organization']
     }),
     filterOrganizations: builder.query({
       query: (params) => ({
@@ -39,7 +41,7 @@ const OrganizationAPI = apiWithTag.injectEndpoints({
         method: 'POST',
         data: data
       }),
-      invalidatesTags: ['GetOrganization']
+      invalidatesTags: ['Organization']
     }),
     updateOrganization: builder.mutation({
       query: (data) => ({
@@ -47,30 +49,18 @@ const OrganizationAPI = apiWithTag.injectEndpoints({
         method: 'PATCH',
         data
       }),
-      invalidatesTags: ['GetOrganization']
+      invalidatesTags: ['Organization']
     }),
     deleteOrganization: builder.mutation({
       query: (data) => ({
         url: `${API_DELETE_ORGANIZATION}/${data.id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['GetOrganization']
-    }),
-    // role
-    getRoleGroup: builder.query({
-      query: (params) => ({
-        url: API_GET_LIST_ROLE_GROUP,
-        method: 'GET',
-        params
-      }),
+      invalidatesTags: ['Organization']
     }),
   })
 });
 export const {
   useGetOrganizationsDataWithChildQuery,
-  useCreateChildOrganizationMutation,
-  useUpdateOrganizationMutation,
-  useDeleteOrganizationMutation,
   useGetOrganizationByIdQuery,
-  useGetRoleGroupQuery,
 } = OrganizationAPI;

@@ -9,6 +9,9 @@ const RootStyle = styled(Box)(({theme}) => ({
         overflow: 'hidden',
         position: 'relative',
         borderRadius: theme.spacing(0.5),
+        '& .tox-statusbar__path-item':{
+            display:'none !important'
+        }
     })
 )
 

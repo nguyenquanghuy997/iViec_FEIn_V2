@@ -5,13 +5,13 @@ import OrganizationTree from "@/sections/organization/component/OrganizationTree
 import Iconify from "@/components/Iconify";
 import OrganizationEmptyChildren from "@/sections/organization/component/OrganizationEmptyChildren";
 import OrganizationForm from "@/sections/organization/component/OrganizationForm";
-import {DOMAIN_SERVER_API} from "@/config";
+import {DOMAIN_SERVER_API, PERMISSIONS} from "@/config";
 import {convertFlatDataToTree, convertViToEn} from "@/utils/function";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
 import OrganizationBottomNav from "@/sections/organization/component/OrganizationBottomNav";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
-import InputFilter from "@/sections/dynamic-filter/InputFilter";
+import InputFilter from "@/components/dynamic-filter/InputFilter";
 import {filterBy} from "@/sections/organization/helper/DFSSearchTree";
 import {
   useGetAllAdminByOrganizationIdQuery,
@@ -20,11 +20,21 @@ import {
 import {CrownIcon} from "@/sections/organization/component/Icon";
 import OrganizationConfirmMultipleModal from "@/sections/organization/component/OrganizationConfirmMultipleModal";
 import OrganizationActiveModal from "@/sections/organization/component/OrganizationActiveModal";
-import OrganizationListUserInviteModal from "@/sections/organization/component/OrganizationListUserInviteModal";
 import MuiButton from '@/components/BaseComponents/MuiButton';
 import { AddIcon } from '@/assets/ActionIcon';
+import LoadingScreen from "@/components/LoadingScreen";
+import useRole from '@/hooks/useRole';
 
 const OrganizationContent = () => {
+  // role
+  const { canAccess } = useRole();
+  const canViewUser = useMemo(() => canAccess(PERMISSIONS.VIEW_USER), []);
+  const canEditUser = useMemo(() => canAccess(PERMISSIONS.CRUD_USER), []);
+  const canApproveUser = useMemo(() => canAccess(PERMISSIONS.APPR_USER_INVITE), []);
+
+  const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
+  const canEditUnit = useMemo(() => canAccess(PERMISSIONS.CRUD_UNIT), []);
+
   // selected
   const [selected, setSelected] = React.useState([]);
   // modal
@@ -39,9 +49,19 @@ const OrganizationContent = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [showMultipleDelete, setShowMultipleDelete] = useState(false);
   const [isOpenInviteForm, setIsOpenInviteForm] = useState(false);
-  const [isOpenListUserInvite, setIsOpenListUserInvite] = useState(false);
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0)    // 1 active 0 inactive
+  const [valueTabInviteForm, setValueTabInviteForm] = useState(0);
+
+  const handleOpenListInvite = () => {
+    setValueTabInviteForm(1)
+    setIsOpenInviteForm(true)
+  }
+
+  const handleOpenInviteForm = () => {
+    setValueTabInviteForm(0)
+    setIsOpenInviteForm(true)
+  }
 
   // create form
   const handleOpenForm = () => {
@@ -87,11 +107,10 @@ const OrganizationContent = () => {
         let valueCodeToEng = convertViToEn(node?.code)?.toLowerCase();
         let valueQueryToEng = convertViToEn(query)?.toLowerCase();
         let isMatching = valueNameToEng?.indexOf(valueQueryToEng) > -1 || valueCodeToEng?.indexOf(valueQueryToEng) > -1;
-
         if (isMatching) return true;
         if (isLeaf) return false;
-
         const subtree = filterBy(node.children, query);
+        node.children = subtree;
         return Boolean(subtree.length);
       })
     }
@@ -104,7 +123,7 @@ const OrganizationContent = () => {
     setValueSearch(value);
   }
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <LoadingScreen />
 
   return (
       <Box sx={{px: 7.5, py: 5, backgroundColor: "#FDFDFD", minHeight: '100vh'}}>
@@ -126,20 +145,26 @@ const OrganizationContent = () => {
             </Stack>
           </Stack>
           <Stack flexDirection="row" alignItems="center">
-            <MuiButton 
+            {
+              (canViewUser || canViewUnit || canEditUser || canEditUnit || canApproveUser) && <MuiButton 
               title={"Danh sách mời"}
               color={"default"}
-              onClick={() => setIsOpenListUserInvite(true)}
+              onClick={() => handleOpenListInvite()}
               startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
               sx={{ fontWeight: 550, marginRight: 1 }}
             />
-            <MuiButton 
+            }
+            
+            {
+              (canEditUnit || canEditUser) && <MuiButton 
               title={"Mời người dùng"}
               color={"primary"}
-              onClick={() => setIsOpenInviteForm(true)}
+              onClick={() => handleOpenInviteForm()}
               startIcon={<AddIcon />}
               sx={{ fontWeight: 550 }}
             />
+            }
+            
           </Stack>
         </Stack>
         <Box sx={{mb: 3, mt: 0}}>
@@ -245,10 +270,7 @@ const OrganizationContent = () => {
             isOpenInviteForm={isOpenInviteForm}
             setIsOpenInviteForm={setIsOpenInviteForm}
             ListOrganization={ListOrganization}
-        />}
-        {isOpenListUserInvite && <OrganizationListUserInviteModal
-            isOpenListUserInvite={isOpenListUserInvite}
-            setIsOpenListUserInvite={setIsOpenListUserInvite}
+            valueTabDefault={valueTabInviteForm}
         />}
         {isOpenActive && <OrganizationActiveModal
             actionTypeActive={actionTypeActive}

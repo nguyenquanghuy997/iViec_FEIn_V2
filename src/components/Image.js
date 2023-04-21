@@ -55,7 +55,7 @@ export default function Image({
           component={LazyLoadImage}
           wrapperClassName='wrapper'
           effect={disabledEffect ? undefined : effect}
-          placeholderSrc='/assets/placeholder.svg'
+          placeholderSrc='/assets/placeholder.png'
           sx={{ width: 1, height: 1, objectFit: 'cover' }}
           {...other}
         />
@@ -74,6 +74,7 @@ export default function Image({
           width: 1,
           height: 1,
           backgroundSize: 'cover !important',
+          backgroundPosition: 'center'
         },
         ...sx,
       }}
@@ -82,7 +83,7 @@ export default function Image({
         component={LazyLoadImage}
         wrapperClassName='wrapper'
         effect={disabledEffect ? undefined : effect}
-        placeholderSrc='/assets/placeholder.svg'
+        placeholderSrc='/assets/placeholder.png'
         sx={{ width: 1, height: 1, objectFit: 'cover' }}
         {...other}
       />

@@ -1,0 +1,42 @@
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px white inset;
+    -webkit-text-fill-color: #333;
+}
+
+input:-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+.SnackbarContainer-root {
+    z-index: 3001!important;
+}
+
+/**::-webkit-scrollbar-thumb {*/
+/*    background: #B9BFC9;*/
+/*    margin-right: 3px;*/
+/*    border-radius: 30px;*/
+/*}*/
+
+/**::-webkit-scrollbar {*/
+/*    width: 6px;*/
+/*    height: 6px;*/
+/*}*/
+.top {
+    top: 156px;
+}
+
+.down {
+    top: -156px !important;
+}
+
+.up {
+    top: 156px;
+}

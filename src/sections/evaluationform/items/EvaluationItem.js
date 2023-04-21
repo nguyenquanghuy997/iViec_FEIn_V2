@@ -1,147 +1,184 @@
-import Content from "@/components/BaseComponents/Content";
-import {View} from "@/components/FlexStyled";
-import EvaluationformHeader from "@/sections/evaluationform/EvaluationformHeader";
-import ApplicantFilterModal from "@/sections/applicant/filter/ApplicantFilterModal";
-// import {fDate} from "@/utils/formatTime";
-import {yupResolver} from "@hookform/resolvers/yup";
-// import {Tag} from "antd";
-import React, {useEffect, useState,useMemo} from "react";
-import {useForm} from "react-hook-form";
-import * as Yup from "yup";
+import {
+  useDeleteReviewFormMutation,
+  useGetAllReviewFormQuery,
+  useUpdateStatusReviewFormMutation,
+} from "../evaluationFormSlice";
+import { EvaluationFormModal } from "../modals/EvaluationFormModal";
+import EvaluationItemBlock from "./EvaluationItemBlock";
+import ActiveModal from "@/components/BaseComponents/ActiveModal";
+import DeleteModal from "@/components/BaseComponents/DeleteModal";
+import FormHeader from "@/sections/emailform/component/FormHeader";
+import { Box } from "@mui/material";
+import { useSnackbar } from "notistack";
+import React, {useMemo, useState} from "react";
+import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
+import {LIST_STATUS} from "@/utils/formatString";
+import {isEmpty as _isEmpty} from "lodash";
 import {useRouter} from "next/router";
-// import {
-//     Address,
-//     MaritalStatus,
-//     Sex,
-//     YearOfExperience,
-//     PipelineStateType,
-//   } from "@/utils/enum";
-const defaultValues = {
-    searchKey: "",
-};
+import TableHeader from "@/components/BaseComponents/table/TableHeader";
+import useRole from "@/hooks/useRole";
+import LoadingScreen from "@/components/LoadingScreen";
 
-export const EvaluationItem = () => {
-    const router = useRouter();
-    const {query, isReady} = router;
-    // api get list
-    const columns = []
+const columns = [
+  {
+    dataIndex: "createdTime",
+    title: "Ngày tạo",
+    colFilters: {
+      type: TBL_FILTER_TYPE.RANGE_DATE,
+      name: ['StartTime', 'EndTime'],
+      placeholder: 'Chọn ngày',
+    },
+  },
+  {
+    dataIndex: "creatorName",
+    title: "Người tạo",
+    colFilters: {
+      type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+      name: "CreatorIds",
+      placeholder: "Chọn 1 hoặc nhiều người",
+      remoteUrl: API_GET_ORGANIZATION_USERS,
+      showAvatar: true
+    },
+  },
+  {
+    dataIndex: "IsActivated",
+    title: "Trạng thái",
+    colFilters: {
+      type: TBL_FILTER_TYPE.SELECT,
+      placeholder: 'Tất cả',
+      options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+    }
+  }
+]
 
+const EvaluationItem = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const { canAccess } = useRole();
+  const router = useRouter();
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
 
-    // form search
-    const Schema = Yup.object().shape({
-        search: Yup.string(),
-    });
-    const methods = useForm({
-        mode: "onChange",
-        defaultValues: useMemo(() => query.searchKey ? { ...defaultValues, searchKey: query.searchKey } : { ...defaultValues },[query.searchKey]),
-        // defaultValues: {...defaultValues, searchKey: query.searchKey},
-        resolver: yupResolver(Schema),
-    });
+  const {data: {items: Data = []} = {}, isLoading} = useGetAllReviewFormQuery(query, { skip: !isReady });
+  const [status] = useUpdateStatusReviewFormMutation();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
 
-    const {handleSubmit} = methods;
+  const [item, setItem] = useState(null);
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+  const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
 
-    useEffect(() => {
-        if (!isReady) return;
-        // const queryParams = {
-        //     searchKey: query.searchKey,
-        //     applicantSkillIds: query.applicantSkillIds && typeof query.applicantSkillIds === 'string' ? [query.applicantSkillIds] : query.applicantSkillIds && query.applicantSkillIds,
-        //     expectSalaryFrom: query.expectSalaryFrom ? Number(query.expectSalaryFrom) : null,
-        //     expectSalaryTo: query.expectSalaryTo ? Number(query.expectSalaryTo) : null,
-        //     yearsOfExperience: query.yearsOfExperience ? [Number(query.yearsOfExperience)] : null,
-        //     sexs: query.sexs ? [Number(query.sexs)] : null,
-        //     weightFrom: query.weightFrom ? Number(query.weightFrom) : null,
-        //     weightTo: query.weightTo ? Number(query.weightTo) : null,
-        //     heightFrom: query.heightFrom ? Number(query.heightFrom) : null,
-        //     heightTo: query.heightTo ? Number(query.heightTo) : null,
-        //     maritalStatuses: query.maritalStatuses ? [Number(query.maritalStatuses)] : null,
-        //     // educations: query.educations ? [query.educations] : null,
-        //     homeTowerProvinceIds: query.homeTowerProvinceIds ? [query.homeTowerProvinceIds] : null,
-        //     homeTowerDistrictIds: query.homeTowerDistrictIds ? [query.homeTowerDistrictIds] : null,
-        //     livingAddressProvinceIds: query.livingAddressProvinceIds ? [query.livingAddressProvinceIds] : null,
-        //     livingAddressDistrictIds: query.livingAddressDistrictIds ? [query.livingAddressDistrictIds] : null,
-        //     expectWorkingAddressProvinceIds: query.expectWorkingAddressProvinceIds && typeof query.expectWorkingAddressProvinceIds === 'string' ? [query.expectWorkingAddressProvinceIds] : query.expectWorkingAddressProvinceIds && query.expectWorkingAddressProvinceIds,
-        //     organizationIds: query.organizationIds && typeof query.organizationIds === 'string' ? [query.organizationIds] : query.organizationIds && query.organizationIds,
-        //     recruitmentIds: query.recruitmentIds && typeof query.recruitmentIds === 'string' ? [query.recruitmentIds] : query.recruitmentIds && query.recruitmentIds,
-        //     ownerIds: query.ownerIds && typeof query.ownerIds === 'string' ? [query.ownerIds] : query.ownerIds && query.ownerIds,
-        //     councilIds: query.councilIds && typeof query.councilIds === 'string' ? [query.councilIds] : query.councilIds && query.councilIds,
-        //     creatorIds: query.creatorIds && typeof query.creatorIds === 'string' ? [query.creatorIds] : query.creatorIds && query.creatorIds,
-        //     createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-        //     createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-        //     recruitmentPipelineStates: query.recruitmentPipelineStates
-        //     && typeof query.recruitmentPipelineStates === 'string'
-        //         ? [Number(query.recruitmentPipelineStates)]
-        //         : query.recruitmentPipelineStates && query.recruitmentPipelineStates?.map(pipe => Number(pipe)),
-        //     jobCategoryIds: query.jobCategoryIds && typeof query.jobCategoryIds === 'string' ? [query.jobCategoryIds] : query.jobCategoryIds && query.jobCategoryIds,
-        //     jobSourceIds: query.jobSourceIds && typeof query.jobSourceIds === 'string' ? [query.jobSourceIds] : query.jobSourceIds && query.jobSourceIds,
-        // };
-        if (query) {
-            // getAllFilterApplicant(JSON.stringify(queryParams)).unwrap();
-        } else {
-            // getAllFilterApplicant({}).unwrap();
-        }
-    }, [isReady, query]);
+  const handleOpenModel = (event, data, type) => {
+    event.stopPropagation();
+    setTypeConfirmMultiple(type);
+    setShowConfirmMultiple(true);
+    setItem(data);
+  };
 
-    // open filter form
-    const [isOpen, setIsOpen] = useState(false);
+  const handleCloseModel = () => {
+    setShowConfirmMultiple(false);
+    setItem(null);
+  };
 
-    // filter modal
-    const handleOpenFilterForm = () => {
-        setIsOpen(true);
-    };
-
-    const handleCloseFilterForm = () => {
-        setIsOpen(false);
-    };
-
-    const onSubmitSearch = async (data) => {
-        await router.push({
-            pathname: router.pathname,
-            query: {...query, searchKey: data.searchKey}
-        }, undefined, {shallow: true})
+  const onSubmitFilter = (values = {}, reset = false, timeout = 1) => {
+    if (reset && _isEmpty(router.query)) {
+      return;
     }
 
-    const onSubmit = async (data) => {
-        const body = {...data, searchKey: data.searchKey}
-        await router.push({
-            pathname: router.pathname,
-            query: {
-                ...body,
-                createdTimeFrom: data.createdTimeFrom ? new Date(data.createdTimeFrom).toISOString() : null,
-                createdTimeTo: data.createdTimeTo ? new Date(data.createdTimeTo).toISOString() : null,
-            }
-        }, undefined, {shallow: true})
-        handleCloseFilterForm();
-    };
+    setTimeout(() => {
+      router.push({
+        query: reset ? {} : { ...router.query, ...values },
+      }, undefined, { shallow: false });
+    }, timeout);
+  }
 
-    return (
-        <View>
+  const handleChangeStatus = async (item) => {
+    try {
+      const data = {
+        ids: [item.id],
+        isActivated: !item.isActive,
+      };
+      await status(data).unwrap();
+      enqueueSnackbar("Chuyển trạng thái thành công !");
+      handleCloseModel();
+    } catch (err) {
+      enqueueSnackbar("Chuyển trạng thái thất bại !", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
+  };
+  const [deletes] = useDeleteReviewFormMutation();
 
-            <Content>
-            <EvaluationformHeader
-                methods={methods}
-                isOpen={isOpen}
-                onSubmit={onSubmitSearch}
-                handleSubmit={handleSubmit}
-                onOpenFilterForm={handleOpenFilterForm}
-                onCloseFilterForm={handleCloseFilterForm}
+  const handleDelete = async (item) => {
+    try {
+      await deletes({ ids: [item?.id] }).unwrap();
+      enqueueSnackbar("Thực hiện thành công !");
+      handleCloseModel();
+    } catch (err) {
+      enqueueSnackbar("Thực hiện thất bại !", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingScreen />
+  }
+
+  return (
+    <>
+      <Box>
+        <FormHeader
+          title="Mẫu đánh giá"
+          buttonTitle="Thêm mẫu đánh giá"
+          showButton={false}
+        />
+        <Box sx={{mb: 2}}>
+          <TableHeader
+              columns={columns}
+              onSubmitFilter={onSubmitFilter}
+              onClickCreate={(e) => handleOpenModel(e,null,"form")}
+              createText={canEdit && 'Thêm mẫu đánh giá'}
+              isInside={true}
+          />
+        </Box>
+        {Data.map((column, index) => {
+          return (
+            <EvaluationItemBlock
+              key={index}
+              index={index}
+              item={column}
+              onOpenModel={handleOpenModel}
             />
-            {/* <DynamicColumnsTable
-                    columns={columns}
-                     source={Data?.items}
-                     loading={isLoading}
-                     ColumnData={ColumnData}
-                     menuItemText={menuItemText}
-                     UpdateListColumn={handleUpdateListColumnApplicants}
-                     settingName={"DANH SÁCH QUY TRÌNH TUYỂN DỤNG"}
-            /> */}
-               
-            </Content>
-            {isOpen && <ApplicantFilterModal
-                columns={columns}
-                isOpen={isOpen}
-                onClose={handleCloseFilterForm}
-                onSubmit={onSubmit}
-            />}
-        </View>
-    );
+          );
+        })}
+      </Box>
+      {showConfirmMultiple && typeConfirmMultiple?.includes("status") && (
+        <ActiveModal
+          showConfirmMultiple={showConfirmMultiple}
+          onClose={handleCloseModel}
+          isActivated={item.isActive}
+          title={"mẫu đánh giá"}
+          handleSave={() => handleChangeStatus(item)}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple?.includes("delete") && (
+        <DeleteModal
+          showConfirmMultiple={showConfirmMultiple}
+          onClose={handleCloseModel}
+          title={"mẫu đánh giá"}
+          handleSave={() => handleDelete(item)}
+        />
+      )}
+      {showConfirmMultiple && typeConfirmMultiple?.includes("form") && (
+        <EvaluationFormModal
+          show={showConfirmMultiple}
+          onClose={handleCloseModel}
+          id={item?.id}
+        />
+      )}
+    </>
+  );
 };
+
+export default EvaluationItem;

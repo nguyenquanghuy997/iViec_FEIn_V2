@@ -22,7 +22,7 @@ const UserActiveFailure = () => {
   return (
     <Box sx={{ ...BoxInnerStyle }}>
       <Stack sx={{ position: "absolute", top: 8, left: 8 }}>
-        <IconButton edge="end" onClick={() => router.push(-1)}>
+        <IconButton edge="end" onClick={() => router.push(PATH_AUTH.login)}>
           <Iconify icon="material-symbols:arrow-back" />
         </IconButton>
       </Stack>

@@ -1,15 +1,24 @@
 import React from "react";
-import {CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate,} from "@/assets/CheckboxIcon";
-import {ButtonTreeStyle, CheckboxStyle, TreeItemStyle, TreeViewStyle} from "@/sections/organization/style";
+import { CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate, } from "@/assets/CheckboxIcon";
+import { ButtonTreeStyle, CheckboxStyle, TreeItemStyle, TreeViewStyle } from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
-import {Box, Divider, IconButton, Link} from "@mui/material";
-import {DeleteIcon, EditIcon, ForwardIcon, PreviewIcon} from "@/assets/ActionIcon";
-import {PATH_DASHBOARD} from "@/routes/paths";
+import { Box, Divider, IconButton, Link } from "@mui/material";
+import { AddIcon, DeleteIcon, EditIcon, ForwardIcon, PreviewIcon } from "@/assets/ActionIcon";
+import { PATH_DASHBOARD } from "@/routes/paths";
 import NextLink from "next/link";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
+import { PERMISSIONS } from "@/config";
+import MuiButton from "@/components/BaseComponents/MuiButton";
 
-export default function OrganizationTree({ selected, setSelected, treeData, dataRoot, data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType}) {
+export default function OrganizationTree({ selected, setSelected, treeData, dataRoot, data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType }) {
 
     const selectedSet = React.useMemo(() => new Set(selected), [selected]);
+
+    const { canAccess } = useRole();
+
+    const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
+    const canEditUnit = useMemo(() => canAccess(PERMISSIONS.CRUD_UNIT), []);
 
     const parentMap = React.useMemo(() => {
         return data.map(item => goThroughAllNodes(item));
@@ -58,7 +67,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
             return result;
         }
         const nodeToToggle = getNodeById(nodes, id, path);
-        return {childNodesToToggle: getAllChild(nodeToToggle, array), path};
+        return { childNodesToToggle: getAllChild(nodeToToggle, array), path };
     };
 
     const findParentNodeById = (tree, id) => {
@@ -76,7 +85,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
 
     function getOnChange(checked, nodes) {
         const dataRootNode = data.find((item) => findParentNodeById(item, nodes.id) !== null);
-        const {childNodesToToggle, path} = getChildById(dataRootNode, nodes.id);
+        const { childNodesToToggle, path } = getChildById(dataRootNode, nodes.id);
         let array = checked
             ? [...selected, ...childNodesToToggle]
             : selected
@@ -116,7 +125,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                 <TreeItemStyle
                     key={nodes.id}
                     nodeId={nodes.id}
-                    className={`tree-item ${nodes.isRoot ? 'tree-item-root-node' : !nodes.children ? 'tree-item-no-children' : '' }`}
+                    className={`tree-item ${nodes.isRoot ? 'tree-item-root-node' : !nodes.children ? 'tree-item-no-children' : ''}`}
                     label={
                         <div className={`tree-item-label ${nodes.isRoot ? 'tree-item-root-label' : ''}`}>
                             <div className="tree-item-label-text">
@@ -131,53 +140,65 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                 <span className='tree-label-title'>{nodes.name}</span>
                             </div>
                             <div className={`tree-item-label-actions ${checked ? 'tree-item-label-actions-checked' : ''}`}>
-                                <IconButton
-                                    size='small'
-                                    sx={{ color: '#1976D2' }}
-                                    onClick={() => {
-                                        handleOpenFormWithCurrentNode(nodes);
-                                        setActionType(0)
-                                    }}
-                                ><Iconify icon={"material-symbols:add"} /></IconButton>
-                                <Divider orientation="vertical" flexItem sx={{borderWidth: '1.5px', height: '18px'}} variant="middle" />
-                                <IconButton
-                                    size='small'
-                                    sx={{ color: '#1976D2', mx: 0.5 }}
-                                    onClick={() => handleOpenPreview(nodes)}
-                                ><PreviewIcon /></IconButton>
-                                <Divider orientation="vertical" flexItem sx={{borderWidth: '1.5px', height: '18px'}} variant="middle" />
-                                <IconButton
-                                    size='small'
-                                    sx={{ color: '#1976D2', mx: 0.5 }}
-                                    onClick={() => {
-                                        handleOpenFormWithCurrentNode(nodes);
-                                        setActionType(1)
-                                    }}
-                                ><EditIcon /></IconButton>
-                                <Divider orientation="vertical" flexItem sx={{borderWidth: '1.5px', height: '18px'}} variant="middle" />
-                                <IconButton
-                                    size='small'
-                                    sx={{ color: '#1976D2', mx: 0.5 }}
-                                    onClick={() => {
-                                        handleShowDelete(nodes)
-                                    }}
-                                ><DeleteIcon /></IconButton>
-                                <Divider orientation="vertical" flexItem sx={{borderWidth: '1.5px', height: '18px'}} variant="middle" />
-                                <NextLink href={PATH_DASHBOARD.organization.view(nodes.id)} passHref>
-                                    <Link>
-                                        <IconButton size='small' sx={{ color: '#1976D2', mx: 0.5 }}>
-                                            <ForwardIcon />
-                                        </IconButton>
-                                    </Link>
-                                </NextLink>
+                                {
+                                    canEditUnit && <IconButton
+                                        size='small'
+                                        sx={{ color: '#1976D2' }}
+                                        onClick={() => {
+                                            handleOpenFormWithCurrentNode(nodes);
+                                            setActionType(0)
+                                        }}
+                                    ><Iconify icon={"material-symbols:add"} /></IconButton>
+                                }
+
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
+
+                                {
+                                    (canEditUnit || canViewUnit) && <IconButton
+                                        size='small'
+                                        sx={{ color: '#1976D2', mx: 0.5 }}
+                                        onClick={() => handleOpenPreview(nodes)}
+                                    ><PreviewIcon /></IconButton>
+                                }
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
+                                {
+                                    canEditUnit && <IconButton
+                                        size='small'
+                                        sx={{ color: '#1976D2', mx: 0.5 }}
+                                        onClick={() => {
+                                            handleOpenFormWithCurrentNode(nodes);
+                                            setActionType(1)
+                                        }}
+                                    ><EditIcon /></IconButton>
+                                }
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
+                                {
+                                    canEditUnit && <IconButton
+                                        size='small'
+                                        sx={{ color: '#1976D2', mx: 0.5 }}
+                                        onClick={() => {
+                                            handleShowDelete(nodes)
+                                        }}
+                                    ><DeleteIcon /></IconButton>
+                                }
+                                <Divider orientation="vertical" flexItem sx={{ borderWidth: '1.5px', height: '18px', alignSelf: 'auto' }} variant="middle" />
+                                {
+                                    (canEditUnit || canViewUnit) && <NextLink href={PATH_DASHBOARD.organization.view(nodes.id)} passHref>
+                                        <Link>
+                                            <IconButton size='small' sx={{ color: '#1976D2', mx: 0.5 }}>
+                                                <ForwardIcon />
+                                            </IconButton>
+                                        </Link>
+                                    </NextLink>
+                                }
                             </div>
                         </div>
                     }
                     collapseIcon={nodes.children && <Iconify icon="material-symbols:arrow-drop-down" sx={{ height: 24, width: 24 }} />}
-                    expandIcon={nodes.children &&  <Iconify icon="material-symbols:arrow-right" sx={{ height: 24, width: 24 }} />}
+                    expandIcon={nodes.children && <Iconify icon="material-symbols:arrow-right" sx={{ height: 24, width: 24 }} />}
                 >
                     {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
-                    {Array.isArray(nodes.children) && nodes.children.length > 0 &&
+                    {Array.isArray(nodes.children) && nodes.children.length > 0 && canEditUnit &&
                         <ButtonTreeStyle
                             onClick={() => {
                                 handleOpenFormWithCurrentNode(nodes);
@@ -259,17 +280,45 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                 onNodeToggle={handleToggle}
                 expanded={expanded}
             >
-                {treeData?.map(item => renderTree({ ...item, isRoot: true }))}
-                <ButtonTreeStyle
-                    onClick={() => {
-                        handleOpenFormWithCurrentNode(dataRoot);
-                        setActionType(0)
-                    }}
-                    className="tree-add-button tree-add-button-root-node"
-                    startIcon={<Iconify icon="material-symbols:add" sx={{ height: 20, width: 20 }} />}
-                >
-                    Thêm đơn vị
-                </ButtonTreeStyle>
+
+                {treeData && treeData.length > 0 && treeData?.map(item => renderTree({ ...item, isRoot: true }))}
+                {
+                    treeData && treeData.length > 0 && canEditUnit && <ButtonTreeStyle
+                        onClick={() => {
+                            handleOpenFormWithCurrentNode(dataRoot);
+                            setActionType(0)
+                        }}
+                        className="tree-add-button tree-add-button-root-node"
+                        startIcon={<Iconify icon="material-symbols:add" sx={{ height: 20, width: 20 }} />}
+                    >
+                        Thêm đơn vị
+                    </ButtonTreeStyle>
+                }
+
+                {
+                    (!treeData || treeData.length == 0) && <div style={{ margin: "40px 0", minHeight: "250px", textAlign: 'center' }}>
+                        <img
+                            src={`/assets/icons/candidate/notfound.png`}
+                            style={{ margin: "0 auto" }}
+                        />
+                        <p>Hiện chưa có đơn vị nào trực thuộc công ty của bạn</p>
+                        {
+                            canEditUnit && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
+                                <MuiButton
+                                    title={"Thêm đơn vị"}
+                                    onClick={() => {
+                                        handleOpenFormWithCurrentNode(dataRoot);
+                                        setActionType(0)
+                                    }}
+                                    startIcon={<AddIcon />}
+                                    sx={{ fontWeight: 550 }}
+                                />
+                            </div>
+                        }
+                    </div>
+                }
+
+
             </TreeViewStyle>
         </Box>
     );

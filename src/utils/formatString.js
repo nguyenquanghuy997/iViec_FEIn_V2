@@ -3,7 +3,7 @@ import {
   AssessmentIcon,
   InterviewIcon, OfferIcon,
   ResultIcon
-} from "@/sections/recruitment-create/component/icon/PipelineIcon";
+} from "@/sections/recruitment-form/icon/PipelineIcon";
 
 export const LIST_BRANCH_SIZE = [
     {id: "Less10", value: "[0-9]", name: "Dưới 10"},
@@ -33,9 +33,9 @@ export const LIST_ORGANIZATION_SIZE = [
     {id: "LargeTenThousand", value: 7, name: "Trên 10000 nhân sự"},
 ];
 export const LIST_STATUS = [
-    {value: 0, name: "Tất cả"},
-    {value: 1, name: "Đang hoạt động"},
-    {value: 2, name: "Không hoạt động"},
+  {id:0, value: 0, name: "Tất cả"},
+  {id:true, value: 1, name: "Đang hoạt động"},
+  {id: false, value:2, name: "Không hoạt động"},
 ]
 export const LIST_MARITAL_STATUSES = [
     {value: 0, name: "Độc thân", label: "Độc thân"},
@@ -53,7 +53,7 @@ export const LIST_GENDER_RECRUITMENT = [
     {value: 0, name: "Nam", label: "Nam"},
     {value: 1, name: "Nữ", label: "Nữ"},
     {value: 2, name: "Khác", label: "Khác"},
-    {value: 3, name: "Không yêu cầu", label: "Không yêu cầu"},
+    // {value: 3, name: "Không yêu cầu", label: "Không yêu cầu"},
 ]
 
 export const LIST_EXPERIENCE_NUMBER = [
@@ -102,6 +102,17 @@ export const LIST_RECRUITMENT_SALARY_DISPLAY_TYPE = [
   {value: 0, name: "Không lương", label: "Không lương"},
   {value: 1, name: "Lương thỏa thuận", label: "Lương thỏa thuận"},
   {value: 2, name: "Mức lương chi tiết", label: "Mức lương chi tiết"},
+]
+export const LIST_RECRUITMENT_PROCESS_STATUS = [
+  {value: 0, label: "Bản nháp"},
+  {value: 1, label: "Chờ nội bộ phê duyệt"},
+  {value: 2, label: "Nội bộ từ chối"},
+  {value: 3, label: "Chờ iVIEC phê duyệt"},
+  {value: 4, label: "iVIEC từ chối"},
+  {value: 5, label: "Đang tuyển dụng"},
+  {value: 6, label: "Đã lên lịch"},
+  {value: 7, label: "Hết hạn"},
+  {value: 8, label: "Đóng"},
 ]
 
 export const PipelineStateType = (item, description = '') => {

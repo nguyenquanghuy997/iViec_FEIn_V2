@@ -1,5 +1,5 @@
 import {styled} from "@mui/styles";
-import {Box, Button, Checkbox} from '@mui/material';
+import {Button, Checkbox} from '@mui/material';
 import {TreeItem, TreeView} from "@mui/lab";
 
 const CheckboxStyle = styled(Checkbox)(({theme}) => ({
@@ -13,7 +13,7 @@ const CheckboxStyle = styled(Checkbox)(({theme}) => ({
 }));
 
 const TreeItemStyle = styled(TreeItem)(({theme}) => ({
-  [theme.breakpoints.up('xl')]: {
+  [theme.breakpoints.up('lg')]: {
     '&.tree-item .MuiTreeItem-content': {
       height: 48,
       marginBottom: theme.spacing(0.5),
@@ -109,7 +109,6 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
   }
 }));
 const TreeViewStyle = styled(TreeView)(({theme}) => ({
-  [theme.breakpoints.up('xl')]: {
     "& .tree-item .MuiTreeItem-group": {
       marginLeft: theme.spacing(3.5),
       position: 'relative',
@@ -124,10 +123,8 @@ const TreeViewStyle = styled(TreeView)(({theme}) => ({
         backgroundColor: '#D0D4DB'
       }
     },
-  }
 }));
 const ButtonTreeStyle = styled(Button)(({theme}) => ({
-  [theme.breakpoints.up('xl')]: {
     "&.tree-add-button": {
       marginTop: theme.spacing(1),
       marginLeft: theme.spacing(1.5),
@@ -154,42 +151,6 @@ const ButtonTreeStyle = styled(Button)(({theme}) => ({
         display: 'none'
       },
     }
-  }
-}));
-
-const OrganizationFromHeadStyle = styled(Box)(({theme, width = 600}) => ({
-  "&.organization-form-head": {
-    position: "fixed",
-    top: 0,
-    right: 0,
-    width: width,
-    backgroundColor: '#FDFDFD',
-    zIndex: 1,
-    borderBottom: '1px solid #E7E9ED',
-    padding: theme.spacing(2),
-    height: theme.spacing(8),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  }
-
-}));
-
-const OrganizationFromFooterStyle = styled(Box)(({theme, width = 600}) => ({
-  "&.organization-form-footer": {
-    position: "fixed",
-    bottom: 0,
-    right: 0,
-    width: width,
-    backgroundColor: '#FDFDFD',
-    zIndex: 1,
-    borderTop: '1px solid #E7E9ED',
-    padding: theme.spacing(2),
-    height: theme.spacing(8),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  }
 }));
 
 export {
@@ -197,7 +158,5 @@ export {
   TreeItemStyle,
   TreeViewStyle,
   ButtonTreeStyle,
-  OrganizationFromHeadStyle,
-  OrganizationFromFooterStyle,
 }
 

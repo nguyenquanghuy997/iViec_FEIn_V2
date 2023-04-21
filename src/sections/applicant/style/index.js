@@ -7,7 +7,9 @@ const ButtonFilterStyle = styled(Button)(({theme}) => ({
     padding: "12px 16px 12px 16px !important",
     height: "44px",
     borderRadius: "6px !important",
-    color: '#455570 !important'
+    color: '#455570 !important',
+    fontSize: '14px',
+    fontWeight: '600 !important'
 }));
 
 const ButtonCancelStyle = styled(Button)(({theme}) => ({
@@ -37,13 +39,13 @@ const ButtonSaveStyle = styled(Button)(({theme}) => ({
 
 const HelperTextTypography = styled(Typography)(({theme}) => ({
     padding: theme.spacing(0, 2),
-    fontSize: '13px',
+    fontSize: '13px !important',
     fontWeight: 400,
     fontStyle: 'italic',
     color: "#8A94A5"
 }));
 
-const ApplicantModalHeadStyle = styled(Box)(({theme}) => ({
+const FilterModalHeadStyle = styled(Box)(({theme}) => ({
     position: "sticky",
     top: 0,
     right: 0,
@@ -58,7 +60,7 @@ const ApplicantModalHeadStyle = styled(Box)(({theme}) => ({
     justifyContent: 'space-between',
 }));
 
-const ApplicantModalFooterStyle = styled(Box)(({theme}) => ({
+const FilterModalFooterStyle = styled(Box)(({theme}) => ({
     position: "fixed",
     bottom: 0,
     right: 0,
@@ -77,8 +79,8 @@ const ApplicantModalFooterStyle = styled(Box)(({theme}) => ({
 export {
     ButtonFilterStyle,
     HelperTextTypography,
-    ApplicantModalHeadStyle,
-    ApplicantModalFooterStyle,
+    FilterModalHeadStyle,
+    FilterModalFooterStyle,
     ButtonCancelStyle,
     ButtonSaveStyle
 };

@@ -3,37 +3,41 @@ import Iconify from "@/components/Iconify";
 import { PipelineStateType } from "@/utils/enum";
 import { Box, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { memo } from "react";
+import React, { memo, useRef } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
 const Column = ({ droppableId, column }) => {
   // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
+  const windowHeight = useRef(window.innerHeight - 120);
   return (
-    <Stack spacing={2} sx={{ p: 2 }}>
+    <Stack spacing={2} sx={{ p: 1, py: 0 }}>
       <div
         style={{
           background: "rgba(9, 30, 66, 0.1)",
-          padding: 4,
-          width: 300,
-          minHeight: 1000,
-          border: "2px solid #ccc",
-          borderRadius: "8px",
+          padding: "12px",
+          // backdropFilter: 'blur(3px)'
+          width: 350,
+          // border: "2px solid #ccc",
+          // borderRadius: "8px",
         }}
       >
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            p: 1,
+            p: 2,
             m: 1,
             bgcolor: "background.paper",
-            borderRadius: 1,
+            borderRadius: "4px",
+            boxShadow:
+              "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
           }}
         >
           <Iconify
             icon={"fluent:arrow-sort-16-regular"}
-            width={12}
-            height={12}
+            width={13}
+            height={13}
+            fontWeight={600}
             color="#455570"
             mt={0.5}
           />
@@ -46,9 +50,9 @@ const Column = ({ droppableId, column }) => {
             }}
           >
             <Iconify
-              icon={"material-symbols:square"}
-              width={12}
-              height={12}
+              icon={"material-symbols:square-rounded"}
+              width={15}
+              height={15}
               color="#1E88E5"
               mr={1}
               mt={0.5}
@@ -56,16 +60,18 @@ const Column = ({ droppableId, column }) => {
             <Typography
               display="flex"
               fontSize="14px"
-              fontWeight="600"
+              fontWeight="700"
               alignItems="center"
+              color="#455570"
             >
               {PipelineStateType(column.pipelineStateType)}
             </Typography>
             <Typography
               display="flex"
               fontSize="14px"
-              fontWeight="600"
+              fontWeight="700"
               alignItems="center"
+              color="#455570"
               ml={1}
             >
               {column.items.length}
@@ -73,13 +79,13 @@ const Column = ({ droppableId, column }) => {
           </Box>
           <Iconify
             icon={"material-symbols:filter-list-rounded"}
-            width={12}
-            height={12}
+            width={13}
+            height={13}
             color="#455570"
             mt={0.5}
           />
         </Box>
-        <div style={{ display: "flex", overflow: "auto" ,borderRadius: "8px"}}>
+        <Box style={{ borderRadius: "8px" }}>
           <Droppable droppableId={droppableId} key={droppableId}>
             {(provided) => {
               return (
@@ -88,11 +94,11 @@ const Column = ({ droppableId, column }) => {
                   ref={provided.innerRef}
                   style={{
                     // background: "rgba(9, 30, 66, 0.1)",
-                    padding: 4,
-                    width: 300,
-                    minHeight: 1000,
-                    // border: "2px solid #ccc",
+                    padding: 8,
                     borderRadius: "8px",
+                    minHeight: windowHeight.current,
+                    maxHeight: windowHeight.current,
+                    overflow: "auto",
                   }}
                 >
                   {column?.items?.map((item, index) => {
@@ -110,7 +116,7 @@ const Column = ({ droppableId, column }) => {
               );
             }}
           </Droppable>
-        </div>
+        </Box>
       </div>
     </Stack>
   );

@@ -1,5 +1,5 @@
 import {
-  useGetRecruitmentPipelineStatesByRecruitment1Query,
+  useGetRecruitmentPipelineStatesByRecruitmentsQuery,
   useUpdateApplicantRecruitmentToNextStateMutation,
 } from "../ApplicantFormSlice";
 import { ButtonDS } from "@/components/DesignSystem";
@@ -17,7 +17,7 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { useState } from "react";
+import React, {Fragment, useState} from "react";
 import { useForm } from "react-hook-form";
 
 const ApplicantTransferPipelineModal = ({
@@ -25,8 +25,9 @@ const ApplicantTransferPipelineModal = ({
   setShowConfirmMultiple,
   itemSelected,
   onClose,
-  setReject,
-  setRejectid,
+  setActionId,
+  setActionType,
+  setActionShow,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const methods = useForm({});
@@ -37,11 +38,13 @@ const ApplicantTransferPipelineModal = ({
   };
   const [tranfer] = useUpdateApplicantRecruitmentToNextStateMutation();
   const handleTranfer = handleSubmit(async () => {
-    var resultId = items.filter((p) => p.pipelineStateType == 3)[0]?.id;
-    if (valueChecked == 2) {
+    var resultId = items.filter((p) => p.pipelineStateType === 3)[0]?.id;
+    if (valueChecked == 0 || valueChecked == 1 || valueChecked == 2) {
+      setActionId(resultId);
+      setActionType(valueChecked);
+      setActionShow(true);
+
       setShowConfirmMultiple(false);
-      setReject(true);
-      setRejectid(resultId);
     } else {
       let recruitmentPipelineStateId = valueChecked;
       let resultType = null;
@@ -80,7 +83,7 @@ const ApplicantTransferPipelineModal = ({
   };
 
   const { data: { items: items = [] } = {} } =
-    useGetRecruitmentPipelineStatesByRecruitment1Query({
+    useGetRecruitmentPipelineStatesByRecruitmentsQuery({
       RecruitmentId: itemSelected?.recruitmentId,
     });
 
@@ -132,38 +135,38 @@ const ApplicantTransferPipelineModal = ({
               name="radio-buttons-group"
               onChange={handleChange}
             >
-              {items &&
-                items?.map((p) => {
-                  if (p?.pipelineStateType == 3) {
-                    return (
-                      <>
-                        <FormControlLabel
-                          value={0}
-                          control={<Radio />}
-                          label={PipelineStateType(p?.pipelineStateType, 0)}
-                        />
-                        <FormControlLabel
-                          value={1}
-                          control={<Radio />}
-                          label={PipelineStateType(p?.pipelineStateType, 1)}
-                        />
-                        <FormControlLabel
-                          value={2}
-                          control={<Radio />}
-                          label={PipelineStateType(p?.pipelineStateType, 2)}
-                        />
-                      </>
-                    );
-                  } else if (p?.pipelineStateType != 4) {
-                    return (
+              {items?.map((p, index) => {
+                if (p?.pipelineStateType == 3) {
+                  return (
+                    <Fragment key={index}>
                       <FormControlLabel
-                        value={p?.id}
+                        value={0}
                         control={<Radio />}
-                        label={PipelineStateType(p?.pipelineStateType)}
+                        label={PipelineStateType(p?.pipelineStateType, 0)}
                       />
-                    );
-                  }
-                })}
+                      <FormControlLabel
+                        value={1}
+                        control={<Radio />}
+                        label={PipelineStateType(p?.pipelineStateType, 1)}
+                      />
+                      <FormControlLabel
+                        value={2}
+                        control={<Radio />}
+                        label={PipelineStateType(p?.pipelineStateType, 2)}
+                      />
+                    </Fragment>
+                  );
+                } else if (p?.pipelineStateType != 4) {
+                  return (
+                    <FormControlLabel
+                        key={index}
+                      value={p?.id}
+                      control={<Radio />}
+                      label={PipelineStateType(p?.pipelineStateType)}
+                    />
+                  );
+                }
+              })}
             </RadioGroup>
           </View>
         </View>

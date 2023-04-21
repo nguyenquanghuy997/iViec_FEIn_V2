@@ -162,7 +162,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                                           mr: "4px"
                                         }}/>
                                     </Grid>
-                                    <Grid item container direction={"column"}>
+                                    <Grid item container direction={"column"} sx={{overflowWrap: "anywhere"}}>
                                       <Grid item>
                                         <Typography variant={"subtitle2"}
                                                     color={"#172B4D"}>

@@ -1,33 +1,36 @@
-import { Divider, Typography, Box, Card, CardContent } from "@mui/material";
-import * as React from "react";
+import DetailDialog from "./edit/DetailDialog";
+import ViewSchedule from "./edit/ViewSchedule";
+import { PERMISSIONS } from "@/config";
+import useRole from "@/hooks/useRole";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
+import { useTheme } from "@emotion/react";
+import { Typography, Box, Card, CardContent } from "@mui/material";
+import { useMemo } from "react";
+import { useState } from "react";
 
-export default function InterviewSchedule() {
-  const type = [
-    {
-      id: 1,
-      title: "Tiêu đề lịch phỏng vấn",
-      number: "15",
-      type: "Cá nhân",
-      form: "Onl",
-    },
-    {
-      id: 2,
-      title: "Phỏng vấn chuyên viên phân tích nghiệp vụ - vòng 2",
-      number: "15",
-      type: "Nhóm",
-      form: "Trực tiếp",
-      address: "Số 10, Phạm Văn Bạch, Dịch Vọng Hậu, Cầu Giấy, Hà Nội",
-    },
-    {
-      id: 3,
-      title: "Tiêu đề lịch phỏng vấn",
-      number: "15",
-      type: "Cá nhân",
-      form: "Onl",
-    },
-  ];
+export default function InterviewSchedule({ Data }) {
+  const check = false;
+  const { palette } = useTheme();
+  const [openForm, setOpenForm] = useState(false);
+  const [item, setItem] = useState({});
+  const [itemDialog, setItemDialog] = useState({});
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
+
+  const handleClick = (data) => {
+    setOpenForm(true);
+    setItem(data);
+  };
+  const handleClickDialog = (data) => {
+    setOpenDialog(true);
+    setItemDialog(data);
+  };
+
   return (
-    <Card sx={{ m: "140px 0", borderRadius: "6px", border: "none", p: 3 }}>
+    <Card sx={{borderRadius: "6px", border: "none", p: 3 }}>
       <CardContent sx={{ display: "flex", p: 0 }}>
         <Box
           sx={{
@@ -42,83 +45,43 @@ export default function InterviewSchedule() {
             color: "white",
           }}
         >
-          7
+          {Data?.items.length}
         </Box>
+    
         <Typography
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
+          color={palette.text.primary}
+          variant={"subtitle2"}
         >
-          Thứ 4, Ngày 07/03/2023 (Hôm nay)
+          {/* Thứ 4, Ngày 07/03/2023 (Hôm nay) */}
+          Lịch phỏng vấn tháng 03
         </Typography>
       </CardContent>
 
-      {type.map((item) => (
-        <Box key={item.id}>
-          <CardContent
-            sx={{
-              display: "flex",
-              width: "100%",
-              bgcolor: "background.paper",
-              color: "text.secondary",
-              px: 2,
-            }}
-          >
-            <Box sx={{ width: "20%" }}>
-              <Typography
-                sx={{ fontSize: 13, fontWeight: 600 }}
-                color="#172B4D"
-              >
-                {item.title}
-              </Typography>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                15:00 - 18:00
-              </Typography>
-            </Box>
-
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "15%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Số ứng viên
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {" "}
-                {item?.number}
-              </Typography>
-            </Box>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "15%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Loại phỏng vấn
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.type}
-              </Typography>
-            </Box>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "15%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Hình thức
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.form}
-              </Typography>
-            </Box>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Box sx={{ width: "30%", px: 3 }}>
-              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                Địa chỉ
-              </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                {item?.address}
-              </Typography>
-            </Box>
-          </CardContent>
-          <Divider />
-        </Box>
+      {Data?.items.map((item) => (
+        <ViewSchedule
+          key={item.id}
+          data={item}
+          check={check}
+          handleClick={handleClick}
+          handleClickDialog={handleClickDialog}
+        />
       ))}
+      {openForm && (
+        <FormCalendar open={openForm} data={item} setOpen={setOpenForm} />
+      )}
+      {canEdit && openDialog && (
+        <DetailDialog
+          title="Chi tiết lịch phỏng vấn"
+          open={openDialog}
+          item={itemDialog}
+          onClose={() => setOpenDialog(false)}
+        />
+      )}
     </Card>
   );
 }

@@ -1,73 +1,62 @@
-// import PlusIcon from "../../../assets/interview/PlusIcon";
-// import DragCandidate from "./DragCandidate";
 import RHFSelectMultiple from "./RHFSelectMultiple";
-import { RHFTextField } from "@/components/hook-form";
-import { useSelector } from "@/redux/store";
-import {
-  useGetAllFilterApplicantQuery,
-} from "@/sections/applicant";
-// import Popover from "@mui/material/Popover";
-// import _without from "lodash/without";
-// import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
-// import { useState } from "react";
-// import { Controller, useFormContext } from "react-hook-form";
-import {
-  // Button,
-  // MenuItem,
-  // FormControlLabel,
-  Box,
-  Typography,
-} from "@mui/material";
+import { Label } from "@/components/hook-form/style";
+import { DOMAIN_SERVER_API } from "@/config";
+import { useGetApplicantByPipeLineQuery } from "@/sections/interview/InterviewSlice";
+import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React, { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({
-  value,
-  // defaultValues,
-  action,
-}) => {
-  const dataFilter = useSelector((state) => state.filterReducer.data);
-  const { data: Data } = useGetAllFilterApplicantQuery(
-    JSON.stringify(
-      Object.entries(dataFilter).reduce(
-        (a, [k, v]) =>
-          v === null || v === undefined || !v || v?.length === 0
-            ? a
-            : ((a[k] = v), a),
-        {}
-      )
-    )
+const ListCandidate = ({ option, detailCandidate, applicantId, error }) => {
+  const { watch, setValue } = useFormContext();
+  const { palette } = useTheme();
+  const { data: { items: dataApplicant = [] } = {} } = useGetApplicantByPipeLineQuery(
+    { RecruitmentPipelineStateId: watch("recruitmentPipelineStateId") },
+    { skip: !watch("recruitmentPipelineStateId") }
   );
 
-  return value == 1 ? (
-    <Box sx={{ p: 3 }}>
-      <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
-        Danh sách ứng viên
-      </Typography>
+
+  useEffect(() => {
+    if (option) {
+      setValue("applicantIdArray", [option?.applicantId]);
+    }
+  }, [option]);
+
+  useEffect(() => {
+    if (detailCandidate) {
+      setValue("applicantIdArray", [detailCandidate?.id]);
+    }
+  }, [detailCandidate]);
+
+  return (
+    <Box height={"100%"}>
+      <Label mb={3}>
+        <Typography variant={"subtitle2"} color={palette.text.primary}>
+          Danh sách ứng viên
+        </Typography>
+      </Label>
+
+
       <RHFSelectMultiple
-        options={Data?.items?.map((i) => ({
+        options={dataApplicant?.map((i) => ({
           id: i.id,
           value: i.id,
           label: i.fullName,
           phone: i.phoneNumber,
           name: i.fullName,
+          image:`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${i?.portraitImage}`,
         }))}
-        name="bookingCalendarGroups"
-        action={action}
+        name={'applicantIdArray'}
         fullWidth
+        disabled={
+          applicantId || !watch("recruitmentPipelineStateId")
+        }
+        error={error}
         multiple
         isRequired
+        open={open}
       />
-      <RHFTextField
-        name="name"
-        hidden
-        sx={{ width: "100%", minHeight: 44, display: "none" }}
-      />
-      ;
-    </Box>
-  ) : (
-    <Box sx={{ p: 3 }}>
-      <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
-        Danh sách ứng viên
-      </Typography>
+
     </Box>
   );
 };

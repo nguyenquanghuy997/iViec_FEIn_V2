@@ -1,39 +1,37 @@
 import SelectCouncils from "./SelectCouncils";
-import { useGetAllApplicantUserOrganizationByIdQuery } from "@/sections/organization/override/OverrideOrganizationSlice";
+import { Label } from "@/components/hook-form/style";
 import { Typography, Box } from "@mui/material";
-import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { useFormContext } from "react-hook-form";
+import { useGetRecruitmentPersonInChargeIdsQuery } from "../InterviewSlice";
 
-const InterviewCouncil = ({ value, action }) => {
-  const { data: { items: Data = [] } = {}, isLoading } =
-    useGetAllApplicantUserOrganizationByIdQuery();
-  if (isLoading) return null;
+const InterviewCouncil = () => {
+  const { watch } = useFormContext();
+  const { palette } = useTheme();
+  const { data: { items: coOwners = [] } = {} } = useGetRecruitmentPersonInChargeIdsQuery(watch("recruitmentId"));
 
-  return value == 1 ? (
+  return (
     <Box sx={{ p: 3 }}>
-      <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
-        Hội đồng phỏng vấn
-      </Typography>
+      <Label mb={3}>
+        <Typography variant={"subtitle2"} color={palette.text.primary}>
+          Hội đồng phỏng vấn
+        </Typography>
+      </Label>
+
       <SelectCouncils
-        options={Data?.map((i) => ({
+        options={coOwners?.map((i) => ({
           id: i.id,
           value: i.id,
-          label: i.lastName,
+          label: i.name,
           mail: i.email || "tuyetda@fpt.com.vn",
-          name: i.lastName,
-          position: "Giám đốc tuyển dụng",
+          name: i.name,
         }))}
         name="councilIds"
-        action={action}
+        disabled={watch("recruitmentId") ? false : true}
         fullWidth
         multiple
         isRequired
       />
-    </Box>
-  ) : (
-    <Box sx={{ p: 3 }}>
-      <Typography sx={{ fontSize: "14px", fontWeight: "600", mb: 3 }}>
-        Hội đồng phỏng vấn
-      </Typography>
     </Box>
   );
 };

@@ -1,139 +1,84 @@
-import { useAddRoleGroupMutation } from "../rolegroup/RoleGroupSlice";
+import { useEffect, useMemo, useRef } from 'react';
 import PipelineTable from "./RolegroupTable";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
+import { TextAreaDS } from "@/components/DesignSystem";
+import { View } from "@/components/DesignSystem/FlexStyled";
+import { RHFTextField } from "@/components/hook-form";
+import { Label } from "@/components/hook-form/style";
 import {
   Typography,
   Stack,
   Divider,
-  Switch,
-  FormControlLabel,
   Box,
-  Alert,
+  FormHelperText,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { React, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+import { pick as _pick } from 'lodash';
 
 const InputStyle = { width: "100%", minHeight: 44 };
-const ActiveSwitch = styled(Switch)(() => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#388E3C",
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#388E3C",
-  },
-}));
 
-const PipelineForm = ({ onClose }) => {
-  const [addRoleGroup] = useAddRoleGroupMutation();
-  const RoleSchema = Yup.object().shape({
-    name: Yup.string(),
-    description: Yup.string(),
-    // registerTime: Yup.date().transform(value => (!value ? new Date().toISOString() : value)).min(Yup.ref('createdTimeFrom')),
-    identityRoleIds: Yup.array().min(1),
-  });
+const RolegroupForm = ({ role, selectedItem, ...methods }) => {
+  const { setValue, formState: { errors } } = methods;
+  const _timeoutInit = useRef();
 
-  const methods = useForm({
-    resolver: yupResolver(RoleSchema),
-    defaultValues: {
-      identityRoleIds: ["a"],
-    },
-  });
-  const {
-    handleSubmit,
-    control,
-    register,
-    formState: { errors, isSubmitting },
-  } = methods;
-
-  const onSubmit = (values) => {
-    addRoleGroup(values);
-    onClose();
-  };
+  const actions = useMemo(() => {
+    if (!selectedItem || !role || !role.identityRoles || role.identityRoles.length < 1) {
+      return [];
+    }
+    return role.identityRoles.map(r => r.name)
+  }, [role, selectedItem]);
 
   useEffect(() => {
-    if (isSubmitting) {
-      // reset();
+    if (!role || !selectedItem) {
+      return;
     }
-  }, [isSubmitting]);
+
+    clearTimeout(_timeoutInit.current);
+    _timeoutInit.current = setTimeout(() => {
+      let fieldValues = _pick(role, ['id', 'name', 'description', 'isActivated']);
+      for (let f in fieldValues) {
+        setValue(f, fieldValues[f]);
+      }
+      setValue('identityRoles', role.identityRoles?.map(ac => ac.name));
+    }, 200);
+  }, [role, selectedItem]);
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {!!errors.afterSubmit && (
-        <Alert severity="error">{errors.afterSubmit?.message}</Alert>
-      )}
-      <Box sx={{ p: 2 }}>
-        <Stack sx={{ pb: 2 }}>
-          <RHFTextField
-            name="name"
-            title="Tên vai trò"
-            placeholder="Nhập tên vai trò"
-            isRequired
-            sx={{ ...InputStyle }}
-          />
-        </Stack>
-
-        <Stack>
-          <RHFTextField
-            style={{
-              width: "100%",
-              height: "144px",
-              "& .MuiInputBase-root": {
-                display: "flex",
-                alignItems: "start",
-              },
-            }}
-            name="note"
-            title="Mô tả"
-            placeholder="Nhập nội dung mô tả..."
-            maxLength={150}
-          />
-        </Stack>
-        <Divider />
-        <Typography sx={{ py: 2, fontSize: "16px", fontWeight: 600 }}>
-          Thiết lập chức năng
-        </Typography>
-        <PipelineTable control={control} register={register} />
-      </Box>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-
-          position: "fixed",
-          bottom: 0,
-          background: "#FDFDFD",
-          width: "100%",
-          padding: "16px 24px ",
-          borderTop: "1px solid #EFF3F6",
-        }}
-      >
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-          sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
-        >
-          {"Lưu"}
-        </LoadingButton>
-        <div style={{ width: 8 }} />
-
-        <LoadingButton
-          variant="text"
-          sx={{ color: "#455570", mr: "290px" }}
-          onClick={onClose}
-        >
-          {"Hủy"}
-        </LoadingButton>
-        <FormControlLabel
-          control={<ActiveSwitch defaultChecked />}
-          label="Đang hoạt động"
+    <Box>
+      <Stack sx={{ pb: 2 }}>
+        <RHFTextField
+          name="name"
+          title="Tên vai trò"
+          placeholder="Nhập tên vai trò"
+          isRequired
+          sx={{ ...InputStyle }}
         />
-      </div>
-    </FormProvider>
+      </Stack>
+
+      <Stack justifyContent="space-between" sx={{ mb: 3 }}>
+        <View mb={24}>
+          <Label>Mô tả</Label>
+          <TextAreaDS
+            maxLength={255}
+            placeholder="Nhập nội dung mô tả..."
+            name="description"
+          />
+        </View>
+      </Stack>
+      <Divider />
+
+      <Typography sx={{ py: 2, fontSize: "16px", fontWeight: 600 }}>
+        Thiết lập chức năng
+      </Typography>
+
+      {!!errors.identityRoles && (
+        <FormHelperText error={true}>{errors.identityRoles.message}</FormHelperText>
+      )}
+
+      <PipelineTable
+        actions={actions}
+        {...methods}
+      />
+    </Box>
   );
 };
-export default PipelineForm;
+
+export default RolegroupForm;

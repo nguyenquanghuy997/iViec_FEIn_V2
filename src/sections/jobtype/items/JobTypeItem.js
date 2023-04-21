@@ -1,229 +1,116 @@
-import JobTypeFilterModal from "../modals/JobTypeFilterModal";
 import JobTypeBottomNav from "./JobTypeBottomNav";
 import Content from "@/components/BaseComponents/Content";
-import DynamicColumnsTable from "@/components/BaseComponents/DynamicColumnsTable";
+import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
-import Iconify from "@/components/Iconify";
+import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
 import {
-  useGetListColumnApplicantsQuery,
-  useUpdateListColumnApplicantsMutation,
-} from "@/sections/applicant";
-import { useLazyGetAllJobTypeQuery } from "@/sections/jobtype";
-import JobTypeHeader from "@/sections/jobtype/JobTypeHeader";
+  useGetAllJobTypeQuery,
+  useGetListJobColumnsQuery,
+  useUpdateListJobColumnsMutation,
+} from "@/sections/jobtype";
 import { Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-
-const defaultValues = {
-  searchKey: "",
-};
+import { useState, useMemo } from "react";
+import { LIST_STATUS } from "@/utils/formatString";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import { JobTypeFormModal } from "@/sections/jobtype";
+import useRole from "@/hooks/useRole";
 
 export const JobTypeItem = () => {
   const router = useRouter();
-  const { query, isReady } = router;
-  // api get list
 
-  const [getAllFilter, { data: Data = [], isLoading }] =
-    useLazyGetAllJobTypeQuery();
-  // api get list Column
-  const { data: ColumnData } = useGetListColumnApplicantsQuery();
-  // api update list Column
-  const [UpdateListColumnApplicants] = useUpdateListColumnApplicantsMutation();
-  const columns = [
-    {
-      title: "STT",
-      key: "index",
-      render: (item, record, index, page, paginationSize) => (
-        <>{(page - 1) * paginationSize + index + 1}</>
-      ),
-      width: "60px",
-      fixed: "left",
-    },
-    { dataIndex: "name", title: "Vị trí công việc", width: "240px" },
-    {
-      dataIndex: "numberOfRecruitmentApplied",
-      title: "Số tin áp dụng",
-      width: "160px",
-      align: "center",
-    },
-    {
-      dataIndex: "isActivated",
-      title: "Trạng thái",
-      width: "180px",
-      name: "isActive",
-      type: "select",
-      label: "Trạng thái",
-      render: (item) => (
-        <span style={{ color: item ? "#388E3C" : "#455570" }}>
-          {Status(item)}
-        </span>
-      ),
-    },
-    {
-      dataIndex: "createdTime",
-      title: "Ngày tạo",
-      width: "180px",
-      type: "date",
-      label: "Ngày tạo",
-      name: "createdTime",
-      render: (date) => fDate(date),
-      items: [
-        {
-          name: "createdTimeFrom",
-          type: "date",
-          placeholder: "Chọn ngày",
-          startIcon: <span>Từ</span>,
-          endIcon: <Iconify icon="material-symbols:calendar-today" />,
-        },
-        {
-          name: "createdTimeTo",
-          type: "date",
-          placeholder: "Chọn ngày",
-          startIcon: <span>Đến</span>,
-          endIcon: <Iconify icon="material-symbols:calendar-today" />,
-        },
-      ],
-    },
-    {
-      dataIndex: "creatorEmail",
-      title: "Người tạo",
-      width: "300px",
-      name: "creatorIds",
-      label: "Người tạo",
-      placeholder: "Chọn 1 hoặc nhiều người",
-      type: "select",
-      multiple: true,
-      render: (item) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <AvatarDS
-            sx={{
-              height: "20px",
-              width: "20px",
-              borderRadius: "100px",
-              fontSize: "12px",
-            }}
-            name={item}
-          ></AvatarDS>
-          <span fontSize="14px" fontWeight="600" color="#172B4D">
-            {item}
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const { data: Data = {}, isLoading } = useGetAllJobTypeQuery(query, { skip: !isReady });
+
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB_POS), []);
+
+  const columns = useMemo(() => {
+    return [
+      {
+        dataIndex: "id",
+        title: "STT",
+        key: "index",
+        render: (item, record, index, page, paginationSize) => (
+          <>{(page - 1) * paginationSize + index + 1}</>
+        ),
+        width: "60px",
+        fixed: "left",
+      },
+      {
+        dataIndex: "name",
+        title: "Vị trí công việc",
+        width: "240px",
+        fixed: "left",
+        render: (name) => <span style={{ fontWeight: 500 }}>{name}</span>
+      },
+      {
+        dataIndex: "numberOfRecruitmentApplied",
+        title: "Số tin áp dụng",
+        width: "160px",
+        align: "center",
+      },
+      {
+        dataIndex: "isActivated",
+        title: "Trạng thái",
+        width: "180px",
+        render: (item) => (
+          <span style={{ color: item ? "#388E3C" : "#455570" }}>
+            {Status(item)}
           </span>
-        </div>
-      ),
-    },
-  ];
-
-  const handleUpdateListColumnApplicants = async () => {
-    var body = {
-      recruitment: false,
-    };
-    var data = { id: "01000000-ac12-0242-981f-08db10c9413d", body: body };
-
-    await UpdateListColumnApplicants(data);
-  };
-
-  // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-  const methods = useForm({
-    mode: "onChange",
-    defaultValues: useMemo(
-      () =>
-        query.searchKey
-          ? { ...defaultValues, searchKey: query.searchKey }
-          : { ...defaultValues },
-      [query.searchKey]
-    ),
-    // defaultValues: {...defaultValues, searchKey: query.searchKey},
-    resolver: yupResolver(Schema),
-  });
-
-  const { handleSubmit } = methods;
-  const [page, setPage] = useState(1);
-  const [paginationSize, setPaginationSize] = useState(10);
-  const queryParams = {
-    searchKey: query.searchKey,
-    isActive: query.isActive ? query.isActive : null,
-    createdTimeFrom: query.createdTimeFrom ? query.createdTimeFrom : null,
-    createdTimeTo: query.createdTimeTo ? query.createdTimeTo : null,
-    creatorIds:
-      query.creatorIds && typeof query.creatorIds === "string"
-        ? query.creatorIds
-        : query.creatorIds && query.creatorIds,
-    pageSize: paginationSize,
-    pageIndex: page,
-  };
-  const handleChangePagination = (pageIndex, pageSize) => {
-    setPaginationSize(pageSize);
-    setPage(pageIndex);
-    if (query) {
-      getAllFilter({
-        ...queryParams,
-        pageSize: pageSize,
-        pageIndex: pageIndex,
-      }).unwrap();
-    } else {
-      getAllFilter({ pageSize: pageSize, pageIndex: pageIndex }).unwrap();
-    }
-  };
-  useEffect(() => {
-    if (!isReady) return;
-
-    if (query) {
-      getAllFilter(queryParams).unwrap();
-    } else {
-      getAllFilter().unwrap();
-    }
-  }, [isReady, query]);
-
-  // open filter form
-  const [isOpen, setIsOpen] = useState(false);
-
-  // filter modal
-  const handleOpenFilterForm = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseFilterForm = () => {
-    setIsOpen(false);
-  };
-
-  const onSubmitSearch = async (data) => {
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: { ...query, searchKey: data.searchKey },
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
-
-  const onSubmit = async (data) => {
-    const body = { ...data, searchKey: data.searchKey };
-    await router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...body,
-          createdTimeFrom: data.createdTimeFrom
-            ? new Date(data.createdTimeFrom).toISOString()
-            : null,
-          createdTimeTo: data.createdTimeTo
-            ? new Date(data.createdTimeTo).toISOString()
-            : null,
+        ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT,
+          name: 'isActive',
+          options: LIST_STATUS.map(item => ({ value: item.id, label: item.name })),
         },
       },
-      undefined,
-      { shallow: true }
-    );
-    handleCloseFilterForm();
-  };
+      {
+        dataIndex: "createTime",
+        title: "Ngày tạo",
+        width: "180px",
+        render: (date, record) => record?.createdTime ? fDate(record?.createdTime) : '',
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_DATE,
+          name: ['createdTimeFrom', 'createdTimeTo'],
+          placeholder: 'Chọn ngày',
+        },
+      },
+      {
+        dataIndex: "creatorEmail",
+        title: "Người tạo",
+        width: "300px",
+        render: (item) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <AvatarDS
+              sx={{
+                height: "20px",
+                width: "20px",
+                borderRadius: "100px",
+                fontSize: "12px",
+              }}
+              name={item}
+            ></AvatarDS>
+            <span fontSize="14px" fontWeight="600" color="#172B4D">
+              {item}
+            </span>
+          </div>
+        ),
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "creatorIds",
+          placeholder: "Chọn 1 hoặc nhiều người",
+          remoteUrl: API_GET_ORGANIZATION_USERS,
+          showAvatar: true
+        },
+      },
+    ];
+  }, [query.PageIndex, query.PageSize]);
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
   const [, setIsOpenBottomNav] = useState(false);
@@ -237,32 +124,32 @@ export const JobTypeItem = () => {
 
   return (
     <View>
-      <Content sx={{ padding: "0 !important" }}>
+      <Content sx={{ 
+        padding: "0 !important",
+        "& .MuiBox-root": {
+          padding: 0,
+        }
+        }}
+        >
         <DynamicColumnsTable
-          page={page}
-          paginationSize={paginationSize}
-          handleChangePagination={handleChangePagination}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
           columns={columns}
           source={Data}
           loading={isLoading}
-          ColumnData={ColumnData}
-          UpdateListColumn={handleUpdateListColumnApplicants}
           settingName={"DANH SÁCH VỊ TRÍ CÔNG VIỆC"}
           nodata="Hiện chưa có vị trí công việc nào"
           isSetting={true}
           itemSelected={itemSelected}
           setItemSelected={setItemSelected}
-          filter={
-            <JobTypeHeader
-              methods={methods}
-              onSubmit={onSubmitSearch}
-              handleSubmit={handleSubmit}
-              onOpenFilterForm={handleOpenFilterForm}
-            />
-          }
+          useGetColumnsFunc={useGetListJobColumnsQuery}
+          useUpdateColumnsFunc={useUpdateListJobColumnsMutation}
+          createText={canEdit && "Thêm vị trí công việc"}
+          onClickCreate={() => {
+            setOpenEdit(true);
+          }}
         />
+
         <JobTypeBottomNav
           open={selectedRowKeys?.length > 0}
           onClose={toggleDrawer(false)}
@@ -270,16 +157,15 @@ export const JobTypeItem = () => {
           onOpenForm={toggleDrawer(true)}
           setselectedList={setSelectedRowKeys}
           itemSelected={itemSelected}
+          setItemSelected={setItemSelected}
         />
       </Content>
-      {isOpen && (
-        <JobTypeFilterModal
-          columns={columns}
-          isOpen={isOpen}
-          onClose={handleCloseFilterForm}
-          onSubmit={onSubmit}
-        />
-      )}
+
+      <JobTypeFormModal
+        show={openEdit}
+        onClose={() => setOpenEdit(false)}
+        setShow={setOpenEdit}
+      />
     </View>
   );
 };

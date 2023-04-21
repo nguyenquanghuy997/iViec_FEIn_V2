@@ -1,31 +1,25 @@
-// components
-import {STYLE_CONSTANT} from "../register/constants";
-import {ButtonDS} from "@/components/DesignSystem";
+import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import {FormProvider, RHFCheckbox, RHFTextField,} from "@/components/hook-form";
-// hooks
+import { FormProvider, RHFCheckbox, RHFTextField, } from "@/components/hook-form";
+import { STYLE_CONSTANT } from "../register/constants";
 import useAuth from "@/hooks/useAuth";
-// import useIsMountedRef from "@/hooks/useIsMountedRef";
-import {PATH_AUTH} from "@/routes/paths";
-// form
-import {yupResolver} from "@hookform/resolvers/yup";
-import {Alert, IconButton, InputAdornment, Link, Stack, Typography,} from "@mui/material";
+import { PATH_AUTH } from "@/routes/paths";
+import { LabelStyle } from "@/components/hook-form/style";
+import { errorMessages, AUTH_ERROR_TYPE } from '@/utils/errorMessages';
+import { CHECK_EMAIL } from '@/utils/regex';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Alert, IconButton, Link, Stack, Typography, } from "@mui/material";
 import NextLink from "next/link";
-import {useSnackbar} from "notistack";
-import {useState} from "react";
-import {useForm} from "react-hook-form";
+import { useSnackbar } from "notistack";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {errorMessages} from '@/utils/errorMessages'
-import {CHECK_EMAIL} from '@/utils/regex'
-// routes
-// import { PATH_AUTH } from '@/routes/paths'
+
+const __DEV__ = process.env.NODE_ENV === 'development';
 
 export default function LoginForm() {
     const {login} = useAuth();
     const {enqueueSnackbar} = useSnackbar();
-
-    // const isMountedRef = useIsMountedRef();
-
     const [showPassword, setShowPassword] = useState(false);
 
     const LoginSchema = Yup.object().shape({
@@ -37,10 +31,11 @@ export default function LoginForm() {
     });
 
     const defaultValues = {
-        email: "thuybon1@gmail.com",
-        password: "000000",
+        email: __DEV__ ? "thuybon1@gmail.com" : "",
+        password: __DEV__ ? "123123" : "",
         remember: true,
     };
+    
 
     const methods = useForm({
         mode: 'onChange',
@@ -61,11 +56,11 @@ export default function LoginForm() {
         } catch (error) {
             const message = errorMessages[`${error.code}`] || 'Lỗi hệ thống'
             const {code} = error;
-            if (code === "AUE_01") {
-                setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"}, {shouldFocus: true})
-            } else if (code === "IDE_12") {
-                setError('email', {type: "custom", message: "Email chưa được kích hoạt"}, {shouldFocus: true})
-            } else if (code === "IDE_06") {
+            if (code === AUTH_ERROR_TYPE.AUE_01) {
+                setError('email', {type: "custom", message: "Email đăng nhập không tồn tại"})
+            } else if (code === AUTH_ERROR_TYPE.IDE_12) {
+                setError('email', {type: "custom", message: "Email chưa được kích hoạt"})
+            } else if (code === AUTH_ERROR_TYPE.IDE_06) {
                 setError('password', {type: "custom", message: "Mật khẩu không chính xác"})
             } else setError("afterSubmit", {...error, message});
         }
@@ -79,32 +74,24 @@ export default function LoginForm() {
                 )}
 
                 <Stack>
+                    <LabelStyle required={true}>Email đăng nhập</LabelStyle>
                     <RHFTextField
                         name="email"
-                        title="Email đăng nhập"
                         placeholder="Bắt buộc"
-                        isRequired
-                        sx={{width: 440, minHeight: 44}}
                     />
                 </Stack>
 
                 <Stack>
+                    <LabelStyle required={true}>Mật khẩu</LabelStyle>
                     <RHFTextField
-                        isRequired
-                        sx={{width: 440, minHeight: 44}}
                         name="password"
-                        title="Mật khẩu"
                         type={showPassword ? "text" : "password"}
                         placeholder="Bắt buộc"
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end" sx={{ mr: 1.5 }}>
-                                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                                        <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
+                        endIcon={
+                            <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                <Iconify icon={showPassword ? "ic:outline-remove-red-eye" : "mdi:eye-off-outline"}/>
+                            </IconButton>
+                        }
                     />
                     {!errors.password && (
                         <Typography
@@ -142,7 +129,7 @@ export default function LoginForm() {
             <ButtonDS
                 width="440px"
                 size="large"
-                tittle="Đăng nhập"
+                tittle={<span>Đăng nhập</span>}
                 loading={isSubmitting}
                 type="submit"
             />

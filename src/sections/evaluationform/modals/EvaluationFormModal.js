@@ -1,43 +1,45 @@
+import {
+  useAddReviewFormMutation,
+  useGetReviewFormByIdQuery,
+  useUpdateReviewFormMutation,
+} from "../evaluationFormSlice";
+import { EvaluationDraggableItem } from "../items/EvaluationDraggableItem";
+import { EvaluationAddModal } from "./EvaluationAddModal";
+import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
+import { View, Text } from "@/components/DesignSystem/FlexStyled";
 import { DraggableList } from "@/components/DraggableList";
-import { Text, View } from "@/components/FlexStyled";
-import SvgIcon from "@/components/SvgIcon";
+import Iconify from "@/components/Iconify";
 import {
   FormProvider,
   RHFCheckbox,
-  RHFSwitch,
   RHFTextField,
 } from "@/components/hook-form";
-import {
-  EvaluationAddModal,
-  EvaluationDraggableItem,
-  EvaluationPreviewItem,
-  useAddReviewFormMutation,
-  useUpdateReviewFormMutation,
-} from "@/sections/evaluationform";
+import { Label } from "@/components/hook-form/style";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
+import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoadingButton } from "@mui/lab";
-import { Modal } from "@mui/material";
+import { Divider, FormHelperText, Modal } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 const defaultValues = {
   name: "",
-  list: [],
+  description: "",
+  reviewFormCriterias: [],
   isDefault: false,
   isActive: true,
 };
+export const EvaluationFormModal = ({ id, show, onClose }) => {
+  const isEditMode = !!id;
 
-export const EvaluationFormModal = ({ data, show, setShow, onRefreshData }) => {
-  const isEditMode = !!data?.ReviewId;
-
-  // state
-  const [listForm, setListForm] = useState([]);
-
-  const [showForm, setShowForm] = useState(false);
-  const [editItemData, setEditItemData] = useState({});
-  const [editItemIndex, setEditItemIndex] = useState(-1);
-
+  const { data: data } = useGetReviewFormByIdQuery(
+    {
+      Id: id,
+    },
+    { skip: !id }
+  );
   // api
   const [addForm] = useAddReviewFormMutation();
   const [updateForm] = useUpdateReviewFormMutation();
@@ -45,7 +47,6 @@ export const EvaluationFormModal = ({ data, show, setShow, onRefreshData }) => {
   // form
   const Schema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tên mẫu đánh giá"),
-    list: Yup.array().min(1, "Chưa thêm tiêu chí đánh giá"),
   });
   const methods = useForm({
     defaultValues,
@@ -57,30 +58,18 @@ export const EvaluationFormModal = ({ data, show, setShow, onRefreshData }) => {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
+  // state
+  const [listForm, setListForm] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [error, setError] = useState("");
+  const [editItemData, setEditItemData] = useState({});
+  const [editItemIndex, setEditItemIndex] = useState(-1);
   const pressAdd = () => {
+    setEditItemData({});
+    setEditItemIndex(-1);
     setShowForm(true);
   };
-
-  const pressHide = () => {
-    setShow(false);
-  };
-
-  const pressSave = handleSubmit(async (e) => {
-    const body = {
-      ReviewId: isEditMode ? data.ReviewId : 0,
-      ReviewName: e.name,
-      IsDefault: e.isDefault ? 1 : 0,
-      Criterias: e.list.map((i) => ({
-        CriteriaName: i.name,
-        CriteriaNote: i.des,
-      })),
-      Status: e.isActive ? 1 : 0,
-    };
-    pressHide();
-    isEditMode ? await updateForm(body).unwrap() : await addForm(body).unwrap();
-    onRefreshData();
-  });
 
   const onAddForm = (data) => {
     if (editItemIndex < 0) setListForm((l) => [...l, data]);
@@ -93,12 +82,64 @@ export const EvaluationFormModal = ({ data, show, setShow, onRefreshData }) => {
   const onEditForm = (item, index) => {
     setEditItemIndex(index);
     setEditItemData(item);
-    pressAdd();
+    setShowForm(true);
   };
 
   const onDeleteForm = (index) => {
     setListForm((l) => [...l].filter((_item, _index) => index !== _index));
   };
+
+  const { enqueueSnackbar } = useSnackbar();
+  const pressSave = handleSubmit(async (e) => {
+    if (e.reviewFormCriterias == 0) {
+      setError("Chưa thêm tiêu chí đánh giá");
+    } else {
+      setIsDisabled(true);
+      const param = {
+        id: isEditMode ? data.id : "",
+        body: {
+          name: e.name,
+          // description: e.description,
+          isActive: e.isActive ? true : false,
+          isDefault: e.isDefault ? true : false,
+          reviewFormCriterias: e.reviewFormCriterias.map((i) => ({
+            name: i.name,
+            description: i.des,
+            isRequired: i.isRequired ? true:false,
+          })),
+        },
+      };
+      if (isEditMode) {
+        try {
+          await updateForm(param).unwrap();
+          enqueueSnackbar("Thực hiện thành công!", {
+            autoHideDuration: 1000,
+          });
+          onClose();
+        } catch (err) {
+          setIsDisabled(false);
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
+        }
+      } else {
+        try {
+          await addForm(param.body).unwrap();
+          enqueueSnackbar("Thực hiện thành công!", {
+            autoHideDuration: 1000,
+          });
+          onClose();
+        } catch (err) {
+          setIsDisabled(false);
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
+        }
+      }
+    }
+  });
 
   const renderDraggableItem = (item, index) => {
     return (
@@ -107,187 +148,181 @@ export const EvaluationFormModal = ({ data, show, setShow, onRefreshData }) => {
         onPressAdd={pressAdd}
         onPressEdit={() => onEditForm(item, index)}
         onPressDelete={() => onDeleteForm(index)}
+        isDefault={false}
       />
     );
   };
-
-  const renderPreviewItem = (item, index) => {
-    return <EvaluationPreviewItem data={item} index={index} />;
-  };
-
+  // effect
   useEffect(() => {
-    if (!show) {
-      reset();
-      setValue("name", "");
-      setValue("isDefault", false);
-      setValue("isActive", true);
-      setListForm([]);
-      setShowForm(false);
+    if (!isEditMode) {
+      reset(defaultValues);
+      setIsDisabled(false);
+      setError("");
       return;
     }
-
+  }, [show]);
+  useEffect(() => {
     if (!isEditMode) return;
-
-    setValue("name", data.ReviewName);
-    setValue("isDefault", !!data.IsDefault);
-    setValue("isActive", !!data.Status);
+    setValue("name", data?.name);
+    setValue("description", data?.description);
+    setValue("isActive", !!data?.isActive);
+    setValue("isDefault", !!data?.isDefault);
     setListForm(
-      data.Criterias?.map?.((i) => ({
-        name: i.CriteriaName,
-        des: i.CriteriaNote,
+      data?.reviewFormCriterias?.map((i) => ({
+        name: i.name,
+        isRequired: i.isRequired,
+        des: i.description,
       })) || []
     );
-  }, [show]);
-
+  }, [data]);
   useEffect(() => {
-    setValue("list", listForm);
-    listForm.length && handleSubmit(() => {})();
+    setValue("reviewFormCriterias", listForm);
+    setEditItemIndex(-1);
   }, [listForm]);
-
-  useEffect(() => {
-    if (!showForm) {
-      setEditItemIndex(-1);
-      setEditItemData({});
-    }
-  }, [showForm]);
-
+  const isActive = methods.watch("isActive");
   return (
-    <>
-      <FormProvider methods={methods}>
-        <Modal
-          open={show}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
-          onBackdropClick={pressHide}
-        >
-          <View flexRow bgColor={"#fff"}>
-            {/* preview */}
-            {!!listForm.length && (
-              <View
-                pv={32}
-                ph={24}
-                width={"40vw"}
-                style={{ overflow: "scroll" }}
-              >
-                <Text mb={40} fontSize={20} fontWeight={"700"}>
-                  {"Bản xem trước"}
-                </Text>
-
-                {listForm.map(renderPreviewItem)}
-              </View>
-            )}
-            <View width={1} height={"100%"} bgColor={"#EBECF4"} />
-
-            {/* form */}
-            <View width={"40vw"}>
-              {/* header */}
-              <View flexRow pv={32} ph={24} bgColor={"#F1F5F8"}>
-                <Text flex1 fontSize={28} fontWeight={"600"}>
-                  {isEditMode ? "Sửa mẫu đánh giá" : "Thêm mới mẫu đánh giá"}
-                </Text>
-
-                <View
-                  contentCenter
-                  size={40}
-                  borderRadius={4}
-                  bgColor={"#fff"}
-                  onPress={pressHide}
-                >
-                  <SvgIcon>
-                    {
-                      '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.33325 1.33334L5.99991 6.00001M5.99991 6.00001L10.6666 10.6667M5.99991 6.00001L10.6666 1.33334M5.99991 6.00001L1.33325 10.6667" stroke="#393B3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-                    }
-                  </SvgIcon>
-                </View>
-              </View>
-
-              {/* body */}
-              <View flex1 style={{ overflow: "scroll" }}>
-                <View p={24} pb={16}>
-                  <Text flexRow mb={8} fontWeight={"600"}>
-                    {"Tên mẫu đánh giá "}
-                    <Text ml={4} color={"#E82E25"}>
-                      {"*"}
-                    </Text>
-                  </Text>
-
-                  <RHFTextField name={"name"} />
-                  <View height={24} />
-
-                  <RHFCheckbox
-                    name={"isDefault"}
-                    label={"Đặt làm mẫu đánh giá mặc định"}
-                  />
-                  <View height={24} />
-
-                  <Text italic>
-                    {"Nhấn vào các tiêu chí và kéo thả để thay đổi thứ tự"}
-                  </Text>
-                </View>
-
-                <View p={24} bgColor={"#F8F8F9"}>
-                  <DraggableList
-                    data={listForm}
-                    setData={setListForm}
-                    renderItem={renderDraggableItem}
-                  />
-
-                  <View mv={16} contentCenter onPress={pressAdd}>
-                    <SvgIcon>
-                      {
-                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 20C4.47967 19.9939 0.00606237 15.5203 0 10V9.8C0.109931 4.30453 4.63459 -0.072041 10.1307 0.000882959C15.6268 0.0738069 20.0337 4.56889 19.9978 10.0653C19.9619 15.5618 15.4966 19.9989 10 20ZM5 9V11H9V15H11V11H15V9H11V5H9V9H5Z" fill="#01B6A7"/></svg>'
-                      }
-                    </SvgIcon>
-
-                    <Text mt={6} color={"#00978A"} fontWeight={"600"}>
-                      {"Thêm tiêu chí đánh giá"}
-                    </Text>
-                  </View>
-                </View>
-                <RHFTextField
-                  name={"list"}
-                  variant={"standard"}
-                  inputProps={{ style: { display: "none" } }}
+    <FormProvider methods={methods}>
+      <Modal
+        open={show}
+        onClose={onClose}
+        sx={{ display: "flex", justifyContent: "flex-end" }}
+      >
+        <ViewModel>
+          {/* header */}
+          <View
+            flexrow="true"
+            atcenter="center"
+            pv={12}
+            ph={24}
+            bgcolor={"#FDFDFD"}
+          >
+            <Text flex="true" fontsize={16} fontweight={"600"}>
+              {isEditMode ? "Chỉnh sửa mẫu đánh giá" : "Thêm mới mẫu đánh giá"}
+            </Text>
+            <ButtonDS
+              type="submit"
+              sx={{
+                backgroundColor: "#fff",
+                boxShadow: "none",
+                ":hover": {
+                  backgroundColor: "#EFF3F7",
+                },
+                textTransform: "none",
+                padding: "12px",
+                minWidth: "unset",
+              }}
+              onClick={onClose}
+              icon={
+                <Iconify
+                  icon={"mi:close"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
                 />
-              </View>
+              }
+            />
+          </View>
+          <Divider />
+          {/* body */}
+          <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
+            {/* code & name */}
 
-              {/* footer */}
-              <View
-                flexRow
-                pv={12}
-                ph={16}
-                boxShadow={"inset 0px 1px 0px #EBECF4"}
+            <View mb={16}>
+              <Label required={true}>{"Tên mẫu đánh giá"}</Label>
+              <RHFTextField
+                name={"name"}
+                placeholder="Nhập mẫu đánh giá"
+                maxLength={150}
+              />
+            </View>
+            <View mb={20}>
+              <RHFCheckbox
+                style={{ marginLeft: "-8px" }}
+                name="isDefault"
+                label="Đặt mẫu đánh giá mặc định"
+              />
+            </View>
+            <Divider />
+            {/* dept */}
+            <View pv={24}>
+              <Label
+                required={true}
+                sx={{ color: "#455570", fontSize: 16, fontWeight: 600 }}
               >
-                <LoadingButton
-                  size="large"
-                  variant="contained"
-                  loading={isSubmitting}
-                  onClick={pressSave}
-                >
-                  {isEditMode ? "Sửa" : "Thêm"}
-                </LoadingButton>
-                <View width={8} />
+                {"Tiêu chí đánh giá"}
+              </Label>
+              <FormHelperText error sx={{ mt: 0, mb: 1 }}>
+                {error && error}
+              </FormHelperText>
+              <DraggableList
+                data={listForm}
+                setData={setListForm}
+                renderItem={renderDraggableItem}
+              />
 
-                <LoadingButton size="large" variant="text" onClick={pressHide}>
-                  {"Hủy"}
-                </LoadingButton>
-                <View width={8} />
-                <View flex1 />
-
-                <RHFSwitch name={"isActive"} label={"Đang hoạt động"} />
-              </View>
+              <ButtonDS
+                type="submit"
+                loading={isSubmitting}
+                variant="contained"
+                tittle={"Thêm tiêu chí đánh giá"}
+                onClick={pressAdd}
+                sx={{
+                  marginBottom: "16px",
+                  textTransform: "unset",
+                  boxShadow: "unset",
+                  backgroundColor: "#fff",
+                  color: "#1976D2",
+                  border: "1px solid #1976D2",
+                  "&:hover": { backgroundColor: "#EFF3F7" },
+                }}
+                icon={
+                  <Iconify
+                    icon={"material-symbols:add"}
+                    width={20}
+                    height={20}
+                    color="#1976D2"
+                    mr={1}
+                  />
+                }
+              />
             </View>
           </View>
-        </Modal>
-      </FormProvider>
+          {/* footer */}
+          <View
+            flexrow="true"
+            pv={12}
+            ph={16}
+            boxshadow={"inset 0px 1px 0px #EBECF4"}
+          >
+            <ButtonDS
+              type="submit"
+              loading={isSubmitting}
+              variant="contained"
+              tittle={isEditMode ? "Sửa" : "Thêm"}
+              onClick={pressSave}
+              isDisabled={isDisabled}
+            />
+            <View width={8} />
+            <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
+            <View width={8} />
+            <View flex="true" />
 
+            <SwitchStatusDS
+              name={"isActive"}
+              label={isActive ? "Đang hoạt động" : "Không hoạt động"}
+            />
+          </View>
+        </ViewModel>
+      </Modal>
       {/* modal */}
-      <EvaluationAddModal
-        show={showForm}
-        editData={editItemData}
-        setShow={setShowForm}
-        onSubmit={onAddForm}
-        onDelete={() => onDeleteForm(editItemIndex)}
-      />
-    </>
+      {showForm && (
+        <EvaluationAddModal
+          show={showForm}
+          editData={editItemData}
+          setShow={setShowForm}
+          onSubmit={onAddForm}
+        />
+      )}
+    </FormProvider>
   );
 };

@@ -1,25 +1,25 @@
-import {ButtonDS, SwitchStatusDS, TextAreaDS} from "@/components/DesignSystem";
-import {Text, View} from "@/components/DesignSystem/FlexStyled";
+import { ButtonDS, SwitchStatusDS, TextAreaDS } from "@/components/DesignSystem";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
-import {RHFTextField} from "@/components/hook-form";
-import {Label} from "@/components/hook-form/style";
+import { RHFTextField } from "@/components/hook-form";
+import { Label } from "@/components/hook-form/style";
 import {
   useAddApproveProcessMutation,
   useUpdateApproveProcessMutation,
   useGetPreviewApproveProcessQuery
 } from "@/sections/approve-process/ApproveProcessSlice";
-import {ViewModel} from "@/utils/cssStyles";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {Box, Button, CircularProgress, Divider, Grid, IconButton, Modal, Typography} from "@mui/material";
-import {useSnackbar} from "notistack";
-import React, {useEffect, useState} from "react";
-import {useFieldArray, useForm, FormProvider} from "react-hook-form";
+import { ViewModel } from "@/utils/cssStyles";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, CircularProgress, Divider, Grid, IconButton, Modal, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
+import React, { useEffect, useState } from "react";
+import { useFieldArray, useForm, FormProvider } from "react-hook-form";
 import * as Yup from "yup";
-import {ButtonCancelStyle} from "@/sections/applicant/style";
-import {MinusIcon} from "@/assets/ActionIcon";
-import {ApproveProcessFormLevelItem} from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
-import {styled} from "@mui/styles";
-import {formatDataGet, formatDataPush} from "@/sections/approve-process/config";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
+import { MinusIcon } from "@/assets/ActionIcon";
+import { ApproveProcessFormLevelItem } from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
+import { styled } from "@mui/styles";
+import { formatDataGet, formatDataPush } from "@/sections/approve-process/config";
 import ApproveProcessDialog from "@/sections/approve-process/ApproveProcessDialog";
 
 const defaultValues = {
@@ -71,7 +71,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
     const isLoading = isEditMode && !preview.id;
     // form
     const Schema = Yup.object().shape({
-      name: Yup.string().required("Chưa nhập tên quy trình phê duyệt"),
+      name: Yup.string().required("Chưa nhập tên quy trình phê duyệt").max(150, "Tên quy trình không dài quá 150 ký tự"),
       description: Yup.string(),
       isAvailable: Yup.bool(),
       approvalProcessLevels: Yup.array().of(
@@ -89,12 +89,12 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         })
       )
     });
-
+    
     const methods = useForm({
       defaultValues,
       resolver: yupResolver(Schema),
     });
-
+    
     const {
       reset,
       control,
@@ -102,11 +102,12 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
       handleSubmit,
       formState: {isSubmitting},
     } = methods;
-
+    
     const {fields, append, remove} = useFieldArray({
       control,
       name: "approvalProcessLevels"
     });
+
 // action
     const pressHide = () => {
       setData(null);
@@ -123,7 +124,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         approvalProcessLevels: e.approvalProcessLevels
       };
       body = formatDataPush(body);
-
+      
       if (isEditMode) {
         try {
           await updateForm(body).unwrap();
@@ -152,12 +153,12 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         }
       }
     });
-
+    
     // render
     const renderTitle = (title, required) => {
       return <Label required={required}>{title}</Label>;
     };
-
+    
     // effect
     useEffect(() => {
       if (!show) {
@@ -167,7 +168,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         setValue("isAvailable", false);
       }
     }, [show]);
-
+    
     useEffect(() => {
       if (!data?.id) return;
       let body = preview;
@@ -177,7 +178,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
       setValue("isAvailable", body.isAvailable);
       setValue("approvalProcessLevels", body.approvalProcessLevels);
     }, [isEditMode, data, preview]);
-
+    
     return (
       <FormProvider {...methods}>
         <Modal
@@ -266,14 +267,16 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                         </Typography>
                       </Grid>
                       <Grid item xs={2}>
-                        <Typography variant="textSize13500">
-                          Đã chọn: ...
-                        </Typography>
+                        {/*<Typography variant="textSize13500">*/}
+                        {/*  Đã chọn: ...*/}
+                        {/*</Typography>*/}
                       </Grid>
                       <Grid item xs={9} container direction="row" justifyContent="flex-end">
-                        <IconButton onClick={() => setOpenDialogConfirm(true)}>
-                          <MinusIcon/>
-                        </IconButton>
+                        {fields.length > 1 &&
+                          <IconButton onClick={() => setOpenDialogConfirm(true)}>
+                            <MinusIcon/>
+                          </IconButton>
+                        }
                       </Grid>
                     </Grid>
                     <Box className="box-content-wrapper" sx={{width: '100%'}}>
@@ -319,7 +322,6 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
               {!isLoading ? (
                 <SwitchStatusDS
                   name={"isAvailable"}
-                  disabled={!isEditMode}
                   label={methods.watch("isAvailable") ? "Đang áp dụng" : "Không áp dụng"}
                 />
               ) : null}

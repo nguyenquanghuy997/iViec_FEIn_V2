@@ -27,20 +27,24 @@ const JobTypeHeader = ({
             <RHFTextField
               name="searchKey"
               placeholder="Tìm kiếm vị trí công việc"
+              autoComplete="off"
               sx={{
                 minWidth: "360px",
+                borderRadius: '6px',
+                background: '#F2F4F5',
                 height: "36px",
                 ".MuiInput-root": {
                   height: "36px",
                   minHeight: "36px",
+                  border: 'none',
                 },
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                  <InputAdornment position="start" sx={{ ml: 0.5, mr:0 }}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "text.disabled", width: 20, height: 20 }}
+                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
                     />
                   </InputAdornment>
                 ),
@@ -48,7 +52,7 @@ const JobTypeHeader = ({
             />
           </FormProvider>
           <ButtonFilterStyle
-            style={{ height: 36 }}
+            style={{ height: 36, fontSize: '14px', fontWeight: 500 }}
             onClick={onOpenFilterForm}
             startIcon={
               <Iconify
@@ -82,7 +86,7 @@ const JobTypeHeader = ({
       <JobTypeFormModal
         show={showForm}
         setShow={setShowForm}
-        onClose={()=>setShowForm(false)}
+        onClose={() => setShowForm(false)}
       />
     </>
   );

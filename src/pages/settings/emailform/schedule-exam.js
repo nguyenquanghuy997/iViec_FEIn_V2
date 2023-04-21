@@ -1,22 +1,23 @@
-import {getRolesByPage} from "@/utils/role";
-import {PAGES} from "@/config";
+import { PERMISSIONS, PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {useState} from "react";
+import { useState } from "react";
 import Page from "@/components/Page";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 import FormHeader from "@/sections/emailform/component/FormHeader";
 import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import FormModal from "@/sections/emailform/component/FormModal";
-import {useDispatch, useSelector} from "@/redux/store";
-import {modalSlice} from "@/redux/common/modalSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import { modalSlice } from "@/redux/common/modalSlice";
+import useRole from "@/hooks/useRole";
+import { useMemo } from "react";
 
-ScheduleExam.getLayout = function getLayout({roles = []}, page) {
+ScheduleExam.getLayout = function getLayout(pageProps, page) {
   return (
-      <SettingLayout roles={roles}>
-        {page}
-      </SettingLayout>
+    <SettingLayout permissions={PERMISSION_PAGES.emailTemplate} {...pageProps}>
+      {page}
+    </SettingLayout>
   );
 };
 
@@ -61,60 +62,56 @@ function ScheduleExam() {
     return data;
   }
 
-  return (
-      <Page title="Email lịch thi tuyển">
-        <Box>
-          <FormHeader
-              title="Email lịch thi tuyển"
-              subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng khởi tạo lịch phỏng vấn."
-              buttonTitle="Thêm mẫu email"
-              onOpenModal={() => handleOpenModal(null)}
-          />
-          {data.map((column, index) => {
-            return <CardEmailFormItem
-                key={index}
-                index={index}
-                item={column}
-                expanded={expands[index]}
-                onChangeExpand={() => handleChangeExpand(index)}
-                onOpenConfirmDelete={() => handleOpenConfirm(column)}
-                onOpenActiveModal={() => handleOpenActive(column)}
-                onOpenFormModal={() => handleOpenModal(column)}
-            />
-          })}
-        </Box>
-        {toggleConfirm && <ConfirmModal
-            confirmDelete={toggleConfirm}
-            onCloseConfirmDelete={handleCloseModal}
-            onSubmit={handleDelete}
-            title="Xác nhận xóa mẫu email"
-            subtitle="Bạn có chắc chắn muốn xóa mẫu email"
-            item={item}
-        />}
-        {toggleActive && <ActiveModal
-            isOpenActive={toggleActive}
-            onCloseActiveModal={handleCloseModal}
-            onSubmit={handleActive}
-            title={item.isActive ? "Tắt trạng thái áp dụng cho mẫu email" : "Bật trạng thái áp dụng cho mẫu email"}
-            subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt trạng thái áp dụng cho mẫu email" : "Bạn có chắc chắn muốn bật trạng thái áp dụng cho mẫu email"}
-            item={item}
-        />}
-        {toggleFormModal && <FormModal
-            isOpen={toggleFormModal}
-            onClose={handleCloseModal}
-            item={item}
-            title={item?.id ? 'Chỉnh sửa mẫu email lịch thi tuyển' : 'Thêm mới mẫu email lịch thi tuyển'}
-        />}
-      </Page>
-  )
-}
+  const { canAccess } = useRole();
+  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EMAIL), []);
 
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
+  return (
+    <Page title="Email lịch thi tuyển">
+      <Box>
+        <FormHeader
+          title="Email lịch thi tuyển"
+          subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng khởi tạo lịch phỏng vấn."
+          buttonTitle="Thêm mẫu email"
+          onOpenModal={() => handleOpenModal(null)}
+        />
+        {data.map((column, index) => {
+          return <CardEmailFormItem
+            key={index}
+            index={index}
+            item={column}
+            expanded={expands[index]}
+            onChangeExpand={() => handleChangeExpand(index)}
+            onOpenConfirmDelete={() => handleOpenConfirm(column)}
+            onOpenActiveModal={() => handleOpenActive(column)}
+            onOpenFormModal={() => handleOpenModal(column)}
+            canEdit={canEdit}
+          />
+        })}
+      </Box>
+      {toggleConfirm && <ConfirmModal
+        confirmDelete={toggleConfirm}
+        onCloseConfirmDelete={handleCloseModal}
+        onSubmit={handleDelete}
+        title="Xác nhận xóa mẫu email"
+        subtitle="Bạn có chắc chắn muốn xóa mẫu email"
+        item={item}
+      />}
+      {toggleActive && <ActiveModal
+        isOpenActive={toggleActive}
+        onCloseActiveModal={handleCloseModal}
+        onSubmit={handleActive}
+        title={item.isActive ? "Tắt trạng thái áp dụng cho mẫu email" : "Bật trạng thái áp dụng cho mẫu email"}
+        subtitle={item.isActive ? "Bạn có chắc chắn muốn tắt trạng thái áp dụng cho mẫu email" : "Bạn có chắc chắn muốn bật trạng thái áp dụng cho mẫu email"}
+        item={item}
+      />}
+      {toggleFormModal && <FormModal
+        isOpen={toggleFormModal}
+        onClose={handleCloseModal}
+        item={item}
+        title={item?.id ? 'Chỉnh sửa mẫu email lịch thi tuyển' : 'Thêm mới mẫu email lịch thi tuyển'}
+      />}
+    </Page>
+  )
 }
 
 export default ScheduleExam;

@@ -1,25 +1,16 @@
 import HeaderBreadcrumbs from "@/components/HeaderBreadcrumbs";
 import Page from "@/components/Page";
-import { PAGES } from "@/config";
+import { PERMISSION_PAGES } from "@/config";
 import useSettings from "@/hooks/useSettings";
 import Layout from "@/layouts";
 import FormCompanyInfor from "@/sections/companyinfor/edit/FormCompanyInfor";
-import { getRolesByPage } from "@/utils/role";
 import { Container } from "@mui/material";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 
-Setting.getLayout = function getLayout({ roles = [] }, page) {
-  return <Layout roles={roles}>{page}</Layout>;
+Setting.getLayout = function getLayout(pageProps, page) {
+  return <Layout permissions={PERMISSION_PAGES.editOrganization} {...pageProps}>{page}</Layout>;
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      roles: getRolesByPage(PAGES.Industry),
-    },
-  };
-}
 
 const defaultValues = {
   name: "",
