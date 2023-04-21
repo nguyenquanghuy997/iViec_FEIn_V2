@@ -133,26 +133,25 @@ export default function UpdateRecruitment() {
   );
 
   const defaultValues = {
-    id: "",
-    name: "",
-    organizationId: defaultOrganization?.id,
-    description: "",
-    benefit: "",
-    requirement: "",
-    numberPosition: 0,
+    name: '',
+    organizationId: defaultOrganization?.id || null,
+    description: '',
+    benefit: '',
+    requirement: '',
+    numberPosition: 1,
     minSalary: null,
     maxSalary: null,
-    salaryDisplayType: "",
-    sex: "",
+    salaryDisplayType: 0,
+    sex: null,
     startDate: null,
     endDate: null,
-    address: "",
+    address: '',
     recruitmentLanguageIds: [],
     coOwnerIds: [],
     tags: [],
     jobPositionId: null,
     ownerId: null,
-    workExperience: "",
+    workExperience: 0,
     currencyUnit: 0,
     candidateLevelId: null,
     recruitmentCouncilIds: [],
@@ -161,7 +160,7 @@ export default function UpdateRecruitment() {
     recruitmentWorkingForms: [],
     organizationPipelineId: null,
     isAutomaticStepChange: false,
-  };
+  }
 
   const methods = useForm({
     mode: "onBlur",
