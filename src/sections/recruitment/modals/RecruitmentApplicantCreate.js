@@ -86,6 +86,7 @@ export const RecruitmentApplicantCreate = ({
   const isEditMode = !!data?.id;
   const [avatar, setAvatar] = useState(undefined);
   const [cv, setCV] = useState(undefined);
+  const [isEdit, setIsEdit] = useState(true);
   // api
   const [addForm] = useCreateApplicantRecruitmentMutation();
   const [updateForm] = useUpdateApplicantMutation();
@@ -278,7 +279,7 @@ export const RecruitmentApplicantCreate = ({
     setValue("cvFile", extendData?.applicantCvPath);
     setValue("cvFileName", extendData?.applicantCvPath);
   }, [extendData]);
-
+  
   useEffect(() => {
     if (avatar && avatar.length > 0) {
       setValue("portraitImage", getFileUrl(avatar[0].response));
@@ -287,6 +288,7 @@ export const RecruitmentApplicantCreate = ({
 
   useEffect(() => {
     if (cv && cv.length > 0) {
+      setIsEdit(false);
       setIsUpload(true);
       setValue("cvFile", URL.createObjectURL(cv[0].originFileObj));
       setValue("cvFileName", cv[0].name);
@@ -351,7 +353,7 @@ export const RecruitmentApplicantCreate = ({
           <View
             style={{
               minWidth: "600px",
-              maxWidth: "1200px",
+              // maxWidth: "1200px",
               overflow: "hidden",
             }}
           >
@@ -583,13 +585,13 @@ export const RecruitmentApplicantCreate = ({
                     <Divider orientation={"vertical"} />
                     <Grid
                       sx={{
-                        minWidth: "580px",
+                        minWidth: "750px",
                         "& .pg-viewer-wrapper": {
                           overflowY: "auto",
                         },
                       }}
                     >
-                      {watch("cvFile") || cv[0]?.status === "done" ? (
+                      {isEdit || (watch("cvFile") && cv[0].status === "done") ? (
                         <Suspense
                           fallback={
                             <View
