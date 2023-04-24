@@ -97,30 +97,30 @@ export const getWorkingFormNames = (aryWorkingForms = []) => {
 }
 
 
-function base64ToBlob(base64String, contentType) {
-    const byteCharacters = atob(base64String.split(',')[1]);
-    const byteArrays = [];
+// function base64ToBlob(base64String, contentType) {
+//     const byteCharacters = atob(base64String.split(',')[1]);
+//     const byteArrays = [];
 
-    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-        const slice = byteCharacters.slice(offset, offset + 1024);
+//     for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+//         const slice = byteCharacters.slice(offset, offset + 1024);
 
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
+//         const byteNumbers = new Array(slice.length);
+//         for (let i = 0; i < slice.length; i++) {
+//             byteNumbers[i] = slice.charCodeAt(i);
+//         }
 
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-    }
+//         const byteArray = new Uint8Array(byteNumbers);
+//         byteArrays.push(byteArray);
+//     }
 
-    return new Blob(byteArrays, {type: contentType});
-}
+//     return new Blob(byteArrays, {type: contentType});
+// }
 export const setValueFieldScan = (setValue, objectScan) => {
-  const blob = base64ToBlob("data:image/png;base64," +objectScan.portraitImage, 'image/png');
+//   const blob = base64ToBlob("data:image/png;base64," +objectScan.portraitImage, 'image/png');
 
-const imageUrl = URL.createObjectURL(blob);
+// const imageUrl = URL.createObjectURL(blob);
 
-console.log('imageUrl',imageUrl);
+// console.log('imageUrl',imageUrl);
   setValue("fullName", undefined);
   setValue("email", undefined);
   setValue("phoneNumber", undefined);
