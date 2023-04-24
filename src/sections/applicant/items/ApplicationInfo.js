@@ -5,8 +5,8 @@ import {
   YearOfExperience,
 } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
-import { fDate, fYear } from "@/utils/formatTime";
-import { Grid, Divider, Chip, Typography } from "@mui/material";
+import { fDate } from "@/utils/formatTime";
+import { Grid, Divider } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 
@@ -40,6 +40,7 @@ export const ApplicantInfo = ({ data }) => {
                 fontSize: "13px",
                 fontWeight: 600,
                 color: "#172B4D",
+                whiteSpace: "pre-line"
               },
             }}
           />
@@ -141,124 +142,8 @@ export const ApplicantInfo = ({ data }) => {
         "Số năm kinh nghiệm:",
         YearOfExperience(data?.yearOfExperience)
       )}
-      <div>
-        <span
-          style={{
-            display: "inline-flex",
-            fontSize: 13,
-            margin: "12px 0",
-            color: "#5C6A82",
-            width: "160px",
-            fontWeight: 400,
-          }}
-        >
-          {"Kỹ năng:"}
-        </span>
-
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            fontSize: 13,
-            fontWeight: 600,
-            color: "#172B4D",
-            width: "calc(100% - 160px)",
-          }}
-        >
-          {data?.applicantSkills?.length > 0
-            ? data?.applicantSkills.map((p, index) => {
-              return (
-                <div key={index}>
-                  <ListItemText
-                    primary={p?.name}
-                    sx={{
-                      "& .MuiTypography-root": {
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: "#172B4D",
-                      },
-                    }}
-                  />
-                  {data?.applicantSkills.length - 1 > index ? (
-                    <span style={{ marginRight: 5 }}>,</span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              );
-            })
-            : "-"}
-        </span>
-      </div>
-      {data?.applicantsWorkingExperiences?.length > 0 &&
-        data?.applicantsWorkingExperiences.map((p, index) => {
-          return (
-            <div key={index}>
-              <span
-                style={{
-                  display: "inline-flex",
-                  fontSize: 13,
-                  margin: "12px 0",
-                  color: "#5C6A82",
-                  width: "160px",
-                  fontWeight: 400,
-                }}
-              >
-                {fYear(p?.startTime)} - {fYear(p?.endTime)}
-              </span>
-
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "#172B4D",
-                  width: "calc(100% - 160px)",
-                }}
-              >
-                <ListItemText
-                  primary={
-                    <>
-                      {p?.organizationName}
-                      <Chip
-                        label={"Đang làm việc"}
-                        size="small"
-                        sx={{
-                          color: "#388E3C",
-                          backgroundColor: "#EFF3F6",
-                          ml: 1,
-                          fontSize: 10,
-                          fontWeight: 500,
-                        }}
-                      />
-                    </>
-                  }
-                  secondary={
-                    <>
-                      <Typography>{p?.position}</Typography>
-                      <Typography>{p?.experience}</Typography>
-                    </>
-                  }
-                  sx={{
-                    "& .MuiListItemText-primary": {
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "#172B4D",
-                      marginBottom: "4px",
-                    },
-                    "& .MuiListItemText-secondary .MuiTypography-root": {
-                      fontSize: "13px",
-                      fontWeight: 400,
-                      color: "#455570",
-                      marginBottom: "4px",
-                    },
-                  }}
-                />
-              </span>
-            </div>
-          );
-        })}
+      {renderText("Kỹ năng:", data?.rawApplicantSkills)}
+      {renderText("Kinh nghiệm làm việc:", data?.experience)}
 
       <DividerInfo text="HỌC VẤN" />
       {renderText("Học vấn:", data?.education)}

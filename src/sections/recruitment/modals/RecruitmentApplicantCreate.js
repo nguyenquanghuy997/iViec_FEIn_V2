@@ -469,10 +469,10 @@ export const RecruitmentApplicantCreate = ({
                       />
                     </Grid>
                     <Grid mb={3}>
-                      <RHFTextField
-                        title={"Kỹ năng"}
+                      <Label>Kỹ năng</Label>
+                      <TextAreaDS
                         name={"rawApplicantSkills"}
-                        placeholder="Nhập 1 hoặc nhiều kỹ năng"
+                        placeholder="Nhập kỹ năng ứng viên"
                       />
                     </Grid>
                     <Grid mb={3}>
@@ -545,7 +545,7 @@ export const RecruitmentApplicantCreate = ({
                         <RHFTextField
                           title={"Căn cước công dân"}
                           name={"identityNumber"}
-                          placeholder="Chọn giới tính"
+                          placeholder="Nhập CCCD/CMTND"
                         />
                       </Grid>
                       <Typography
@@ -566,7 +566,7 @@ export const RecruitmentApplicantCreate = ({
                           title={"Chiều cao"}
                           type={"number"}
                           name={"height"}
-                          placeholder="Chọn chiều cao"
+                          placeholder="Nhập chiều cao"
                         />
                       </Grid>
                       <Grid item xs={6} pl={"12px"}>
@@ -574,7 +574,7 @@ export const RecruitmentApplicantCreate = ({
                           title={"Cân nặng"}
                           type={"number"}
                           name={"weight"}
-                          placeholder="Chọn cân nặng"
+                          placeholder="Nhập cân nặng"
                         />
                       </Grid>
                     </Grid>
