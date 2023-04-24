@@ -96,7 +96,31 @@ export const getWorkingFormNames = (aryWorkingForms = []) => {
   return aryWorkingForms.map(wf => getWorkingFormName(wf.workingForm)).join(', ');
 }
 
+
+function base64ToBlob(base64String, contentType) {
+    const byteCharacters = atob(base64String.split(',')[1]);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+        const slice = byteCharacters.slice(offset, offset + 1024);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, {type: contentType});
+}
 export const setValueFieldScan = (setValue, objectScan) => {
+  const blob = base64ToBlob("data:image/png;base64," +objectScan.portraitImage, 'image/png');
+
+const imageUrl = URL.createObjectURL(blob);
+
+console.log('imageUrl',imageUrl);
   setValue("fullName", undefined);
   setValue("email", undefined);
   setValue("phoneNumber", undefined);
@@ -110,7 +134,7 @@ export const setValueFieldScan = (setValue, objectScan) => {
   setValue("identityNumber", undefined);
   setValue("yearOfExperience", undefined);
   setValue("rawApplicantSkills", undefined);
-  
+
   if (objectScan) {
     setValue("fullName", objectScan.fullName);
     setValue("email", objectScan.email);
@@ -124,5 +148,6 @@ export const setValueFieldScan = (setValue, objectScan) => {
     setValue("rawApplicantSkills", objectScan.rawApplicantSkills);
     setValue("yearOfExperience", objectScan.yearOfExperience ? getYearOfExperience(objectScan.yearOfExperience) : "");
     setValue("sex", objectScan.sex && objectScan.sex === "Nữ" ? 1 : 0);
+    setValue("portraitImage", "data:image/jpg;base64," + objectScan.portraitImage);
   }
 };
