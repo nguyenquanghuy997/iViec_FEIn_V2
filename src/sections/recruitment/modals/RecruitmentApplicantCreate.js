@@ -221,8 +221,7 @@ export const RecruitmentApplicantCreate = ({
           });
           dispatch(
             ApplicantFormSlice.util.invalidateTags([
-              { type: "GetListApplicantPipeline" },
-              { type: "GetListsApplicants" },
+              { type: "APPLICANT", id: 'LIST_APPLICANT_PIPELINE'},
             ])
           );
           pressHide();

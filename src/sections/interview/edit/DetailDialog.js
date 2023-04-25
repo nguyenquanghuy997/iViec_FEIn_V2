@@ -88,7 +88,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
     );
 
   const startTime = convertStoMs(
-    convertDurationTimeToSeconds(moment(time?.[0]).format("HH:mm:ss")) -
+    convertDurationTimeToSeconds(moment(time?.[0]).format("HH:mm:ss")) +
       convertDurationTimeToSeconds(duration?.[0])
   );
   const { user } = useAuth();
@@ -177,7 +177,8 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                   </ListItemText>
                   <ListItemText>
                     <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                      {startTime}- {moment(time?.[index]).format("HH:mm")}
+
+                     {moment(time?.[index]).format("HH:mm")} - {startTime}
                     </Typography>
                   </ListItemText>
                   <ListItemText

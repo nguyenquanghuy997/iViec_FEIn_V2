@@ -40,6 +40,7 @@ import { useForm } from "react-hook-form";
 import useRole from "@/hooks/useRole";
 import {PERMISSIONS, RECRUITMENT_STATUS} from "@/config";
 import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 
 const defaultStyleRecruitmentStatus = {
   borderRadius: "100px",
@@ -309,7 +310,8 @@ function RecruitmentPreviewItem({
   const collapseHeader = () => {
     setIsFullHeader(!isFullHeader);
   };
-
+  const [ open, setOpen] = useState(false) 
+  const [ dataInterview] = useState({recruitmentId: RecruitmentId}) 
   return (
     <div>
       <TabContext value={tab}>
@@ -666,7 +668,7 @@ function RecruitmentPreviewItem({
           ) : (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
-                <Box>
+                {/* <Box>
                   <ButtonGroup
                     disableElevation
                     variant="contained"
@@ -691,7 +693,7 @@ function RecruitmentPreviewItem({
                         "& .MuiButton-startIcon": { mr: 0 },
                       }}
                     />
-                    {/* <Button
+                    <Button
                       variant="outlined"
                       startIcon={<MenuIcon />}
                       sx={{
@@ -705,7 +707,7 @@ function RecruitmentPreviewItem({
                         },
                         "& .MuiButton-startIcon": { mr: 0 },
                       }}
-                    /> */}
+                    />
                   </ButtonGroup>
                 </Box>
 
@@ -743,7 +745,7 @@ function RecruitmentPreviewItem({
                   }
                 >
                   Bộ lọc
-                </ButtonFilterStyle>
+                </ButtonFilterStyle> */}
               </Stack>
               <Stack flexDirection={"row"}>
                 <ButtonGroup
@@ -764,7 +766,7 @@ function RecruitmentPreviewItem({
                       background: "#1976D2",
                       padding: "12px 16px",
                     }}
-                    onClick={() => setShowDialogStage(true)}
+                    onClick={() => setOpen(true)}
                   >
                     <Iconify
                       icon={"material-symbols:add"}
@@ -773,7 +775,7 @@ function RecruitmentPreviewItem({
                       color="#fff"
                       mr={1}
                     />
-                    Thêm ứng viên
+                    Đặt lịch phỏng vấn
                   </Button>
                   {/* <LightTooltip
                     placement="bottom-start"
@@ -891,6 +893,7 @@ function RecruitmentPreviewItem({
               onClose={() => setOpenPreview(false)}
           />
       )}
+      {open && <FormCalendar open={open} setOpen={setOpen} optionsFromCruit={dataInterview}/>}
     </div>
   );
 }

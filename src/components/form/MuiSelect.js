@@ -132,8 +132,7 @@ const MuiSelect = forwardRef((
                     method: method,
                     ...(reqMethod !== 'get' ? { data: reqData } : {}),
                 });
-
-                setSelectedOptions(items.map(it => pick(it, ['id', 'name', 'title'])));
+                setSelectedOptions(items.map(it => pick(it, ['id', 'name', 'title', 'email'])));
                 _firstInit.current = false;
             }, 300);
         }
@@ -276,7 +275,7 @@ const MuiSelect = forwardRef((
       </span>
         );
     }
-
+    
     const itemHeight = 44;
 
     const selectSx = {

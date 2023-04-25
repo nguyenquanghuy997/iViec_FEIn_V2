@@ -238,9 +238,9 @@ function DraggableForm({model, index, removeItem}) {
                   fontSize: 13
                 }}
               >
-                {watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`)} -
-                {pushMin(watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`), watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`))}
-                {" "}Ngày {watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`).toLocaleDateString()}
+                {watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`)} - 
+                {watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`) ? pushMin(watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`), watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`)):''}
+                {" "}Ngày {watch(`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`)?.toLocaleDateString()}
               </Typography>
               <Button
                 sx={{m: "0 auto", textTransform: "none"}}

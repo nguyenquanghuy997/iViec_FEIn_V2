@@ -185,6 +185,8 @@ export const API_GET_JOB_CATEGORIES = "/masterData/JobCategory/GetJobCategories"
 //ĐẶT LỊCH
 export const API_POST_BOOK_CALENDAR = 'applicant/BookingCalendar/CreateBookingCalendar'
 export const API_GET_APPLICANT = 'applicant/ApplicantRecruitment/GetApplicantByPipelineStateId'
+export const API_GET_BOOKING_CALENDER_BY_RECRUITMENT ='applicant/BookingCalendar/GetBookingCalendarsByRecruitment'
+export const API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE ='applicant/BookingCalendar/GetBookingCalendarsByApplicantRecruitmentPipelineState'
 export const API_GET_CALENDAR ='applicant/BookingCalendar/GetBookingCalendars'
 export const API_GET_CALENDAR_DETAIL = 'applicant/BookingCalendar/GetBookingCalendar'
 export const API_UPDATE_CALENDAR = 'applicant/BookingCalendar/UpdateBookingCalendar'

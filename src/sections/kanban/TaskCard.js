@@ -1,14 +1,27 @@
+import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
+import { FormCalendar } from "../interview/components/FormCalendar";
 import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
+import { ApplicantInterviewState } from "@/config";
+import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 import { srcImage } from "@/utils/enum";
-import { fDate } from "@/utils/formatTime";
-import { Box, Paper, Stack, Typography, Grid, Button, ButtonGroup } from "@mui/material";
+import { fDate, fTime } from "@/utils/formatTime";
+import {
+  Box,
+  Paper,
+  Stack,
+  Typography,
+  Grid,
+  Button,
+  ButtonGroup,
+} from "@mui/material";
+import { Divider } from "antd";
+import moment from "moment";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import React, { memo, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
-import { Divider } from "antd";
-import { FormCalendar } from "../interview/components/FormCalendar";
+
 function Item(props) {
   const { sx, ...other } = props;
   return (
@@ -31,30 +44,33 @@ function Baseitem(props) {
       display="flex"
       alignItems="center"
       sx={{
-        margin: '0 12px',
-        marginBottom: '16px',
+        margin: "0 12px",
+        marginBottom: "16px",
         "& .MuiBadge-dot": {
           width: "6px",
           minWidth: "6px",
           height: "6px",
           top: 3,
           right: 3,
-        }
+        },
       }}
     >
       <AvatarDS
-        sx={{ height: "32px", width: "32px", borderRadius: "14px", }}
+        sx={{ height: "32px", width: "32px", borderRadius: "14px" }}
         src={srcImage(item?.portraitImage)}
       />
 
       <Box pl={1}>
-        <Typography fontSize="12px" display="flex" fontWeight="600" alignItems="center">
+        <Typography
+          fontSize="12px"
+          display="flex"
+          fontWeight="600"
+          alignItems="center"
+        >
           {item?.fullName}
         </Typography>
         <Stack direction="row" spacing={2} color="#172B4D">
-          <Typography fontSize="12px">
-            {item.phoneNumber}
-          </Typography>
+          <Typography fontSize="12px">{item.phoneNumber}</Typography>
         </Stack>
       </Box>
     </Grid>
@@ -68,7 +84,8 @@ function ExaminationItem(props) {
       <Baseitem item={item} />
       <Box
         sx={{
-          backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE", display: "flex",
+          backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE",
+          display: "flex",
           flexDirection: "column-reverse",
           alignItems: "flex-start",
         }}
@@ -79,8 +96,12 @@ function ExaminationItem(props) {
           p={0.5}
           color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
         >
-          <Typography fontSize="14px" fontWeight="600">{"Điểm:"}</Typography>
-          <Typography fontSize="14px" fontWeight="600" >{item?.processStatus == 4 ? "15/16" : "3/16"}</Typography>
+          <Typography fontSize="14px" fontWeight="600">
+            {"Điểm:"}
+          </Typography>
+          <Typography fontSize="14px" fontWeight="600">
+            {item?.processStatus == 4 ? "15/16" : "3/16"}
+          </Typography>
         </Stack>
         <Stack
           direction="row"
@@ -88,8 +109,12 @@ function ExaminationItem(props) {
           p={0.5}
           color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
         >
-          <Typography fontSize="14px" fontWeight="600">{"Kết quả :"}</Typography>
-          <Typography fontSize="14px" fontWeight="600" >{item?.processStatus == 4 ? "Đạt" : "Không Đạt"}</Typography>
+          <Typography fontSize="14px" fontWeight="600">
+            {"Kết quả :"}
+          </Typography>
+          <Typography fontSize="14px" fontWeight="600">
+            {item?.processStatus == 4 ? "Đạt" : "Không Đạt"}
+          </Typography>
         </Stack>
       </Box>
     </div>
@@ -98,108 +123,215 @@ function ExaminationItem(props) {
 
 function InterviewItem(props) {
   const { item } = props;
-  const [ open, setOpen] = useState(false)
-  const [ data, setData ] = useState()
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState();
   const handleClick = (item) => {
-    setOpen(true)
-    setData(item)
+    setOpen(true);
+    setData(item);
+  };
+  const { data: { items: interview } = { items: [] } } =
+    useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery(
+      {
+        ApplicantId: item?.applicantId,
+        RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
+      },
+      { skip: !item }
+    );
+  const { enqueueSnackbar } = useSnackbar();
+  function copyToClipboard(id) {
+    var copyText =
+      window.location.origin +
+      "/phong-van.html?DisplayName=&&Email=&&Role=1&&RoomName=" +
+      id;
+    navigator.clipboard.writeText(copyText);
+    enqueueSnackbar("Đã sao chép link cuộc họp");
   }
-
   return (
     <div>
       <Baseitem item={item} />
+      <Box style={{ margin: "12px 0px 0px 0px" }}>
+        {interview &&
+          interview?.map((item, index) => {
+            if (index < interview?.length - 1) {
+              return (
+                <Box
+                  sx={{
+                    background: "#F3F4F6",
+                    color: "#455570",
+                    padding: "4px 12px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        fontSize="12px"
+                        display="flex"
+                        fontWeight="500"
+                        alignItems="left"
+                      >
+                        {item?.name}
+                      </Typography>
+                    </Box>
+                    <Iconify
+                      icon={"material-symbols:play-circle-rounded"}
+                      width={16}
+                      height={16}
+                      color="#455570"
+                    />
+                  </Box>
+                </Box>
+              );
+            } else if (
+              interview?.[0]?.applicantInterviewState ==
+                ApplicantInterviewState.PENDING ||
+              interview?.[0]?.applicantInterviewState ==
+                ApplicantInterviewState.CONFIRMED ||
+              interview?.[0]?.applicantInterviewState ==
+                ApplicantInterviewState.INTERVIEWING
+            ) {
+              var timeEnd = moment(item?.interviewTime).add(
+                item?.interviewDuration
+              );
+              return (
+                <Box
+                  sx={{
+                    background: "#4CAF50",
+                    color: "#FDFDFD",
+                    padding: "8px 12px 16px",
+                    marginTop: "12px",
+                    borderBottomLeftRadius: "4px",
+                    borderBottomRightRadius: "4px",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        fontSize="12px"
+                        display="flex"
+                        fontWeight="700"
+                        alignItems="left"
+                      >
+                        {item?.name}
+                      </Typography>
+                      <Typography
+                        fontSize="12px"
+                        display="flex"
+                        fontWeight="500"
+                        alignItems="center"
+                      >
+                        {item?.interviewTime
+                          ? fDate(item?.interviewTime) +
+                            " " +
+                            fTime(item?.interviewTime) +
+                            " - " +
+                            fTime(timeEnd)
+                          : ""}
+                      </Typography>
+                    </Box>
+                    <Iconify
+                      icon={"mdi:arrow-right-bold-circle"}
+                      width={20}
+                      height={20}
+                      color="#FDFDFD"
+                    />
+                  </Box>
 
-      <Box style={{ margin: '12px 0px 0px 0px' }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      background: "#FDFDFD",
+                      borderRadius: "6px",
+                      marginTop: "8px",
+                      padding: "10px",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        sx={{
+                          fontSize: "12px",
+                          color: "#5C6A82",
+                          fontWeight: "500",
+                          lineClamp: 1,
+                          boxOrient: "vertical",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {"http://inside.iviec.vn/phong-van..."}
+                      </Typography>
+                    </Box>
+                    <Iconify
+                      icon={"ri:file-copy-fill"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
+                      onClick={copyToClipboard(item?.id)}
+                    />
+                  </Box>
+                </Box>
+              );
+            }
+          })}
         <Box>
-          <Divider style={{ margin: 0 }} />
-
-          <Box style={{ padding: '12px 12px' }}>
-            <ButtonDS
-              tittle={"Đặt lịch phỏng vấn"}
-              type="submit"
-              sx={{
-                ":hover": {
-                  backgroundColor: "#F3F4F6",
-                },
-                pt: "2px",
-                color: "#455570",
-                backgroundColor: "#FFFFFF",
-                borderRadius: 1,
-                border: 1,
-                borderColor: "#455570",
-                marginRight: "2px",
-                fontSize: "12px",
-                fontWeight: 600,
-                padding: "6px 12px",
-                textTransform: "none",
-              }}
-              onClick={()=>handleClick(item)}
-            />
-          </Box>
+          {interview?.[0]?.applicantInterviewState ==
+            ApplicantInterviewState.SUSPENDED ||
+            interview?.[0]?.applicantInterviewState ==
+              ApplicantInterviewState.REFUSE ||
+            interview?.[0]?.applicantInterviewState ==
+              ApplicantInterviewState.NOTPERTED ||
+            (interview?.[0]?.applicantInterviewState ==
+              ApplicantInterviewState.COMPLETED && (
+              <Box style={{ padding: "12px 12px" }}>
+                <ButtonDS
+                  tittle={"Đặt lịch phỏng vấn"}
+                  type="submit"
+                  sx={{
+                    ":hover": {
+                      backgroundColor: "#F3F4F6",
+                    },
+                    pt: "2px",
+                    color: "#455570",
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: 1,
+                    border: 1,
+                    borderColor: "#455570",
+                    marginRight: "2px",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    padding: "6px 12px",
+                    textTransform: "none",
+                  }}
+                  onClick={() => handleClick(item)}
+                />
+              </Box>
+            ))}
         </Box>
 
         {/* đã có hẹn phỏng vấn */}
-        {/* <Box sx={{
-          background: '#4CAF50',
-          color: '#FDFDFD',
-          padding: '8px 12px 16px',
-          marginTop: '12px',
-          borderBottomLeftRadius: '4px',
-          borderBottomRightRadius: '4px',
-        }}>
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <Box>
-              <Typography fontSize="12px" display="flex" fontWeight="700" alignItems="left">
-                {'Phỏng vấn nhân viên kinh doanh'}
-              </Typography>
-              <Typography fontSize="12px" display="flex" fontWeight="500" alignItems="center">
-                {'12/03/2023 15:00 - 15:30'}
-              </Typography>
-            </Box>
-            <Iconify
-              icon={"mdi:arrow-right-bold-circle"}
-              width={20}
-              height={20}
-              color="#FDFDFD"
-            />
-          </Box>
-
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            background: '#FDFDFD',
-            borderRadius: '6px',
-            marginTop: '8px',
-            padding: '10px',
-          }}>
-            <Box>
-              <Typography sx={{
-                fontSize: "12px",
-                color: '#5C6A82',
-                fontWeight: "500",
-                lineClamp: 1,
-                boxOrient: 'vertical',
-                textOverflow: 'ellipsis'
-              }}>
-                {'https://www.iviec.vn/...'}
-              </Typography>
-            </Box>
-            <Iconify
-              icon={"ri:file-copy-fill"}
-              width={20}
-              height={20}
-              color="#5C6A82"
-            />
-          </Box>
-        </Box> */}
       </Box>
 
-      {open && <FormCalendar options={data} open={open} setOpen={setOpen} optionsFromCruit={data}/>}
+      {open && (
+        <FormCalendar
+          options={data}
+          open={open}
+          setOpen={setOpen}
+          optionsFromCruit={data}
+        />
+      )}
     </div>
   );
 }
@@ -210,9 +342,9 @@ function ResultItem(props) {
   return (
     <div>
       <Baseitem item={item} />
-      <Box style={{ margin: '12px 0px 0px 0px' }}>
-        <Divider style={{ margin: '0px' }} />
-        <Box style={{ padding: '12px 12px ' }}>
+      <Box style={{ margin: "12px 0px 0px 0px" }}>
+        <Divider style={{ margin: "0px" }} />
+        <Box style={{ padding: "12px 12px " }}>
           <Box>
             <Box
               sx={{
@@ -220,79 +352,74 @@ function ResultItem(props) {
                 borderRadius: 1,
               }}
             >
-              <ButtonGroup fullWidth={true} style={{ border: '1px solid #E7E9ED' }}>
+              <ButtonGroup
+                fullWidth={true}
+                style={{ border: "1px solid #E7E9ED" }}
+              >
                 <Button
                   type="submit"
                   sx={{
-                    border: 'none',
+                    border: "none",
                     color:
-                      item.pipelineStateResultType == 0
-                        ? "#FDFDFD"
-                        : "#455570",
+                      item.pipelineStateResultType == 0 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 0
-                        ? "#4CAF50"
-                        : "#FDFDFD",
+                      item.pipelineStateResultType == 0 ? "#4CAF50" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#4CAF50",
-                      color: '#FDFDFD',
-                      border: 'none',
+                      color: "#FDFDFD",
+                      border: "none",
                     },
                     fontSize: "12px",
                     padding: "6px 10px",
-                  }}>
+                  }}
+                >
                   Đạt
                 </Button>
                 <Button
                   type="submit"
                   sx={{
-                    border: 'none',
+                    border: "none",
                     color:
-                      item.pipelineStateResultType == 1
-                        ? "#FDFDFD"
-                        : "#455570",
+                      item.pipelineStateResultType == 1 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 1
-                        ? "#FF9800"
-                        : "#FDFDFD",
+                      item.pipelineStateResultType == 1 ? "#FF9800" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#FF9800",
-                      color: '#FDFDFD',
-                      border: 'none',
+                      color: "#FDFDFD",
+                      border: "none",
                     },
                     fontSize: "12px",
                     padding: "6px 10px",
                     textTransform: "none",
                   }}
-                >Cân nhắc</Button>
+                >
+                  Cân nhắc
+                </Button>
                 <Button
                   type="submit"
                   sx={{
-                    border: 'none',
+                    border: "none",
                     color:
-                      item.pipelineStateResultType == 2
-                        ? "#FDFDFD"
-                        : "#455570",
+                      item.pipelineStateResultType == 2 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 2
-                        ? "#F44336"
-                        : "#FDFDFD",
+                      item.pipelineStateResultType == 2 ? "#F44336" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#F44336",
-                      color: '#FDFDFD',
-                      border: 'none',
+                      color: "#FDFDFD",
+                      border: "none",
                     },
                     marginLeft: "2px",
                     fontSize: "12px",
                     padding: "6px 10px",
                     textTransform: "none",
                   }}
-                >Loại</Button>
+                >
+                  Loại
+                </Button>
               </ButtonGroup>
-
             </Box>
 
             {item.pipelineStateResultType == 2 && (
@@ -303,12 +430,12 @@ function ResultItem(props) {
                   ":hover": {
                     backgroundColor: "#F3F4F6",
                   },
-                  marginTop: '12px',
+                  marginTop: "12px",
                   pt: "2px",
                   color: "#455570",
                   backgroundColor: "#FFFFFF",
                   borderRadius: 1,
-                  border: '1px solid #455570',
+                  border: "1px solid #455570",
                   fontSize: "12px",
                   fontWeight: 600,
                   padding: "6px 10px",
@@ -339,17 +466,16 @@ function ResultItem(props) {
               />
             )} */}
           </Box>
-          {
-            isOpenSendOffer && <ApplicantSendOfferModal
+          {isOpenSendOffer && (
+            <ApplicantSendOfferModal
               isOpen={isOpenSendOffer}
               onClose={() => setIsOpenSendOffer(false)}
               showUploadFile={true}
               title="Tạo thư mời nhận việc"
             />
-          }
+          )}
         </Box>
       </Box>
-
     </div>
   );
 }
@@ -414,9 +540,7 @@ function OfferItem(props) {
               color="#388E3C"
             />
           </Item>
-          <Item sx={{ width: "100%", color: "#388E3C" }}>
-            Đồng ý nhận việc
-          </Item>
+          <Item sx={{ width: "100%", color: "#388E3C" }}>Đồng ý nhận việc</Item>
           <Item sx={{ flexShrink: 0 }}>
             <Iconify
               icon={"fluent-mdl2:circle-half-full"}
@@ -450,14 +574,11 @@ function OfferItem(props) {
           </Item>
         </Box>
       )}
-
-
     </div>
   );
 }
 
 function TaskCard({ item, index, pipelineStateType }) {
-  
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
       {(provided) => {
@@ -471,15 +592,17 @@ function TaskCard({ item, index, pipelineStateType }) {
               sx={{
                 width: 1,
                 position: "relative",
-                border: 'none',
-                borderRadius: '4px',
-                boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+                border: "none",
+                borderRadius: "4px",
+                boxShadow:
+                  "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
                 mb: 2,
                 // boxShadow: (theme) => theme.customShadows.z1,
                 "&:hover": {
                   // border: '0.5px solid #5C6A82',
                   // boxShadow: (theme) => theme.customShadows.z16,
-                  boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+                  boxShadow:
+                    "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
                 },
               }}
             >
@@ -488,7 +611,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                   justifyContent: "space-between",
                   display: "flex",
                   flexDirection: "row",
-                  p: '16px 12px 4px 12px',
+                  p: "16px 12px 4px 12px",
                 }}
               >
                 <Typography
@@ -517,10 +640,8 @@ function TaskCard({ item, index, pipelineStateType }) {
                 />
               </Box>
 
-              <Box sx={{ cursor: 'pointer' }}>
-                <Stack
-                  sx={{ borderRadius: '8px', background: "#FDFDFD" }}
-                >
+              <Box sx={{ cursor: "pointer" }}>
+                <Stack sx={{ borderRadius: "8px", background: "#FDFDFD" }}>
                   {pipelineStateType == 0 && <Baseitem item={item} />}
                   {pipelineStateType == 1 && <ExaminationItem item={item} />}
                   {pipelineStateType == 2 && <InterviewItem item={item} />}
@@ -534,7 +655,6 @@ function TaskCard({ item, index, pipelineStateType }) {
                   ></Box>
                 </Stack>
               </Box>
-           
             </Paper>
           </div>
         );

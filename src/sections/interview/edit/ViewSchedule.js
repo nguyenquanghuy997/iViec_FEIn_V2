@@ -3,6 +3,7 @@ import { ButtonDS } from "@/components/DesignSystem";
 import { PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
+import { fTime } from "@/utils/formatTime";
 import { Box, CardContent, Divider, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { RiCalendarCheckFill, RiCalendarEventFill } from "react-icons/ri";
@@ -76,7 +77,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
               {data?.name}
             </Typography>
             <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-              15:00 - 18:00
+            {data?.startTime ? fTime(data?.startTime):''} -{data?.endTime ? fTime(data?.endTime):''}
             </Typography>
           </Box>
           <Divider orientation="vertical" variant="middle" flexItem />

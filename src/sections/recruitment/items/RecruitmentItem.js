@@ -87,9 +87,18 @@ export const RecruitmentItem = () => {
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB), []);
 
   // api get list
+  const listArrayOtherIdsFilter =["processStatuses", "workingForms", "workExperiences", "sexes"]
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  let reqData = {};
+  for (let f in query) {
+    let val = query[f];
+    if ((f.includes('Ids') || listArrayOtherIdsFilter.includes(f)) && !Array.isArray(val)) {
+      val = [val];
+    }
+    reqData[f] = val;
+  }
   const { data: Data = {}, isLoading } = useGetRecruitmentsQuery(
-    { ...query, searchKey: query.SearchKey },
+    { ...reqData, searchKey: reqData.SearchKey },
     { skip: !isReady }
   );
 
