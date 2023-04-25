@@ -209,7 +209,7 @@ export const FormCalendar = ({
           autoHideDuration: 2000,
         });
         dispatch(
-          calendarServiceApi.util.invalidateTags(['BookCalendarRecruitment'])
+          calendarServiceApi.util.invalidateTags([{ type: 'BookCalendar', id: 'List' }])
         );
         onClose();
       })
