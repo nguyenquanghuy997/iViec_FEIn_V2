@@ -79,6 +79,10 @@ export const calendarServiceApi = createApi({
         method: "GET",
         params
       }),
+      transformResponse: (response) => {
+        response.events = response.items.reverse();
+        return response;
+      },
       providesTags: ["BookCalendarRecruitment"],
     }),
 
