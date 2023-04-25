@@ -27,7 +27,7 @@ import {
   LIST_GENDER,
   LIST_MARITAL_STATUSES,
 } from "@/utils/formatString";
-import { getExtension, phoneRegExp } from "@/utils/function";
+import { phoneRegExp } from "@/utils/function";
 import { getFileUrl } from "@/utils/helper";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -39,7 +39,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -75,7 +75,6 @@ const defaultValues = {
     address: undefined,
   },
 };
-const FileViewer = React.lazy(() => import("react-file-viewer"));
 
 export const RecruitmentApplicantCreate = ({
   data,
@@ -279,7 +278,7 @@ export const RecruitmentApplicantCreate = ({
     setValue("cvFile", extendData?.applicantCvPath);
     setValue("cvFileName", extendData?.applicantCvPath);
   }, [extendData]);
-  
+
   useEffect(() => {
     if (avatar && avatar.length > 0) {
       setValue("portraitImage", getFileUrl(avatar[0].response));
@@ -396,6 +395,7 @@ export const RecruitmentApplicantCreate = ({
                         showUploadList={false}
                         height={120}
                         autoUpload={true}
+                        accept={"image/*,.pdf"}
                       />
                     </Grid>
                     <Grid mb={3}>
@@ -591,23 +591,14 @@ export const RecruitmentApplicantCreate = ({
                         },
                       }}
                     >
-                      {isEdit || (watch("cvFile") && cv[0].status === "done") ? (
-                        <Suspense
-                          fallback={
-                            <View
-                              flex="true"
-                              contentcenter="true"
-                              height={"100%"}
-                            >
-                              <CircularProgress />
-                            </View>
-                          }
-                        >
-                          <FileViewer
-                            fileType={getExtension(watch("cvFileName"))}
-                            filePath={getFileUrl(watch("cvFile"))}
-                          />
-                        </Suspense>
+                      {isEdit ||
+                      (watch("cvFile") && cv[0].status === "done") ? (
+                        <div style={{ width: "100%", height: "100%" }}>
+                          <iframe
+                            src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
+                            style={{ width: "100%", height: "100%" }}
+                          ></iframe>
+                        </div>
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
                           <CircularProgress />
