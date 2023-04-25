@@ -9,7 +9,7 @@ import UploadFileDragAndDrop from "@/components/upload/UploadFileDragAndDrop";
 import { dispatch } from "@/redux/store";
 import { API_SCAN_FILE_APPLICANTS } from "@/routes/api";
 import {
-  ApplicantFormSlice,
+  ApplicantFormSlice, useGetAllJobSourcesQuery,
   useGetApplicantByIdQuery,
   useUpdateApplicantMutation,
 } from "@/sections/applicant";
@@ -42,6 +42,8 @@ import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { useGetJobCategoriesQuery } from "@/sections/companyinfor/companyInforSlice";
+import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
 
 const defaultValues = {
   id: undefined,
@@ -49,6 +51,8 @@ const defaultValues = {
   recruitmentPipelineStageId: undefined,
   pipelineStateResultType: undefined,
   fullName: undefined,
+  jobSourceId: undefined,
+  jobCategoryIds: undefined,
   portraitImage: undefined,
   cvFile: undefined,
   cvFileName: undefined,
@@ -60,7 +64,6 @@ const defaultValues = {
   height: undefined,
   experience: undefined,
   education: undefined,
-  jobSourceId: undefined,
   expectedSalaryFrom: undefined,
   expectedSalaryTo: undefined,
   maritalStatus: undefined,
@@ -90,18 +93,18 @@ export const RecruitmentApplicantCreate = ({
   const [addForm] = useCreateApplicantRecruitmentMutation();
   const [updateForm] = useUpdateApplicantMutation();
   const [uploadFile] = useUploadFileApplicantMutation();
-  const [uploadFileApplicantRecruitment] =
-    useUploadFileApplicantRecruitmentMutation();
-  let { data: preview = {} } = useGetApplicantByIdQuery(
-    { applicantId: data?.id },
-    { skip: !data?.id }
+  const [uploadFileApplicantRecruitment] = useUploadFileApplicantRecruitmentMutation();
+  const {data: {items: listJobSources = []} = {}} = useGetAllJobSourcesQuery();
+  const {data: {items: listCategory = []} = {}} = useGetJobCategoriesQuery();
+  let {data: preview = {}} = useGetApplicantByIdQuery(
+    {applicantId: data?.id},
+    {skip: !data?.id}
   );
-  let { data: extendData = null } = useGetApplicantRecruitmentQuery(
+  let {data: extendData = null} = useGetApplicantRecruitmentQuery(
     {
       applicantId: data?.id,
       recruitmentId: data?.recruitmentId,
-    },
-    { skip: !(data?.id && data?.recruitmentId) }
+    }, {skip: !(data?.id && data?.recruitmentId)}
   );
   const isLoading = isEditMode && !preview?.id && !extendData?.id;
   const [isUpload, setIsUpload] = useState(false);
@@ -112,36 +115,22 @@ export const RecruitmentApplicantCreate = ({
     recruitmentTitle: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
     recruitmentPipelineStageId: Yup.string().nullable(),
     pipelineStateResultType: Yup.string().nullable(),
-    fullName: Yup.string()
-      .max(50, "Họ tên không quá 50 ký tự")
-      .required("Chưa nhập họ tên"),
+    jobCategoryIds: Yup.array().required("Chưa chọn ngành nghề"),
+    jobSourceId: Yup.string().required("Chưa chọn nguồn"),
+    fullName: Yup.string().max(50, "Họ tên không quá 50 ký tự").required("Chưa nhập họ tên"),
     portraitImage: Yup.string(),
-    email: Yup.string()
-      .email("Email cần nhập đúng định dạng")
-      .required("Chưa nhập email"),
-    phoneNumber: Yup.string()
-      .required("Chưa nhập số điện thoại")
-      .matches(phoneRegExp, "Số điện thoại không đúng định dạng"),
-    weight: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
-    height: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    email: Yup.string().email("Email cần nhập đúng định dạng").required("Chưa nhập email"),
+    phoneNumber: Yup.string().required("Chưa nhập số điện thoại").matches(phoneRegExp, "Số điện thoại không đúng định dạng"),
+    weight: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+    height: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
     cvFile: Yup.string().nullable(),
     cvFileName: Yup.string().nullable(),
-    yearOfExperience: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    yearOfExperience: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
     experience: Yup.string(),
     identityNumber: Yup.string(),
     education: Yup.string(),
-    sex: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
-    maritalStatus: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    sex: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
+    maritalStatus: Yup.number().transform((value) => (isNaN(value) ? undefined : value)).nullable(),
     homeTower: Yup.object().shape({
       address: Yup.string(),
     }),
@@ -150,18 +139,18 @@ export const RecruitmentApplicantCreate = ({
     }),
     rawApplicantSkills: Yup.string(),
   });
-
+  
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-
+  
   const {
     reset,
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methods;
   const pressHide = () => {
     reset();
@@ -176,10 +165,11 @@ export const RecruitmentApplicantCreate = ({
     }));
     setShow(false);
   };
-  const { enqueueSnackbar } = useSnackbar();
-
+  const {enqueueSnackbar} = useSnackbar();
+  
   const pressSave = handleSubmit(async (body) => {
     let pathFile = "";
+    body.jobCategoryIds = body.jobCategoryIds?.map(item => item?.value);
     if (isEditMode) {
       if (cv && cv.length > 0) {
         const file = new FormData();
@@ -187,55 +177,47 @@ export const RecruitmentApplicantCreate = ({
         file.append("ApplicantRecruitmentId", extendData.id);
         pathFile = await uploadFileApplicantRecruitment(file).unwrap();
       }
-      await updateForm({ ...body, cvFile: pathFile })
-        .unwrap()
-        .then(() => {
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
-          });
-          dispatch(
-            ApplicantFormSlice.util.invalidateTags([
-              { type: "GetListApplicantPipeline" },
-              { type: "GetListsApplicants" },
-            ])
-          );
-          pressHide();
-        })
-        .catch(() => {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
+      await updateForm({...body, cvFile: pathFile}).unwrap()
+      .then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
         });
+        dispatch(ApplicantFormSlice.util.invalidateTags([
+          {type: 'GetListApplicantPipeline'},
+          {type: 'GetListsApplicants'}
+        ]));
+        pressHide();
+      }).catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      });
     } else {
       if (cv && cv.length > 0) {
         const file = new FormData();
-        file.append("File", cv[0].originFileObj);
+        file.append("File", cv[0].originFileObj)
         pathFile = await uploadFile(file).unwrap();
       }
-      await addForm({ ...body, cvFile: pathFile })
-        .unwrap()
-        .then(() => {
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
-          });
-          dispatch(
-            ApplicantFormSlice.util.invalidateTags([
-              { type: "GetListApplicantPipeline" },
-              { type: "GetListsApplicants" },
-            ])
-          );
-          pressHide();
-        })
-        .catch(() => {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 2000,
-            variant: "error",
-          });
+      await addForm({...body, cvFile: pathFile}).unwrap()
+      .then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
         });
+        dispatch(ApplicantFormSlice.util.invalidateTags([
+          {type: 'GetListApplicantPipeline'},
+          {type: 'GetListsApplicants'}
+        ]));
+        pressHide();
+      }).catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 2000,
+          variant: "error",
+        });
+      });
     }
   });
-
+  
   // effect
   useEffect(() => {
     if (!show) return;
@@ -245,7 +227,7 @@ export const RecruitmentApplicantCreate = ({
     setValue("recruitmentPipelineStateId", data.stage);
     setValue("pipelineStateResultType", data.stageResult);
   }, [show]);
-
+  
   useEffect(() => {
     if (!preview?.id) return;
     setValue("fullName", preview.fullName ?? undefined);
@@ -271,20 +253,26 @@ export const RecruitmentApplicantCreate = ({
       preview.livingAddress?.address ?? undefined
     );
     setValue("rawApplicantSkills", preview.rawApplicantSkills ?? undefined);
+    setValue("jobCategoryIds", preview.jobCategories?.map((item) => ({
+      value: item.jobCategoryId,
+      name: item.jobCategoryName,
+      label: item.jobCategoryName
+    })) ?? undefined);
+    setValue("jobSourceId", preview.jobSourceId ?? undefined);
   }, [preview]);
-
+  
   useEffect(() => {
     if (!extendData?.id) return;
     setValue("cvFile", extendData?.applicantCvPath);
     setValue("cvFileName", extendData?.applicantCvPath);
   }, [extendData]);
-
+  
   useEffect(() => {
     if (avatar && avatar.length > 0) {
       setValue("portraitImage", getFileUrl(avatar[0].response));
     }
   }, [avatar]);
-
+  
   useEffect(() => {
     if (cv && cv.length > 0) {
       setIsEdit(false);
@@ -296,13 +284,13 @@ export const RecruitmentApplicantCreate = ({
       }
     }
   }, [cv]);
-
+  
   return (
     <FormProvider {...methods}>
       <Modal
         open={show}
         onClose={pressHide}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
+        sx={{display: "flex", justifyContent: "flex-end"}}
       >
         <ViewModel
           sx={{
@@ -346,7 +334,7 @@ export const RecruitmentApplicantCreate = ({
                 }
               />
             </View>
-            <Divider />
+            <Divider/>
           </View>
           {/* body */}
           <View
@@ -358,7 +346,7 @@ export const RecruitmentApplicantCreate = ({
           >
             {isLoading ? (
               <View flex="true" contentcenter="true">
-                <CircularProgress />
+                <CircularProgress/>
               </View>
             ) : (
               <Grid
@@ -370,7 +358,7 @@ export const RecruitmentApplicantCreate = ({
               >
                 <Grid
                   container
-                  sx={{ width: "600px", overflowY: "auto" }}
+                  sx={{width: "600px", overflowY: "auto"}}
                   height={"100%"}
                   flexWrap={"nowrap"}
                   flexDirection={"column"}
@@ -414,7 +402,7 @@ export const RecruitmentApplicantCreate = ({
                       <Grid container alignItems={"center"}>
                         <Grid item mr={3}>
                           <Avatar
-                            sx={{ width: 120, height: 120 }}
+                            sx={{width: 120, height: 120}}
                             src={watch("portraitImage")}
                           />
                         </Grid>
@@ -435,7 +423,7 @@ export const RecruitmentApplicantCreate = ({
                         placeholder="Nhập họ và tên ứng viên"
                       />
                     </Grid>
-                    <Grid container flexDirection={"row"}>
+                    <Grid mb={3} container flexDirection={"row"}>
                       <Grid item xs={6} pr={"12px"}>
                         <RHFTextField
                           title={"Số điện thoại"}
@@ -450,6 +438,35 @@ export const RecruitmentApplicantCreate = ({
                           isRequired={true}
                           name={"email"}
                           placeholder="Nhập email ứng viên"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid container flexDirection={"row"}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <RHFMuiAutocomplete
+                          options={listCategory?.map((i) => ({
+                            value: i.id,
+                            label: i.name,
+                            name: i.name,
+                          }))}
+                          disabledOption={3}
+                          name="jobCategoryIds"
+                          title="Ngành nghề"
+                          isRequired
+                          placeholder="Chọn tối đa 3 ngành nghề (bắt buộc)"
+                          multiple
+                        />
+                      </Grid>
+                      <Grid item xs={6} pl={"12px"}>
+                        <RHFDropdown
+                          title={"Nguồn"}
+                          isRequired={true}
+                          options={listJobSources.map((item) => ({
+                            value: item.id,
+                            name: item.name
+                          }))}
+                          name={"jobSourceId"}
+                          placeholder="Chọn nguồn"
                         />
                       </Grid>
                     </Grid>
@@ -582,7 +599,7 @@ export const RecruitmentApplicantCreate = ({
                 </Grid>
                 {(isUpload || watch("cvFile")) && (
                   <>
-                    <Divider orientation={"vertical"} />
+                    <Divider orientation={"vertical"}/>
                     <Grid
                       sx={{
                         minWidth: "750px",
@@ -593,15 +610,15 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        <div style={{ width: "100%", height: "100%" }}>
+                        <div style={{width: "100%", height: "100%"}}>
                           <iframe
                             src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
-                            style={{ width: "100%", height: "100%" }}
+                            style={{width: "100%", height: "100%"}}
                           ></iframe>
                         </div>
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
-                          <CircularProgress />
+                          <CircularProgress/>
                         </View>
                       )}
                     </Grid>
@@ -610,8 +627,6 @@ export const RecruitmentApplicantCreate = ({
               </Grid>
             )}
           </View>
-
-          {/* footer */}
           <View
             flexrow="true"
             jcbetween="true"
@@ -633,5 +648,5 @@ export const RecruitmentApplicantCreate = ({
         </ViewModel>
       </Modal>
     </FormProvider>
-  );
+  )
 };

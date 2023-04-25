@@ -312,5 +312,6 @@ export const {
   useGetApplicantReviewFormQuery,
   useDeleteApplicantsMutation,
   useGetCheckReviewQuery,
-  useAddApplicantReviewMutation
+  useAddApplicantReviewMutation,
+  useGetAllJobSourcesQuery
 } = ApplicantFormSlice;
