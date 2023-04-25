@@ -11,6 +11,7 @@ import {
 } from "@/sections/organization/component/Icon";
 import { Avatar, Checkbox } from "@mui/material";
 import moment from "moment";
+import { useRouter } from "next/router";
 
 export default ({
   data,
@@ -33,14 +34,22 @@ export default ({
   const quest = Array.isArray(questions) ? questions : [];
   const user = createdUserInFo || {};
 
+  const router = useRouter();
+
   const pressSwitchActive = () => {
     setCurrentItem(data);
     setShowConfirmSwitchActive(true);
   };
 
   const pressView = () => {
-    setCurrentItem(data);
-    setShowForm(true);
+    router.push(
+      {
+        pathname: `${router.pathname}/${id}`,
+        query: { group: name },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   const pressEdit = () => {

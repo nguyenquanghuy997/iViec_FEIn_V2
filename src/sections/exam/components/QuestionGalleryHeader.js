@@ -55,13 +55,13 @@ export default ({
             Thêm nhóm câu hỏi
           </ButtonAddStyle>
 
-          <ButtonAddStyle
+          {/* <ButtonAddStyle
             className="button-add"
             startIcon={<Iconify icon="material-symbols:add" />}
             style={{ marginLeft: 16 }}
           >
             Thêm câu hỏi
-          </ButtonAddStyle>
+          </ButtonAddStyle> */}
         </Stack>
       </Box>
     </>
