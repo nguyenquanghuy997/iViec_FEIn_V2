@@ -55,9 +55,9 @@ export const PipelineItem = () => {
         title: "Quy trình tuyển dụng",
         width: "240px",
         fixed: "left",
-        render: (item, record) => (
+        render: (item) => (
           <span style={{ fontWeight: 500 }}>
-            {record.isDefault == true ? "Quy trình mặc định iVIEC" : item}
+            {item}
           </span>
         ),
       },
@@ -164,7 +164,7 @@ export const PipelineItem = () => {
         dataIndex: "creatorName",
         title: "Người tạo",
         width: "300px",
-        render: (item) => (
+        render: (item, record) => (
           <div style={{ display: "flex", alignItems: "center" }}>
             <AvatarDS
               sx={{
@@ -173,10 +173,10 @@ export const PipelineItem = () => {
                 borderRadius: "100px",
                 fontSize: "12px",
               }}
-              name={item}
+              name={record?.isDefault == true ? "iVIEC" : item}
             ></AvatarDS>
             <span fontSize="14px" fontWeight="600" color="#172B4D">
-              {item}
+              {record?.isDefault == true ? "iVIEC" : item}
             </span>
           </div>
         ),

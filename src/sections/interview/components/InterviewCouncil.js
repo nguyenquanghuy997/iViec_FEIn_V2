@@ -1,18 +1,14 @@
 import SelectCouncils from "./SelectCouncils";
 import { Label } from "@/components/hook-form/style";
-import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useFormContext } from "react-hook-form";
+import { useGetRecruitmentPersonInChargeIdsQuery } from "../InterviewSlice";
 
 const InterviewCouncil = () => {
   const { watch } = useFormContext();
   const { palette } = useTheme();
-  const { data: { items: Data = [] } = {} } = useGetRecruitmentsQuery({
-    PageIndex: 1,
-    PageSize: 20,
-  });
-  const coOwners = Data?.filter((item) => item.id === watch("recruitmentId"));
+  const { data: { items: coOwners = [] } = {} } = useGetRecruitmentPersonInChargeIdsQuery(watch("recruitmentId"));
 
   return (
     <Box sx={{ p: 3 }}>
@@ -23,7 +19,7 @@ const InterviewCouncil = () => {
       </Label>
 
       <SelectCouncils
-        options={coOwners[0]?.coOwners?.map((i) => ({
+        options={coOwners?.map((i) => ({
           id: i.id,
           value: i.id,
           label: i.name,

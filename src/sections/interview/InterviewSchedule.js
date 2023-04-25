@@ -3,14 +3,12 @@ import ViewSchedule from "./edit/ViewSchedule";
 import { PERMISSIONS } from "@/config";
 import useRole from "@/hooks/useRole";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
-import { useTheme } from "@emotion/react";
-import { Typography, Box, Card, CardContent } from "@mui/material";
+import { Card} from "@mui/material";
 import { useMemo } from "react";
 import { useState } from "react";
 
 export default function InterviewSchedule({ Data }) {
   const check = false;
-  const { palette } = useTheme();
   const [openForm, setOpenForm] = useState(false);
   const [item, setItem] = useState({});
   const [itemDialog, setItemDialog] = useState({});
@@ -31,7 +29,7 @@ export default function InterviewSchedule({ Data }) {
 
   return (
     <Card sx={{borderRadius: "6px", border: "none", p: 3 }}>
-      <CardContent sx={{ display: "flex", p: 0 }}>
+      {/* <CardContent sx={{ display: "flex", p: 0 }}>
         <Box
           sx={{
             borderRadius: "100%",
@@ -57,10 +55,9 @@ export default function InterviewSchedule({ Data }) {
           color={palette.text.primary}
           variant={"subtitle2"}
         >
-          {/* Thứ 4, Ngày 07/03/2023 (Hôm nay) */}
           Lịch phỏng vấn tháng 03
         </Typography>
-      </CardContent>
+      </CardContent> */}
 
       {Data?.items.map((item) => (
         <ViewSchedule

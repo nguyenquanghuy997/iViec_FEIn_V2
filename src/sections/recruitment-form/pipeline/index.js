@@ -76,7 +76,7 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
         if(isEmpty(recruitment)) {
             const findIndex = pipelineStateDatas?.map(item => item.organizationPipelineStateId).indexOf(data.organizationPipelineStateId);
             if (findIndex !== -1) {
-                const newValue = pipelineStateDatas.map(i => i.organizationPipelineStateId === data.organizationPipelineStateId ? {
+                const newValue = pipelineStateDatas?.map(i => i.organizationPipelineStateId === data.organizationPipelineStateId ? {
                     ...data,
                     examinationName: data?.examinationName
                 } : {...i})
@@ -88,7 +88,7 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
         } else {
             const findIndex = data?.index || 1;
             const pipelineStateData = pipelineStateDatas[findIndex];
-            const newValue = pipelineStateDatas.map((i, index) => index === findIndex ? {
+            const newValue = pipelineStateDatas?.map((i, index) => index === findIndex ? {
                 ...pipelineStateData,
                 ...data,
             } : {...i})

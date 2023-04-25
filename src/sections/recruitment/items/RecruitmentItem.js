@@ -5,17 +5,27 @@ import {
   useGetRecruitmentsQuery,
   useUpdateListRecruitmentColumnsMutation,
 } from "../RecruitmentSlice";
-import { useGetOrganizationQuery } from "@/sections/report/reportSlice";
+import OrganizationSettingModal from "../modals/OrganizationSettingModal";
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
-import OrganizationSettingModal from "../modals/OrganizationSettingModal";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import TextMaxLine from "@/components/TextMaxLine";
+import { PERMISSIONS, RECRUITMENT_STATUS, TBL_FILTER_TYPE } from "@/config";
+import useRole from "@/hooks/useRole";
 import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
+import {
+  API_GET_LIST_CANDIDATELEVEL,
+  API_GET_LIST_LANGUAGE,
+  API_GET_ORGANIZATION_USERS,
+  API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_PAGING_JOBTYPE,
+  API_GET_PROVINCE,
+} from "@/routes/api";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { ExcelIcon } from "@/sections/offerform/component/editor/Icon";
 import {
@@ -30,6 +40,7 @@ import {
   ForwardLightIcon,
   SquareDarkIcon,
 } from "@/sections/recruitment/others/Icon";
+import { useGetOrganizationQuery } from "@/sections/report/reportSlice";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import {
   Currency,
@@ -38,27 +49,18 @@ import {
   YearOfExperience,
 } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
-import { fDate } from "@/utils/formatTime";
-import { Tooltip, Typography } from "@mui/material";
-import { Tag } from "antd";
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { useMemo, useState } from "react";
-import { get } from "lodash";
-import useRole from "@/hooks/useRole";
-import { PERMISSIONS, TBL_FILTER_TYPE } from "@/config";
-import TextMaxLine from "@/components/TextMaxLine";
-import {
-  API_GET_LIST_CANDIDATELEVEL, API_GET_LIST_LANGUAGE,
-  API_GET_ORGANIZATION_USERS,
-  API_GET_ORGANIZATION_WITH_CHILD, API_GET_PAGING_JOBTYPE,
-  API_GET_PROVINCE
-} from "@/routes/api";
 import {
   LIST_EXPERIENCE_NUMBER,
   LIST_RECRUITMENT_PROCESS_STATUS,
   LIST_RECRUITMENT_WORKING_FORM,
 } from "@/utils/formatString";
+import { fDate } from "@/utils/formatTime";
+import { Tooltip, Typography } from "@mui/material";
+import { Tag } from "antd";
+import { get } from "lodash";
+import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
+import { useMemo, useState } from "react";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -68,6 +70,8 @@ export const RecruitmentItem = () => {
   const dispatch = useDispatch();
   const toggleModalState = useSelector((state) => state.modalReducer.openState);
   const { openClose, openDelete, openPreview } = toggleModalState;
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [itemSelected, setItemSelected] = useState([]);
 
   const handleOpenModalState = (data) =>
     dispatch(modalSlice.actions.openStateModal(data));
@@ -83,8 +87,20 @@ export const RecruitmentItem = () => {
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB), []);
 
   // api get list
+  const listArrayOtherIdsFilter =["processStatuses", "workingForms", "workExperiences", "sexes"]
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
-  const { data: Data = {}, isLoading } = useGetRecruitmentsQuery({ ...query, searchKey: query.SearchKey }, { skip: !isReady });
+  let reqData = {};
+  for (let f in query) {
+    let val = query[f];
+    if ((f.includes('Ids') || listArrayOtherIdsFilter.includes(f)) && !Array.isArray(val)) {
+      val = [val];
+    }
+    reqData[f] = val;
+  }
+  const { data: Data = {}, isLoading } = useGetRecruitmentsQuery(
+    { ...reqData, searchKey: reqData.SearchKey },
+    { skip: !isReady }
+  );
 
   const columns = useMemo(() => {
     return [
@@ -106,7 +122,12 @@ export const RecruitmentItem = () => {
         width: "300px",
         render: (item, record) => (
           <TextMaxLine
-            sx={{ width: 360, fontWeight: 500, fontSize: 14, ...(canView && { cursor: 'pointer' }) }}
+            sx={{
+              width: 360,
+              fontWeight: 500,
+              fontSize: 14,
+              ...(canView && { cursor: "pointer" }),
+            }}
             onClick={(e) => {
               if (!canView) {
                 return;
@@ -126,9 +147,9 @@ export const RecruitmentItem = () => {
         render: (item) => item?.name,
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          placeholder: 'Chọn 1 hoặc nhiều vị trí công việc',
-          name: 'jobPositionIds',
-          remoteUrl: API_GET_PAGING_JOBTYPE
+          placeholder: "Chọn 1 hoặc nhiều vị trí công việc",
+          name: "jobPositionIds",
+          remoteUrl: API_GET_PAGING_JOBTYPE,
         },
       },
       {
@@ -137,7 +158,7 @@ export const RecruitmentItem = () => {
         width: "200px",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_TREE,
-          name: 'organizationIds',
+          name: "organizationIds",
           placeholder: "Chọn một hoặc nhiều đơn vị",
           remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
         },
@@ -171,10 +192,13 @@ export const RecruitmentItem = () => {
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: 'processStatuses',
-          placeholder: 'Tất cả',
-          options: LIST_RECRUITMENT_PROCESS_STATUS.map(item => ({ value: item.value, label: item.label }),)
-        }
+          name: "processStatuses",
+          placeholder: "Tất cả",
+          options: LIST_RECRUITMENT_PROCESS_STATUS.map((item) => ({
+            value: item.value,
+            label: item.label,
+          })),
+        },
       },
       {
         dataIndex: "startDate",
@@ -183,8 +207,8 @@ export const RecruitmentItem = () => {
         render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
-          name: ['queryStartFrom', 'queryStartTo'],
-          placeholder: 'Chọn ngày',
+          name: ["queryStartFrom", "queryStartTo"],
+          placeholder: "Chọn ngày",
         },
       },
       {
@@ -194,8 +218,8 @@ export const RecruitmentItem = () => {
         render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
-          name: ['queryEndFrom', 'queryEndTo'],
-          placeholder: 'Chọn ngày',
+          name: ["queryEndFrom", "queryEndTo"],
+          placeholder: "Chọn ngày",
         },
       },
       {
@@ -205,8 +229,8 @@ export const RecruitmentItem = () => {
         render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
-          name: ['createdFrom', 'createdTo'],
-          placeholder: 'Chọn ngày',
+          name: ["createdFrom", "createdTo"],
+          placeholder: "Chọn ngày",
         },
       },
       {
@@ -225,8 +249,8 @@ export const RecruitmentItem = () => {
         align: "center",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_NUMBER,
-          name: ['numOfPositionFrom', 'numOfPositionTo'],
-          placeholder: 'Nhập số',
+          name: ["numOfPositionFrom", "numOfPositionTo"],
+          placeholder: "Nhập số",
         },
       },
       {
@@ -267,10 +291,10 @@ export const RecruitmentItem = () => {
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: 'ownerIds',
-          placeholder: 'Chọn 1 hoặc nhiều cán bộ',
+          name: "ownerIds",
+          placeholder: "Chọn 1 hoặc nhiều cán bộ",
           remoteUrl: API_GET_ORGANIZATION_USERS,
-          showAvatar: true
+          showAvatar: true,
         },
       },
       {
@@ -315,10 +339,10 @@ export const RecruitmentItem = () => {
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: 'coOwnerIds',
-          placeholder: 'Chọn 1 hoặc nhiều cán bộ',
+          name: "coOwnerIds",
+          placeholder: "Chọn 1 hoặc nhiều cán bộ",
           remoteUrl: API_GET_ORGANIZATION_USERS,
-          showAvatar: true
+          showAvatar: true,
         },
       },
       {
@@ -371,7 +395,10 @@ export const RecruitmentItem = () => {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "workingForms",
           placeholder: "Chọn 1 hoặc nhiều hình thức",
-          options: LIST_RECRUITMENT_WORKING_FORM.map((item) => ({ value: item.value, label: item.label }))
+          options: LIST_RECRUITMENT_WORKING_FORM.map((item) => ({
+            value: item.value,
+            label: item.label,
+          })),
         },
       },
       {
@@ -381,14 +408,18 @@ export const RecruitmentItem = () => {
         render: (text, record) => (
           <>
             {record?.minSalary != 0
-              ? `${fCurrency(record?.minSalary)} - ${fCurrency(record?.maxSalary)} ${Currency(record?.currencyUnit)}`
-              : (record.salaryDisplayType == 0 ? 'Không lương' : 'Thỏa thuận')}
+              ? `${fCurrency(record?.minSalary)} - ${fCurrency(
+                  record?.maxSalary
+                )} ${Currency(record?.currencyUnit)}`
+              : record.salaryDisplayType == 0
+              ? "Không lương"
+              : "Thỏa thuận"}
           </>
         ),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_MONEY,
-          name: ['minSalary', 'maxSalary'],
-          placeholder: 'Nhập số',
+          name: ["minSalary", "maxSalary"],
+          placeholder: "Nhập số",
         },
       },
       {
@@ -409,9 +440,12 @@ export const RecruitmentItem = () => {
         render: (item) => YearOfExperience(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          placeholder: 'Chọn số năm kinh nghiệm',
-          name: 'workExperiences',
-          options: LIST_EXPERIENCE_NUMBER.map(item => ({ value: item.value, label: item.label }))
+          placeholder: "Chọn số năm kinh nghiệm",
+          name: "workExperiences",
+          options: LIST_EXPERIENCE_NUMBER.map((item) => ({
+            value: item.value,
+            label: item.label,
+          })),
         },
       },
       {
@@ -456,27 +490,27 @@ export const RecruitmentItem = () => {
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          placeholder: 'Chọn 1 hoặc nhiều ngôn ngữ',
-          name: 'workingLanguageIds',
-          remoteUrl: API_GET_LIST_LANGUAGE
+          placeholder: "Chọn 1 hoặc nhiều ngôn ngữ",
+          name: "workingLanguageIds",
+          remoteUrl: API_GET_LIST_LANGUAGE,
         },
       },
     ];
   }, [query.PageIndex, query.PageSize]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [itemSelected, setItemSelected] = useState([]);
-  const [isOpenSettingOrganization, setIsOpenSettingOrganization] = useState(false);
+
+  const [isOpenSettingOrganization, setIsOpenSettingOrganization] =
+    useState(false);
 
   const { data: Organization = {} } = useGetOrganizationQuery();
 
   const handleCheckNavigate = () => {
-    if (get(Organization, 'isActivated')) {
+    if (get(Organization, "isActivated")) {
       return router.push(PATH_DASHBOARD.recruitment.create);
     } else {
-      setIsOpenSettingOrganization(true)
+      setIsOpenSettingOrganization(true);
     }
-  }
+  };
 
   const [, setIsOpenBottomNav] = useState(false);
   const toggleDrawer = (newOpen) => () => {
@@ -564,7 +598,21 @@ export const RecruitmentItem = () => {
             return ["name", "detail"];
         }
       } else {
-        return ["close", "excel", "delete"];
+        let isShow = true;
+        for (let i = 1; i < data.length; i++) {
+          if (
+            data[i].processStatus == RECRUITMENT_STATUS.RECRUITING ||
+            data[i].processStatus == RECRUITMENT_STATUS.CALENDARED ||
+            data[i].processStatus == RECRUITMENT_STATUS.EXPIRED ||
+            data[i].processStatus == RECRUITMENT_STATUS.CLOSED
+          ) {
+            isShow = false;
+          }
+        }
+        if(isShow){
+          return ["close", "excel","delete"];
+        }
+         return ["close", "excel"];
       }
     };
     return getKeysByStatus(itemSelected);
@@ -588,7 +636,7 @@ export const RecruitmentItem = () => {
           useUpdateColumnsFunc={useUpdateListRecruitmentColumnsMutation}
           searchInside={false}
           createText={canEdit && "Đăng tin tuyển dụng"}
-          searchTextHint = 'Tìm kiếm theo tiêu đề tin tuyển dụng...'
+          searchTextHint="Tìm kiếm theo tiêu đề tin tuyển dụng..."
           onClickCreate={() => {
             handleCheckNavigate();
           }}

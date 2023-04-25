@@ -3,6 +3,7 @@ import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider } from "@/components/hook-form";
 import {
+  calendarServiceApi,
   useAddCalendarMutation,
   useGetDetailCalendarsQuery,
   useUpdateCalendarMutation,
@@ -20,6 +21,7 @@ import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { dispatch } from "@/redux/store";
 
 const defaultValues = {
   id: undefined,
@@ -50,6 +52,7 @@ export const FormCalendar = ({
   item,
   currentApplicantPipelineState,
 }) => {
+
   const { enqueueSnackbar } = useSnackbar();
   const isEditMode = !!data?.id;
   const { data: DetailData = {} } = useGetDetailCalendarsQuery(
@@ -170,12 +173,7 @@ export const FormCalendar = ({
               const dateTime = convertStoMs(
                 convertDurationTimeToSeconds(
                   `${item?.interviewTime}:00`
-                ) +
-                convertDurationTimeToSeconds(
-                  toHhMmSs(
-                    item?.interviewDuration
-                  )
-                )
+                ) 
               );
               item.interviewTime = new Date(
                 `${moment(item.date).format("YYYY-MM-DD")} ${dateTime}`
@@ -210,6 +208,9 @@ export const FormCalendar = ({
         enqueueSnackbar("Thực hiện thành công!", {
           autoHideDuration: 2000,
         });
+        dispatch(
+          calendarServiceApi.util.invalidateTags(['BookCalendarRecruitment'])
+        );
         onClose();
       })
       .catch(() => {

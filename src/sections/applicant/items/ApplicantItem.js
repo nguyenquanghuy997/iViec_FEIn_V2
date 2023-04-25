@@ -35,9 +35,19 @@ export const ApplicantItem = ({
   headerProps,
 }) => {
   const router = useRouter();
-  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
 
-  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(query, {
+  const listArrayOtherIdsFilter =["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  let reqData = {};
+  for (let f in query) {
+    let val = query[f];
+    if ((f.includes('Ids') || listArrayOtherIdsFilter.includes(f)) && !Array.isArray(val)) {
+      val = [val];
+    }
+    reqData[f] = val;
+  }
+
+  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(reqData, {
     skip: !isReady,
   });
 

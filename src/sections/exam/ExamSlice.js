@@ -1,12 +1,17 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
+  API_CREATE_QUESTION,
   API_CREATE_QUESTION_GROUP,
   API_GET_EXAMINATION,
   API_GET_EXAMINATION_BY_ID,
+  API_GET_QUESTIONS,
   API_GET_QUESTION_GROUP,
+  API_GET_QUESTION_VISIBLE,
   API_REMOVE_QUESTION_GROUP,
   API_UPDATE_ACTIVE_QUESTION_GROUP,
+  API_UPDATE_QUESTION,
   API_UPDATE_QUESTION_GROUP,
+  API_UPDATE_QUESTION_VISIBLE,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -69,6 +74,45 @@ const examinationSlice = apiWithTag.injectEndpoints({
         data,
       }),
     }),
+    getQuestions: builder.query({
+      query: (params) => ({
+        url: API_GET_QUESTIONS,
+        method: "GET",
+        params,
+      }),
+    }),
+    createQuestion: builder.mutation({
+      query: (data) => ({
+        url: API_CREATE_QUESTION,
+        method: "POST",
+        data,
+      }),
+    }),
+    updateQuestion: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_QUESTION}/${data.id}`,
+        method: "PATCH",
+        data,
+      }),
+    }),
+    getListQuestionColumns: builder.query({
+      query: () => ({
+        url: API_GET_QUESTION_VISIBLE,
+        method: "GET",
+      }),
+      providesTags: ["GetColumn"],
+    }),
+    updateQuestionColumns: builder.mutation({
+      query: (data = {}) => {
+        let { id, ...restData } = data;
+        return {
+          url: `${API_UPDATE_QUESTION_VISIBLE}/${id}`,
+          method: "PATCH",
+          data: restData,
+        };
+      },
+      invalidatesTags: [{ type: "QUESTION", id: "LIST_COLUMN" }],
+    }),
   }),
 });
 
@@ -80,4 +124,9 @@ export const {
   useUpdateQuestionGroupMutation,
   useUpdateActiveQuestionGroupMutation,
   useRemoveQuestionGroupMutation,
+  useLazyGetQuestionsQuery,
+  useCreateQuestionMutation,
+  useUpdateQuestionMutation,
+  useGetListQuestionColumnsQuery,
+  useUpdateQuestionColumnsMutation,
 } = examinationSlice;

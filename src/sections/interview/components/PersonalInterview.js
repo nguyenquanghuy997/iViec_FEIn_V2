@@ -154,7 +154,7 @@ const PersonalInterview = ({
               !!(
                 currentApplicantPipelineState ||
                 item?.recruitmentPipelineStateId ||
-                !watch("recruitmentId") || optionsFromCruit
+                !watch("recruitmentId") || optionsFromCruit?.recruitmentPipelineStateId
               )
             }
             onChange={changePipelineRecruitment}

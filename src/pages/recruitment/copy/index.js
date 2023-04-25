@@ -109,33 +109,32 @@ export default function CloneRecruitment() {
   const {data: Recruitment = {}, isLoading} = useGetRecruitmentByIdQuery({Id: query.source}, {skip: !query.source})
 
   const defaultValues = {
-    id: '',
     name: '',
-    organizationId: defaultOrganization?.id,
+    organizationId: defaultOrganization?.id || null,
     description: '',
     benefit: '',
     requirement: '',
-    numberPosition: '',
-    minSalary: '',
-    maxSalary: '',
-    salaryDisplayType: '',
-    sex: '',
+    numberPosition: 1,
+    minSalary: null,
+    maxSalary: null,
+    salaryDisplayType: 0,
+    sex: null,
     startDate: null,
     endDate: null,
     address: '',
     recruitmentLanguageIds: [],
     coOwnerIds: [],
     tags: [],
-    jobPositionId: '',
-    ownerId: '',
-    workExperience: '',
+    jobPositionId: null,
+    ownerId: null,
+    workExperience: 0,
     currencyUnit: 0,
-    candidateLevelId: '',
+    candidateLevelId: null,
     recruitmentCouncilIds: [],
     recruitmentJobCategoryIds: [],
     recruitmentAddressIds: [],
     recruitmentWorkingForms: [],
-    organizationPipelineId: '',
+    organizationPipelineId: null,
     isAutomaticStepChange: false,
   }
 
@@ -170,7 +169,7 @@ export default function CloneRecruitment() {
     const hasExaminationValue = examinationDataRef.current.getHasValue();
     const examinationSize = examinationDataRef.current?.getSize();
     const pipelineStateDatas = examinationDataRef.current?.getPipeLineStateData()?.filter(item => item.pipelineStateType === PIPELINE_TYPE.EXAMINATION && !isEmpty(item.examinationId));
-    const pipelineStateDatasSize = pipelineStateDatas.length;
+    const pipelineStateDatasSize = pipelineStateDatas?.length;
     if (hasExaminationValue && examinationSize !== pipelineStateDatasSize) {
       enqueueSnackbar("Thêm tin tuyển dụng không thành công. Vui lòng chọn đề thi!", {
         variant: 'error',

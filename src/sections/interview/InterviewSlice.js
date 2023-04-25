@@ -8,6 +8,9 @@ import {
   API_GET_APPLICANT_BY_PIPELINES_STATE,
   API_GET_RELATE_CALENDAR,
   API_DELETE_CALENDAR,
+  API_GET_RECRUITMENT_PERSON_IN_CHARGE_IDS,
+  API_GET_BOOKING_CALENDER_BY_RECRUITMENT,
+  API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE,
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -62,6 +65,23 @@ export const calendarServiceApi = createApi({
       providesTags: ["BookCalendar"],
     }),
 
+    getBookingCalendarsByRecruitment: builder.query({
+      query: (params) => ({
+        url: API_GET_BOOKING_CALENDER_BY_RECRUITMENT,
+        method: "GET",
+        params
+      }),
+      providesTags: ["BookCalendarRecruitment"],
+    }),
+    getBookingCalendarsByApplicantRecruitmentPipelineState: builder.query({
+      query: (params) => ({
+        url: API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE,
+        method: "GET",
+        params
+      }),
+      providesTags: ["BookCalendarRecruitment"],
+    }),
+
     getReviewForm: builder.query({
       query: () => ({
         url: API_GET_ALL_REVIEW_FORM,
@@ -69,6 +89,14 @@ export const calendarServiceApi = createApi({
       }),
       providesTags: ["BookCalendar"],
     }),
+    getRecruitmentPersonInChargeIds: builder.query({
+      query: (params) => ({
+        url: `${API_GET_RECRUITMENT_PERSON_IN_CHARGE_IDS}?RecruitmentId=${params}`, 
+        method: "GET",
+      }),
+      providesTags: ["BookCalendar"],
+    }),
+
     getDetailCalendars: builder.query({
       query: (params) => ({
         url: API_GET_CALENDAR_DETAIL,
@@ -121,4 +149,7 @@ export const {
   useGetApplicantByPipeLineQuery,
   useUpdateCalendarMutation,
   useDeleteCalendarMutation,
+  useGetRecruitmentPersonInChargeIdsQuery,
+  useGetBookingCalendarsByRecruitmentQuery,
+  useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery
 } = calendarServiceApi;

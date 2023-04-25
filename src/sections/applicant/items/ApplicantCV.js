@@ -1,22 +1,13 @@
 import NoCV from "@/assets/NoCV";
-import { View } from "@/components/FlexStyled";
-import { getExtension } from "@/utils/function";
 import { getFileUrl } from "@/utils/helper";
-import {
-  Box,
-  CircularProgress,
-  Divider,
-  Grid,
-  Typography,
-} from "@mui/material";
-import React, { Suspense, useEffect, useState } from "react";
+import { Box, Divider, Grid, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 const defaultValues = {
   cvFile: undefined,
   cvFileName: undefined,
 };
-const FileViewer = React.lazy(() => import("react-file-viewer"));
 
 export const ApplicantCV = ({ dataLog }) => {
   const [cv] = useState(undefined);
@@ -58,31 +49,19 @@ export const ApplicantCV = ({ dataLog }) => {
           <Grid
             sx={{
               minWidth: "580px",
-              "& .pg-viewer-wrapper": {
-                overflowY: "auto",
-              },
-              "& .photo-viewer-container, & img": {
-                width: "100% !important",
-                height: "100% !important",
-              },
+              minHeight: watch("cvFile") ? "1040px" : "unset",
             }}
           >
             {watch("cvFile") ? (
-              <Suspense
-                fallback={
-                  <View flex="true" contentcenter="true">
-                    <CircularProgress />
-                  </View>
-                }
-              >
-                <FileViewer
-                  fileType={getExtension(watch("cvFileName"))}
-                  filePath={getFileUrl(watch("cvFile"))}
-                />
-              </Suspense>
+              <div style={{ width: "100%", height: "1040px" }}>
+                <iframe
+                  src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
+                  style={{ width: "100%", height: "100%" }}
+                ></iframe>
+              </div>
             ) : (
               <Box sx={{ minHeight: "1040px" }}>
-                <Box sx={{ textAlign: "center", marginTop:13 }}>
+                <Box sx={{ textAlign: "center", marginTop: 13 }}>
                   <NoCV />
                 </Box>
                 <Typography

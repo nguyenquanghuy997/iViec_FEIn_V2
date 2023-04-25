@@ -11,6 +11,7 @@ import {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useUpdateApplicantRecruitmentToNextStateMutation,
 } from "@/sections/applicant";
+import { useGetBookingCalendarsByRecruitmentQuery } from "@/sections/interview";
 import InterviewSchedule from "@/sections/interview/InterviewSchedule";
 import { Column } from "@/sections/kanban";
 import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
@@ -33,9 +34,12 @@ Recruitment.getLayout = function getLayout(pageProps, page) {
 
 export default function Recruitment() {
   const [pipelineStateResultType, setPipelineStateResultType] = useState(0);
-  
+
   const Schema = Yup.object().shape({
-    note: (pipelineStateResultType == 0 || pipelineStateResultType == 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
+    note:
+      pipelineStateResultType == 0 || pipelineStateResultType == 1
+        ? Yup.string().nullable()
+        : Yup.string().required("Chưa nhập ghi chú"),
   });
 
   const methods = useForm({
@@ -212,7 +216,10 @@ export default function Recruitment() {
   const onChangeTab = (value) => {
     setTab(value);
   };
-
+  const { data: DataInterview } = useGetBookingCalendarsByRecruitmentQuery(
+    { RecruitmentId: RecruitmentId },
+    { skip: !isReady }
+  );
   return (
     <Page title={"Chi tiết tin"}>
       <RecruitmentPreviewItem
@@ -459,9 +466,12 @@ export default function Recruitment() {
           style={{
             paddingLeft: "256px",
             paddingRight: "256px",
+            marginTop: "25px",
           }}
         >
-          <InterviewSchedule idSlg={RecruitmentId}/>
+          {DataInterview?.totalRecord > 0 && (
+            <InterviewSchedule Data={DataInterview} />
+          )}
         </View>
       )}
     </Page>

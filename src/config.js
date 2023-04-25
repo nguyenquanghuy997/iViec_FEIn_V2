@@ -69,6 +69,7 @@ export const defaultPagination = PAGINATION[0]; // 10
 
 // DATETIME FORMAT
 export const DATE_FORMAT = "dd/MM/yyyy";
+export const TIME_FORMAT = "HH:mm";
 export const YEAR_FORMAT = "yyyy";
 export const DATE_YEAR_MONTH_DAY_FORMAT = "yyyy-MM-dd";
 export const DATETIME_FORMAT = "dd/MM/yyyy HH:mm";
@@ -225,6 +226,15 @@ export const RECRUITMENT_CREATE_TYPE = {
   OFFICIAL: 1,
 }
 
+export const ApplicantInterviewState = {
+  PENDING: 0, // chờ xác nhận pv
+  CONFIRMED: 1, // xác nhận pv
+  SUSPENDED: 2,// hoãn pv
+  REFUSE: 3, // từ chối
+  INTERVIEWING: 4, // đang pv
+  NOTPERTED: 5,// k tham gia pv
+  COMPLETED: 6, // hoàn thành pv
+}
 export const RECRUITMENT_STATUS = {
   DRAFT: 0,
   WAITING_ORGANIZATION_APPROVAL: 1,
@@ -236,7 +246,6 @@ export const RECRUITMENT_STATUS = {
   EXPIRED: 7,
   CLOSED: 8
 }
-
 export const PIPELINE_TYPE = {
   APPLY: 0,
   EXAMINATION: 1,
