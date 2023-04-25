@@ -85,7 +85,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
             <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
               Số người phỏng vấn
             </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>{2}</Typography>
+            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>{data?.bookingCalendarGroups[0]?.bookingCalendarApplicants?.length}</Typography>
           </Box>
           <Divider orientation="vertical" variant="middle" flexItem />
           <Box sx={{ width: "15%", px: 3 }}>
@@ -139,7 +139,8 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
           <ButtonDS
             tittle="Tham gia"
             href={
-              "phong-van.html?DisplayName=" +
+              window.location.origin +
+              "/phong-van.html?DisplayName=" +
               user?.firstName +
               "&&Email=" +
               user?.email +
@@ -147,6 +148,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
               data?.id +
               "&&Role=1"
             }
+            target='_blank'
             sx={{
               fontSize: "12px",
               lineHeight: "18px",
