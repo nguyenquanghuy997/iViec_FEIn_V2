@@ -57,7 +57,7 @@ function Baseitem(props) {
     >
       <AvatarDS
         sx={{ height: "32px", width: "32px", borderRadius: "14px" }}
-        src={srcImage(item?.portraitImage)}
+        src={item?.portraitImage && srcImage(item?.portraitImage)}
       />
 
       <Box pl={1}>
@@ -161,6 +161,7 @@ function InterviewItem(props) {
             if (index < interview?.length - 1) {
               return (
                 <Box
+                  key={index}
                   sx={{
                     background: "#F3F4F6",
                     color: "#455570",
@@ -607,12 +608,14 @@ function TaskCard({ item, index, pipelineStateType }) {
                   p: "16px 12px 4px 12px",
                 }}
               >
-                <Typography
-                  display="flex"
-                  fontSize="11px"
-                  lineHeight={18}
-                  fontWeight="600"
-                  alignItems="center"
+                <Box
+                  sx={{
+                    display: "flex",
+                    fontSize: "11px",
+                    lineHeight: 18,
+                    fontWeight: "600",
+                    alignItems: "center",
+                  }}
                 >
                   <Iconify
                     icon={"carbon:dot-mark"}
@@ -624,7 +627,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                   <Typography fontSize="12px">
                     {fDate(item.createdTime)}
                   </Typography>
-                </Typography>
+                </Box>
                 <Iconify
                   icon={"ph:dots-three-bold"}
                   width={20}
