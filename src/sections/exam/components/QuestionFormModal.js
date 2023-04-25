@@ -1,7 +1,7 @@
 import {
-  useCreateQuestionMutation,
+  // useCreateQuestionMutation,
   useLazyGetQuestionGroupQuery,
-  useUpdateQuestionMutation,
+  // useUpdateQuestionMutation,
 } from "../ExamSlice";
 import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
@@ -68,8 +68,8 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
   // const { enqueueSnackbar } = useSnackbar();
 
   // api
-  const [addForm] = useCreateQuestionMutation();
-  const [updateForm] = useUpdateQuestionMutation();
+  // const [addForm] = useCreateQuestionMutation();
+  // const [updateForm] = useUpdateQuestionMutation();
   const [getQuestionGroup, { data: { items = [] } = {} }] =
     useLazyGetQuestionGroupQuery();
 
@@ -116,13 +116,13 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
     setListAnswer((l) => l.filter((_, i) => i !== index));
   };
 
-  const pressSave = handleSubmit(async (e) => {
-    const body = {
-      ...e,
-      questionState: Number(e.questionState),
-    };
-    const res = await (e.id ? updateForm(body) : addForm(body));
-    console.log("onSubmitQuestion", body, res);
+  const pressSave = handleSubmit(async () => {
+    // const body = {
+    //   ...e,
+    //   questionState: Number(e.questionState),
+    // };
+    // const res = await (e.id ? updateForm(body) : addForm(body));
+    // console.log("onSubmitQuestion", body, res);
   });
 
   const changeAnswer = (index, key, value) => {
