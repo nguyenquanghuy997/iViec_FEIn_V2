@@ -466,7 +466,7 @@ function RecruitmentPreviewItem({
               </Box>
             </>
           )}
-          {tab === 1 ? (
+          {tab === "1" ? (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
                 <Box>
