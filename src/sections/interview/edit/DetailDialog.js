@@ -25,6 +25,7 @@ import { useSnackbar } from "notistack";
 import { forwardRef } from "react";
 import { useState } from "react";
 import { RiLinkM } from "react-icons/ri";
+import { DOMAIN_SERVER_API } from "@/config";
 
 const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   const { data: DetailData } = useGetDetailCalendarsQuery(
@@ -121,7 +122,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
           <h3>{item?.name}</h3>
           {renderText(
             "Hình thức phỏng vấn:",
-            DetailData?.interviewType == 0 ? "Online" : "Trực tiếp"
+            DetailData?.interviewType === 0 ? "Online" : "Trực tiếp"
           )}
           {renderText("Thời gian:", `${moment(time?.[0]).format("HH:mm")}`)}
           {renderText(
@@ -159,7 +160,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                   <ListItemAvatar>
                     <img
                       alt=""
-                      src={`http://103.176.149.158:5001/api/Image/GetImage?imagePath=${item?.applicant?.portraitImage}`}
+                      src={DOMAIN_SERVER_API + `/Image/GetImage?imagePath=${item?.applicant?.portraitImage}`}
                       style={{
                         width: "60px",
                         height: "60px",

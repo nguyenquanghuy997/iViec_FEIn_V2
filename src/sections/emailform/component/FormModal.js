@@ -15,6 +15,7 @@ import RHFEmailEditor from "@/sections/emailform/component/editor/RHFEmailEditor
 import {LabelStyle} from "@/components/hook-form/style";
 import CropImage from "@/sections/emailform/component/crop-image/CropImage";
 import PreviewEmail from "@/sections/emailform/component/PreviewEmail";
+import { DOMAIN_SERVER_API } from "@/config";
 
 const InputStyle = {
   minHeight: 44,
@@ -178,7 +179,7 @@ const FormModal = ({isOpen, onClose, item, title, showUploadFile}) => {
           title={watchTitle}
           content={watchContent}
           signature={watchSignature}
-          logo={'http://103.176.149.158:5001/api/Image/GetImage?imagePath=01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'}
+          logo={DOMAIN_SERVER_API + '/Image/GetImage?imagePath=01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'}
         /> }
       </>
   )

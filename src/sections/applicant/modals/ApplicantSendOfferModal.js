@@ -21,6 +21,7 @@ import {DeleteIcon} from "@/assets/ActionIcon";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import ChipDS from "@/components/DesignSystem/ChipDS";
 import {calcFileSize, showIconByFileType} from "@/utils/function";
+import { DOMAIN_SERVER_API } from "@/config";
 
 const InputStyle = {
   minHeight: 44,
@@ -312,7 +313,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title, showUploadFile})
             title={watchTitle}
             content={watchContent}
             signature={watchSignature}
-            logo={'http://103.176.149.158:5001/api/Image/GetImage?imagePath=01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'}
+            logo={DOMAIN_SERVER_API + '/Image/GetImage?imagePath=01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'}
         />}
       </>
   )
