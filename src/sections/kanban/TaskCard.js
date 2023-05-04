@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { Divider } from "antd";
 import moment from "moment";
-import { useSnackbar } from "notistack";
+// import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import React, { memo, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
@@ -57,7 +57,7 @@ function Baseitem(props) {
     >
       <AvatarDS
         sx={{ height: "32px", width: "32px", borderRadius: "14px" }}
-        src={srcImage(item?.portraitImage)}
+        src={item?.portraitImage && srcImage(item?.portraitImage)}
       />
 
       <Box pl={1}>
@@ -137,24 +137,31 @@ function InterviewItem(props) {
       },
       { skip: !item }
     );
-  const { enqueueSnackbar } = useSnackbar();
-  function copyToClipboard(id) {
-    var copyText =
-      window.location.origin +
-      "/phong-van.html?DisplayName=&&Email=&&Role=1&&RoomName=" +
-      id;
-    navigator.clipboard.writeText(copyText);
-    enqueueSnackbar("Đã sao chép link cuộc họp");
-  }
+  const lastInterview = interview[interview.length - 1];
+  var timeEnd = moment(lastInterview?.interviewTime).add(
+    lastInterview?.interviewDuration
+  );
+  // const { enqueueSnackbar } = useSnackbar();
+  // function copyToClipboard(id) {
+  //   var copyText =
+  //     window.location.origin +
+  //     "/phong-van.html?DisplayName=&&Email=&&Role=1&&RoomName=" +
+  //     id;
+  //   navigator.clipboard.writeText(copyText);
+  //   enqueueSnackbar("Đã sao chép link cuộc họp");
+  // }
+
   return (
     <div>
       <Baseitem item={item} />
       <Box style={{ margin: "12px 0px 0px 0px" }}>
+        {/* Lịch sử cuộc pv */}
         {interview &&
           interview?.map((item, index) => {
             if (index < interview?.length - 1) {
               return (
                 <Box
+                  key={index}
                   sx={{
                     background: "#F3F4F6",
                     color: "#455570",
@@ -188,113 +195,101 @@ function InterviewItem(props) {
                   </Box>
                 </Box>
               );
-            } else if (
-              interview?.[0]?.applicantInterviewState ==
-                ApplicantInterviewState.PENDING ||
-              interview?.[0]?.applicantInterviewState ==
-                ApplicantInterviewState.CONFIRMED ||
-              interview?.[0]?.applicantInterviewState ==
-                ApplicantInterviewState.INTERVIEWING
-            ) {
-              var timeEnd = moment(item?.interviewTime).add(
-                item?.interviewDuration
-              );
-              return (
-                <Box
-                  sx={{
-                    background: "#4CAF50",
-                    color: "#FDFDFD",
-                    padding: "8px 12px 16px",
-                    marginTop: "12px",
-                    borderBottomLeftRadius: "4px",
-                    borderBottomRightRadius: "4px",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box>
-                      <Typography
-                        fontSize="12px"
-                        display="flex"
-                        fontWeight="700"
-                        alignItems="left"
-                      >
-                        {item?.name}
-                      </Typography>
-                      <Typography
-                        fontSize="12px"
-                        display="flex"
-                        fontWeight="500"
-                        alignItems="center"
-                      >
-                        {item?.interviewTime
-                          ? fDate(item?.interviewTime) +
-                            " " +
-                            fTime(item?.interviewTime) +
-                            " - " +
-                            fTime(timeEnd)
-                          : ""}
-                      </Typography>
-                    </Box>
-                    <Iconify
-                      icon={"mdi:arrow-right-bold-circle"}
-                      width={20}
-                      height={20}
-                      color="#FDFDFD"
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      background: "#FDFDFD",
-                      borderRadius: "6px",
-                      marginTop: "8px",
-                      padding: "10px",
-                    }}
-                  >
-                    <Box>
-                      <Typography
-                        sx={{
-                          fontSize: "12px",
-                          color: "#5C6A82",
-                          fontWeight: "500",
-                          lineClamp: 1,
-                          boxOrient: "vertical",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {"http://inside.iviec.vn/phong-van..."}
-                      </Typography>
-                    </Box>
-                    <Iconify
-                      icon={"ri:file-copy-fill"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                      onClick={copyToClipboard(item?.id)}
-                    />
-                  </Box>
-                </Box>
-              );
             }
           })}
         <Box>
-          {interview?.[0]?.applicantInterviewState ==
-            ApplicantInterviewState.SUSPENDED ||
-            interview?.[0]?.applicantInterviewState ==
-              ApplicantInterviewState.REFUSE ||
-            interview?.[0]?.applicantInterviewState ==
-              ApplicantInterviewState.NOTPERTED ||
-            (interview?.[0]?.applicantInterviewState ==
-              ApplicantInterviewState.COMPLETED && (
+          {lastInterview?.applicantInterviewState ==
+            ApplicantInterviewState.PENDING ||
+          lastInterview?.applicantInterviewState ==
+            ApplicantInterviewState.CONFIRMED ||
+          lastInterview?.applicantInterviewState ==
+            ApplicantInterviewState.INTERVIEWING ? (
+            <Box
+              sx={{
+                background: "#4CAF50",
+                color: "#FDFDFD",
+                padding: "8px 12px 16px",
+                marginTop: "12px",
+                borderBottomLeftRadius: "4px",
+                borderBottomRightRadius: "4px",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box>
+                  <Typography
+                    fontSize="12px"
+                    display="flex"
+                    fontWeight="700"
+                    alignItems="left"
+                  >
+                    {lastInterview?.name}
+                  </Typography>
+                  <Typography
+                    fontSize="12px"
+                    display="flex"
+                    fontWeight="500"
+                    alignItems="center"
+                  >
+                    {lastInterview?.interviewTime
+                      ? fDate(lastInterview?.interviewTime) +
+                        " " +
+                        fTime(lastInterview?.interviewTime) +
+                        " - " +
+                        fTime(timeEnd)
+                      : ""}
+                  </Typography>
+                </Box>
+                <Iconify
+                  icon={"mdi:arrow-right-bold-circle"}
+                  width={20}
+                  height={20}
+                  color="#FDFDFD"
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  background: "#FDFDFD",
+                  borderRadius: "6px",
+                  marginTop: "8px",
+                  padding: "10px",
+                }}
+              >
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize: "12px",
+                      color: "#5C6A82",
+                      fontWeight: "500",
+                      lineClamp: 1,
+                      boxOrient: "vertical",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {"http://inside.iviec.vn/phong-van..."}
+                  </Typography>
+                </Box>
+                <Iconify
+                  icon={"ri:file-copy-fill"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
+                  // onClick={copyToClipboard(item?.id)}
+                />
+              </Box>
+            </Box>
+          ) : (
+            <>
+              <Divider style={{ margin: 0 }} />
               <Box style={{ padding: "12px 12px" }}>
                 <ButtonDS
                   tittle={"Đặt lịch phỏng vấn"}
@@ -318,10 +313,9 @@ function InterviewItem(props) {
                   onClick={() => handleClick(item)}
                 />
               </Box>
-            ))}
+            </>
+          )}
         </Box>
-
-        {/* đã có hẹn phỏng vấn */}
       </Box>
 
       {open && (
@@ -614,12 +608,14 @@ function TaskCard({ item, index, pipelineStateType }) {
                   p: "16px 12px 4px 12px",
                 }}
               >
-                <Typography
-                  display="flex"
-                  fontSize="11px"
-                  lineHeight={18}
-                  fontWeight="600"
-                  alignItems="center"
+                <Box
+                  sx={{
+                    display: "flex",
+                    fontSize: "11px",
+                    lineHeight: 18,
+                    fontWeight: "600",
+                    alignItems: "center",
+                  }}
                 >
                   <Iconify
                     icon={"carbon:dot-mark"}
@@ -631,7 +627,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                   <Typography fontSize="12px">
                     {fDate(item.createdTime)}
                   </Typography>
-                </Typography>
+                </Box>
                 <Iconify
                   icon={"ph:dots-three-bold"}
                   width={20}

@@ -453,14 +453,14 @@ function RecruitmentPreviewItem({
                   >
                     <Tab
                       label="ỨNG VIÊN"
-                      value={1}
+                      value={'1'}
                       sx={{
                         "&:not(:last-of-type)": {
                           marginRight: "16px",
                         },
                       }}
                     />
-                    <Tab label="LỊCH PHỎNG VẤN" value={2} />
+                    <Tab label="LỊCH PHỎNG VẤN" value={'2'} />
                   </TabList>
                 </Box>
               </Box>
@@ -901,7 +901,7 @@ function RecruitmentPreviewItem({
 RecruitmentPreviewItem.propTypes = {
   viewModeDefault: PropTypes.number,
   onChangeViewMode: PropTypes.func,
-  tabDefault: PropTypes.number,
+  tabDefault: PropTypes.string,
   onChangeTab: PropTypes.func,
 };
 export default RecruitmentPreviewItem;

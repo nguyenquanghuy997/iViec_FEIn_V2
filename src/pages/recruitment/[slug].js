@@ -163,7 +163,7 @@ export default function Recruitment() {
             recruitmentId: RecruitmentId,
             recruitmentPipelineStateId: destColumn.id,
           };
-          await ChangeToNextState(body);
+          ChangeToNextState(body);
           setColumns({
             ...columns,
             [source.droppableId]: {
@@ -172,7 +172,12 @@ export default function Recruitment() {
             },
             [destination.droppableId]: {
               ...destColumn,
-              items: destItems,
+              items: destItems?.map((item) => {
+                return {
+                  ...item,
+                  recruitmentPipelineStateId: destColumn.id,
+                };
+              }),
             },
           });
         }
@@ -207,7 +212,7 @@ export default function Recruitment() {
   ];
 
   const [viewMode, setViewMode] = useState(1);
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState("1");
   const onChangViewMode = (value) => {
     if (value === 1 && isSearch) window.location.href = asPath.split("?")[0];
     else setViewMode(value);
@@ -307,137 +312,140 @@ export default function Recruitment() {
                   }}
                   onBackdropClick={() => handleCancel()}
                 >
-                  <FormProvider methods={methods}>
-                    <View width={600} borderRadius={8} bgColor={"#fff"}>
-                      <View pt={20} pb={36} ph={24}>
-                        {/* button close */}
-                        <View asEnd mr={12} onPress={() => handleCancel()}>
-                          <SvgIcon>
-                            {
-                              '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.0001 8.82178L14.1251 4.69678L15.3034 5.87511L11.1784 10.0001L15.3034 14.1251L14.1251 15.3034L10.0001 11.1784L5.87511 15.3034L4.69678 14.1251L8.82178 10.0001L4.69678 5.87511L5.87511 4.69678L10.0001 8.82178Z" fill="#455570"/></svg>'
-                            }
-                          </SvgIcon>
-                        </View>
+                  <>
+                    <FormProvider methods={methods}>
+                      <View width={600} borderRadius={8} bgColor={"#fff"}>
+                        <View pt={20} pb={36} ph={24}>
+                          {/* button close */}
+                          <View asEnd mr={12} onPress={() => handleCancel()}>
+                            <SvgIcon>
+                              {
+                                '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.0001 8.82178L14.1251 4.69678L15.3034 5.87511L11.1784 10.0001L15.3034 14.1251L14.1251 15.3034L10.0001 11.1784L5.87511 15.3034L4.69678 14.1251L8.82178 10.0001L4.69678 5.87511L5.87511 4.69678L10.0001 8.82178Z" fill="#455570"/></svg>'
+                              }
+                            </SvgIcon>
+                          </View>
 
-                        {/* icon */}
-                        <View asCenter mt={25}>
-                          <SvgIcon>
-                            {
-                              '<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M40.1255 30.125L52.5005 42.5L40.1255 54.875L36.5905 51.34L42.9305 44.9975L10.0005 45V40H42.9305L36.5905 33.66L40.1255 30.125ZM19.8755 5.125L23.4105 8.66L17.0705 15H50.0005V20H17.0705L23.4105 26.34L19.8755 29.875L7.50049 17.5L19.8755 5.125Z" fill="#455570"/></svg>'
-                            }
-                          </SvgIcon>
-                        </View>
+                          {/* icon */}
+                          <View asCenter mt={25}>
+                            <SvgIcon>
+                              {
+                                '<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M40.1255 30.125L52.5005 42.5L40.1255 54.875L36.5905 51.34L42.9305 44.9975L10.0005 45V40H42.9305L36.5905 33.66L40.1255 30.125ZM19.8755 5.125L23.4105 8.66L17.0705 15H50.0005V20H17.0705L23.4105 26.34L19.8755 29.875L7.50049 17.5L19.8755 5.125Z" fill="#455570"/></svg>'
+                              }
+                            </SvgIcon>
+                          </View>
 
-                        {/* title */}
-                        <Typography
-                          mt={"12px"}
-                          fontSize={16}
-                          fontWeight={"600"}
-                          color="#455570"
-                          textAlign={"center"}
-                        >
-                          {"Chuyển ứng viên sang bước kết quả"}
-                        </Typography>
+                          {/* title */}
+                          <Typography
+                            mt={"12px"}
+                            fontSize={16}
+                            fontWeight={"600"}
+                            color="#455570"
+                            textAlign={"center"}
+                          >
+                            {"Chuyển ứng viên sang bước kết quả"}
+                          </Typography>
 
-                        {/* des */}
-                        <Typography
-                          mt={"8px"}
-                          fontSize={14}
-                          color="#455570"
-                          textAlign={"center"}
-                        >
-                          {`Lưu ý: Bạn chỉ có thể gửi Offer khi ứng viên ở trạng thái `}
-                          <strong>{`Kết quả - Đạt`}</strong>
-                        </Typography>
+                          {/* des */}
+                          <Typography
+                            mt={"8px"}
+                            fontSize={14}
+                            color="#455570"
+                            textAlign={"center"}
+                          >
+                            {`Lưu ý: Bạn chỉ có thể gửi Offer khi ứng viên ở trạng thái `}
+                            <strong>{`Kết quả - Đạt`}</strong>
+                          </Typography>
 
-                        <View
-                          hidden
-                          flexRow
-                          mt={24}
-                          borderRadius={6}
-                          borderWidth={1}
-                          borderColor={"#D0D4DB"}
-                        >
-                          {LIST_ACTION.map((item, index) => {
-                            const isActive = item.id == pipelineStateResultType;
-                            return (
-                              <View
-                                flex1
-                                pv={16}
-                                key={item.id}
-                                bgColor={isActive ? item.color : undefined}
-                                onPress={() =>
-                                  setPipelineStateResultType(index)
-                                }
-                              >
-                                <Typography
-                                  fontSize={14}
-                                  fontWeight={"600"}
-                                  color={isActive ? "#FDFDFD" : "#455570"}
-                                  textAlign={"center"}
+                          <View
+                            hidden
+                            flexRow
+                            mt={24}
+                            borderRadius={6}
+                            borderWidth={1}
+                            borderColor={"#D0D4DB"}
+                          >
+                            {LIST_ACTION.map((item, index) => {
+                              const isActive =
+                                item.id == pipelineStateResultType;
+                              return (
+                                <View
+                                  flex1
+                                  pv={16}
+                                  key={item.id}
+                                  bgColor={isActive ? item.color : undefined}
+                                  onPress={() =>
+                                    setPipelineStateResultType(index)
+                                  }
                                 >
-                                  {item.name}
-                                </Typography>
-                              </View>
-                            );
-                          })}
+                                  <Typography
+                                    fontSize={14}
+                                    fontWeight={"600"}
+                                    color={isActive ? "#FDFDFD" : "#455570"}
+                                    textAlign={"center"}
+                                  >
+                                    {item.name}
+                                  </Typography>
+                                </View>
+                              );
+                            })}
+                          </View>
+
+                          <Typography
+                            fontWeight={"600"}
+                            color="#5C6A82"
+                            mt="24px"
+                            mb="8px"
+                          >
+                            {"Ghi chú"}
+                          </Typography>
+                          <TextAreaDS
+                            maxLength={150}
+                            placeholder="Nhập nội dung ghi chú..."
+                            name="note"
+                          />
                         </View>
 
-                        <Typography
-                          fontWeight={"600"}
-                          color="#5C6A82"
-                          mt="24px"
-                          mb="8px"
+                        <Grid
+                          container
+                          padding="16px 24px"
+                          borderTop="1px solid #E7E9ED"
+                          justifyContent="end"
+                          background="#FDFDFD"
                         >
-                          {"Ghi chú"}
-                        </Typography>
-                        <TextAreaDS
-                          maxLength={150}
-                          placeholder="Nhập nội dung ghi chú..."
-                          name="note"
-                        />
-                      </View>
-
-                      <Grid
-                        container
-                        padding="16px 24px"
-                        borderTop="1px solid #E7E9ED"
-                        justifyContent="end"
-                        background="#FDFDFD"
-                      >
-                        <ButtonDS
-                          tittle={"Hủy"}
-                          type="button"
-                          sx={{
-                            color: "#455570",
-                            backgroundColor: "#fff",
-                            boxShadow: "none",
-                            ":hover": {
+                          <ButtonDS
+                            tittle={"Hủy"}
+                            type="button"
+                            sx={{
+                              color: "#455570",
                               backgroundColor: "#fff",
-                              textDecoration: "underline",
-                            },
-                            fontSize: "14px",
-                            marginRight: "8px",
-                          }}
-                          onClick={() => handleCancel()}
-                        />
+                              boxShadow: "none",
+                              ":hover": {
+                                backgroundColor: "#fff",
+                                textDecoration: "underline",
+                              },
+                              fontSize: "14px",
+                              marginRight: "8px",
+                            }}
+                            onClick={() => handleCancel()}
+                          />
 
-                        <ButtonDS
-                          tittle={"Chuyển"}
-                          type="button"
-                          sx={{
-                            textTransform: "unset",
-                            color: "#fff",
-                            boxShadow: "none",
-                            fontSize: "14px",
-                            padding: "6px 12px",
-                          }}
-                          loading={true}
-                          onClick={handleOk}
-                        />
-                      </Grid>
-                    </View>
-                  </FormProvider>
+                          <ButtonDS
+                            tittle={"Chuyển"}
+                            type="button"
+                            sx={{
+                              textTransform: "unset",
+                              color: "#fff",
+                              boxShadow: "none",
+                              fontSize: "14px",
+                              padding: "6px 12px",
+                            }}
+                            loading={true}
+                            onClick={handleOk}
+                          />
+                        </Grid>
+                      </View>
+                    </FormProvider>
+                  </>
                 </Modal>
               </DragDropContext>
             </div>

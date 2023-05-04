@@ -71,7 +71,7 @@ export const calendarServiceApi = createApi({
         method: "GET",
         params
       }),
-      providesTags: ["BookCalendarRecruitment"],
+      providesTags: [{ type: 'BookCalendar', id: 'List' }]
     }),
     getBookingCalendarsByApplicantRecruitmentPipelineState: builder.query({
       query: (params) => ({
@@ -79,7 +79,11 @@ export const calendarServiceApi = createApi({
         method: "GET",
         params
       }),
-      providesTags: ["BookCalendarRecruitment"],
+      transformResponse: (response) => {
+        response.events = response.items.reverse();
+        return response;
+      },
+      providesTags: [{ type: 'BookCalendar', id: 'List' }]
     }),
 
     getReviewForm: builder.query({
