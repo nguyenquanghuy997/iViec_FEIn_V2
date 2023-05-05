@@ -248,8 +248,7 @@ export default function CreateRecruitment() {
       throw e;
     }
   };
-console.log('cate', getValues("recruitmentJobCategoryIds"))
-console.log('cateW', getValues("recruitmentWorkingForms"))
+
   return (
     <Page title="Đăng tin tuyển dụng">
       <View mt={200} mb={36}>
