@@ -33,7 +33,6 @@ export default ({
   } = data;
   const quest = Array.isArray(questions) ? questions : [];
   const user = createdUserInFo || {};
-
   const router = useRouter();
 
   const pressSwitchActive = () => {
@@ -106,7 +105,10 @@ export default ({
           onChange={pressCheckbox}
           icon={<CheckboxIconDefault />}
           checkedIcon={<CheckboxIconChecked />}
-          style={{ marginTop: -6 }}
+          style={{
+            marginTop: -6,
+            marginLeft: -6
+          }}
         />
 
         <View flex1 mh={12}>
@@ -173,7 +175,7 @@ export default ({
         </Text>
         <View flex1 />
 
-        <View onPress={pressSwitchActive}>
+        <View style={{marginRight:-10}} onPress={pressSwitchActive}>
           {isActive ? (
             <ActionSwitchCheckedIcon />
           ) : (

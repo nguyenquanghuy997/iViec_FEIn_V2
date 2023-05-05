@@ -56,22 +56,22 @@ export const sidebarConfig = [
       //   path: "/settings/connect",
       //   permissions: [PERS.VIEW_CONNECT],
       // },
-      // {
-      //   title: "Quản lý đề thi",
-      //   path: "/settings/exam",
-      //   permissions: [PERS.VIEW_EXAM],
-      //   children: [
-      //     {
-      //       title: "Kho đề thi doanh nghiệp",
-      //       path: "/settings/exam/exambusiness",
-      //     },
-      //     {
-      //       title: "Kho đề thi iVIEC",
-      //       path: "/settings/exam/iviecexam",
-      //       icon: ICONS.notification,
-      //     },
-      //   ],
-      // },
+      {
+        title: "Quản lý đề thi",
+        path: "/settings/exam",
+        permissions: [PERS.VIEW_EXAM],
+        children: [
+          {
+            title: "Kho đề thi doanh nghiệp",
+            path: "/settings/exam/exambusiness",
+          },
+          {
+            title: "Kho đề thi iVIEC",
+            path: "/settings/exam/iviecexam",
+            // icon: ICONS.notification,
+          },
+        ],
+      },
     ],
   },
   // {

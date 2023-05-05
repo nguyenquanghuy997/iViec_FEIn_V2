@@ -18,7 +18,9 @@ import QuestionGalleryBottomNav from "@/sections/exam/components/QuestionGallery
 import { QuestionGalleryFormModal } from "@/sections/exam/components/QuestionGalleryFormModal";
 import QuestionGalleryHeader from "@/sections/exam/components/QuestionGalleryHeader";
 import QuestionGalleryItem from "@/sections/exam/components/QuestionGalleryItem";
-import { CircularProgress } from "@mui/material";
+import { ExamItem } from "@/sections/exam/items/ExamItem";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { CircularProgress, Tab } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -31,6 +33,9 @@ Setting.getLayout = function getLayout(pageProps, page) {
 };
 
 export default function Setting() {
+
+  // tab
+  const [tab, setTab] = useState(1);
   // state
   const [currentItem, setCurrentItem] = useState(null);
   const [listSelected, setListSelected] = useState([]);
@@ -146,82 +151,116 @@ export default function Setting() {
     setCurrentItem(null);
   }, [showFrom]);
 
+  const tabs = [
+    {
+      value: 1,
+      title: 'Đề thi',
+    },
+    {
+      value: 2,
+      title: 'Thư viện câu hỏi',
+    }
+  ]
+
+  const handleChangeTab = (event, newValue) => {
+    setTab(newValue);
+  };
+
   return (
     <PageWrapper title={"Kho đề thi doanh nghiệp"}>
-      <Page>
-        {/* title */}
-        <Text fontSize={20} fontWeight={"700"}>
-          {"Danh sách nhóm câu hỏi"}
-        </Text>
+      <TabContext value={tab} >
+        <TabList onChange={handleChangeTab} sx={{
+          "&. Mui-selected": {
+            background: "#000"
+          }
+        }}>
+          {
+            tabs.map(x => <Tab label={x.title} value={x.value} />)
+          }
+        </TabList>
 
-        <QuestionGalleryHeader
-          methods={methods}
-          handleSubmit={methods.handleSubmit}
-          pressAddQuestionGallery={() => setShowForm(true)}
-        />
+        <TabPanel value={1}>
+          <ExamItem/>
+        </TabPanel>
 
-        <View flex1>
-          {list.length ? (
-            list.map(renderItem)
-          ) : (
-            <View contentCenter pt={64}>
-              {isLoading ? (
-                <CircularProgress />
+        <TabPanel value={2}>
+          <Page>
+            {/* title */}
+            <Text fontSize={20} fontWeight={"700"}>
+              {"Danh sách nhóm câu hỏi"}
+            </Text>
+
+            <QuestionGalleryHeader
+              methods={methods}
+              handleSubmit={methods.handleSubmit}
+              pressAddQuestionGallery={() => setShowForm(true)}
+            />
+
+            <View flex1>
+              {list.length ? (
+                list.map(renderItem)
               ) : (
-                <>
-                  <EmptyIcon />
-                  <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
-                    {"Hiện chưa có nhóm câu hỏi nào."}
-                  </Text>
-                </>
+                <View contentCenter pt={64}>
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <>
+                      <EmptyIcon />
+                      <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
+                        {"Hiện chưa có nhóm câu hỏi nào."}
+                      </Text>
+                    </>
+                  )}
+                </View>
               )}
             </View>
-          )}
-        </View>
 
-        <QuestionGalleryBottomNav
-          list={list}
-          listSelected={listSelected}
-          setListSelected={setListSelected}
-          setShowForm={setShowForm}
-          setShowConfirmDelete={setShowConfirmDelete}
-          setShowConfirmSwitchActive={setShowConfirmSwitchActive}
-        />
+            <QuestionGalleryBottomNav
+              list={list}
+              listSelected={listSelected}
+              setListSelected={setListSelected}
+              setShowForm={setShowForm}
+              setShowConfirmDelete={setShowConfirmDelete}
+              setShowConfirmSwitchActive={setShowConfirmSwitchActive}
+            />
 
-        <ConfirmModal
-          confirmDelete={showConfirmDelete}
-          title="Xác nhận xóa nhóm câu hỏi"
-          subtitle={`Bạn có chắc chắn muốn xóa nhóm câu hỏi ${_name}`.trim()}
-          onSubmit={handleDelete}
-          onCloseConfirmDelete={onCloseConfirmDelete}
-        />
+            <ConfirmModal
+              confirmDelete={showConfirmDelete}
+              title="Xác nhận xóa nhóm câu hỏi"
+              subtitle={`Bạn có chắc chắn muốn xóa nhóm câu hỏi ${_name}`.trim()}
+              onSubmit={handleDelete}
+              onCloseConfirmDelete={onCloseConfirmDelete}
+            />
 
-        <ActiveModal
-          item={{ isActive }}
-          isOpenActive={showConfirmSwitchActive}
-          title={
-            isActive
-              ? "Tắt trạng thái hoạt động cho nhóm câu hỏi"
-              : "Bật trạng thái hoạt động cho nhóm câu hỏi"
-          }
-          subtitle={
-            isActive
-              ? `Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi ${_name}`.trim()
-              : `Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi ${_name}`.trim()
-          }
-          onSubmit={handleActive}
-          onCloseActiveModal={onCloseActiveModal}
-        />
+            <ActiveModal
+              item={{ isActive }}
+              isOpenActive={showConfirmSwitchActive}
+              title={
+                isActive
+                  ? "Tắt trạng thái hoạt động cho nhóm câu hỏi"
+                  : "Bật trạng thái hoạt động cho nhóm câu hỏi"
+              }
+              subtitle={
+                isActive
+                  ? `Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi ${_name}`.trim()
+                  : `Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi ${_name}`.trim()
+              }
+              onSubmit={handleActive}
+              onCloseActiveModal={onCloseActiveModal}
+            />
 
-        {showFrom && (
-          <QuestionGalleryFormModal
-            show={showFrom}
-            editData={{ id, name, description, isActive }}
-            setShow={setShowForm}
-            onSubmit={onSubmitForm}
-          />
-        )}
-      </Page>
+            {showFrom && (
+              <QuestionGalleryFormModal
+                show={showFrom}
+                editData={{ id, name, description, isActive }}
+                setShow={setShowForm}
+                onSubmit={onSubmitForm}
+              />
+            )}
+          </Page>
+        </TabPanel>
+      </TabContext>
+
     </PageWrapper>
   );
 }
