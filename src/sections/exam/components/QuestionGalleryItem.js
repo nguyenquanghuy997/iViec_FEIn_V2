@@ -160,14 +160,14 @@ export default ({
         </Text>
       </View>
 
-      <View flexRow atCenter mt={30}>
+      <View flexRow atCenter mt={24}>
         <Avatar
           src={`${DOMAIN_SERVER_API}/file/GetFile?filePath=${user.avatar}`}
           sx={{ width: 20, height: 20 }}
         />
 
         <Text ml={4} fontSize={12} color={"#172B4D"}>
-          {user.name}
+          {user.fullName}
         </Text>
 
         <Text ml={4} fontSize={12} color={"#5C6A82"}>
