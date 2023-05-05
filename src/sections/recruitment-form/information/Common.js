@@ -27,6 +27,7 @@ const Common = ({ recruitment }) => {
                         name="name"
                         placeholder="Nhập tiêu đề tin hiển thị tại trang việc làm..."
                         fullWidth
+                        maxLength={255}
                         disabled={recruitment?.processStatus === RECRUITMENT_STATUS.RECRUITING || recruitment?.processStatus === RECRUITMENT_STATUS.CALENDARED}
                     />
                 </Box>
@@ -81,6 +82,7 @@ const Common = ({ recruitment }) => {
                         name="address"
                         placeholder="Ví dụ: Tầng 15, Tòa nhà FPT, Số 10 Phạm Văn Bạch, Cầu Giấy, Hà Nội"
                         fullWidth
+                        maxLength={255}
                     />
                 </Box>
                 {/* Ngành nghề */}
