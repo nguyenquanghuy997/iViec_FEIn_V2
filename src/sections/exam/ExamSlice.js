@@ -16,7 +16,8 @@ import {
     API_UPDATE_COLUMN_EXAMS,
     API_UPDATE_STATUS_EXAM,
     API_CREATE_EXAM,
-    API_UPDATE_EXAM, API_DELETE_JOBTYPE, API_DELETE_EXAM, API_DELETE_EXAMS,
+    API_UPDATE_EXAM,
+    API_DELETE_EXAMS
 } from "@/routes/api";
 import * as qs from "qs";
 

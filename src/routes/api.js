@@ -332,3 +332,6 @@ export const API_GET_QUESTION_VISIBLE =
   "/aggregator/QuestionVisible/GetQuestionVisible";
 export const API_UPDATE_QUESTION_VISIBLE =
   "/aggregator/QuestionVisible/UpdateQuestionVisible";
+
+export class API_DELETE_EXAM {
+}
