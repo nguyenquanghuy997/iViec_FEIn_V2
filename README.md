@@ -7,8 +7,8 @@ git pull origin --rebase develop
 git push origin [PT-01]/[feat/fix]/xxxx
 Chú ý:
 [PT-01] là mã ticket được assign khi làm.
- -- Trong đó PT là viết tắt của tên project "Portal",
- -- 01 là số thứ tự ticket được assign.
+-- Trong đó PT là viết tắt của tên project "Portal",
+-- 01 là số thứ tự ticket được assign.
 Quy tắc đặt tên.
 Document
 
@@ -31,9 +31,9 @@ Quy tắc đặt tên commit
 -ProjectName: PT
 -TicketNumber : task trên azudevops
 -tille :
-    -- feat: đây là 1 cái commit
-    -- fix: fix homeScreen sai UI
-    Initial types: 'feat', 'fix', 'refactor', 'revert'
+-- feat: đây là 1 cái commit
+-- fix: fix homeScreen sai UI
+Initial types: 'feat', 'fix', 'refactor', 'revert'
 -content: nội dung commnit
 Quy trình chuyển task trong dự án
 Document
@@ -66,16 +66,15 @@ Make sure using Node.js version is 14
 $ nvm install 14 && nvm use 14
 
 Clone this repo
-- git clone 
+
+- git clone
 - cd project && yarn && yarn start
-
-
 
 Link
 Admin https://iviec-inside.vercel.app
 Figma https://www.figma.com/files/team/1143803997256806376/iVIEC-Design-Hub?fuid=706899021609054164
 API Document https://sapi.iviec.vn/swagger/ui/index
-Task 
+Task
 
 git remote set-url origin git@gitlab.com:ngocthang1493/iviec_inside.git
 
