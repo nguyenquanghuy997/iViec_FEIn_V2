@@ -68,6 +68,7 @@ export const API_DELETE_APPLICANT = "/applicant/Applicant/RemoveApplicants";
 export const API_GET_APPLICANT_SKILLS =
   "/applicant/ApplicantSkill/GetApplicantSkills";
 
+
 //Apply mẫu đánh giá
 export const API_APPLICANT_REVIEW_FORM =
   "/applicant/ApplicantReview/GetApplicantReviewForm";
@@ -284,20 +285,41 @@ export const API_GET_JOB_CATEGORIES =
   "/masterData/JobCategory/GetJobCategories";
 
 //ĐẶT LỊCH
-export const API_POST_BOOK_CALENDAR = 'applicant/BookingCalendar/CreateBookingCalendar'
-export const API_GET_APPLICANT = 'applicant/ApplicantRecruitment/GetApplicantByPipelineStateId'
-export const API_GET_BOOKING_CALENDER_BY_RECRUITMENT ='applicant/BookingCalendar/GetBookingCalendarsByRecruitment'
-export const API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE ='applicant/BookingCalendar/GetBookingCalendarsByApplicantRecruitmentPipelineState'
-export const API_GET_CALENDAR ='applicant/BookingCalendar/GetBookingCalendars'
-export const API_GET_CALENDAR_DETAIL = 'applicant/BookingCalendar/GetBookingCalendar'
-export const API_UPDATE_CALENDAR = 'applicant/BookingCalendar/UpdateBookingCalendar'
-export const API_GET_APPLICANT_BY_PIPELINES_STATE= 'applicant/BookingCalendar/GetBookingApplicantsAvailableByPipelineState'
-export const API_GET_RELATE_CALENDAR = 'applicant/BookingCalendar/GetRelateBookingCalendar'
-export const API_DELETE_CALENDAR = '/applicant/BookingCalendar/RemoveBookingCalendar'
+export const API_POST_BOOK_CALENDAR =
+  "applicant/BookingCalendar/CreateBookingCalendar";
+export const API_GET_APPLICANT =
+  "applicant/ApplicantRecruitment/GetApplicantByPipelineStateId";
+export const API_GET_BOOKING_CALENDER_BY_RECRUITMENT =
+  "applicant/BookingCalendar/GetBookingCalendarsByRecruitment";
+export const API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE =
+  "applicant/BookingCalendar/GetBookingCalendarsByApplicantRecruitmentPipelineState";
+export const API_GET_CALENDAR = "applicant/BookingCalendar/GetBookingCalendars";
+export const API_GET_CALENDAR_DETAIL =
+  "applicant/BookingCalendar/GetBookingCalendar";
+export const API_UPDATE_CALENDAR =
+  "applicant/BookingCalendar/UpdateBookingCalendar";
+export const API_GET_APPLICANT_BY_PIPELINES_STATE =
+  "applicant/BookingCalendar/GetBookingApplicantsAvailableByPipelineState";
+export const API_GET_RELATE_CALENDAR =
+  "applicant/BookingCalendar/GetRelateBookingCalendar";
+export const API_DELETE_CALENDAR =
+  "/applicant/BookingCalendar/RemoveBookingCalendar";
 // Thi tuyển
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID =
   "/examination/Examination/GetExamination";
+export const API_GET_COLUMN_EXAMS =
+    "/aggregator/ExamVisible/GetExamsVisible";
+export const API_UPDATE_COLUMN_EXAMS =
+    "/aggregator/ExamVisible/UpdateExamVisible/{id}";
+export const API_UPDATE_STATUS_EXAM =
+    "/examination/Examination/SetExaminationActivated";
+export const API_CREATE_EXAM =
+    "/examination/Examination/CreateExamination";
+export const API_UPDATE_EXAM =
+    "/examination/Examination/UpdateExamination/{id}";
+export const API_DELETE_EXAMS =
+    "/examination/Examination/RemoveExaminations";
 
 // QuestionGroup
 export const API_GET_QUESTION_GROUP =
@@ -319,3 +341,9 @@ export const API_GET_QUESTION_VISIBLE =
   "/aggregator/QuestionVisible/GetQuestionVisible";
 export const API_UPDATE_QUESTION_VISIBLE =
   "/aggregator/QuestionVisible/UpdateQuestionVisible";
+export const API_UPDATE_ACTIVE_QUESTION =
+  "/applicant/Question/UpdateActiveQuestions";
+export const API_REMOVE_QUESTION = "/applicant/Question/RemoveQuestions";
+
+export class API_DELETE_EXAM {
+}
