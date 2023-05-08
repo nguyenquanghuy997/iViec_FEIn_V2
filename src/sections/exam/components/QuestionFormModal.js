@@ -1,7 +1,7 @@
 import {
-  // useCreateQuestionMutation,
+  useCreateQuestionMutation,
   useLazyGetQuestionGroupQuery,
-  // useUpdateQuestionMutation,
+  useUpdateQuestionMutation,
 } from "../ExamSlice";
 import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
@@ -47,9 +47,9 @@ const LIST_QUESTION_TYPE = [
 const defaultValues = {
   id: null,
   questionType: 0,
-  questionGroup: "",
+  questionGroupId: "",
   questionTitle: "",
-  questionState: true,
+  isActive: true,
   answers: [],
 };
 
@@ -58,7 +58,7 @@ const defaultAnswer = {
   isCorrect: false,
 };
 
-export const QuestionFormModal = ({ data, show, onClose }) => {
+export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   const router = useRouter();
 
   // props
@@ -68,14 +68,14 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
   // const { enqueueSnackbar } = useSnackbar();
 
   // api
-  // const [addForm] = useCreateQuestionMutation();
-  // const [updateForm] = useUpdateQuestionMutation();
+  const [addForm] = useCreateQuestionMutation();
+  const [updateForm] = useUpdateQuestionMutation();
   const [getQuestionGroup, { data: { items = [] } = {} }] =
     useLazyGetQuestionGroupQuery();
 
   // form
   const schema = Yup.object().shape({
-    questionGroup: Yup.string().required("Chưa chọn nhóm câu hỏi"),
+    questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
     questionTitle: Yup.string().required("Chưa nhập câu hỏi"),
     answers: Yup.mixed()
       .test({
@@ -101,7 +101,7 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
 
   // watch
   const isEssay = methods.watch("questionType") === 2;
-  const isActive = methods.watch("questionState");
+  const isActive = methods.watch("isActive");
   const isMultipleChoice = methods.watch("questionType") === 1;
 
   // state
@@ -116,13 +116,10 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
     setListAnswer((l) => l.filter((_, i) => i !== index));
   };
 
-  const pressSave = handleSubmit(async () => {
-    // const body = {
-    //   ...e,
-    //   questionState: Number(e.questionState),
-    // };
-    // const res = await (e.id ? updateForm(body) : addForm(body));
-    // console.log("onSubmitQuestion", body, res);
+  const pressSave = handleSubmit(async (e) => {
+    const body = { ...e };
+    await (e.id ? updateForm(body) : addForm(body));
+    getData();
   });
 
   const changeAnswer = (index, key, value) => {
@@ -210,7 +207,7 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
 
   useEffect(() => {
     if (!show || !isEditMode) {
-      reset({ ...defaultValues, questionGroup: router.query.slug });
+      reset({ ...defaultValues, questionGroupId: router.query.slug });
       setListAnswer([defaultAnswer]);
 
       return;
@@ -219,7 +216,8 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
     setValue("id", data.id);
     setValue("questionType", data.questionType);
     setValue("questionTitle", data.questionTitle);
-    setValue("questionState", !!data.questionState);
+    setValue("isActive", !!data.isActive);
+    setListAnswer(data.answers);
   }, [show, isEditMode]);
 
   useEffect(() => {
@@ -302,7 +300,7 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
                     value: i.id,
                     label: i.name,
                   }))}
-                  name={"questionGroup"}
+                  name={"questionGroupId"}
                   placeholder={"Chọn nhóm câu hỏi"}
                 />
               </View>
@@ -361,7 +359,7 @@ export const QuestionFormModal = ({ data, show, onClose }) => {
             <View flex="true" />
 
             <SwitchStatusDS
-              name={"questionState"}
+              name={"isActive"}
               label={isActive ? "Đang hoạt động" : "Không hoạt động"}
             />
           </View>
