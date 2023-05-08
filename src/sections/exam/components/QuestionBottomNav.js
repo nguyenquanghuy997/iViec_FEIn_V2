@@ -24,10 +24,10 @@ export default ({
 }) => {
   const firstActiveStatus = list.find(
     (i) => i.id === listSelected[0]
-  )?.questionState;
+  )?.isActive;
 
   const showSwitchActive = !list.some(
-    (i) => listSelected.includes(i.id) && i.questionState !== firstActiveStatus
+    (i) => listSelected.includes(i.id) && i.isActive !== firstActiveStatus
   );
   const showEdit = listSelected.length === 1;
 

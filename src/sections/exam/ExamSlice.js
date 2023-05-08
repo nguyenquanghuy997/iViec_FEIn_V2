@@ -7,7 +7,9 @@ import {
   API_GET_QUESTIONS,
   API_GET_QUESTION_GROUP,
   API_GET_QUESTION_VISIBLE,
+  API_REMOVE_QUESTION,
   API_REMOVE_QUESTION_GROUP,
+  API_UPDATE_ACTIVE_QUESTION,
   API_UPDATE_ACTIVE_QUESTION_GROUP,
   API_UPDATE_QUESTION,
   API_UPDATE_QUESTION_GROUP,
@@ -113,6 +115,20 @@ const examinationSlice = apiWithTag.injectEndpoints({
       },
       invalidatesTags: [{ type: "QUESTION", id: "LIST_COLUMN" }],
     }),
+    updateActiveQuestion: builder.mutation({
+      query: (data) => ({
+        url: API_UPDATE_ACTIVE_QUESTION,
+        method: "patch",
+        data,
+      }),
+    }),
+    removeQuestion: builder.mutation({
+      query: (data) => ({
+        url: API_REMOVE_QUESTION,
+        method: "delete",
+        data,
+      }),
+    }),
   }),
 });
 
@@ -129,4 +145,6 @@ export const {
   useUpdateQuestionMutation,
   useGetListQuestionColumnsQuery,
   useUpdateQuestionColumnsMutation,
+  useUpdateActiveQuestionMutation,
+  useRemoveQuestionMutation,
 } = examinationSlice;
