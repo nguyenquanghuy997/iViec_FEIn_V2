@@ -124,7 +124,9 @@ export const QuestionGalleryFormModal = ({
               <View
                 flexrow
                 atcenter
-                asEnd
+                style={{
+                  marginLeft: -8
+                }}
                 onclick={() => setIsActive(!isActive)}
               >
                 {isActive ? (
