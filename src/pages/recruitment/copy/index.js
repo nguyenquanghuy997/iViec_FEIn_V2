@@ -162,6 +162,8 @@ export default function CloneRecruitment() {
       recruitmentLanguageIds: Recruitment?.recruitmentLanguages?.map(item => item?.languageId),
       organizationPipelineId: Recruitment?.recruitmentPipeline?.organizationPipelineId,
       isAutomaticStepChange: Recruitment?.recruitmentPipeline?.isAutomaticStepChange,
+      startDate: null,
+      endDate: null,
     })
   }, [Recruitment, defaultOrganization])
 
@@ -182,8 +184,8 @@ export default function CloneRecruitment() {
       startDate: moment(data?.startDate).toISOString(),
       endDate: moment(data?.endDate).toISOString(),
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map(item => Number(item)),
-      minSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.minSalary),
-      maxSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.maxSalary),
+      minSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.minSalary)|| null,
+      maxSalary: data.salaryDisplayType === SALARY_TYPE.NO_SALARY || data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY ? null : Number(data.maxSalary)|| null,
       sex: (data.sex || data.sex === SEX_TYPE.MALE) ? data.sex : SEX_TYPE.NOT_REQUIRED,
       recruitmentCreationType: openSaveDraft ? RECRUITMENT_CREATE_TYPE.DRAFT : RECRUITMENT_CREATE_TYPE.OFFICIAL,
       jobPositionId: data?.jobPositionId ? data?.jobPositionId : null,

@@ -87,12 +87,20 @@ export const RecruitmentItem = () => {
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB), []);
 
   // api get list
-  const listArrayOtherIdsFilter =["processStatuses", "workingForms", "workExperiences", "sexes"]
+  const listArrayOtherIdsFilter = [
+    "processStatuses",
+    "workingForms",
+    "workExperiences",
+    "sexes",
+  ];
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   let reqData = {};
   for (let f in query) {
     let val = query[f];
-    if ((f.includes('Ids') || listArrayOtherIdsFilter.includes(f)) && !Array.isArray(val)) {
+    if (
+      (f.includes("Ids") || listArrayOtherIdsFilter.includes(f)) &&
+      !Array.isArray(val)
+    ) {
       val = [val];
     }
     reqData[f] = val;
@@ -129,7 +137,17 @@ export const RecruitmentItem = () => {
               ...(canView && { cursor: "pointer" }),
             }}
             onClick={(e) => {
-              if (!canView) {
+              if (
+                !canView ||
+                record.processStatus == RECRUITMENT_STATUS.DRAFT 
+                // record.processStatus ==
+                //   RECRUITMENT_STATUS.WAITING_ORGANIZATION_APPROVAL ||
+                // record.processStatus ==
+                //   RECRUITMENT_STATUS.ORGANIZATION_REJECT ||
+                // record.processStatus ==
+                //   RECRUITMENT_STATUS.WAITING_IVIEC_APPROVAL ||
+                // record.processStatus == RECRUITMENT_STATUS.IVIEC_REJECT
+              ) {
                 return;
               }
               router.push(PATH_DASHBOARD.recruitment.view(record.id)),
@@ -498,7 +516,6 @@ export const RecruitmentItem = () => {
     ];
   }, [query.PageIndex, query.PageSize]);
 
-
   const [isOpenSettingOrganization, setIsOpenSettingOrganization] =
     useState(false);
 
@@ -573,11 +590,11 @@ export const RecruitmentItem = () => {
           case 1:
             return ["name", "preview", "excel", "edit", "copy", "delete"];
           case 2:
-            return ["name", "detail", "preview", "excel", "edit", "copy", "delete"];
+            return ["name", "preview", "excel", "edit", "copy", "delete"];
           case 3:
             return ["name", "preview", "excel", "edit", "copy", "delete"];
           case 4:
-            return ["name", "detail", "preview", "excel", "copy", "delete"];
+            return ["name", "preview", "excel", "copy", "delete"];
           case 5:
             return [
               "name",
@@ -589,7 +606,14 @@ export const RecruitmentItem = () => {
               "copy",
             ];
           case 6:
-            return ["name", "detail", "preview", "excel", "close", "edit", "copy"];
+            return [
+              "name",
+              "detail",
+              "preview",
+              "excel",
+              "edit",
+              "copy",
+            ];
           case 7:
             return ["name", "detail", "preview", "excel", "close", "copy"];
           case 8:
@@ -609,10 +633,10 @@ export const RecruitmentItem = () => {
             isShow = false;
           }
         }
-        if(isShow){
-          return ["close", "excel","delete"];
+        if (isShow) {
+          return ["close", "excel", "delete"];
         }
-         return ["close", "excel"];
+        return ["close", "excel"];
       }
     };
     return getKeysByStatus(itemSelected);
