@@ -17,7 +17,9 @@ import {
     API_UPDATE_STATUS_EXAM,
     API_CREATE_EXAM,
     API_UPDATE_EXAM,
-    API_DELETE_EXAMS
+    API_DELETE_EXAMS,
+    API_REMOVE_QUESTION,
+    API_UPDATE_ACTIVE_QUESTION,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -80,45 +82,6 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 data,
             }),
         }),
-        getQuestions: builder.query({
-            query: (params) => ({
-                url: API_GET_QUESTIONS,
-                method: "GET",
-                params,
-            }),
-        }),
-        createQuestion: builder.mutation({
-            query: (data) => ({
-                url: API_CREATE_QUESTION,
-                method: "POST",
-                data,
-            }),
-        }),
-        updateQuestion: builder.mutation({
-            query: (data) => ({
-                url: `${API_UPDATE_QUESTION}/${data.id}`,
-                method: "PATCH",
-                data,
-            }),
-        }),
-        getListQuestionColumns: builder.query({
-            query: () => ({
-                url: API_GET_QUESTION_VISIBLE,
-                method: "GET",
-            }),
-            providesTags: ["GetColumn"],
-        }),
-        updateQuestionColumns: builder.mutation({
-            query: (data = {}) => {
-                let {id, ...restData} = data;
-                return {
-                    url: `${API_UPDATE_QUESTION_VISIBLE}/${id}`,
-                    method: "PATCH",
-                    data: restData,
-                };
-            },
-            invalidatesTags: [{type: "QUESTION", id: "LIST_COLUMN"}],
-        }),
         getListColumnExams: builder.query({
             query: () => ({
                 url: API_GET_COLUMN_EXAMS,
@@ -165,7 +128,60 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 method: "DELETE",
                 data: data
             }),
-        })
+        }),
+        getQuestions: builder.query({
+            query: (params) => ({
+                url: API_GET_QUESTIONS,
+                method: "GET",
+                params,
+            }),
+        }),
+        createQuestion: builder.mutation({
+            query: (data) => ({
+                url: API_CREATE_QUESTION,
+                method: "POST",
+                data,
+            }),
+        }),
+        updateQuestion: builder.mutation({
+            query: (data) => ({
+                url: `${API_UPDATE_QUESTION}/${data.id}`,
+                method: "PATCH",
+                data,
+            }),
+        }),
+        getListQuestionColumns: builder.query({
+            query: () => ({
+                url: API_GET_QUESTION_VISIBLE,
+                method: "GET",
+            }),
+            providesTags: ["GetColumn"],
+        }),
+        updateQuestionColumns: builder.mutation({
+            query: (data = {}) => {
+                let {id, ...restData} = data;
+                return {
+                    url: `${API_UPDATE_QUESTION_VISIBLE}/${id}`,
+                    method: "PATCH",
+                    data: restData,
+                };
+            },
+            invalidatesTags: [{type: "QUESTION", id: "LIST_COLUMN"}],
+        }),
+        updateActiveQuestion: builder.mutation({
+            query: (data) => ({
+                url: API_UPDATE_ACTIVE_QUESTION,
+                method: "patch",
+                data,
+            }),
+        }),
+        removeQuestion: builder.mutation({
+            query: (data) => ({
+                url: API_REMOVE_QUESTION,
+                method: "delete",
+                data,
+            }),
+        }),
     }),
 });
 
@@ -187,5 +203,7 @@ export const {
     useUpdateStatusExamMutation,
     useCreateExamMutation,
     useUpdateExamMutation,
-    useDeleteExamMutation
+    useDeleteExamMutation,
+    useUpdateActiveQuestionMutation,
+    useRemoveQuestionMutation
 } = examinationSlice;
