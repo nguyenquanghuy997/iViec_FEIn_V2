@@ -4,9 +4,13 @@ import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
+import ActiveModal from "@/sections/emailform/component/ActiveModal";
+import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import {
   useGetListQuestionColumnsQuery,
   useLazyGetQuestionsQuery,
+  useRemoveQuestionMutation,
+  useUpdateActiveQuestionMutation,
   useUpdateQuestionColumnsMutation,
 } from "@/sections/exam/ExamSlice";
 import QuestionBottomNav from "@/sections/exam/components/QuestionBottomNav";
@@ -33,9 +37,18 @@ function Question() {
   const [showForm, setShowForm] = useState(false);
   const [itemSelected, setItemSelected] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showConfirmSwitchActive, setShowConfirmSwitchActive] = useState(false);
+
+  const { isActive, questionTitle = "" } = itemSelected[0] || {};
+  const isMulti = itemSelected.length > 1;
+  const ids = itemSelected.map((i) => i.id);
+  const _name = isMulti ? "" : questionTitle;
 
   //   api
   const [getQuestions, { data: Data, isLoading }] = useLazyGetQuestionsQuery();
+  const [updateActiveQuestion] = useUpdateActiveQuestionMutation();
+  const [removeQuestion] = useRemoveQuestionMutation();
 
   // table
   const columns = useMemo(() => {
@@ -154,10 +167,8 @@ function Question() {
         width: "180px",
         render: (_, record) => {
           return (
-            <span
-              style={{ color: record.questionState ? "#388E3C" : "#D32F2F" }}
-            >
-              {record.questionState ? "Đang hoạt động" : "Ngừng hoạt động"}
+            <span style={{ color: record.isActive ? "#388E3C" : "#D32F2F" }}>
+              {record.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
             </span>
           );
         },
@@ -165,9 +176,43 @@ function Question() {
     ];
   }, [PageIndex, PageSize]);
 
+  // callback
+  const onCloseConfirmDelete = () => {
+    setShowConfirmDelete(false);
+  };
+
+  const onCloseActiveModal = () => {
+    setShowConfirmSwitchActive(false);
+  };
+
+  // handle
+  const getData = () => {
+    setShowForm(false);
+    setItemSelected([]);
+    setSelectedRowKeys([]);
+    onCloseActiveModal();
+    onCloseConfirmDelete();
+    getQuestions({ ...query, QuestionGroupId, slug: undefined });
+  };
+
+  const handleDelete = async () => {
+    await removeQuestion({
+      questionIds: ids,
+    });
+    getData();
+  };
+
+  const handleActive = async () => {
+    await updateActiveQuestion({
+      questionIds: ids,
+      isActive: !isActive,
+    });
+    getData();
+  };
+
   //   effect
   useEffect(() => {
-    getQuestions({ ...query, QuestionGroupId, slug: undefined });
+    getData();
   }, [query, QuestionGroupId]);
 
   return (
@@ -212,8 +257,8 @@ function Question() {
             setSelectedRowKeys(e);
           }}
           setShowForm={setShowForm}
-          setShowConfirmDelete={() => {}}
-          setShowConfirmSwitchActive={() => {}}
+          setShowConfirmDelete={() => setShowConfirmDelete(true)}
+          setShowConfirmSwitchActive={() => setShowConfirmSwitchActive(true)}
         />
       </Content>
 
@@ -221,6 +266,52 @@ function Question() {
         data={itemSelected[0]}
         show={showForm}
         onClose={() => setShowForm(false)}
+        getData={getData}
+      />
+
+      <ConfirmModal
+        confirmDelete={showConfirmDelete}
+        title="Xác nhận xóa câu hỏi"
+        subtitle={
+          isMulti ? (
+            <span>
+              Bạn có chắc chắn muốn xóa{" "}
+              <b>{isMulti ? itemSelected.length : ""} câu hỏi</b>
+            </span>
+          ) : (
+            <span>
+              Bạn có chắc chắn muốn xóa nhóm câu hỏi{" "}
+              {!isMulti ? <b>{_name.trim()}</b> : ""} này
+            </span>
+          )
+        }
+        onSubmit={handleDelete}
+        onCloseConfirmDelete={onCloseConfirmDelete}
+      />
+
+      <ActiveModal
+        item={{ isActive }}
+        isOpenActive={showConfirmSwitchActive}
+        title={
+          isActive
+            ? "Tắt trạng thái hoạt động cho câu hỏi"
+            : "Bật trạng thái hoạt động cho câu hỏi"
+        }
+        subtitle={
+          isActive ? (
+            <span>
+              Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi{" "}
+              <b>{_name.trim()}</b>
+            </span>
+          ) : (
+            <span>
+              Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi{" "}
+              <b>{_name.trim()}</b>
+            </span>
+          )
+        }
+        onSubmit={handleActive}
+        onCloseActiveModal={onCloseActiveModal}
       />
     </View>
   );
