@@ -36,13 +36,14 @@ export const QuestionGallary = () => {
   const [removeQuestionGroup] = useRemoveQuestionGroupMutation();
 
   // variable
-  const isMulti = !currentItem && !!listSelected.length;
+  const isMulti = listSelected.length > 1;
+
   const {
     id,
     name = "",
     description,
     isActive,
-  } = (isMulti
+  } = (isMulti || !currentItem
     ? { ...list.find((i) => i.id === listSelected[0]) }
     : currentItem) || {};
 
@@ -136,79 +137,82 @@ export const QuestionGallary = () => {
 
 
   return (
-      <View>
-        {/* title */}
-        <Text fontSize={20} fontWeight={"700"}>
-          {"Danh sách nhóm câu hỏi"}
-        </Text>
+    <View>
+      {/* title */}
+      <Text fontSize={20} fontWeight={"700"}>
+        {"Danh sách nhóm câu hỏi"}
+      </Text>
 
-        <QuestionGalleryHeader
-          methods={methods}
-          handleSubmit={methods.handleSubmit}
-          pressAddQuestionGallery={() => setShowForm(true)}
-        />
+      <QuestionGalleryHeader
+        methods={methods}
+        handleSubmit={methods.handleSubmit}
+        pressAddQuestionGallery={() => setShowForm(true)}
+      />
 
-        <View flex1>
-          {list.length ? (
-            list.map(renderItem)
-          ) : (
-            <View contentCenter pt={64}>
-              {isLoading ? (
-                <CircularProgress />
-              ) : (
-                <>
-                  <EmptyIcon />
-                  <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
-                    {"Hiện chưa có nhóm câu hỏi nào."}
-                  </Text>
-                </>
-              )}
-            </View>
-          )}
-        </View>
-
-        <QuestionGalleryBottomNav
-          list={list}
-          listSelected={listSelected}
-          setListSelected={setListSelected}
-          setShowForm={setShowForm}
-          setShowConfirmDelete={setShowConfirmDelete}
-          setShowConfirmSwitchActive={setShowConfirmSwitchActive}
-        />
-
-        <ConfirmModal
-          confirmDelete={showConfirmDelete}
-          title="Xác nhận xóa nhóm câu hỏi"
-          subtitle={`Bạn có chắc chắn muốn xóa nhóm câu hỏi ${_name}`.trim()}
-          onSubmit={handleDelete}
-          onCloseConfirmDelete={onCloseConfirmDelete}
-        />
-
-        <ActiveModal
-          item={{ isActive }}
-          isOpenActive={showConfirmSwitchActive}
-          title={
-            isActive
-              ? "Tắt trạng thái hoạt động cho nhóm câu hỏi"
-              : "Bật trạng thái hoạt động cho nhóm câu hỏi"
-          }
-          subtitle={
-            isActive
-              ? `Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi ${_name}`.trim()
-              : `Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi ${_name}`.trim()
-          }
-          onSubmit={handleActive}
-          onCloseActiveModal={onCloseActiveModal}
-        />
-
-        {showFrom && (
-          <QuestionGalleryFormModal
-            show={showFrom}
-            editData={{ id, name, description, isActive }}
-            setShow={setShowForm}
-            onSubmit={onSubmitForm}
-          />
+      <View flex1>
+        {list.length ? (
+          list.map(renderItem)
+        ) : (
+          <View contentCenter pt={64}>
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <EmptyIcon />
+                <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
+                  {"Hiện chưa có nhóm câu hỏi nào."}
+                </Text>
+              </>
+            )}
+          </View>
         )}
       </View>
+
+      <QuestionGalleryBottomNav
+        list={list}
+        listSelected={listSelected}
+        setListSelected={setListSelected}
+        setShowForm={setShowForm}
+        setShowConfirmDelete={setShowConfirmDelete}
+        setShowConfirmSwitchActive={setShowConfirmSwitchActive}
+      />
+
+      <ConfirmModal
+        confirmDelete={showConfirmDelete}
+        title="Xác nhận xóa nhóm câu hỏi"
+        subtitle={listSelected.length > 1
+          ? <span>Bạn có chắc chắn muốn xóa <b>{listSelected.length > 1 ? listSelected.length : ''} nhóm câu hỏi</b></span>
+          : <span>Bạn có chắc chắn muốn xóa nhóm câu hỏi {listSelected.length == 1 ? <b>{name.trim()}</b> : ''} này</span>
+        }
+        onSubmit={handleDelete}
+        onCloseConfirmDelete={onCloseConfirmDelete}
+      />
+
+      <ActiveModal
+        item={{ isActive }}
+        isOpenActive={showConfirmSwitchActive}
+        title={
+          isActive
+            ? "Tắt trạng thái hoạt động cho nhóm câu hỏi"
+            : "Bật trạng thái hoạt động cho nhóm câu hỏi"
+        }
+        subtitle={
+          isActive
+            ? <span>Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi <b>{_name.trim()}</b></span>
+            : <span>Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi <b>{_name.trim()}</b></span>
+        }
+        onSubmit={handleActive}
+        onCloseActiveModal={onCloseActiveModal}
+      />
+
+      {showFrom && (
+        <QuestionGalleryFormModal
+          show={showFrom}
+          editData={{ id, name, description, isActive }}
+          setShow={setShowForm}
+          onSubmit={onSubmitForm}
+        />
+      )}
+    </View>
   );
 }
