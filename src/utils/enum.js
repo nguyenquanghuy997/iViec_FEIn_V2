@@ -195,3 +195,12 @@ export const OrganizationSize = (item) => {
       return  "Khác";
   }
 };
+
+export const ExamType = (item) => {
+  switch (item) {
+    case 0:
+      return "Đề thi câu hỏi cố định";
+    case 1:
+      return "Đề thi câu hỏi trắc nghiệm";
+  }
+};

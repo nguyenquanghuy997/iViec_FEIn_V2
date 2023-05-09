@@ -1,5 +1,5 @@
-import { PERMISSIONS } from "@/config";
-import { useGetExaminationByIdQuery } from "../ExamSlice";
+import {PERMISSIONS} from "@/config";
+import {useGetExaminationByIdQuery} from "../ExamSlice";
 import Content from "@/components/BaseComponents/Content";
 import Iconify from "@/components/Iconify";
 import useRole from "@/hooks/useRole";
@@ -7,49 +7,51 @@ import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
-import { ButtonIcon } from "@/utils/cssStyles";
-import { checkSameValue } from "@/utils/formatString";
-import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { useMemo } from "react";
+import {ButtonIcon} from "@/utils/cssStyles";
+import {checkSameValue} from "@/utils/formatString";
+import {Box, Divider, Drawer, Stack, Typography} from "@mui/material";
+import React, {useState} from "react";
+import {useMemo} from "react";
 import ExamActiveModal from "@/sections/exam/modals/ExamActiveModal";
 import ExamFormModal from "@/sections/exam/modals/ExamFormModal";
 import ExamDeleteModal from "@/sections/exam/modals/ExamDeleteModal";
 
 const ExamBottumonNav = ({
-  selectedList,
-  open,
-  onClose,
-  setselectedList,
-  itemSelected,
-  setItemSelected
-}) => {
+                           itemIds,
+                           setItemIds,
+                           open,
+                           onClose,
+                           itemSelected,
+                           setItemSelected
+                         }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
 
+  let itemIdss = itemSelected.map((p) => p.id);
+
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
-    setselectedList([]);
+    setItemIds([]);
     setItemSelected([]);
   };
 
-  const { canAccess } = useRole();
+  const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB_POS), []);
 
-  const { data: exam } = useGetExaminationByIdQuery(
+  const {data: exam} = useGetExaminationByIdQuery(
     {
-      Id: selectedList[0],
+      Id: itemIdss[0],
     },
-    { skip: selectedList.length !== 1 }
+    {skip: itemIdss.length !== 1}
   );
-
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
   };
 
-  let item = itemSelected.map((p) => p.isActivated);
+  let item = itemSelected.map((p) => p.isActive);
   let itemApply = itemSelected.map((p) => p.numberOfRecruitmentApplied);
+
   function checkSameApply(arr) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] > 0) {
@@ -58,6 +60,7 @@ const ExamBottumonNav = ({
     }
     return true;
   }
+
   return (
     <Drawer
       anchor={"bottom"}
@@ -65,7 +68,7 @@ const ExamBottumonNav = ({
       variant="persistent"
       onClose={onClose}
     >
-      <Content sx={{ padding: "20px 24px" }}>
+      <Content sx={{padding: "20px 24px"}}>
         <Box
           sx={{
             width: "100%",
@@ -85,13 +88,13 @@ const ExamBottumonNav = ({
                         sx={{
                           backgroundColor: "unset !important",
                         }}
-                        icon={<ActionSwitchCheckedIcon />}
+                        icon={<ActionSwitchCheckedIcon/>}
                       />
                     }
 
                     <Typography
                       variant="body2"
-                      sx={{ color: "#388E3C", fontSize: 13 }}
+                      sx={{color: "#388E3C", fontSize: 13}}
                     >
                       Đang hoạt động
                     </Typography>
@@ -104,13 +107,13 @@ const ExamBottumonNav = ({
                         sx={{
                           backgroundColor: "unset !important",
                         }}
-                        icon={<ActionSwitchUnCheckedIcon />}
+                        icon={<ActionSwitchUnCheckedIcon/>}
                       />
                     }
 
                     <Typography
                       variant="body2"
-                      sx={{ color: "#5C6A82", fontSize: 13 }}
+                      sx={{color: "#5C6A82", fontSize: 13}}
                     >
                       Không hoạt động
                     </Typography>
@@ -119,20 +122,20 @@ const ExamBottumonNav = ({
               </>
             )}
             {/*{itemSelected.length === 1 && itemSelected[0]?.recruitmentCount == 0 && canEdit && (*/}
-              <ButtonIcon
-                sx={{
-                  marginLeft: "16px",
-                }}
-                onClick={() => handleShowConfirmMultiple("edit")}
-                icon={
-                  <Iconify
-                    icon={"ri:edit-2-fill"}
-                    width={20}
-                    height={20}
-                    color="#5C6A82"
-                  />
-                }
-              />
+            <ButtonIcon
+              sx={{
+                marginLeft: "16px",
+              }}
+              onClick={() => handleShowConfirmMultiple("edit")}
+              icon={
+                <Iconify
+                  icon={"ri:edit-2-fill"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
+                />
+              }
+            />
             {/*)}*/}
             {checkSameApply(itemApply) && canEdit && (
               <ButtonIcon
@@ -151,14 +154,14 @@ const ExamBottumonNav = ({
               />
             )}
           </Stack>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
-              Đã chọn: {selectedList.length}
+          <Box sx={{display: "flex", alignItems: "center"}}>
+            <Typography sx={{fontSize: 14, fontWeight: 600}}>
+              Đã chọn: {itemIdss.length}
             </Typography>
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
+              sx={{mx: 2, width: "2px", backgroundColor: "#E7E9ED"}}
             />
             <ButtonIcon
               sx={{
@@ -181,7 +184,7 @@ const ExamBottumonNav = ({
         <ExamActiveModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
-          ids={selectedList}
+          ids={itemIds}
           onClose={onCloseModel}
           isActivated={item[0]}
         />
@@ -198,7 +201,7 @@ const ExamBottumonNav = ({
         <ExamDeleteModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
-          examIds={selectedList}
+          examIds={itemIdss}
           onClose={onCloseModel}
           isActivated={exam?.isActivated}
         />

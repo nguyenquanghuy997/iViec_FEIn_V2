@@ -18,6 +18,9 @@ import {QuestionFormModal} from "@/sections/exam/components/QuestionFormModal";
 import {TBL_FILTER_TYPE} from "@/config";
 import {LIST_EXAM_TYPE, LIST_STATUS} from "@/utils/formatString";
 import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
+import {ExamType, Status} from "@/utils/enum";
+import {fDate} from "@/utils/formatTime";
+import {AvatarDS} from "@/components/DesignSystem";
 
 export const ExamItem = ({
                              hideTable,
@@ -56,7 +59,7 @@ export const ExamItem = ({
             {
                 dataIndex: "name",
                 title: "Đề thi",
-                width: "220px",
+                width: "150px",
                 // render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
                 render: (item, record) => (
                     <TextMaxLine
@@ -77,23 +80,27 @@ export const ExamItem = ({
             {
                 dataIndex: "description",
                 title: "Mô tả",
-                width: "120px"
+                width: "200px"
             },
             {
-                dataIndex: "examType",
+                dataIndex: "type",
                 title: "Kiểu đề thi",
-                width: "120px",
+                width: "220px",
+                render: (item) => (
+
+                    ExamType(item)),
                 filters: {
                     type: TBL_FILTER_TYPE.SELECT,
-                    name: 'isActive',
-                    options: LIST_EXAM_TYPE.map(item => ({ value: item.id, label: item.name })),
+                    name: 'type',
+                    options: LIST_EXAM_TYPE.map(item => ({value: item.id, label: item.name})),
                     placeholder: "Tất cả"
                 },
             },
             {
-                dataIndex: "createDate",
+                dataIndex: "createdTime",
                 title: "Ngày tạo",
                 width: "214px",
+                render: (date, record) => record?.createdTime ? fDate(record?.createdTime) : '',
                 filters: {
                     type: TBL_FILTER_TYPE.RANGE_DATE,
                     name: ['createdTimeFrom', 'createdTimeTo'],
@@ -101,9 +108,25 @@ export const ExamItem = ({
                 },
             },
             {
-                dataIndex: "creator",
+                dataIndex: "createdUser",
                 title: "Người tạo",
                 width: "300px",
+                render: (item) => (
+                    <div style={{display: "flex", alignItems: "center"}}>
+                        <AvatarDS
+                            sx={{
+                                height: "20px",
+                                width: "20px",
+                                borderRadius: "100px",
+                                fontSize: "12px",
+                            }}
+                            name={item}
+                        ></AvatarDS>
+                        <span fontSize="14px" fontWeight="600" color="#172B4D">
+              {item}
+            </span>
+                    </div>
+                ),
                 filters: {
                     type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
                     name: "createdUser",
@@ -113,14 +136,31 @@ export const ExamItem = ({
                 },
             },
             {
-                dataIndex: "updateDate",
+                dataIndex: "modifiedTime",
                 title: "Ngày chỉnh sửa",
+                render: (date, record) => record?.createdTime ? fDate(record?.createdTime) : '',
                 width: "200px"
             },
             {
-                dataIndex: "creatorUpdate",
+                dataIndex: "modifiedUser",
                 title: "Người chỉnh sửa",
                 width: "200px",
+                render: (item) => (
+                    <div style={{display: "flex", alignItems: "center"}}>
+                        <AvatarDS
+                            sx={{
+                                height: "20px",
+                                width: "20px",
+                                borderRadius: "100px",
+                                fontSize: "12px",
+                            }}
+                            name={item}
+                        ></AvatarDS>
+                        <span fontSize="14px" fontWeight="600" color="#172B4D">
+              {item}
+            </span>
+                    </div>
+                ),
                 filters: {
                     type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
                     name: "modifiedUser",
@@ -145,18 +185,18 @@ export const ExamItem = ({
                 },
             },
             {
-                dataIndex: "choiceQuestion",
+                dataIndex: "multipleChoiceQuestion",
                 title: "Trắc nghiệm",
                 width: "220px"
             },
             {
-                dataIndex: "longQuestion",
+                dataIndex: "essayQuestion",
                 title: "Tự luận",
                 width: "200px"
             },
             {
                 title: "Điểm tối đa",
-                dataIndex: "maxPoint",
+                dataIndex: "maximumPoint",
                 width: "120px",
                 filters: {
                     type: TBL_FILTER_TYPE.RANGE_POINT,
@@ -165,7 +205,7 @@ export const ExamItem = ({
                 },
             },
             {
-                dataIndex: "milestonesPoint",
+                dataIndex: "standardPoint",
                 title: "Điểm sàn",
                 width: "200px",
                 filters: {
@@ -178,10 +218,15 @@ export const ExamItem = ({
                 dataIndex: "isActive",
                 title: "Trạng thái",
                 width: "200px",
+                render: (item) => (
+                    <span style={{color: item ? "#388E3C" : "#455570"}}>
+            {Status(item)}
+          </span>
+                ),
                 filters: {
                     type: TBL_FILTER_TYPE.SELECT,
                     name: 'isActive',
-                    options: LIST_STATUS.map(item => ({ value: item.id, label: item.name })),
+                    options: LIST_STATUS.map(item => ({value: item.id, label: item.name})),
                     placeholder: "Tất cả"
                 },
             }
@@ -269,21 +314,21 @@ export const ExamItem = ({
                                 disableGutters={true}
                             >
                                 <MenuItem>
-                                    <TeamLineIcon sx={{ mr: "12px" }} />
+                                    <TeamLineIcon sx={{mr: "12px"}}/>
                                     <Typography ml={"12px"} variant={"textSize13600"}>
                                         Lấy từ kho iVIEC
                                     </Typography>
                                 </MenuItem>
-                                <Divider />
+                                <Divider/>
                                 <MenuItem>
-                                    <DownloadLineIcon />
+                                    <DownloadLineIcon/>
                                     <Typography ml={"12px"} variant={"textSize13600"}>
                                         Tải mẫu Excel
                                     </Typography>
                                 </MenuItem>
-                                <Divider />
+                                <Divider/>
                                 <MenuItem>
-                                    <ImportLinkIcon sx={{ mr: "12px" }} />
+                                    <ImportLinkIcon sx={{mr: "12px"}}/>
                                     <Typography ml={"12px"} variant={"textSize13600"}>
                                         Import Excel
                                     </Typography>
@@ -313,6 +358,8 @@ export const ExamItem = ({
             </ButtonGroup>
         </Box>
     }
+    console.log('selectedRowKeys', selectedRowKeys);
+
     return (
         <View>
             <View>
@@ -337,7 +384,7 @@ export const ExamItem = ({
                         // setItemSelected([]);
                         // setSelectedRowKeys([]);
                     }}
-                    headerProps = {
+                    headerProps={
 
                         {
                             ...headerProps,
@@ -355,7 +402,7 @@ export const ExamItem = ({
                     onClose={toggleDrawer(false)}
                     selectedList={selectedRowKeys || []}
                     onOpenForm={toggleDrawer(true)}
-                    setselectedList={setSelectedRowKeys}
+                    setItemIds={setSelectedRowKeys}
                     itemSelected={itemSelected}
                     setItemSelected={setItemSelected}
                 />
