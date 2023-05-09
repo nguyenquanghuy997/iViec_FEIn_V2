@@ -179,7 +179,7 @@ export const ExamItem = ({
                 variant="contained"
                 aria-label="split button"
                 sx={{
-                    marginLeft: '1rem',
+                    marginLeft: '8px',
                     boxShadow: "unset",
                     "& .MuiButtonGroup-grouped:not(:last-of-type)": {
                         borderColor: "white",
