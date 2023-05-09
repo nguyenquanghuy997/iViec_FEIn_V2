@@ -549,7 +549,7 @@ export const RecruitmentApplicantCreate = ({
                           title={"Tình trạng hôn nhân"}
                           options={LIST_MARITAL_STATUSES}
                           name={"maritalStatus"}
-                          placeholder="Chọn tình trạng hồn nhân"
+                          placeholder="Chọn tình trạng hôn nhân"
                         />
                       </Grid>
                     </Grid>

@@ -25,7 +25,7 @@ export const SIDEBAR_CONSTANTS = {
   MENU_ITEM_ACTIVE_BG_COLOR: "#E7E9ED",
   // MENU_ITEM_COLOR: "",
   // HEIGHT
-}
+};
 
 export const sidebarConfig = [
   {
@@ -36,21 +36,21 @@ export const sidebarConfig = [
         path: "/settings/pipeline",
         permissions: [PERS.VIEW_RECRUIT_PROCESS],
       },
-      // {
-      //   title: "Quy trình phê duyệt",
-      //   path: "/settings/approve-process",
-      //   permissions: [PERS.VIEW_APPR_PROCESS],
-      // },
+      {
+        title: "Quy trình phê duyệt",
+        path: "/settings/approve-process",
+        permissions: [PERS.VIEW_APPR_PROCESS],
+      },
       {
         title: "Vị trí công việc",
         path: "/settings/jobtype",
         permissions: [PERS.VIEW_JOB_POS],
       },
-      {
-        title: "Mẫu đánh giá",
-        path: "/settings/evaluationform",
-        permissions: [PERS.VIEW_EVA_TPL],
-      },
+      // {
+      //   title: "Mẫu đánh giá",
+      //   path: "/settings/evaluationform",
+      //   permissions: [PERS.VIEW_EVA_TPL],
+      // },
       // {
       //   title: "Kết nối",
       //   path: "/settings/connect",
@@ -74,57 +74,52 @@ export const sidebarConfig = [
       },
     ],
   },
-  // {
-  //   subheader: "Thiết lập mẫu",
-  //   items: [
-  //     {
-  //       title: "Mẫu đánh giá",
-  //       path: "/settings/evaluationform",
-  //       permissions: [PERS.VIEW_EVA_TPL],
-  //     },
-  //     {
-  //       title: "Mẫu thư mời nhận việc",
-  //       path: "/settings/offerform",
-  //       permissions: [PERS.VIEW_OFFER_TPL],
-  //     },
-  //     {
-  //       title: "Mẫu email tự động",
-  //       path: "/settings/emailform",
-  //       permissions: [PERS.VIEW_EMAIL],
-  //       children: [
-  //         {
-  //           title: "Email thông báo tài khoản",
-  //           path: "/settings/emailform/account",
-  //         },
-  //         {
-  //           title: "Email lịch thi tuyển",
-  //           path: "/settings/emailform/schedule-exam",
-  //           icon: ICONS.notification,
-  //         },
-  //         {
-  //           title: "Email lịch phỏng vấn trực tuyến",
-  //           path: "/settings/emailform/schedule-online",
-  //           icon: ICONS.notification,
-  //         },
-  //         {
-  //           title: "Email lịch phỏng vấn trực tiếp",
-  //           path: "/settings/emailform/schedule-live",
-  //           icon: ICONS.notification,
-  //         },
-  //         {
-  //           title: "Email thông báo Kết quả - Đạt",
-  //           path: "/settings/emailform/approve",
-  //           icon: ICONS.notification,
-  //         },
-  //         {
-  //           title: "Email thông báo Kết quả - Loại",
-  //           path: "/settings/emailform/reject",
-  //           icon: ICONS.notification,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    subheader: "Thiết lập mẫu",
+    items: [
+      {
+        title: "Mẫu đánh giá",
+        path: "/settings/evaluationform",
+        permissions: [PERS.VIEW_EVA_TPL],
+      },
+      {
+        title: "Mẫu thư mời nhận việc",
+        path: "/settings/offerform",
+        permissions: [PERS.VIEW_OFFER_TPL],
+      },
+      {
+        title: "Mẫu email tự động",
+        path: "/settings/emailform",
+        permissions: [PERS.VIEW_EMAIL],
+        children: [
+          {
+            title: "Email thông báo tài khoản",
+            path: "/settings/emailform/account",
+          },
+          {
+            title: "Email lịch thi tuyển",
+            path: "/settings/emailform/schedule-exam",
+          },
+          {
+            title: "Email lịch phỏng vấn trực tuyến",
+            path: "/settings/emailform/schedule-online",
+          },
+          {
+            title: "Email lịch phỏng vấn trực tiếp",
+            path: "/settings/emailform/schedule-live",
+          },
+          {
+            title: "Email thông báo Kết quả - Đạt",
+            path: "/settings/emailform/approve",
+          },
+          {
+            title: "Email thông báo Kết quả - Loại",
+            path: "/settings/emailform/reject",
+          },
+        ],
+      },
+    ],
+  },
   {
     subheader: "Công ty",
     items: [
