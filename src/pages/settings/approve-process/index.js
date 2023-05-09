@@ -1,13 +1,12 @@
 import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import {Container} from "@mui/material";
+import { Container } from "@mui/material";
 import ApproveProcessCard from "@/sections/approve-process/ApproveProcessCard";
 import useSettings from "@/hooks/useSettings";
 import Page from "@/components/Page";
-//import {JobTypeItem, useLazyGetAllJobTypeQuery} from "@/sections/jobtype";
 import PageWrapper from "@/components/PageWrapper";
-import {useGetAllApproveProcessQuery} from "@/sections/approve-process/ApproveProcessSlice";
-import React, {useEffect, useState} from "react";
+import { useGetAllApproveProcessQuery } from "@/sections/approve-process/ApproveProcessSlice";
+import React, { useEffect, useState } from "react";
 
 ApproveProcess.getLayout = function getLayout(pageProps, page) {
     return <SettingLayout
@@ -25,9 +24,9 @@ export default function ApproveProcess() {
 
     useEffect(() => {
         if (Data.length > 0) {
-            setDataInternal(Data.filter(x => x.approvalProcessType == 0));
-            setDataApplication(Data.filter(x => x.approvalProcessType == 1));
-            setDataInvite(Data.filter(x => x.approvalProcessType == 2));
+            setDataInternal(Data.filter(x => x.approvalProcessType === 0));
+            setDataApplication(Data.filter(x => x.approvalProcessType === 1));
+            setDataInvite(Data.filter(x => x.approvalProcessType === 2));
         }
     }, [Data]);
     return (

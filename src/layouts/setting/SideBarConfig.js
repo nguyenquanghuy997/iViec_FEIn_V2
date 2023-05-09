@@ -1,13 +1,4 @@
-// import Iconify from "@/components/Iconify";
 import { PERMISSIONS as PERS } from "@/config";
-
-// const getIconByIconify = (icon) => (
-//     <Iconify icon={icon} width="100%" height="100%" />
-// );
-
-// const ICONS = {
-//   notification: getIconByIconify("eva:bell-fill"),
-// };
 
 export const SIDEBAR_CONSTANTS = {
   // WIDTH
@@ -77,14 +68,14 @@ export const sidebarConfig = [
   {
     subheader: "Thiết lập mẫu",
     items: [
-      {
-        title: "Mẫu đánh giá",
-        path: "/settings/evaluationform",
-        permissions: [PERS.VIEW_EVA_TPL],
-      },
+      // {
+      //   title: "Mẫu đánh giá",
+      //   path: "/settings/evaluationform",
+      //   permissions: [PERS.VIEW_EVA_TPL],
+      // },
       {
         title: "Mẫu thư mời nhận việc",
-        path: "/settings/offerform",
+        path: "/settings/offer-form",
         permissions: [PERS.VIEW_OFFER_TPL],
       },
       {

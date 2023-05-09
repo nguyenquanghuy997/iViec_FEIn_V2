@@ -331,3 +331,7 @@ export const API_UPDATE_QUESTION_VISIBLE =
 export const API_UPDATE_ACTIVE_QUESTION =
   "/applicant/Question/UpdateActiveQuestions";
 export const API_REMOVE_QUESTION = "/applicant/Question/RemoveQuestions";
+export const API_GET_OFFER_TEMPLATE = "/notification/OfferTemplate/GetOfferTemplate";
+export const API_GET_OFFER_TEMPLATES = "/notification/OfferTemplate/GetOfferTemplates";
+export const API_CREATE_OFFER_TEMPLATE = "/notification/OfferTemplate/CreateOfferTemplate";
+export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate/{id}";
