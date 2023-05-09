@@ -59,7 +59,6 @@ export default function SelectAutoCompleteDS(props) {
     onChange,
     placeholder
   } = props;
-
   const classes = usePlaceholderStyles();
   const Placeholder = ({ children }) => {
     return <div className={classes.placeholder}>{children}</div>;

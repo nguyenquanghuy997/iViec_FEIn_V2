@@ -38,7 +38,6 @@ export const ExamItem = ({
         skip: !isReady,
     });
 
-    console.log(Data)
     const columns = useMemo(() => {
         return [
             {
@@ -86,7 +85,7 @@ export const ExamItem = ({
                 dataIndex: "createDate",
                 title: "Ngày tạo",
                 width: "214px"
-            },
+            }, 
             {
                 dataIndex: "creator",
                 title: "Người tạo",
@@ -273,7 +272,7 @@ export const ExamItem = ({
         </Box>
     }
     return (
-        <View>
+        <View style={{margin:'-32px 0px'}}>
             <View>
                 <DynamicColumnsTable
                     columns={columns}

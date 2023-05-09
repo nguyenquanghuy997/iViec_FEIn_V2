@@ -21,6 +21,7 @@ export default ({
   setShowForm,
   setShowConfirmDelete,
   setShowConfirmSwitchActive,
+  setShowTransferQuestionGroup,
 }) => {
   const firstActiveStatus = list.find(
     (i) => i.id === listSelected[0]
@@ -49,6 +50,7 @@ export default ({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            padding: '20px 24px !important'
           }}
         >
           <Stack flexDirection="row" alignItems="center">
@@ -76,6 +78,7 @@ export default ({
                 </Typography>
               </>
             )}
+
             <Box sx={{ ml: 2 }}>
               {showEdit && (
                 <IconButton
@@ -86,6 +89,20 @@ export default ({
                   <EditIcon />
                 </IconButton>
               )}
+
+              <IconButton
+                size="small"
+                sx={{ color: "#8A94A5", mx: 1 }}
+                onClick={() => setShowTransferQuestionGroup()}
+              >
+                <Iconify
+                  icon={"ri:share-forward-2-fill"}
+                  width={20}
+                  height={20}
+                  color="#5C6A82"
+                />
+              </IconButton>
+
               <IconButton
                 size="small"
                 sx={{ color: "#1976D2", mx: 1 }}
