@@ -5,15 +5,15 @@ import { RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import {
   useAddApproveProcessMutation,
-  useUpdateApproveProcessMutation,
-  useGetPreviewApproveProcessQuery
+  useGetPreviewApproveProcessQuery,
+  useUpdateApproveProcessMutation
 } from "@/sections/approve-process/ApproveProcessSlice";
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, CircularProgress, Divider, Grid, IconButton, Modal, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
-import { useFieldArray, useForm, FormProvider } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { MinusIcon } from "@/assets/ActionIcon";
@@ -21,12 +21,15 @@ import { ApproveProcessFormLevelItem } from "@/sections/approve-process/Items/Ap
 import { styled } from "@mui/styles";
 import { formatDataGet, formatDataPush } from "@/sections/approve-process/config";
 import ApproveProcessDialog from "@/sections/approve-process/ApproveProcessDialog";
+import { useTheme } from "@mui/material/styles";
+import { RiTimerFlashLine } from "react-icons/ri";
 
 const defaultValues = {
   name: undefined,
   description: undefined,
   approvalProcessType: undefined,
   isAvailable: false,
+  isApprovalAuto: false,
   approvalProcessLevels: [
     {
       approvalProcessLevelDetails: [
@@ -35,7 +38,8 @@ const defaultValues = {
           personInChargeIds: [],
           processLevelDetailType: undefined
         }
-      ]
+      ],
+      autoApprovedTime: undefined
     }
   ]
 };
@@ -69,11 +73,13 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
     const [updateForm] = useUpdateApproveProcessMutation();
     let {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id});
     const isLoading = isEditMode && !preview.id;
+    const theme = useTheme();
     // form
     const Schema = Yup.object().shape({
       name: Yup.string().required("Chưa nhập tên quy trình phê duyệt").max(150, "Tên quy trình không dài quá 150 ký tự"),
       description: Yup.string(),
       isAvailable: Yup.bool(),
+      isApprovalAuto: Yup.bool(),
       approvalProcessLevels: Yup.array().of(
         Yup.object().shape({
           approvalProcessLevelDetails: Yup.array().of(
@@ -85,9 +91,17 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
               }),
               personInChargeIds: Yup.lazy(val => (Array.isArray(val) ? Yup.array().min(1, "Chưa chọn người phê duyệt") : Yup.string().required("Chưa chọn người phê duyệt"))),
             })
-          )
+          ),
+          autoApprovedTimeInHours: Yup.string().transform((value) => (isNaN(value) ? undefined : value))
         })
-      )
+      ).when("isApprovalAuto", {
+        is: true,
+        then: Yup.array().of(
+          Yup.object().shape({
+            autoApprovedTimeInHours: Yup.string().transform((value) => (isNaN(value) ? undefined : value)).required("Chưa nhập thời gian tự động phê duyệt")
+          })
+        )
+      }),
     });
     
     const methods = useForm({
@@ -98,6 +112,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
     const {
       reset,
       control,
+      watch,
       setValue,
       handleSubmit,
       formState: {isSubmitting},
@@ -107,8 +122,8 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
       control,
       name: "approvalProcessLevels"
     });
-
-// action
+    
+    // action
     const pressHide = () => {
       setData(null);
       setShow(false);
@@ -166,6 +181,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         setValue("name", "");
         setValue("description", "");
         setValue("isAvailable", false);
+        setValue("isApprovalAuto", false);
       }
     }, [show]);
     
@@ -176,6 +192,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
       setValue("name", body.name);
       setValue("description", body.description);
       setValue("isAvailable", body.isAvailable);
+      setValue("isApprovalAuto", body.isApprovalAuto);
       setValue("approvalProcessLevels", body.approvalProcessLevels);
     }, [isEditMode, data, preview]);
     
@@ -247,31 +264,66 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                     name={"description"}
                   />
                 </View>
+                <View mb={24}>
+                  <SwitchStatusDS
+                    name={"isApprovalAuto"}
+                    colorLabel={theme.palette.text.primary}
+                    label={<Typography variant={"body1"}>Phê duyệt tự động</Typography>}
+                    sx={{
+                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                        backgroundColor: theme.palette.text.Blue200,
+                      },
+                      "& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb": {
+                        backgroundColor: theme.palette.text.Blue700,
+                      },
+                    }}
+                  />
+                  <Typography variant={"body2"} color={theme.palette.text.search}>
+                    Hệ thống sẽ tự động phê duyệt tin tuyển dụng sau khoảng thời gian đã được cài đặt
+                  </Typography>
+                </View>
                 <Divider sx={{mt: 1, mb: 3}}/>
                 {fields.map((item, index) => {
                   return (<View
                     style={{
-                      padding: 16,
                       marginBottom: 24,
                       borderRadius: 6,
-                      backgroundColor: "#F2F4F5"
+                      border: '0.5px solid ' + theme.palette.text.Neutral400,
                     }}
                     key={item.id}>
                     <Grid container direction="row"
                           justifyContent="center"
                           alignItems="center"
-                          mb={2}>
+                          p={2}
+                          sx={{
+                            backgroundColor: theme.palette.background.MasterBg,
+                            borderTopLeftRadius: '6px',
+                            borderTopRightRadius: '6px'
+                          }}
+                    >
                       <Grid item xs>
                         <Typography variant="subtitle1">
                           Cấp {index + 1}
                         </Typography>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={6}>
                         {/*<Typography variant="textSize13500">*/}
                         {/*  Đã chọn: ...*/}
                         {/*</Typography>*/}
                       </Grid>
-                      <Grid item xs={9} container direction="row" justifyContent="flex-end">
+                      <Grid item xs={3}>
+                        {watch("isApprovalAuto") &&
+                          <RHFTextField
+                            name={`approvalProcessLevels.${index}.autoApprovedTimeInHours`}
+                            placeholder="Nhập số"
+                            type={"number"}
+                            startIcon={<RiTimerFlashLine size={20}/>}
+                            endIcon={"Giờ"}
+                            sx={{backgroundColor: theme.palette.background.whiteBg}}
+                          />
+                        }
+                      </Grid>
+                      <Grid item xs={2} container direction="row" justifyContent="flex-end">
                         {fields.length > 1 &&
                           <IconButton onClick={() => setOpenDialogConfirm(true)}>
                             <MinusIcon/>
@@ -279,7 +331,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                         }
                       </Grid>
                     </Grid>
-                    <Box className="box-content-wrapper" sx={{width: '100%'}}>
+                    <Box className="box-content-wrapper" p={2} sx={{width: '100%'}}>
                       <ApproveProcessFormLevelItem
                         index={index}
                         key={item.id}
@@ -319,7 +371,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                 />
                 <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
               </View>
-              {!isLoading ? (
+              {!isLoading && !isEditMode  ? (
                 <SwitchStatusDS
                   name={"isAvailable"}
                   label={methods.watch("isAvailable") ? "Đang áp dụng" : "Không áp dụng"}

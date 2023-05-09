@@ -36,11 +36,11 @@ export const sidebarConfig = [
         path: "/settings/pipeline",
         permissions: [PERS.VIEW_RECRUIT_PROCESS],
       },
-      // {
-      //   title: "Quy trình phê duyệt",
-      //   path: "/settings/approve-process",
-      //   permissions: [PERS.VIEW_APPR_PROCESS],
-      // },
+      {
+        title: "Quy trình phê duyệt",
+        path: "/settings/approve-process",
+        permissions: [PERS.VIEW_APPR_PROCESS],
+      },
       {
         title: "Vị trí công việc",
         path: "/settings/jobtype",

@@ -246,12 +246,12 @@ export default function UpdateRecruitment() {
         data.salaryDisplayType === SALARY_TYPE.NO_SALARY ||
         data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY
           ? null
-          : Number(data.minSalary),
+          : Number(data.minSalary)|| null,
       maxSalary:
         data.salaryDisplayType === SALARY_TYPE.NO_SALARY ||
         data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY
           ? null
-          : Number(data.maxSalary),
+          : Number(data.maxSalary)|| null,
       sex:
         data.sex || data.sex === SEX_TYPE.MALE
           ? data.sex

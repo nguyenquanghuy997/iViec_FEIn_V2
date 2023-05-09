@@ -143,7 +143,7 @@ function RecruitmentPreviewItem({
     </div>
     <div class="content">
       <div class="content-title">Số lượng cần tuyển: </div>
-      <div>${RecruitmentData?.numberApply || "-"}</div>
+      <div>${RecruitmentData?.numberPosition || "-"}</div>
     </div>
   </div>
   `;

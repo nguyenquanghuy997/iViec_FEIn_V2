@@ -86,13 +86,13 @@ const CHART_COLORS = {
 }
 
 const COMMON = {
-  common: { black: '#000', white: '#fff' },
-  primary: { ...PRIMARY, contrastText: '#fff' },
-  secondary: { ...SECONDARY, contrastText: '#fff' },
-  info: { ...INFO, contrastText: '#fff' },
-  success: { ...SUCCESS, contrastText: GREY[800] },
-  warning: { ...WARNING, contrastText: GREY[800] },
-  error: { ...ERROR, contrastText: '#fff' },
+  common: {black: '#000', white: '#fff'},
+  primary: {...PRIMARY, contrastText: '#fff'},
+  secondary: {...SECONDARY, contrastText: '#fff'},
+  info: {...INFO, contrastText: '#fff'},
+  success: {...SUCCESS, contrastText: GREY[800]},
+  warning: {...WARNING, contrastText: GREY[800]},
+  error: {...ERROR, contrastText: '#fff'},
   grey: GREY,
   gradients: GRADIENTS,
   chart: CHART_COLORS,
@@ -108,48 +108,7 @@ const COMMON = {
   },
 }
 
-const palette = {
-  light: {
-    ...COMMON,
-    mode: 'light',
-    text: {
-      primary: '#172B4D',
-      active: '#F77A0C',
-      secondary: '#5C6A82',
-      sub: '#455570',
-      search: '#8A94A5',
-      money: '#2E7D32',
-      border: '#CCD4DC',
-      placeholder: '#8A94A5',
-      disabled: '#8A94A5',
-      bgGray: '#F2F4F5',
-      warning: '#E53935',
-    },
-    background: { active: '#FFF3E0', paper: '#fff', default: '#fff', neutral: GREY[200] },
-    action: { active: GREY[600], ...COMMON.action },
-  },
-  dark: {
-    ...COMMON,
-    mode: 'dark',
-    text: {
-      primary: '#172B4D',
-      active: '#F77A0C',
-      secondary: '#5C6A82',
-      sub: '#455570',
-      search: '#8A94A5',
-      money: '#2E7D32',
-      border: '#CCD4DC',
-      placeholder: '#8A94A5',
-      disabled: '#8A94A5',
-      bgGray: '#F2F4F5',
-      warning: '#E53935',
-    },
-    background: { active: '#FFF3E0', paper: '#fff', default: '#fff', neutral: GREY[200] },
-    action: { active: GREY[500], ...COMMON.action },
-  },
-}
-
-export const STYLE_CONSTANT= {
+export const STYLE_CONSTANT = {
   // font size
   FONT_2XL: 24,
   FONT_XL: 20,
@@ -196,5 +155,64 @@ export const STYLE_CONSTANT= {
   BG_GRAY_LIGHT: "#F3F4F6",
 };
 
+
+const palette = {
+  light: {
+    ...COMMON,
+    mode: 'light',
+    text: {
+      primary: '#172B4D',
+      active: '#F77A0C',
+      secondary: '#5C6A82',
+      sub: '#455570',
+      search: '#8A94A5',
+      money: '#2E7D32',
+      border: '#CCD4DC',
+      placeholder: '#8A94A5',
+      disabled: '#8A94A5',
+      bgGray: '#F2F4F5',
+      warning: '#E53935',
+      Neutral400: "#A2AAB7",
+      Blue700: "#1976D2",
+      Blue200: "#90CAF9",
+    },
+    background: {
+      active: '#FFF3E0',
+      MasterBg: '#F2F4F5',
+      whiteBg: STYLE_CONSTANT.COLOR_WHITE,
+      paper: '#fff',
+      default: '#fff',
+      neutral: GREY[200]
+    },
+    action: {active: GREY[600], ...COMMON.action},
+  },
+  dark: {
+    ...COMMON,
+    mode: 'dark',
+    text: {
+      primary: '#172B4D',
+      active: '#F77A0C',
+      secondary: '#5C6A82',
+      sub: '#455570',
+      search: '#8A94A5',
+      money: '#2E7D32',
+      border: '#CCD4DC',
+      placeholder: '#8A94A5',
+      disabled: '#8A94A5',
+      bgGray: '#F2F4F5',
+      warning: '#E53935',
+      Neutral400: "#A2AAB7",
+    },
+    background: {
+      active: '#FFF3E0',
+      MasterBg: '#F2F4F5',
+      whiteBg: STYLE_CONSTANT.COLOR_WHITE,
+      paper: '#fff',
+      default: '#fff',
+      neutral: GREY[200]
+    },
+    action: {active: GREY[500], ...COMMON.action},
+  },
+}
 
 export default palette

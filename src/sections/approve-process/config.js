@@ -39,7 +39,8 @@ export function formatDataPush(approveProcesses) {
 
 export function formatDataGet(approveProcesses) {
     if (!approveProcesses || !approveProcesses.approvalProcessLevels) return "";
-    const newList = {
+    let isAutoProcess = false;
+    return {
         ...approveProcesses, approvalProcessLevels: approveProcesses.approvalProcessLevels.map((item) => {
             const newItem = {
                 ...item, approvalProcessLevelDetails: item?.approvalProcessLevelDetails?.map((itemChild) => {
@@ -51,8 +52,8 @@ export function formatDataGet(approveProcesses) {
                     return _itemChild;
                 })
             };
+            if (item?.autoApprovedTimeInHours) isAutoProcess = true;
             return newItem;
-        })
+        }), isApprovalAuto: isAutoProcess
     };
-    return newList;
 }
