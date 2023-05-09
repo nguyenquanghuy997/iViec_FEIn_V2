@@ -68,6 +68,7 @@ export const API_DELETE_APPLICANT = "/applicant/Applicant/RemoveApplicants";
 export const API_GET_APPLICANT_SKILLS =
   "/applicant/ApplicantSkill/GetApplicantSkills";
 
+
 //Apply mẫu đánh giá
 export const API_APPLICANT_REVIEW_FORM =
   "/applicant/ApplicantReview/GetApplicantReviewForm";
@@ -307,6 +308,18 @@ export const API_DELETE_CALENDAR =
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID =
   "/examination/Examination/GetExamination";
+export const API_GET_COLUMN_EXAMS =
+    "/aggregator/ExamVisible/GetExamsVisible";
+export const API_UPDATE_COLUMN_EXAMS =
+    "/aggregator/ExamVisible/UpdateExamVisible/{id}";
+export const API_UPDATE_STATUS_EXAM =
+    "/examination/Examination/SetExaminationActivated";
+export const API_CREATE_EXAM =
+    "/examination/Examination/CreateExamination";
+export const API_UPDATE_EXAM =
+    "/examination/Examination/UpdateExamination/{id}";
+export const API_DELETE_EXAMS =
+    "/examination/Examination/RemoveExaminations";
 
 // QuestionGroup
 export const API_GET_QUESTION_GROUP =
@@ -335,3 +348,6 @@ export const API_GET_OFFER_TEMPLATE = "/notification/OfferTemplate/GetOfferTempl
 export const API_GET_OFFER_TEMPLATES = "/notification/OfferTemplate/GetOfferTemplates";
 export const API_CREATE_OFFER_TEMPLATE = "/notification/OfferTemplate/CreateOfferTemplate";
 export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate/{id}";
+
+export class API_DELETE_EXAM {
+}
