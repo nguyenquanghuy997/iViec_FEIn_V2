@@ -106,6 +106,7 @@ export const YearOfExperience = (item) => {
 
 //Link image
 export const srcImage = (image) => {
+  if (/data:.+;base64/g.test(image)) return image;
   return DOMAIN_SERVER_API + "/Image/GetImage?imagePath=" + image;
 };
 
@@ -123,11 +124,11 @@ export const RecruitmentProcessStatus = (item) => {
     case 4: //"MedusaReject":
       return "iVIEC từ chối";
     case 5: //"Recruiting":
-      return "Đang tuyển dụng";//DADTWJ LICHJ
+      return "Đang tuyển dụng"; //DADTWJ LICHJ
     case 6: //"Calendared":
       return "Đã lên lịch";
     case 7: //"Expired":
-      return "Hết hạn";//DATWJH LICHJ
+      return "Hết hạn"; //DATWJH LICHJ
     case 8: //"Closed":
       return "Đóng";
   }
@@ -136,23 +137,23 @@ export const RecruitmentProcessStatus = (item) => {
 export const DivProcessStatus = (item) => {
   switch (item) {
     case 0: //"Draft"
-      return <span style={{color:'#455570'}}>Bản nháp</span>
+      return <span style={{ color: "#455570" }}>Bản nháp</span>;
     case 1: //"WaitingOrganizationApproval":
-      return <span style={{color:'#F77A0C'}}>Chờ nội bộ phê duyệt</span>;
+      return <span style={{ color: "#F77A0C" }}>Chờ nội bộ phê duyệt</span>;
     case 2: //"OrganizationReject":
-      return <span style={{color:'#E53935'}}>Nội bộ từ chối</span>;
+      return <span style={{ color: "#E53935" }}>Nội bộ từ chối</span>;
     case 3: //"WaitingMedusaApproval":
-      return <span style={{color:'#F77A0C'}}>Chờ iVIEC phê duyệt</span>;
+      return <span style={{ color: "#F77A0C" }}>Chờ iVIEC phê duyệt</span>;
     case 4: //"MedusaReject":
-      return <span style={{color:'#E53935'}}>iVIEC từ chối</span>;
+      return <span style={{ color: "#E53935" }}>iVIEC từ chối</span>;
     case 5: //"Recruiting":
-      return <span style={{color:'#388E3C'}}>Đang tuyển dụng</span>;
+      return <span style={{ color: "#388E3C" }}>Đang tuyển dụng</span>;
     case 6: //"Calendared":
-      return <span style={{color:'#388E3C'}}>Đã lên lịch</span>;
+      return <span style={{ color: "#388E3C" }}>Đã lên lịch</span>;
     case 7: //"Expired":
-      return <span style={{color:'#455570'}}>Hết hạn</span>;
+      return <span style={{ color: "#455570" }}>Hết hạn</span>;
     case 8: //"Closed":
-      return <span style={{color:'#455570'}}>Đóng</span>;
+      return <span style={{ color: "#455570" }}>Đóng</span>;
   }
 };
 //RecruitmentWorkingForm
@@ -192,6 +193,6 @@ export const OrganizationSize = (item) => {
     case 7:
       return "Trên 10000 nhân sự";
     default:
-      return  "Khác";
+      return "Khác";
   }
 };
