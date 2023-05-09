@@ -1,3 +1,4 @@
+import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
 import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
 import { FormCalendar } from "../interview/components/FormCalendar";
 import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
@@ -8,18 +9,18 @@ import { srcImage } from "@/utils/enum";
 import { fDate, fTime } from "@/utils/formatTime";
 import {
   Box,
+  Button,
+  ButtonGroup,
+  Grid,
   Paper,
   Stack,
   Typography,
-  Grid,
-  Button,
-  ButtonGroup,
 } from "@mui/material";
 import { Divider } from "antd";
 import moment from "moment";
-// import { useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 function Item(props) {
@@ -141,15 +142,22 @@ function InterviewItem(props) {
   var timeEnd = moment(lastInterview?.interviewTime).add(
     lastInterview?.interviewDuration
   );
-  // const { enqueueSnackbar } = useSnackbar();
-  // function copyToClipboard(id) {
-  //   var copyText =
-  //     window.location.origin +
-  //     "/phong-van.html?DisplayName=&&Email=&&Role=1&&RoomName=" +
-  //     id;
-  //   navigator.clipboard.writeText(copyText);
-  //   enqueueSnackbar("Đã sao chép link cuộc họp");
-  // }
+  const { enqueueSnackbar } = useSnackbar();
+  const [getCompanyInfo] = useLazyGetCompanyInfoQuery();
+
+  const getLink = async (id) => {
+    const res = await getCompanyInfo().unwrap();
+    return `${window.location.origin}/phong-van.html?DisplayName=${res?.name}&&Email=${res?.organizationInformation?.email}&&Role=1&&RoomName=${id}`;
+  };
+
+  const copyToClipboard = async (id) => {
+    navigator.clipboard.writeText(await getLink(id));
+    enqueueSnackbar("Đã sao chép link cuộc họp");
+  };
+
+  const openMeeting = async (id) => {
+    window.open(await getLink(id));
+  };
 
   return (
     <div>
@@ -250,6 +258,7 @@ function InterviewItem(props) {
                   width={20}
                   height={20}
                   color="#FDFDFD"
+                  onClick={() => openMeeting(item?.id)}
                 />
               </Box>
 
@@ -275,7 +284,7 @@ function InterviewItem(props) {
                       textOverflow: "ellipsis",
                     }}
                   >
-                    {"http://inside.iviec.vn/phong-van..."}
+                    {`${window.location.origin}/phong-van.html...`}
                   </Typography>
                 </Box>
                 <Iconify
@@ -283,7 +292,7 @@ function InterviewItem(props) {
                   width={20}
                   height={20}
                   color="#5C6A82"
-                  // onClick={copyToClipboard(item?.id)}
+                  onClick={() => copyToClipboard(item?.id)}
                 />
               </Box>
             </Box>
