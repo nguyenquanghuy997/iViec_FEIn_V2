@@ -109,7 +109,6 @@ export const ApproveProcessFormLevelItem = (props) => {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         width: '100%',
-                        backgroundColor: '#F2F4F5',
                     }}>
                     <Box className="box-content-inner" sx={{flex: 1}}>
                         <Grid container alignItems={"baseline"}>

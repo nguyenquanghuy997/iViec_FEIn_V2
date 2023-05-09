@@ -90,8 +90,9 @@ const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
             <MuiButton
                 title="Gửi phê duyệt"
                 color="default"
-                onClick={() => onOpenConfirm({openSaveApprove: true})}
-                disabled={!errors || isDisabled}
+                type={!errors?"submit":"button"}
+                onClick={()=>onOpenConfirm({openSaveApprove:errors? true: false})}
+                disabled={isDisabled}
                 startIcon={<Iconify icon="majesticons:send"/>}
                 sx={{
                   fontWeight: 500,
