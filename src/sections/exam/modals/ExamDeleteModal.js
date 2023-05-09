@@ -14,7 +14,7 @@ import React from "react";
 const ExamDeleteModal = ({
   showConfirmMultiple,
   setShowConfirmMultiple,
-  jobTypeIds,
+  examIds,
   onClose,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -22,7 +22,8 @@ const ExamDeleteModal = ({
 
   const handleChangeStatus = async () => {
     try {
-      await deletejob({"ids":jobTypeIds}).unwrap();
+      debugger
+      await deletejob({"ids":examIds}).unwrap();
       enqueueSnackbar("Thực hiện thành công !");
       onClose();
     } catch (err) {
@@ -54,14 +55,14 @@ const ExamDeleteModal = ({
           color="#E53935"
         />
         <TitleModelStyle className="title" style={{ color: "#E53935" }}>
-          Xác nhận xóa vị trí công việc
+          Xác nhận xóa đề thi
         </TitleModelStyle>
         <DialogContentTextModelStyle
           id="alert-dialog-description"
           className="subtite"
           style={{ fontWeight: 400 }}
         >
-          Bạn có chắc chắn muốn xóa vị trí công việc?
+          Bạn có chắc chắn muốn xóa đề thi?
         </DialogContentTextModelStyle>
         <Divider />
       </DialogContent>

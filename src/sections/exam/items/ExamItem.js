@@ -15,6 +15,9 @@ import {DownloadLineIcon, ImportLinkIcon, TeamLineIcon} from "@/assets/ActionIco
 import Divider from "@mui/material/Divider";
 import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
 import {QuestionFormModal} from "@/sections/exam/components/QuestionFormModal";
+import {TBL_FILTER_TYPE} from "@/config";
+import {LIST_EXAM_TYPE, LIST_STATUS} from "@/utils/formatString";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 export const ExamItem = ({
                              hideTable,
@@ -38,7 +41,6 @@ export const ExamItem = ({
         skip: !isReady,
     });
 
-    console.log(Data)
     const columns = useMemo(() => {
         return [
             {
@@ -81,23 +83,34 @@ export const ExamItem = ({
                 dataIndex: "examType",
                 title: "Kiểu đề thi",
                 width: "120px",
+                filters: {
+                    type: TBL_FILTER_TYPE.SELECT,
+                    name: 'isActive',
+                    options: LIST_EXAM_TYPE.map(item => ({ value: item.id, label: item.name })),
+                    placeholder: "Tất cả"
+                },
             },
             {
                 dataIndex: "createDate",
                 title: "Ngày tạo",
-                width: "214px"
+                width: "214px",
+                filters: {
+                    type: TBL_FILTER_TYPE.RANGE_DATE,
+                    name: ['createdTimeFrom', 'createdTimeTo'],
+                    placeholder: 'Chọn ngày',
+                },
             },
             {
                 dataIndex: "creator",
                 title: "Người tạo",
-                width: "300px"
-                // filters: {
-                //     type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-                //     name: "recruitmentIds",
-                //     remoteUrl: API_GET_LIST_RECRUITMENT,
-                //     remoteMethod: 'POST',
-                //     placeholder: "Chọn một hoặc nhiều tin tuyển dụng",
-                // },
+                width: "300px",
+                filters: {
+                    type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+                    name: "createdUser",
+                    placeholder: "Chọn 1 hoặc nhiều người",
+                    remoteUrl: API_GET_ORGANIZATION_USERS,
+                    showAvatar: true,
+                },
             },
             {
                 dataIndex: "updateDate",
@@ -108,6 +121,13 @@ export const ExamItem = ({
                 dataIndex: "creatorUpdate",
                 title: "Người chỉnh sửa",
                 width: "200px",
+                filters: {
+                    type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+                    name: "modifiedUser",
+                    placeholder: "Chọn 1 hoặc nhiều người",
+                    remoteUrl: API_GET_ORGANIZATION_USERS,
+                    showAvatar: true,
+                },
             },
             {
                 dataIndex: "recruitmentCount",
@@ -117,32 +137,53 @@ export const ExamItem = ({
             {
                 dataIndex: "totalQuestion",
                 title: "Tổng số câu hỏi",
-                width: "200px"
+                width: "200px",
+                filters: {
+                    type: TBL_FILTER_TYPE.RANGE_QUESTION,
+                    name: ['totalQuestionFrom', 'totalQuestionTo'],
+                    placeholder: 'Nhập số câu hỏi',
+                },
             },
             {
                 dataIndex: "choiceQuestion",
                 title: "Trắc nghiệm",
-                width: "220px",
+                width: "220px"
             },
             {
                 dataIndex: "longQuestion",
                 title: "Tự luận",
-                width: "200px",
+                width: "200px"
             },
             {
                 title: "Điểm tối đa",
                 dataIndex: "maxPoint",
                 width: "120px",
+                filters: {
+                    type: TBL_FILTER_TYPE.RANGE_POINT,
+                    name: ["maximumPointForm", "maximumPointTo"],
+                    placeholder: "Nhập số điểm",
+                },
             },
             {
                 dataIndex: "milestonesPoint",
                 title: "Điểm sàn",
-                width: "200px"
+                width: "200px",
+                filters: {
+                    type: TBL_FILTER_TYPE.RANGE_POINT,
+                    name: ["standardPointFrom", "standardPointTo"],
+                    placeholder: "Nhập số điểm",
+                },
             },
             {
                 dataIndex: "isActive",
                 title: "Trạng thái",
-                width: "200px"
+                width: "200px",
+                filters: {
+                    type: TBL_FILTER_TYPE.SELECT,
+                    name: 'isActive',
+                    options: LIST_STATUS.map(item => ({ value: item.id, label: item.name })),
+                    placeholder: "Tất cả"
+                },
             }
         ];
     }, [query.PageIndex, query.PageSize]);

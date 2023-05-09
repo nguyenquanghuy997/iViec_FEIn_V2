@@ -114,6 +114,11 @@ export const LIST_RECRUITMENT_PROCESS_STATUS = [
   {value: 7, label: "Hết hạn"},
   {value: 8, label: "Đóng"},
 ]
+export const LIST_EXAM_TYPE = [
+    {id:0, value: 0, name: "Tất cả"},
+    {id:true, value: 1, name: "Đề thi câu hỏi trắc nghiệm"},
+    {id: false, value:2, name: "Đề thi câu hỏi cố định"},
+]
 
 export const PipelineStateType = (item, description = '') => {
   switch (item) {

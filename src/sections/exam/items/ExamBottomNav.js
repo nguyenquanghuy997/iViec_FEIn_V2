@@ -36,7 +36,7 @@ const ExamBottumonNav = ({
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB_POS), []);
 
-  const { data: jobType } = useGetExaminationByIdQuery(
+  const { data: exam } = useGetExaminationByIdQuery(
     {
       Id: selectedList[0],
     },
@@ -191,16 +191,16 @@ const ExamBottumonNav = ({
           show={showConfirmMultiple}
           setShow={setShowConfirmMultiple}
           onClose={onCloseModel}
-          data={jobType}
+          data={exam}
         />
       )}
       {showConfirmMultiple && typeConfirmMultiple.includes("delete") && (
         <ExamDeleteModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
-          jobTypeIds={selectedList}
+          examIds={selectedList}
           onClose={onCloseModel}
-          isActivated={jobType?.isActivated}
+          isActivated={exam?.isActivated}
         />
       )}
     </Drawer>

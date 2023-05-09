@@ -311,7 +311,7 @@ export const API_GET_EXAMINATION_BY_ID =
 export const API_GET_COLUMN_EXAMS =
     "/aggregator/ExamVisible/GetExamsVisible";
 export const API_UPDATE_COLUMN_EXAMS =
-    "/aggregator/ExamVisible/UpdateExamVisible/{id}";
+    "/aggregator/ExamVisible/UpdateExamVisible";
 export const API_UPDATE_STATUS_EXAM =
     "/examination/Examination/SetExaminationActivated";
 export const API_CREATE_EXAM =
