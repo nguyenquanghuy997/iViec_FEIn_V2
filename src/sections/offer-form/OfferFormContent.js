@@ -4,13 +4,13 @@ import FormHeader from "@/sections/emailform/component/FormHeader";
 import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
-import OfferFormBottomNav from "@/sections/offerform/component/OfferFormBottomNav";
+import OfferFormBottomNav from "@/sections/offer-form/component/OfferFormBottomNav";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import OfferFormFilterHeader from "@/sections/offerform/component/OfferFormFilterHeader";
-import OfferFormFilterModal from "@/sections/offerform/component/OfferFormFilterModal";
-import OfferFormModal from "@/sections/offerform/component/OfferFormModal";
+import OfferFormFilterHeader from "@/sections/offer-form/component/OfferFormFilterHeader";
+import OfferFormFilterModal from "@/sections/offer-form/component/OfferFormFilterModal";
+import OfferFormModal from "@/sections/offer-form/component/OfferFormModal";
 import useRole from '@/hooks/useRole';
 import { useMemo } from 'react';
 import { PERMISSIONS } from '@/config';
@@ -233,7 +233,6 @@ const OfferFormContent = () => {
         isOpen={isOpenForm}
         onClose={handleCloseForm}
         item={item}
-        showUploadFile
         title={item?.id ? 'Chỉnh sửa mẫu email mời nhận việc' : 'Thêm mới mẫu email mời nhận việc'}
       />}
       {

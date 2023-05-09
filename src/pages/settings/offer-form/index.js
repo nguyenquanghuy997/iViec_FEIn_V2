@@ -1,7 +1,7 @@
 import Page from "@/components/Page";
 import { PERMISSION_PAGES } from "@/config";
 import SettingLayout from "@/layouts/setting";
-import OfferFormContent from "@/sections/offerform/OfferFormContent";
+import OfferFormContent from "@/sections/offer-form/OfferFormContent";
 
 OfferForm.getLayout = function getLayout(pageProps, page) {
   return (
