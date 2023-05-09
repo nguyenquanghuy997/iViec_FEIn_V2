@@ -18,12 +18,11 @@ const ExamDeleteModal = ({
   onClose,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [deletejob] = useDeleteExamMutation();
+  const [deleteExam] = useDeleteExamMutation();
 
   const handleChangeStatus = async () => {
     try {
-      debugger
-      await deletejob({"ids":examIds}).unwrap();
+      await deleteExam({"ids":examIds}).unwrap();
       enqueueSnackbar("Thực hiện thành công !");
       onClose();
     } catch (err) {
