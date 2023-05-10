@@ -22,6 +22,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -60,7 +61,7 @@ const defaultAnswer = {
 
 export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   const router = useRouter();
-
+  const { enqueueSnackbar } = useSnackbar();
   // props
   const isEditMode = !!data?.id;
 
@@ -118,8 +119,16 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
 
   const pressSave = handleSubmit(async (e) => {
     const body = { ...e };
-    await (e.id ? updateForm(body) : addForm(body));
-    getData();
+    try {
+      await (e.id ? updateForm(body) : addForm(body)).unwrap();
+      getData();
+    } catch (error) {
+      if (error.status == 'QGE_04')
+        enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+    }
   });
 
   const changeAnswer = (index, key, value) => {
@@ -128,8 +137,8 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
         j === index
           ? { ...i, [key]: value }
           : key === "isCorrect" && !isMultipleChoice
-          ? { ...i, isCorrect: false }
-          : i
+            ? { ...i, isCorrect: false }
+            : i
       )
     );
   };
@@ -185,16 +194,16 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
 
         {index === listAnswer.length - 1
           ? renderButton(
-              `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.16602 9.16699V4.16699H10.8327V9.16699H15.8327V10.8337H10.8327V15.8337H9.16602V10.8337H4.16602V9.16699H9.16602Z" fill="#388E3C"/></svg>`,
-              pressAddAnswer
-            )
+            `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.16602 9.16699V4.16699H10.8327V9.16699H15.8327V10.8337H10.8327V15.8337H9.16602V10.8337H4.16602V9.16699H9.16602Z" fill="#388E3C"/></svg>`,
+            pressAddAnswer
+          )
           : null}
 
         {index
           ? renderButton(
-              `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.16602 9.16699H15.8327V10.8337H4.16602V9.16699Z" fill="#E53935"/></svg>`,
-              () => pressDeleteAnswer(index)
-            )
+            `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.16602 9.16699H15.8327V10.8337H4.16602V9.16699Z" fill="#E53935"/></svg>`,
+            () => pressDeleteAnswer(index)
+          )
           : null}
       </View>
     );
