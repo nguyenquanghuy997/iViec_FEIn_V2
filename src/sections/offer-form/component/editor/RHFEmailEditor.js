@@ -21,7 +21,7 @@ const RHFEmailEditor = ({ name, title, isRequired = false, ...other }) => {
                     onChange={field.onChange}
                     error={!!error}
                     helperText={
-                      <FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>
+                      <FormHelperText error sx={{textTransform: 'capitalize'}}>
                         {error?.message}
                       </FormHelperText>
                     }

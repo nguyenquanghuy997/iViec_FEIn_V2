@@ -3,7 +3,8 @@ import {
   API_CREATE_OFFER_TEMPLATE,
   API_GET_OFFER_TEMPLATE,
   API_GET_OFFER_TEMPLATES,
-  API_UPDATE_OFFER_TEMPLATE
+  API_UPDATE_OFFER_TEMPLATE,
+  API_UPLOAD_FILE_OFFER
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -15,16 +16,16 @@ const offerFormSlice = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getAllOfferTemplate: builder.query({
       query: (params) => ({
-        url: `${API_GET_OFFER_TEMPLATE}}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
-        method: "GET",
-      }),
-    }),
-    getPreviewOfferTemplate: builder.query({
-      query: (data) => ({
-        url: `${API_GET_OFFER_TEMPLATES}?${qs.stringify(data)}`,
+        url: `${API_GET_OFFER_TEMPLATES}?${qs.stringify(params, {arrayFormat: 'repeat'})}`,
         method: "GET",
       }),
       providesTags: ["offerProcess"]
+    }),
+    getPreviewOfferTemplate: builder.query({
+      query: (data) => ({
+        url: `${API_GET_OFFER_TEMPLATE}?${qs.stringify(data)}`,
+        method: "GET",
+      }),
     }),
     // deleteOfferTemplate: builder.mutation({
     //   query: (id) => ({
@@ -49,6 +50,16 @@ const offerFormSlice = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: ["AllProcess"]
     }),
+    uploadImageOffer: builder.mutation({
+      query: (rest) => ({
+        url: API_UPLOAD_FILE_OFFER,
+        method: "POST",
+        data: rest,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    }),
     // setApproveProcessAvailable: builder.mutation({
     //   query: (data) => ({
     //     url: `${API_SET_AVAILABLE_APPROVE_PROCESS}/${data.id}`,
@@ -64,5 +75,6 @@ export const {
   useGetAllOfferTemplateQuery,
   useGetPreviewOfferTemplateQuery,
   useAddOfferTemplateMutation,
+  useUploadImageOfferMutation,
   useUpdateOfferTemplateMutation,
 } = offerFormSlice;

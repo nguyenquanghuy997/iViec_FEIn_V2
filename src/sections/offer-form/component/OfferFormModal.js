@@ -3,7 +3,17 @@ import { FormProvider, useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, CircularProgress, Divider, Grid, IconButton, Modal, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  FormHelperText,
+  Grid,
+  IconButton,
+  Modal,
+  Stack,
+  Typography
+} from "@mui/material";
 import { RHFCheckbox, RHFSwitch, RHFTextField } from "@/components/hook-form";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import Iconify from "@/components/Iconify";
@@ -11,7 +21,6 @@ import { ButtonDS } from "@/components/DesignSystem";
 import { useTheme } from "@mui/material/styles";
 import RHFEmailEditor from "@/sections/offer-form/component/editor/RHFEmailEditor";
 import { LabelStyle } from "@/components/hook-form/style";
-import CropImage from "@/sections/emailform/component/crop-image/CropImage";
 import PreviewEmail from "@/sections/emailform/component/PreviewEmail";
 import { styled } from "@mui/styles";
 import { DeleteIcon } from "@/assets/ActionIcon";
@@ -22,9 +31,12 @@ import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import {
   useAddOfferTemplateMutation,
   useGetPreviewOfferTemplateQuery,
-  useUpdateOfferTemplateMutation
+  useUpdateOfferTemplateMutation,
+  useUploadImageOfferMutation
 } from "@/sections/offer-form/OfferFormSlice";
 import { useSnackbar } from "notistack";
+import { useUploadImageCompanyMutation } from "@/sections/companyinfor/companyInforSlice";
+import CropImage from "@/sections/offer-form/component/crop-image/CropImage";
 
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
   '&.file-upload-item': {
@@ -49,7 +61,6 @@ const defaultValues = {
   signatureLogo: undefined,
   signatureContent: undefined,
   isDefaultSignature: undefined,
-  isDefault: undefined,
   isActive: undefined,
   attachFiles: undefined,
 };
@@ -92,11 +103,11 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   );
   const [addForm] = useAddOfferTemplateMutation();
   const [updateForm] = useUpdateOfferTemplateMutation();
+  const [uploadFiles] = useUploadImageOfferMutation();
   const isLoading = isEditMode && !preview?.id;
   const [isOpenPreview, setIsOpenPreview] = useState(false);
   const [fileList, setFileList] = useState([]);
   const {enqueueSnackbar} = useSnackbar();
-  
   const handleFileChange = (e) => {
     setFileList(prev => [...prev, ...e.target.files]);
   };
@@ -113,7 +124,6 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
     signatureLogo: Yup.string().required("Logo chữ ký không được bỏ trống"),
     signatureContent: Yup.string().required("Nội dung chữ ký không được bỏ trống"),
     isDefaultSignature: Yup.boolean(),
-    isDefault: Yup.boolean(),
     isActive: Yup.boolean(),
     attachFiles: Yup.array().of(Yup.string()),
   });
@@ -123,7 +133,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
     resolver: yupResolver(Schema),
   });
   
-  const {watch, setValue, handleSubmit, formState: {isSubmitting}} = methods;
+  const {watch, setValue, handleSubmit, formState: {isSubmitting, errors}} = methods;
   
   const watchIsActive = watch('isActive');
   const watchTitle = watch('title');
@@ -139,10 +149,17 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   }
   
   const handleSetSignatureLogo = (e) => {
-    setValue("signatureLogo", e);
+    setValue("signatureLogo", e.fileTemplates[0].path);
   };
   
   const pressSave = handleSubmit(async (body) => {
+    const file = new FormData();
+    fileList.forEach(item => {
+      file.append("Files", item);
+    });
+    const fileResult = await uploadFiles(file).unwrap();
+    body.templateAttachFiles = fileResult.fileTemplates;
+  
     if (isEditMode) {
       await updateForm(body).unwrap().then(() => {
         enqueueSnackbar("Thực hiện thành công!", {
@@ -279,14 +296,19 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
                         <LabelStyle sx={{mb: 'unset'}} required={true}>
                           Chữ ký email
                         </LabelStyle>
-                        <RHFCheckbox name='isDefault' label='Đặt làm chữ ký mặc định'/>
+                        <RHFCheckbox name='isDefaultSignature' label='Đặt làm chữ ký mặc định'/>
                       </Box>
                       <Box display={"flex"}>
                         <Stack>
-                          <CropImage data={''} handleSubmit={handleSetSignatureLogo}/>
+                          <CropImage data={''} handleSubmit={handleSetSignatureLogo} mutation={useUploadImageCompanyMutation}/>
                           <Typography variant={"textSize13"} sx={{mt: 1}} color={theme.palette.text.secondary}>
                             Logo công ty
                           </Typography>
+                          {errors.signatureLogo &&
+                            <FormHelperText error sx={{textTransform: 'capitalize'}}>
+                              {errors.signatureLogo.message}
+                            </FormHelperText>
+                          }
                         </Stack>
                         <Box flex={1} pl={2}>
                           <RHFEmailEditor

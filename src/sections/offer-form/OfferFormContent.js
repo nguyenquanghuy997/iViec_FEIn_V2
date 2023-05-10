@@ -14,69 +14,17 @@ import OfferFormModal from "@/sections/offer-form/component/OfferFormModal";
 import useRole from '@/hooks/useRole';
 import { useMemo } from 'react';
 import { PERMISSIONS } from '@/config';
-
-// data
-const data = [
-  {
-    id: 1,
-    title: 'Mặc định',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: true,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 2,
-    title: 'Mẫu email mời nhận việc 1',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: true,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 3,
-    title: 'Mẫu email mời nhận việc 2',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: false,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 4,
-    title: 'Mẫu email mời nhận việc 3',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: false,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 5,
-    title: 'Mẫu email mời nhận việc 4',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: true,
-    createdDate: '17/02/2023',
-  },
-  {
-    id: 5,
-    title: 'Mẫu email mời nhận việc 5',
-    subtitle: '(Đã gửi 12)',
-    user: 'Đinh Tiến Thành',
-    isActive: false,
-    createdDate: '17/02/2023',
-  }
-]
+import { useGetAllOfferTemplateQuery } from "@/sections/offer-form/OfferFormSlice";
 
 const defaultValues = {
   searchKey: "",
 };
 const OfferFormContent = () => {
+  const {data: {items: data = []} = {}} = useGetAllOfferTemplateQuery();
 
-  const [offerFormLIst] = useState([...data])
-
-  const [expands, setExpands] = useState(Array(offerFormLIst.length).fill(false));
-  const [selected, setSelected] = useState(Array(offerFormLIst.length).fill(false));
-  const [selectedValue, setSelectedValue] = useState(Array(offerFormLIst.length).fill({ checked: false }));
+  const [expands, setExpands] = useState(Array(data.length).fill(false));
+  const [selected, setSelected] = useState(Array(data.length).fill(false));
+  const [selectedValue, setSelectedValue] = useState(Array(data.length).fill({ checked: false }));
 
   // modal
   const [item, setItem] = useState(null);
@@ -247,7 +195,7 @@ const OfferFormContent = () => {
           onGetParentNode={setItem}
           setActionType={setActionType}
           setActionTypeActive={setActionTypeActive}
-          status={offerFormLIst?.filter(i => selectedValue.includes(i.id)).every(i => i.isActive === true)}
+          status={data?.filter(i => selectedValue.includes(i.id)).every(i => i.isActive === true)}
           onOpenForm={handleOpenForm}
         />
       }

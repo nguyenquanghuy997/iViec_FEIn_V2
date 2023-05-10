@@ -349,5 +349,5 @@ export const API_GET_OFFER_TEMPLATES = "/notification/OfferTemplate/GetOfferTemp
 export const API_CREATE_OFFER_TEMPLATE = "/notification/OfferTemplate/CreateOfferTemplate";
 export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate/{id}";
 
-export class API_DELETE_EXAM {
-}
+// File
+export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
