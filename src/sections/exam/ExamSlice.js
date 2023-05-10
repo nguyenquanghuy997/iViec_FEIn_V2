@@ -193,6 +193,7 @@ export const {
     useGetAllExaminationQuery,
     useGetExaminationByIdQuery,
     useLazyGetQuestionGroupQuery,
+    useGetQuestionGroupQuery,
     useCreateQuestionGroupMutation,
     useUpdateQuestionGroupMutation,
     useUpdateActiveQuestionGroupMutation,

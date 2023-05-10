@@ -33,10 +33,8 @@ const ExamActiveModal = ({
       };
       await status(data).unwrap();
       enqueueSnackbar("Chuyển trạng thái thành công !");
-      debugger
       onClose();
     } catch (err) {
-      debugger
       enqueueSnackbar("Chuyển trạng thái thất bại !", {
         autoHideDuration: 1000,
         variant: "error",

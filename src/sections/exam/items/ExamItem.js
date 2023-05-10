@@ -358,8 +358,6 @@ export const ExamItem = ({
       </ButtonGroup>
     </Box>
   }
-  console.log('selectedRowKeys', selectedRowKeys);
-
   return (
     <View>
       <View>

@@ -68,8 +68,6 @@ const FormModal = ({ isOpen, onClose, item, title, showUploadFile }) => {
     };
   }, [item, theme]);
 
-  console.log(defaultValues);
-
   const Schema = Yup.object().shape({
     name: Yup.string().required("Tên mẫu email không được bỏ trống"),
   });
