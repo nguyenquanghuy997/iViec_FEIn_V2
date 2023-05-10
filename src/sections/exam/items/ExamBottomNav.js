@@ -17,21 +17,19 @@ import ExamFormModal from "@/sections/exam/modals/ExamFormModal";
 import ExamDeleteModal from "@/sections/exam/modals/ExamDeleteModal";
 
 const ExamBottumonNav = ({
-                           itemIds,
-                           setItemIds,
+                           selectedList,
                            open,
                            onClose,
+                           setSelectedList,
                            itemSelected,
                            setItemSelected
                          }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
 
-  let itemIdss = itemSelected.map((p) => p.id);
-
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
-    setItemIds([]);
+    setSelectedList([]);
     setItemSelected([]);
   };
 
@@ -40,9 +38,9 @@ const ExamBottumonNav = ({
 
   const {data: exam} = useGetExaminationByIdQuery(
     {
-      Id: itemIdss[0],
+      Id: selectedList[0],
     },
-    {skip: itemIdss.length !== 1}
+    {skip: selectedList.length !== 1}
   );
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
@@ -156,7 +154,7 @@ const ExamBottumonNav = ({
           </Stack>
           <Box sx={{display: "flex", alignItems: "center"}}>
             <Typography sx={{fontSize: 14, fontWeight: 600}}>
-              Đã chọn: {itemIdss.length}
+              Đã chọn: {selectedList.length}
             </Typography>
             <Divider
               orientation="vertical"
@@ -184,7 +182,7 @@ const ExamBottumonNav = ({
         <ExamActiveModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
-          ids={itemIds}
+          ids={selectedList}
           onClose={onCloseModel}
           isActivated={item[0]}
         />
@@ -201,7 +199,7 @@ const ExamBottumonNav = ({
         <ExamDeleteModal
           showConfirmMultiple={showConfirmMultiple}
           setShowConfirmMultiple={setShowConfirmMultiple}
-          examIds={itemIdss}
+          examIds={selectedList}
           onClose={onCloseModel}
           isActivated={exam?.isActivated}
         />

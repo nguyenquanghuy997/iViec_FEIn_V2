@@ -186,26 +186,11 @@ const ExamFormModal = ({data, show, onClose}) => {
 
                         {/* des */}
                         <View mt={28}>
-                            <Label>Mô tả công việc</Label>
+                            <Label>Mô tả</Label>
                             <RHFTinyEditor
                                 name="description"
                                 placeholder="Nhập mô tả đề thi..."
                             />
-                        </View>
-
-                        {/* require */}
-                        <View mt={28}>
-                            <Label>Yêu cầu công việc</Label>
-                            <RHFTinyEditor
-                                name="requirement"
-                                placeholder="Nhập yêu cầu công việc..."
-                            />
-                        </View>
-
-                        {/* benefit */}
-                        <View mt={28}>
-                            <Label>Quyền lợi</Label>
-                            <RHFTinyEditor name="benefit" placeholder="Nhập quyền lợi..."/>
                         </View>
                     </View>
                     {/* footer */}
