@@ -113,15 +113,15 @@ export const ExamItem = ({
         width: "300px",
         render: (item, record) => (
           <div style={{display: "flex", alignItems: "center"}}>
-            <AvatarDS
-              sx={{
-                height: "20px",
-                width: "20px",
-                borderRadius: "100px",
-                fontSize: "12px",
-              }}
-              name={record.creatorEmail}
-            ></AvatarDS>
+            {/*<AvatarDS*/}
+            {/*  sx={{*/}
+            {/*    height: "20px",*/}
+            {/*    width: "20px",*/}
+            {/*    borderRadius: "100px",*/}
+            {/*    fontSize: "12px",*/}
+            {/*  }}*/}
+            {/*  name={record.creatorEmail}*/}
+            {/*></AvatarDS>*/}
             <span fontSize="14px" fontWeight="600" color="#172B4D">
               {record.creatorEmail}
             </span>
@@ -147,15 +147,15 @@ export const ExamItem = ({
         width: "200px",
         render: (item, record) => (
           <div style={{display: "flex", alignItems: "center"}}>
-            <AvatarDS
-              sx={{
-                height: "20px",
-                width: "20px",
-                borderRadius: "100px",
-                fontSize: "12px",
-              }}
-              name={record.updaterEmail}
-            ></AvatarDS>
+            {/*<AvatarDS*/}
+            {/*  sx={{*/}
+            {/*    height: "20px",*/}
+            {/*    width: "20px",*/}
+            {/*    borderRadius: "100px",*/}
+            {/*    fontSize: "12px",*/}
+            {/*  }}*/}
+            {/*  name={record.updaterEmail}*/}
+            {/*></AvatarDS>*/}
             <span fontSize="14px" fontWeight="600" color="#172B4D">
               {record.updaterEmail}
             </span>
