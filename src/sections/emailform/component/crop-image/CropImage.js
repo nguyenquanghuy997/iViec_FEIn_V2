@@ -236,6 +236,7 @@ export default function CropImage({ id, logo, handleSubmit }) {
     <div className="cropImage">
       {croppedImage?.url ? (
         <img
+          alt=""
           src={croppedImage.url}
           style={{
             width: 140,
@@ -243,7 +244,6 @@ export default function CropImage({ id, logo, handleSubmit }) {
             maxWidth: 140,
             borderRadius: 0,
             cursor: "pointer",
-            border: "1px solid #000",
           }}
           onClick={() => setDialogOpen(true)}
         />
@@ -257,6 +257,7 @@ export default function CropImage({ id, logo, handleSubmit }) {
           {({ onImageUpload }) => {
             return (
               <img
+                alt=""
                 src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${logo}`}
                 style={{
                   width: 140,
@@ -264,9 +265,12 @@ export default function CropImage({ id, logo, handleSubmit }) {
                   maxWidth: 140,
                   borderRadius: 0,
                   cursor: "pointer",
-                  border: "1px solid #000",
                 }}
                 onClick={onImageUpload}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = "/assets/ImageDefaultAdd.svg";
+                }}
               />
             );
           }}
@@ -275,8 +279,8 @@ export default function CropImage({ id, logo, handleSubmit }) {
       <ImageCropper
         open={dialogOpen}
         image={(image.length > 0 && image[0].dataURL) || image}
-        onComplete={(imagePromisse) => {
-          imagePromisse.then((image) => {
+        onComplete={(imagePromise) => {
+          imagePromise.then((image) => {
             setCroppedImage(image);
             setDialogOpen(false);
           });

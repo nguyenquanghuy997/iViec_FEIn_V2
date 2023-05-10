@@ -8,7 +8,6 @@ import { RHFCheckbox, RHFSwitch, RHFTextField } from "@/components/hook-form";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import Iconify from "@/components/Iconify";
 import { ButtonDS } from "@/components/DesignSystem";
-import { EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT } from "@/sections/emailform/config/EditorConfig";
 import { useTheme } from "@mui/material/styles";
 import RHFEmailEditor from "@/sections/offer-form/component/editor/RHFEmailEditor";
 import { LabelStyle } from "@/components/hook-form/style";
@@ -20,7 +19,12 @@ import { calcFileSize, showIconByFileType } from "@/utils/function";
 import { DOMAIN_SERVER_API } from "@/config";
 import { ViewModel } from "@/utils/cssStyles";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
-import { useGetPreviewOfferTemplateQuery } from "@/sections/offer-form/OfferFormSlice";
+import {
+  useAddOfferTemplateMutation,
+  useGetPreviewOfferTemplateQuery,
+  useUpdateOfferTemplateMutation
+} from "@/sections/offer-form/OfferFormSlice";
+import { useSnackbar } from "notistack";
 
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
   '&.file-upload-item': {
@@ -35,15 +39,15 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
   }
 }));
 
-const defaultEmailEditorConfig = EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT();
+// const defaultEmailEditorConfig = EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT();
 
 const defaultValues = {
   id: undefined,
   name: undefined,
   title: undefined,
-  content: defaultEmailEditorConfig.contentEmail,
+  content: undefined,
   signatureLogo: undefined,
-  signatureContent: defaultEmailEditorConfig.contentSignature,
+  signatureContent: undefined,
   isDefaultSignature: undefined,
   isDefault: undefined,
   isActive: undefined,
@@ -86,9 +90,12 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
     {applicantId: item?.id},
     {skip: !item?.id}
   );
+  const [addForm] = useAddOfferTemplateMutation();
+  const [updateForm] = useUpdateOfferTemplateMutation();
   const isLoading = isEditMode && !preview?.id;
   const [isOpenPreview, setIsOpenPreview] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const {enqueueSnackbar} = useSnackbar();
   
   const handleFileChange = (e) => {
     setFileList(prev => [...prev, ...e.target.files]);
@@ -136,7 +143,31 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   };
   
   const pressSave = handleSubmit(async (body) => {
-    return body
+    if (isEditMode) {
+      await updateForm(body).unwrap().then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
+        });
+        onClose();
+      }).catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      });
+    } else {
+      await addForm(body).unwrap().then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
+        });
+        onClose();
+      }).catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      });
+    }
   });
   
   return (
@@ -234,7 +265,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
                         {!isEmpty(fileList) && fileList.map((file, index) => renderFileUploadItem(file, index, removeFileUpload))}
                       </Box>
                       <RHFEmailEditor
-                        name="contentEmail"
+                        name="content"
                         placeholder="Nhập nội dung email..."
                         showPreview
                         showUploadFile={true}
@@ -259,7 +290,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
                         </Stack>
                         <Box flex={1} pl={2}>
                           <RHFEmailEditor
-                            name="contentSignature"
+                            name="signatureContent"
                             placeholder="Nhập nội dung email..."
                             sx={{minHeight: '230px'}}
                           />
