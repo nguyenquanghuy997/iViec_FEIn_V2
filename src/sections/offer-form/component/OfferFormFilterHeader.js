@@ -70,7 +70,7 @@ const OfferFormFilterHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubm
               className="button-add"
               startIcon={<Iconify icon="material-symbols:add" />}
               onClick={() => onOpenForm(null)}
-            >Thêm mẫu email</ButtonAddStyle>
+            >Thêm mẫu mời nhận việc</ButtonAddStyle>
           </Stack>
         }
       </Box>

@@ -98,7 +98,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   const theme = useTheme();
   const isEditMode = !!item?.id;
   let {data: preview = {}} = useGetPreviewOfferTemplateQuery(
-    {applicantId: item?.id},
+    {Id: item?.id},
     {skip: !item?.id}
   );
   const [addForm] = useAddOfferTemplateMutation();
