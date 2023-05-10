@@ -332,6 +332,8 @@ export const API_UPDATE_ACTIVE_QUESTION_GROUP =
   "/examination/QuestionGroup/UpdateActiveQuestionGroups";
 export const API_REMOVE_QUESTION_GROUP =
   "/examination/QuestionGroup/RemoveQuestionGroups";
+export const API_TRANSFER_QUESTIONS_TO_OTHER_QUESTION_GROUP =
+  "/examination/QuestionGroup/MoveQuestionsToOtherGroup";
 
 // Question
 export const API_GET_QUESTIONS = "/applicant/Question/GetQuestions";
