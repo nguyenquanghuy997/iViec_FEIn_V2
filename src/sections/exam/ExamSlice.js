@@ -20,6 +20,7 @@ import {
     API_DELETE_EXAMS,
     API_REMOVE_QUESTION,
     API_UPDATE_ACTIVE_QUESTION,
+    API_TRANSFER_QUESTIONS_TO_OTHER_QUESTION_GROUP,
 } from "@/routes/api";
 import * as qs from "qs";
 
@@ -182,6 +183,14 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 data,
             }),
         }),
+
+        transferQuestionGroup: builder.mutation({
+            query: (data) => ({
+                url: API_TRANSFER_QUESTIONS_TO_OTHER_QUESTION_GROUP,
+                method: "patch",
+                data,
+            }),
+        })
     }),
 });
 
@@ -206,5 +215,6 @@ export const {
     useUpdateExamMutation,
     useDeleteExamMutation,
     useUpdateActiveQuestionMutation,
-    useRemoveQuestionMutation
+    useRemoveQuestionMutation,
+    useTransferQuestionGroupMutation
 } = examinationSlice;

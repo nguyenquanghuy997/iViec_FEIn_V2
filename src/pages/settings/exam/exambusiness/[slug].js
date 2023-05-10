@@ -323,6 +323,9 @@ function Question() {
       />
 
       <QuestionTransferModal
+        questionGroupId = {QuestionGroupId}
+        data={selectedRowKeys}
+        getData={getData}
         isShowTransferQuestionGroup={showTransferQuestionGroup}
         onCloseTransfer={onCloseTransfer} />
     </View>

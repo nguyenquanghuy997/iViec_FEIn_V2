@@ -12,6 +12,7 @@ CreateExam.getLayout = function getLayout(pageProps, page) {
         </SettingLayout>
     );
 };
+
 export default function CreateExam() {
     return <PageWrapper title={'Tạo mới đề thi'}>
             <View>
