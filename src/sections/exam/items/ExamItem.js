@@ -20,8 +20,6 @@ import {LIST_EXAM_TYPE, LIST_STATUS} from "@/utils/formatString";
 import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 import {ExamType, Status} from "@/utils/enum";
 import {fDate} from "@/utils/formatTime";
-import {AvatarDS} from "@/components/DesignSystem";
-
 export const ExamItem = ({
                            hideTable,
                            headerProps,
