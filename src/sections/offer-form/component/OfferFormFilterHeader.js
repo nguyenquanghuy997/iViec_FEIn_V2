@@ -1,18 +1,35 @@
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
-import { ButtonFilterStyle } from "@/sections/applicant/style";
-import { Box, InputAdornment, Stack } from "@mui/material";
-import React from "react";
+import { Badge, Box, InputAdornment, Stack } from "@mui/material";
+import React, { useMemo, useRef } from "react";
 import { ButtonAddStyle } from "@/sections/emailform/style";
 import useRole from "@/hooks/useRole";
-import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
+import { useRouter } from "next/router";
+import { Button } from "@/components/DesignSystem";
+import { RiFilterLine } from "react-icons/ri";
+import { useTheme } from "@mui/material/styles";
 
-const OfferFormFilterHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit, onOpenForm }) => {
-
-  const { canAccess } = useRole();
+const OfferFormFilterHeader = ({methods, handleFilterForm, onSubmitFilter, onOpenForm}) => {
+  const {query = {}} = useRouter();
+  const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_OFFER_TPL), []);
-
+  const _timeoutSearch = useRef();
+  const {palette} = useTheme();
+  const onSubmit = (value, timeout = 0) => {
+    clearTimeout(_timeoutSearch.current);
+    _timeoutSearch.current = setTimeout(() => {
+      onSubmitFilter({searchKey: value});
+    }, timeout);
+  }
+  
+  const countFilter = () => {
+    /* eslint-disable */
+    let {PageSize, PageIndex, SearchKey, ...restQuery} = query;
+    /* eslint-enable */
+    return Object.keys(restQuery).length;
+  }
+  
   return (
     <>
       <Box sx={{
@@ -23,8 +40,8 @@ const OfferFormFilterHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubm
         padding: '16px',
         marginBottom: 3
       }}>
-        <Box sx={{ display: 'flex', alignItems: "center" }}>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{display: 'flex', alignItems: "center"}}>
+          <FormProvider methods={methods} onSubmit={onSubmit}>
             <RHFTextField
               name="searchKey"
               placeholder="Tìm kiếm quy trình tuyển dụng"
@@ -41,34 +58,44 @@ const OfferFormFilterHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubm
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ ml: 0.5, mr:0 }}>
+                  <InputAdornment position="start" sx={{ml: 0.5, mr: 0}}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
+                      sx={{color: "#5C6A82", width: 20, height: 20}}
                     />
                   </InputAdornment>
                 ),
               }}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  onSubmit(e.target.value);
+                }
+              }}
+              onKeyUp={e => {
+                onSubmit(e.target.value, 500);
+              }}
             />
           </FormProvider>
-          <ButtonFilterStyle
-            style={{ height: 36 }}
-            onClick={onOpenFilterForm}
-            startIcon={
-              <Iconify
-                sx={{ height: "18px", width: "18px" }}
-                icon="material-symbols:filter-alt-outline"
-              />
-            }
-          >
-            Bộ lọc
-          </ButtonFilterStyle>
+          <Badge badgeContent={countFilter()} color="secondary" sx={{ml: 2}}>
+            <Button
+              variant="contained"
+              color="default"
+              startIcon={<RiFilterLine size={18} color={palette.text.sub}/>}
+              onClick={() => {
+                handleFilterForm(true);
+              }}
+              height={36}
+            >
+              Bộ lọc
+            </Button>
+          </Badge>
         </Box>
         {
           canEdit && <Stack flexDirection="row" alignItems="center">
             <ButtonAddStyle
               className="button-add"
-              startIcon={<Iconify icon="material-symbols:add" />}
+              startIcon={<Iconify icon="material-symbols:add"/>}
               onClick={() => onOpenForm(null)}
             >Thêm mẫu mời nhận việc</ButtonAddStyle>
           </Stack>

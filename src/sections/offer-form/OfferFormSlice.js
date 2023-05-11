@@ -1,8 +1,8 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
-  API_CREATE_OFFER_TEMPLATE,
+  API_CREATE_OFFER_TEMPLATE, API_DELETE_OFFER_TEMPLATE,
   API_GET_OFFER_TEMPLATE,
-  API_GET_OFFER_TEMPLATES,
+  API_GET_OFFER_TEMPLATES, API_UPDATE_ACTIVE_OFFER_TEMPLATE,
   API_UPDATE_OFFER_TEMPLATE,
   API_UPLOAD_FILE_OFFER
 } from "@/routes/api";
@@ -26,21 +26,23 @@ const offerFormSlice = apiWithTag.injectEndpoints({
         url: `${API_GET_OFFER_TEMPLATE}?${qs.stringify(data)}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 1,
     }),
-    // deleteOfferTemplate: builder.mutation({
-    //   query: (id) => ({
-    //     url: `${API_DELETE_APPROVE_PROCESS}/${id}`,
-    //     method: "DELETE",
-    //   }),
-    //   invalidatesTags: ["offerProcess"]
-    // }),
+    deleteOfferTemplate: builder.mutation({
+      query: (ids) => ({
+        url: `${API_DELETE_OFFER_TEMPLATE}`,
+        method: "DELETE",
+        data: ids
+      }),
+      invalidatesTags: ["offerProcess"]
+    }),
     addOfferTemplate: builder.mutation({
       query: (data) => ({
         url: API_CREATE_OFFER_TEMPLATE,
         method: "POST",
         data: data,
       }),
-      invalidatesTags: ["AllProcess"]
+      invalidatesTags: ["offerProcess"]
     }),
     updateOfferTemplate: builder.mutation({
       query: (data) => ({
@@ -48,7 +50,15 @@ const offerFormSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data,
       }),
-      invalidatesTags: ["AllProcess"]
+      invalidatesTags: ["offerProcess"]
+    }),
+    updateActiveOfferTemplate: builder.mutation({
+      query: (data) => ({
+        url: `${API_UPDATE_ACTIVE_OFFER_TEMPLATE}/${data.id}`,
+        method: "PATCH",
+        data,
+      }),
+      invalidatesTags: ["offerProcess"]
     }),
     uploadImageOffer: builder.mutation({
       query: (rest) => ({
@@ -60,14 +70,6 @@ const offerFormSlice = apiWithTag.injectEndpoints({
         },
       }),
     }),
-    // setApproveProcessAvailable: builder.mutation({
-    //   query: (data) => ({
-    //     url: `${API_SET_AVAILABLE_APPROVE_PROCESS}/${data.id}`,
-    //     method: "PATCH",
-    //     data,
-    //   }),
-    //   invalidatesTags: ["AllProcess"]
-    // }),
   }),
 });
 
@@ -77,4 +79,6 @@ export const {
   useAddOfferTemplateMutation,
   useUploadImageOfferMutation,
   useUpdateOfferTemplateMutation,
+  useDeleteOfferTemplateMutation,
+  useUpdateActiveOfferTemplateMutation,
 } = offerFormSlice;

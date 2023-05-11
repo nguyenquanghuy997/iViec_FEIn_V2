@@ -13,14 +13,12 @@ export default function CropImage({logo, handleSubmit }) {
   const [image, setImage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
-
   const { control } = useFormContext();
   const [uploadImage] = useUploadImageOfferMutation();
-
   const onSubmitImage = async () => {
     try {
       const file = new FormData();
-      file.append("Files", croppedImage.file);
+      file.append("Files", new File([croppedImage.file], image[0].file.name));
       const res = await uploadImage(file).unwrap();
       handleSubmit?.(res);
     } catch (error) {

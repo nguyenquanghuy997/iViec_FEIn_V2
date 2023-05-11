@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 import * as Yup from "yup";
@@ -25,7 +25,6 @@ import PreviewEmail from "@/sections/emailform/component/PreviewEmail";
 import { styled } from "@mui/styles";
 import { DeleteIcon } from "@/assets/ActionIcon";
 import { calcFileSize, showIconByFileType } from "@/utils/function";
-import { DOMAIN_SERVER_API } from "@/config";
 import { ViewModel } from "@/utils/cssStyles";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import {
@@ -35,8 +34,8 @@ import {
   useUploadImageOfferMutation
 } from "@/sections/offer-form/OfferFormSlice";
 import { useSnackbar } from "notistack";
-import { useUploadImageCompanyMutation } from "@/sections/companyinfor/companyInforSlice";
 import CropImage from "@/sections/offer-form/component/crop-image/CropImage";
+import { getFileUrl } from "@/utils/helper";
 
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
   '&.file-upload-item': {
@@ -51,8 +50,6 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
   }
 }));
 
-// const defaultEmailEditorConfig = EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT();
-
 const defaultValues = {
   id: undefined,
   name: undefined,
@@ -62,7 +59,7 @@ const defaultValues = {
   signatureContent: undefined,
   isDefaultSignature: undefined,
   isActive: undefined,
-  attachFiles: undefined,
+  templateAttachFiles: undefined,
 };
 
 const renderFileUploadItem = (file, index, removeFileUpload) => {
@@ -118,6 +115,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   }
   
   const Schema = Yup.object().shape({
+    id: Yup.string(),
     name: Yup.string().required("Tên mẫu mời nhận việc không được bỏ trống"),
     title: Yup.string().required("Tiêu đề mail không được bỏ trống"),
     content: Yup.string().required("Nội dung mail không được bỏ trống"),
@@ -125,7 +123,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
     signatureContent: Yup.string().required("Nội dung chữ ký không được bỏ trống"),
     isDefaultSignature: Yup.boolean(),
     isActive: Yup.boolean(),
-    attachFiles: Yup.array().of(Yup.string()),
+    templateAttachFiles: Yup.array().of(Yup.string()),
   });
   
   const methods = useForm({
@@ -135,10 +133,18 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   
   const {watch, setValue, handleSubmit, formState: {isSubmitting, errors}} = methods;
   
-  const watchIsActive = watch('isActive');
-  const watchTitle = watch('title');
-  const watchContent = watch('contentEmail');
-  const watchSignature = watch('contentSignature');
+  useEffect(() => {
+    if (!item?.id) return;
+    setValue("id", preview.id);
+    setValue("name", preview.name);
+    setValue("title", preview.title);
+    setValue("content", preview.content);
+    setValue("signatureLogo", preview.signatureLogo);
+    setValue("signatureContent", preview.signatureContent);
+    setValue("isDefaultSignature", preview.isDefaultSignature);
+    setValue("isActive", preview.isActive);
+    setFileList(preview.templateAttachFiles);
+  }, [isEditMode, item, preview]);
   
   const handleOpenPreviewEmail = () => {
     setIsOpenPreview(true);
@@ -153,13 +159,15 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   };
   
   const pressSave = handleSubmit(async (body) => {
-    const file = new FormData();
-    fileList.forEach(item => {
-      file.append("Files", item);
-    });
-    const fileResult = await uploadFiles(file).unwrap();
-    body.templateAttachFiles = fileResult.fileTemplates;
-  
+    if(fileList.length > 0) {
+      const file = new FormData();
+      fileList.forEach(item => {
+        if(item.id) return
+        file.append("Files", item);
+      });
+      const fileResult = await uploadFiles(file).unwrap();
+      body.templateAttachFiles = fileResult.fileTemplates.concat(fileList.filter(item => item.id));
+    }
     if (isEditMode) {
       await updateForm(body).unwrap().then(() => {
         enqueueSnackbar("Thực hiện thành công!", {
@@ -300,7 +308,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
                       </Box>
                       <Box display={"flex"}>
                         <Stack>
-                          <CropImage data={''} handleSubmit={handleSetSignatureLogo} mutation={useUploadImageCompanyMutation}/>
+                          <CropImage logo={watch('signatureLogo')} handleSubmit={handleSetSignatureLogo}/>
                           <Typography variant={"textSize13"} sx={{mt: 1}} color={theme.palette.text.secondary}>
                             Logo công ty
                           </Typography>
@@ -343,7 +351,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
               </View>
               <RHFSwitch
                 name="isActive"
-                label={watchIsActive ? 'Áp dụng' : 'Không áp dụng'}
+                label={watch("isActive") ? 'Áp dụng' : 'Không áp dụng'}
               />
             </View>
           </ViewModel>
@@ -352,10 +360,10 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
       {isOpenPreview && <PreviewEmail
         isOpen={isOpenPreview}
         onClose={handleClosePreviewEmail}
-        title={watchTitle}
-        content={watchContent}
-        signature={watchSignature}
-        logo={DOMAIN_SERVER_API + '/Image/GetImage?imagePath=01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'}
+        title={watch("title")}
+        content={watch("content")}
+        signature={watch("signatureContent")}
+        logo={getFileUrl(watch('signatureLogo'))}
       />}
     </>
   )

@@ -346,10 +346,14 @@ export const API_UPDATE_QUESTION_VISIBLE =
 export const API_UPDATE_ACTIVE_QUESTION =
   "/applicant/Question/UpdateActiveQuestions";
 export const API_REMOVE_QUESTION = "/applicant/Question/RemoveQuestions";
+
+// Offer
 export const API_GET_OFFER_TEMPLATE = "/notification/OfferTemplate/GetOfferTemplate";
 export const API_GET_OFFER_TEMPLATES = "/notification/OfferTemplate/GetOfferTemplates";
 export const API_CREATE_OFFER_TEMPLATE = "/notification/OfferTemplate/CreateOfferTemplate";
-export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate/{id}";
+export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate";
+export const API_DELETE_OFFER_TEMPLATE = "/notification/OfferTemplate/RemoveOfferTemplates";
+export const API_UPDATE_ACTIVE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplateActive";
 
 // File
 export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
