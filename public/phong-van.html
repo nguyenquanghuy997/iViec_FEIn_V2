@@ -29,15 +29,11 @@
         prev.set(key, value);
         return prev;
     }, new Map());
-    const DisplayName = decodeURIComponent(queryObj.get('DisplayName'))
-    const Email = decodeURIComponent(queryObj.get('Email'))
-    const RoomName = decodeURIComponent(queryObj.get('RoomName'))
-    const Role = decodeURIComponent(queryObj.get('Role'))
     const interview ={
         DisplayName : decodeURIComponent(queryObj.get('DisplayName')),
         Email : decodeURIComponent(queryObj.get('Email')),
         RoomName : decodeURIComponent(queryObj.get('RoomName')),
-        Role : decodeURIComponent(queryObj.get('Role')),
+        Role : 1,
     }
     console.log('interview', interview);
     // Defining our token parts
