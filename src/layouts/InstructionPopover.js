@@ -8,7 +8,7 @@ const LIST_STEP = [
   {
     title: "Thông tin công ty",
     des: "Thiết lập thông tin giới thiệu của doanh nghiệp",
-    path: "/settings/companyinfor",
+    path: "/settings/company-info",
   },
   {
     title: "Vị trí công việc",

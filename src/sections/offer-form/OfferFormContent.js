@@ -78,13 +78,13 @@ const OfferFormContent = () => {
   
   // handle delete
   const handleOpenConfirm = (data) => {
-    setConfirmDelete(true);
     setItem(data);
+    setConfirmDelete(true);
   }
   
   const handleCloseConfirm = () => {
-    setConfirmDelete(false);
     setItem(null);
+    setConfirmDelete(false);
   }
   
   const handleDelete = (data) => {
@@ -98,8 +98,8 @@ const OfferFormContent = () => {
   }
   
   const handleCloseActiveModal = () => {
-    setIsOpenActive(false);
     setItem(null);
+    setIsOpenActive(false);
   }
   
   const handleActive = (data) => {
@@ -113,8 +113,8 @@ const OfferFormContent = () => {
   }
   
   const handleCloseForm = () => {
+    setItem(null);
     setIsOpenForm(false);
-    setItem(null)
   }
   
   // handle bottom nav
