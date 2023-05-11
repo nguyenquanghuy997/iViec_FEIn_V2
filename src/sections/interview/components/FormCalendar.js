@@ -40,6 +40,11 @@ const defaultValues = {
       applicantId: undefined,
       interviewTime: undefined,
       interviewDuration: undefined,
+      bookingCalendarApplicants:[
+        {
+          date: null
+        }
+      ]
     },
   ],
 };
@@ -94,10 +99,10 @@ export const FormCalendar = ({
         bookingCalendarApplicants: Yup.array().of(
           Yup.object().shape({
             applicantId: Yup.string(),
-            date: Yup.string().required("Chọn ngày phỏng vấn"),
-            interviewTime: Yup.string().required("Chọn thời gian phỏng vấn"),
-            interviewDuration: Yup.string().required(
-              "Chọn thời lượng phỏng vấn"
+            date: Yup.string().nullable().required("Chưa chọn ngày phỏng vấn"),
+            interviewTime: Yup.string().nullable().required("Chưa chọn giờ phỏng vấn"),
+            interviewDuration: Yup.number().nullable().max(120, "Thời lượng không quá 120 phút").required(
+              "Chưa chọn thời lượng phỏng vấn"
             ),
           })
         ),
@@ -106,6 +111,7 @@ export const FormCalendar = ({
   });
 
   const methods = useForm({
+    mode: "onChange",
     defaultValues,
     resolver: yupResolver(Schema),
   });
