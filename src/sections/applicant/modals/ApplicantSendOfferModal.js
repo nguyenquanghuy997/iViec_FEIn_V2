@@ -12,7 +12,7 @@ import Scrollbar from "@/components/Scrollbar";
 import {EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT} from "@/sections/emailform/config/EditorConfig";
 import {useTheme} from "@mui/material/styles";
 import {BoxFlex, EmailFormFooterStyle, EmailFormHeadStyle} from "@/sections/emailform/style";
-import RHFEmailEditor from "@/sections/offerform/component/editor/RHFEmailEditor";
+import RHFEmailEditor from "@/sections/offer-form/component/editor/RHFEmailEditor";
 import {LabelStyle} from "@/components/hook-form/style";
 import CropImage from "@/sections/emailform/component/crop-image/CropImage";
 import PreviewEmail from "@/sections/emailform/component/PreviewEmail";

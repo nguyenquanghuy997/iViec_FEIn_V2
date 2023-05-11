@@ -5,7 +5,7 @@ export const HeaderStyle = styled('div')(() => ({
   background: '#fff',
   boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
   '.search-form': {
-    width: '620px',
+    width: '520px',
     maxWidth: '100%',
   },
   '.search-input': {

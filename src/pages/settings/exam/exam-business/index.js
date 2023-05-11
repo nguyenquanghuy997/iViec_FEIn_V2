@@ -54,7 +54,7 @@ export default function Setting() {
                   position: 'relative',
                   "&.MuiTab-root": {
                     textTransform: 'unset',
-                    marginRight: '20px',
+                    marginRight: '1rem',
                     padding: '8px 12px',
                     overflow: 'visible',
                     minHeight: 'auto'

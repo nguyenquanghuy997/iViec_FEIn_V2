@@ -65,7 +65,6 @@ const MuiDatePicker = forwardRef((props, ref) => {
               }}
               renderInput={(params) => (
                 <MuiTextField
-                  sx={{ mb: 2 }}
                   {...params}
                   ref={ref}
                   inputProps={{

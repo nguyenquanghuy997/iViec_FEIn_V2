@@ -26,6 +26,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import moment from "moment/moment";
 
 const CardEmailFormItem = ({
   isCheckbox,
@@ -71,16 +72,16 @@ const CardEmailFormItem = ({
                 checkedIcon={<CheckboxIconChecked />}
               />
             )}
-            {item.title}
+            {item.name}
             <Typography className="card-item-subtitle" component="span">
-              {item.subtitle}
+              (Đã gửi 0)
             </Typography>
           </CardFormItemTitleStyle>
           {item.isActive && (
             <Typography
               sx={{ color: "#388E3C", fontSize: 12, fontWeight: 500, mr: 6 }}
             >
-              Đang áp dụng
+              Đang hoạt động
             </Typography>
           )}
         </BoxFlex>
@@ -93,15 +94,15 @@ const CardEmailFormItem = ({
                 borderRadius: "100px",
                 fontSize: "8px",
               }}
-              name={item.user}
+              name={item.creatorName}
             />
             <CardFormItemContentStyle className="card-item-content-text">
-              {item.user}
+              {item.creatorName}
               <Typography
                 component="span"
                 className="card-item-content-subtext"
               >
-                đã tạo ngày {item.createdDate}
+                đã tạo ngày {moment(item.createdTime).format("DD/MM/YYYY")}
               </Typography>
             </CardFormItemContentStyle>
           </BoxFlex>
@@ -109,7 +110,7 @@ const CardEmailFormItem = ({
             {
               canEdit && <>
                 <ButtonIcon
-                  onClick={() => onOpenActiveModal("status")}
+                  onClick={() => onOpenActiveModal(item)}
                   sx={{
                     backgroundColor: "unset !important",
                     cursor: "pointer",
@@ -129,7 +130,7 @@ const CardEmailFormItem = ({
                     style={{
                       margin: '0 8px'
                     }}
-                    onClick={onOpenFormModal}>
+                    onClick={() => onOpenFormModal(item)}>
                     <Iconify
                       icon={"ri:edit-2-fill"}
                       width={16}
@@ -141,7 +142,7 @@ const CardEmailFormItem = ({
 
                 <Tooltip title="Xóa">
                   <IconButton
-                    onClick={onOpenConfirmDelete}
+                    onClick={() => onOpenConfirmDelete(item)}
                   >
                     <Iconify
                       icon={"material-symbols:delete-outline-rounded"}

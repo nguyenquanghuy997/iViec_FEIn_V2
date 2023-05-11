@@ -15,6 +15,7 @@ import {
 } from "@/sections/exam/ExamSlice";
 import QuestionBottomNav from "@/sections/exam/components/QuestionBottomNav";
 import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
+import QuestionTransferModal from "@/sections/exam/components/QuestionTransferModal";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -39,6 +40,7 @@ function Question() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showConfirmSwitchActive, setShowConfirmSwitchActive] = useState(false);
+  const [showTransferQuestionGroup, setShowTransferQuestionGroup] = useState(false);
 
   const { isActive, questionTitle = "" } = itemSelected[0] || {};
   const isMulti = itemSelected.length > 1;
@@ -79,8 +81,8 @@ function Question() {
           return questionType === 2
             ? "Tự luận"
             : questionType === 1
-            ? "Trắc nghiệm - nhiều đáp án đúng"
-            : "Trắc nghiệm - một đáp án đúng";
+              ? "Trắc nghiệm - nhiều đáp án đúng"
+              : "Trắc nghiệm - một đáp án đúng";
         },
       },
       {
@@ -185,6 +187,10 @@ function Question() {
     setShowConfirmSwitchActive(false);
   };
 
+  const onCloseTransfer = () => {
+    setShowTransferQuestionGroup(false);
+  };
+
   // handle
   const getData = () => {
     setShowForm(false);
@@ -192,6 +198,7 @@ function Question() {
     setSelectedRowKeys([]);
     onCloseActiveModal();
     onCloseConfirmDelete();
+    onCloseTransfer();
     getQuestions({ ...query, QuestionGroupId, slug: undefined });
   };
 
@@ -259,6 +266,7 @@ function Question() {
           setShowForm={setShowForm}
           setShowConfirmDelete={() => setShowConfirmDelete(true)}
           setShowConfirmSwitchActive={() => setShowConfirmSwitchActive(true)}
+          setShowTransferQuestionGroup={() => setShowTransferQuestionGroup(true)}
         />
       </Content>
 
@@ -313,6 +321,13 @@ function Question() {
         onSubmit={handleActive}
         onCloseActiveModal={onCloseActiveModal}
       />
+
+      <QuestionTransferModal
+        questionGroupId = {QuestionGroupId}
+        data={selectedRowKeys}
+        getData={getData}
+        isShowTransferQuestionGroup={showTransferQuestionGroup}
+        onCloseTransfer={onCloseTransfer} />
     </View>
   );
 }

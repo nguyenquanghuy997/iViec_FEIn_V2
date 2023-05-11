@@ -135,8 +135,6 @@ function OfferFormFilterModal({isOpen, onClose, onSubmit}) {
 
             </Stack>
           </Box>
-
-          <Divider/>
           <FilterModalFooterStyle>
             <Stack flexDirection="row">
               <ButtonDS

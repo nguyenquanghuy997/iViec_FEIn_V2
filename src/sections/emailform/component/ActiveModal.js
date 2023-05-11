@@ -94,7 +94,7 @@ const ActiveModal = ({isOpenActive, onCloseActiveModal, onSubmit, item, title, s
           </TitleAlertStyle>
           <DialogContentTextStyle id="alert-dialog-description" className="subtitle-active">
             {subtitle}
-            <span className="subtitle-active-name">{item?.title}</span>?
+            <span className="subtitle-active-name">{item?.name}</span>?
           </DialogContentTextStyle>
           <Divider/>
         </DialogContent>
