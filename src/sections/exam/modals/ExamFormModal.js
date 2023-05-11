@@ -34,7 +34,7 @@ const ExamFormModal = ({data, show, onClose}) => {
     const [isDisabled, setIsDisabled] = useState(false);
     // form
     const Schema = Yup.object().shape({
-        name: Yup.string().required("Chưa nhập tên vị trí công việc"),
+        name: Yup.string().required("Chưa nhập tên đề thi"),
     });
     const methods = useForm({
         defaultValues,
@@ -70,7 +70,7 @@ const ExamFormModal = ({data, show, onClose}) => {
             } catch (err) {
                 setIsDisabled(false);
                 if (err.status === "JPE_05") {
-                    enqueueSnackbar("Vị trí công việc đã tồn tại!", {
+                    enqueueSnackbar("Đề thi đã tồn tại!", {
                         autoHideDuration: 1000,
                         variant: "error",
                     });
@@ -91,7 +91,7 @@ const ExamFormModal = ({data, show, onClose}) => {
             } catch (err) {
                 setIsDisabled(false);
                 if (err.status === "JPE_05") {
-                    enqueueSnackbar("Vị trí công việc đã tồn tại!", {
+                    enqueueSnackbar("Đề thi đã tồn tại!", {
                         autoHideDuration: 1000,
                         variant: "error",
                     });
@@ -140,8 +140,8 @@ const ExamFormModal = ({data, show, onClose}) => {
                     >
                         <Text flex="true" fontsize={16} fontweight={"600"}>
                             {isEditMode
-                                ? "Chỉnh sửa vị trí công việc"
-                                : "Thêm mới vị trí công việc"}
+                                ? "Chỉnh sửa đề thi"
+                                : "Thêm mới đề thi"}
                         </Text>
                         <ButtonDS
                             type="submit"
@@ -173,10 +173,10 @@ const ExamFormModal = ({data, show, onClose}) => {
                         {/* code & name */}
 
                         <View mb={24}>
-                            <Label required>Tên vị trí công việc</Label>
+                            <Label required>Tên đề thi</Label>
                             <RHFTextField
                                 name={"name"}
-                                placeholder="Nhập tên vị trí công việc"
+                                placeholder="Nhập tên đề thi"
                                 maxLength={150}
                             />
                         </View>
@@ -186,26 +186,11 @@ const ExamFormModal = ({data, show, onClose}) => {
 
                         {/* des */}
                         <View mt={28}>
-                            <Label>Mô tả công việc</Label>
+                            <Label>Mô tả</Label>
                             <RHFTinyEditor
                                 name="description"
-                                placeholder="Nhập mô tả công việc..."
+                                placeholder="Nhập mô tả đề thi..."
                             />
-                        </View>
-
-                        {/* require */}
-                        <View mt={28}>
-                            <Label>Yêu cầu công việc</Label>
-                            <RHFTinyEditor
-                                name="requirement"
-                                placeholder="Nhập yêu cầu công việc..."
-                            />
-                        </View>
-
-                        {/* benefit */}
-                        <View mt={28}>
-                            <Label>Quyền lợi</Label>
-                            <RHFTinyEditor name="benefit" placeholder="Nhập quyền lợi..."/>
                         </View>
                     </View>
                     {/* footer */}
