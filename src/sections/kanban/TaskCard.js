@@ -1,9 +1,16 @@
+import {
+  useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery,
+  useUpdateApplicantRecruitmentToNextStateMutation,
+} from "../applicant";
 import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
 import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
 import { FormCalendar } from "../interview/components/FormCalendar";
+import { CircleLineIcon, EditIcon, LogoIcon } from "@/assets/ActionIcon";
 import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
+import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import { ApplicantInterviewState } from "@/config";
+import { PATH_DASHBOARD } from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 import { srcImage } from "@/utils/enum";
 import { fDate, fTime } from "@/utils/formatTime";
@@ -11,13 +18,18 @@ import {
   Box,
   Button,
   ButtonGroup,
+  ClickAwayListener,
   Grid,
+  MenuItem,
+  MenuList,
   Paper,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Divider } from "antd";
 import moment from "moment";
+import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { memo, useState } from "react";
@@ -582,6 +594,58 @@ function OfferItem(props) {
 }
 
 function TaskCard({ item, index, pipelineStateType }) {
+  const theme = useTheme();
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  const [openGroup, setOpenGroup] = useState(false);
+
+  const [tranfer] = useUpdateApplicantRecruitmentToNextStateMutation();
+  const [getInfo] = useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
+
+  const handleOpenGroup = () => {
+    setOpenGroup(true);
+  };
+
+  const handleCloseGroup = () => {
+    setOpenGroup(false);
+  };
+
+  const pressGetFromIVIEC = () => {
+    enqueueSnackbar("Tính năng đang được phát triển, thử lại sau!", {
+      variant: "warning",
+    });
+  };
+
+  const pressEdit = () => {
+    router.push(
+      {
+        pathname: PATH_DASHBOARD.applicant.view(item?.applicantId),
+        query: {
+          correlationId: item?.correlationId,
+          organizationId: item?.organizationId,
+          recruitmentId: item?.recruitmentId,
+          applicantId: item?.applicantId,
+          mode: "edit",
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const pressDelete = async () => {
+    const res = await getInfo({ RecruitmentId: item?.recruitmentId }).unwrap();
+    const body = {
+      applicantId: item?.applicantId,
+      recruitmentId: item?.recruitmentId,
+      recruitmentPipelineStateId: res.items?.find(
+        (i) => i.pipelineStateType === 3
+      )?.id,
+      pipelineStateResultType: "2",
+    };
+    await tranfer(body).unwrap();
+  };
+
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
       {(provided) => {
@@ -626,23 +690,67 @@ function TaskCard({ item, index, pipelineStateType }) {
                     alignItems: "center",
                   }}
                 >
-                  <Iconify
-                    icon={"carbon:dot-mark"}
-                    width={12}
-                    height={12}
-                    color="#4CAF50"
-                    mr={1}
-                  />
                   <Typography fontSize="12px">
                     {fDate(item.createdTime)}
                   </Typography>
                 </Box>
-                <Iconify
-                  icon={"ph:dots-three-bold"}
-                  width={20}
-                  height={20}
-                  color="#455570"
-                />
+                <LightTooltip
+                  placement="bottom-start"
+                  onClose={handleCloseGroup}
+                  disableFocusListener
+                  disableHoverList
+                  ener
+                  disableTouchListener
+                  open={openGroup}
+                  title={
+                    <ClickAwayListener onClickAway={handleCloseGroup}>
+                      <MenuList
+                        autoFocusItem
+                        divider={true}
+                        disableGutters={true}
+                      >
+                        <MenuItem onClick={pressGetFromIVIEC}>
+                          <LogoIcon />
+                          <Typography ml={"12px"} variant={"textSize13600"}>
+                            Lấy từ kho iVIEC
+                          </Typography>
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={pressEdit}>
+                          <EditIcon sx={{ mr: "12px" }} />
+                          <Typography ml={"12px"} variant={"textSize13600"}>
+                            Chỉnh sửa
+                          </Typography>
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={pressDelete}>
+                          <CircleLineIcon sx={{ mr: "12px" }} />
+                          <Typography
+                            color={theme.palette.text.warning}
+                            ml={"12px"}
+                            variant={"textSize13600"}
+                          >
+                            Loại ứng viên
+                          </Typography>
+                        </MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  }
+                >
+                  <Button
+                    size="small"
+                    aria-haspopup="menu"
+                    style={{ minWidth: 0, padding: 0 }}
+                    onClick={handleOpenGroup}
+                  >
+                    <Iconify
+                      icon={"ph:dots-three-bold"}
+                      width={20}
+                      height={20}
+                      color="#455570"
+                    />
+                  </Button>
+                </LightTooltip>
               </Box>
 
               <Box sx={{ cursor: "pointer" }}>

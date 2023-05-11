@@ -168,6 +168,7 @@ export const ApplicantFormSlice = createApi({
         { type: "APPLICANT", id: "LOG_APPLICANT" },
         { type: "APPLICANT", id: "APPLICANT_STATE_WITH_RECRUITMENT_STATE" },
         { type: "APPLICANT", id: "APPLICANT_REVIEW" },
+        { type: "APPLICANT", id: "LIST_APPLICANT_PIPELINE" },
       ],
     }),
     addApplicantReview: builder.mutation({
