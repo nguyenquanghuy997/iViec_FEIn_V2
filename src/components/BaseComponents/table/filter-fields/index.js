@@ -10,6 +10,8 @@ import RangeMoneyField from "./RangeMoneyField";
 
 import { FilterItemStyle } from "../styles";
 import TreeSelectField from "./TreeSelectField";
+import RangePointField from "@/components/BaseComponents/table/filter-fields/RangePointField";
+import RangeQuestionField from "@/components/BaseComponents/table/filter-fields/RangeQuestionField";
 
 export default function FilterFields({
   columns = [],
@@ -137,6 +139,22 @@ const FilterFieldItem = ({
         <RangeMoneyField
           {...fieldProps}
         />
+      )
+    }
+
+    if (type === TBL_FILTER_TYPE.RANGE_POINT) {
+      return (
+          <RangePointField
+              {...fieldProps}
+          />
+      )
+    }
+
+    if (type === TBL_FILTER_TYPE.RANGE_QUESTION) {
+      return (
+          <RangeQuestionField
+              {...fieldProps}
+          />
       )
     }
   
