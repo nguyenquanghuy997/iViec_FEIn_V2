@@ -5,14 +5,25 @@ import MuiInputNumber from "@/components/form/MuiInputNumber";
 import MuiTimePicker from "@/components/form/MuiTimePicker";
 import { Label } from "@/components/hook-form/style";
 import { DragItem } from "@/sections/interview/components/DragCandidate";
-import { pushMin } from "@/sections/interview/config";
+import {
+  convertDurationTimeToSeconds,
+  convertStoMs,
+  pushMin,
+} from "@/sections/interview/config";
 import { Avatar, Box, Button, Card, Collapse, Typography } from "@mui/material";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useFormContext } from "react-hook-form";
 
 function DraggableForm({ model, index, removeItem }) {
-  const { setValue, getValues, watch, setError } = useFormContext();
+  const {
+    setValue,
+    getValues,
+    watch,
+    setError,
+    formState: { errors },
+  } = useFormContext();
   const [open, setOpen] = useState(true);
   const [first, setFirst] = useState(false);
   const [time, setTime] = useState(false);
@@ -64,6 +75,26 @@ function DraggableForm({ model, index, removeItem }) {
         { type: "custom", message: "Chưa chọn giờ phỏng vấn" }
       );
     }
+    const time = convertStoMs(
+      convertDurationTimeToSeconds(
+        `${getValues(
+          `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`
+        )}:00`
+      )
+    );
+    const date = new Date(
+      `${moment(
+        getValues(
+          `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`
+        )
+      ).format("YYYY-MM-DD")} ${time}`
+    );
+    if (moment() > date) {
+      setError(
+        `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`,
+        { type: "custom", message: "Giờ phỏng vấn phải lớn hơn hiện tại" }
+      );
+    }
     if (
       !getValues(
         `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`
@@ -74,18 +105,12 @@ function DraggableForm({ model, index, removeItem }) {
         { type: "custom", message: "Chưa chọn thời lượng phỏng vấn" }
       );
     }
-    if(getValues(
-      `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.date`
-    ) && getValues(
-      `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`
-    ) && getValues(
-      `bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`
-    )) {
+
+    if (!errors?.bookingCalendarGroups?.length) {
       setTime(true);
       setOpen(false);
     }
   };
-
   return (
     <Draggable key={model.id} draggableId={model.id} index={index}>
       {(provided) => (

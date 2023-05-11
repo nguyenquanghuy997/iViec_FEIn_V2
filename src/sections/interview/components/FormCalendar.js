@@ -101,7 +101,7 @@ export const FormCalendar = ({
             applicantId: Yup.string(),
             date: Yup.string().nullable().required("Chưa chọn ngày phỏng vấn"),
             interviewTime: Yup.string().nullable().required("Chưa chọn giờ phỏng vấn"),
-            interviewDuration: Yup.number().nullable().max(120, "Thời lượng không quá 120 phút").required(
+            interviewDuration: Yup.number().transform(value => (isNaN(value) ? undefined : value)).min(1, "Thời lượng phải lớn hơn 0").max(120, "Thời lượng không quá 120 phút").required(
               "Chưa chọn thời lượng phỏng vấn"
             ),
           })
