@@ -1,31 +1,58 @@
 import { DialogActions, Divider } from "@mui/material";
 import React, { useState } from "react";
-import { useGetQuestionGroupQuery } from "../ExamSlice";
+import { useGetQuestionGroupQuery, useTransferQuestionGroupMutation } from "../ExamSlice";
 import { View } from "@/components/FlexStyled";
 import { Label } from "@/components/hook-form/style";
 import { ButtonDS, SelectAutoCompleteDS } from "@/components/DesignSystem";
 import { FormProvider, useForm } from "react-hook-form";
 import { ButtonCancel, DialogModelStyle, ButtonIcon } from "@/utils/cssStyles";
 import Iconify from "@/components/Iconify";
+import { useSnackbar } from "notistack";
+import { useEffect } from "react";
 
+const QuestionTransferModal = ({ questionGroupId, data, getData, isShowTransferQuestionGroup, onCloseTransfer }) => {
+  const { enqueueSnackbar } = useSnackbar();
 
-const QuestionTransferModal = ({ isShowTransferQuestionGroup, onCloseTransfer }) => {
   const { data: { items: options = [] } = {} } = useGetQuestionGroupQuery({});
   const [selectedOption, setSelectedOption] = useState("");
+
+  const [transferQuestion] = useTransferQuestionGroupMutation();
 
   const onChangeQuestionGroup = (e) => {
     setSelectedOption(e.target.value);
   }
 
-  const methods = useForm({
-
-  });
+  const methods = useForm({});
 
   const { handleSubmit } = methods;
 
   const handleTranfer = handleSubmit(async () => {
-      // update data in here
+    if (!selectedOption) {
+      enqueueSnackbar("Chưa chọn nhóm câu hỏi", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+      return;
+    }
+    try {
+      await transferQuestion({
+        questionIds: data,
+        sourceQuestionGroupId: questionGroupId,
+        destinationQuestionGroupId: selectedOption.id,
+      }).unwrap()
+      enqueueSnackbar("Chuyển câu hỏi thành công");
+      getData();
+    } catch {
+      enqueueSnackbar("Chuyển câu hỏi thất bại", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    }
   })
+
+  useEffect(() => {
+    setSelectedOption("");
+  }, [isShowTransferQuestionGroup])
 
   return <DialogModelStyle
     open={isShowTransferQuestionGroup}

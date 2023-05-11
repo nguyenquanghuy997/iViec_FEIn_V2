@@ -311,7 +311,7 @@ export const API_GET_EXAMINATION_BY_ID =
 export const API_GET_COLUMN_EXAMS =
     "/aggregator/ExamVisible/GetExamsVisible";
 export const API_UPDATE_COLUMN_EXAMS =
-    "/aggregator/ExamVisible/UpdateExamVisible/{id}";
+    "/aggregator/ExamVisible/UpdateExamVisible";
 export const API_UPDATE_STATUS_EXAM =
     "/examination/Examination/SetExaminationActivated";
 export const API_CREATE_EXAM =
@@ -332,6 +332,8 @@ export const API_UPDATE_ACTIVE_QUESTION_GROUP =
   "/examination/QuestionGroup/UpdateActiveQuestionGroups";
 export const API_REMOVE_QUESTION_GROUP =
   "/examination/QuestionGroup/RemoveQuestionGroups";
+export const API_TRANSFER_QUESTIONS_TO_OTHER_QUESTION_GROUP =
+  "/examination/QuestionGroup/MoveQuestionsToOtherGroup";
 
 // Question
 export const API_GET_QUESTIONS = "/applicant/Question/GetQuestions";

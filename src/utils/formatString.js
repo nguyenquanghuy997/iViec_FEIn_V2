@@ -6,54 +6,54 @@ import {
 } from "@/sections/recruitment-form/icon/PipelineIcon";
 
 export const LIST_BRANCH_SIZE = [
-    {id: "Less10", value: "[0-9]", name: "Dưới 10"},
-    {id: "From10to49", value: "[10-49]", name: "10-49"},
-    {id: "From50to99", value: "[50-99]", name: "50-99"},
-    {id: "From100to499", value: "[100-499]", name: "100-499"},
-    {id: "From500to999", value: "[500-999]", name: "500-999"},
-    {id: "From1000to4999", value: "[1000-4999]", name: "1000-4999"},
-    {id: "From5000to9999", value: "[5000-9999]", name: "5000-9999"},
-    {id: "Greater10000", value: "[10000-00]", name: "Trên 10000"},
+  {id: "Less10", value: "[0-9]", name: "Dưới 10"},
+  {id: "From10to49", value: "[10-49]", name: "10-49"},
+  {id: "From50to99", value: "[50-99]", name: "50-99"},
+  {id: "From100to499", value: "[100-499]", name: "100-499"},
+  {id: "From500to999", value: "[500-999]", name: "500-999"},
+  {id: "From1000to4999", value: "[1000-4999]", name: "1000-4999"},
+  {id: "From5000to9999", value: "[5000-9999]", name: "5000-9999"},
+  {id: "Greater10000", value: "[10000-00]", name: "Trên 10000"},
 ];
 
 
 export const LIST_PROCESS_LEVEL_DETAIL_TYPE = [
-    {id: 0, name: "Vai trò"},
-    {id: 1, name: "Cán bộ"},
+  {id: 0, name: "Vai trò"},
+  {id: 1, name: "Cán bộ"},
 ];
 
 export const LIST_ORGANIZATION_SIZE = [
-    {id: "LessThanTen", value: 0, name: "Dưới 10 nhân sự"},
-    {id: "BetweenTenAndFortyNine", value: 1, name: "10-49 nhân sự"},
-    {id: "BetweenFiftyAndNinetyNine", value: 2, name: "50-99 nhân sự"},
-    {id: "BetweenOneHundredAndFourHundredNinetyNine", value: 3, name: "100-499 nhân sự",},
-    {id: "BetweenFiveHundredAndNineHundredNinetyNine", value: 4, name: "500-999 nhân sự",},
-    {id: "BetweenOneThousandAndFourThousandNineHundredNinetyNine", value: 5, name: "1000-4999 nhân sự",},
-    {id: "BetweenFiveThousandAndNineThousandNineHundredNinetyNine", value: 6, name: "5000-9999 nhân sự",},
-    {id: "LargeTenThousand", value: 7, name: "Trên 10000 nhân sự"},
+  {id: "LessThanTen", value: 0, name: "Dưới 10 nhân sự"},
+  {id: "BetweenTenAndFortyNine", value: 1, name: "10-49 nhân sự"},
+  {id: "BetweenFiftyAndNinetyNine", value: 2, name: "50-99 nhân sự"},
+  {id: "BetweenOneHundredAndFourHundredNinetyNine", value: 3, name: "100-499 nhân sự",},
+  {id: "BetweenFiveHundredAndNineHundredNinetyNine", value: 4, name: "500-999 nhân sự",},
+  {id: "BetweenOneThousandAndFourThousandNineHundredNinetyNine", value: 5, name: "1000-4999 nhân sự",},
+  {id: "BetweenFiveThousandAndNineThousandNineHundredNinetyNine", value: 6, name: "5000-9999 nhân sự",},
+  {id: "LargeTenThousand", value: 7, name: "Trên 10000 nhân sự"},
 ];
 export const LIST_STATUS = [
-  {id:0, value: 0, name: "Tất cả"},
-  {id:true, value: 1, name: "Đang hoạt động"},
-  {id: false, value:2, name: "Không hoạt động"},
+  {id: 0, value: 0, name: "Tất cả"},
+  {id: 'true', value: 1, name: "Đang hoạt động"},
+  {id: 'false', value: 2, name: "Không hoạt động"},
 ]
 export const LIST_MARITAL_STATUSES = [
-    {value: 0, name: "Độc thân", label: "Độc thân"},
-    {value: 1, name: "Kết hôn", label: "Kết hôn"},
-    {value: 2, name: "Khác", label: "Khác"},
+  {value: 0, name: "Độc thân", label: "Độc thân"},
+  {value: 1, name: "Kết hôn", label: "Kết hôn"},
+  {value: 2, name: "Khác", label: "Khác"},
 ]
 
 export const LIST_GENDER = [
-    {value: 0, name: "Nam", label: "Nam"},
-    {value: 1, name: "Nữ", label: "Nữ"},
-    {value: 2, name: "Khác", label: "Khác"},
+  {value: 0, name: "Nam", label: "Nam"},
+  {value: 1, name: "Nữ", label: "Nữ"},
+  {value: 2, name: "Khác", label: "Khác"},
 ]
 
 export const LIST_GENDER_RECRUITMENT = [
-    {value: 0, name: "Nam", label: "Nam"},
-    {value: 1, name: "Nữ", label: "Nữ"},
-    {value: 2, name: "Khác", label: "Khác"},
-    // {value: 3, name: "Không yêu cầu", label: "Không yêu cầu"},
+  {value: 0, name: "Nam", label: "Nam"},
+  {value: 1, name: "Nữ", label: "Nữ"},
+  {value: 2, name: "Khác", label: "Khác"},
+  // {value: 3, name: "Không yêu cầu", label: "Không yêu cầu"},
 ]
 
 export const LIST_EXPERIENCE_NUMBER = [
@@ -114,6 +114,11 @@ export const LIST_RECRUITMENT_PROCESS_STATUS = [
   {value: 7, label: "Hết hạn"},
   {value: 8, label: "Đóng"},
 ]
+export const LIST_EXAM_TYPE = [
+  {id: 2, value: 2, name: "Tất cả"},
+  {id: true, value: 1, name: "Đề thi câu hỏi trắc nghiệm"},
+  {id: false, value: 0, name: "Đề thi câu hỏi cố định"},
+]
 
 export const PipelineStateType = (item, description = '') => {
   switch (item) {
@@ -121,53 +126,54 @@ export const PipelineStateType = (item, description = '') => {
       return {
         title: "Ứng tuyển",
         subtitle: description,
-        icon: <ApplyJobIcon />
+        icon: <ApplyJobIcon/>
       }
     case 1:
       return {
         title: "Thi tuyển",
         subtitle: description,
-        icon: <AssessmentIcon />
+        icon: <AssessmentIcon/>
       }
     case 2:
       return {
         title: "Phỏng vấn",
         subtitle: description,
-        icon: <InterviewIcon />
+        icon: <InterviewIcon/>
       }
     case 3:
       return {
         title: "Kết quả",
         subtitle: description,
-        icon: <ResultIcon />
+        icon: <ResultIcon/>
       }
     case 4:
       return {
         title: "Mời nhận việc",
         subtitle: description,
-        icon: <OfferIcon />
+        icon: <OfferIcon/>
       }
     default:
       return {
         title: "Ứng tuyển",
         subtitle: description,
-        icon: <ApplyJobIcon />
+        icon: <ApplyJobIcon/>
       }
   }
 };
 
 export function joinArrStr(arr, key) {
-    return Array.isArray(arr) ? arr.filter((item) => !!item).join(key) : "";
+  return Array.isArray(arr) ? arr.filter((item) => !!item).join(key) : "";
 }
 
 export function formatRemoteUrl(str) {
-    if (!str) return null;
-    return `https://be.iviec.vn${str}`;
+  if (!str) return null;
+  return `https://be.iviec.vn${str}`;
 }
 
 export function formatBranchSize(data) {
-    return LIST_BRANCH_SIZE.find((i) => i.id === data)?.name || "";
+  return LIST_BRANCH_SIZE.find((i) => i.id === data)?.name || "";
 }
+
 export function checkSameValue(arr) {
   for (let i = 1; i < arr.length; i++) {
     if (arr[i] !== arr[0]) {

@@ -1,4 +1,4 @@
-import {apiSlice} from "@/redux/api/apiSlice";
+import { apiSlice } from "@/redux/api/apiSlice";
 import {
     API_CREATE_QUESTION,
     API_CREATE_QUESTION_GROUP,
@@ -20,26 +20,26 @@ import {
     API_DELETE_EXAMS,
     API_REMOVE_QUESTION,
     API_UPDATE_ACTIVE_QUESTION,
+    API_TRANSFER_QUESTIONS_TO_OTHER_QUESTION_GROUP,
 } from "@/routes/api";
 import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
-    addTagTypes: ["EXAMINATION"],
+    addTagTypes: ["EXAMINATION", "GetColumn"],
 });
 
 const examinationSlice = apiWithTag.injectEndpoints({
     endpoints: (builder) => ({
         getAllExamination: builder.query({
-            query: () => ({
-                url: API_GET_EXAMINATION,
-                method: "GET",
-            }),
-            // transformResponse: (response) => {
-            //   return response?.items.map((item) => ({
-            //     value: item.id,
-            //     label: item.name,
-            //   }));
-            // },
+            query: (params) => {
+                const defaultParams = { PageIndex: 1, PageSize: 10 }
+                return {
+                    url: API_GET_EXAMINATION,
+                    method: "GET",
+                    params: { ...defaultParams, ...params }
+                }
+            },
+            providesTags: [{ type: "EXAMINATION", id: "GetColumn" }]
         }),
         getExaminationById: builder.query({
             query: (params) => ({
@@ -87,18 +87,18 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 url: API_GET_COLUMN_EXAMS,
                 method: "GET",
             }),
-            providesTags: [{type: 'APPLICANT', id: 'LIST_COLUMN'}],
+            providesTags: [{ type: 'EXAMINATION', id: 'LIST_COLUMN' }],
         }),
         updateListColumnExams: builder.mutation({
             query: (data = {}) => {
-                let {id, ...restData} = data;
+                const { id, ...restData } = data;
                 return {
                     url: `${API_UPDATE_COLUMN_EXAMS}/${id}`,
                     method: "PATCH",
                     data: restData,
                 };
             },
-            invalidatesTags: [{type: 'EXAM', id: 'LIST_COLUMN'}],
+            invalidatesTags: ["EXAMINATION"],
         }),
         updateStatusExam: builder.mutation({
             query: (data) => ({
@@ -106,7 +106,7 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 method: "PATCH",
                 data: data,
             }),
-            invalidatesTags: ["JobPosition"],
+            invalidatesTags: ["EXAMINATION"],
         }),
         createExam: builder.mutation({
             query: (data) => ({
@@ -114,6 +114,7 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 method: "POST",
                 data,
             }),
+            invalidatesTags: ["EXAMINATION"]
         }),
         updateExam: builder.mutation({
             query: (data) => ({
@@ -121,6 +122,7 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 method: "PATCH",
                 data,
             }),
+            invalidatesTags: ["EXAMINATION"]
         }),
         deleteExam: builder.mutation({
             query: (data) => ({
@@ -128,6 +130,7 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 method: "DELETE",
                 data: data
             }),
+            invalidatesTags: ["EXAMINATION"],
         }),
         getQuestions: builder.query({
             query: (params) => ({
@@ -159,14 +162,14 @@ const examinationSlice = apiWithTag.injectEndpoints({
         }),
         updateQuestionColumns: builder.mutation({
             query: (data = {}) => {
-                let {id, ...restData} = data;
+                let { id, ...restData } = data;
                 return {
                     url: `${API_UPDATE_QUESTION_VISIBLE}/${id}`,
                     method: "PATCH",
                     data: restData,
                 };
             },
-            invalidatesTags: [{type: "QUESTION", id: "LIST_COLUMN"}],
+            invalidatesTags: [{ type: "QUESTION", id: "LIST_COLUMN" }],
         }),
         updateActiveQuestion: builder.mutation({
             query: (data) => ({
@@ -182,8 +185,17 @@ const examinationSlice = apiWithTag.injectEndpoints({
                 data,
             }),
         }),
+    
+        transferQuestionGroup: builder.mutation({
+            query: (data) => ({
+                url: API_TRANSFER_QUESTIONS_TO_OTHER_QUESTION_GROUP,
+                method: "patch",
+                data,
+            }),
+        })
     }),
-});
+})
+
 
 export const {
     useGetAllExaminationQuery,
@@ -206,5 +218,6 @@ export const {
     useUpdateExamMutation,
     useDeleteExamMutation,
     useUpdateActiveQuestionMutation,
-    useRemoveQuestionMutation
+    useRemoveQuestionMutation,
+    useTransferQuestionGroupMutation
 } = examinationSlice;
