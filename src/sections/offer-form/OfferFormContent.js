@@ -1,64 +1,83 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box } from "@mui/material";
 import FormHeader from "@/sections/emailform/component/FormHeader";
 import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import OfferFormBottomNav from "@/sections/offer-form/component/OfferFormBottomNav";
-import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import OfferFormFilterHeader from "@/sections/offer-form/component/OfferFormFilterHeader";
 import OfferFormFilterModal from "@/sections/offer-form/component/OfferFormFilterModal";
 import OfferFormModal from "@/sections/offer-form/component/OfferFormModal";
 import useRole from '@/hooks/useRole';
-import { useMemo } from 'react';
 import { PERMISSIONS } from '@/config';
-import { useGetAllOfferTemplateQuery } from "@/sections/offer-form/OfferFormSlice";
+import {
+  useDeleteOfferTemplateMutation,
+  useGetAllOfferTemplateQuery,
+  useUpdateActiveOfferTemplateMutation
+} from "@/sections/offer-form/OfferFormSlice";
+import { useRouter } from "next/router";
+import { isArray } from "lodash";
+import { findIndexs, toRequestFilterData } from "@/utils/helper";
+import { useSnackbar } from "notistack";
 
 const defaultValues = {
   searchKey: "",
+  createdTimeFrom: "",
+  createdTimeTo: "",
+  creatorIds: [],
+  isActive: undefined,
 };
+
 const OfferFormContent = () => {
-  const {data: {items: data = []} = {}} = useGetAllOfferTemplateQuery();
+  const router = useRouter();
+  const {query, isReady} = router;
+  const {data: {items: data = []} = {}} = useGetAllOfferTemplateQuery(query, {skip: !isReady});
+  const [activeOffer] = useUpdateActiveOfferTemplateMutation();
+  const [deleteOffer] = useDeleteOfferTemplateMutation();
   
-  const [expands, setExpands] = useState(Array(data.length).fill(false));
-  const [selected, setSelected] = useState(Array(data.length).fill(false));
-  const [selectedValue, setSelectedValue] = useState(Array(data.length).fill({checked: false}));
+  const [expands, setExpands] = useState([]);
+  const [selected, setSelected] = useState([]);
+  
   // modal
   const [item, setItem] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [isOpenActive, setIsOpenActive] = useState(false);
+  const [isOpenFilter, setIsOpenFilter] = useState(false)
   
   // bottom nav modal
   const [, setIsOpenBottomNav] = React.useState(false);
-  const [, setShowDelete] = useState(false);
-  const [, setShowMultipleDelete] = useState(false);
   const [, setActionType] = useState(0)    // 0 add, 1 update
   const [, setActionTypeActive] = useState(0)    // 1 active 0 inactive
   
-  const [isOpenFilter, setIsOpenFilter] = useState(false)
-  const handleOpenFilterForm = () => {
-    setIsOpenFilter(true);
-  }
-  
-  const handleCloseFilterForm = () => {
-    setIsOpenFilter(false);
-  }
-  
+  const {enqueueSnackbar} = useSnackbar();
   // form search
-  const Schema = Yup.object().shape({
-    search: Yup.string(),
-  });
-  
   const methods = useForm({
     mode: "onChange",
     defaultValues: {...defaultValues},
-    resolver: yupResolver(Schema),
   });
   
-  const {handleSubmit} = methods;
+  const {
+    setValue,
+  } = methods;
+  
+  useEffect(() => {
+    let queryValues = toRequestFilterData(query);
+    for (let item in query) {
+      if (query[item]) {
+        if (isArray(defaultValues[item]))
+          setValue(item, isArray(query[item]) ? queryValues[item] : [queryValues[item]])
+        else setValue(item, queryValues[item])
+      } else setValue(item, defaultValues[item])
+    }
+  }, [query]);
+  
+  useEffect(() => {
+    if(data.length === 0) return
+    setExpands(Array(data.length).fill(false));
+    setSelected(Array(data.length).fill(false));
+  }, [data])
   
   // expand card item
   const handleChangeExpand = (index) => {
@@ -68,12 +87,7 @@ const OfferFormContent = () => {
   
   const handleSelected = (data, index) => {
     const selectedNext = [...selected].map((i, idx) => idx === index ? !i : i)
-    const selectedValueNext = [...selectedValue].map((i, idx) => idx === index ? {...i, checked: !i.checked} : {
-      ...i,
-      checked: i.checked
-    })
     setSelected(selectedNext);
-    setSelectedValue(selectedValueNext);
   }
   
   // handle delete
@@ -83,12 +97,22 @@ const OfferFormContent = () => {
   }
   
   const handleCloseConfirm = () => {
-    setItem(null);
     setConfirmDelete(false);
+    setItem(null);
   }
   
-  const handleDelete = (data) => {
-    return data;
+  const handleDelete = async (data) => {
+    await deleteOffer({ids: data}).unwrap().then(() => {
+      enqueueSnackbar("Thực hiện thành công!", {
+        autoHideDuration: 2000,
+      });
+    }).catch(() => {
+      enqueueSnackbar("Thực hiện thất bại!", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    });
+    handleCloseConfirm();
   }
   
   // handle active
@@ -98,12 +122,22 @@ const OfferFormContent = () => {
   }
   
   const handleCloseActiveModal = () => {
-    setItem(null);
     setIsOpenActive(false);
+    setItem(null);
   }
   
-  const handleActive = (data) => {
-    return data;
+  const handleActive = async (data) => {
+    await activeOffer({isActive: !data.isActive, id: data.id}).unwrap().then(() => {
+      enqueueSnackbar("Thực hiện thành công!", {
+        autoHideDuration: 2000,
+      });
+    }).catch(() => {
+      enqueueSnackbar("Thực hiện thất bại!", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    });
+    handleCloseActiveModal();
   }
   
   // handle form (add & update)
@@ -126,6 +160,15 @@ const OfferFormContent = () => {
   const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_OFFER_TPL), []);
   
+  const onSubmitFilter = (values = {}, timeout = 1) => {
+    setTimeout(() => {
+      router.push({
+        query: {...router.query, ...values},
+      }, undefined, {shallow: false});
+      setIsOpenFilter(false);
+    }, timeout);
+  }
+  
   return (
     <>
       <Box>
@@ -138,9 +181,8 @@ const OfferFormContent = () => {
         />
         <OfferFormFilterHeader
           methods={methods}
-          handleSubmit={handleSubmit}
-          onOpenFilterForm={handleOpenFilterForm}
-          onCloseFilterForm={handleCloseFilterForm}
+          onSubmitFilter={onSubmitFilter}
+          handleFilterForm={setIsOpenFilter}
           onOpenForm={handleOpenForm}
         />
         {data.map((column, index) => {
@@ -150,7 +192,7 @@ const OfferFormContent = () => {
             index={index}
             item={column}
             expanded={expands[index]}
-            checked={selectedValue[index]?.checked}
+            checked={selected[index]}
             onChangeSelected={() => handleSelected(column, index)}
             onChangeExpand={() => handleChangeExpand(index)}
             onOpenConfirmDelete={handleOpenConfirm}
@@ -185,24 +227,23 @@ const OfferFormContent = () => {
       />}
       {
         selected.some((i => i === true)) && <OfferFormBottomNav
-          item={data.find(i => i)}
           open={selected?.length > 0}
           onClose={handleCloseBottomNav}
-          setShowDelete={setShowDelete}
-          setShowMultipleDelete={setShowMultipleDelete}
+          onDelete={handleDelete}
           setIsOpenActive={setIsOpenActive}
-          selectedList={selected.filter(i => i === true) || []}
+          selectedList={findIndexs(true, selected)?.map(i => data[i]) || []}
           onGetParentNode={setItem}
           setActionType={setActionType}
           setActionTypeActive={setActionTypeActive}
-          status={data?.filter(i => selectedValue.includes(i.id)).every(i => i.isActive === true)}
+          status={data?.[selected.indexOf(true)].isActive}
           onOpenForm={handleOpenForm}
         />
       }
       {isOpenFilter && <OfferFormFilterModal
+        methods={methods}
         isOpen={isOpenFilter}
-        onClose={handleCloseFilterForm}
-        onSubmit={handleCloseFilterForm}
+        handleOpen={setIsOpenFilter}
+        onSubmit={onSubmitFilter}
       />}
     </>
   )

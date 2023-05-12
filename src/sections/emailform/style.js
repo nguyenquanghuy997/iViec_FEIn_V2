@@ -155,7 +155,7 @@ const EmailFormHeadStyle = styled(Box)(({ theme }) => ({
     height: theme.spacing(8),
     display: "flex",
     alignItems: "center",
-    // justifyContent: 'space-between',
+    justifyContent: 'space-between',
   },
 }));
 

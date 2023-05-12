@@ -26,7 +26,7 @@ export const FormStyle = styled('div')(({ theme: { palette } }) => ({
   },
   '.form-value': {
     height: 44,
-    background: '#EFF3F6',
+    background: palette.common.bgrObject,
     borderRadius: 6,
     display: 'flex',
     alignItems: 'center',

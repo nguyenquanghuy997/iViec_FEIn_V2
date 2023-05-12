@@ -55,7 +55,7 @@ const OrganizationCard = (
                         <Typography sx={{
                             color: style.COLOR_TEXT_BLACK,
                             fontSize: style.FONT_SM,
-                            fontWeight: style.FONT_SEMIBOLD
+                            fontWeight: style.FONT_SEMI_BOLD
                         }}>
                             {`${item?.lastName ? item?.lastName : ''} ${item.firstName ? item.firstName : ''}`}
                         </Typography>

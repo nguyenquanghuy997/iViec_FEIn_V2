@@ -149,7 +149,7 @@ const EnvironmentWorkplace = ({ data }) => {
                             sx={{
                               ml: "10px",
                               fontSize: style.FONT_BASE,
-                              fontWeight: style.FONT_SEMIBOLD,
+                              fontWeight: style.FONT_SEMI_BOLD,
                               lineHeight: "24px",
                             }}
                           >

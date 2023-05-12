@@ -36,7 +36,7 @@ const MarkdownStyle = styled('div')(({ theme }) => {
       fontFamily: 'Georgia, serif',
       padding: theme.spacing(3, 3, 3, 8),
       borderRadius: Number(theme.shape.borderRadius) * 2,
-      backgroundColor: theme.palette.background.neutral,
+      backgroundColor: theme.palette.background.greyDetail,
       color: `${theme.palette.text.secondary} !important`,
       [theme.breakpoints.up('md')]: {
         width: '80%',
@@ -54,7 +54,7 @@ const MarkdownStyle = styled('div')(({ theme }) => {
         fontSize: '3em',
         content: '"\\201C"',
         position: 'absolute',
-        color: theme.palette.text.disabled,
+        color: theme.palette.text.search,
       },
     },
 
@@ -64,7 +64,7 @@ const MarkdownStyle = styled('div')(({ theme }) => {
       overflowX: 'auto',
       whiteSpace: 'pre',
       padding: theme.spacing(2),
-      color: theme.palette.common.white,
+      color: theme.palette.background.paper,
       borderRadius: theme.shape.borderRadius,
       backgroundColor: isLight
         ? theme.palette.grey[900]

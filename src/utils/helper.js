@@ -98,3 +98,13 @@ export const toRequestFilterData = (data = {}, removeEmpty = true) => {
   }
   return reqData;
 }
+
+export const findIndexs = (needle, haystack) => {
+  let results = [];
+  let idx = haystack.indexOf(needle);
+  while (idx != -1) {
+    results.push(idx);
+    idx = haystack.indexOf(needle, idx + 1);
+  }
+  return results;
+}
