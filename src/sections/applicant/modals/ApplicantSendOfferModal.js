@@ -44,7 +44,7 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
     justifyContent: 'space-between',
     border: '1px solid #B9BFC9',
     borderRadius: 6,
-    backgroundColor: '#FDFDFD'
+    backgroundColor: theme.palette.background.paper
   }
 }));
 

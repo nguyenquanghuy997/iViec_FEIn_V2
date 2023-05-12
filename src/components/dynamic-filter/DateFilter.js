@@ -2,18 +2,20 @@ import React from 'react'
 import { InputAdornment } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { DatePicker } from "@/components/datepicker";
+import { useTheme } from "@mui/material/styles";
 
 const DateFilter = React.forwardRef((props, ref) => {
   const {name, label, DatePickerProps, startIcon, endIcon, ...other} = props;
-  const {control} = useFormContext()
+  const {control} = useFormContext();
+  const theme = useTheme();
   const propsInput = {
     inputFormat: 'DD/MM/YYYY',
     iconPosition: "end",
     inputProps: {
-      sx: { mb: 2 },
+      sx: {mb: 2},
       startIcon: startIcon && (
         <InputAdornment position='start' sx={{
-          color: '#5C6A82', '& div': {
+          color: theme.palette.common.neutral600, '& div': {
             minWidth: '28px'
           }
         }}>
@@ -21,7 +23,7 @@ const DateFilter = React.forwardRef((props, ref) => {
         </InputAdornment>
       ),
       endIcon: endIcon && (
-        <InputAdornment position='end' style={{color: '#5C6A82'}}>{endIcon}</InputAdornment>
+        <InputAdornment position='end' style={{color: theme.palette.common.neutral600}}>{endIcon}</InputAdornment>
       ),
     },
     ...DatePickerProps,

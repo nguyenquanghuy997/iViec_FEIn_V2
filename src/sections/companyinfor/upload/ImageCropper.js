@@ -13,7 +13,7 @@ const renderTitle = (title) => {
       <Typography sx={{
         fontSize: style.FONT_BASE,
         color: style.COLOR_TEXT_PRIMARY,
-        fontWeight: style.FONT_SEMIBOLD,
+        fontWeight: style.FONT_SEMI_BOLD,
         display: "inline",
         mr: 2,
       }}>

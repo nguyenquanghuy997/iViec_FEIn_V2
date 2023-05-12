@@ -22,7 +22,7 @@ export default function cssStyles(theme) {
   return {
     bgBlur: (props) => {
       const color =
-        props?.color || theme?.palette.background.default || "#000000";
+        props?.color || theme?.palette.background.paper || "#000000";
 
       const blur = props?.blur || 6;
       const opacity = props?.opacity || 0.8;
@@ -176,11 +176,11 @@ export const FooterPreviewStyle = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
   },
 }));
-export const GreenSwitch = styled(Switch)(({ theme }) => ({
+export const GreenSwitch = styled(Switch)(() => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
     color: "#388E3C",
     "&:hover": {
-      backgroundColor: alpha("#A5D6A7", theme.palette.action.hoverOpacity),
+      backgroundColor: alpha("#A5D6A7", 0.08),
     },
   },
   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {

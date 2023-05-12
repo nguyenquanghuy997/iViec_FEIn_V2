@@ -31,7 +31,7 @@ export default function CustomLabel({
       sx={{
         ...(startIcon && { pl: 0.75 }),
         ...(endIcon && { pr: 0.75 }),
-        color: '#fff',
+        color: theme.palette.background.paper,
         backgroundColor: color,
         fontSize: theme.typography.pxToRem(12),
         alignItems: 'center',

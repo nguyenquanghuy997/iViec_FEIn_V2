@@ -6,7 +6,7 @@ import {pxToRem} from "@/utils/getFontValue";
 const JobDetailHeader = styled(Box)(({theme}) => ({
     "&.job-detail-header": {
         width: '100%',
-        backgroundColor: style.BG_WHITE,
+        backgroundColor: style.COLOR_WHITE,
         borderRadius: theme.spacing(0.5),
         marginBottom: theme.spacing(2),
         padding: theme.spacing(3),
@@ -44,7 +44,7 @@ const JobTitleBox = styled(Box)(({theme}) => ({
         "& .extra-buttons": {
             "& .job-match": {
                 fontSize: pxToRem(12),
-                fontWeight: style.FONT_SEMIBOLD,
+                fontWeight: style.FONT_SEMI_BOLD,
                 color: '#2E7D32',
                 backgroundColor: "#E8F5E9",
                 borderRadius: 6,
@@ -86,14 +86,14 @@ const JobDescriptionBox = styled(Box)(({theme}) => ({
     "&.job-description-box": {
         width: '100%',
         marginBottom: theme.spacing(2),
-        backgroundColor: style.BG_WHITE,
+        backgroundColor: style.COLOR_WHITE,
         borderRadius: theme.spacing(0.5),
         padding: theme.spacing(3),
         border: '1px solid #CCD4DC',
         "& .job-description": {
             "& .typoTitle": {
                 fontSize: style.FONT_BASE,
-                fontWeight: style.FONT_SEMIBOLD,
+                fontWeight: style.FONT_SEMI_BOLD,
                 lineHeight: '26px',
                 color: style.COLOR_TEXT_BLACK,
             },
@@ -163,7 +163,7 @@ const CompanyIntro = styled(Box)(() => ({
         },
         "& .typoTitle": {
             fontSize: pxToRem(16),
-            fontWeight: style.FONT_SEMIBOLD,
+            fontWeight: style.FONT_SEMI_BOLD,
             lineHeight: '24px',
             color: style.COLOR_TEXT_BLACK,
             marginBottom: 8

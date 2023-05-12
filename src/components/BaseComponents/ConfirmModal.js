@@ -14,13 +14,14 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import {isEmpty} from "lodash";
 import {styled} from "@mui/styles";
 import {IoCloseSharp} from "react-icons/io5";
+import { useTheme } from "@mui/material/styles";
 
 export const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
   textAlign: 'center',
   width: '100%',
   fontSize: '14px !important',
   fontWeight: 400,
-  color: '#455570 !important',
+  color: theme.palette.common.neutral700 + ' !important',
   display: 'block',
   "& strong": {
     fontWeight: 600,
@@ -91,7 +92,7 @@ const ConfirmModal = (
   const { wrapperSx, ...otherDialogProps } = dialogProps || {};
   const { contentSx, ...otherContentProps } = contentProps || {};
   const { actionsSx, ...otherActionsProps } = actionsProps || {};
-
+  const theme = useTheme();
   const handleSubmit = (data) => {
     if (!isEmpty(data)) {
       onSubmit(data);
@@ -168,7 +169,7 @@ const ConfirmModal = (
                 width: '100%',
                 fontSize: '14px !important',
                 fontWeight: 400,
-                color: '#455570 !important',
+                color: theme.palette.common.neutral700 + ' !important',
                 display: 'block',
                 "& strong": {
                   fontWeight: 600,

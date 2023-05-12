@@ -64,13 +64,13 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
                     <Typography sx={{
                         color: style.COLOR_TEXT_PRIMARY,
                         fontSize: style.FONT_13,
-                        fontWeight: style.FONT_SEMIBOLD
+                        fontWeight: style.FONT_SEMI_BOLD
                     }}>{PipelineStateType(item?.pipelineStateType).title}</Typography>
                     <Typography
                         sx={{
                             color: '#1565C0',
                             fontSize: style.FONT_XS,
-                            fontWeight: style.FONT_SEMIBOLD,
+                            fontWeight: style.FONT_SEMI_BOLD,
                             py: 0.5,
                         }}>{pipelineStateType === PIPELINE_TYPE.EXAMINATION ? !isEmpty(examination) ? examination?.examinationName : 'Chưa chọn đề thi' : ''}</Typography>
                     <Typography
@@ -90,7 +90,7 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
                 onClick={() => handleOpenFormExamination(item)}
                 sx={{
                     fontSize: style.FONT_SM,
-                    fontWeight: style.FONT_SEMIBOLD,
+                    fontWeight: style.FONT_SEMI_BOLD,
                     minWidth: '120px'
                 }}
             />}

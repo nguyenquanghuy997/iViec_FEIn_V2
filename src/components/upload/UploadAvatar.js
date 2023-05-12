@@ -49,7 +49,7 @@ const PlaceholderStyle = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   color: theme.palette.text.secondary,
-  backgroundColor: theme.palette.background.neutral,
+  backgroundColor: theme.palette.background.greyDetail,
   transition: theme.transitions.create('opacity', {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
