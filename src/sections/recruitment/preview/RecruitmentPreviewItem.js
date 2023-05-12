@@ -8,14 +8,18 @@ import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
+import { PERMISSIONS, RECRUITMENT_STATUS } from "@/config";
 import useResponsive from "@/hooks/useResponsive";
+import useRole from "@/hooks/useRole";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
 import { RecruitmentApplicantChooseStage } from "@/sections/recruitment/modals/RecruitmentApplicantChooseStage";
 import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
+import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
 import { ButtonGray, ButtonIcon } from "@/utils/cssStyles";
 import { TabContext, TabList } from "@mui/lab";
 import {
@@ -35,12 +39,8 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import {useEffect, useMemo, useState} from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import useRole from "@/hooks/useRole";
-import {PERMISSIONS, RECRUITMENT_STATUS} from "@/config";
-import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
-import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 
 const defaultStyleRecruitmentStatus = {
   borderRadius: "100px",
@@ -48,7 +48,7 @@ const defaultStyleRecruitmentStatus = {
   marginLeft: "12px",
   fontSize: "12px",
   fontWeight: 600,
-}
+};
 
 function RecruitmentPreviewItem({
   viewModeDefault,
@@ -65,6 +65,7 @@ function RecruitmentPreviewItem({
   const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
     Id: RecruitmentId,
   });
+  const disableAdd = !RecruitmentData || RecruitmentData.processStatus === 3;
   const inforRecruitment = `
   <div>
     <div class="content">
@@ -310,8 +311,8 @@ function RecruitmentPreviewItem({
   const collapseHeader = () => {
     setIsFullHeader(!isFullHeader);
   };
-  const [ open, setOpen] = useState(false) 
-  const [ dataInterview] = useState({recruitmentId: RecruitmentId}) 
+  const [open, setOpen] = useState(false);
+  const [dataInterview] = useState({ recruitmentId: RecruitmentId });
   return (
     <div>
       <TabContext value={tab}>
@@ -369,30 +370,33 @@ function RecruitmentPreviewItem({
                     </div>
                   </Tooltip>
 
-                  {
-                      RecruitmentData?.processStatus === RECRUITMENT_STATUS.EXPIRED || RecruitmentData?.processStatus === RECRUITMENT_STATUS.CLOSED ? null : (
-                          <ButtonIcon
-                              onClick={(e) => {
-                                if (!canEdit) {
-                                  return;
-                                }
-                                router.push(PATH_DASHBOARD.recruitment.update(RecruitmentData?.id)),
-                                    e.stopPropagation();
-                              }}
-                              style={{
-                                marginLeft: "12px",
-                              }}
-                              icon={
-                                <Iconify
-                                    icon={"ri:edit-2-fill"}
-                                    width={20}
-                                    height={20}
-                                    color="#8A94A5"
-                                />
-                              }
-                          />
-                      )
-                  }
+                  {RecruitmentData?.processStatus ===
+                    RECRUITMENT_STATUS.EXPIRED ||
+                  RecruitmentData?.processStatus ===
+                    RECRUITMENT_STATUS.CLOSED ? null : (
+                    <ButtonIcon
+                      onClick={(e) => {
+                        if (!canEdit) {
+                          return;
+                        }
+                        router.push(
+                          PATH_DASHBOARD.recruitment.update(RecruitmentData?.id)
+                        ),
+                          e.stopPropagation();
+                      }}
+                      style={{
+                        marginLeft: "12px",
+                      }}
+                      icon={
+                        <Iconify
+                          icon={"ri:edit-2-fill"}
+                          width={20}
+                          height={20}
+                          color="#8A94A5"
+                        />
+                      }
+                    />
+                  )}
 
                   <Box>
                     {DivRecruitmentDataProcessStatus(
@@ -413,7 +417,7 @@ function RecruitmentPreviewItem({
                       if (!canView) {
                         return;
                       }
-                      setOpenPreview(true)
+                      setOpenPreview(true);
                     }}
                     icon={
                       <Iconify
@@ -453,14 +457,14 @@ function RecruitmentPreviewItem({
                   >
                     <Tab
                       label="ỨNG VIÊN"
-                      value={'1'}
+                      value={"1"}
                       sx={{
                         "&:not(:last-of-type)": {
                           marginRight: "16px",
                         },
                       }}
                     />
-                    <Tab label="LỊCH PHỎNG VẤN" value={'2'} />
+                    <Tab label="LỊCH PHỎNG VẤN" value={"2"} />
                   </TabList>
                 </Box>
               </Box>
@@ -567,103 +571,105 @@ function RecruitmentPreviewItem({
                   </>
                 )}
               </Stack>
-              <Stack flexDirection={"row"}>
-                <ButtonGroup
-                  variant="contained"
-                  aria-label="split button"
-                  sx={{
-                    boxShadow: "unset",
-                    "& .MuiButtonGroup-grouped:not(:last-of-type)": {
-                      borderColor: "white",
-                    },
-                    "& .MuiButtonGroup-grouped:hover": {
-                      opacity: 0.8,
-                    },
-                  }}
-                >
-                  <Button
-                    style={{
-                      background: "#1976D2",
-                      padding: "12px 16px",
+              {!disableAdd && (
+                <Stack flexDirection={"row"}>
+                  <ButtonGroup
+                    variant="contained"
+                    aria-label="split button"
+                    sx={{
+                      boxShadow: "unset",
+                      "& .MuiButtonGroup-grouped:not(:last-of-type)": {
+                        borderColor: "white",
+                      },
+                      "& .MuiButtonGroup-grouped:hover": {
+                        opacity: 0.8,
+                      },
                     }}
-                    onClick={() => setShowDialogStage(true)}
-                  >
-                    <Iconify
-                      icon={"material-symbols:add"}
-                      width={20}
-                      height={20}
-                      color="#fff"
-                      mr={1}
-                    />
-                    Thêm ứng viên
-                  </Button>
-                  <LightTooltip
-                    placement="bottom-start"
-                    onClose={handleCloseGroup}
-                    disableFocusListener
-                    disableHoverList
-                    ener
-                    disableTouchListener
-                    open={openGroup}
-                    title={
-                      <ClickAwayListener onClickAway={handleCloseGroup}>
-                        <MenuList
-                          autoFocusItem
-                          divider={true}
-                          disableGutters={true}
-                        >
-                          <MenuItem>
-                            <DownloadLineIcon />
-                            <Typography ml={"12px"} variant={"textSize13600"}>
-                              Tải mẫu Excel
-                            </Typography>
-                          </MenuItem>
-                          <Divider />
-                          <MenuItem>
-                            <ImportLinkIcon sx={{ mr: "12px" }} />
-                            <Typography ml={"12px"} variant={"textSize13600"}>
-                              Import Excel
-                            </Typography>
-                          </MenuItem>
-                          <Divider />
-                          <MenuItem>
-                            <TeamLineIcon sx={{ mr: "12px" }} />
-                            <Typography ml={"12px"} variant={"textSize13600"}>
-                              Scan CV hàng loạt
-                            </Typography>
-                          </MenuItem>
-                        </MenuList>
-                      </ClickAwayListener>
-                    }
                   >
                     <Button
-                      size="small"
-                      aria-haspopup="menu"
-                      onClick={handleOpenGroup}
                       style={{
                         background: "#1976D2",
                         padding: "12px 16px",
                       }}
+                      onClick={() => setShowDialogStage(true)}
                     >
                       <Iconify
-                        icon={"material-symbols:arrow-drop-down"}
+                        icon={"material-symbols:add"}
                         width={20}
                         height={20}
                         color="#fff"
+                        mr={1}
                       />
+                      Thêm ứng viên
                     </Button>
-                  </LightTooltip>
-                </ButtonGroup>
-                <RecruitmentApplicantChooseStage
-                  data={
-                    RecruitmentData?.recruitmentPipeline
-                      ?.recruitmentPipelineStates
-                  }
-                  show={showDialogStage}
-                  setShow={setShowDialogStage}
-                  setStage={setModelApplication}
-                />
-              </Stack>
+                    <LightTooltip
+                      placement="bottom-start"
+                      onClose={handleCloseGroup}
+                      disableFocusListener
+                      disableHoverList
+                      ener
+                      disableTouchListener
+                      open={openGroup}
+                      title={
+                        <ClickAwayListener onClickAway={handleCloseGroup}>
+                          <MenuList
+                            autoFocusItem
+                            divider={true}
+                            disableGutters={true}
+                          >
+                            <MenuItem>
+                              <DownloadLineIcon />
+                              <Typography ml={"12px"} variant={"textSize13600"}>
+                                Tải mẫu Excel
+                              </Typography>
+                            </MenuItem>
+                            <Divider />
+                            <MenuItem>
+                              <ImportLinkIcon sx={{ mr: "12px" }} />
+                              <Typography ml={"12px"} variant={"textSize13600"}>
+                                Import Excel
+                              </Typography>
+                            </MenuItem>
+                            <Divider />
+                            <MenuItem>
+                              <TeamLineIcon sx={{ mr: "12px" }} />
+                              <Typography ml={"12px"} variant={"textSize13600"}>
+                                Scan CV hàng loạt
+                              </Typography>
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      }
+                    >
+                      <Button
+                        size="small"
+                        aria-haspopup="menu"
+                        onClick={handleOpenGroup}
+                        style={{
+                          background: "#1976D2",
+                          padding: "12px 16px",
+                        }}
+                      >
+                        <Iconify
+                          icon={"material-symbols:arrow-drop-down"}
+                          width={20}
+                          height={20}
+                          color="#fff"
+                        />
+                      </Button>
+                    </LightTooltip>
+                  </ButtonGroup>
+                  <RecruitmentApplicantChooseStage
+                    data={
+                      RecruitmentData?.recruitmentPipeline
+                        ?.recruitmentPipelineStates
+                    }
+                    show={showDialogStage}
+                    setShow={setShowDialogStage}
+                    setStage={setModelApplication}
+                  />
+                </Stack>
+              )}
             </BoxFlex>
           ) : (
             <BoxFlex>
@@ -887,13 +893,19 @@ function RecruitmentPreviewItem({
       />
 
       {openPreview && (
-          <RecruitmentPreview
-              data={RecruitmentData}
-              open={openPreview}
-              onClose={() => setOpenPreview(false)}
-          />
+        <RecruitmentPreview
+          data={RecruitmentData}
+          open={openPreview}
+          onClose={() => setOpenPreview(false)}
+        />
       )}
-      {open && <FormCalendar open={open} setOpen={setOpen} optionsFromCruit={dataInterview}/>}
+      {open && (
+        <FormCalendar
+          open={open}
+          setOpen={setOpen}
+          optionsFromCruit={dataInterview}
+        />
+      )}
     </div>
   );
 }
