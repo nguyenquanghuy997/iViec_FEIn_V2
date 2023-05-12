@@ -21,7 +21,7 @@ export default function Table(theme) {
         },
         head: {
           color: theme.palette.text.secondary,
-          backgroundColor: theme.palette.background.neutral,
+          backgroundColor: theme.palette.background.greyDetail,
           '&:first-of-type': {
             paddingLeft: theme.spacing(2),
             borderTopLeftRadius: theme.shape.borderRadius,
@@ -35,7 +35,7 @@ export default function Table(theme) {
         },
         stickyHeader: {
           backgroundColor: theme.palette.background.paper,
-          backgroundImage: `linear-gradient(to bottom, ${theme.palette.background.neutral} 0%, ${theme.palette.background.neutral} 100%)`,
+          backgroundImage: `linear-gradient(to bottom, ${theme.palette.background.greyDetail} 0%, ${theme.palette.background.greyDetail} 100%)`,
         },
         body: {
           '&:first-of-type': {

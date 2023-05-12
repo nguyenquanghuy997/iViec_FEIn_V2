@@ -6,16 +6,17 @@ import Iconify from "@/components/Iconify";
 import SelectFilter from "@/components/dynamic-filter/SelectFilter";
 import InputNumberFormatFilter from "@/components/dynamic-filter/InputNumberFormatFilter";
 import TreeFilter from "@/components/dynamic-filter/TreeFilter";
+import { STYLE_CONSTANT } from "@/theme/palette";
 
 export const TypographyStyle = {
-  color: '#455570',
+  color: STYLE_CONSTANT.COLOR_TEXT_PRIMARY,
   fontSize: "14px",
   fontWeight: "600",
   mb: 2
 }
 
 export const InputAdornmentStyle = {
-  color: '#5C6A82'
+  color: STYLE_CONSTANT.COLOR_TEXT_SECONDARY
 }
 
 function compare(a) {

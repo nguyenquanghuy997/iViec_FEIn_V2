@@ -82,7 +82,7 @@ const RecruitmentTabList = ({ onChange, isValid, ...props }) => {
                                           },
                                           "&.Mui-selected": {
                                             color: style.COLOR_WHITE,
-                                            backgroundColor: style.BG_PRIMARY,
+                                            backgroundColor: style.COLOR_PRIMARY,
                                           },
                                           "& .MuiTabs-indicator": {
                                             display: "none",

@@ -6,7 +6,7 @@ const BoxInfoStyle = styled(Box)(({theme}) => ({
   "&.box-info": {
     display: "flex",
     padding: theme.spacing(2, 5),
-    background: style.BG_WHITE,
+    background: style.COLOR_WHITE,
     "& .box-image": {
       display: 'flex',
       justifyContent: 'center',

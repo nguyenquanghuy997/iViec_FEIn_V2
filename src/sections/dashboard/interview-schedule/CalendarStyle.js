@@ -14,8 +14,8 @@ const CalendarStyle = styled('div')(({ theme }) => ({
     '--fc-event-border-color': theme.palette.info.light,
     '--fc-now-indicator-color': theme.palette.error.main,
     '--fc-today-bg-color': theme.palette.action.selected,
-    '--fc-page-bg-color': theme.palette.background.default,
-    '--fc-neutral-bg-color': theme.palette.background.neutral,
+    '--fc-page-bg-color': theme.palette.background.paper,
+    '--fc-neutral-bg-color': theme.palette.background.greyDetail,
     '--fc-list-event-hover-bg-color': theme.palette.action.hover,
     '--fc-highlight-color': alpha(theme.palette.primary.main, 0.08),
   },
@@ -41,7 +41,7 @@ const CalendarStyle = styled('div')(({ theme }) => ({
   '& .fc .fc-event .fc-event-main': {
     padding: '2px 4px',
     borderRadius: 4,
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.paper,
     transition: theme.transitions.create('filter'),
     '&:hover': { filter: 'brightness(0.92)' },
     '&:before,&:after': {
@@ -113,7 +113,7 @@ const CalendarStyle = styled('div')(({ theme }) => ({
   '& .fc .fc-day-other .fc-daygrid-day-top': {
     opacity: 1,
     '& .fc-daygrid-day-number': {
-      color: theme.palette.text.disabled,
+      color: theme.palette.text.search,
     },
   },
   '& .fc .fc-daygrid-day-number': {

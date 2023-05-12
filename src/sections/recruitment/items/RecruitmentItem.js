@@ -677,7 +677,7 @@ export const RecruitmentItem = () => {
                 textAlign: "center",
                 width: "100%",
                 fontSize: style.FONT_BASE,
-                fontWeight: style.FONT_SEMIBOLD,
+                fontWeight: style.FONT_SEMI_BOLD,
                 color: style.COLOR_PRIMARY,
                 marginTop: 2,
               }}
@@ -723,7 +723,7 @@ export const RecruitmentItem = () => {
                 textAlign: "center",
                 width: "100%",
                 fontSize: style.FONT_BASE,
-                fontWeight: style.FONT_SEMIBOLD,
+                fontWeight: style.FONT_SEMI_BOLD,
                 color: style.COLOR_TEXT_DANGER,
                 marginTop: 2,
               }}

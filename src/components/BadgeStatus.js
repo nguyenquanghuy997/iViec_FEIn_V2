@@ -16,7 +16,7 @@ const RootStyle = styled('span')(({ theme, ownerState }) => {
     '&:before, &:after': {
       content: "''",
       borderRadius: 1,
-      backgroundColor: theme.palette.common.white,
+      backgroundColor: theme.palette.background.paper,
     },
 
     ...(size === 'small' && { width: 8, height: 8 }),
@@ -49,7 +49,7 @@ const RootStyle = styled('span')(({ theme, ownerState }) => {
     }),
 
     ...(status === 'invisible' && {
-      backgroundColor: theme.palette.text.disabled,
+      backgroundColor: theme.palette.text.search,
       '&:before': {
         width: 6,
         height: 6,

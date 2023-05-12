@@ -56,7 +56,7 @@ const RootStyle = styled('span')(({ theme, ownerState }) => {
           ...(variant === 'ghost' && {
             color: isLight
               ? theme.palette.text.secondary
-              : theme.palette.common.white,
+              : theme.palette.background.paper,
             backgroundColor: theme.palette.grey[500_16],
           }),
         }),
