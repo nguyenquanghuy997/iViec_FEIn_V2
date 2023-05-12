@@ -3,8 +3,10 @@ import {
   CheckboxIconDefault,
 } from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
+import { Text } from "@/components/DesignSystem/FlexStyled";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import useAuth from "@/hooks/useAuth";
 import {
   BoxFlex,
   CardFormItemStyle,
@@ -14,10 +16,12 @@ import { ButtonIcon } from "@/utils/cssStyles";
 import {
   AccordionDetails,
   AccordionSummary,
+  Box,
   Checkbox,
   Divider,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 import React, { useState } from "react";
 
 const questionInfoTitle = {
@@ -33,10 +37,29 @@ const questionAnswer = {
   marginBottom: '12px'
 }
 
+const LIST_QUESTION_TYPE = [
+  {
+    value: 0,
+    label: "Trắc nghiệm - 1 đáp án đúng",
+    name: "Trắc nghiệm - 1 đáp án đúng",
+  },
+  {
+    value: 1,
+    label: "Trắc nghiệm - nhiều đáp án đúng",
+    name: "Trắc nghiệm - nhiều đáp án đúng",
+  },
+  {
+    value: 2,
+    label: "Tự luận",
+    name: "Tự luận",
+  },
+];
 
-function QuestionCardItem({ index }) {
 
-  const [expanded, setExpanded] = useState(false)
+function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
+  const { user } = useAuth();
+  const [expanded, setExpanded] = useState(true)
+
   const renderText = (title, value) => {
     return (
       <div style={{
@@ -73,18 +96,19 @@ function QuestionCardItem({ index }) {
         expandIcon={
           <BoxFlex>
             <Typography sx={{
-              width: '20px',
-              height: '20px',
-              fontSize: 14,
+              width: '25px',
+              height: '25px',
+              fontSize: 12,
               textAlign: 'center',
-              lineHeight: '20px',
+              lineHeight: '25px',
               borderRadius: '50%',
               border: '1px solid #455570',
               marginRight: '8px'
             }}>
-              1
+              {item.questionPoint}
             </Typography>
             <ButtonIcon
+              onClick={() => onEdit(item, index)}
               icon={
                 <Iconify
                   icon={"ri:edit-2-fill"}
@@ -96,6 +120,7 @@ function QuestionCardItem({ index }) {
             />
 
             <ButtonIcon
+              onClick={() => onDelete(item, index)}
               icon={
                 <Iconify
                   icon={"material-symbols:delete-outline-rounded"}
@@ -139,46 +164,54 @@ function QuestionCardItem({ index }) {
               icon={<CheckboxIconDefault />}
               checkedIcon={<CheckboxIconChecked />}
             />
-            <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} ml={2} >Câu hỏi 1
+            <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} ml={2} >Câu hỏi {index + 1}
 
             </Typography>
 
             <Typography fontSize={14} ml={2} color={"#455570"} maxWidth={'75%'} component="span">
-              Trong các tỉnh tây nguyên, thành phố nào có nhiều đơn vị hành chính nhất ?
+              {item.questionTitle}
             </Typography>
           </CardFormItemTitleStyle>
         </BoxFlex>
       </AccordionSummary>
       <AccordionDetails sx={{ mt: "0px !important" }}>
         <Divider sx={{ color: '#E7E9ED' }} />
-        <View flexRow jcBetween style={{ margin: '24px' }}>
-          <View>
-            <Typography sx={questionInfoTitle}>Đáp án</Typography>
-
-            <View mt={'12px'}>
-              <Typography sx={questionAnswer}>{'A) Gia Lai'}
-                <Iconify
-                  icon={"material-symbols:check-circle"}
-                  width={14}
-                  height={14}
-                  marginLeft={'12px'}
-                  color="#43A047"
-                />
-              </Typography>
-              <Typography sx={questionAnswer}>{'B) Buôn ma thuột'}</Typography>
-              <Typography sx={questionAnswer}>{'A) Đà lạt'}</Typography>
+        <View flexRow={true} jcbetween={true} style={{ margin: '24px', justifyContent: 'space-between' }}>
+          {
+            item.questionType != 2 &&
+            <View>
+              <Typography sx={questionInfoTitle}>Đáp án</Typography>
+              <Box mt={'12px'}>
+                {
+                  item.answers.map((x, index) =>
+                    <Typography key={index} sx={questionAnswer}>
+                      <Text style={{ display: 'inline-block', marginRight: '8px' }}>{`${String.fromCharCode(65 + index)})`}</Text>
+                      {x.content}
+                      {
+                        x.isCorrect &&
+                        <Iconify
+                          icon={"material-symbols:check-circle"}
+                          width={14}
+                          height={14}
+                          marginLeft={'12px'}
+                          color="#43A047"
+                        />
+                      }
+                    </Typography>)
+                }
+              </Box>
             </View>
-          </View>
-          <View style={{
+          }
+          <View style={item.questionType != 2 && {
             borderLeft: '1px solid #E7E9ED',
             paddingLeft: '48px'
           }}>
             <Typography sx={questionInfoTitle}>Thông tin câu hỏi</Typography>
             <View mt={'12px'}>
-              {renderText('Nhóm câu hỏi:', 'Nhóm câu hỏi lập trình Nhóm câu hỏi lập trình Nhóm câu hỏi lập trình')}
-              {renderText('Kiểu câu hỏi:', 'Nhóm câu hỏi lập trình')}
-              {renderText('Ngày tạo:', '15/03/2033 15:00')}
-              {renderText('Nhóm câu hỏi:', <>
+              {renderText('Nhóm câu hỏi:', item?.questionGroupName)}
+              {renderText('Kiểu câu hỏi:', LIST_QUESTION_TYPE.find(x => x.value == item.questionType).name)}
+              {renderText('Ngày tạo:', moment(new Date).format('DD/MM/YYYY HH:mm'))}
+              {renderText('Người tạo:', <>
                 <AvatarDS
                   sx={{
                     height: "20px",
@@ -186,7 +219,7 @@ function QuestionCardItem({ index }) {
                     borderRadius: "100px",
                     fontSize: "8px",
                   }}
-                  name={'CV'} />Đinh tiến thành
+                  name={user && `${user?.lastName || ""} ${user?.firstName}`} />{user && `${user?.lastName || ""} ${user?.firstName}`}
               </>
               )}
             </View>
@@ -197,4 +230,4 @@ function QuestionCardItem({ index }) {
   );
 }
 
-export default QuestionCardItem;
+export default QuestionCardItemDefault;

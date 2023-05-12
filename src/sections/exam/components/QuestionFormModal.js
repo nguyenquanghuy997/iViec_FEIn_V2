@@ -7,6 +7,7 @@ import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import SvgIcon from "@/components/SvgIcon";
+import MuiInputNumber from "@/components/form/MuiInputNumber";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { Label } from "@/components/hook-form/style";
@@ -48,6 +49,8 @@ const LIST_QUESTION_TYPE = [
 const defaultValues = {
   id: null,
   questionType: 0,
+  questionPoint: 0,
+  questionState: 0,
   questionGroupId: "",
   questionTitle: "",
   isActive: true,
@@ -59,11 +62,11 @@ const defaultAnswer = {
   isCorrect: false,
 };
 
-export const QuestionFormModal = ({ data, show, onClose, getData }) => {
+export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, handleNoSave }) => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   // props
-  const isEditMode = !!data?.id;
+  const isEditMode = !!data?.id || data?.questionTitle;
 
   // other
   // const { enqueueSnackbar } = useSnackbar();
@@ -78,6 +81,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   const schema = Yup.object().shape({
     questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
     questionTitle: Yup.string().required("Chưa nhập câu hỏi"),
+    questionPoint: Yup.number().typeError('Chưa nhập điểm câu hỏi').required("Chưa nhập điểm câu hỏi").min(1, 'Điểm câu hỏi phải lớn hơn 0'),
     answers: Yup.mixed()
       .test({
         message: "Vui lòng nhập đầy đủ nội dung đáp án",
@@ -118,9 +122,19 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   };
 
   const pressSave = handleSubmit(async (e) => {
-    const body = { ...e };
     try {
-      await (e.id ? updateForm(body) : addForm(body)).unwrap();
+      if (isNotSave) {
+        const data = {
+          ...e,
+          questionGroupName: items.find(x => x.id === e.questionGroupId).name
+        }
+        handleNoSave(data)
+      }
+      else {
+        const body = { ...e };
+        await (e.id ? updateForm(body) : addForm(body)).unwrap();
+      }
+      enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
       getData();
     } catch (error) {
       if (error.status == 'QGE_04')
@@ -160,8 +174,9 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
     const Cb = isMultipleChoice ? Checkbox : Radio;
     return (
       <View
-        flexrow
-        atcenter
+        key={index}
+        flexrow='true'
+        atcenter='true'
         mt={24}
         p={16}
         borderradius={6}
@@ -225,6 +240,8 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
     setValue("id", data.id);
     setValue("questionType", data.questionType);
     setValue("questionTitle", data.questionTitle);
+    setValue("questionPoint", data.questionPoint);
+    setValue("questionGroupId", data.questionGroupId);
     setValue("isActive", !!data.isActive);
     setListAnswer(data.answers);
   }, [show, isEditMode]);
@@ -289,7 +306,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
 
           {/* body */}
           <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
-            <View flexrow>
+            <View flexrow='true'>
               <View flex={1}>
                 {renderTitle("Kiểu câu hỏi", true)}
 
@@ -325,6 +342,19 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
                 name={"questionTitle"}
                 placeholder={"Nhập nội dung câu hỏi..."}
               />
+            </View>
+
+            <View mv={24}>
+              <View width={'50%'}>
+                {renderTitle("Điểm câu hỏi", true)}
+
+                <MuiInputNumber
+                  isRequired
+                  name={"questionPoint"}
+                  placeholder={"Nhập điểm câu hỏi..."}
+                />
+              </View>
+
             </View>
 
             {!isEssay && (

@@ -15,18 +15,19 @@ import * as Yup from "yup";
 
 const defaultValues = {
   id: null,
-  name: "ccc",
+  name: "",
   description: "",
   examTime: 0,
-  isQuestionMixing: false,
+  isQuestionMixing: true,
   showType: 0,
   type: 0
 };
 
 function ExamFormModal({ show, onClose, onSubmit, data }) {
-  const [showType, setShowType] = useState(data?.showType ?? 0)
 
   const dataForm = data ? data : defaultValues;
+
+  const [showType, setShowType] = useState(dataForm?.showType ?? 0)
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Chưa nhập tên đề thi').max(50, 'Tên đề thi không được quá 50 ký tự'),

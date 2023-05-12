@@ -8,8 +8,9 @@ import React, { useState } from 'react'
 
 
 function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
-  
-  const [type, setType] = useState(0);
+
+  const [type, setType] = useState(data?.type ?? 0);
+
   const handleChange = (e) => {
     setType(parseInt(e.target.value))
   }
