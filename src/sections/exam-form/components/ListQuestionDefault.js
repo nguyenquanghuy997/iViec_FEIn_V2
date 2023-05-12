@@ -12,14 +12,17 @@ import { QuestionFormModal } from '@/sections/exam/components/QuestionFormModal'
 import ConfirmModal from '@/sections/emailform/component/ConfirmModal';
 import { View } from "@/components/DesignSystem/FlexStyled";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
+import QuestionGallaryDetailModal from "./QuestionGallaryDetailModal";
 
 function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const [openGroup, setOpenGroup] = useState(false);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showQuestionGallaryInternalModal, setShowQuestionGallaryInternalModal] = useState(false);
+  const [showQuestionGallaryDetailModal, setShowQuestionGallaryDetailModal] = useState(false);
   const [currentIndexQuestion, setCurrentIndexQuestion] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [questionGallary, setQuestionGallary] = useState(null);
 
   const handleCloseGroup = () => {
     setOpenGroup(false);
@@ -66,6 +69,10 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     setCurrentIndexQuestion(-1)
   }
 
+  const handleAddQuestionFromInternal = (datas)=>{
+    updateListQuestion([...listQuestions,...datas])
+  }
+
   const handlerDeleteQuestion = () => {
     listQuestions.splice(currentIndexQuestion, 1)
     // setListData([...listData])
@@ -87,9 +94,10 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     setShowDeleteModal(true)
   }
 
-  // useEffect(()=>{
-  //   updateListQuestion(listData)
-  // },[listQuestions])
+  const handleViewQuestionGallaryDetail = (questionGallary) => {
+    setQuestionGallary(questionGallary)
+    setShowQuestionGallaryDetailModal(true)
+  }
 
   return (
     <>
@@ -97,7 +105,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         {
           listQuestions.length == 0 ?
             <View>
-              <NoQuestion setShowQuestionForm={() => setShowQuestionForm(true)} />
+              <NoQuestion setShowQuestionForm={() => setShowQuestionForm(true)} setShowQuestionGallaryInternalModal={() => setShowQuestionGallaryInternalModal(true)} />
             </View>
             :
             <>
@@ -229,6 +237,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                       key={index}
                       index={index}
                       item={item}
+                      hasRoleEdit={true}
                       onDelete={openDeleteQuestionModal}
                       onEdit={openEditQuestionForm}
                     />)
@@ -238,9 +247,24 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         }
       </View>
 
-      <QuestionFormModal data={currentQuestion} show={showQuestionForm} onClose={handleCloseForm} isNotSave={true} handleNoSave={handleCreateEditQuestion} />
+      <QuestionFormModal
+        data={currentQuestion}
+        show={showQuestionForm}
+        onClose={handleCloseForm}
+        isNotSave={true}
+        handleNoSave={handleCreateEditQuestion} />
 
-      <QuestionGallaryInternalModal show={showQuestionGallaryInternalModal} onClose={() => setShowQuestionGallaryInternalModal(false)} />
+      <QuestionGallaryInternalModal
+        show={showQuestionGallaryInternalModal}
+        handleViewDetail={handleViewQuestionGallaryDetail}
+        onClose={() => setShowQuestionGallaryInternalModal(false)} />
+
+      <QuestionGallaryDetailModal
+        listQuestions={listQuestions?.filter(x=>x.id)}
+        show={showQuestionGallaryDetailModal}
+        handleAddQuestionFromInternal={handleAddQuestionFromInternal}
+        onClose={() => setShowQuestionGallaryDetailModal(false)}
+        questionGallary={questionGallary} />
 
       <ConfirmModal
         confirmDelete={showDeleteModal}

@@ -56,9 +56,9 @@ const LIST_QUESTION_TYPE = [
 ];
 
 
-function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
+function QuestionCardItemDefault({ index, item, hasRoleEdit, onEdit, onDelete, onChangeSelected }) {
   const { user } = useAuth();
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
 
   const renderText = (title, value) => {
     return (
@@ -86,7 +86,7 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
   };
 
   return (
-    <CardFormItemStyle className="card-item" expanded={expanded}>
+    <CardFormItemStyle className="card-item" expanded={expanded} style={{padding: '20px 24px !important'}}>
       <AccordionSummary
         sx={{
           ".MuiAccordionSummary-content": {
@@ -107,30 +107,33 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
             }}>
               {item.questionPoint}
             </Typography>
-            <ButtonIcon
-              onClick={() => onEdit(item, index)}
-              icon={
-                <Iconify
-                  icon={"ri:edit-2-fill"}
-                  width={16}
-                  height={16}
-                  color="#455570"
+            {
+              hasRoleEdit && <>
+                <ButtonIcon
+                  onClick={() => onEdit(item, index)}
+                  icon={
+                    <Iconify
+                      icon={"ri:edit-2-fill"}
+                      width={16}
+                      height={16}
+                      color="#455570"
+                    />
+                  }
                 />
-              }
-            />
 
-            <ButtonIcon
-              onClick={() => onDelete(item, index)}
-              icon={
-                <Iconify
-                  icon={"material-symbols:delete-outline-rounded"}
-                  width={14}
-                  height={14}
-                  color="#455570"
+                <ButtonIcon
+                  onClick={() => onDelete(item, index)}
+                  icon={
+                    <Iconify
+                      icon={"material-symbols:delete-outline-rounded"}
+                      width={14}
+                      height={14}
+                      color="#455570"
+                    />
+                  }
                 />
-              }
-            />
-
+              </>
+            }
             <ButtonIcon
               onClick={() => {
                 setExpanded(!expanded)
@@ -158,9 +161,9 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
             }}
           >
             <Checkbox
-              // value={item}
+              value={item}
               // checked={checked}
-              // onChange={onChangeSelected}
+              onChange={onChangeSelected}
               icon={<CheckboxIconDefault />}
               checkedIcon={<CheckboxIconChecked />}
             />

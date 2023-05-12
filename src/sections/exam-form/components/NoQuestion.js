@@ -4,7 +4,7 @@ import Iconify from "@/components/Iconify";
 import { Button, ButtonGroup, ClickAwayListener, Divider, MenuItem, MenuList, Typography } from "@mui/material";
 import { useState } from "react";
 
-const NoQuestion = ({ setShowQuestionForm }) => {
+const NoQuestion = ({ setShowQuestionForm, setShowQuestionGallaryInternalModal }) => {
     const [openGroup, setOpenGroup] = useState(false);
 
     const handleCloseGroup = () => {
@@ -70,6 +70,13 @@ const NoQuestion = ({ setShowQuestionForm }) => {
                             divider={true}
                             disableGutters={true}
                         >
+                            <MenuItem onClick={setShowQuestionGallaryInternalModal}>
+                                <TeamLineIcon sx={{ mr: "12px" }} />
+                                <Typography ml={"12px"} variant={"textSize13600"}>
+                                    Lấy từ kho nội bộ
+                                </Typography>
+                            </MenuItem>
+                            <Divider />
                             <MenuItem>
                                 <TeamLineIcon sx={{ mr: "12px" }} />
                                 <Typography ml={"12px"} variant={"textSize13600"}>
