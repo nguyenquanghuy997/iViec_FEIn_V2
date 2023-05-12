@@ -129,7 +129,7 @@ export default function DashboardAppBar({ onOpenSidebar, isCollapse = false, ver
                         <NavItemRoot
                             item={{
                                 icon: <Iconify icon="material-symbols:settings"/>,
-                                path: "/settings/companyinfor",
+                                path: "/settings/company-info",
                                 title: "Thiết lập",
                             }}
                             active={activeSettingPath}

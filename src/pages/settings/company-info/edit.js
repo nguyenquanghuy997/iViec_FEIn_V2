@@ -30,7 +30,7 @@ export default function Setting() {
   const { enqueueSnackbar } = useSnackbar();
 
   const onFinish = () => {
-    router.replace("/settings/companyinfor");
+    router.replace("/settings/company-info");
   };
   return (
     <Page

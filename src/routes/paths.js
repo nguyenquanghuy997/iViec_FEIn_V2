@@ -24,7 +24,7 @@ export const PATH_AUTH = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
-  dashboard: path(ROOTS_DASHBOARD, "settings/companyinfor"),
+  dashboard: path(ROOTS_DASHBOARD, "settings/company-info"),
   applicant: {
     root: path(ROOTS_DASHBOARD, "applicant"),
     view: (id) => path(ROOTS_DASHBOARD, `applicant/${id}`),
@@ -86,9 +86,9 @@ export const PATH_DASHBOARD = {
   industry: {
     root: path(ROOTS_DASHBOARD, "industry"),
   },
-  companyinfor: {
-    root: path(ROOTS_DASHBOARD, "companyinfor"),
-    edit: path(ROOTS_DASHBOARD, "companyinfor/edit"),
+  companyInfo: {
+    root: path(ROOTS_DASHBOARD, "company-info"),
+    edit: path(ROOTS_DASHBOARD, "company-info/edit"),
   },
   report1: {
     root: path(ROOTS_DASHBOARD, "report1"),
@@ -115,7 +115,7 @@ export const PATH_DASHBOARD = {
     view: (id) => path(ROOTS_DASHBOARD, `recruitment/${id}`),
   },
   company: {
-    root: path(ROOTS_DASHBOARD, "settings/companyinfor"),
+    root: path(ROOTS_DASHBOARD, "settings/company-info"),
   },
   // pipeline
   pipeline: {

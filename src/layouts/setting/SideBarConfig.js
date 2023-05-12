@@ -1,13 +1,4 @@
-// import Iconify from "@/components/Iconify";
 import { PERMISSIONS as PERS } from "@/config";
-
-// const getIconByIconify = (icon) => (
-//     <Iconify icon={icon} width="100%" height="100%" />
-// );
-
-// const ICONS = {
-//   notification: getIconByIconify("eva:bell-fill"),
-// };
 
 export const SIDEBAR_CONSTANTS = {
   // WIDTH
@@ -43,12 +34,12 @@ export const sidebarConfig = [
       },
       {
         title: "Vị trí công việc",
-        path: "/settings/jobtype",
+        path: "/settings/job-type",
         permissions: [PERS.VIEW_JOB_POS],
       },
       // {
       //   title: "Mẫu đánh giá",
-      //   path: "/settings/evaluationform",
+      //   path: "/settings/evaluation-form",
       //   permissions: [PERS.VIEW_EVA_TPL],
       // },
       // {
@@ -63,7 +54,7 @@ export const sidebarConfig = [
         children: [
           {
             title: "Kho đề thi doanh nghiệp",
-            path: "/settings/exam/exambusiness",
+            path: "/settings/exam/exam-business",
           },
           {
             title: "Kho đề thi iVIEC",
@@ -77,44 +68,44 @@ export const sidebarConfig = [
   {
     subheader: "Thiết lập mẫu",
     items: [
-      {
-        title: "Mẫu đánh giá",
-        path: "/settings/evaluationform",
-        permissions: [PERS.VIEW_EVA_TPL],
-      },
+      // {
+      //   title: "Mẫu đánh giá",
+      //   path: "/settings/evaluation-form",
+      //   permissions: [PERS.VIEW_EVA_TPL],
+      // },
       {
         title: "Mẫu thư mời nhận việc",
-        path: "/settings/offerform",
+        path: "/settings/offer-form",
         permissions: [PERS.VIEW_OFFER_TPL],
       },
       {
         title: "Mẫu email tự động",
-        path: "/settings/emailform",
+        path: "/settings/email-form",
         permissions: [PERS.VIEW_EMAIL],
         children: [
           {
             title: "Email thông báo tài khoản",
-            path: "/settings/emailform/account",
+            path: "/settings/email-form/account",
           },
           {
             title: "Email lịch thi tuyển",
-            path: "/settings/emailform/schedule-exam",
+            path: "/settings/email-form/schedule-exam",
           },
           {
             title: "Email lịch phỏng vấn trực tuyến",
-            path: "/settings/emailform/schedule-online",
+            path: "/settings/email-form/schedule-online",
           },
           {
             title: "Email lịch phỏng vấn trực tiếp",
-            path: "/settings/emailform/schedule-live",
+            path: "/settings/email-form/schedule-live",
           },
           {
             title: "Email thông báo Kết quả - Đạt",
-            path: "/settings/emailform/approve",
+            path: "/settings/email-form/approve",
           },
           {
             title: "Email thông báo Kết quả - Loại",
-            path: "/settings/emailform/reject",
+            path: "/settings/email-form/reject",
           },
         ],
       },
@@ -125,7 +116,7 @@ export const sidebarConfig = [
     items: [
       {
         title: "Thông tin công ty",
-        path: "/settings/companyinfor",
+        path: "/settings/company-info",
         permissions: [PERS.VIEW_COMPANY],
       },
       {

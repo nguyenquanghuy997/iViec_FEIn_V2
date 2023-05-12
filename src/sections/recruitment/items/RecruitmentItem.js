@@ -27,7 +27,7 @@ import {
   API_GET_PROVINCE,
 } from "@/routes/api";
 import { PATH_DASHBOARD } from "@/routes/paths";
-import { ExcelIcon } from "@/sections/offerform/component/editor/Icon";
+import { ExcelIcon } from "@/sections/offer-form/component/editor/Icon";
 import {
   AlertIcon,
   UnCheckedSwitchIcon,
@@ -139,7 +139,7 @@ export const RecruitmentItem = () => {
             onClick={(e) => {
               if (
                 !canView ||
-                record.processStatus == RECRUITMENT_STATUS.DRAFT 
+                record.processStatus === RECRUITMENT_STATUS.DRAFT
                 // record.processStatus ==
                 //   RECRUITMENT_STATUS.WAITING_ORGANIZATION_APPROVAL ||
                 // record.processStatus ==
@@ -425,11 +425,11 @@ export const RecruitmentItem = () => {
         width: "216px",
         render: (text, record) => (
           <>
-            {record?.minSalary != 0
+            {record?.minSalary !== 0
               ? `${fCurrency(record?.minSalary)} - ${fCurrency(
                   record?.maxSalary
                 )} ${Currency(record?.currencyUnit)}`
-              : record.salaryDisplayType == 0
+              : record.salaryDisplayType === 0
               ? "Không lương"
               : "Thỏa thuận"}
           </>
@@ -625,10 +625,10 @@ export const RecruitmentItem = () => {
         let isShow = true;
         for (let i = 1; i < data.length; i++) {
           if (
-            data[i].processStatus == RECRUITMENT_STATUS.RECRUITING ||
-            data[i].processStatus == RECRUITMENT_STATUS.CALENDARED ||
-            data[i].processStatus == RECRUITMENT_STATUS.EXPIRED ||
-            data[i].processStatus == RECRUITMENT_STATUS.CLOSED
+            data[i].processStatus === RECRUITMENT_STATUS.RECRUITING ||
+            data[i].processStatus === RECRUITMENT_STATUS.CALENDARED ||
+            data[i].processStatus === RECRUITMENT_STATUS.EXPIRED ||
+            data[i].processStatus === RECRUITMENT_STATUS.CLOSED
           ) {
             isShow = false;
           }

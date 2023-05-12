@@ -266,9 +266,9 @@ export const ExamItem = ({
   }
 
   const handleSubmitCreate = (data) => {
-    let url = '/settings/exam/exambusiness/create'
-    if (data.type == 2) {
-      url = '/settings/exam/exambusiness/create-random'
+    let url = '/settings/exam/exam-business/create'
+    if (data.type === 2) {
+      url = '/settings/exam/exam-business/create-random'
     }
     router.push({
       pathname: url,

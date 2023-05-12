@@ -7,6 +7,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { createContext, useEffect, useReducer } from "react";
 import jwtDecode from 'jwt-decode';
+import { decodeToken } from "jwt-js";
 
 const initialState = {
   // Open authen gurad
@@ -45,7 +46,7 @@ const handlers = {
   }),
 };
 
-const reducer = (state, action) =>
+export const reducer = (state, action) =>
   handlers[action.type] ? handlers[action.type](state, action) : state;
 
 const AuthContext = createContext({
@@ -62,7 +63,7 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -80,7 +81,6 @@ function AuthProvider({ children }) {
           if (tokenDecode['internal.perform']) {
             permissions.push(PERMISSIONS.IVIEC_ADMIN);
           }
-
           dispatch({
             type: "INITIALIZE",
             payload: {
@@ -123,10 +123,11 @@ function AuthProvider({ children }) {
         Authorization: "Bearer " + token,
       },
     };
-
+    
     try {
       const user = await axios(config);
-      return user.data;
+      let userResult = {...user.data, organizationId: decodeToken(token).payload.ownerId}
+      return userResult;
     } catch (err) {
       throw err;
     }
