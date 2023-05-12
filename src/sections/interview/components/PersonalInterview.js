@@ -1,10 +1,10 @@
 import { TextAreaDS } from "@/components/DesignSystem";
 import { RHFCheckbox, RHFSelect, RHFTextField } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
-import { useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery } from "@/sections/applicant/ApplicantFormSlice";
+import { useGetRecruitmentPipelineStatesByRecruitmentsQuery } from "@/sections/applicant/ApplicantFormSlice";
 import {
+  useGetRelateCalendarQuery,
   useGetReviewFormQuery,
-  useLazyGetRelateCalendarQuery,
 } from "@/sections/interview/InterviewSlice";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
@@ -23,12 +23,18 @@ const PersonalInterview = ({
   const { data: { items: dataRecruitment = [] } = {} } =
     useGetRecruitmentsQuery({ processStatuses: [5, 7] });
   const { palette } = useTheme();
+    const { data: { items: ListStep = [] } = {} } = useGetRecruitmentPipelineStatesByRecruitmentsQuery(
+      { RecruitmentId: watch("recruitmentId") },
+      { skip: !watch("recruitmentId") }
+    );
+  const { data: relateCalendar = [], isError } = useGetRelateCalendarQuery(
+    { RecruitmentPipelineStateId: watch("recruitmentPipelineStateId") },
+    { skip: !watch("recruitmentPipelineStateId") }
+  );
+  const recruitment = watch('recruitmentPipelineStateId');
+  const _relateCalendar = isError || !recruitment ? null : relateCalendar
 
-  const [getPipeline, { data: { items: ListStep = [] } = {} }] =
-    useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
 
-  const [getRelateCalendar, { data: relateCalendar }] =
-    useLazyGetRelateCalendarQuery();
   const { data: { items: DataForm = [] } = {} } = useGetReviewFormQuery();
 
   const interviewType = [
@@ -42,28 +48,18 @@ const PersonalInterview = ({
     },
   ];
 
-  const changeRecruitment = (e) => {
-    getPipeline({ RecruitmentId: e });
+  const changeRecruitment = () => {
     resetField("recruitmentPipelineStateId");
     resetField("reviewFormId");
-    resetField("interviewType");
     resetField("offlineInterviewAddress");
     resetField("applicantIdArray");
     resetField("bookingCalendarGroups");
   };
 
-  const changePipelineRecruitment = (e) => {
-    getRelateCalendar({ RecruitmentPipelineStateId: e });
-  };
-
   useEffect(() => {
     if (option) {
       setValue("recruitmentId", option?.id);
-      setValue("recruitmentPipelineStateId", currentApplicantPipelineState),
-        getPipeline({ RecruitmentId: option?.id });
-      getRelateCalendar({
-        RecruitmentPipelineStateId: currentApplicantPipelineState,
-      });
+      setValue("recruitmentPipelineStateId", currentApplicantPipelineState)
     }
   }, [!option]);
 
@@ -74,26 +70,14 @@ const PersonalInterview = ({
         "recruitmentPipelineStateId",
         optionsFromCruit?.recruitmentPipelineStateId
       );
-      getPipeline({ RecruitmentId: optionsFromCruit?.recruitmentId });
-    getRelateCalendar({
-      RecruitmentPipelineStateId: optionsFromCruit?.recruitmentPipelineStateId,
-    });
     }
   }, [optionsFromCruit]);
 
   useEffect(() => {
-    if (!item?.id) return;
-    getPipeline({ RecruitmentId: item?.recruitmentId });
-    getRelateCalendar({
-      RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
-    });
-  }, [item]);
-
-  useEffect(() => {
-    if (!relateCalendar) return;
-    setValue("reviewFormId", relateCalendar?.reviewFormId);
-  }, [relateCalendar]);
-
+    if(recruitment){
+      setValue("reviewFormId", _relateCalendar?.reviewFormId);
+    }
+  }, [ _relateCalendar]);
 
   return (
     <Grid>
@@ -142,9 +126,9 @@ const PersonalInterview = ({
                 })
               ) || {
                 value: option.currentApplicantPipelineState,
+              } || {
+                value: optionsFromCruit?.recruitmentPipelineStateId,
               }
-              ||{
-               value: optionsFromCruit?.recruitmentPipelineStateId}
             }
             name="recruitmentPipelineStateId"
             multiple={false}
@@ -154,10 +138,10 @@ const PersonalInterview = ({
               !!(
                 currentApplicantPipelineState ||
                 item?.recruitmentPipelineStateId ||
-                !watch("recruitmentId") || optionsFromCruit?.recruitmentPipelineStateId
+                !watch("recruitmentId") ||
+                optionsFromCruit?.recruitmentPipelineStateId
               )
             }
-            onChange={changePipelineRecruitment}
           />
         </Grid>
         <Grid item xs={6} pl={"12px"}>
@@ -187,9 +171,11 @@ const PersonalInterview = ({
             placeholder="Nhập nội dung lưu ý..."
             name={"offlineInterviewAddress"}
             style={{
-              height: "80px", resize: "none", "&.antInputDataCount": {
-                display: "none"
-              }
+              height: "80px",
+              resize: "none",
+              "&.antInputDataCount": {
+                display: "none",
+              },
             }}
           />
         </Grid>
@@ -230,7 +216,7 @@ const PersonalInterview = ({
           }))}
           name="reviewFormId"
           placeholder="Chọn mẫu đánh giá"
-          disabled={!!(item?.reviewFormId || relateCalendar?.reviewFormId)}
+          disabled={!!(item?.reviewFormId || (!isError  && _relateCalendar?.reviewFormId))}
           multiple={false}
         />
       </Grid>
