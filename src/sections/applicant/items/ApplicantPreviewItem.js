@@ -40,7 +40,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/styles";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function ApplicantPreviewItem() {
   const router = useRouter();
@@ -50,6 +50,7 @@ function ApplicantPreviewItem() {
   const ApplicantCorrelationId = router.query.correlationId;
   const OrganizationId = router.query.organizationId;
   const RecruitmentId = router.query.recruitmentId;
+  const requestEdit = router.query.mode === "edit";
 
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
@@ -362,6 +363,11 @@ function ApplicantPreviewItem() {
   };
 
   useEffect(() => {
+    if (!requestEdit) return;
+    handleOpenEditForm();
+  }, [requestEdit]);
+
+  useEffect(() => {
     if (!isFetching) {
       const recruitment = options.filter((p) => p.id == RecruitmentId);
       setSelectedOption(recruitment[0]);
@@ -410,8 +416,8 @@ function ApplicantPreviewItem() {
         sx={{ ...(smDown && { padding: 0 }) }}
       >
         <NavGoBack
-          link={PATH_DASHBOARD.applicant.root}
           name={"Trở về danh sách ứng viên"}
+          onClick={router.back}
         ></NavGoBack>
         <Grid>
           <Grid item xs={12} md={5}>
