@@ -102,10 +102,6 @@ export const API_SET_ACTIVE_ORGANIZATION =
   "/organization/Organization/SetOrganizationsActive";
 export const API_GET_ALL_ADMIN_ORGANIZATION =
   "/organization/Organization/GetApplicantUsersAdmin";
-
-export const API_GET_LIST_USER_ORGANIZATION =
-  "/organization/Organization/GetApplicationUserByOrganization";
-
 // mời người dùng
 export const API_INVITE_USER =
   "/organization/OrganizationUserInvite/CreateOrganizationUserInvites";
@@ -253,8 +249,6 @@ export const API_GET_ADD_APPLICANT_TO_RECRUITMENT =
   "/applicant/ApplicantRecruitment/AddApplicantsToRecruitment";
 
 //Danh sách người tạo
-export const API_GET_APPLICANT_USERS_FILTER =
-  "/organization/Organization/GetApplicationUsersFilter";
 
 // API ApproveProcess
 export const API_CREATE_APPROVE_PROCESS =

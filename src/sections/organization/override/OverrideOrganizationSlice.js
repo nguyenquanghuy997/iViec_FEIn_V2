@@ -2,22 +2,25 @@ import {
   API_CREATE_CHILD_ORGANIZATION,
   API_DELETE_INVITE_USER,
   API_DELETE_MULTIPLE_ORGANIZATION,
-  API_DELETE_ORGANIZATION, API_DELETE_USER_ORGANIZATION,
+  API_DELETE_ORGANIZATION,
+  API_DELETE_USER_ORGANIZATION,
   API_GET_ALL_ADMIN_ORGANIZATION,
   API_GET_LIST_USER_INVITE,
-  API_GET_LIST_USER_ORGANIZATION,
   API_GET_ORGANIZATION_DETAIL_BY_ID,
   API_GET_ORGANIZATION_DETAIL_BY_SLUG,
   API_GET_ORGANIZATION_PREVIEW,
   API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_USER_FROM_ORGANIZATION,
   API_INVITE_USER,
   API_RESEND_INVITE_USER,
-  API_SET_ACTIVE_ORGANIZATION, API_SET_ACTIVE_USER,
-  API_UPDATE_ORGANIZATION, API_UPDATE_USER_ROLE_ORGANIZATION,
+  API_SET_ACTIVE_ORGANIZATION,
+  API_SET_ACTIVE_USER,
+  API_UPDATE_ORGANIZATION,
+  API_UPDATE_USER_ROLE_ORGANIZATION,
   API_USER_CONFIRM_INVITE
 } from "@/routes/api";
-import {createApi} from '@reduxjs/toolkit/query/react'
-import {axiosBaseQuery} from "@/redux/api/apiSlice";
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { axiosBaseQuery } from "@/redux/api/apiSlice";
 
 export const organizationServiceApi = createApi({
   reducerPath: 'organizationServiceApi',
@@ -55,7 +58,7 @@ export const organizationServiceApi = createApi({
     }),
     getAllApplicantUserOrganizationById: build.query({
       query: (params) => ({
-        url: API_GET_LIST_USER_ORGANIZATION,
+        url: API_GET_USER_FROM_ORGANIZATION,
         method: 'GET',
         params
       }),

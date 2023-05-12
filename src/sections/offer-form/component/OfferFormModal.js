@@ -62,7 +62,7 @@ const defaultValues = {
   templateAttachFiles: undefined,
 };
 
-const renderFileUploadItem = (file, index, removeFileUpload) => {
+export const renderFileUploadItem = (file, index, removeFileUpload, displayButtonDelete) => {
   if (!file) return;
   let fileType = file.name.slice(file.name.lastIndexOf('.'));
   return (
@@ -81,13 +81,15 @@ const renderFileUploadItem = (file, index, removeFileUpload) => {
           }}>{file.name}</Typography>
         <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
       </Stack>
-      <IconButton
-        size='small'
-        sx={{color: '#1976D2', mx: 0.5}}
-        onClick={() => {
-          removeFileUpload(index)
-        }}
-      ><DeleteIcon/></IconButton>
+      {!displayButtonDelete &&
+        <IconButton
+          size='small'
+          sx={{color: '#1976D2', mx: 0.5}}
+          onClick={() => {
+            removeFileUpload(index)
+          }}
+        ><DeleteIcon/></IconButton>
+      }
     </BoxItemFileStyle>
   )
 }
@@ -159,10 +161,10 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
   };
   
   const pressSave = handleSubmit(async (body) => {
-    if(fileList.length > 0) {
+    if (fileList.length > 0) {
       const file = new FormData();
       fileList.forEach(item => {
-        if(item.id) return
+        if (item.id) return
         file.append("Files", item);
       });
       const fileResult = await uploadFiles(file).unwrap();

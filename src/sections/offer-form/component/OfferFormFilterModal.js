@@ -13,8 +13,8 @@ import {
 } from "@/sections/applicant/style";
 import { fDate } from "@/utils/formatTime";
 import { LIST_STATUS } from "@/utils/formatString";
-import { useGetAllUserFromOrganizationQuery } from "@/sections/applicant";
 import { toRequestFilterData } from "@/utils/helper";
+import { useGetAllOrganizationUserQuery } from "@/sections/offer-form/OfferFormSlice";
 
 const columns = [
   {
@@ -56,8 +56,8 @@ const columns = [
 
 function OfferFormFilterModal({methods, isOpen, handleOpen, onSubmit}) {
   const router = useRouter();
-  const {data: {items: ListUserFromOrganization = []} = {}} = useGetAllUserFromOrganizationQuery();
-
+  const {data: {items: ListUserFromOrganization = []} = {}} = useGetAllOrganizationUserQuery();
+  
   const {
     handleSubmit,
     reset,
