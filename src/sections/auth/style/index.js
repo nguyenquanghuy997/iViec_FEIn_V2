@@ -62,7 +62,7 @@ const BoxWrapperStyle = {
 const BoxInnerStyle = {
     px: 7.5,
     py: 5,
-    backgroundColor: style.BG_WHITE,
+    backgroundColor: style.COLOR_WHITE,
     width: "560px",
     mb: 4.5,
     borderRadius: 0.75,

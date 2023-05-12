@@ -146,7 +146,7 @@ const EditHirePipeline = ({data, onClose}) => {
                         <Box>
                           {renderIconByPipelineType(pipeline?.organizationProfilePipelineType)}
                         </Box>
-                        <Typography sx={{fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD}}>
+                        <Typography sx={{fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMI_BOLD}}>
                           {PipelineStateType(pipeline?.organizationProfilePipelineType || pipeline?.type)}
                         </Typography>
                       </div>
@@ -172,7 +172,7 @@ const EditHirePipeline = ({data, onClose}) => {
                           <Box>
                             {renderIconByPipelineType(pipeline?.organizationProfilePipelineType)}
                           </Box>
-                          <Typography sx={{fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMIBOLD}}>
+                          <Typography sx={{fontSize: style.FONT_BASE, fontWeight: style.FONT_SEMI_BOLD}}>
                             {PipelineStateType(pipeline?.organizationProfilePipelineType)}
                           </Typography>
                         </div>

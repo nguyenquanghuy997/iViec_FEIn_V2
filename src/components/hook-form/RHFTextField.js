@@ -1,13 +1,9 @@
-import {memo} from 'react';
-import {Controller, useFormContext} from "react-hook-form";
 import MuiTextField from "@/components/form/MuiTextField";
+import { FormHelperText } from "@mui/material";
+import { memo } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
-function RHFTextField({
-  name,
-  beforeChange,
-  maxLength,
-  ...other
-}) {
+function RHFTextField({ name, beforeChange, maxLength, ...other }) {
   const { control } = useFormContext();
   return (
     <Controller
@@ -21,14 +17,20 @@ function RHFTextField({
         return (
           <>
             <MuiTextField
+              sx={{ background: "#fff" }}
               {...field}
-              error={!!error}
-              helperText={error?.message}
               inputProps={{
                 maxLength: maxLength,
               }}
               {...other}
             />
+            {error && (
+              <FormHelperText
+                sx={{ color: "#FF4842", fontSize: 12, fontWeight: 400, mt: 1 }}
+              >
+                {error?.message}
+              </FormHelperText>
+            )}
           </>
         );
       }}
@@ -36,4 +38,4 @@ function RHFTextField({
   );
 }
 
-export default memo(RHFTextField)
+export default memo(RHFTextField);

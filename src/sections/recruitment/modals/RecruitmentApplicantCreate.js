@@ -1,6 +1,7 @@
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
+import MuiDatePicker from "@/components/form/MuiDatePicker";
 import { RHFTextField } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
@@ -26,6 +27,7 @@ import {
 import { setValueFieldScan } from "@/sections/recruitment/helper";
 import { ViewModel } from "@/utils/cssStyles";
 import {
+  LIST_CURRENCY_TYPE,
   LIST_EXPERIENCE_NUMBER,
   LIST_GENDER,
   LIST_MARITAL_STATUSES,
@@ -41,6 +43,7 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
+import moment from "moment/moment";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -76,6 +79,13 @@ const defaultValues = {
     address: undefined,
   },
   livingAddress: {
+    address: undefined,
+  },
+  activitiesAndProjects: undefined,
+  careerObjective: undefined,
+  achievements: undefined,
+  currencyUnit: undefined,
+  expectedWorkingAddress: {
     address: undefined,
   },
 };
@@ -120,15 +130,14 @@ export const RecruitmentApplicantCreate = ({
     recruitmentTitle: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
     recruitmentPipelineStageId: Yup.string().nullable(),
     pipelineStateResultType: Yup.string().nullable(),
+    dateOfBirth: Yup.string().required("Chưa chọn ngày sinh"),
     jobCategoryIds: Yup.array().required("Chưa chọn ngành nghề"),
     jobSourceId: Yup.string().required("Chưa chọn nguồn"),
     fullName: Yup.string()
       .max(50, "Họ tên không quá 50 ký tự")
       .required("Chưa nhập họ tên"),
     portraitImage: Yup.string(),
-    email: Yup.string()
-      .email("Email cần nhập đúng định dạng")
-      .required("Chưa nhập email"),
+    email: Yup.string().email("Email cần nhập đúng định dạng"),
     phoneNumber: Yup.string()
       .required("Chưa nhập số điện thoại")
       .matches(phoneRegExp, "Số điện thoại không đúng định dạng"),
@@ -159,6 +168,15 @@ export const RecruitmentApplicantCreate = ({
       address: Yup.string(),
     }),
     rawApplicantSkills: Yup.string(),
+    expectedSalaryFrom: Yup.number(),
+    expectedSalaryTo: Yup.number(),
+    activitiesAndProjects: Yup.string(),
+    careerObjective: Yup.string(),
+    achievements: Yup.string(),
+    currencyUnit: Yup.number(),
+    expectedWorkingAddress: Yup.object().shape({
+      address: Yup.string(),
+    }),
   });
 
   const methods = useForm({
@@ -191,6 +209,7 @@ export const RecruitmentApplicantCreate = ({
   const pressSave = handleSubmit(async (body) => {
     let pathFile = "";
     body.jobCategoryIds = body.jobCategoryIds?.map((item) => item?.value);
+    body.dateOfBirth = moment(body?.dateOfBirth).toISOString();
     if (isEditMode) {
       if (cv && cv.length > 0) {
         const file = new FormData();
@@ -259,6 +278,7 @@ export const RecruitmentApplicantCreate = ({
   useEffect(() => {
     if (!preview?.id) return;
     setValue("fullName", preview.fullName ?? undefined);
+    setValue("dateOfBirth", preview.dateOfBirth ?? undefined);
     setValue(
       "portraitImage",
       preview.portraitImage?.includes("base64")
@@ -290,6 +310,19 @@ export const RecruitmentApplicantCreate = ({
       })) ?? undefined
     );
     setValue("jobSourceId", preview.jobSourceId ?? undefined);
+    setValue("expectedSalaryFrom", preview.expectedSalaryFrom ?? undefined);
+    setValue("expectedSalaryTo", preview.expectedSalaryTo ?? undefined);
+    setValue(
+      "activitiesAndProjects",
+      preview.activitiesAndProjects ?? undefined
+    );
+    setValue("careerObjective", preview.careerObjective ?? undefined);
+    setValue("achievements", preview.achievements ?? undefined);
+    setValue("currencyUnit", preview.currencyUnit ?? undefined);
+    setValue(
+      "expectedWorkingAddress.address",
+      preview.expectedWorkingAddress?.address ?? undefined
+    );
   }, [preview]);
 
   useEffect(() => {
@@ -447,12 +480,25 @@ export const RecruitmentApplicantCreate = ({
                         />
                       </Grid>
                     </Grid>
-                    <Grid mb={3}>
-                      <Label required={true}>{"Họ và tên"}</Label>
-                      <RHFTextField
-                        name={"fullName"}
-                        placeholder="Nhập họ và tên ứng viên"
-                      />
+                    <Grid container flexDirection={"row"} mb={3}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <Label required={true}>{"Họ và tên"}</Label>
+                        <RHFTextField
+                          name={"fullName"}
+                          placeholder="Nhập họ và tên ứng viên"
+                        />
+                      </Grid>
+                      <Grid item xs={6} pl={"12px"}>
+                        <Label required={true}>{"Ngày sinh"}</Label>
+                        <MuiDatePicker
+                          name="dateOfBirth"
+                          placeholder="Chọn ngày"
+                          DatePickerProps={{
+                            maxDate: new Date(),
+                          }}
+                          sx
+                        />
+                      </Grid>
                     </Grid>
                     <Grid mb={3} container flexDirection={"row"}>
                       <Grid item xs={6} pr={"12px"}>
@@ -466,7 +512,6 @@ export const RecruitmentApplicantCreate = ({
                       <Grid item xs={6} pl={"12px"}>
                         <RHFTextField
                           title={"Email"}
-                          isRequired={true}
                           name={"email"}
                           placeholder="Nhập email ứng viên"
                         />
@@ -504,7 +549,7 @@ export const RecruitmentApplicantCreate = ({
                   </Grid>
                   <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
                     <Typography variant={"subtitle2"} color={"#5C6A82"}>
-                      KINH NGHIỆM LÀM VIỆC VÀ HỌC VẤN
+                      KINH NGHIỆM LÀM VIỆC
                     </Typography>
                   </Grid>
                   <Grid item p={3}>
@@ -531,10 +576,80 @@ export const RecruitmentApplicantCreate = ({
                       />
                     </Grid>
                     <Grid mb={3}>
+                      <Label>Dự án và hoạt động</Label>
+                      <TextAreaDS
+                        name={"activitiesAndProjects"}
+                        placeholder="VD: Thời gian - Tên dự án - Vị trí trong dự án - Mô tả cụ thể..."
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
+                    <Typography variant={"subtitle2"} color={"#5C6A82"}>
+                      HỌC VẤN VÀ CHỨNG CHỈ
+                    </Typography>
+                  </Grid>
+                  <Grid item p={3}>
+                    <Grid mb={3}>
                       <Label>Học vấn</Label>
                       <TextAreaDS
                         name={"education"}
                         placeholder="VD: Thời gian - Trình độ - Nơi đào tạo - Chuyên ngành..."
+                      />
+                    </Grid>
+                    <Grid mb={3}>
+                      <Label>Chứng chỉ</Label>
+                      <TextAreaDS
+                        name={"achievements"}
+                        placeholder="VD: Thời gian - Tên chứng chỉ - Nơi đào tạo - Mô tả cụ thể..."
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
+                    <Typography variant={"subtitle2"} color={"#5C6A82"}>
+                      KỲ VỌNG Ở CÔNG VIỆC MỚI
+                    </Typography>
+                  </Grid>
+                  <Grid item p={3}>
+                    <Grid mb={3} container flexDirection={"row"}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <RHFDropdown
+                          title={"Loại tiền tệ"}
+                          options={LIST_CURRENCY_TYPE}
+                          name={"currencyUnit"}
+                          placeholder="Chọn loại tiền tệ"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid mb={3} container flexDirection={"row"}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <RHFTextField
+                          title={"Mức lương mong muốn tối thiểu"}
+                          name={"expectedSalaryFrom"}
+                          type={"number"}
+                          placeholder="Nhập số tiền"
+                        />
+                      </Grid>
+                      <Grid item xs={6} pl={"12px"}>
+                        <RHFTextField
+                          title={"Mức lương mong muốn tối đa"}
+                          name={"expectedSalaryTo"}
+                          type={"number"}
+                          placeholder="Nhập số tiền"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid mb={3}>
+                      <Label>Nơi làm việc mong muốn</Label>
+                      <TextAreaDS
+                        name={"expectedWorkingAddress.address"}
+                        placeholder="VD: Quận Huyện, Tỉnh/Thành..."
+                      />
+                    </Grid>
+                    <Grid mb={3}>
+                      <Label>Mục tiêu nghề nghiệp</Label>
+                      <TextAreaDS
+                        name={"careerObjective"}
+                        placeholder="Nhập mục tiêu nghề nghiệp của ứng viên"
                       />
                     </Grid>
                   </Grid>

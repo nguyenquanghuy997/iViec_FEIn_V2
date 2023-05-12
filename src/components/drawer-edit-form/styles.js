@@ -17,7 +17,7 @@ export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) =
   '.role-actions-table': {
     '.MuiTableHead-root': {
       'tr th': {
-        background: '#fff',
+        background: palette.background.paper,
       },
     },
   },
@@ -28,7 +28,7 @@ export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) =
     ...contentStyles,
   },
   '.edit-footer': {
-    background: "#FDFDFD",
+    background: palette.common.white,
     padding: "14px 24px",
     minHeight: '68px',
     borderTop: '1px solid ' + palette.text.border,

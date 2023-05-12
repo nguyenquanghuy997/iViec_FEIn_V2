@@ -106,7 +106,7 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
         <>
             <BoxWrapperStyle className="wrapper">
                 <Box className="box-item"
-                     sx={{width: style.WIDTH_FULL, backgroundColor: style.BG_TRANSPARENT, display: 'flex',}}>
+                     sx={{width: style.WIDTH_FULL, backgroundColor: "transparent", display: 'flex',}}>
                     <BoxInnerStyle>
                         <DividerCard title="QUY TRÌNH TUYỂN DỤNG" sx={{borderTopRightRadius: '6px', borderTopLeftRadius: '6px'}}/>
                         <Box sx={{px: 4, py: 3}}>
@@ -137,7 +137,7 @@ const RecruitmentPipeline = forwardRef(({recruitment,}, ref) => {
                                 <Typography sx={{
                                     color: style.COLOR_TEXT_PRIMARY,
                                     fontSize: style.FONT_BASE,
-                                    fontWeight: style.FONT_SEMIBOLD
+                                    fontWeight: style.FONT_SEMI_BOLD
                                 }}>
                                     Bước tuyển dụng
                                 </Typography>
