@@ -72,7 +72,7 @@ export const RoleContainer = () => {
         <TextMaxLine
           sx={{ width: 220, fontWeight: "normal", fontSize: 14, ...(canEdit && { cursor: 'pointer' }) }}
           onClick={(e) => {
-            if (!canEdit) {
+            if (!canEdit || record?.isDefault == true) {
               return;
             }
             setEditItem(record);
@@ -180,7 +180,6 @@ export const RoleContainer = () => {
     if (itemSelected.length < 2) {
       return true;
     }
-
     let isShow = true;
     let isActive = itemSelected[0].isActivated;
     for (let i = 1; i < itemSelected.length; i++) {
@@ -327,8 +326,9 @@ export const RoleContainer = () => {
               />
             ),
           }] : []),
-          ...((canEdit && itemSelected.length === 1) ? [{
+          ...((canEdit && itemSelected.length === 1 && itemSelected[0]?.isDefault != true) ? [{
             icon: <RiEdit2Fill size={18} color={palette.text.secondary} />,
+            title:"Sửa",
             onClick: () => {
               if (itemSelected.length > 1) {
                 return;
@@ -340,6 +340,7 @@ export const RoleContainer = () => {
           }] : []),
           ...(showDeleteBtn ? [{
             icon: <RiDeleteBin6Line size={18} color={palette.text.warning} />,
+            title:'Xóa',
             onClick: () => {
               handleConfirmDelete();
             },

@@ -299,7 +299,6 @@ export const ApplicantFormSlice = createApi({
 export const {
   useGetRecruitmentsQuery,
   useGetRecruitmentPipelineStatesByRecruitmentsQuery,
-  useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
