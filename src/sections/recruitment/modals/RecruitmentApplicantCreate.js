@@ -251,6 +251,7 @@ export const RecruitmentApplicantCreate = ({
           });
           dispatch(
             ApplicantFormSlice.util.invalidateTags([
+              { type: "APPLICANT", id: "LIST_FILTER" },
               { type: "APPLICANT", id: "LIST_APPLICANT_PIPELINE" },
             ])
           );
