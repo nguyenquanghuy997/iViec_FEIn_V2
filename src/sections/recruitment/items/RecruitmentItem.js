@@ -606,14 +606,7 @@ export const RecruitmentItem = () => {
               "copy",
             ];
           case 6:
-            return [
-              "name",
-              "detail",
-              "preview",
-              "excel",
-              "edit",
-              "copy",
-            ];
+            return ["name", "detail", "preview", "excel", "edit", "copy"];
           case 7:
             return ["name", "detail", "preview", "excel", "close", "copy"];
           case 8:
@@ -818,12 +811,14 @@ export const RecruitmentItem = () => {
               ),
             color: "basic",
             icon: <EditIcon />,
+            title: "Chỉnh sửa",
           },
           (canView || canEdit) && {
             key: "excel",
             onClick: () => handleExportExcel(itemSelected),
             color: "basic",
             icon: <ExcelIcon />,
+            title: "Export Excel",
           },
           canEdit && {
             key: "copy",
@@ -837,12 +832,14 @@ export const RecruitmentItem = () => {
               }),
             color: "basic",
             icon: <CopyIcon />,
+            title: "Sao chép",
           },
           canEdit && {
             key: "delete",
             onClick: () => handleOpenModalState({ openDelete: true }),
             color: "basic",
             icon: <DeleteIcon />,
+            title: "Xóa",
           },
         ].filter((item) => listKeyActions?.includes(item.key))}
       />
