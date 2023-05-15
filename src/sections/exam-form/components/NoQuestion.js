@@ -67,8 +67,8 @@ const NoQuestion = ({ setShowQuestionForm, setShowQuestionGallaryInternalModal }
                     >
                         <MenuList
                             autoFocusItem
-                            divider={true}
-                            disableGutters={true}
+                            divider={'true'}
+                            disableGutters={'true'}
                         >
                             <MenuItem onClick={setShowQuestionGallaryInternalModal}>
                                 <TeamLineIcon sx={{ mr: "12px" }} />

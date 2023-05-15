@@ -5,13 +5,37 @@ import { Text } from '@/components/DesignSystem/FlexStyled'
 import { Box, Dialog, DialogActions, DialogContent, Divider, Grid, InputAdornment } from '@mui/material'
 import React, { useState } from 'react'
 import { ButtonCancel } from '@/utils/cssStyles'
-import { FormProvider, RHFTextField } from '@/components/hook-form'
+import { FormProvider, RHFSelect, RHFTextField } from '@/components/hook-form'
 import { useForm } from 'react-hook-form'
 import { useLazyGetQuestionsQuery } from '@/sections/exam/ExamSlice'
 import { useEffect } from 'react'
 import QuestionCardItemDefault from './QuestionCardItemDefault'
+import { LabelStyle } from '@/components/hook-form/style'
+import { API_GET_ORGANIZATION_USERS } from '@/routes/api'
+import MuiDatePicker from '@/components/form/MuiDatePicker'
+import { useDebounce } from '@/hooks/useDebounce'
 
-function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQuestionFromInternal }) {
+
+const LIST_QUESTION_TYPE = [
+  {
+    value: 0,
+    label: "Trắc nghiệm - 1 đáp án đúng",
+    name: "Trắc nghiệm - 1 đáp án đúng",
+  },
+  {
+    value: 1,
+    label: "Trắc nghiệm - nhiều đáp án đúng",
+    name: "Trắc nghiệm - nhiều đáp án đúng",
+  },
+  {
+    value: 2,
+    label: "Tự luận",
+    name: "Tự luận",
+  },
+];
+
+
+function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuestions, handleAddQuestionFromInternal }) {
   const [getQuestions, { data: Data }] = useLazyGetQuestionsQuery();
   const [questionSelected, setQuestionSelected] = useState([])
 
@@ -22,26 +46,57 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
     },
   });
 
-  const { handleSubmit } = methods;
+  const {
+    handleSubmit,
+    watch,
+    setValue
+  } = methods;
+
+  const searchKey = useDebounce(watch('searchKey'),500) 
+  const type = watch('type')
+  const createdTimeFrom = watch('createdTimeFrom')
+  const createdTimeTo = watch('createdTimeTo')
+  const OrganizationIds = watch('OrganizationIds')
 
   const handleSelected = (data) => {
+    //neu disable thi khong cho check
+    if (isDisable(data))
+      return;
     const isExits = questionSelected.find(x => x.id == data.id)
     if (isExits) {
       setQuestionSelected(questionSelected.filter(x => x.id != data.id))
     }
     else {
-      setQuestionSelected([...questionSelected, data]);
+      setQuestionSelected([...questionSelected, { ...data, questionGroupName: questionGallary?.name }]);
     }
   }
 
   const addToQuestion = () => {
-    handleAddQuestionFromInternal(questionSelected)
+    handleAddQuestionFromInternal([...questionSelected].filter(x => !isDisable(x)))
+  }
+
+  const isSelected = (item) => {
+    return listQuestions.some(x => x.id == item.id)
+  }
+
+  const isDisable = (item) => {
+    return listQuestions.some(x => x.id == item.id)
+  }
+
+  const getTotalSelected = () => {
+    return listQuestions.filter(x => x.questionGroupId == questionGallary?.id).length + questionSelected.length;
   }
 
   useEffect(() => {
-    getQuestions();
-  }, [questionGallary]);
+    // setQuestionSelected([])
+    getQuestions({ QuestionGroupId: questionGallary?.id, searchKey, type, createdTimeFrom, createdTimeTo, OrganizationIds });
+  }, [questionGallary, searchKey, type, createdTimeFrom, createdTimeTo, OrganizationIds]);
 
+  useEffect(() => {
+    setQuestionSelected([])
+    setValue("searchKey", "")
+  }, [show])
+  
   return (
     <Dialog
       fullWidth
@@ -54,7 +109,6 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
         "& .MuiPaper-root": {
           top: "0 !important",
           borderRadius: "6px !important",
-          // minHeight: 'calc(100% - 64px)'
         },
       }}
     >
@@ -100,7 +154,8 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
           backgroundColor: '#F2F4F5',
           padding: 0,
           display: 'flex',
-          alignItems: 'stretch'
+          alignItems: 'stretch',
+          height: 'calc(100vh - 64px - 68px - 68px)'
         }}>
           <Grid container spacing={0} alignItems={'stretch'}>
             <Grid item xs={3} sx={{ background: '#FDFDFD' }}>
@@ -127,6 +182,43 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
                     ),
                   }}
                 />
+
+                <Box sx={{ mt: 3 }}>
+                  <LabelStyle>Kiểu câu hỏi</LabelStyle>
+                  <RHFSelect
+                    name="type"
+                    placeholder="Chọn kiểu câu hỏi"
+                    options={LIST_QUESTION_TYPE}
+                    fullWidth
+                    allowClear
+                  />
+                </Box>
+
+                <Box sx={{ mt: 3 }}>
+                  <LabelStyle>Ngày tạo</LabelStyle>
+                  <MuiDatePicker
+                    name="createdTimeFrom"
+                    placeholder="Chọn ngày"
+                  />
+
+                  <MuiDatePicker
+                    name="createdTimeTo"
+                    placeholder="Chọn ngày"
+                  />
+                </Box>
+
+                <Box sx={{ mt: 1 }}>
+                  <LabelStyle>Người tạo</LabelStyle>
+                  <RHFSelect
+                    remoteUrl={`${API_GET_ORGANIZATION_USERS}`}
+                    name="OrganizationIds"
+                    multiple
+                    placeholder="Chọn người tạo"
+                    fullWidth
+                    showAvatar
+                    allowClear
+                  />
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={9}>
@@ -134,6 +226,7 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex' }}>
                     <Iconify
+                      onClick={onClose}
                       icon={"ion:arrow-back-outline"}
                       width={20}
                       height={20}
@@ -147,7 +240,9 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
                   </Box>
 
                   <Box>
-                    <Text fontsize={13} fontweight={"600"} color={"#455570"}>Đã chọn {questionSelected.length}/{Data?.items?.length} Câu hỏi</Text>
+                    <Text fontsize={13} fontweight={"600"} color={"#455570"}>
+                      {`Đã chọn ${getTotalSelected()}/${Data?.totalRecord} câu hỏi`}
+                    </Text>
                   </Box>
                 </Box>
                 <Box mt={2}>
@@ -155,6 +250,8 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
                     Data?.items?.map((item, index) => <QuestionCardItemDefault
                       key={index}
                       index={index}
+                      checked={isSelected(item)}
+                      isDisable={isDisable(item)}
                       onChangeSelected={() => handleSelected(item)}
                       item={{ ...item, questionGroupName: questionGallary?.name }}
                     />)
@@ -170,10 +267,10 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, handleAddQ
       <Divider />
       <DialogActions sx={{ padding: '16px 24px !important' }}>
         <ButtonCancel tittle="Hủy" onClick={onClose} />
-        <ButtonDS tittle="Thêm vào đề thi" onClick={addToQuestion} />
+        <ButtonDS tittle="Thêm vào đề thi" onClick={addToQuestion} isDisabled={questionSelected.length == 0} />
       </DialogActions>
     </Dialog>
   )
 }
 
-export default QuestionGallaryDetailModal
+export default React.memo(QuestionGallaryDetailModal)

@@ -133,9 +133,10 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
       else {
         const body = { ...e };
         await (e.id ? updateForm(body) : addForm(body)).unwrap();
+        enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
+        getData();
       }
-      enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
-      getData();
+
     } catch (error) {
       if (error.status == 'QGE_04')
         enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
@@ -164,7 +165,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
 
   const renderButton = (content, onPress) => {
     return (
-      <View contentcenter size={44} ml={16} onclick={onPress}>
+      <View contentcenter='true' size={44} ml={16} onClick={onPress}>
         <SvgIcon>{content}</SvgIcon>
       </View>
     );

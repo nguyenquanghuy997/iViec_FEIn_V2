@@ -13,8 +13,13 @@ import ConfirmModal from '@/sections/emailform/component/ConfirmModal';
 import { View } from "@/components/DesignSystem/FlexStyled";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
 import QuestionGallaryDetailModal from "./QuestionGallaryDetailModal";
+import { useSnackbar } from "notistack";
+import ListQuestionBottomNav from "./ListQuestionBottomNav";
 
 function ListQuestionDefault({ listQuestions, updateListQuestion }) {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const [openGroup, setOpenGroup] = useState(false);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -23,6 +28,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const [currentIndexQuestion, setCurrentIndexQuestion] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionGallary, setQuestionGallary] = useState(null);
+  const [itemIndexSelected, setItemIndexSelected] = useState([]);
 
   const handleCloseGroup = () => {
     setOpenGroup(false);
@@ -52,11 +58,26 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
    * @param {*} data 
    */
   const handleCreateEditQuestion = (data) => {
+    //create
     if (currentIndexQuestion == -1) {
-      // setListData([...listData, data])
+      // check duplicate
+      if (listQuestions.find(x => x.questionTitle == data.questionTitle)) {
+        enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
+          variant: 'error'
+        })
+        return;
+      }
       listQuestions.push(data);
     }
+    //edit
     else {
+      // check duplicate
+      if (listQuestions.find((x, index) => x.questionTitle == data.questionTitle && index != currentIndexQuestion)) {
+        enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
+          variant: 'error'
+        })
+        return;
+      }
       listQuestions[currentIndexQuestion] = data;
       // setListData([...listData])
     }
@@ -69,8 +90,10 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     setCurrentIndexQuestion(-1)
   }
 
-  const handleAddQuestionFromInternal = (datas)=>{
-    updateListQuestion([...listQuestions,...datas])
+  const handleAddQuestionFromInternal = (datas) => {
+    // loc nhung items da them vao danh sach
+    updateListQuestion([...listQuestions, ...datas])
+    setShowQuestionGallaryDetailModal(false)
   }
 
   const handlerDeleteQuestion = () => {
@@ -89,7 +112,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     setShowQuestionForm(true);
   }
 
-  const openDeleteQuestionModal = (item, index) => {
+  const openDeleteQuestionModal = (index) => {
     setCurrentIndexQuestion(index)
     setShowDeleteModal(true)
   }
@@ -97,6 +120,16 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const handleViewQuestionGallaryDetail = (questionGallary) => {
     setQuestionGallary(questionGallary)
     setShowQuestionGallaryDetailModal(true)
+  }
+
+  const handleSelected = (data, index) => {
+    const isExits = itemIndexSelected.some(x => x == index)
+    if (isExits) {
+      setItemIndexSelected(itemIndexSelected.filter(x => x != index))
+    }
+    else {
+      setItemIndexSelected([...itemIndexSelected, index]);
+    }
   }
 
   return (
@@ -237,9 +270,11 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                       key={index}
                       index={index}
                       item={item}
-                      hasRoleEdit={true}
+                      hasRoleEdit={!item.id}
+                      hasRoleDelete={true}
                       onDelete={openDeleteQuestionModal}
                       onEdit={openEditQuestionForm}
+                      onChangeSelected={() => handleSelected(item, index)}
                     />)
                 }
               </View>
@@ -260,7 +295,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         onClose={() => setShowQuestionGallaryInternalModal(false)} />
 
       <QuestionGallaryDetailModal
-        listQuestions={listQuestions?.filter(x=>x.id)}
+        listQuestions={listQuestions?.filter(x => x.id)}
         show={showQuestionGallaryDetailModal}
         handleAddQuestionFromInternal={handleAddQuestionFromInternal}
         onClose={() => setShowQuestionGallaryDetailModal(false)}
@@ -273,8 +308,13 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         onSubmit={handlerDeleteQuestion}
         onCloseConfirmDelete={handleCloseDeleModal}
       />
+
+      <ListQuestionBottomNav
+        open={itemIndexSelected.length > 0}
+        itemSelected={itemIndexSelected}
+        onEdit={() => openEditQuestionForm(listQuestions[itemIndexSelected[0]], itemIndexSelected[0])} />
     </>
   )
 }
 
-export default ListQuestionDefault
+export default React.memo(ListQuestionDefault)

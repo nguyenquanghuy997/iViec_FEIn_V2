@@ -1,10 +1,5 @@
-import {
-  CheckboxIconChecked,
-  CheckboxIconDefault,
-} from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
-import { Text } from "@/components/DesignSystem/FlexStyled";
-import { View } from "@/components/FlexStyled";
+import { View, Text } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import useAuth from "@/hooks/useAuth";
 import {
@@ -56,7 +51,7 @@ const LIST_QUESTION_TYPE = [
 ];
 
 
-function QuestionCardItemDefault({ index, item, hasRoleEdit, onEdit, onDelete, onChangeSelected }) {
+function QuestionCardItemDefault({ index, item, hasRoleEdit, hasRoleDelete, onEdit, onDelete, onChangeSelected, checked, isDisable }) {
   const { user } = useAuth();
   const [expanded, setExpanded] = useState(false)
 
@@ -86,7 +81,7 @@ function QuestionCardItemDefault({ index, item, hasRoleEdit, onEdit, onDelete, o
   };
 
   return (
-    <CardFormItemStyle className="card-item" expanded={expanded} style={{padding: '20px 24px !important'}}>
+    <CardFormItemStyle className="card-item" expanded={expanded} style={{ padding: '20px 24px !important' }}>
       <AccordionSummary
         sx={{
           ".MuiAccordionSummary-content": {
@@ -120,20 +115,23 @@ function QuestionCardItemDefault({ index, item, hasRoleEdit, onEdit, onDelete, o
                     />
                   }
                 />
-
-                <ButtonIcon
-                  onClick={() => onDelete(item, index)}
-                  icon={
-                    <Iconify
-                      icon={"material-symbols:delete-outline-rounded"}
-                      width={14}
-                      height={14}
-                      color="#455570"
-                    />
-                  }
-                />
               </>
             }
+            {
+              hasRoleDelete &&
+              <ButtonIcon
+                onClick={() => onDelete(item, index)}
+                icon={
+                  <Iconify
+                    icon={"material-symbols:delete-outline-rounded"}
+                    width={14}
+                    height={14}
+                    color="#455570"
+                  />
+                }
+              />
+            }
+
             <ButtonIcon
               onClick={() => {
                 setExpanded(!expanded)
@@ -160,13 +158,16 @@ function QuestionCardItemDefault({ index, item, hasRoleEdit, onEdit, onDelete, o
               alignItems: 'start !important'
             }}
           >
-            <Checkbox
-              value={item}
-              // checked={checked}
-              onChange={onChangeSelected}
-              icon={<CheckboxIconDefault />}
-              checkedIcon={<CheckboxIconChecked />}
-            />
+            {
+              <Checkbox
+                value={item}
+                defaultChecked={checked}
+                disabled={isDisable}
+                onChange={onChangeSelected}
+              // icon={<CheckboxIconDefault />}
+              // checkedIcon={<CheckboxIconChecked />}
+              />
+            }
             <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} ml={2} >Câu hỏi {index + 1}
 
             </Typography>
@@ -179,7 +180,7 @@ function QuestionCardItemDefault({ index, item, hasRoleEdit, onEdit, onDelete, o
       </AccordionSummary>
       <AccordionDetails sx={{ mt: "0px !important" }}>
         <Divider sx={{ color: '#E7E9ED' }} />
-        <View flexRow={true} jcbetween={true} style={{ margin: '24px', justifyContent: 'space-between' }}>
+        <View flexrow={'true'} jcbetween={'true'} style={{ margin: '24px', justifyContent: 'space-between' }}>
           {
             item.questionType != 2 &&
             <View>
@@ -233,4 +234,4 @@ function QuestionCardItemDefault({ index, item, hasRoleEdit, onEdit, onDelete, o
   );
 }
 
-export default QuestionCardItemDefault;
+export default React.memo(QuestionCardItemDefault);

@@ -82,7 +82,7 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
               fontweight={"400"}
               color={"#455570"}
               width={"auto"}
-              style={{ "max-height": "16.25px" }}
+              style={{ "maxHeight": "16.25px" }}
             >
               {data.description}
             </Text>
@@ -129,7 +129,7 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
 
       <View>
         <ButtonIcon
-          onClick={()=>handleViewDetail(data)}
+          onClick={() => handleViewDetail(data)}
           icon={
             <Iconify
               icon="ic:baseline-arrow-circle-right"
@@ -199,54 +199,60 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
         <Divider />
 
         {/* body */}
-          <View flex="true" ph={16} pv={24} style={{ overflowY: "scroll", backgroundColor: "#F2F4F5" }}>
 
-            <View flexrow={'true'} atcenter={'true'} jcbetween={'true'} mb={8}>
-              <Text color={'#455570'} fontsize={16} fontweight={600}>Danh sách nhóm câu hỏi</Text>
+        <View flex="true" ph={16} pv={24}
+          style={{
+            overflowY: "scroll",
+            backgroundColor: "#F2F4F5",
+            minHeight: 'calc(100vh - 64px -68px -68px) !important'
+          }}>
 
-              <RHFTextField
-                name="searchKey"
-                placeholder="Tìm kiếm theo nhóm câu hỏi..."
-                sx={{
-                  width: "360px",
-                  backgroundColor: '#FDFDFD',
-                  borderRadius: '6px',
-                  '.MuiInput-root': {
-                    border: 'none'
-                  }
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start" sx={{ ml: 1.5 }}>
-                      <Iconify
-                        icon={"eva:search-fill"}
-                        sx={{ color: "text.disabled", width: 20, height: 20 }}
-                      />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </View>
+          <View flexrow={'true'} atcenter={'true'} jcbetween={'true'} mb={8}>
+            <Text color={'#455570'} fontsize={16} fontweight={600}>Danh sách nhóm câu hỏi</Text>
 
-            <View flex1>
-              {list.length ? (
-                list.map(renderItem)
-              ) : (
-                <View allcenter={'true'} pt={64}>
-                  {isLoading ? (
-                    <CircularProgress />
-                  ) : (
-                    <>
-                      <EmptyIcon />
-                      <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
-                        {"Hiện chưa có nhóm câu hỏi nào."}
-                      </Text>
-                    </>
-                  )}
-                </View>
-              )}
-            </View>
+            <RHFTextField
+              name="searchKey"
+              placeholder="Tìm kiếm theo nhóm câu hỏi..."
+              sx={{
+                width: "360px",
+                backgroundColor: '#FDFDFD',
+                borderRadius: '6px',
+                '.MuiInput-root': {
+                  border: 'none'
+                }
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ ml: 1.5 }}>
+                    <Iconify
+                      icon={"eva:search-fill"}
+                      sx={{ color: "text.disabled", width: 20, height: 20 }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </View>
+
+          <View flex1='true'>
+            {list.length ? (
+              list.map(renderItem)
+            ) : (
+              <View allcenter={'true'} pt={64}>
+                {isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  <>
+                    <EmptyIcon />
+                    <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
+                      {"Hiện chưa có nhóm câu hỏi nào."}
+                    </Text>
+                  </>
+                )}
+              </View>
+            )}
+          </View>
+        </View>
       </FormProvider>
 
 
@@ -271,4 +277,4 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
   )
 }
 
-export default QuestionGallaryInternalModal
+export default React.memo(QuestionGallaryInternalModal)
