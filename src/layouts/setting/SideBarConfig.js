@@ -38,11 +38,6 @@ export const sidebarConfig = [
         permissions: [PERS.VIEW_JOB_POS],
       },
       // {
-      //   title: "Mẫu đánh giá",
-      //   path: "/settings/evaluation-form",
-      //   permissions: [PERS.VIEW_EVA_TPL],
-      // },
-      // {
       //   title: "Kết nối",
       //   path: "/settings/connect",
       //   permissions: [PERS.VIEW_CONNECT],
@@ -68,11 +63,11 @@ export const sidebarConfig = [
   {
     subheader: "Thiết lập mẫu",
     items: [
-      // {
-      //   title: "Mẫu đánh giá",
-      //   path: "/settings/evaluation-form",
-      //   permissions: [PERS.VIEW_EVA_TPL],
-      // },
+      {
+        title: "Mẫu đánh giá",
+        path: "/settings/evaluation-form",
+        permissions: [PERS.VIEW_EVA_TPL],
+      },
       {
         title: "Mẫu thư mời nhận việc",
         path: "/settings/offer-form",

@@ -1,61 +1,37 @@
-import QuestionCardItemDefault from "./QuestionCardItemDefault";
+import { AddQuestionGroupModel } from "./AddQuestionGroupModel";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
-import {
-  DownloadLineIcon,
-  ImportLinkIcon,
-  TeamLineIcon,
-} from "@/assets/ActionIcon";
 import {
   CheckboxIconChecked,
   CheckboxIconDefault,
 } from "@/assets/CheckboxIcon";
+import { ButtonDS } from "@/components/DesignSystem";
 import { View } from "@/components/DesignSystem/FlexStyled";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
-import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
-import {
-  Checkbox,
-  Divider,
-  Typography,
-  Button,
-  ButtonGroup,
-  ClickAwayListener,
-  MenuItem,
-  MenuList,
-  Box,
-} from "@mui/material";
-import { palette } from "@mui/system";
+import { Checkbox, Button, ButtonGroup, Box, useTheme } from "@mui/material";
 import React from "react";
 import { useState } from "react";
+import QuestionGroupCardItem from "./QuestionGroupCardItem";
 
 function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
-  const [openGroup, setOpenGroup] = useState(false);
-  const [showQuestionForm, setShowQuestionForm] = useState(false);
+  const [showQuestionGroup, setShowQuestionGroup] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [
     showQuestionGallaryInternalModal,
     setShowQuestionGallaryInternalModal,
   ] = useState(false);
   const [currentIndexQuestion, setCurrentIndexQuestion] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
-
-  const handleCloseGroup = () => {
-    setOpenGroup(false);
-  };
-
-  const handleOpenGroup = () => {
-    setOpenGroup(true);
-  };
+  const [, setCurrentQuestion] = useState(null);
+  const { palette } = useTheme();
 
   /**
    * Đóng form thêm hoặc sửa câu hỏi
    */
-  const handleCloseForm = () => {
-    setCurrentIndexQuestion(-1);
-    setCurrentQuestion(null);
-    setShowQuestionForm(false);
-  };
+  // const handleCloseForm = () => {
+  //   setCurrentIndexQuestion(-1);
+  //   setCurrentQuestion(null);
+  //   setShowQuestionGroup(false);
+  // };
 
   const handleCloseDeleModal = () => {
     setCurrentIndexQuestion(-1);
@@ -78,7 +54,7 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
 
     updateListQuestion(listQuestions);
 
-    setShowQuestionForm(false);
+    setShowQuestionGroup(false);
     // reset choose index && data
     setCurrentQuestion(null);
     setCurrentIndexQuestion(-1);
@@ -96,7 +72,7 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
   const openEditQuestionForm = (item, index) => {
     setCurrentIndexQuestion(index);
     setCurrentQuestion(item);
-    setShowQuestionForm(true);
+    setShowQuestionGroup(true);
   };
 
   const openDeleteQuestionModal = (item, index) => {
@@ -110,6 +86,7 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
 
   return (
     <>
+    {console.log('listQuestions', listQuestions)}
       <Box>
         {listQuestions.length == 0 && (
           <div
@@ -117,13 +94,19 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
               margin: "40px 0",
               minHeight: "250px",
               textAlign: "center",
+              color: palette.text.disabled,
             }}
           >
             <img
               src={`/assets/icons/candidate/notfound.png`}
               style={{ margin: "0 auto" }}
             />
-            <p style={{ fontSize: 14, color: palette.text.Neutral400, margin: "0 0 24px 0" }}>
+            <p
+              style={{
+                fontSize: 14,
+                margin: "0 0 24px 0",
+              }}
+            >
               Đề thi hiện chưa có nhóm câu hỏi nào
             </p>
             <ButtonGroup
@@ -139,83 +122,19 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                 },
               }}
             >
-              <Button
-                style={{
-                  background: "#1976D2",
-                  padding: "8px 12px",
-                  fontWeight: 600,
-                  fontSize: " .875rem",
-                  borderRadius: "6px 0px 0px 6px",
-                  textTransform: "none",
-                }}
-                onClick={setShowQuestionForm}
-              >
-                <Iconify
-                  icon={"material-symbols:add"}
-                  width={20}
-                  height={20}
-                  color="#fff"
-                  mr={1}
-                />
-                Thêm câu hỏi
-              </Button>
-              <LightTooltip
-                placement="bottom-end"
-                onClose={handleCloseGroup}
-                disableFocusListener
-                disableHoverList
-                ener={"true"}
-                disableTouchListener
-                open={openGroup}
-                title={
-                  <ClickAwayListener onClickAway={handleCloseGroup}>
-                    <MenuList
-                      autoFocusItem
-                      divider={true}
-                      disableGutters={true}
-                    >
-                      <MenuItem>
-                        <TeamLineIcon sx={{ mr: "12px" }} />
-                        <Typography ml={"12px"} variant={"textSize13600"}>
-                          Lấy từ kho iVIEC
-                        </Typography>
-                      </MenuItem>
-                      <Divider />
-                      <MenuItem>
-                        <DownloadLineIcon />
-                        <Typography ml={"12px"} variant={"textSize13600"}>
-                          Tải mẫu Excel
-                        </Typography>
-                      </MenuItem>
-                      <Divider />
-                      <MenuItem>
-                        <ImportLinkIcon sx={{ mr: "12px" }} />
-                        <Typography ml={"12px"} variant={"textSize13600"}>
-                          Import Excel
-                        </Typography>
-                      </MenuItem>
-                    </MenuList>
-                  </ClickAwayListener>
-                }
-              >
-                <Button
-                  size="small"
-                  aria-haspopup="menu"
-                  onClick={handleOpenGroup}
-                  style={{
-                    background: "#1976D2",
-                    padding: "8px 12px",
-                    borderRadius: "0px 6px 6px 0px",
-                  }}
-                >
+              <ButtonDS
+                tittle="Thêm nhóm câu hỏi"
+                onClick={setShowQuestionGroup}
+                icon={
                   <Iconify
-                    icon={"material-symbols:arrow-drop-down"}
+                    icon={"material-symbols:add"}
                     width={20}
                     height={20}
                     color="#fff"
+                    mr={1}
                   />
-                </Button>
-              </LightTooltip>
+                }
+              />
             </ButtonGroup>
           </div>
         )}
@@ -266,7 +185,7 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                     borderRadius: "6px 0px 0px 6px",
                     textTransform: "none",
                   }}
-                  onClick={() => setShowQuestionForm(true)}
+                  onClick={() => setShowQuestionGroup(true)}
                 >
                   <Iconify
                     icon={"material-symbols:add"}
@@ -275,82 +194,14 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                     color="#fff"
                     mr={1}
                   />
-                  Thêm câu hỏi
+                  Thêm nhóm câu hỏi
                 </Button>
-                <LightTooltip
-                  placement="bottom-end"
-                  onClose={handleCloseGroup}
-                  disableFocusListener
-                  disableHoverList
-                  ener
-                  disableTouchListener
-                  open={openGroup}
-                  title={
-                    <ClickAwayListener onClickAway={handleCloseGroup}>
-                      <MenuList
-                        autoFocusItem
-                        divider={true}
-                        disableGutters={true}
-                      >
-                        <MenuItem
-                          onClick={() =>
-                            setShowQuestionGallaryInternalModal(true)
-                          }
-                        >
-                          <TeamLineIcon sx={{ mr: "12px" }} />
-                          <Typography ml={"12px"} variant={"textSize13600"}>
-                            Lấy từ kho nội bộ
-                          </Typography>
-                        </MenuItem>
-                        <Divider />
-                        <MenuItem>
-                          <TeamLineIcon sx={{ mr: "12px" }} />
-                          <Typography ml={"12px"} variant={"textSize13600"}>
-                            Lấy từ kho iVIEC
-                          </Typography>
-                        </MenuItem>
-                        <Divider />
-                        <MenuItem>
-                          <DownloadLineIcon />
-                          <Typography ml={"12px"} variant={"textSize13600"}>
-                            Tải mẫu Excel
-                          </Typography>
-                        </MenuItem>
-                        <Divider />
-                        <MenuItem>
-                          <ImportLinkIcon sx={{ mr: "12px" }} />
-                          <Typography ml={"12px"} variant={"textSize13600"}>
-                            Import Excel
-                          </Typography>
-                        </MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  }
-                >
-                  <Button
-                    size="small"
-                    aria-haspopup="menu"
-                    onClick={handleOpenGroup}
-                    style={{
-                      background: "#1976D2",
-                      padding: "8px 12px",
-                      borderRadius: "0px 6px 6px 0px",
-                    }}
-                  >
-                    <Iconify
-                      icon={"material-symbols:arrow-drop-down"}
-                      width={20}
-                      height={20}
-                      color="#fff"
-                    />
-                  </Button>
-                </LightTooltip>
               </ButtonGroup>
             </View>
 
             <View mt={24} mb={28}>
               {listQuestions.map((item, index) => (
-                <QuestionCardItemDefault
+                <QuestionGroupCardItem
                   key={index}
                   index={index}
                   item={item}
@@ -363,14 +214,18 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
         )}
       </Box>
 
-      <QuestionFormModal
+      {/* <QuestionFormModal
         data={currentQuestion}
-        show={showQuestionForm}
+        show={showQuestionGroup}
         onClose={handleCloseForm}
         isNotSave={true}
         handleNoSave={handleCreateEditQuestion}
+      /> */}
+      <AddQuestionGroupModel
+        show={showQuestionGroup}
+        setShow={setShowQuestionGroup}
+        onSubmit={handleCreateEditQuestion}
       />
-
       <QuestionGallaryInternalModal
         show={showQuestionGallaryInternalModal}
         onClose={() => setShowQuestionGallaryInternalModal(false)}

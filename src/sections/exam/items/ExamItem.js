@@ -267,7 +267,7 @@ export const ExamItem = ({
 
   const handleSubmitCreate = (data) => {
     router.push({
-      pathname: '/settings/exam/exambusiness/create',
+      pathname: '/settings/exam/exam-business/create',
       query: data
     });
   }
