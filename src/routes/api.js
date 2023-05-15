@@ -67,6 +67,7 @@ export const API_DELETE_APPLICANT = "/applicant/Applicant/RemoveApplicants";
 
 export const API_GET_APPLICANT_SKILLS =
   "/applicant/ApplicantSkill/GetApplicantSkills";
+export const API_SEND_OFFER_TEMPLATE = "/applicant/ApplicantRecruitment/SendOfferTemplateToApplicant"
 
 
 //Apply mẫu đánh giá
@@ -348,6 +349,7 @@ export const API_CREATE_OFFER_TEMPLATE = "/notification/OfferTemplate/CreateOffe
 export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate";
 export const API_DELETE_OFFER_TEMPLATE = "/notification/OfferTemplate/RemoveOfferTemplates";
 export const API_UPDATE_ACTIVE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplateActive";
+export const API_GET_OFFER_TEMPLATE_DEFAULT = "/notification/OfferTemplate/GetOfferTemplateDefaultSignature";
 
 // File
 export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";

@@ -1,8 +1,8 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
   API_CREATE_OFFER_TEMPLATE, API_DELETE_OFFER_TEMPLATE,
-  API_GET_OFFER_TEMPLATE,
-  API_GET_OFFER_TEMPLATES, API_GET_ORGANIZATION_USERS, API_UPDATE_ACTIVE_OFFER_TEMPLATE,
+  API_GET_OFFER_TEMPLATE, API_GET_OFFER_TEMPLATE_DEFAULT,
+  API_GET_OFFER_TEMPLATES, API_GET_ORGANIZATION_USERS, API_SEND_OFFER_TEMPLATE, API_UPDATE_ACTIVE_OFFER_TEMPLATE,
   API_UPDATE_OFFER_TEMPLATE,
   API_UPLOAD_FILE_OFFER
 } from "@/routes/api";
@@ -34,6 +34,13 @@ const offerFormSlice = apiWithTag.injectEndpoints({
       }),
       keepUnusedDataFor: 1,
     }),
+    getDefaultOfferTemplate: builder.query({
+      query: (data) => ({
+        url: `${API_GET_OFFER_TEMPLATE_DEFAULT}?${qs.stringify(data)}`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 1,
+    }),
     deleteOfferTemplate: builder.mutation({
       query: (ids) => ({
         url: `${API_DELETE_OFFER_TEMPLATE}`,
@@ -49,6 +56,13 @@ const offerFormSlice = apiWithTag.injectEndpoints({
         data: data,
       }),
       invalidatesTags: ["offerProcess"]
+    }),
+    sendOfferTemplate: builder.mutation({
+      query: (data) => ({
+        url: API_SEND_OFFER_TEMPLATE,
+        method: "POST",
+        data: data,
+      }),
     }),
     updateOfferTemplate: builder.mutation({
       query: (data) => ({
@@ -82,9 +96,11 @@ const offerFormSlice = apiWithTag.injectEndpoints({
 export const {
   useGetAllOfferTemplateQuery,
   useGetPreviewOfferTemplateQuery,
+  useGetDefaultOfferTemplateQuery,
   useGetAllOrganizationUserQuery,
   useLazyGetPreviewOfferTemplateQuery,
   useAddOfferTemplateMutation,
+  useSendOfferTemplateMutation,
   useUploadImageOfferMutation,
   useUpdateOfferTemplateMutation,
   useDeleteOfferTemplateMutation,
