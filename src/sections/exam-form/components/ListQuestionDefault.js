@@ -14,7 +14,7 @@ import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
 import QuestionGallaryDetailModal from "./QuestionGallaryDetailModal";
 import { useSnackbar } from "notistack";
 import ListQuestionBottomNav from "./ListQuestionBottomNav";
-import QuestionFormModal from "@/sections/exam/components/QuestionFormModal";
+import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
 
 function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const { enqueueSnackbar } = useSnackbar();
