@@ -161,6 +161,11 @@ export const PipelineStateType = (item, description = '') => {
   }
 };
 
+export const LIST_QUESTION_TYPE = [
+  {id: 1, name: "Trắc nghiệm", quantity:20},
+  {id: 2, name: "Tự luận", quantity: 10},
+]
+
 export function joinArrStr(arr, key) {
   return Array.isArray(arr) ? arr.filter((item) => !!item).join(key) : "";
 }

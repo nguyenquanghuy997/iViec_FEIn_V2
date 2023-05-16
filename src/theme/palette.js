@@ -206,7 +206,8 @@ const palette = {
       active: COMMON.common.orange50,
       MasterBg: COMMON.common.bgrMaster,
       paper: '#fff',
-      greyDetail: '#F4F6F8'
+      greyDetail: '#F4F6F8',
+      disabled: COMMON.common.bgrUnActive,
     },
     action: {
       active: '#637381',
@@ -233,7 +234,8 @@ const palette = {
       active: COMMON.common.orange50,
       MasterBg: COMMON.common.bgrMaster,
       paper: '#fff',
-      greyDetail: '#F4F6F8'
+      greyDetail: '#F4F6F8',
+      disabled: COMMON.common.bgrUnActive,
     },
     action: {
       active: '#637381',

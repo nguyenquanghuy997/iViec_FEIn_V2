@@ -98,6 +98,9 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
   "& .MuiInputAdornment-positionStart": {
     marginLeft: 8,
   },
+  '& .Mui-disabled': {
+    backgroundColor: theme.palette.background.disabled,
+  },
 }));
 
 const SelectFieldStyle = styled(Select)(({ theme }) => ({

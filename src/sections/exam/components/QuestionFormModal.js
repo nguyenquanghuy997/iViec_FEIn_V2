@@ -49,12 +49,12 @@ const LIST_QUESTION_TYPE = [
 const defaultValues = {
   id: null,
   questionType: 0,
-  questionPoint: 0,
+  questionPoint: 1,
   questionState: 0,
   questionGroupId: "",
   questionTitle: "",
   isActive: true,
-  answers: [],
+  answers: null,
 };
 
 const defaultAnswer = {
@@ -126,12 +126,13 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
       if (isNotSave) {
         const data = {
           ...e,
+          answers: e.answers.length?e.answers: null,
           questionGroupName: items.find(x => x.id === e.questionGroupId).name
         }
         handleNoSave(data)
       }
       else {
-        const body = { ...e };
+        const body = { ...e, answers: e.answers.length?e.answers: null };
         await (e.id ? updateForm(body) : addForm(body)).unwrap();
       }
       enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
