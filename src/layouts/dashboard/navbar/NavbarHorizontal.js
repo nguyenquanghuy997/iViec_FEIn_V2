@@ -23,7 +23,7 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
   padding: theme.spacing(1, 0),
   boxShadow: theme.customShadows.z8,
   top: HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT,
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
 }))
 
 function NavbarHorizontal() {

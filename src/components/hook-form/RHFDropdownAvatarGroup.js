@@ -21,9 +21,10 @@ import {
     useStyles,
 } from './style';
 import {isEmpty} from "lodash";
+import { STYLE_CONSTANT } from "@/theme/palette";
 
 const Placeholder = (placeholder) => {
-    return <Typography variant="body2" sx={{color: '#8A94A5', fontSize: 14, fontWeight: 400}}>{placeholder}</Typography>
+    return <Typography variant="body2" sx={{color: STYLE_CONSTANT.COLOR_TEXT_GRAY}}>{placeholder}</Typography>
 }
 
 const MenuProps = {

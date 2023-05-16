@@ -147,7 +147,7 @@ export const calendarServiceApi = createApi({
 export const {
   useAddCalendarMutation,
   useGetReviewFormQuery,
-  useLazyGetRelateCalendarQuery,
+  useGetRelateCalendarQuery,
   useGetCalendarQuery,
   useGetDetailCalendarsQuery,
   useGetApplicantByPipeLineQuery,

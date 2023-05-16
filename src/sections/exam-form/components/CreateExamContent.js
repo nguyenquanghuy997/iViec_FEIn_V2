@@ -1,7 +1,6 @@
 import MuiButton from "@/components/BaseComponents/MuiButton"
 import { Text } from "@/components/FlexStyled"
 import Iconify from "@/components/Iconify"
-import SvgIcon from "@/components/SvgIcon"
 import { SubTitleStyle } from "@/sections/emailform/style"
 import { ButtonIcon } from "@/utils/cssStyles"
 import { Box, Divider, Typography } from "@mui/material"
@@ -44,7 +43,7 @@ const CreateExamContent = () => {
   const renderExamSettingInfo = (icon, title) => {
     return (
       <>
-        <SvgIcon>{icon}</SvgIcon>
+        <Iconify icon={icon} width={20} height={20} color="#455570" />
         <Text ml={8} mr={24} fontSize={14} fontWeight={"400"} color={"#5C6A82"}>
           {title}
         </Text>
@@ -69,7 +68,7 @@ const CreateExamContent = () => {
     try {
       await createExam(body).unwrap();
       enqueueSnackbar("Lưu đề thi thành công")
-      router.push("/settings/exam/exambusiness")
+      router.push("/settings/exam/exam-business")
     } catch {
       enqueueSnackbar("Lưu đề thi thất bại", {
         variant: 'error'
@@ -90,7 +89,7 @@ const CreateExamContent = () => {
     try {
       await createExam(body).unwrap();
       enqueueSnackbar("Lưu đề thi thành công")
-      router.push("/settings/exam/exambusiness")
+      router.push("/settings/exam/exam-business")
     } catch {
       enqueueSnackbar("Lưu đề thi thất bại", {
         variant: 'error'
@@ -99,7 +98,7 @@ const CreateExamContent = () => {
   }
 
   const handleCancel = async () => {
-    router.push("/settings/exam/exambusiness")
+    router.push("/settings/exam/exam-business")
   }
 
   return <>

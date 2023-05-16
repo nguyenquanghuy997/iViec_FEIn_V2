@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {ExcelIcon, PdfIcon, WordIcon} from "@/sections/offerform/component/editor/Icon";
+import {ExcelIcon, PdfIcon, WordIcon} from "@/sections/offer-form/component/editor/Icon";
 import React from "react";
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/

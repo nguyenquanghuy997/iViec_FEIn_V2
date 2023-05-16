@@ -13,7 +13,6 @@ import {Box, Divider, Drawer, Stack, Typography} from "@mui/material";
 import React, {useState} from "react";
 import {useMemo} from "react";
 import ExamActiveModal from "@/sections/exam/modals/ExamActiveModal";
-import ExamFormModal from "@/sections/exam/modals/ExamFormModal";
 import ExamDeleteModal from "@/sections/exam/modals/ExamDeleteModal";
 
 const ExamBottumonNav = ({
@@ -185,14 +184,6 @@ const ExamBottumonNav = ({
           ids={selectedList}
           onClose={onCloseModel}
           isActivated={item[0]}
-        />
-      )}
-      {showConfirmMultiple && typeConfirmMultiple.includes("edit") && (
-        <ExamFormModal
-          show={showConfirmMultiple}
-          setShow={setShowConfirmMultiple}
-          onClose={onCloseModel}
-          data={exam}
         />
       )}
       {showConfirmMultiple && typeConfirmMultiple.includes("delete") && (

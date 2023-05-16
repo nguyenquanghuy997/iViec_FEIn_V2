@@ -10,7 +10,7 @@ export default function DataGrid(theme) {
           },
           '& .MuiDataGrid-toolbarContainer': {
             padding: theme.spacing(2),
-            backgroundColor: theme.palette.background.neutral,
+            backgroundColor: theme.palette.background.greyDetail,
             '& .MuiButton-root': {
               marginRight: theme.spacing(1.5),
               color: theme.palette.text.primary,
@@ -60,7 +60,7 @@ export default function DataGrid(theme) {
               ...theme.typography.body2,
               padding: theme.spacing(0.75, 1),
               borderRadius: theme.shape.borderRadius,
-              backgroundColor: theme.palette.background.neutral,
+              backgroundColor: theme.palette.background.greyDetail,
             },
             '& .MuiSvgIcon-root': {
               right: 4,
@@ -83,7 +83,7 @@ export default function DataGrid(theme) {
               },
             },
             '&:last-of-type': {
-              color: theme.palette.common.white,
+              color: theme.palette.background.paper,
               backgroundColor: theme.palette.primary.main,
               '&:hover': {
                 backgroundColor: theme.palette.primary.dark,

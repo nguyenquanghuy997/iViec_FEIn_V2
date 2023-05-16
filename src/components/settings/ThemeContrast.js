@@ -32,7 +32,7 @@ export default function ThemeContrast({ children }) {
     : defaultTheme.palette.common.black
 
   const styles = {
-    bgDefault: defaultTheme.palette.background.default,
+    bgDefault: defaultTheme.palette.background.paper,
     bgBold: isLight
       ? defaultTheme.palette.grey[100]
       : defaultTheme.palette.grey[900],

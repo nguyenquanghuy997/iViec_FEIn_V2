@@ -43,7 +43,7 @@ export default function RHFSelect({ name, onChange, ...props }) {
               }}
               {...otherField}
               error={!!error}
-              sx={{ width: "100%" }}
+              sx={{ background: "#fff", width: "100%" }}
               onDelete={(item) => handleDelete(field, item)}
               onClearValue={handleClearValue}
               {...props}

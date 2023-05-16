@@ -15,7 +15,7 @@ export default function Slider(theme) {
         },
         markLabel: {
           fontSize: 13,
-          color: theme.palette.text.disabled,
+          color: theme.palette.text.search,
         },
         valueLabel: {
           borderRadius: 8,

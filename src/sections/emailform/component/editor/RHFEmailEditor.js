@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {Controller, useFormContext} from 'react-hook-form'
 import {LabelStyle} from "@/components/hook-form/style";
 import React from "react";
-import EmailEditor from "@/sections/offerform/component/editor/EmailEditor";
+import EmailEditor from "@/sections/offer-form/component/editor/EmailEditor";
 
 const RHFEmailEditor = ({ name, title, isRequired = false, ...other }) => {
   const {control} = useFormContext()

@@ -22,7 +22,7 @@ export default function Switch(theme) {
           },
           '&.Mui-disabled+.MuiSwitch-track': {
             opacity: 1,
-            backgroundColor: `${theme.palette.action.disabledBackground} !important`,
+            backgroundColor: `${theme.palette.action.focus} !important`,
           },
         },
       },

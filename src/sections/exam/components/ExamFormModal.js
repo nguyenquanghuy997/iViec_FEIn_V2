@@ -17,7 +17,7 @@ const defaultValues = {
   id: null,
   name: "",
   description: "",
-  examTime: 0,
+  examTime: "",
   isQuestionMixing: true,
   showType: 0,
   type: 0

@@ -457,10 +457,8 @@ export default function Recruitment() {
       {tab == 1 && viewMode == 2 && (
         <View>
           <ApplicantItem
-            Data={Data}
+            data={Data}
             isLoading={isLoading}
-            PageSize={query.PageSize}
-            PageIndex={query.PageIndex}
             headerProps={{
               display: "none",
             }}

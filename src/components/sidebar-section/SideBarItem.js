@@ -25,6 +25,7 @@ import {
   ListItemIconStyle,
   ListItemTextStyle,
 } from './style'
+import { useTheme } from "@mui/material/styles";
 
 SideBarItemRoot.propTypes = {
   active: PropTypes.bool,
@@ -234,10 +235,11 @@ ArrowIcon.propTypes = {
 }
 
 export function ArrowIcon({ open }) {
+  const theme = useTheme()
   return (
     <Iconify
       icon={open ? 'material-symbols:arrow-drop-up' : 'material-symbols:arrow-drop-down'}
-      sx={{ width: 16, height: 16, ml: 1, color: '#172B4D' }}
+      sx={{ width: 16, height: 16, ml: 1, color: theme.palette.common.neutral800 }}
     />
   )
 }

@@ -45,7 +45,7 @@ const RootStyle = styled(AppBar, {
     ...(verticalLayout && {
       width: "100%",
       height: HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT,
-      backgroundColor: theme.palette.background.default,
+      backgroundColor: theme.palette.background.paper,
     }),
   },
 }));

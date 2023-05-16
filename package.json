@@ -71,6 +71,7 @@
     "install": "^0.13.0",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",
+    "jwt-js": "^0.5.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "material-ui-popup-state": "^5.0.5",

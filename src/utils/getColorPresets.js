@@ -25,7 +25,7 @@ export const colorPresets = [
     main: '#1CCAFF',
     dark: '#0E77B7',
     darker: '#053D7A',
-    contrastText: palette.light.grey[800],
+    contrastText: palette.light.common.neutral800,
   },
   // BLUE
   {
@@ -45,7 +45,7 @@ export const colorPresets = [
     main: '#fda92d',
     dark: '#B66816',
     darker: '#793908',
-    contrastText: palette.light.grey[800],
+    contrastText: palette.light.common.neutral800,
   },
   // RED
   {
