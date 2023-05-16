@@ -1,8 +1,8 @@
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
 import {
-  useGetAllExaminationQuery, 
-  useGetListColumnExamsQuery, 
+  useGetAllExaminationQuery,
+  useGetListColumnExamsQuery,
   useUpdateListColumnExamsMutation,
 } from "@/sections/exam/ExamSlice"
 import { useRouter } from "next/router";
@@ -65,7 +65,7 @@ export const ExamItem = ({
         width: "150px",
         render: (item, record) => (
           <TextMaxLine
-            sx={{width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer'}}
+            sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
             onClick={() => router.push({
               pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
                 correlationId: record?.correlationId,
@@ -73,7 +73,7 @@ export const ExamItem = ({
                 recruitmentId: record?.recruitmentId,
                 applicantId: record?.applicantId,
               }
-            }, undefined, {shallow: true})}
+            }, undefined, { shallow: true })}
           >
             {item}
           </TextMaxLine>
@@ -94,7 +94,7 @@ export const ExamItem = ({
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           name: 'type',
-          options: LIST_EXAM_TYPE.map(item => ({value: item.value, label: item.name})),
+          options: LIST_EXAM_TYPE.map(item => ({ value: item.value, label: item.name })),
           placeholder: "Tất cả"
         },
       },
@@ -114,7 +114,7 @@ export const ExamItem = ({
         title: "Người tạo",
         width: "300px",
         render: (item, record) => (
-          <div style={{display: "flex", alignItems: "center"}}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             {/*<AvatarDS*/}
             {/*  sx={{*/}
             {/*    height: "20px",*/}
@@ -148,7 +148,7 @@ export const ExamItem = ({
         title: "Người chỉnh sửa",
         width: "200px",
         render: (item, record) => (
-          <div style={{display: "flex", alignItems: "center"}}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             {/*<AvatarDS*/}
             {/*  sx={{*/}
             {/*    height: "20px",*/}
@@ -221,14 +221,14 @@ export const ExamItem = ({
         title: "Trạng thái",
         width: "200px",
         render: (item) => (
-          <span style={{color: item ? "#388E3C" : "#455570"}}>
+          <span style={{ color: item ? "#388E3C" : "#455570" }}>
             {Status(item)}
           </span>
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           name: 'isActive',
-          options: LIST_STATUS.map(item => ({value: item.id, label: item.name})),
+          options: LIST_STATUS.map(item => ({ value: item.id, label: item.name })),
           placeholder: "Tất cả"
         },
       }
@@ -266,12 +266,8 @@ export const ExamItem = ({
   }
 
   const handleSubmitCreate = (data) => {
-    let url = '/settings/exam/exam-business/create'
-    if (data.type === 2) {
-      url = '/settings/exam/exam-business/create-random'
-    }
     router.push({
-      pathname: url,
+      pathname: '/settings/exam/exam-business/create',
       query: data
     });
   }
