@@ -1,24 +1,27 @@
 import { FormProvider } from "@/components/hook-form";
 import { ConnectCardStyle } from "@/sections/connect/style";
-import { Box, Card, CardContent, CardMedia, Tooltip, Typography, } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Divider, Tooltip, Typography, } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import PropTypes from "prop-types";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { SwitchForm } from "@/sections/connect/ConnectCard";
 import InforIcon from "@/assets/InforIcon";
+import { useTheme } from "@mui/material/styles";
+import RHFDropdown from "@/components/hook-form/RHFDropdown";
+import { useGetListJobCategoriesInternalQuery } from "@/sections/recruitment";
 
-const ChannelCardItem = ({account, color, handleChange}) => {
+const ChannelCardItem = ({account, color}) => {
   const methods = useForm({
     defaultValues: {checked: account.active},
   });
   
   const {
     setValue,
+    watch
   } = methods;
   const changeToggleConnect = (value) => {
     setValue("checked", value.target.checked);
-    handleChange(value.target.checked);
   }
   
   return (
@@ -64,20 +67,37 @@ const ChannelCardItem = ({account, color, handleChange}) => {
             handleChange={changeToggleConnect}
           />
         </Box>
-        {/*<Divider />*/}
-        {/*{type === "outside" ? (*/}
-        {/*  <DetailCard*/}
-        {/*    checked={checked}*/}
-        {/*    accounts={accounts}*/}
-        {/*    sx={{ display: "block" }}*/}
-        {/*  />*/}
-        {/*) : (*/}
-        {/*  <DetailSocial checked={checked} accounts={accounts} />*/}
-        {/*)}*/}
+        <Divider/>
+        <DetailChannel checked={watch("checked")}/>
       </Card>
     </FormProvider>
   );
 };
+
+const DetailChannel = ({checked}) => {
+  const theme = useTheme();
+  const {data: {items: dataJobCategories = []} = {}} = useGetListJobCategoriesInternalQuery();
+  return checked && <Box>
+    <Box py={3}>
+      <Typography variant={"textSize13500"} color={theme.palette.common.neutral700}>
+        Để đăng tin lên Website FPT Education tuyển dụng, vui lòng bổ sung thêm trường thông tin bắt buộc sau:
+      </Typography>
+    </Box>
+    <Box mb={3}>
+      <RHFDropdown
+        title={"Ngành nghề"}
+        isRequired={true}
+        options={dataJobCategories.map((item) => ({
+          value: item.jobCategoryId,
+          name: item.jobCategoryName,
+        }))}
+        name={"jobSourceId"}
+        placeholder="Chọn ngành nghề"
+      />
+    </Box>
+  </Box>
+};
+
 const ChannelCard = ({accounts, color, title, handleChange}) => {
   return (
     <Box>

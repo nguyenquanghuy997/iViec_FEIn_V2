@@ -3,13 +3,7 @@ import Content from "@/components/BaseComponents/Content";
 import { View } from "@/components/FlexStyled";
 import Page from "@/components/Page";
 import { FormProvider } from "@/components/hook-form";
-import {
-  PERMISSION_PAGES,
-  RECRUITMENT_CREATE_TYPE,
-  SALARY_TYPE,
-  SEX_TYPE,
-  PIPELINE_TYPE,
-} from "@/config";
+import { PERMISSION_PAGES, PIPELINE_TYPE, RECRUITMENT_CREATE_TYPE, SALARY_TYPE, SEX_TYPE, } from "@/config";
 import Layout from "@/layouts";
 import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -20,11 +14,7 @@ import Header from "@/sections/recruitment-form/components/Header";
 import TabList from "@/sections/recruitment-form/components/TabList";
 import TabPanel from "@/sections/recruitment-form/components/TabPanel";
 import { FormValidate } from "@/sections/recruitment-form/form/Validate";
-import {
-  DraftIcon,
-  OrangeAlertIcon,
-  SendIcon,
-} from "@/sections/recruitment-form/icon/HeaderIcon";
+import { DraftIcon, OrangeAlertIcon, SendIcon, } from "@/sections/recruitment-form/icon/HeaderIcon";
 import Information from "@/sections/recruitment-form/information";
 import Pipeline from "@/sections/recruitment-form/pipeline";
 import Preview from "@/sections/recruitment-form/preview/Preview";
@@ -50,32 +40,32 @@ CreateRecruitment.getLayout = function getLayout(pageProps, page) {
 
 export default function CreateRecruitment() {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
-
+  
   const stateOpenForm = useSelector((state) => state.modalReducer.openState);
-  const { openSaveDraft, openPreview, openSaveApprove } = stateOpenForm;
-
+  const {openSaveDraft, openPreview, openSaveApprove} = stateOpenForm;
+  
   const [valueTab, setValueTab] = useState("1");
   const [showAlert, setShowAlert] = useState(false);
   const [hState, sethState] = useState("top");
   const examinationDataRef = useRef(null);
-
+  
   const goBackButtonHandler = () => {
     setShowAlert(true);
   };
-
+  
   const onBackButtonEvent = (e) => {
     e.preventDefault();
     goBackButtonHandler();
   };
-
+  
   useEffect(() => {
     window.history.pushState(null, null, window.location.pathname);
     window.addEventListener("popstate", onBackButtonEvent);
     return () => window.removeEventListener("popstate", onBackButtonEvent);
   }, []);
-
+  
   useEffect(() => {
     const unloadCallback = (event) => {
       event.preventDefault();
@@ -88,7 +78,7 @@ export default function CreateRecruitment() {
     window.addEventListener("popstate", unloadCallback);
     return () => window.removeEventListener("popstate", unloadCallback);
   }, []);
-
+  
   useEffect(() => {
     let lastVal = 0;
     window.onscroll = function () {
@@ -105,19 +95,18 @@ export default function CreateRecruitment() {
       lastVal = y;
     };
   }, []);
-
+  
   const handleChangeTab = (event, newValue) => {
     setValueTab(newValue);
   };
-
+  
   const handleOpenConfirm = (data) => {
     dispatch(modalSlice.actions.openStateModal(data));
   };
   const handleCloseConfirm = () => dispatch(modalSlice.actions.closeModal());
-
+  
   const [createRecruitment] = useCreateRecruitmentMutation();
-  const { data: defaultOrganization = {} } = useGetOrganizationInfoQuery();
-
+  const {data: defaultOrganization = {}} = useGetOrganizationInfoQuery();
   const defaultValues = {
     name: "",
     organizationId: defaultOrganization?.id || null,
@@ -147,7 +136,7 @@ export default function CreateRecruitment() {
     organizationPipelineId: null,
     isAutomaticStepChange: false,
   };
-
+  
   const methods = useForm({
     resolver: yupResolver(FormValidate),
     mode: "onChange",
@@ -156,32 +145,32 @@ export default function CreateRecruitment() {
     }, [defaultValues]),
     shouldUnregister: false,
   });
-
+  
   const {
     handleSubmit,
     getValues,
     setValue,
-    formState: { isValid },
+    formState: {isValid},
   } = methods;
-
+  
   useEffect(() => {
     if (!isEmpty(defaultOrganization)) {
       setValue("organizationId", defaultOrganization.id);
     }
   }, [defaultOrganization]);
-
+  
   const onSubmit = async (data) => {
     const hasExaminationValue = examinationDataRef.current.getHasValue();
     const examinationSize = examinationDataRef.current?.getSize();
     const pipelineStateDatas = examinationDataRef.current
-      ?.getPipeLineStateData()
-      ?.filter(
-        (item) =>
-          item.pipelineStateType === PIPELINE_TYPE.EXAMINATION &&
-          !isEmpty(item.examinationId)
-      );
+    ?.getPipeLineStateData()
+    ?.filter(
+      (item) =>
+        item.pipelineStateType === PIPELINE_TYPE.EXAMINATION &&
+        !isEmpty(item.examinationId)
+    );
     const pipelineStateDatasSize = pipelineStateDatas?.length;
-
+    
     if (hasExaminationValue && examinationSize !== pipelineStateDatasSize) {
       enqueueSnackbar(
         "Thêm tin tuyển dụng không thành công. Vui lòng chọn đề thi!",
@@ -192,7 +181,7 @@ export default function CreateRecruitment() {
       setValueTab("2");
       return;
     }
-
+    
     const body = {
       ...data,
       startDate: moment(data?.startDate).toISOString(),
@@ -221,12 +210,12 @@ export default function CreateRecruitment() {
       organizationPipelineStateDatas: !hasExaminationValue
         ? []
         : pipelineStateDatas
-            ?.filter((item) => item?.examinationId !== null)
-            ?.map((item) => ({
-              organizationPipelineStateId: item.organizationPipelineStateId,
-              examinationId: item.examinationId,
-              examinationExpiredDays: Number(item.expiredTime),
-            })),
+        ?.filter((item) => item?.examinationId !== null)
+        ?.map((item) => ({
+          organizationPipelineStateId: item.organizationPipelineStateId,
+          examinationId: item.examinationId,
+          examinationExpiredDays: Number(item.expiredTime),
+        })),
     };
     try {
       await createRecruitment({
@@ -249,7 +238,7 @@ export default function CreateRecruitment() {
       throw e;
     }
   };
-
+  
   return (
     <Page title="Đăng tin tuyển dụng">
       <View mt={200} mb={36}>
@@ -269,17 +258,17 @@ export default function CreateRecruitment() {
                 isValid={isValid}
               />
             </Grid>
-            <Content style={{ marginBottom: 64 }}>
+            <Content style={{marginBottom: 64}}>
               <Grid container columnSpacing={3}>
                 <Grid item md={12} className="profile-content">
                   <TabPanel value="1">
-                    <Information />
+                    <Information/>
                   </TabPanel>
                   <TabPanel value="2">
-                    <Pipeline ref={examinationDataRef} />
+                    <Pipeline ref={examinationDataRef}/>
                   </TabPanel>
                   <TabPanel value="3">
-                    <Channel ref={examinationDataRef} />
+                    <Channel ref={examinationDataRef}/>
                   </TabPanel>
                 </Grid>
               </Grid>
@@ -291,7 +280,7 @@ export default function CreateRecruitment() {
         <ConfirmModal
           open={showAlert}
           onClose={() => setShowAlert(false)}
-          icon={<OrangeAlertIcon />}
+          icon={<OrangeAlertIcon/>}
           title={"Trở về danh sách tin tuyển dụng"}
           titleProps={{
             sx: {
@@ -305,7 +294,7 @@ export default function CreateRecruitment() {
           }
           data={getValues()}
           onSubmit={() => router.push(PATH_DASHBOARD.recruitment.root)}
-          btnCancelProps={{ title: "Hủy" }}
+          btnCancelProps={{title: "Hủy"}}
           btnConfirmProps={{
             title: "Trở lại",
             color: "dark",
@@ -316,7 +305,7 @@ export default function CreateRecruitment() {
         <ConfirmModal
           open={openSaveDraft}
           onClose={handleCloseConfirm}
-          icon={<DraftIcon height={45} width={50} />}
+          icon={<DraftIcon height={45} width={50}/>}
           title={"Lưu nháp tin tuyển dụng"}
           titleProps={{
             sx: {
@@ -328,15 +317,15 @@ export default function CreateRecruitment() {
           subtitle={"Bạn có chắc chắn muốn lưu nháp tin tuyển dụng này?"}
           data={getValues()}
           onSubmit={onSubmit}
-          btnCancelProps={{ title: "Hủy" }}
-          btnConfirmProps={{ title: "Xác nhận" }}
+          btnCancelProps={{title: "Hủy"}}
+          btnConfirmProps={{title: "Xác nhận"}}
         />
       )}
       {openSaveApprove && (
         <ConfirmModal
           open={openSaveApprove}
           onClose={handleCloseConfirm}
-          icon={<SendIcon />}
+          icon={<SendIcon/>}
           title={"Gửi phê duyệt tin tuyển dụng"}
           titleProps={{
             sx: {
@@ -348,8 +337,8 @@ export default function CreateRecruitment() {
           subtitle={"Bạn có chắc chắn muốn gửi phê duyệt tin tuyển dụng này?"}
           data={getValues()}
           onSubmit={onSubmit}
-          btnCancelProps={{ title: "Hủy" }}
-          btnConfirmProps={{ title: "Gửi phê duyệt" }}
+          btnCancelProps={{title: "Hủy"}}
+          btnConfirmProps={{title: "Gửi phê duyệt"}}
         />
       )}
       {openPreview && (

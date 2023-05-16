@@ -18,7 +18,7 @@ import {
 } from "@/sections/offer-form/OfferFormSlice";
 import { useRouter } from "next/router";
 import { isArray } from "lodash";
-import { findIndexs, toRequestFilterData } from "@/utils/helper";
+import { findIndex, toRequestFilterData } from "@/utils/helper";
 import { useSnackbar } from "notistack";
 
 const defaultValues = {
@@ -231,7 +231,7 @@ const OfferFormContent = () => {
           onClose={handleCloseBottomNav}
           onDelete={handleDelete}
           setIsOpenActive={setIsOpenActive}
-          selectedList={findIndexs(true, selected)?.map(i => data[i]) || []}
+          selectedList={findIndex(true, selected)?.map(i => data[i]) || []}
           onGetParentNode={setItem}
           setActionType={setActionType}
           setActionTypeActive={setActionTypeActive}

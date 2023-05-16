@@ -15,14 +15,14 @@ import PreviewEmail from "@/sections/emailform/component/PreviewEmail";
 import { ViewModel } from "@/utils/cssStyles";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import {
-  useGetAllOfferTemplateQuery,
+  useGetAllOfferTemplateQuery, useGetInfoDataOfferQuery,
   useLazyGetPreviewOfferTemplateQuery,
   useSendOfferTemplateMutation,
   useUploadImageOfferMutation
 } from "@/sections/offer-form/OfferFormSlice";
 import { useSnackbar } from "notistack";
 import CropImage from "@/sections/offer-form/component/crop-image/CropImage";
-import { getFileUrl } from "@/utils/helper";
+import { getFileUrl, replaceValueOffer } from "@/utils/helper";
 import { renderFileUploadItem } from "@/sections/offer-form/component/OfferFormModal";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
@@ -48,7 +48,8 @@ const defaultValues = {
 const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
   const theme = useTheme();
   const [addForm] = useSendOfferTemplateMutation();
-  const {data: {items: dataOffer = []} = {}} = useGetAllOfferTemplateQuery();
+  const {data: {items: dataOffer = []} = {}} = useGetAllOfferTemplateQuery({IsActive: true});
+  const {data: dataInfo} = useGetInfoDataOfferQuery({ApplicantId: item.applicantId, RecruitmentId: item.recruitmentId});
   const [getDataOffer, {data: Data}] = useLazyGetPreviewOfferTemplateQuery();
   const {data: {items: dataPersons = []} = {}} = useGetRecruitmentPersonInChargeIdsQuery(item.recruitmentId);
   const [uploadFiles] = useUploadImageOfferMutation();
@@ -58,7 +59,6 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
   const handleFileChange = (e) => {
     setFileList(prev => [...prev, ...e.target.files]);
   };
-  
   const removeFileUpload = (index) => {
     const newFileList = [...fileList].filter((item, idx) => idx !== index);
     setFileList(newFileList);
@@ -100,13 +100,14 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
   }, [watch("offerTemplateId")])
   
   useEffect(() => {
-    if (!Data) return;
-    setValue("title", Data.title);
-    setValue("content", Data.content);
-    setValue("signatureLogo", Data.signatureLogo);
-    setValue("signatureContent", Data.signatureContent);
-    setFileList(Data.templateAttachFiles);
-  }, [Data])
+    if (Data && dataInfo) {
+      setValue("title", Data.title);
+      setValue("content", replaceValueOffer(Data.content, dataInfo));
+      setValue("signatureLogo", Data.signatureLogo);
+      setValue("signatureContent", replaceValueOffer(Data.signatureContent, dataInfo));
+      setFileList(Data.templateAttachFiles);
+    }
+  }, [Data, dataInfo])
   
   const handleOpenPreviewEmail = () => {
     setIsOpenPreview(true);

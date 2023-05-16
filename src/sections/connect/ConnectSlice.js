@@ -26,5 +26,6 @@ const connectSlice = apiWithTag.injectEndpoints({
 
 export const {
   useLazyGetInternalAccountQuery,
+  useGetInternalAccountQuery,
   useSetActiveInternalAccountMutation,
 } = connectSlice;

@@ -1,6 +1,6 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import {
-  API_CREATE_OFFER_TEMPLATE, API_DELETE_OFFER_TEMPLATE,
+  API_CREATE_OFFER_TEMPLATE, API_DELETE_OFFER_TEMPLATE, API_GET_INFO_DATA_OFFER,
   API_GET_OFFER_TEMPLATE, API_GET_OFFER_TEMPLATE_DEFAULT,
   API_GET_OFFER_TEMPLATES, API_GET_ORGANIZATION_USERS, API_SEND_OFFER_TEMPLATE, API_UPDATE_ACTIVE_OFFER_TEMPLATE,
   API_UPDATE_OFFER_TEMPLATE,
@@ -37,6 +37,13 @@ const offerFormSlice = apiWithTag.injectEndpoints({
     getDefaultOfferTemplate: builder.query({
       query: (data) => ({
         url: `${API_GET_OFFER_TEMPLATE_DEFAULT}?${qs.stringify(data)}`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 1,
+    }),
+    getInfoDataOffer: builder.query({
+      query: (data) => ({
+        url: `${API_GET_INFO_DATA_OFFER}?${qs.stringify(data)}`,
         method: "GET",
       }),
       keepUnusedDataFor: 1,
@@ -99,6 +106,7 @@ export const {
   useGetDefaultOfferTemplateQuery,
   useGetAllOrganizationUserQuery,
   useLazyGetPreviewOfferTemplateQuery,
+  useGetInfoDataOfferQuery,
   useAddOfferTemplateMutation,
   useSendOfferTemplateMutation,
   useUploadImageOfferMutation,

@@ -1,9 +1,11 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { Badge, Box, Stack, Typography } from "@mui/material";
 import TabList from "@mui/lab/TabList";
 import Tab from "@mui/material/Tab";
 import Content from "@/components/BaseComponents/Content";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
+import { useLazyGetInternalAccountQuery } from "@/sections/connect/ConnectSlice";
+import useAuth from "@/hooks/useAuth";
 
 const renderLabelTab = (title, subtitle) => {
   return (
@@ -14,7 +16,7 @@ const renderLabelTab = (title, subtitle) => {
   )
 }
 
-const tabs = [
+let tabs = [
   {
     value: '1',
     title: 'Thông tin tuyển dụng',
@@ -24,15 +26,27 @@ const tabs = [
     value: '2',
     title: 'Quy trình tuyển dụng',
     description: 'Cài đặt quy trình tuyển dụng và các thiết lập tự động'
-  },
-  {
-    value: '3',
-    title: 'Kênh tuyển dụng',
-    description: 'Đăng tin tuyển dụng lên các Jobsite bên ngoài để quản lý tập trung'
-  }
-]
+  }]
 
 const RecruitmentTabList = ({onChange, isValid, ...props}) => {
+  const [dataInternal] = useLazyGetInternalAccountQuery();
+  const [tabsRender, setTabsRender] = useState(tabs);
+  const auth = useAuth();
+  useEffect(async () => {
+    await dataInternal({OrganizationId: auth.user.organizationId}).unwrap().then((response) => {
+      if (response.isActivated) {
+        setTabsRender([...tabs, {
+          value: '3',
+          title: 'Kênh tuyển dụng',
+          description: 'Đăng tin tuyển dụng lên các Jobsite bên ngoài để quản lý tập trung'
+        }]);
+      }
+    })
+    .catch(() => {
+    
+    });
+  }, [tabs])
+  
   return (
     <Box
       sx={{
@@ -59,7 +73,7 @@ const RecruitmentTabList = ({onChange, isValid, ...props}) => {
             },
           }}>
           {
-            tabs.map((tab) => {
+            tabsRender.map((tab) => {
               return (
                 <Tab
                   label={<Badge color="secondary" badgeContent=" " variant="dot" sx={{

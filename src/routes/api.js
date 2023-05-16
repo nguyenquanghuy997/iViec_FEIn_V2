@@ -350,10 +350,12 @@ export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOffe
 export const API_DELETE_OFFER_TEMPLATE = "/notification/OfferTemplate/RemoveOfferTemplates";
 export const API_UPDATE_ACTIVE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplateActive";
 export const API_GET_OFFER_TEMPLATE_DEFAULT = "/notification/OfferTemplate/GetOfferTemplateDefaultSignature";
+export const API_GET_INFO_DATA_OFFER = "/applicant/ApplicantRecruitment/GetApplicantRecruitmentTagsData";
 
 // File
 export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
 
 // InternalAccount
 export const API_GET_INTERNAL_ACCOUNT = "/internal/Internal/GetInternalAccount";
+export const API_GET_JOB_CATEGORIES_INTERNAL = "/internal/Internal/GetJobCategories";
 export const API_SET_ACTIVE_ACCOUNT = "/integrator/ConnectionAccount/SetConnectAccountActive";
