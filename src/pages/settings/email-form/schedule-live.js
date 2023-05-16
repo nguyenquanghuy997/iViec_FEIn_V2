@@ -13,6 +13,7 @@ ScheduleLive.getLayout = function getLayout(pageProps, page) {
 function ScheduleLive() {
   return (
     <EmailForm
+      type={4}
       title="Email lịch phỏng vấn trực tiếp"
       subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
     />

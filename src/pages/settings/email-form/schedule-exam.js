@@ -13,6 +13,7 @@ ScheduleExam.getLayout = function getLayout(pageProps, page) {
 function ScheduleExam() {
   return (
     <EmailForm
+      type={2}
       title="Email lịch thi tuyển"
       subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng khởi tạo lịch phỏng vấn."
     />
