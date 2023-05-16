@@ -16,6 +16,7 @@ NotifyApprove.getLayout = function getLayout(pageProps, page) {
 function NotifyApprove() {
   return (
     <EmailForm
+      type={6}
       title="Email thông báo Kết quả - Đạt"
       subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng khởi tạo lịch phỏng vấn."
     />

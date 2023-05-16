@@ -13,6 +13,7 @@ ScheduleOnline.getLayout = function getLayout(pageProps, page) {
 function ScheduleOnline() {
   return (
     <EmailForm
+      type={3}
       title="Email lịch phỏng vấn trực tuyến"
       subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng khởi tạo lịch phỏng vấn."
     />
