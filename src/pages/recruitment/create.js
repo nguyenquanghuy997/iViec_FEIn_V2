@@ -38,6 +38,7 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import Channel from "@/sections/recruitment-form/channel";
 
 CreateRecruitment.getLayout = function getLayout(pageProps, page) {
   return (
@@ -276,6 +277,9 @@ export default function CreateRecruitment() {
                   </TabPanel>
                   <TabPanel value="2">
                     <Pipeline ref={examinationDataRef} />
+                  </TabPanel>
+                  <TabPanel value="3">
+                    <Channel ref={examinationDataRef} />
                   </TabPanel>
                 </Grid>
               </Grid>

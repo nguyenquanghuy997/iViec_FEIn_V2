@@ -353,3 +353,7 @@ export const API_GET_OFFER_TEMPLATE_DEFAULT = "/notification/OfferTemplate/GetOf
 
 // File
 export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
+
+// InternalAccount
+export const API_GET_INTERNAL_ACCOUNT = "/internal/Internal/GetInternalAccount";
+export const API_SET_ACTIVE_ACCOUNT = "/integrator/ConnectionAccount/SetConnectAccountActive";

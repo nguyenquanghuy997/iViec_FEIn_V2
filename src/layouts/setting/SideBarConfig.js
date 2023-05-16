@@ -42,11 +42,11 @@ export const sidebarConfig = [
       //   path: "/settings/evaluation-form",
       //   permissions: [PERS.VIEW_EVA_TPL],
       // },
-      // {
-      //   title: "Kết nối",
-      //   path: "/settings/connect",
-      //   permissions: [PERS.VIEW_CONNECT],
-      // },
+      {
+        title: "Kết nối",
+        path: "/settings/connect",
+        permissions: [PERS.VIEW_CONNECT],
+      },
       {
         title: "Quản lý đề thi",
         path: "/settings/exam",
