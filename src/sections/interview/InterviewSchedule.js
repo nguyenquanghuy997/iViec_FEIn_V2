@@ -3,16 +3,18 @@ import ViewSchedule from "./edit/ViewSchedule";
 import {PERMISSIONS} from "@/config";
 import useRole from "@/hooks/useRole";
 import {FormCalendar} from "@/sections/interview/components/FormCalendar";
-import {Card, useTheme} from "@mui/material";
+import {Card, Typography, useTheme} from "@mui/material";
 import {CardContent} from "@mui/material";
 import {Box} from "@mui/material";
 import {useMemo} from "react";
 import {useState} from "react";
+import moment from "moment";
+import "moment/locale/vi";
 
 export default function InterviewSchedule({Data}) {
   const check = false;
   const [openForm, setOpenForm] = useState(false);
-  const [item, setItem] = useState({});
+  const [setItem] = useState({});
   const [itemDialog, setItemDialog] = useState({});
   const {palette} = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
@@ -32,10 +34,10 @@ export default function InterviewSchedule({Data}) {
 
   return (
     <>
-      {Data?.items.map(() => (
-        <Card sx={{borderRadius: "6px", border: "none", p: 3}}>
-          <CardContent sx={{display: "flex", p: 0}}>
-            <div>
+      {Data?.result &&
+        Object.entries(Data?.result).map(([key, item]) => <>
+          <Card sx={{borderRadius: "6px", border: "none", p: 3}}>
+            <CardContent sx={{display: "flex", p: 0}}>
               <Box
                 sx={{
                   borderRadius: "100%",
@@ -49,45 +51,47 @@ export default function InterviewSchedule({Data}) {
                   color: "white",
                 }}
               >
-                {Data?.items.length}
+                {item.length}
               </Box>
-              <Box
+
+              <Typography
                 sx={{
                   display: "flex",
                   justifyContent: "center",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
                 color={palette.text.primary}
                 variant={"subtitle2"}
               >
-                {Data?.items[0].name}
-              </Box>
-            </div>
+                <b>{moment(key).locale("vi").format("dddd DD/MM/yyyy")}</b>
+              </Typography>
+            </CardContent>
 
-          </CardContent>
-          {Data?.items.map((item) => (
-            <ViewSchedule
-              key={item.id}
-              data={item}
-              check={check}
-              handleClick={handleClick}
-              handleClickDialog={handleClickDialog}
-            />
-          ))}
-        </Card>
-      ))}
-      {openForm && (
-        <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
-      )}
-      {canEdit && openDialog && (
-        <DetailDialog
-          title="Chi tiết lịch phỏng vấn"
-          open={openDialog}
-          item={itemDialog}
-          onClose={() => setOpenDialog(false)}
-        />
-      )}
+            {
+              item.map((p) => (
+                <ViewSchedule
+                  key={p.id}
+                  data={p}
+                  check={check}
+                  handleClick={handleClick}
+                  handleClickDialog={handleClickDialog}
+                />
+              ))
+            }
+            {openForm && (
+              <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
+            )}
+            {canEdit && openDialog && (
+              <DetailDialog
+                title="Chi tiết lịch phỏng vấn"
+                open={openDialog}
+                item={itemDialog}
+                onClose={() => setOpenDialog(false)}
+              />
+            )}
+          </Card>
+        </>)
+      }
     </>
-
   );
 }

@@ -21,7 +21,7 @@ const columns = [
     title: "Đơn vị",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "CreatorIds",
+      name: "organizationIds",
       placeholder: "Chọn 1 hoặc nhiều đơn vị",
       remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
       showAvatar: true
@@ -32,7 +32,7 @@ const columns = [
     title: "Người tạo",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "CreatorIds",
+      name: "creatorIds",
       placeholder: "Chọn 1 hoặc nhiều người",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true
@@ -43,7 +43,7 @@ const columns = [
     title: "Cán bộ tuyển dụng",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "CreatorIds",
+      name: "organizationIds",
       placeholder: "Chọn 1 hoặc nhiều cán bộ",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true
@@ -54,7 +54,7 @@ const columns = [
     title: "Hội đồng phỏng vấn",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "CreatorIds",
+      name: "councilIds",
       placeholder: "Chọn 1 hoặc nhiều người",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true
@@ -65,7 +65,7 @@ const columns = [
     title: "Tin tuyển dụng",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "CreatorIds",
+      name: "recruitmentIds",
       placeholder: "Chọn 1 hoặc nhiều tin tuyển dụng",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true
@@ -76,7 +76,7 @@ const columns = [
     title: "Ngày tạo",
     colFilters: {
       type: TBL_FILTER_TYPE.RANGE_DATE,
-      name: ['StartTime', 'EndTime'],
+      name: ['interviewFrom', 'interviewTo'],
       placeholder: 'Chọn ngày',
     },
   },
