@@ -16,6 +16,7 @@ NotifyReject.getLayout = function getLayout(pageProps, page) {
 function NotifyReject() {
   return (
     <EmailForm
+      type={5}
       title="Email thông báo Kết quả - Loại"
       subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng khởi tạo lịch phỏng vấn."
     />

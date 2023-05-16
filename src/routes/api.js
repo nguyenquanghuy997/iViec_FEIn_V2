@@ -354,3 +354,13 @@ export const API_UPDATE_ACTIVE_OFFER_TEMPLATE =
 
 // File
 export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
+
+// Email
+export const API_GET_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/GetEmailTemplateOrganizations";
+export const API_CREATE_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/CreateEmailTemplateOrganization";
+export const API_UPDATE_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/UpdateEmailTemplateOrganization";
+export const API_DELETE_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/RemoveEmailTemplateOrganizations";
