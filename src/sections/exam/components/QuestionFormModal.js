@@ -2,7 +2,6 @@ import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import SvgIcon from "@/components/SvgIcon";
-import MuiInputNumber from "@/components/form/MuiInputNumber";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { Label } from "@/components/hook-form/style";
@@ -58,7 +57,6 @@ const defaultValues = {
   questionGroupId: "",
   questionTitle: "",
   questionFilePaths: [],
-  questionPoint: "",
   isActive: true,
   answers: [],
 };
