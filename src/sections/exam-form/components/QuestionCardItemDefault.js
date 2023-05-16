@@ -160,12 +160,9 @@ function QuestionCardItemDefault({ index, item, showIndex, hasRoleEdit, checked,
             {
               <Checkbox
                 value={item}
-                defaultChecked={checked}
                 checked={checked}
                 disabled={isDisable}
                 onChange={onChangeSelected}
-              // icon={<CheckboxIconDefault />}
-              // checkedIcon={<CheckboxIconChecked />}
               />
             }
             {

@@ -18,7 +18,7 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
 
   const [getQuestionGroup, { isLoading, data: { items = [] } = {} }] =
     useLazyGetQuestionGroupQuery();
-    
+
   const list = Array.isArray(items) ? items : [];
 
   const methods = useForm({
@@ -33,7 +33,8 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
   const searchKey = useDebounce(methods.watch("searchKey"), 500);
 
   useEffect(() => {
-    getQuestionGroup({ searchKey });
+    if(show)
+      getQuestionGroup({ searchKey });
   }, [searchKey, show])
 
   const renderItem = (data) => {
