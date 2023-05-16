@@ -1,9 +1,9 @@
-import {FormHelperText} from '@mui/material'
+import { FormHelperText } from '@mui/material'
 import PropTypes from 'prop-types'
-import {Controller, useFormContext} from 'react-hook-form'
-import {LabelStyle} from "@/components/hook-form/style";
+import { Controller, useFormContext } from 'react-hook-form'
+import { LabelStyle } from "@/components/hook-form/style";
 import React from "react";
-import EmailEditor from "@/sections/offerform/component/editor/EmailEditor";
+import EmailEditor from "@/sections/offer-form/component/editor/EmailEditor";
 
 const RHFEmailEditor = ({ name, title, isRequired = false, ...other }) => {
   const {control} = useFormContext()
@@ -21,15 +21,15 @@ const RHFEmailEditor = ({ name, title, isRequired = false, ...other }) => {
                     onChange={field.onChange}
                     error={!!error}
                     helperText={
-                      <FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>
+                      <FormHelperText error sx={{textTransform: 'capitalize'}}>
                         {error?.message}
                       </FormHelperText>
                     }
                     {...other}
                 />
-                <FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>
-                  {error?.message}
-                </FormHelperText>
+                {/*<FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>*/}
+                {/*  {error?.message}*/}
+                {/*</FormHelperText>*/}
               </>
           )}
       />

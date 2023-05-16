@@ -4,6 +4,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker as XDatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import TextInput from '@/components/form/MuiTextField';
+import { useTheme } from "@mui/material/styles";
 
 const DatePicker = forwardRef(({
   iconPosition = 'start',
@@ -12,7 +13,7 @@ const DatePicker = forwardRef(({
   ...props
 }, ref) => {
   const _datePicker = useRef();
-
+  const theme = useTheme();
   useImperativeHandle(ref, () => (_datePicker.current));
 
   return (
@@ -22,7 +23,7 @@ const DatePicker = forwardRef(({
         InputAdornmentProps={{ position: iconPosition }}
         PaperProps={{
           sx: {
-            background: '#fff',
+            background: theme.palette.background.paper,
             '.MuiButtonBase-root': {
               background: 'transparent',
             },

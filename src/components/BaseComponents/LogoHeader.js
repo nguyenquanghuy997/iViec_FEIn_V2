@@ -2,12 +2,14 @@ import { View } from "../FlexStyled";
 import Logo from "@/components/Logo";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { useTheme } from "@mui/material/styles";
 
 LogoHeader.propTypes = {};
 
 export default function LogoHeader() {
+  const theme = useTheme();
   return (
-    <View style={{ backgroundColor: '#FDFDFD' }} width={"100%"}>
+    <View style={{ backgroundColor: theme.palette.common.white }} width={"100%"}>
       <Box
         display="flex"
         justifyContent="center"

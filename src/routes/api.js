@@ -102,10 +102,6 @@ export const API_SET_ACTIVE_ORGANIZATION =
   "/organization/Organization/SetOrganizationsActive";
 export const API_GET_ALL_ADMIN_ORGANIZATION =
   "/organization/Organization/GetApplicantUsersAdmin";
-
-export const API_GET_LIST_USER_ORGANIZATION =
-  "/organization/Organization/GetApplicationUserByOrganization";
-
 // mời người dùng
 export const API_INVITE_USER =
   "/organization/OrganizationUserInvite/CreateOrganizationUserInvites";
@@ -253,8 +249,6 @@ export const API_GET_ADD_APPLICANT_TO_RECRUITMENT =
   "/applicant/ApplicantRecruitment/AddApplicantsToRecruitment";
 
 //Danh sách người tạo
-export const API_GET_APPLICANT_USERS_FILTER =
-  "/organization/Organization/GetApplicationUsersFilter";
 
 // API ApproveProcess
 export const API_CREATE_APPROVE_PROCESS =
@@ -347,5 +341,13 @@ export const API_UPDATE_ACTIVE_QUESTION =
   "/applicant/Question/UpdateActiveQuestions";
 export const API_REMOVE_QUESTION = "/applicant/Question/RemoveQuestions";
 
-export class API_DELETE_EXAM {
-}
+// Offer
+export const API_GET_OFFER_TEMPLATE = "/notification/OfferTemplate/GetOfferTemplate";
+export const API_GET_OFFER_TEMPLATES = "/notification/OfferTemplate/GetOfferTemplates";
+export const API_CREATE_OFFER_TEMPLATE = "/notification/OfferTemplate/CreateOfferTemplate";
+export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate";
+export const API_DELETE_OFFER_TEMPLATE = "/notification/OfferTemplate/RemoveOfferTemplates";
+export const API_UPDATE_ACTIVE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplateActive";
+
+// File
+export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";

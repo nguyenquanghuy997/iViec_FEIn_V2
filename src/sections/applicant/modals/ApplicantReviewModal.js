@@ -1,19 +1,21 @@
+import { useAddApplicantReviewMutation } from "../ApplicantFormSlice";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
-import { View, Text } from "@/components/DesignSystem/FlexStyled";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
 import { ButtonIcon, ReviewForm } from "@/utils/cssStyles";
+import { yupResolver } from "@hookform/resolvers/yup";
 // import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Divider, Modal, Typography } from "@mui/material";
+import { Box, Divider, FormHelperText, Modal, Typography } from "@mui/material";
 import { Rate } from "antd";
 import { useSnackbar } from "notistack";
 // import { Rate } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAddApplicantReviewMutation } from "../ApplicantFormSlice";
+import * as Yup from "yup";
 
 const LIST_ACTION = [
   { id: 0, name: "Đạt", color: "#4CAF50", icon: "bxs:like" },
@@ -21,7 +23,7 @@ const LIST_ACTION = [
   { id: 2, name: "Loại", color: "#F44336", icon: "bxs:dislike" },
 ];
 
-const Point = ({ index, value, onChange, setFormValue }) => {
+const Point = ({ value, onChange }) => {
   return (
     <Box
       sx={{
@@ -31,10 +33,7 @@ const Point = ({ index, value, onChange, setFormValue }) => {
       }}
     >
       <Rate
-        onChange={(p) => {
-          onChange(p);
-          setFormValue("applicantReviewCriterias." + index + ".point", p);
-        }}
+        onChange={onChange}
         character={({ index }) => index + 1}
         count={10}
         value={value}
@@ -54,13 +53,31 @@ export const ApplicantReviewModal = ({
   const [mediumScore, setMediumScore] = useState(0);
   const [currentAction, setCurrentAction] = useState();
 
-  const methodss = useForm({});
+  const Schema = Yup.object().shape({
+    ...data?.reviewFormCriterias?.reduce(
+      (res, item) => ({
+        ...res,
+        [`${item.id}_content`]: item.isRequired
+          ? Yup.string().required("Chưa nhập đánh giá tiêu chí này")
+          : Yup.string(),
+        [`${item.id}_point`]: item.isRequired
+          ? Yup.number().required("Chưa đánh giá điểm tiêu chí này")
+          : Yup.number(),
+      }),
+      {}
+    ),
+    result: Yup.string().required("Chưa nhập kết luận"),
+  });
+
+  const methodss = useForm({
+    resolver: yupResolver(Schema),
+  });
 
   const {
-    watch,
     setValue,
+    setError,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methodss;
 
   const pressHide = () => {
@@ -70,11 +87,15 @@ export const ApplicantReviewModal = ({
   const [reviewForm] = useAddApplicantReviewMutation();
   const pressSave = handleSubmit(async (d) => {
     const data = {
-      applicantId: applicantId,
-      recruitmentId: recruitmentId,
+      applicantId,
+      recruitmentId,
       applicantReviewResultType: currentAction,
       comment: d.result,
-      applicantReviewCriterias: d.applicantReviewCriterias,
+      applicantReviewCriterias: d?.applicantReviewCriterias?.map((i) => ({
+        ...i,
+        point: d[`${i.id}_point`],
+        content: d[`${i.id}_content`],
+      })),
     };
     try {
       await reviewForm(data).unwrap();
@@ -92,19 +113,17 @@ export const ApplicantReviewModal = ({
     setValue(
       "applicantReviewCriterias",
       data?.reviewFormCriterias?.map((i) => ({
-        reviewFormCriteriaId: i.id,
+        id: i.id,
       }))
     );
   }, [JSON.stringify(data?.reviewFormCriterias)]);
-  const applicantReviewCriterias = watch("applicantReviewCriterias");
-  const isPoint = applicantReviewCriterias
-    ?.filter((p) => p.point)
-    .map((p) => p.point);
+
   useEffect(() => {
-    const sum = isPoint?.reduce((a, b) => a + b, 0);
-    const avg = sum / isPoint?.length || 0;
-    setMediumScore(avg);
-  }, [applicantReviewCriterias, isPoint]);
+    const list = Object.keys(points);
+    const total = list.reduce((res, item) => (res += points[item]), 0);
+    if (list.length !== data?.reviewFormCriterias?.length) return;
+    setMediumScore(total / list.length);
+  }, [points]);
 
   return (
     <Modal
@@ -136,47 +155,47 @@ export const ApplicantReviewModal = ({
             <View
               style={{ overflowY: "auto", maxHeight: "600px", padding: 24 }}
             >
-              {data?.reviewFormCriterias &&
-                data?.reviewFormCriterias.map((p, index) => {
-                  return (
-                    <ReviewForm className="block-review" key={index}>
-                      <Label
-                        required={true}
-                        className="title"
-                        title="Tính cách"
-                      >
-                        {p?.name}
-                      </Label>
-                      <p className="subTitleForm" title="">
-                        {p?.description}
-                      </p>
-                      <div className="input-content">
-                        <TextAreaDS
-                          maxLength={255}
-                          placeholder="Nhập nội dung đánh giá..."
-                          name={`applicantReviewCriterias.${index}.description`}
-                          sx={{
-                            ".ant-input-data-count": {
-                              display: "none",
-                            },
-                          }}
-                        />
-                      </div>
-                      <Point
-                        value={points[index]}
-                        index={index}
-                        setFormValue={setValue}
-                        onChange={(val) => {
-                          setPoints({
-                            ...points,
-                            [index]: val,
-                          });
+              {data?.reviewFormCriterias?.map((item, index) => {
+                const { isRequired, id, name, description } = item;
+
+                return (
+                  <ReviewForm className="block-review" key={index}>
+                    <Label
+                      required={isRequired}
+                      className="title"
+                      title="Tính cách"
+                    >
+                      {name}
+                    </Label>
+                    <p className="subTitleForm" title="">
+                      {description}
+                    </p>
+                    <div className="input-content">
+                      <TextAreaDS
+                        maxLength={255}
+                        placeholder="Nhập nội dung đánh giá..."
+                        name={`${id}_content`}
+                        sx={{
+                          ".ant-input-data-count": {
+                            display: "none",
+                          },
                         }}
                       />
-                      <span className="error"></span>
-                    </ReviewForm>
-                  );
-                })}
+                    </div>
+                    <Point
+                      value={points[index]}
+                      onChange={(val) => {
+                        setError(`${id}_point`, false);
+                        setValue(`${id}_point`, val);
+                        setPoints({ ...points, [index]: val });
+                      }}
+                    />
+                    <FormHelperText error>
+                      {errors?.[`${id}_point`]?.message}
+                    </FormHelperText>
+                  </ReviewForm>
+                );
+              })}
 
               <ReviewForm
                 className="block-review block-review-result"

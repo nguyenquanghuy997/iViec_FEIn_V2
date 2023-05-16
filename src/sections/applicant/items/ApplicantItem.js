@@ -1,55 +1,71 @@
+import ApplicantBottomNav from "./ApplicantBottomNav";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
-import {View} from "@/components/FlexStyled";
+import { View } from "@/components/FlexStyled";
+import TextMaxLine from "@/components/TextMaxLine";
+import { TBL_FILTER_TYPE } from "@/config";
+import {
+  API_GET_APPLICANT_SKILLS,
+  API_GET_JOB_CATEGORIES,
+  API_GET_LIST_JOB_SOURCE,
+  API_GET_LIST_RECRUITMENT,
+  API_GET_ORGANIZATION_USERS,
+  API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_PROVINCE,
+} from "@/routes/api";
+import { PATH_DASHBOARD } from "@/routes/paths";
 import {
   useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import {Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience,} from "@/utils/enum";
-import {fDate} from "@/utils/formatTime";
-import {Tag} from "antd";
-import {useRouter} from "next/router";
-import {useMemo, useState} from "react";
-import ApplicantBottomNav from "./ApplicantBottomNav";
-import {TBL_FILTER_TYPE} from "@/config";
 import {
+  Address,
+  MaritalStatus,
+  PipelineStateType,
+  Sex,
+  YearOfExperience,
+} from "@/utils/enum";
+import {
+  LIST_EXPERIENCE_NUMBER,
   LIST_GENDER,
   LIST_MARITAL_STATUSES,
-  LIST_EXPERIENCE_NUMBER,
   LIST_STEP_RECRUITMENT,
 } from "@/utils/formatString";
-import {
-  API_GET_LIST_RECRUITMENT,
-  API_GET_PROVINCE,
-  API_GET_LIST_JOB_SOURCE,
-  API_GET_ORGANIZATION_USERS,
-  API_GET_ORGANIZATION_WITH_CHILD,
-  API_GET_JOB_CATEGORIES,
-  API_GET_APPLICANT_SKILLS,
-} from "@/routes/api";
-import TextMaxLine from "@/components/TextMaxLine";
-import {PATH_DASHBOARD} from "@/routes/paths";
+import { fDate } from "@/utils/formatTime";
+import { Tag } from "antd";
+import { useRouter } from "next/router";
+import { useMemo, useState } from "react";
 
-export const ApplicantItem = ({
-                                hideTable,
-                                headerProps,
-                              }) => {
+export const ApplicantItem = (props) => {
+  const { hideTable, headerProps } = props;
   const router = useRouter();
 
-  const listArrayOtherIdsFilter = ["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
-  const {query = {PageIndex: 1, PageSize: 10}, isReady} = router;
+  const listArrayOtherIdsFilter = [
+    "yearsOfExperience",
+    "sexs",
+    "maritalStatuses",
+    "recruitmentPipelineStates",
+  ];
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   let reqData = {};
   for (let f in query) {
     let val = query[f];
-    if ((f.includes('Ids') || listArrayOtherIdsFilter.includes(f)) && !Array.isArray(val)) {
+    if (
+      (f.includes("Ids") || listArrayOtherIdsFilter.includes(f)) &&
+      !Array.isArray(val)
+    ) {
       val = [val];
     }
     reqData[f] = val;
   }
 
-  const {data: Data, isLoading} = useGetAllFilterApplicantQuery(reqData, {
-    skip: !isReady,
-  });
+  const { data, isLoading } = hideTable
+    ? {}
+    : props.data
+    ? props
+    : useGetAllFilterApplicantQuery(reqData, {
+        skip: !isReady,
+      });
 
   const columns = useMemo(() => {
     return [
@@ -72,15 +88,27 @@ export const ApplicantItem = ({
         // render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
         render: (item, record) => (
           <TextMaxLine
-            sx={{width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer'}}
-            onClick={() => router.push({
-              pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
-                correlationId: record?.correlationId,
-                organizationId: record?.organizationId,
-                recruitmentId: record?.recruitmentId,
-                applicantId: record?.applicantId,
-              }
-            }, undefined, {shallow: true})}
+            sx={{
+              width: 360,
+              fontWeight: 500,
+              fontSize: 14,
+              cursor: "pointer",
+            }}
+            onClick={() =>
+              router.push(
+                {
+                  pathname: PATH_DASHBOARD.applicant.view(record?.applicantId),
+                  query: {
+                    correlationId: record?.correlationId,
+                    organizationId: record?.organizationId,
+                    recruitmentId: record?.recruitmentId,
+                    applicantId: record?.applicantId,
+                  },
+                },
+                undefined,
+                { shallow: true }
+              )
+            }
           >
             {item}
           </TextMaxLine>
@@ -95,7 +123,7 @@ export const ApplicantItem = ({
       {
         dataIndex: "dateOfBirth",
         title: "Ngày sinh",
-        render: (date) => date ? fDate(date) : '',
+        render: (date) => (date ? fDate(date) : ""),
         width: "120px",
       },
       {
@@ -111,7 +139,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "recruitmentIds",
           remoteUrl: API_GET_LIST_RECRUITMENT,
-          remoteMethod: 'POST',
+          remoteMethod: "POST",
           placeholder: "Chọn một hoặc nhiều tin tuyển dụng",
         },
       },
@@ -119,12 +147,16 @@ export const ApplicantItem = ({
         dataIndex: "recruitmentPipelineState",
         title: "Bước tuyển dụng",
         width: "200px",
-        render: (item, record) => getStatusPipelineStateType(item, record?.pipelineStateResultType),
+        render: (item, record) =>
+          getStatusPipelineStateType(item, record?.pipelineStateResultType),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "recruitmentPipelineStates",
           placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
-          options: LIST_STEP_RECRUITMENT.map(item => ({value: item.value, label: item.name})),
+          options: LIST_STEP_RECRUITMENT.map((item) => ({
+            value: item.value,
+            label: item.name,
+          })),
         },
       },
       {
@@ -134,8 +166,8 @@ export const ApplicantItem = ({
         render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
-          name: ['createdTimeFrom', 'createdTimeTo'],
-          placeholder: 'Chọn ngày',
+          name: ["createdTimeFrom", "createdTimeTo"],
+          placeholder: "Chọn ngày",
         },
       },
       {
@@ -145,7 +177,7 @@ export const ApplicantItem = ({
         label: "Đơn vị",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_TREE,
-          name: 'organizationIds',
+          name: "organizationIds",
           placeholder: "Chọn một hoặc nhiều đơn vị",
           remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
         },
@@ -156,7 +188,7 @@ export const ApplicantItem = ({
         width: "200px",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: 'jobSourceIds',
+          name: "jobSourceIds",
           placeholder: "Chọn 1 hoặc nhiều nguồn",
           remoteUrl: API_GET_LIST_JOB_SOURCE,
         },
@@ -207,7 +239,7 @@ export const ApplicantItem = ({
         title: "Ngành nghề",
         width: "200px",
         render: (jobCats = []) => {
-          return jobCats.map(cat => cat.name).join(', ');
+          return jobCats.map((cat) => cat.name).join(", ");
         },
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
@@ -223,7 +255,7 @@ export const ApplicantItem = ({
         render: (item) => YearOfExperience(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          placeholder: 'Chọn số năm kinh nghiệm',
+          placeholder: "Chọn số năm kinh nghiệm",
           name: "yearsOfExperience",
           options: LIST_EXPERIENCE_NUMBER,
         },
@@ -232,7 +264,7 @@ export const ApplicantItem = ({
         title: "Kỹ năng",
         key: "applicantSkills",
         dataIndex: "applicantSkills",
-        render: (_, {applicantSkills}) => (
+        render: (_, { applicantSkills }) => (
           <>
             {applicantSkills.map((item, idx) => {
               // let color = item.length > 5 ? 'geekblue' : 'green';
@@ -273,8 +305,10 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT,
           name: "maritalStatuses",
           label: "Tình trạng hôn nhân",
-          options: [{value: '', label: 'Tất cả'}].concat(LIST_MARITAL_STATUSES),
-          placeholder: 'Tất cả',
+          options: [{ value: "", label: "Tất cả" }].concat(
+            LIST_MARITAL_STATUSES
+          ),
+          placeholder: "Tất cả",
         },
       },
       {
@@ -284,8 +318,8 @@ export const ApplicantItem = ({
         align: "center",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_NUMBER,
-          name: ['heightFrom', 'heightTo'],
-          placeholder: 'Nhập chiều cao',
+          name: ["heightFrom", "heightTo"],
+          placeholder: "Nhập chiều cao",
         },
       },
       {
@@ -298,8 +332,8 @@ export const ApplicantItem = ({
         align: "center",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_NUMBER,
-          name: ['weightFrom', 'weightTo'],
-          placeholder: 'Nhập cân nặng',
+          name: ["weightFrom", "weightTo"],
+          placeholder: "Nhập cân nặng",
         },
       },
       {
@@ -320,8 +354,8 @@ export const ApplicantItem = ({
         width: "240px",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_MONEY,
-          placeholder: 'Nhập số tiền',
-          name: ['expectedSalaryFrom', 'expectedSalaryTo'],
+          placeholder: "Nhập số tiền",
+          name: ["expectedSalaryFrom", "expectedSalaryTo"],
         },
       },
       {
@@ -331,7 +365,7 @@ export const ApplicantItem = ({
         render: (item) => Address(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_ADDRESS,
-          name: ['livingAddressProvinceIds', 'livingAddressDistrictIds'],
+          name: ["livingAddressProvinceIds", "livingAddressDistrictIds"],
         },
       },
       {
@@ -341,7 +375,7 @@ export const ApplicantItem = ({
         render: (item) => Address(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_ADDRESS,
-          name: ['homeTowerProvinceIds', 'homeTowerDistrictIds'],
+          name: ["homeTowerProvinceIds", "homeTowerDistrictIds"],
         },
       },
     ];
@@ -383,7 +417,7 @@ export const ApplicantItem = ({
         switch (pipelineStateResultType) {
           case 0:
             return (
-              <span style={{color: "#2E7D32"}}>
+              <span style={{ color: "#2E7D32" }}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -392,7 +426,7 @@ export const ApplicantItem = ({
             );
           case 1:
             return (
-              <span style={{color: "#F77A0C"}}>
+              <span style={{ color: "#F77A0C" }}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -401,7 +435,7 @@ export const ApplicantItem = ({
             );
           case 2:
             return (
-              <span style={{color: "#D32F2F"}}>
+              <span style={{ color: "#D32F2F" }}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -410,7 +444,7 @@ export const ApplicantItem = ({
             );
           default:
             return (
-              <span style={{color: "#2E7D32"}}>
+              <span style={{ color: "#2E7D32" }}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -426,7 +460,7 @@ export const ApplicantItem = ({
       <View>
         <DynamicColumnsTable
           columns={columns}
-          source={Data}
+          source={data}
           loading={isLoading}
           settingName={"DANH SÁCH ỨNG VIÊN"}
           nodata="Hiện chưa có ứng viên nào"
@@ -439,7 +473,7 @@ export const ApplicantItem = ({
           searchInside={false}
           headerProps={headerProps}
           hideTable={hideTable}
-          searchTextHint='Tìm kiếm theo họ tên, email, SĐT ứng viên...'
+          searchTextHint="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
         />
       </View>
 

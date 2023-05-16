@@ -27,7 +27,7 @@ import {
   API_GET_PROVINCE,
 } from "@/routes/api";
 import { PATH_DASHBOARD } from "@/routes/paths";
-import { ExcelIcon } from "@/sections/offerform/component/editor/Icon";
+import { ExcelIcon } from "@/sections/offer-form/component/editor/Icon";
 import {
   AlertIcon,
   UnCheckedSwitchIcon,
@@ -139,7 +139,7 @@ export const RecruitmentItem = () => {
             onClick={(e) => {
               if (
                 !canView ||
-                record.processStatus == RECRUITMENT_STATUS.DRAFT 
+                record.processStatus === RECRUITMENT_STATUS.DRAFT
                 // record.processStatus ==
                 //   RECRUITMENT_STATUS.WAITING_ORGANIZATION_APPROVAL ||
                 // record.processStatus ==
@@ -425,11 +425,11 @@ export const RecruitmentItem = () => {
         width: "216px",
         render: (text, record) => (
           <>
-            {record?.minSalary != 0
+            {record?.minSalary !== 0
               ? `${fCurrency(record?.minSalary)} - ${fCurrency(
                   record?.maxSalary
                 )} ${Currency(record?.currencyUnit)}`
-              : record.salaryDisplayType == 0
+              : record.salaryDisplayType === 0
               ? "Không lương"
               : "Thỏa thuận"}
           </>
@@ -606,14 +606,7 @@ export const RecruitmentItem = () => {
               "copy",
             ];
           case 6:
-            return [
-              "name",
-              "detail",
-              "preview",
-              "excel",
-              "edit",
-              "copy",
-            ];
+            return ["name", "detail", "preview", "excel", "edit", "copy"];
           case 7:
             return ["name", "detail", "preview", "excel", "close", "copy"];
           case 8:
@@ -625,10 +618,10 @@ export const RecruitmentItem = () => {
         let isShow = true;
         for (let i = 1; i < data.length; i++) {
           if (
-            data[i].processStatus == RECRUITMENT_STATUS.RECRUITING ||
-            data[i].processStatus == RECRUITMENT_STATUS.CALENDARED ||
-            data[i].processStatus == RECRUITMENT_STATUS.EXPIRED ||
-            data[i].processStatus == RECRUITMENT_STATUS.CLOSED
+            data[i].processStatus === RECRUITMENT_STATUS.RECRUITING ||
+            data[i].processStatus === RECRUITMENT_STATUS.CALENDARED ||
+            data[i].processStatus === RECRUITMENT_STATUS.EXPIRED ||
+            data[i].processStatus === RECRUITMENT_STATUS.CLOSED
           ) {
             isShow = false;
           }
@@ -677,7 +670,7 @@ export const RecruitmentItem = () => {
                 textAlign: "center",
                 width: "100%",
                 fontSize: style.FONT_BASE,
-                fontWeight: style.FONT_SEMIBOLD,
+                fontWeight: style.FONT_SEMI_BOLD,
                 color: style.COLOR_PRIMARY,
                 marginTop: 2,
               }}
@@ -723,7 +716,7 @@ export const RecruitmentItem = () => {
                 textAlign: "center",
                 width: "100%",
                 fontSize: style.FONT_BASE,
-                fontWeight: style.FONT_SEMIBOLD,
+                fontWeight: style.FONT_SEMI_BOLD,
                 color: style.COLOR_TEXT_DANGER,
                 marginTop: 2,
               }}
@@ -818,12 +811,14 @@ export const RecruitmentItem = () => {
               ),
             color: "basic",
             icon: <EditIcon />,
+            title: "Chỉnh sửa",
           },
           (canView || canEdit) && {
             key: "excel",
             onClick: () => handleExportExcel(itemSelected),
             color: "basic",
             icon: <ExcelIcon />,
+            title: "Export Excel",
           },
           canEdit && {
             key: "copy",
@@ -837,12 +832,14 @@ export const RecruitmentItem = () => {
               }),
             color: "basic",
             icon: <CopyIcon />,
+            title: "Sao chép",
           },
           canEdit && {
             key: "delete",
             onClick: () => handleOpenModalState({ openDelete: true }),
             color: "basic",
             icon: <DeleteIcon />,
+            title: "Xóa",
           },
         ].filter((item) => listKeyActions?.includes(item.key))}
       />

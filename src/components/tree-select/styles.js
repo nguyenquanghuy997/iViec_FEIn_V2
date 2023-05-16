@@ -8,7 +8,7 @@ export const TreeSelectStyle = styled(TreeSelect)(({ theme: { palette }, height 
     paddingLeft: 14,
     border: '1px solid ' + palette.text.border + '!important',
     '.ant-select-selection-placeholder': {
-      color: palette.text.placeholder,
+      color: palette.text.search,
       fontSize: pxToRem(14),
       paddingLeft: 4,
     },

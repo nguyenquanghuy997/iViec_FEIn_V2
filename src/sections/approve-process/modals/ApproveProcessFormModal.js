@@ -271,10 +271,10 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                     label={<Typography variant={"body1"}>Phê duyệt tự động</Typography>}
                     sx={{
                       "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                        backgroundColor: theme.palette.text.Blue200,
+                        backgroundColor: theme.palette.common.blue200,
                       },
                       "& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb": {
-                        backgroundColor: theme.palette.text.Blue700,
+                        backgroundColor: theme.palette.common.blue700,
                       },
                     }}
                   />
@@ -288,7 +288,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                     style={{
                       marginBottom: 24,
                       borderRadius: 6,
-                      border: '0.5px solid ' + theme.palette.text.Neutral400,
+                      border: '0.5px solid ' + theme.palette.common.neutral400,
                     }}
                     key={item.id}>
                     <Grid container direction="row"

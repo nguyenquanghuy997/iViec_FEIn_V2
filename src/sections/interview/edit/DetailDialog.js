@@ -281,8 +281,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                 "&&Email=" +
                 user?.email +
                 "&&RoomName=" +
-                DetailData?.id +
-                "&&Role=1"
+                DetailData?.id
               }
               sx={{
                 color: "white",

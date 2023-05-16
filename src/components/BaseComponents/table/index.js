@@ -1,18 +1,16 @@
-import { useState, useMemo } from "react";
-import { Table } from "antd";
-import { useTheme } from "@mui/material";
-import {isEmpty, isEmpty as _isEmpty} from "lodash";
-import { RiSettings3Fill } from 'react-icons/ri';
-import { useRouter } from "next/router";
-
+import Content from "../Content";
+import TableHeader from "./TableHeader";
+import ColumnsModal from "./VisibleColumnsModal";
+import { TableStyle } from "./styles";
 import { View } from "@/components/FlexStyled";
 import TextMaxLine from "@/components/TextMaxLine";
 import { ButtonIcon } from "@/utils/cssStyles";
-import ColumnsModal from "./VisibleColumnsModal";
-import TableHeader from "./TableHeader";
-import Content from "../Content";
-
-import { TableStyle } from "./styles";
+import { useTheme } from "@mui/material";
+import { Table } from "antd";
+import { isEmpty as _isEmpty, isEmpty } from "lodash";
+import { useRouter } from "next/router";
+import { useMemo, useState } from "react";
+import { RiSettings3Fill } from "react-icons/ri";
 
 const DynamicColumnsTable = (props) => {
   const {
@@ -41,18 +39,20 @@ const DynamicColumnsTable = (props) => {
   const router = useRouter();
   const { PageIndex = 1, PageSize = 10 } = router.query;
   const { palette } = useTheme();
-  const { data: colsVisible = {} } = useGetColumnsFunc ? useGetColumnsFunc() : { data: {} };
+  const { data: colsVisible = {} } = useGetColumnsFunc
+    ? useGetColumnsFunc()
+    : { data: {} };
 
   const columnsVisible = useMemo(() => {
     if (!useGetColumnsFunc) {
       let cols = {};
-      columns.map(col => {
+      columns.map((col) => {
         cols[col.dataIndex] = true;
       });
       return cols;
     }
 
-    if (typeof colsVisible.items !== 'undefined') {
+    if (typeof colsVisible.items !== "undefined") {
       if (Array.isArray(colsVisible.items)) {
         return colsVisible.items[0] || [];
       }
@@ -62,22 +62,43 @@ const DynamicColumnsTable = (props) => {
   }, [colsVisible]);
 
   const columnsDisplay = useMemo(() => {
-    return columns.filter(col => {
-      return !!columnsVisible[col.dataIndex];
-    }).map(col => {
-      let renderFunc = col.render;
-      if (renderFunc) {
-        col.render = (text, record, index) => {
-          return renderFunc(text, record, index, parseInt(PageIndex), parseInt(PageSize));
-        };
-      }
+    return columns
+      .filter((col) => {
+        return !!columnsVisible[col.dataIndex];
+      })
+      .map((col) => {
+        let renderFunc = col.render;
+        if (renderFunc) {
+          col.render = (text, record, index) => {
+            return renderFunc(
+              text,
+              record,
+              index,
+              parseInt(PageIndex),
+              parseInt(PageSize)
+            );
+          };
+        } else if (col.width) {
+          col.render = (text) => (
+            <p
+              style={{
+                maxWidth: col.width,
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {text}
+            </p>
+          );
+        }
 
-      return {
-        ...col,
-        colFilters: col.filters,
-        filters: null,
-      };
-    });
+        return {
+          ...col,
+          colFilters: col.filters,
+          filters: null,
+        };
+      });
   }, [columnsVisible, columns]);
 
   const [visibleMenuSettings, setVisibleMenuSettings] = useState(false);
@@ -100,7 +121,9 @@ const DynamicColumnsTable = (props) => {
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    setItemSelected(source?.items?.filter((item) => newSelectedRowKeys.includes(item.id)));
+    setItemSelected(
+      source?.items?.filter((item) => newSelectedRowKeys.includes(item.id))
+    );
   };
 
   const rowSelection = {
@@ -138,18 +161,22 @@ const DynamicColumnsTable = (props) => {
     }
 
     setTimeout(() => {
-      router.push({
-        query: reset ? {} : { ...router.query, ...values },
-      }, undefined, { shallow: false });
+      router.push(
+        {
+          query: reset ? {} : { ...router.query, ...values },
+        },
+        undefined,
+        { shallow: false }
+      );
     }, timeout);
-  }
+  };
 
   const handleOnChange = ({ current, pageSize }) => {
     onSubmitFilter({
       PageIndex: current,
       PageSize: pageSize,
     });
-  }
+  };
 
   return (
     <View>
@@ -179,7 +206,9 @@ const DynamicColumnsTable = (props) => {
               <ButtonIcon
                 onClick={showSetting}
                 sx={{ backgroundColor: "unset" }}
-                icon={<RiSettings3Fill size={16} color={palette.text.primary} />}
+                icon={
+                  <RiSettings3Fill size={16} color={palette.text.primary} />
+                }
               />
 
               <View>
@@ -214,7 +243,7 @@ const DynamicColumnsTable = (props) => {
             </View>
           </View>
 
-          <TableStyle className={searchInside ? 'inside' : ''}>
+          <TableStyle className={searchInside ? "inside" : ""}>
             {searchInside && (
               <TableHeader
                 onSubmitFilter={onSubmitFilter}
@@ -232,7 +261,9 @@ const DynamicColumnsTable = (props) => {
               // onRow={onRow}
               rowKey={(record) => record.id}
               rowClassName={(record) =>
-                selectedRowKeys?.includes(record.id) ? "ant-table-row-selected" : ""
+                selectedRowKeys?.includes(record.id)
+                  ? "ant-table-row-selected"
+                  : ""
               }
               columns={columnsDisplay}
               dataSource={source?.items}

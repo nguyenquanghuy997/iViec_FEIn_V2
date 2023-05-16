@@ -132,7 +132,7 @@ export default function PipelineTable({
                     setActionsList([]);
                   }
                 }}
-                sx={{ color: palette.text.placeholder }}
+                sx={{ color: palette.text.search }}
               />
             </TableCell>
           </TableRow>
@@ -156,7 +156,7 @@ export default function PipelineTable({
                           onChange={(e) => {
                             handleChangeActionGroup(e, itemActions);
                           }}
-                          sx={{ color: palette.text.placeholder }}
+                          sx={{ color: palette.text.search }}
                         />
                       }
                       label={item.name}

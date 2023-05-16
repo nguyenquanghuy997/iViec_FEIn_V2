@@ -50,6 +50,7 @@ import { getSettings } from '@/utils/getSettings'
 import './style.css'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
+import '@/assets/scss/global.scss';
 
 MyApp.propTypes = {
   Component: PropTypes.func,
@@ -58,22 +59,22 @@ MyApp.propTypes = {
 }
 
 export default function MyApp(props) {
-  const { Component, pageProps, settings } = props
-
+  const {Component, pageProps, settings} = props
+  
   const getLayout = Component.getLayout ?? ((pageProps, page) => page)
-
+  
   const router = useRouter()
-
+  
   useMemo(() => {
-    router.prefetch = async () => { }
+    router.prefetch = async () => {
+    }
   }, [router])
-
+  
   return (
     <>
       <Head>
-        <meta name='viewport' content='initial-scale=1, width=device-width' />
+        <meta name='viewport' content='initial-scale=1, width=device-width'/>
       </Head>
-
       <AuthProvider>
         <ReduxProvider store={store}>
           <RoleProvider>
@@ -87,7 +88,7 @@ export default function MyApp(props) {
                           {/* <SocketProvider> */}
                           <NotificationProvider>
                             <ConfirmModalProvider>
-                              <ProgressBar />
+                              <ProgressBar/>
                               {getLayout(
                                 pageProps,
                                 <Component {...pageProps} />
@@ -111,13 +112,13 @@ export default function MyApp(props) {
 
 MyApp.getInitialProps = async (context) => {
   const appProps = await App.getInitialProps(context)
-
+  
   const cookies = cookie.parse(
     context.ctx.req ? context.ctx.req.headers.cookie || '' : document.cookie
   )
-
+  
   const settings = getSettings(cookies)
-
+  
   return {
     ...appProps,
     settings,

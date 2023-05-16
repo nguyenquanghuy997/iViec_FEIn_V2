@@ -23,7 +23,6 @@ export default function FilterModal({
     /* eslint-disable */
     let { auto, ...reqData } = data;
     /* eslint-enable */
-
     onSubmitFilter(
       toRequestFilterData(reqData),
       isReset,

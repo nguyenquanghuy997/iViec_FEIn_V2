@@ -255,8 +255,7 @@ const ViewSchedule = ({data, check, handleClick, handleClickDialog}) => {
               "&&Email=" +
               user?.email +
               "&&RoomName=" +
-              data?.id +
-              "&&Role=1"
+              data?.id
             }
             target='_blank'
             sx={{

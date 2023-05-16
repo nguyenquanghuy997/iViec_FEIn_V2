@@ -67,12 +67,16 @@ export const Status = (item) => {
   }
 };
 //Địa chỉ
-export const Address = (item) =>
-  `${item?.address ? item?.address + "," : ""} ${
-    item?.villageName ? item?.villageName + "," : ""
-  }  ${item?.districtName ? item?.districtName + "," : ""} ${
-    item?.provinceName ? item?.provinceName : ""
-  }`;
+export const Address = (item) => {
+  return [
+    item?.address,
+    item?.villageName,
+    item?.districtName,
+    item?.provinceName,
+  ]
+    .filter((i) => i)
+    .join(", ");
+};
 //Đơn vị tiền tệ
 export const Currency = (item) => {
   switch (item) {
