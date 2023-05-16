@@ -1,17 +1,17 @@
 import DynamicColumnsTable from "@/components/BaseComponents/table";
-import { View } from "@/components/FlexStyled";
+import {View} from "@/components/FlexStyled";
 import {
   useGetAllFilterApplicantQuery,
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
 } from "@/sections/applicant";
-import { Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience, } from "@/utils/enum";
-import { fDate } from "@/utils/formatTime";
-import { Tag } from "antd";
-import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import {Address, MaritalStatus, PipelineStateType, Sex, YearOfExperience,} from "@/utils/enum";
+import {fDate} from "@/utils/formatTime";
+import {Tag} from "antd";
+import {useRouter} from "next/router";
+import {useMemo, useState} from "react";
 import ApplicantBottomNav from "./ApplicantBottomNav";
-import { TBL_FILTER_TYPE } from "@/config";
+import {TBL_FILTER_TYPE} from "@/config";
 import {
   LIST_GENDER,
   LIST_MARITAL_STATUSES,
@@ -28,16 +28,16 @@ import {
   API_GET_APPLICANT_SKILLS,
 } from "@/routes/api";
 import TextMaxLine from "@/components/TextMaxLine";
-import { PATH_DASHBOARD } from "@/routes/paths";
+import {PATH_DASHBOARD} from "@/routes/paths";
 
 export const ApplicantItem = ({
-  hideTable,
-  headerProps,
-}) => {
+                                hideTable,
+                                headerProps,
+                              }) => {
   const router = useRouter();
 
-  const listArrayOtherIdsFilter =["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
-  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const listArrayOtherIdsFilter = ["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
+  const {query = {PageIndex: 1, PageSize: 10}, isReady} = router;
   let reqData = {};
   for (let f in query) {
     let val = query[f];
@@ -47,7 +47,7 @@ export const ApplicantItem = ({
     reqData[f] = val;
   }
 
-  const { data: Data, isLoading } = useGetAllFilterApplicantQuery(reqData, {
+  const {data: Data, isLoading} = useGetAllFilterApplicantQuery(reqData, {
     skip: !isReady,
   });
 
@@ -72,7 +72,7 @@ export const ApplicantItem = ({
         // render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
         render: (item, record) => (
           <TextMaxLine
-            sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
+            sx={{width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer'}}
             onClick={() => router.push({
               pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
                 correlationId: record?.correlationId,
@@ -80,7 +80,7 @@ export const ApplicantItem = ({
                 recruitmentId: record?.recruitmentId,
                 applicantId: record?.applicantId,
               }
-            }, undefined, { shallow: true })}
+            }, undefined, {shallow: true})}
           >
             {item}
           </TextMaxLine>
@@ -124,7 +124,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "recruitmentPipelineStates",
           placeholder: "Chọn một hoặc nhiều bước tuyển dụng",
-          options: LIST_STEP_RECRUITMENT.map(item => ({ value: item.value, label: item.name })),
+          options: LIST_STEP_RECRUITMENT.map(item => ({value: item.value, label: item.name})),
         },
       },
       {
@@ -232,7 +232,7 @@ export const ApplicantItem = ({
         title: "Kỹ năng",
         key: "applicantSkills",
         dataIndex: "applicantSkills",
-        render: (_, { applicantSkills }) => (
+        render: (_, {applicantSkills}) => (
           <>
             {applicantSkills.map((item, idx) => {
               // let color = item.length > 5 ? 'geekblue' : 'green';
@@ -273,7 +273,7 @@ export const ApplicantItem = ({
           type: TBL_FILTER_TYPE.SELECT,
           name: "maritalStatuses",
           label: "Tình trạng hôn nhân",
-          options: [{ value: '', label: 'Tất cả' }].concat(LIST_MARITAL_STATUSES),
+          options: [{value: '', label: 'Tất cả'}].concat(LIST_MARITAL_STATUSES),
           placeholder: 'Tất cả',
         },
       },
@@ -383,7 +383,7 @@ export const ApplicantItem = ({
         switch (pipelineStateResultType) {
           case 0:
             return (
-              <span style={{ color: "#2E7D32" }}>
+              <span style={{color: "#2E7D32"}}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -392,7 +392,7 @@ export const ApplicantItem = ({
             );
           case 1:
             return (
-              <span style={{ color: "#F77A0C" }}>
+              <span style={{color: "#F77A0C"}}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -401,7 +401,7 @@ export const ApplicantItem = ({
             );
           case 2:
             return (
-              <span style={{ color: "#D32F2F" }}>
+              <span style={{color: "#D32F2F"}}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -410,7 +410,7 @@ export const ApplicantItem = ({
             );
           default:
             return (
-              <span style={{ color: "#2E7D32" }}>
+              <span style={{color: "#2E7D32"}}>
                 {PipelineStateType(
                   recruitmentPipelineState,
                   pipelineStateResultType
@@ -439,7 +439,7 @@ export const ApplicantItem = ({
           searchInside={false}
           headerProps={headerProps}
           hideTable={hideTable}
-          searchTextHint = 'Tìm kiếm theo họ tên, email, SĐT ứng viên...'
+          searchTextHint='Tìm kiếm theo họ tên, email, SĐT ứng viên...'
         />
       </View>
 

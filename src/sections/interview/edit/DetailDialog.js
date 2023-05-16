@@ -194,7 +194,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             )}
           </List>
           <Divider />
-          <List sx={{ pt: 2 }}>
+          <List sx={{pt: 2}}>
             <Typography
               sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}
             >
