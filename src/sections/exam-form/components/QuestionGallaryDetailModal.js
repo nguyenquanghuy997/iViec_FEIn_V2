@@ -76,7 +76,8 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
   }
 
   const isSelected = (item) => {
-    return listQuestions.some(x => x.id == item.id)
+    console.log('istiem '+ item.questionTitle, listQuestions.some(x => x.id == item.id) || questionSelected.some(x => x.id == item.id));
+    return listQuestions.some(x => x.id == item.id) || questionSelected.some(x => x.id == item.id)
   }
 
   const isDisable = (item) => {
@@ -88,15 +89,15 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
   }
 
   useEffect(() => {
-    // setQuestionSelected([])
-    getQuestions({ QuestionGroupId: questionGallary?.id, searchKey, type, createdTimeFrom, createdTimeTo, OrganizationIds });
+    if(questionGallary?.id)
+      getQuestions({ QuestionGroupId: questionGallary?.id, searchKey, type, createdTimeFrom, createdTimeTo, OrganizationIds });
   }, [questionGallary, searchKey, type, createdTimeFrom, createdTimeTo, OrganizationIds]);
 
   useEffect(() => {
     setQuestionSelected([])
     setValue("searchKey", "")
   }, [show])
-  
+
   return (
     <Dialog
       fullWidth
@@ -246,9 +247,10 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
                   </Box>
                 </Box>
                 <Box mt={2}>
+                  {console.log('data', Data?.items)}
                   {
                     Data?.items?.map((item, index) => <QuestionCardItemDefault
-                      key={index}
+                      key={item.id}
                       index={index}
                       checked={isSelected(item)}
                       isDisable={isDisable(item)}
