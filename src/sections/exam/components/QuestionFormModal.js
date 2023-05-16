@@ -27,6 +27,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import React from "react";
 
 const LIST_QUESTION_TYPE = [
   {
@@ -62,7 +63,7 @@ const defaultAnswer = {
   isCorrect: false,
 };
 
-export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, handleNoSave }) => {
+const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, handleNoSave }) => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   // props
@@ -407,4 +408,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
       </Modal>
     </FormProvider>
   );
-};
+}
+
+export default React.memo(QuestionFormModal)
+

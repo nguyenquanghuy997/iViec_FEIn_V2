@@ -50,8 +50,7 @@ const LIST_QUESTION_TYPE = [
   },
 ];
 
-
-function QuestionCardItemDefault({ index, item, hasRoleEdit, hasRoleDelete, onEdit, onDelete, onChangeSelected, checked, isDisable }) {
+function QuestionCardItemDefault({ index, item, showIndex, hasRoleEdit, checked, isDisable, hasRoleDelete, onEdit, onDelete, onChangeSelected }) {
   const { user } = useAuth();
   const [expanded, setExpanded] = useState(false)
 
@@ -162,17 +161,21 @@ function QuestionCardItemDefault({ index, item, hasRoleEdit, hasRoleDelete, onEd
               <Checkbox
                 value={item}
                 defaultChecked={checked}
+                checked={checked}
                 disabled={isDisable}
                 onChange={onChangeSelected}
               // icon={<CheckboxIconDefault />}
               // checkedIcon={<CheckboxIconChecked />}
               />
             }
-            <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} ml={2} >Câu hỏi {index + 1}
+            {
+              showIndex &&
+              <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} mx={2} >
+                Câu hỏi {index + 1}
+              </Typography>
+            }
 
-            </Typography>
-
-            <Typography fontSize={14} ml={2} color={"#455570"} maxWidth={'75%'} component="span">
+            <Typography fontSize={14} color={"#455570"} maxWidth={'75%'} component="span">
               {item.questionTitle}
             </Typography>
           </CardFormItemTitleStyle>

@@ -18,6 +18,7 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
 
   const [getQuestionGroup, { isLoading, data: { items = [] } = {} }] =
     useLazyGetQuestionGroupQuery();
+    
   const list = Array.isArray(items) ? items : [];
 
   const methods = useForm({
@@ -160,53 +161,52 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
         },
       }}
     >
-      <FormProvider methods={methods} onSubmit={handleSubmit}>
-        {/* header */}
-        <View
-          flexrow="true"
-          atcenter="center"
-          jcbetween="true"
-          pv={12}
-          ph={24}
-          bgcolor={"#FDFDFD"}
-        >
-          <Text flex="true" fontsize={16} fontweight={"600"}>
-            {"Thêm câu hỏi từ thư viện câu hỏi nội bộ"}
-          </Text>
-          <ButtonDS
-            type="button"
-            sx={{
-              backgroundColor: "#fff",
-              boxShadow: "none",
-              ":hover": {
-                backgroundColor: "#EFF3F7",
-              },
-              textTransform: "none",
-              padding: "12px",
-              minWidth: "unset",
-            }}
-            onClick={onClose}
-            icon={
-              <Iconify
-                icon={"mi:close"}
-                width={20}
-                height={20}
-                color="#5C6A82"
-              />
-            }
-          />
-        </View>
-        <Divider />
+      {/* header */}
+      <View
+        flexrow="true"
+        atcenter="center"
+        jcbetween="true"
+        pv={12}
+        ph={24}
+        bgcolor={"#FDFDFD"}
+      >
+        <Text flex="true" fontsize={16} fontweight={"600"}>
+          {"Thêm câu hỏi từ thư viện câu hỏi nội bộ"}
+        </Text>
+        <ButtonDS
+          type="button"
+          sx={{
+            backgroundColor: "#fff",
+            boxShadow: "none",
+            ":hover": {
+              backgroundColor: "#EFF3F7",
+            },
+            textTransform: "none",
+            padding: "12px",
+            minWidth: "unset",
+          }}
+          onClick={onClose}
+          icon={
+            <Iconify
+              icon={"mi:close"}
+              width={20}
+              height={20}
+              color="#5C6A82"
+            />
+          }
+        />
+      </View>
+      <Divider />
 
-        {/* body */}
+      {/* body */}
 
-        <View flex="true" ph={16} pv={24}
-          style={{
-            overflowY: "scroll",
-            backgroundColor: "#F2F4F5",
-            minHeight: 'calc(100vh - 64px -68px -68px) !important'
-          }}>
-
+      <View flex="true" ph={16} pv={24}
+        style={{
+          overflowY: "scroll",
+          backgroundColor: "#F2F4F5",
+          minHeight: 'calc(100vh - 64px -68px -68px) !important'
+        }}>
+        <FormProvider methods={methods} onSubmit={handleSubmit}>
           <View flexrow={'true'} atcenter={'true'} jcbetween={'true'} mb={8}>
             <Text color={'#455570'} fontsize={16} fontweight={600}>Danh sách nhóm câu hỏi</Text>
 
@@ -233,46 +233,27 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
               }}
             />
           </View>
+        </FormProvider>
 
-          <View flex1='true'>
-            {list.length ? (
-              list.map(renderItem)
-            ) : (
-              <View allcenter={'true'} pt={64}>
-                {isLoading ? (
-                  <CircularProgress />
-                ) : (
-                  <>
-                    <EmptyIcon />
-                    <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
-                      {"Hiện chưa có nhóm câu hỏi nào."}
-                    </Text>
-                  </>
-                )}
-              </View>
-            )}
-          </View>
+        <View flex1='true'>
+          {list.length ? (
+            list.map(renderItem)
+          ) : (
+            <View allcenter={'true'} pt={64}>
+              {isLoading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <EmptyIcon />
+                  <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
+                    {"Hiện chưa có nhóm câu hỏi nào."}
+                  </Text>
+                </>
+              )}
+            </View>
+          )}
         </View>
-      </FormProvider>
-
-
-      {/* footer */}
-      {/* <View
-        flexrow="true"
-        jcend="true"
-        pv={16}
-        ph={24}
-        boxshadow={"inset 0px 1px 0px #EBECF4"}
-      >
-        <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
-        <View width={8} />
-        <ButtonDS
-          type={"submit"}
-          variant={"contained"}
-          tittle={"Tiếp tục"}
-          onClick={pressSave}
-        />
-      </View> */}
+      </View>
     </Dialog>
   )
 }
