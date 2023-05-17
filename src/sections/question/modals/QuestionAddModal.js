@@ -2,22 +2,18 @@ import { Text, View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
 import {
   FormProvider,
+  RHFArrayQuestion,
+  RHFBasicSelect,
   RHFSwitch,
   RHFTextField,
-  RHFBasicSelect,
-  RHFArrayQuestion,
   RHFUploadMultiFileCustom,
 } from "@/components/hook-form";
 // import { updateAssignUser } from "@/sections/jobdetail/jobDetailSlice";
-import {
-  PipelinePreviewItem,
-  // useGetAllReviewFormMutation,
-} from "@/sections/pipeline";
+import { PipelinePreviewItem } from "@/sections/pipeline";
 // import { useGetAllQuestionQuery } from "@/sections/question";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { FormHelperText, Modal, Typography } from "@mui/material";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, FormHelperText, Modal, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -34,11 +30,11 @@ const defaultValues = {
   questionState: 0,
 };
 
-export const QuestionAddModal = ({  show, setShow }) => {
+export const QuestionAddModal = ({ show, setShow }) => {
   // state
   // eslint-disable-next-line
   const [listForm, setListForm] = useState([]);
-// eslint-disable-next-line
+  // eslint-disable-next-line
   const [showForm, setShowForm] = useState(false);
   // eslint-disable-next-line
   const [editItemData, setEditItemData] = useState({});
@@ -256,7 +252,6 @@ export const QuestionAddModal = ({  show, setShow }) => {
                     // onDrop={handleDrop}
                     // onRemove={handleRemove}
                     // onRemoveAll={handleRemoveAll}
-                    // onUpload={() => console.log("ON UPLOAD")}
                   />
                 </View>
 

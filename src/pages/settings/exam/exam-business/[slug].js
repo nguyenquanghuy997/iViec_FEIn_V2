@@ -40,7 +40,8 @@ function Question() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showConfirmSwitchActive, setShowConfirmSwitchActive] = useState(false);
-  const [showTransferQuestionGroup, setShowTransferQuestionGroup] = useState(false);
+  const [showTransferQuestionGroup, setShowTransferQuestionGroup] =
+    useState(false);
 
   const { isActive, questionTitle = "" } = itemSelected[0] || {};
   const isMulti = itemSelected.length > 1;
@@ -81,8 +82,8 @@ function Question() {
           return questionType === 2
             ? "Tự luận"
             : questionType === 1
-              ? "Trắc nghiệm - nhiều đáp án đúng"
-              : "Trắc nghiệm - một đáp án đúng";
+            ? "Trắc nghiệm - nhiều đáp án đúng"
+            : "Trắc nghiệm - một đáp án đúng";
         },
       },
       {
@@ -151,8 +152,8 @@ function Question() {
         dataIndex: "description",
         title: "Điểm",
         width: "160px",
-        render: () => {
-          return "-";
+        render: (_, { questionPoint }) => {
+          return questionPoint;
         },
       },
       {
@@ -266,7 +267,9 @@ function Question() {
           setShowForm={setShowForm}
           setShowConfirmDelete={() => setShowConfirmDelete(true)}
           setShowConfirmSwitchActive={() => setShowConfirmSwitchActive(true)}
-          setShowTransferQuestionGroup={() => setShowTransferQuestionGroup(true)}
+          setShowTransferQuestionGroup={() =>
+            setShowTransferQuestionGroup(true)
+          }
         />
       </Content>
 
@@ -323,11 +326,12 @@ function Question() {
       />
 
       <QuestionTransferModal
-        questionGroupId = {QuestionGroupId}
+        questionGroupId={QuestionGroupId}
         data={selectedRowKeys}
         getData={getData}
         isShowTransferQuestionGroup={showTransferQuestionGroup}
-        onCloseTransfer={onCloseTransfer} />
+        onCloseTransfer={onCloseTransfer}
+      />
     </View>
   );
 }

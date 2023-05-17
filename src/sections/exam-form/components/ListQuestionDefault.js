@@ -1,4 +1,4 @@
-import { CheckboxIconChecked, CheckboxIconDefault } from "@/assets/CheckboxIcon"
+import { CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate } from "@/assets/CheckboxIcon"
 import { Checkbox, Divider, Typography, Button, ButtonGroup, ClickAwayListener, MenuItem, MenuList } from "@mui/material"
 import QuestionCardItemDefault from "./QuestionCardItemDefault"
 import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
@@ -8,18 +8,26 @@ import React from 'react'
 import { useState } from 'react';
 import Iconify from '@/components/Iconify';
 import NoQuestion from './NoQuestion';
-import { QuestionFormModal } from '@/sections/exam/components/QuestionFormModal';
 import ConfirmModal from '@/sections/emailform/component/ConfirmModal';
 import { View } from "@/components/DesignSystem/FlexStyled";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
+import QuestionGallaryDetailModal from "./QuestionGallaryDetailModal";
+import { useSnackbar } from "notistack";
+import ListQuestionBottomNav from "./ListQuestionBottomNav";
+import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
 
 function ListQuestionDefault({ listQuestions, updateListQuestion }) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [openGroup, setOpenGroup] = useState(false);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showQuestionGallaryInternalModal, setShowQuestionGallaryInternalModal] = useState(false);
+  const [showQuestionGallaryDetailModal, setShowQuestionGallaryDetailModal] = useState(false);
   const [currentIndexQuestion, setCurrentIndexQuestion] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [questionGallary, setQuestionGallary] = useState(null);
+  const [itemIndexSelected, setItemIndexSelected] = useState([]);
 
   const handleCloseGroup = () => {
     setOpenGroup(false);
@@ -33,14 +41,12 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
      * Đóng form thêm hoặc sửa câu hỏi
      */
   const handleCloseForm = () => {
-    setCurrentIndexQuestion(-1)
-    setCurrentQuestion(null)
+    resetSelectItem()
     setShowQuestionForm(false)
   }
 
-  const handleCloseDeleModal = () => {
-    setCurrentIndexQuestion(-1)
-    setCurrentQuestion(null)
+  const handleCloseDeleteModal = () => {
+    resetSelectItem()
     setShowDeleteModal(false)
   }
 
@@ -49,11 +55,26 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
    * @param {*} data 
    */
   const handleCreateEditQuestion = (data) => {
+    //create
     if (currentIndexQuestion == -1) {
-      // setListData([...listData, data])
+      // check duplicate
+      if (listQuestions.find(x => x.questionTitle == data.questionTitle)) {
+        enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
+          variant: 'error'
+        })
+        return;
+      }
       listQuestions.push(data);
     }
+    //edit
     else {
+      // check duplicate
+      if (listQuestions.find((x, index) => x.questionTitle == data.questionTitle && index != currentIndexQuestion)) {
+        enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
+          variant: 'error'
+        })
+        return;
+      }
       listQuestions[currentIndexQuestion] = data;
       // setListData([...listData])
     }
@@ -62,17 +83,27 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
 
     setShowQuestionForm(false)
     // reset choose index && data
-    setCurrentQuestion(null)
-    setCurrentIndexQuestion(-1)
+    resetSelectItem()
+  }
+
+  const handleAddQuestionFromInternal = (datas) => {
+    // loc nhung items da them vao danh sach
+    updateListQuestion([...listQuestions, ...datas])
+    setShowQuestionGallaryDetailModal(false)
   }
 
   const handlerDeleteQuestion = () => {
-    listQuestions.splice(currentIndexQuestion, 1)
+    if(currentIndexQuestion >= 0){
+      listQuestions.splice(currentIndexQuestion, 1)
+      updateListQuestion(listQuestions)
+    }
+    else{
+      updateListQuestion(listQuestions.filter((el,i)=>!itemIndexSelected.some(j => i === j)))
+    }
     // setListData([...listData])
-    updateListQuestion(listQuestions)
 
     setShowDeleteModal(false)
-    setCurrentIndexQuestion(-1)
+    resetSelectItem()
   }
 
 
@@ -82,14 +113,44 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     setShowQuestionForm(true);
   }
 
-  const openDeleteQuestionModal = (item, index) => {
+  const openDeleteQuestionModal = (data, index) => {
     setCurrentIndexQuestion(index)
     setShowDeleteModal(true)
   }
 
-  // useEffect(()=>{
-  //   updateListQuestion(listData)
-  // },[listQuestions])
+  const handleOpenQuestionGallaryDetailModal = (questionGallary) => {
+    setQuestionGallary(questionGallary)
+    setShowQuestionGallaryDetailModal(true)
+  }
+
+  const resetSelectItem = ()=>{
+    setCurrentIndexQuestion(-1)
+    setCurrentQuestion(null)
+    setItemIndexSelected([])
+  }
+
+  const handleSelected = (data, index) => {
+    const isExits = itemIndexSelected.some(x => x == index)
+    if (isExits) {
+      setItemIndexSelected(itemIndexSelected.filter(x => x != index))
+    }
+    else {
+      setItemIndexSelected([...itemIndexSelected, index]);
+    }
+  }
+
+  const isSelected = (index) =>{
+    return itemIndexSelected.some(x=>x==index)
+  }
+
+  const handleSelectAll = ()=>{
+    if(itemIndexSelected.length == listQuestions.length){
+      setItemIndexSelected([])
+    }
+    else{
+      setItemIndexSelected(listQuestions.map((x,i)=>i))
+    }
+  }
 
   return (
     <>
@@ -97,16 +158,19 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         {
           listQuestions.length == 0 ?
             <View>
-              <NoQuestion setShowQuestionForm={() => setShowQuestionForm(true)} />
+              <NoQuestion setShowQuestionForm={() => setShowQuestionForm(true)} setShowQuestionGallaryInternalModal={() => setShowQuestionGallaryInternalModal(true)} />
             </View>
             :
             <>
               <View mh={24} flexrow={'true'} jcbetween={'true'}>
                 <View flexrow={true} atcenter={true}>
                   <Checkbox
-                    // onChange={pressCheckbox}
+                    checked={itemIndexSelected.length > 0 && itemIndexSelected.length == listQuestions.length}
+                    indeterminate={itemIndexSelected.length > 0 && itemIndexSelected.length < listQuestions.length}
+                    onChange={handleSelectAll}
                     icon={<CheckboxIconDefault />}
                     checkedIcon={<CheckboxIconChecked />}
+                    indeterminateIcon={<CheckboxIconIndeterminate/>}
                     title="Chọn tất cả"
                     style={{
                       margin: '-6px 24px 0 -6px'
@@ -226,11 +290,16 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                 {
                   listQuestions.map((item, index) =>
                     <QuestionCardItemDefault
-                      key={index}
+                      key={item.questionTitle}
                       index={index}
                       item={item}
+                      checked={isSelected(index)}
+                      showIndex={true}
+                      hasRoleEdit={!item.id}
+                      hasRoleDelete={true}
                       onDelete={openDeleteQuestionModal}
                       onEdit={openEditQuestionForm}
+                      onChangeSelected={() => handleSelected(item, index)}
                     />)
                 }
               </View>
@@ -238,19 +307,42 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         }
       </View>
 
-      <QuestionFormModal data={currentQuestion} show={showQuestionForm} onClose={handleCloseForm} isNotSave={true} handleNoSave={handleCreateEditQuestion} />
+      <QuestionFormModal
+        data={currentQuestion}
+        show={showQuestionForm}
+        onClose={handleCloseForm}
+        isNotSave={true}
+        handleNoSave={handleCreateEditQuestion} />
 
-      <QuestionGallaryInternalModal show={showQuestionGallaryInternalModal} onClose={() => setShowQuestionGallaryInternalModal(false)} />
+      <QuestionGallaryInternalModal
+        show={showQuestionGallaryInternalModal}
+        handleViewDetail={handleOpenQuestionGallaryDetailModal}
+        onClose={() => setShowQuestionGallaryInternalModal(false)} />
+
+      <QuestionGallaryDetailModal
+        listQuestions={listQuestions?.filter(x => x.id)}
+        show={showQuestionGallaryDetailModal}
+        handleAddQuestionFromInternal={handleAddQuestionFromInternal}
+        onClose={() => setShowQuestionGallaryDetailModal(false)}
+        questionGallary={questionGallary} />
 
       <ConfirmModal
         confirmDelete={showDeleteModal}
         title="Xác nhận xóa câu hỏi"
         subtitle={'Bạn có chắc chắn muốn xóa câu hỏi'}
         onSubmit={handlerDeleteQuestion}
-        onCloseConfirmDelete={handleCloseDeleModal}
+        onCloseConfirmDelete={handleCloseDeleteModal}
       />
+
+      <ListQuestionBottomNav
+        open={itemIndexSelected.length > 0}
+        itemSelected={itemIndexSelected}
+        canEdit={!listQuestions[itemIndexSelected[0]]?.id}
+        onClose={()=>setItemIndexSelected([])}
+        onDelete={() => openDeleteQuestionModal()}
+        onEdit={() => openEditQuestionForm(listQuestions[itemIndexSelected[0]], itemIndexSelected[0])} />
     </>
   )
 }
 
-export default ListQuestionDefault
+export default React.memo(ListQuestionDefault)

@@ -1,19 +1,25 @@
+import CreateExamHeader from "./CreateExamHeader";
 import ListQuestionDefault from "./ListQuestionDefault";
 import ListQuestionGroupDefault from "./ListQuestionGroupDefault";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import { View } from "@/components/DesignSystem/FlexStyled";
 import { Text } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import { SubTitleStyle } from "@/sections/emailform/style";
+import { useCreateExamMutation } from "@/sections/exam/ExamSlice";
 import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal";
 import ExamFormModal from "@/sections/exam/components/ExamFormModal";
-import { ButtonIcon, TextElipsis } from "@/utils/cssStyles";
-import { Box, Divider, Typography, useTheme } from "@mui/material";
+import { ButtonIcon } from "@/utils/cssStyles";
+import { Box, Divider, Typography } from "@mui/material";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { useState } from "react";
+import React from "react";
 
 const CreateExamContent = () => {
   const router = useRouter();
-  const { palette } = useTheme();
+  const [createExam] = useCreateExamMutation();
+  const { enqueueSnackbar } = useSnackbar();
   const {
     query = {
       name: "",
@@ -47,7 +53,7 @@ const CreateExamContent = () => {
   const renderExamSettingInfo = (icon, title) => {
     return (
       <>
-        <Iconify icon={icon} width={20} height={20} color="#455570" />
+        <Iconify icon={icon} width={14} height={14} color="#455570" />
         <Text ml={8} mr={24} fontSize={14} fontWeight={"400"} color={"#5C6A82"}>
           {title}
         </Text>
@@ -59,58 +65,94 @@ const CreateExamContent = () => {
     setExamQuestions([...data]);
   };
 
+  const handleSaveDraft = async () => {
+    const body = {
+      ...examData,
+      totalQuestion: examQuestions.length,
+      standardPoint: 1,
+      maximumPoint: examQuestions.reduce(function (a, b) {
+        return a + b.questionPoint;
+      }, 0),
+      examinationQuestions: examQuestions.map((x) => {
+        return { ...x, questionId: x.id };
+      }),
+    };
+    try {
+      await createExam(body).unwrap();
+      enqueueSnackbar("Lưu đề thi thành công");
+      router.push("/settings/exam/exam-business");
+    } catch {
+      enqueueSnackbar("Lưu đề thi thất bại", {
+        variant: "error",
+      });
+    }
+  };
+
+  const handleSave = async () => {
+    if (examQuestions.length == 0) {
+      enqueueSnackbar("Bạn cần thêm câu hỏi vào đề thi", {
+        variant: "error",
+      });
+      return;
+    }
+    const body = {
+      ...examData,
+      totalQuestion: examQuestions.length,
+      standardPoint: 1,
+      maximumPoint: examQuestions.reduce(function (a, b) {
+        return a + b.questionPoint;
+      }, 0),
+      examinationQuestions: examQuestions.map((x) => {
+        return { ...x, questionId: x.id };
+      }),
+    };
+    try {
+      await createExam(body).unwrap();
+      enqueueSnackbar("Lưu đề thi thành công");
+      router.push("/settings/exam/exam-business");
+    } catch {
+      enqueueSnackbar("Lưu đề thi thất bại", {
+        variant: "error",
+      });
+    }
+  };
+
+  const handleCancel = async () => {
+    router.push("/settings/exam/exam-business");
+  };
+
   return (
     <>
+      <CreateExamHeader
+        handleSaveDraft={handleSaveDraft}
+        handleCancel={handleCancel}
+        handleSave={handleSave}
+      />
+
       <View>
         {/* title */}
-        <Box
-          padding="24px 16px"
-          justifyContent={"space-between"}
-          display={"flex"}
-          alignItems={"flex-start"}
-        >
-          <View width="70%">
-            <TextElipsis
+        <View p={24} flexrow={"true"} atcenter={"true"} jcbetween={"true"}>
+          <View>
+            <Typography
+              variant="h6"
               sx={{
                 fontSize: "1.5rem",
                 fontWeight: 600,
-                color: palette.text.primary,
+                color: "#172B4D",
               }}
             >
               {examData.name}
-            </TextElipsis>
-            {examData.description && (
-              <TextElipsis
-                sx={{
-                  color: palette.text.sub,
-                  fontSize: "14px",
-                  fontWeight: 400,
-                  marginTop: "8px",
-                }}
-              >
-                {examData.description}
-              </TextElipsis>
-            )}
-            <Box mt={2}>
-              <MuiButton
-                title={"Thiết lập đề thi"}
-                startIcon={
-                  <Iconify
-                    icon="material-symbols:settings"
-                    sx={{ width: 16, height: 16 }}
-                  />
-                }
-                variant={"outlined"}
-                onClick={() => setShowForm("true")}
-                sx={{
-                  border: "1px solid #455570",
-                  padding: "8px 12px",
-                  fontWeight: 600,
-                  fontSize: "14px",
-                  color: "#455570",
-                }}
-              />
-            </Box>
+            </Typography>
+
+            <SubTitleStyle
+              sx={{
+                fontSize: "14px",
+                fontWeight: 400,
+                marginTop: "8px",
+              }}
+            >
+              {examData.description}
+            </SubTitleStyle>
           </View>
 
           <View flexrow={"true"} atcenter={"true"}>
@@ -196,11 +238,32 @@ const CreateExamContent = () => {
               </span>
             </View>
           </View>
-        </Box>
+        </View>
 
         {/* setting info exam  */}
         <View ph={24}>
-          <View flexrow={"true"}>
+          <Box>
+            <MuiButton
+              title={"Thiết lập đề thi"}
+              startIcon={
+                <Iconify
+                  icon="material-symbols:settings"
+                  sx={{ width: 16, height: 16 }}
+                />
+              }
+              variant={"outlined"}
+              onClick={() => setShowForm("true")}
+              sx={{
+                border: "1px solid #455570",
+                padding: "8px 12px",
+                fontWeight: 600,
+                fontSize: "14px",
+                color: "#455570",
+              }}
+            />
+          </Box>
+
+          <View flexrow={"true"} atcenter={"true"} mt={24}>
             {renderExamSettingInfo(
               "mdi:clock-time-three-outline",
               `${examData.examTime} phút`
@@ -257,4 +320,4 @@ const CreateExamContent = () => {
   );
 };
 
-export default CreateExamContent;
+export default React.memo(CreateExamContent);

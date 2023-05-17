@@ -15,6 +15,10 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
     setType(parseInt(e.target.value))
   }
 
+  const handleClickItem = (type)=>{
+    setType(type)
+  }
+
   const pressSave = () => {
     data.type = type;
     onSubmit(data);
@@ -101,7 +105,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
                     padding: '24px 16px',
                     marginTop: index !== 0 ? '28px' : '0'
                   }}
-                  onClick={() => setType(x.value)}
+                  onclick={()=>handleClickItem(x.value)}
                 >
                   <View>
                     <FormControlLabel

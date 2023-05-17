@@ -1,10 +1,5 @@
-import {
-  CheckboxIconChecked,
-  CheckboxIconDefault,
-} from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
-import { Text } from "@/components/DesignSystem/FlexStyled";
-import { View } from "@/components/FlexStyled";
+import { View, Text } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import useAuth from "@/hooks/useAuth";
 import {
@@ -55,10 +50,9 @@ const LIST_QUESTION_TYPE = [
   },
 ];
 
-
-function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
+function QuestionCardItemDefault({ index, item, showIndex, hasRoleEdit, checked, isDisable, hasRoleDelete, onEdit, onDelete, onChangeSelected }) {
   const { user } = useAuth();
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
 
   const renderText = (title, value) => {
     return (
@@ -86,7 +80,7 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
   };
 
   return (
-    <CardFormItemStyle className="card-item" expanded={expanded}>
+    <CardFormItemStyle className="card-item" expanded={expanded} style={{ padding: '20px 24px !important' }}>
       <AccordionSummary
         sx={{
           ".MuiAccordionSummary-content": {
@@ -107,29 +101,35 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
             }}>
               {item.questionPoint}
             </Typography>
-            <ButtonIcon
-              onClick={() => onEdit(item, index)}
-              icon={
-                <Iconify
-                  icon={"ri:edit-2-fill"}
-                  width={16}
-                  height={16}
-                  color="#455570"
+            {
+              hasRoleEdit && <>
+                <ButtonIcon
+                  onClick={() => onEdit(item, index)}
+                  icon={
+                    <Iconify
+                      icon={"ri:edit-2-fill"}
+                      width={16}
+                      height={16}
+                      color="#455570"
+                    />
+                  }
                 />
-              }
-            />
-
-            <ButtonIcon
-              onClick={() => onDelete(item, index)}
-              icon={
-                <Iconify
-                  icon={"material-symbols:delete-outline-rounded"}
-                  width={14}
-                  height={14}
-                  color="#455570"
-                />
-              }
-            />
+              </>
+            }
+            {
+              hasRoleDelete &&
+              <ButtonIcon
+                onClick={() => onDelete(item, index)}
+                icon={
+                  <Iconify
+                    icon={"material-symbols:delete-outline-rounded"}
+                    width={14}
+                    height={14}
+                    color="#455570"
+                  />
+                }
+              />
+            }
 
             <ButtonIcon
               onClick={() => {
@@ -157,18 +157,22 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
               alignItems: 'start !important'
             }}
           >
-            <Checkbox
-              // value={item}
-              // checked={checked}
-              // onChange={onChangeSelected}
-              icon={<CheckboxIconDefault />}
-              checkedIcon={<CheckboxIconChecked />}
-            />
-            <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} ml={2} >Câu hỏi {index + 1}
+            {
+              <Checkbox
+                value={item}
+                checked={checked}
+                disabled={isDisable}
+                onChange={onChangeSelected}
+              />
+            }
+            {
+              showIndex &&
+              <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} mx={2} >
+                Câu hỏi {index + 1}
+              </Typography>
+            }
 
-            </Typography>
-
-            <Typography fontSize={14} ml={2} color={"#455570"} maxWidth={'75%'} component="span">
+            <Typography fontSize={14} color={"#455570"} maxWidth={'75%'} component="span">
               {item.questionTitle}
             </Typography>
           </CardFormItemTitleStyle>
@@ -176,7 +180,7 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
       </AccordionSummary>
       <AccordionDetails sx={{ mt: "0px !important" }}>
         <Divider sx={{ color: '#E7E9ED' }} />
-        <View flexRow={true} jcbetween={true} style={{ margin: '24px', justifyContent: 'space-between' }}>
+        <View flexrow={'true'} jcbetween={'true'} style={{ margin: '24px', justifyContent: 'space-between' }}>
           {
             item.questionType != 2 &&
             <View>
@@ -230,4 +234,4 @@ function QuestionCardItemDefault({ index, item, onEdit, onDelete }) {
   );
 }
 
-export default QuestionCardItemDefault;
+export default React.memo(QuestionCardItemDefault);
