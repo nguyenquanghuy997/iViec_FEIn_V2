@@ -43,7 +43,7 @@ const defaultValues = {
   signatureContent: undefined,
   isDefaultSignature: undefined,
   isActive: undefined,
-  templateAttachFiles: undefined,
+  offerTemplateApplicantAttachFiles: undefined,
 };
 
 const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
