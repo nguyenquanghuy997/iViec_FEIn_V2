@@ -3,13 +3,13 @@ import {
   useGetAllReviewFormQuery,
   useUpdateStatusReviewFormMutation,
 } from "../evaluationFormSlice";
-import { EvaluationFormModal } from "../modals/EvaluationFormModal";
+import {EvaluationFormModal} from "../modals/EvaluationFormModal";
 import EvaluationItemBlock from "./EvaluationItemBlock";
 import ActiveModal from "@/components/BaseComponents/ActiveModal";
 import DeleteModal from "@/components/BaseComponents/DeleteModal";
 import FormHeader from "@/sections/emailform/component/FormHeader";
-import { Box } from "@mui/material";
-import { useSnackbar } from "notistack";
+import {Box} from "@mui/material";
+import {useSnackbar} from "notistack";
 import React, {useMemo, useState} from "react";
 import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
 import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
@@ -47,18 +47,18 @@ const columns = [
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT,
       placeholder: 'Tất cả',
-      options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+      options: LIST_STATUS.map(item => ({value: item.value, label: item.name}),)
     }
   }
 ]
 
 const EvaluationItem = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  const { canAccess } = useRole();
+  const {enqueueSnackbar} = useSnackbar();
+  const {canAccess} = useRole();
   const router = useRouter();
-  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
+  const {query = {PageIndex: 1, PageSize: 10}, isReady} = router;
 
-  const {data: {items: Data = []} = {}, isLoading} = useGetAllReviewFormQuery(query, { skip: !isReady });
+  const {data: {items: Data = []} = {}, isLoading} = useGetAllReviewFormQuery(query, {skip: !isReady});
   const [status] = useUpdateStatusReviewFormMutation();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
 
@@ -85,8 +85,8 @@ const EvaluationItem = () => {
 
     setTimeout(() => {
       router.push({
-        query: reset ? {} : { ...router.query, ...values },
-      }, undefined, { shallow: false });
+        query: reset ? {} : {...router.query, ...values},
+      }, undefined, {shallow: false});
     }, timeout);
   }
 
@@ -110,7 +110,7 @@ const EvaluationItem = () => {
 
   const handleDelete = async (item) => {
     try {
-      await deletes({ ids: [item?.id] }).unwrap();
+      await deletes({ids: [item?.id]}).unwrap();
       enqueueSnackbar("Thực hiện thành công !");
       handleCloseModel();
     } catch (err) {
@@ -122,7 +122,7 @@ const EvaluationItem = () => {
   };
 
   if (isLoading) {
-    return <LoadingScreen />
+    return <LoadingScreen/>
   }
 
   return (
@@ -135,11 +135,11 @@ const EvaluationItem = () => {
         />
         <Box sx={{mb: 2}}>
           <TableHeader
-              columns={columns}
-              onSubmitFilter={onSubmitFilter}
-              onClickCreate={(e) => handleOpenModel(e,null,"form")}
-              createText={canEdit && 'Thêm mẫu đánh giá'}
-              isInside={true}
+            columns={columns}
+            onSubmitFilter={onSubmitFilter}
+            onClickCreate={(e) => handleOpenModel(e, null, "form")}
+            createText={canEdit && 'Thêm mẫu đánh giá'}
+            isInside={true}
           />
         </Box>
         {Data.map((column, index) => {

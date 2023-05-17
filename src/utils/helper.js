@@ -99,7 +99,7 @@ export const toRequestFilterData = (data = {}, removeEmpty = true) => {
   return reqData;
 }
 
-export const findIndexs = (needle, haystack) => {
+export const findIndex = (needle, haystack) => {
   let results = [];
   let idx = haystack.indexOf(needle);
   while (idx != -1) {
@@ -108,3 +108,10 @@ export const findIndexs = (needle, haystack) => {
   }
   return results;
 }
+
+export const replaceValueOffer = (data, objectReplace) => {
+  data = data.replace('<span class="tag">T&ecirc;n ứng vi&ecirc;n</span>', '<b>' + objectReplace.applicantName + '</b>');
+  data = data.replace('<span class="tag">T&ecirc;n ứng vi&ecirc;n</span>', '<b>' + objectReplace.applicantName + '</b>');
+  return data;
+}
+

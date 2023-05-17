@@ -52,10 +52,11 @@ const LIST_QUESTION_TYPE = [
 const defaultValues = {
   id: null,
   questionType: 0,
+  questionPoint: 1,
+  questionState: 0,
   questionGroupId: "",
   questionTitle: "",
   questionFilePaths: [],
-  questionPoint: "",
   isActive: true,
   answers: [],
 };
@@ -65,53 +66,53 @@ const defaultAnswer = {
   isCorrect: false,
 };
 
-const MediaItem = ({ data, onUploaded, onPressDelete }) => {
-  const { file, uploadedUrl } = data;
-  const [uploadFile] = useUploadFileExamMutation();
-
-  const startUpload = async () => {
-    if (!file || uploadedUrl) return;
-
-    const formData = new FormData();
-    formData.append("files", file);
-    const res = await uploadFile(formData).unwrap();
-    onUploaded?.(res?.fileTemplates?.[0]?.path);
-  };
-
-  useEffect(() => {
-    startUpload();
-  }, [file, uploadedUrl]);
-
-  const Media = String(file?.type).includes("video") ? "video" : "img";
-
-  return uploadedUrl ? (
-    <View size={"100%"}>
-      <Media
-        src={getFileUrl(uploadedUrl)}
-        style={{ flex: 1, borderRadius: 4, objectFit: "cover" }}
-      />
-
-      <View absolute t={-12} r={-12} onclick={onPressDelete}>
-        <SvgIcon>
-          {
-            '<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_7599_56904)"><path d="M12 22.127C6.477 22.127 2 17.65 2 12.127C2 6.60395 6.477 2.12695 12 2.12695C17.523 2.12695 22 6.60395 22 12.127C22 17.65 17.523 22.127 12 22.127ZM7 11.127V13.127H17V11.127H7Z" fill="#E53935"/></g><defs><clipPath id="clip0_7599_56904"><rect width="24" height="24" fill="white" transform="translate(0 0.126953)"/></clipPath></defs></svg>'
-          }
-        </SvgIcon>
-      </View>
-    </View>
-  ) : (
-    <CircularProgress size={16} />
-  );
-};
-
-export const QuestionFormModal = ({ data, show, onClose, getData }) => {
+export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, handleNoSave }) => {
   // props
-  const isEditMode = !!data?.id;
+  const isEditMode = (!isNotSave && !!data?.id) || (isNotSave && data?.questionTitle);
 
   // hooks
   const theme = useTheme();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+
+  const MediaItem = ({ data, onUploaded, onPressDelete }) => {
+    const { file, uploadedUrl } = data;
+    const [uploadFile] = useUploadFileExamMutation();
+
+    const startUpload = async () => {
+      if (!file || uploadedUrl) return;
+
+      const formData = new FormData();
+      formData.append("files", file);
+      const res = await uploadFile(formData).unwrap();
+      onUploaded?.(res?.fileTemplates?.[0]?.path);
+    };
+
+    useEffect(() => {
+      startUpload();
+    }, [file, uploadedUrl]);
+
+    const Media = String(file?.type).includes("video") ? "video" : "img";
+
+    return uploadedUrl ? (
+      <View size={"100%"}>
+        <Media
+          src={getFileUrl(uploadedUrl)}
+          style={{ flex: 1, borderRadius: 4, objectFit: "cover" }}
+        />
+
+        <View absolute t={-12} r={-12} onclick={onPressDelete}>
+          <SvgIcon>
+            {
+              '<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_7599_56904)"><path d="M12 22.127C6.477 22.127 2 17.65 2 12.127C2 6.60395 6.477 2.12695 12 2.12695C17.523 2.12695 22 6.60395 22 12.127C22 17.65 17.523 22.127 12 22.127ZM7 11.127V13.127H17V11.127H7Z" fill="#E53935"/></g><defs><clipPath id="clip0_7599_56904"><rect width="24" height="24" fill="white" transform="translate(0 0.126953)"/></clipPath></defs></svg>'
+            }
+          </SvgIcon>
+        </View>
+      </View>
+    ) : (
+      <CircularProgress size={16} />
+    );
+  };
 
   // api
   const [addForm] = useCreateQuestionMutation();
@@ -122,24 +123,55 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   // form
   const schema = Yup.object().shape({
     questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
-    questionTitle: Yup.string().required("Chưa nhập câu hỏi"),
+    questionTitle: Yup.string().required("Chưa nhập câu hỏi")
+      .max(500, 'Ký tự quá dài')
+      .when("questionType", {
+        is: 2,
+        then: Yup.string().max(2000, 'Ký tự quá dài')
+      }),
     questionPoint: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
-      .required("Chưa nhập điểm câu hỏi"),
-    answers: Yup.mixed()
+      .required("Chưa nhập điểm câu hỏi")
+      .min(1, 'Điểm câu hỏi phải lớn hơn 0')
+      .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
+    answers: Yup.mixed().when(["questionType"], {
+      is: (questionType) => {
+        return questionType == 0 || questionType == 1
+      },
+      then: Yup.mixed()
+        .test({
+          message: "Vui lòng nhập đầy đủ nội dung đáp án",
+          test: (val) => !val.some((i) => !i.content),
+        })
+        .test({
+          message: "Nội dung đáp án quá dài",
+          test: (val) => !val.some((i) => i.content.length > 255),
+        })
+        .test({
+          message: "Vui lòng chọn ít nhất 2 đáp án ",
+          test: (val) => !(val.length < 2),
+        })
+        .test({
+          message: "Vui lòng chọn nhiều nhất 6 đáp án ",
+          test: (val) => !(val.length > 6),
+        })
+        .test({
+          message: "Vui lòng chọn ít nhất một đáp án đúng",
+          test: (val) => !val.length || val.some((i) => i.isCorrect),
+        })
+    }),
+    questionFilePaths: Yup.mixed()
       .test({
-        message: "Vui lòng nhập đầy đủ nội dung đáp án",
-        test: (val) => !val.some((i) => !i.content),
+        message: 'Tối đa 6 file',
+        test: (val) => !(val.length > 6)
       })
-      .test({
-        message: "Vui lòng chọn ít nhất một đáp án đúng",
-        test: (val) => !val.length || val.some((i) => i.isCorrect),
-      }),
   });
+
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(schema),
   });
+
   const {
     reset,
     setValue,
@@ -156,7 +188,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   // state
   const [listMedia, setListMedia] = useState([]);
   const [listAnswer, setListAnswer] = useState([defaultAnswer]);
-  const isUploading = listMedia.some((i) => !i.uploadedUrl);
+  const isUploading = listMedia?.some((i) => !i.uploadedUrl);
 
   // handle
   const pressAddAnswer = () => {
@@ -168,10 +200,24 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   };
 
   const pressSave = handleSubmit(async (e) => {
-    const body = { ...e };
     try {
-      await (e.id ? updateForm(body) : addForm(body)).unwrap();
-      getData();
+      if (isNotSave) {
+        const data = {
+          ...e,
+          questionGroupName: items.find(x => x.id === e.questionGroupId).name
+        }
+        handleNoSave(data)
+      }
+      else {
+        const body = {
+          ...e,
+          answers: e.answers.length > 0 && !isEssay ? e.answers : null
+        };
+        await (e.id ? updateForm(body) : addForm(body)).unwrap();
+        enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
+        getData();
+      }
+
     } catch (error) {
       if (error.status == "QGE_04")
         enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
@@ -187,8 +233,8 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
         j === index
           ? { ...i, [key]: value }
           : key === "isCorrect" && !isMultipleChoice
-          ? { ...i, isCorrect: false }
-          : i
+            ? { ...i, isCorrect: false }
+            : i
       )
     );
   };
@@ -224,7 +270,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
 
   const renderButton = (content, onPress) => {
     return (
-      <View contentcenter size={44} ml={16} onclick={onPress}>
+      <View contentcenter='true' size={44} ml={16} onclick={onPress}>
         <SvgIcon>{content}</SvgIcon>
       </View>
     );
@@ -275,8 +321,9 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
     const Cb = isMultipleChoice ? Checkbox : Radio;
     return (
       <View
-        flexrow
-        atcenter
+        key={index}
+        flexrow='true'
+        atcenter='true'
         mt={24}
         p={16}
         borderradius={6}
@@ -309,16 +356,16 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
 
         {index === listAnswer.length - 1
           ? renderButton(
-              `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.16602 9.16699V4.16699H10.8327V9.16699H15.8327V10.8337H10.8327V15.8337H9.16602V10.8337H4.16602V9.16699H9.16602Z" fill="#388E3C"/></svg>`,
-              pressAddAnswer
-            )
+            `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.16602 9.16699V4.16699H10.8327V9.16699H15.8327V10.8337H10.8327V15.8337H9.16602V10.8337H4.16602V9.16699H9.16602Z" fill="#388E3C"/></svg>`,
+            pressAddAnswer
+          )
           : null}
 
         {index
           ? renderButton(
-              `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.16602 9.16699H15.8327V10.8337H4.16602V9.16699Z" fill="#E53935"/></svg>`,
-              () => pressDeleteAnswer(index)
-            )
+            `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.16602 9.16699H15.8327V10.8337H4.16602V9.16699Z" fill="#E53935"/></svg>`,
+            () => pressDeleteAnswer(index)
+          )
           : null}
       </View>
     );
@@ -330,24 +377,28 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   }, []);
 
   useEffect(() => {
-    if (!show || !isEditMode) {
-      reset({ ...defaultValues, questionGroupId: router.query.slug });
-      setListAnswer([defaultAnswer]);
-
+    if (data?.id || data?.questionTitle) {
+      setValue("id", data.id);
+      setValue("questionType", data.questionType);
+      setValue("questionTitle", data.questionTitle);
+      setValue("questionPoint", data.questionPoint);
+      setValue("questionGroupId", data.questionGroupId);
+      setValue("isActive", !!data.isActive);
+      setListAnswer(data.answers);
+      setListMedia(data.questionFilePaths?.map((i) => ({ uploadedUrl: i })));
       return;
     }
+    if (!show) {
+      reset({ ...defaultValues, questionGroupId: router.query.slug });
+      setListAnswer([defaultAnswer]);
+      setListMedia([])
+    }
 
-    setValue("id", data.id);
-    setValue("questionType", data.questionType);
-    setValue("questionTitle", data.questionTitle);
-    setValue("questionPoint", data.questionPoint);
-    setValue("isActive", !!data.isActive);
-    setListAnswer(data.answers);
-    setListMedia(data.questionFilePaths.map((i) => ({ uploadedUrl: i })));
   }, [show, isEditMode]);
 
   useEffect(() => {
-    setListAnswer(isEssay ? [] : [defaultAnswer]);
+    // setListAnswer(isEssay ? [] : [defaultAnswer]);
+      setValue("questionPoint", isEssay ? data?.questionPoint ?? 1 : 1)
   }, [isEssay]);
 
   useEffect(() => {
@@ -363,7 +414,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
   useEffect(() => {
     setValue(
       "questionFilePaths",
-      listMedia.map((i) => i.uploadedUrl)
+      listMedia?.map((i) => i.uploadedUrl)
     );
   }, [listMedia]);
 
@@ -413,7 +464,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
 
           {/* body */}
           <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
-            <View flexrow>
+            <View flexrow='true'>
               <View flex={1}>
                 {renderTitle("Kiểu câu hỏi", true)}
 
@@ -452,14 +503,15 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
             </View>
 
             <View flexrow mt={24}>
-              {[...listMedia, null].slice(0, 6).map(renderMediaItem)}
+              {[...(listMedia ?? []), null].slice(0, 6).map(renderMediaItem)}
             </View>
 
-            <View mv={24}>
+            <View mv={24} width={'50%'}>
               {renderTitle("Điểm câu hỏi", true)}
 
               <RHFTextField
                 name={"questionPoint"}
+                disabled={!isEssay}
                 placeholder={"Nhập điểm câu hỏi"}
               />
             </View>
@@ -510,8 +562,8 @@ export const QuestionFormModal = ({ data, show, onClose, getData }) => {
               label={isActive ? "Đang hoạt động" : "Không hoạt động"}
             />
           </View>
-        </ViewModel>
-      </Modal>
-    </FormProvider>
+        </ViewModel >
+      </Modal >
+    </FormProvider >
   );
-};
+}

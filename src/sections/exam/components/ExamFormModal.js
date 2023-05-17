@@ -15,21 +15,23 @@ import * as Yup from "yup";
 
 const defaultValues = {
   id: null,
-  name: "ccc",
+  name: "",
   description: "",
-  examTime: 0,
-  isQuestionMixing: false,
+  examTime: null,
+  isQuestionMixing: true,
   showType: 0,
   type: 0
 };
 
 function ExamFormModal({ show, onClose, onSubmit, data }) {
-  const [showType, setShowType] = useState(data?.showType ?? 0)
 
   const dataForm = data ? data : defaultValues;
 
+  const [showType, setShowType] = useState(dataForm?.showType ?? 0)
+
   const schema = Yup.object().shape({
-    name: Yup.string().required('Chưa nhập tên đề thi').max(50, 'Tên đề thi không được quá 50 ký tự'),
+    name: Yup.string().required('Chưa nhập tên đề thi'),
+    description: Yup.string().max(100, 'Tên đề thi không được quá 100 ký tự'),
     examTime: Yup.number().typeError('Chưa nhập thời gian thi').required('Chưa nhập thời gian thi').min(1, 'Thời gian thi phải lớn hơn 0')
   });
 

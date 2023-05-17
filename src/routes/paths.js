@@ -121,4 +121,7 @@ export const PATH_DASHBOARD = {
   pipeline: {
     root: path(ROOTS_DASHBOARD, "settings/pipeline"),
   },
+  connect: {
+    root: path(ROOTS_DASHBOARD, "settings/connect"),
+  },
 };

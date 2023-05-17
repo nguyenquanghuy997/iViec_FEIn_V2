@@ -14,7 +14,7 @@ const RootStyle = styled(Box)(({theme}) => ({
 )
 
 const renderValue = (value) => {
-  return '&nbsp;<span style="font-weight: 500; font-size: 13px; padding: 5px 8px; color: #1565C0; background-color: #E3F2FD">' + value + '</span>&nbsp;'
+  return '&nbsp;<span class="tag">' + value + '</span>&nbsp;'
 }
 
 export default function EmailEditor({
@@ -121,7 +121,7 @@ export default function EmailEditor({
                     input.click();
                   }
                 },
-                content_style: "body { font-family:Inter,sans-serif; font-size:14px; }",
+                content_style: "body { font-family:Inter,sans-serif; font-size:14px; .tag {font-weight: 500; font-size: 13px; padding: 5px 8px; color: #1565C0; background-color: #E3F2FD} }",
                 setup: function (editor) {
                   editor.ui.registry.addIcon('selectButton', `
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
