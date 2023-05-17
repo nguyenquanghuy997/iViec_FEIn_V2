@@ -78,7 +78,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
     signatureContent: Yup.string().required("Nội dung chữ ký không được bỏ trống"),
     isDefaultSignature: Yup.boolean(),
     isActive: Yup.boolean(),
-    templateAttachFiles: Yup.array().of(Yup.string()),
+    offerTemplateApplicantAttachFiles: Yup.array().of(Yup.string()),
   });
   
   const methods = useForm({
@@ -129,7 +129,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
         file.append("Files", item);
       });
       const fileResult = file.has("Files") ? await uploadFiles(file).unwrap() : {fileTemplates: []};
-      body.templateAttachFiles = fileResult.fileTemplates.concat(fileList.filter(item => item.id));
+      body.offerTemplateApplicantAttachFiles = fileResult.fileTemplates.concat(fileList.filter(item => item.id));
     }
     body.isSendMail = action;
     body.bcc = body.bcc?.map(item => item.value ? item.value : item);
