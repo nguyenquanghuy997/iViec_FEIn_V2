@@ -75,7 +75,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
       reset({ ...dataForm });
       return;
     }
-  }, [show]);
+  }, [show, data]);
 
   return (
     <DialogModelStyle

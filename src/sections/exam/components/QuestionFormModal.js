@@ -531,7 +531,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
                     </Alert>
                   )}
 
-                  {listAnswer.map(renderAnswerItem)}
+                  {listAnswer?.map(renderAnswerItem)}
                 </View>
               </>
             )}

@@ -11,18 +11,24 @@ import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal"
 import ListQuestionDefault from "./ListQuestionDefault"
 import { View } from "@/components/DesignSystem/FlexStyled"
 import CreateExamHeader from "./CreateExamHeader"
-import { useCreateExamMutation } from "@/sections/exam/ExamSlice"
+import { useCreateExamMutation, useGetExaminationByIdQuery, useUpdateExamMutation } from "@/sections/exam/ExamSlice"
 import { useSnackbar } from "notistack"
 import React from "react"
+import { useEffect } from "react"
 
 const CreateExamContent = () => {
   const router = useRouter();
   const [createExam] = useCreateExamMutation();
+  const [updateExam] = useUpdateExamMutation();
   const { enqueueSnackbar } = useSnackbar();
+  const examId = router.query.slug;
+  const { data: data } = useGetExaminationByIdQuery({
+    Id: examId,
+  });
   const { query = { name: "", description: "", examTime: 0, isQuestionMixing: true, showType: 0, type: 0 } } = router;
   const queryDataDefault = {
     ...query,
-    isQuestionMixing: query.isQuestionMixing == 'true',
+    isQuestionMixing: query.isQuestionMixing == 'true'
   }
   const [examData, setExamData] = useState(queryDataDefault);
   const [examQuestions, setExamQuestions] = useState([]);
@@ -51,6 +57,11 @@ const CreateExamContent = () => {
     );
   };
 
+  const minutesFromTime = (times) => {
+    var a = times.split(':');
+    return (+a[0]) * 60 + (+a[1]);
+  }
+
   const handleUpdateListQuestion = (data) => {
     setExamQuestions([...data])
   }
@@ -77,7 +88,7 @@ const CreateExamContent = () => {
   }
 
   const handleSave = async () => {
-    if(examQuestions.length == 0){
+    if (examQuestions.length == 0) {
       enqueueSnackbar("Bạn cần thêm câu hỏi vào đề thi", {
         variant: 'error',
       })
@@ -86,14 +97,20 @@ const CreateExamContent = () => {
     const body = {
       ...examData,
       totalQuestion: examQuestions.length,
-      standardPoint: 1,
+      examTime: new Date(examData.examTime * 60 * 1000).toISOString().substr(11, 8),
+      standardPoint: examData.standardPoint ?? 1,
       maximumPoint: examQuestions.reduce(function (a, b) {
         return a + b.questionPoint;
       }, 0),
       examinationQuestions: examQuestions.map(x => { return { ...x, questionId: x.id } })
     }
     try {
-      await createExam(body).unwrap();
+      if (!examId) {
+        await createExam(body).unwrap();
+      }
+      else {
+        await updateExam(body).unwrap();
+      }
       enqueueSnackbar("Lưu đề thi thành công")
       router.push("/settings/exam/exam-business")
     } catch {
@@ -107,8 +124,16 @@ const CreateExamContent = () => {
     router.push("/settings/exam/exam-business")
   }
 
+  useEffect(() => {
+    if (data) {
+      setExamData({ ...data, examTime: minutesFromTime(data.examTime) })
+      setExamQuestions(data.questions ?? [])
+    }
+  }, [data])
+
   return <>
     <CreateExamHeader
+      isCreate={!examId}
       handleSaveDraft={handleSaveDraft}
       handleCancel={handleCancel}
       handleSave={handleSave} />
@@ -167,7 +192,7 @@ const CreateExamContent = () => {
               fontWeight: 500,
             }}>Điểm sàn
             </Typography>
-            <span style={{ fontSize: '16px', fontWeight: 600, lineHeight: '24px', marginTop: 4 }}>-</span>
+            <span style={{ fontSize: '16px', fontWeight: 600, lineHeight: '24px', marginTop: 4 }}>{examData.standardPoint ?? '-'}</span>
           </View>
 
           <View allcenter={'true'} style={{
@@ -213,28 +238,28 @@ const CreateExamContent = () => {
         </Box>
 
         <View flexrow={'true'} atcenter={'true'} mt={24}>
-        {renderExamSettingInfo(
-              "mdi:clock-time-three-outline",
-              `${examData.examTime} phút`
-            )}
-            {renderExamSettingInfo(
-              `ri:shuffle-fill`,
-              examData.isQuestionMixing == true
-                ? "Đảo vị trí câu hỏi"
-                : "Câu hỏi theo thứ tự"
-            )}
-            {renderExamSettingInfo(
-              `ri:order-play-line`,
-              examData.showType == 0
-                ? "Hiển thị 1 câu hỏi trên một trang"
-                : "Hiển thị toàn bộ câu hỏi trên một trang"
-            )}
-            {renderExamSettingInfo(
-              `ri:list-settings-line`,
-              examData.type == 0
-                ? "Đề thi câu hỏi cố định"
-                : "Đề thi câu hỏi ngẫu nhiên"
-            )}
+          {renderExamSettingInfo(
+            "mdi:clock-time-three-outline",
+            `${examData.examTime} phút`
+          )}
+          {renderExamSettingInfo(
+            `ri:shuffle-fill`,
+            examData.isQuestionMixing == true
+              ? "Đảo vị trí câu hỏi"
+              : "Câu hỏi theo thứ tự"
+          )}
+          {renderExamSettingInfo(
+            `ri:order-play-line`,
+            examData.showType == 0
+              ? "Hiển thị 1 câu hỏi trên một trang"
+              : "Hiển thị toàn bộ câu hỏi trên một trang"
+          )}
+          {renderExamSettingInfo(
+            `ri:list-settings-line`,
+            examData.type == 0
+              ? "Đề thi câu hỏi cố định"
+              : "Đề thi câu hỏi ngẫu nhiên"
+          )}
 
         </View>
       </View>
