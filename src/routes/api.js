@@ -357,6 +357,7 @@ export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
 export const API_GET_INTERNAL_ACCOUNT = "/internal/Internal/GetInternalAccount";
 export const API_GET_JOB_CATEGORIES_INTERNAL = "/internal/Internal/GetJobCategories";
 export const API_SET_ACTIVE_ACCOUNT = "/integrator/ConnectionAccount/SetConnectAccountActive";
+export const API_CREATE_JOB_MAPPING_INTERNAL = "/internal/InternalMasterData/CreateJobMapping"
 
 // Email
 export const API_GET_EMAIL_TEMPLATE =

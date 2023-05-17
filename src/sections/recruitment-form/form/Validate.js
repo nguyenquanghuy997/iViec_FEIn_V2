@@ -52,6 +52,11 @@ const FormValidate = Yup.object().shape({
                 return schema.min(100, 'Mức lương tối đa ít nhất 3 chữ số')
             return schema
         }),
+    isActiveFe: Yup.boolean(),
+    jobCategoryIdFe: Yup.string().when('isActiveFe', {
+      is: true,
+      then: (schema) => schema.required("Chưa chọn ngành nghề bổ sung")
+    })
 });
 
 export {
