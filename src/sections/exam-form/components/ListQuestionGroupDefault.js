@@ -83,11 +83,10 @@ function ListQuestionGroupDefault({
     setCurrentIndexQuestion(index);
     setShowDeleteModal(true);
   };
-  const [error, setError] = React.useState("");
+  const [, setError] = React.useState("");
   // useEffect(()=>{
   //   updateListQuestion(listData)
   // },[listQuestions])
-console.log('errorerror', error)
   return (
     <>
       <Box>
