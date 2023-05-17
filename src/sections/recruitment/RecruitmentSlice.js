@@ -13,7 +13,7 @@ import {
   API_GET_APPLICANT_RECRUITMENT,
   API_UPLOAD_FILE_APPLICANTS,
   API_UPLOAD_FILE_APPLICANT_RECRUITMENT,
-  API_UPDATE_RECRUITMENT, API_GET_JOB_CATEGORIES_INTERNAL,
+  API_UPDATE_RECRUITMENT, API_GET_JOB_CATEGORIES_INTERNAL, API_CREATE_JOB_MAPPING_INTERNAL,
 } from "@/routes/api";
 import { toRequestFilterData } from "@/utils/helper";
 import * as qs from "qs";
@@ -153,6 +153,13 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
         data,
       }),
     }),
+    createJobMappingInternal: builder.mutation({
+      query: (data) => ({
+        url: API_CREATE_JOB_MAPPING_INTERNAL,
+        method: "POST",
+        data,
+      }),
+    }),
     getApplicantRecruitment: builder.query({
       query: (params) => ({
         url: API_GET_APPLICANT_RECRUITMENT,
@@ -172,6 +179,7 @@ export const {
   useGetListJobCategoriesInternalQuery,
   useCreateRecruitmentMutation,
   useUpdateRecruitmentDraftMutation,
+  useCreateJobMappingInternalMutation,
   useCloseRecruitmentMutation,
   useDeleteRecruitmentMutation,
   useGetListRecruitmentColumnsQuery,

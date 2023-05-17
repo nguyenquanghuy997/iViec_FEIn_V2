@@ -9,7 +9,7 @@ import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useGetOrganizationInfoQuery } from "@/sections/organizationdetail/OrganizationDetailSlice";
-import { useCreateRecruitmentMutation } from "@/sections/recruitment";
+import { useCreateJobMappingInternalMutation, useCreateRecruitmentMutation } from "@/sections/recruitment";
 import Header from "@/sections/recruitment-form/components/Header";
 import TabList from "@/sections/recruitment-form/components/TabList";
 import TabPanel from "@/sections/recruitment-form/components/TabPanel";
@@ -106,6 +106,7 @@ export default function CreateRecruitment() {
   const handleCloseConfirm = () => dispatch(modalSlice.actions.closeModal());
   
   const [createRecruitment] = useCreateRecruitmentMutation();
+  const [createJobInternal] = useCreateJobMappingInternalMutation();
   const {data: defaultOrganization = {}} = useGetOrganizationInfoQuery();
   const defaultValues = {
     name: "",
@@ -135,6 +136,8 @@ export default function CreateRecruitment() {
     recruitmentWorkingForms: [],
     organizationPipelineId: null,
     isAutomaticStepChange: false,
+    isActiveFe: undefined,
+    jobCategoryIdFe: undefined,
   };
   
   const methods = useForm({
@@ -223,7 +226,15 @@ export default function CreateRecruitment() {
         recruitmentCreationType: openSaveDraft
           ? RECRUITMENT_CREATE_TYPE.DRAFT
           : RECRUITMENT_CREATE_TYPE.OFFICIAL,
-      }).unwrap();
+      }).unwrap().then(async (res) => {
+        if (body.isActiveFe && res) {
+          await createJobInternal({
+            recruitmentId: res,
+            internalJobCategoryId: body.jobCategoryIdFe,
+            internalType: 0
+          }).unwrap()
+        }
+      });
       handleCloseConfirm();
       enqueueSnackbar("Thêm tin tuyển dụng thành công!");
       await router.push(PATH_DASHBOARD.recruitment.root);
