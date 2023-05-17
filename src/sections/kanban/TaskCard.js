@@ -1,4 +1,5 @@
 import {
+  useLazyGetAllFilterApplicantQuery,
   useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery,
   useUpdateApplicantRecruitmentToNextStateMutation,
 } from "../applicant";
@@ -599,6 +600,7 @@ function TaskCard({ item, index, pipelineStateType }) {
   const { enqueueSnackbar } = useSnackbar();
   const [openGroup, setOpenGroup] = useState(false);
 
+  const [getApplicant] = useLazyGetAllFilterApplicantQuery();
   const [tranfer] = useUpdateApplicantRecruitmentToNextStateMutation();
   const [getInfo] = useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
 
@@ -616,15 +618,25 @@ function TaskCard({ item, index, pipelineStateType }) {
     });
   };
 
-  const pressEdit = () => {
+  const pressEdit = async () => {
+    const res = await getApplicant({
+      searchKey: item?.fullName,
+    }).unwrap();
+    const data = res?.items?.find((i) => i.applicantId === item?.applicantId);
+    if (!data || !data.applicantId) {
+      enqueueSnackbar("Xảy ra lỗi, thử lại sau!", {
+        variant: "error",
+      });
+      return;
+    }
     router.push(
       {
-        pathname: PATH_DASHBOARD.applicant.view(item?.applicantId),
+        pathname: PATH_DASHBOARD.applicant.view(data.applicantId),
         query: {
-          correlationId: item?.correlationId,
-          organizationId: item?.organizationId,
-          recruitmentId: item?.recruitmentId,
-          applicantId: item?.applicantId,
+          correlationId: data.correlationId,
+          organizationId: data.organizationId,
+          recruitmentId: data.recruitmentId,
+          applicantId: data.applicantId,
           mode: "edit",
         },
       },

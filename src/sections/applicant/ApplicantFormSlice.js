@@ -303,6 +303,7 @@ export const {
   useGetListColumnApplicantsQuery,
   useUpdateListColumnApplicantsMutation,
   useGetAllFilterApplicantQuery,
+  useLazyGetAllFilterApplicantQuery,
   useGetAllUserFromOrganizationQuery,
   useUpdateApplicantMutation,
   useLazyGetAllUserFromOrganizationQuery,

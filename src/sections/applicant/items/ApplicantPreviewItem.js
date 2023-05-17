@@ -51,21 +51,23 @@ function ApplicantPreviewItem() {
   const OrganizationId = router.query.organizationId;
   const RecruitmentId = router.query.recruitmentId;
   const requestEdit = router.query.mode === "edit";
-  
-  const {data: {items: options = []} = {}, isFetching} =
+
+  const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery({
       ApplicantCorrelationId: ApplicantCorrelationId,
       OrganizationId,
     });
-  
+
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
   const [open, setOpen] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
-  
-  const HeaderApplicant = ({pipelines}) => {
-    const resultType = pipelines?.recruitmentPipelineStates?.find(item => item.id === pipelines.currentApplicantPipelineState).pipelineStateType;
+
+  const HeaderApplicant = ({ pipelines }) => {
+    const resultType = pipelines?.recruitmentPipelineStates?.find(
+      (item) => item.id === pipelines.currentApplicantPipelineState
+    ).pipelineStateType;
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
         <Grid
@@ -82,7 +84,7 @@ function ApplicantPreviewItem() {
           }}
         >
           <AvatarDS
-            sx={{height: "60px", width: "60px", borderRadius: "14px"}}
+            sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
             name={data?.fullName}
             src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
           ></AvatarDS>
@@ -100,7 +102,7 @@ function ApplicantPreviewItem() {
                 </span>
                 
               </BoxFlex> */}
-          
+
           <Box pl={1}>
             <Typography
               display="flex"
@@ -109,7 +111,7 @@ function ApplicantPreviewItem() {
               alignItems="center"
             >
               {data?.fullName}
-              
+
               <ButtonIcon
                 sx={{
                   marginLeft: 0.5,
@@ -127,7 +129,7 @@ function ApplicantPreviewItem() {
             </Typography>
             <Stack
               direction="row"
-              divider={<Divider orientation="vertical" flexItem/>}
+              divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
               color="#172B4D"
             >
@@ -142,8 +144,8 @@ function ApplicantPreviewItem() {
                 logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
                   ? "#E53935"
                   : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                    ? "#F77A0C"
-                    : "#388E3C"
+                  ? "#F77A0C"
+                  : "#388E3C"
               }
               border={"1px solid #388E3C"}
               padding="6px 8px"
@@ -153,8 +155,8 @@ function ApplicantPreviewItem() {
                 logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
                   ? "#E53935"
                   : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                    ? "#F77A0C"
-                    : "#388E3C"
+                  ? "#F77A0C"
+                  : "#388E3C"
               }
             >
               <Typography fontSize="12px" fontWeight="600">
@@ -244,7 +246,7 @@ function ApplicantPreviewItem() {
               />
             }
           />
-          {(resultType === 3 && pipelines.pipelineStateResultType === 0) &&
+          {resultType === 3 && pipelines.pipelineStateResultType === 0 && (
             <ButtonDS
               tittle={"Gửi offer"}
               type="button"
@@ -258,7 +260,7 @@ function ApplicantPreviewItem() {
                 />
               }
             />
-          }
+          )}
         </Grid>
       </Grid>
     );
@@ -274,9 +276,9 @@ function ApplicantPreviewItem() {
     zIndex: 1,
     display: `${sticky ? "" : "none"}`,
   }));
-  
+
   const [sticky, setSticky] = useState(false);
-  
+
   const trackScroll = () => {
     if (typeof window === "undefined") {
       return;
@@ -284,43 +286,43 @@ function ApplicantPreviewItem() {
       setSticky(window.scrollY >= 120);
     }
   };
-  
+
   useEffect(() => {
     document.addEventListener("scroll", trackScroll);
-    
+
     return () => {
       document.removeEventListener("scroll", trackScroll);
     };
   }, []);
   const smDown = useResponsive("down", "sm");
-  const {themeStretch} = useSettings();
-  
-  const {data: pipelines = [], isSuccess} =
+  const { themeStretch } = useSettings();
+
+  const { data: pipelines = [], isSuccess } =
     useGetApplicantCurrentStateWithRecruitmentStatesQuery(
       {
         ApplicantId: ApplicantId,
         RecruitmentId: RecruitmentId,
       },
-      {skip: !ApplicantId || !RecruitmentId}
+      { skip: !ApplicantId || !RecruitmentId }
     );
-  
-  const {data: logApplicant = []} = useGetApplicantRecruitmentQuery(
+
+  const { data: logApplicant = [] } = useGetApplicantRecruitmentQuery(
     {
       ApplicantId: ApplicantId,
       RecruitmentId: RecruitmentId,
       IsWithdrawHistory: true,
     },
-    {skip: !ApplicantId || !RecruitmentId}
+    { skip: !ApplicantId || !RecruitmentId }
   );
-  
-  const {data: data = []} = useGetApplicantByIdQuery(
+
+  const { data: data = [] } = useGetApplicantByIdQuery(
     {
       applicantId: ApplicantId,
     },
-    {skip: !ApplicantId}
+    { skip: !ApplicantId }
   );
-  
-  const {data: reviewFormCriterias} = useGetApplicantReviewFormQuery(
+
+  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
@@ -329,8 +331,8 @@ function ApplicantPreviewItem() {
       skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
     }
   );
-  
-  const {data: isReview} = useGetCheckReviewQuery(
+
+  const { data: isReview } = useGetCheckReviewQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
@@ -339,24 +341,24 @@ function ApplicantPreviewItem() {
       skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
     }
   );
-  
+
   const [actionId, setActionId] = useState("");
   const [actionType, setActionType] = useState();
   const [actionShow, setActionShow] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
-  
+
   const [ownerName, setOwnerName] = useState();
-  
+
   const onCloseModel = () => {
     setActionShow(false);
     setShowConfirmMultiple(false);
   };
-  
+
   useEffect(() => {
-    if (!requestEdit) return;
+    if (!selectedOption || !requestEdit) return;
     handleOpenEditForm();
-  }, [requestEdit]);
+  }, [selectedOption, requestEdit]);
 
   useEffect(() => {
     if (!isFetching) {
@@ -365,7 +367,7 @@ function ApplicantPreviewItem() {
       setOwnerName(recruitment[0]?.ownerName?.trim());
     }
   }, [isFetching]);
-  
+
   const handleOpenEditForm = () => {
     setModelApplication({
       ...modelApplication,
@@ -375,11 +377,11 @@ function ApplicantPreviewItem() {
     });
     setShowModelCreate(true);
   };
-  
+
   const onChangeRecruitment = (e) => {
     setSelectedOption(e.target.value);
     setOwnerName(e.target.value.ownerName?.trim());
-    
+
     return router.push(
       {
         pathname: PATH_DASHBOARD.applicant.view(ApplicantId),
@@ -393,18 +395,18 @@ function ApplicantPreviewItem() {
         },
       },
       undefined,
-      {shallow: false}
+      { shallow: false }
     );
   };
-  
+
   return (
     <div>
       <HeadingFixed>
-        <HeaderApplicant pipelines={pipelines}/>
+        <HeaderApplicant pipelines={pipelines} />
       </HeadingFixed>
       <Container
         maxWidth={themeStretch ? false : "xl"}
-        sx={{...(smDown && {padding: 0})}}
+        sx={{ ...(smDown && { padding: 0 }) }}
       >
         <NavGoBack
           name={"Trở về danh sách ứng viên"}
@@ -432,7 +434,7 @@ function ApplicantPreviewItem() {
                   padding="32px 24px"
                   borderBottom="1px solid #D0D4DB"
                 >
-                  <HeaderApplicant pipelines={pipelines}/>
+                  <HeaderApplicant pipelines={pipelines} />
                   <Grid marginTop={"32px"}>
                     <Grid>
                       {options ? (
@@ -473,12 +475,12 @@ function ApplicantPreviewItem() {
                       minHeight="76px"
                     >
                       <Grid item md={10} container>
-                        <Grid sx={{width: "80%"}}>
+                        <Grid sx={{ width: "80%" }}>
                           {isSuccess ? (
-                            <PipelineApplicant steps={pipelines}/>
+                            <PipelineApplicant steps={pipelines} />
                           ) : null}
                         </Grid>
-                        <Grid sx={{display: "flex"}}>
+                        <Grid sx={{ display: "flex" }}>
                           <ButtonDS
                             tittle={"Chuyển bước"}
                             type="submit"
@@ -529,7 +531,7 @@ function ApplicantPreviewItem() {
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
                         <div>{"Phụ trách"}</div>
-                        <Grid sx={{display: "flex", marginTop: "8px"}}>
+                        <Grid sx={{ display: "flex", marginTop: "8px" }}>
                           {isSuccess ? (
                             <AvatarDS
                               sx={{
@@ -557,7 +559,7 @@ function ApplicantPreviewItem() {
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV data={data} dataLog={logApplicant}/>
+                    <ApplicantPreviewCV data={data} dataLog={logApplicant} />
                   </Grid>
                   <Grid item xs={5} md={5}>
                     <ApplicantPreviewLog
@@ -601,7 +603,11 @@ function ApplicantPreviewItem() {
             isOpen={isOpenSendOffer}
             onClose={() => setIsOpenSendOffer(false)}
             title="Gửi thư mời nhận việc"
-            item={{recruitmentId: RecruitmentId, applicantId: ApplicantId, applicantEmail: data.email}}
+            item={{
+              recruitmentId: RecruitmentId,
+              applicantId: ApplicantId,
+              applicantEmail: data.email,
+            }}
           />
         )}
         {isOpenReview && (
@@ -613,7 +619,7 @@ function ApplicantPreviewItem() {
             data={reviewFormCriterias}
           />
         )}
-        
+
         {open && (
           <FormCalendar
             open={open}
