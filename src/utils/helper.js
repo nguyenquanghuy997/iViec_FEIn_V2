@@ -120,7 +120,7 @@ export const findIndex = (needle, haystack) => {
 export const replaceValueOffer = (data, objectReplace) => {
   data = data.replace('<span class="tag">T&ecirc;n ứng vi&ecirc;n</span>', '<b>' + (objectReplace.applicantName ?? "") + '</b>');
   data = data.replace('<span class="tag">Vị tr&iacute; c&ocirc;ng việc</span>', '<b>' + (objectReplace.jobPositionName ?? "") + '</b>');
-  data = data.replace('<span class="tag">H&igrave;nh thức l&agrave;m việc</span>', '<b>' + (getRecruitmentFormsNames(objectReplace.recruitmentForms) ?? "") + '</b>');
+  data = data.replace('<span class="tag">H&igrave;nh thức l&agrave;m việc</span>', '<b>' + (objectReplace.recruitmentForms ? getRecruitmentFormsNames(objectReplace.recruitmentForms) : "") + '</b>');
   data = data.replace('<span class="tag">Quyền lợi</span>', '<b>' + (objectReplace.benefit ?? "") + '</b>');
   data = data.replace('<span class="tag">T&ecirc;n c&ocirc;ng ty</span>', '<b>' + (objectReplace.organizationName ?? "") + '</b>');
   data = data.replace('<span class="tag">Địa chỉ c&ocirc;ng ty</span>', '<b>' + (objectReplace.organizationAddress.address ?? "") + '</b>');

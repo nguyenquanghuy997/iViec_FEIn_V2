@@ -5,6 +5,7 @@ import '@/utils/highlight'
 import { Editor } from "@tinymce/tinymce-react";
 import { API_KEY_EDITOR } from "@/config";
 import Iconify from "@/components/Iconify";
+import { getRecruitmentFormsNames } from "@/utils/helper";
 
 const RootStyle = styled(Box)(({theme}) => ({
     overflow: 'hidden',
@@ -35,10 +36,6 @@ export default function EmailEditor({
   ...other
 }) {
   const [loading, setLoading] = useState(true);
-  
-  // useEffect(() => {
-  //   console.log(dataTag);
-  // }, [dataTag])
   
   return (
     <div>
@@ -163,7 +160,7 @@ export default function EmailEditor({
                       text: 'Tên ứng viên',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue(dataTagShow ? dataTag.applicantName : 'Tên ứng viên', dataTagShow));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.applicantName ?? "" : 'Tên ứng viên', dataTagShow));
                       },
                     },
                     {
@@ -171,7 +168,7 @@ export default function EmailEditor({
                       text: 'Vị trí công việc',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue(dataTagShow ? dataTag.jobPositionName : 'Vị trí công việc', dataTagShow));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.jobPositionName ?? "" : 'Vị trí công việc', dataTagShow));
                       },
                     },
                     {
@@ -179,7 +176,7 @@ export default function EmailEditor({
                       text: 'Hình thức làm việc',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Hình thức làm việc'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.recruitmentForms ? getRecruitmentFormsNames(dataTag.recruitmentForms) : "" : 'Hình thức làm việc', dataTagShow));
                       },
                     },
                     {
@@ -187,7 +184,7 @@ export default function EmailEditor({
                       text: 'Quyền lợi',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Quyền lợi'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.benefit ?? "" : 'Quyền lợi', dataTagShow));
                       },
                     },
                     // company
@@ -202,7 +199,7 @@ export default function EmailEditor({
                       text: 'Tên công ty',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Tên công ty'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.organizationName ?? "" : 'Tên công ty', dataTagShow));
                       },
                     },
                     {
@@ -210,7 +207,7 @@ export default function EmailEditor({
                       text: 'Địa chỉ công ty',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Địa chỉ công ty'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.organizationAddress.address ?? "" : 'Địa chỉ công ty', dataTagShow));
                       },
                     },
                     {
@@ -218,7 +215,7 @@ export default function EmailEditor({
                       text: 'Email công ty',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Email công ty'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.organizationEmail ?? "" : 'Email công ty', dataTagShow));
                       },
                     },
                     {
@@ -226,7 +223,7 @@ export default function EmailEditor({
                       text: 'Số điện thoại công ty',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Số điện thoại công ty'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.organizationPhoneNumber ?? "" : 'Số điện thoại công ty', dataTagShow));
                       },
                     },
                     {
@@ -234,7 +231,7 @@ export default function EmailEditor({
                       text: 'Website tuyển dụng công ty',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Website tuyển dụng công ty'));
+                        editor.insertContent(renderValue(dataTagShow ? "" : 'Website tuyển dụng công ty', dataTagShow));
                       },
                     },
                     // organization
@@ -249,7 +246,7 @@ export default function EmailEditor({
                       text: 'Tên đơn vị',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Tên đơn vị'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.rootOrganizationName ?? "" : 'Tên đơn vị', dataTagShow));
                       },
                     },
                     {
@@ -257,7 +254,7 @@ export default function EmailEditor({
                       text: 'Địa chỉ đơn vị',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Địa chỉ đơn vị'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.rootOrganizationAddress.address ?? "" : 'Địa chỉ đơn vị', dataTagShow));
                       },
                     },
                     {
@@ -265,7 +262,7 @@ export default function EmailEditor({
                       text: 'Email đơn vị',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Email đơn vị'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.rootOrganizationEmail ?? "" : 'Email đơn vị', dataTagShow));
                       },
                     },
                     {
@@ -273,7 +270,7 @@ export default function EmailEditor({
                       text: 'Số điện thoại đơn vị',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Số điện thoại đơn vị'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.rootOrganizationPhoneNumber ?? "" : 'Số điện thoại đơn vị', dataTagShow));
                       },
                     },
                     // user
@@ -288,7 +285,7 @@ export default function EmailEditor({
                       text: 'Họ và tên cán bộ tuyển dụng',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Họ và tên cán bộ tuyển dụng'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.recruitmentOwnerName ?? "" : 'Họ và tên cán bộ tuyển dụng', dataTagShow));
                       },
                     },
                     {
@@ -296,7 +293,7 @@ export default function EmailEditor({
                       text: 'Email cán bộ tuyển dụng',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Email cán bộ tuyển dụng'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.recruitmentOwnerEmail ?? "" : 'Email cán bộ tuyển dụng', dataTagShow));
                       },
                     },
                     {
@@ -304,7 +301,7 @@ export default function EmailEditor({
                       text: 'Số điện thoại cán bộ tuyển dụng',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Số điện thoại cán bộ tuyển dụng'));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.recruitmentOwnerPhoneNumber ?? "" : 'Số điện thoại cán bộ tuyển dụng', dataTagShow));
                       },
                     },
                   ];
