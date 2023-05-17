@@ -8,6 +8,7 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 
 import {PipelineStateType} from "@/utils/formatString";
 import {PIPELINE_TYPE} from "@/config";
+import {useTheme} from "@mui/material/styles";
 
 const useStyles = makeStyles(() => ({
     truncate: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const BoxItemStyle = styled(Box)(({theme, borderColor = '#B9BFC9'}) => ({
+const BoxItemStyle = styled(Box)(({theme, borderColor = theme.palette.common.neutral700}) => ({
     '&.card-pipeline-item': {
         marginBottom: theme.spacing(2),
         padding: theme.spacing(2, 2),
@@ -31,7 +32,7 @@ const BoxItemStyle = styled(Box)(({theme, borderColor = '#B9BFC9'}) => ({
         justifyContent: 'space-between',
         border: `1px solid ${borderColor}`,
         borderRadius: 6,
-        backgroundColor: '#FDFDFD'
+        backgroundColor: theme.palette.common.white
     }
 }));
 
@@ -39,7 +40,7 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
     const classes = useStyles();
 
     const {pipelineStateType} = item;
-
+    const theme = useTheme();
     const handleOpenFormExamination = (data) => {
         onOpenFormExamination({
             ...data,
@@ -54,7 +55,7 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
     return (
         <BoxItemStyle
             className="card-pipeline-item"
-            borderColor={isEmpty(examination?.examinationId) && pipelineStateType === PIPELINE_TYPE.EXAMINATION ? '#E53935' : '#B9BFC9'}
+            borderColor={isEmpty(examination?.examinationId) && pipelineStateType === PIPELINE_TYPE.EXAMINATION ? theme.palette.common.red600 : theme.palette.common.neutral300 }
         >
             <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
                 <Box>
@@ -68,7 +69,7 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
                     }}>{PipelineStateType(item?.pipelineStateType).title}</Typography>
                     <Typography
                         sx={{
-                            color: '#1565C0',
+                            color: theme.palette.common.blue800,
                             fontSize: style.FONT_XS,
                             fontWeight: style.FONT_SEMI_BOLD,
                             py: 0.5,

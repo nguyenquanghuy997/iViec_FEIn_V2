@@ -35,7 +35,6 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
   const {data: organization, isLoading} = useGetOrganizationByIdQuery(
       {OrganizationId: parentNode?.id}, {skip: !parentNode?.id || actionType === 0}
   );
-
   const {enqueueSnackbar} = useSnackbar();
 
   const [createChildOrganization] = useCreateChildOrganizationMutation();
@@ -196,7 +195,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                       <TextFieldStyle
                           name="parentOrganizationId"
                           placeholder="Nhập tên đơn vị Trực thuộc"
-                          style={{...InputStyle, backgroundColor: "#EFF3F6"}}
+                          style={{...InputStyle, backgroundColor: theme.palette.common.bgrObject}}
                           value={actionType === 0 ? parentNode?.name : organization?.parentOrganizationName}
                           disabled
                           variant="standard"

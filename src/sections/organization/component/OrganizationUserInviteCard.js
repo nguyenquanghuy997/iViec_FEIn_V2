@@ -14,6 +14,7 @@ import { DOMAIN_SERVER_API } from "@/config";
 import Iconify from "@/components/Iconify";
 import { fDate } from "@/utils/formatTime";
 import { CheckboxIconChecked, CheckboxIconDefault } from "@/assets/CheckboxIcon";
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationUserInviteCard = (
   {
@@ -23,7 +24,7 @@ const OrganizationUserInviteCard = (
     checked,
     onChangeSelected
   }) => {
-
+  const theme = useTheme();
   const [showAll, setShowAll] = useState(false);
 
   const toggleShow = () => {
@@ -66,7 +67,7 @@ const OrganizationUserInviteCard = (
           onClick={onOpenConfirmResend}
           startIcon={<ReloadIcon />}
           sx={{
-            color: '#1976D2',
+            color: theme.palette.common.blue700,
             fontSize: 12,
             fontWeight: 600,
             pr: 0,
@@ -85,19 +86,19 @@ const OrganizationUserInviteCard = (
         <BoxFlex>
           {
             item?.roleGroupName &&
-            <Typography sx={{ fontSize: 13, fontWeight: 600, color: '#172B4D', mr: 1 }}>
+            <Typography sx={{ fontSize: 13, fontWeight: 600, color: theme.palette.common.neutral800, mr: 1 }}>
               {item?.roleGroupName}
             </Typography>
           }
           {
             item?.organizations?.length == 1 ?
               <Box
-                sx={{ padding: '5px 8px', backgroundColor: '#EFF3F6', borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
+                sx={{ padding: '5px 8px', backgroundColor: theme.palette.common.bgrObject, borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
               >
                 <Typography sx={{
                   fontSize: 12,
                   fontWeight: 500,
-                  color: '#172B4D',
+                  color: theme.palette.common.neutral800,
                   display: 'flex',
                   alignItems: 'center'
                 }}>
@@ -106,13 +107,13 @@ const OrganizationUserInviteCard = (
               </Box>
               :
               <Box
-                sx={{ padding: '5px 8px', backgroundColor: '#EFF3F6', borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
+                sx={{ padding: '5px 8px', backgroundColor: theme.palette.common.bgrObject, borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
                 onClick={toggleShow}
               >
                 {!showAll && <Typography sx={{
                   fontSize: 12,
                   fontWeight: 500,
-                  color: '#172B4D',
+                  color: theme.palette.common.neutral800,
                   display: 'flex',
                   alignItems: 'center'
                 }}>
@@ -125,7 +126,7 @@ const OrganizationUserInviteCard = (
         </BoxFlex>
         {
           !showAll && <BoxFlex>
-            <IconButton size='small' sx={{ color: '#5C6A82', ml: 2 }} onClick={onOpenConfirmForm}>
+            <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenConfirmForm}>
               <DeleteIcon width={13} height={13} fill={"#5C6A82"} />
             </IconButton>
           </BoxFlex>
@@ -142,7 +143,7 @@ const OrganizationUserInviteCard = (
                     key={organization?.id}
                     sx={{
                       padding: '12px 16px',
-                      backgroundColor: '#FDFDFD',
+                      backgroundColor: theme.palette.common.white,
                       minHeight: '70px',
                       minWidth: '230px',
                       border: '1px solid #A2AAB7',
@@ -168,8 +169,8 @@ const OrganizationUserInviteCard = (
                       }
                     </Box>
                     <Stack>
-                      <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#172B4D' }}>{organization?.name}</Typography>
-                      <Typography sx={{ fontSize: 12, fontWeight: 400, color: '#455570' }}>{organization?.code || 'ABCDEF'}</Typography>
+                      <Typography sx={{ fontSize: 13, fontWeight: 500, color: theme.palette.common.neutral800 }}>{organization?.name}</Typography>
+                      <Typography sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.neutral700}}>{organization?.code || 'ABCDEF'}</Typography>
                     </Stack>
                   </Box>
                 ))
@@ -177,27 +178,27 @@ const OrganizationUserInviteCard = (
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: 12, fontWeight: 400, color: '#5C6A82', mr: 1 }}>
+                <Typography sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.borderObject, mr: 1 }}>
                   Ngày tham gia: {fDate(item?.createdTime)}
                 </Typography>
                 <Box
                   sx={{
                     padding: '5px 8px',
-                    backgroundColor: '#EFF3F6',
+                    backgroundColor: theme.palette.common.bgrObject,
                     borderRadius: '100px',
                     display: !showAll ? 'none' : 'block',
                     cursor: 'pointer',
                   }}
                   onClick={toggleShow}
                 >
-                  <Typography sx={{ fontSize: 12, fontWeight: 500, color: '#172B4D', display: 'flex', alignItems: 'center' }}>
+                  <Typography sx={{ fontSize: 12, fontWeight: 500, color: theme.palette.common.neutral800, display: 'flex', alignItems: 'center' }}>
                     Thu gọn
                     <Iconify icon={"material-symbols:arrow-drop-up"} height={16} width={16} sx={{ ml: 1 }} />
                   </Typography>
                 </Box>
               </Box>
               <BoxFlex>
-                <IconButton size='small' sx={{ color: '#5C6A82', ml: 2 }} onClick={onOpenConfirmForm}>
+                <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenConfirmForm}>
                   <DeleteIcon width={13} height={13} fill={"#5C6A82"} />
                 </IconButton>
               </BoxFlex>

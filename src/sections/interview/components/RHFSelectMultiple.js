@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const MenuProps = {
   PaperProps: {
@@ -81,7 +82,7 @@ function RHFSelectMultiple({ name, ...props }) {
   const [filterOptions, setFilterOptions] = useState([]);
   const [searchText, setSearchText] = useState("");
   const { control } = useFormContext();
-
+  const theme = useTheme();
   const classes = useStyles();
   const {
     defaultValue,
@@ -195,7 +196,7 @@ function RHFSelectMultiple({ name, ...props }) {
                   mb={3}
                   fontSize={14}
                   fontWeight={500}
-                  color={"#8A94A5"}
+                  color={theme.palette.common.neutral500}
                 >
                   Không có dữ liệu
                 </Typography>

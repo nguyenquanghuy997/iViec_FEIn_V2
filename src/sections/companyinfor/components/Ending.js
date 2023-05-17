@@ -10,15 +10,15 @@ import LoadingScreen from "@/components/LoadingScreen";
 import {QuoteIcon} from "@/sections/companyinfor/icon";
 import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
-const PlaceholderStyle = styled("div")(() => ({
+const PlaceholderStyle = styled("div")(({theme}) => ({
     background: "white",
     padding: "8px 96px 24px 96px",
     minHeight: 150,
     position: 'relative',
     "& .content": {
         backgroundColor: "white",
-        color: "#455570",
-        background: "#F2F4F5",
+        color: theme.palette.common.neutral700,
+        background: theme.palette.common.bgrMaster,
         position: "relative",
         padding: "24px 96px",
         "& .quote-icon": {
@@ -26,7 +26,7 @@ const PlaceholderStyle = styled("div")(() => ({
             top: -100,
             left: "40px",
             fontSize: "128px",
-            color: "#A2AAB7",
+            color: theme.palette.common.neutral400,
         },
     },
 }));
@@ -35,12 +35,9 @@ const Ending = ({data}) => {
     const {enqueueSnackbar} = useSnackbar();
     const theme = useTheme();
     const [open, setOpen] = useState(false);
-
     const [checked, setChecked] = useState(data?.isConclusionVisible);
     const [loading, setLoading] = useState(false);
-
     const [updateVisibleHuman] = useUpdateCompanyEndingMutation();
-
     const handleClose = () => {
         setOpen(false);
     };
@@ -93,8 +90,8 @@ const Ending = ({data}) => {
                             <div className={"quote-icon"}>
                                 <QuoteIcon />
                             </div>
-                            <Typography sx={{ fontSize: 14, fontWeight: 400, color: '#455570' }} dangerouslySetInnerHTML={{ __html: data?.conclusion }} />
-                            <Typography sx={{ textAlign: 'end', fontSize: 14, fontWeight: 500, color: '#455570', fontStyle: 'italic' }}>{data?.name}</Typography>
+                            <Typography sx={{ fontSize: 14, fontWeight: 400, color: theme.palette.common.neutral700 }} dangerouslySetInnerHTML={{ __html: data?.conclusion }} />
+                            <Typography sx={{ textAlign: 'end', fontSize: 14, fontWeight: 500, color: theme.palette.common.neutral700, fontStyle: 'italic' }}>{data?.name}</Typography>
                         </div>
                     </PlaceholderStyle>
                 ) : <EmptyValue text={"Hiện chưa có nội dung Lời kết"}/>}

@@ -229,7 +229,7 @@ const DynamicColumnsTable = (props) => {
                   sx={{
                     fontSize: 10,
                     color: palette.text.primary,
-                    background: "#F2F4F5",
+                    background: palette.common.bgrMaster,
                     border: "1px solid #172B4D",
                     borderRadius: "100px",
                     textAlign: "center",

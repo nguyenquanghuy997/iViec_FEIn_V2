@@ -24,6 +24,7 @@ import MuiButton from '@/components/BaseComponents/MuiButton';
 import { AddIcon } from '@/assets/ActionIcon';
 import LoadingScreen from "@/components/LoadingScreen";
 import useRole from '@/hooks/useRole';
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationContent = () => {
   // role
@@ -31,7 +32,7 @@ const OrganizationContent = () => {
   const canViewUser = useMemo(() => canAccess(PERMISSIONS.VIEW_USER), []);
   const canEditUser = useMemo(() => canAccess(PERMISSIONS.CRUD_USER), []);
   const canApproveUser = useMemo(() => canAccess(PERMISSIONS.APPR_USER_INVITE), []);
-
+  const theme = useTheme();
   const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
   const canEditUnit = useMemo(() => canAccess(PERMISSIONS.CRUD_UNIT), []);
 
@@ -126,7 +127,7 @@ const OrganizationContent = () => {
   if (isLoading) return <LoadingScreen />
 
   return (
-      <Box sx={{px: 7.5, py: 5, backgroundColor: "#FDFDFD", minHeight: '100vh'}}>
+      <Box sx={{px: 7.5, py: 5, backgroundColor: theme.palette.common.white, minHeight: '100vh'}}>
         {/*  Logo and Info  */}
         <Stack flexDirection="row" alignItems="center" justifyContent='space-between' mb={4}>
           <Stack flexDirection="row" alignItems="center">
@@ -136,10 +137,10 @@ const OrganizationContent = () => {
                 sx={{width: 60, height: 60}}
             />
             <Stack sx={{ml: 2}}>
-              <Typography sx={{fontSize: '16px', fontWeight: '600', color: '#172B4D', mb: 0.5}}>
+              <Typography sx={{fontSize: '16px', fontWeight: '600', color: theme.palette.common.neutral800, mb: 0.5}}>
                 {ListOrganization?.find(organization => organization.parentOrganizationId === null)?.name}
               </Typography>
-              <Typography sx={{fontSize: '12px', fontWeight: '400', color: '#455570'}}>Để chỉnh sửa tên công ty, vui
+              <Typography sx={{fontSize: '12px', fontWeight: '400', color: theme.palette.common.neutral700}}>Để chỉnh sửa tên công ty, vui
                 lòng
                 liên hệ admin qua email Support@iviec.com.vn</Typography>
             </Stack>
@@ -168,7 +169,7 @@ const OrganizationContent = () => {
           </Stack>
         </Stack>
         <Box sx={{mb: 3, mt: 0}}>
-          <Typography sx={{color: '#5C6A82', fontSize: 13, fontWeight: 600}}>Quản trị viên</Typography>
+          <Typography sx={{color: theme.palette.common.borderObject, fontSize: 13, fontWeight: 600}}>Quản trị viên</Typography>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             {
               ListUserAdmin?.map(user => {
@@ -181,11 +182,11 @@ const OrganizationContent = () => {
                         </span>
                       </Box>
                       <Stack sx={{ml: 1.5}}>
-                        <Typography sx={{color: '#172B4D', fontSize: 14, fontWeight: 600}}>
+                        <Typography sx={{color: theme.palette.common.neutral800, fontSize: 14, fontWeight: 600}}>
                           {_.get(user, 'lastName') && _.get(user, 'lastName') || ''}
                           {_.get(user, 'firstName') && _.get(user, 'firstName')}
                         </Typography>
-                        <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>
+                        <Typography sx={{color: theme.palette.common.neutral700, fontSize: 12, fontWeight: 400}}>
                           {_.get(user, 'email') && _.get(user, 'email')}
                         </Typography>
                       </Stack>
@@ -199,7 +200,7 @@ const OrganizationContent = () => {
           <InputFilter
               name="search"
               placeholder="Tìm kiếm theo tên đơn vị hoặc mã đơn vị"
-              sx={{width: '100%', height: '44px', backgroundColor: '#F2F4F5', marginBottom: 3}}
+              sx={{width: '100%', height: '44px', backgroundColor: theme.palette.common.bgrMaster, marginBottom: 3}}
               // ref={searchInputRef}
               onChange={onChangeSearch}
               value={valueSearch}

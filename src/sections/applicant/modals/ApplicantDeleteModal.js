@@ -1,6 +1,8 @@
 import { ImgConfirm } from "../others";
 import { Text, View } from "@/components/FlexStyled";
 import { Modal } from "@mui/material";
+import {useTheme} from "@mui/material/styles";
+
 
 export const ApplicantDeleteModal = ({
   showDelete,
@@ -8,13 +10,14 @@ export const ApplicantDeleteModal = ({
   data,
   pressDelete,
 }) => {
+  const  theme = useTheme();
   return (
     <Modal
       open={showDelete}
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       onBackdropClick={() => setShowDelete(false)}
     >
-      <View contentCenter p={16} width={416} borderRadius={8} bgColor={"#fff"}>
+      <View contentCenter p={16} width={416} borderRadius={8} bgColor={theme.palette.background.paper}>
         <ImgConfirm />
 
         <Text centerAlign mt={24} mb={12} fontSize={20} fontWeight={"700"}>
@@ -40,7 +43,7 @@ export const ApplicantDeleteModal = ({
           bgColor={"#E82E25"}
           onPress={pressDelete}
         >
-          <Text color={"#fff"} fontSize={15} fontWeight={"700"}>
+          <Text color={theme.palette.background.paper} fontSize={15} fontWeight={"700"}>
             {"Xác nhận"}
           </Text>
         </View>

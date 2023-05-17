@@ -9,6 +9,7 @@ import useRole from "@/hooks/useRole";
 import { BoxFlex } from "@/sections/emailform/style";
 import { InputAdornment, Stack } from "@mui/material";
 import { useMemo } from "react";
+import {useTheme} from "@mui/material/styles";
 
 const InterviewHeader = ({
   methods,
@@ -19,7 +20,7 @@ const InterviewHeader = ({
 }) => {
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
-
+  const theme = useTheme();
   return (
     <HeadingBar sx={{ mb: "28px", position: "fixed", top: 8 }}>
       <BoxFlex>
@@ -30,7 +31,7 @@ const InterviewHeader = ({
               placeholder="Tìm kiếm lịch phỏng vấn..."
               sx={{
                 minWidth: "510px",
-                background: "#F2F4F5",
+                background: theme.palette.common.bgrMaster,
                 borderRadius: "6px",
                 mb:1,
                 ".MuiInput-root": {

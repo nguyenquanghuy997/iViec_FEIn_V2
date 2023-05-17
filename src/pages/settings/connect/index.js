@@ -39,6 +39,7 @@ import {
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import React, { useCallback, useEffect } from "react";
+import {useTheme} from "@mui/material/styles";
 // import { DragDropContext } from "react-beautiful-dnd";
 
 Board.getLayout = function getLayout(pageProps, page) {
@@ -100,6 +101,7 @@ export default function Board() {
   // const { translate } = useLocales();
   const { enqueueSnackbar } = useSnackbar();
   const { query } = useRouter();
+  const theme = useTheme();
   // const { isLeaderRole, isMemberRole } = useRole()
   const dispatch = useDispatch();
   // const [laneId, setLaneId] = useState("");
@@ -411,19 +413,19 @@ export default function Board() {
 
       <ConnectCard
         accounts={itemData}
-        color={"#FB8906"}
+        color={theme.palette.common.orange600}
         title="KẾT NỐI WEBSITE TUYỂN DỤNG NỘI BỘ"
         type='outside'
       />
       <ConnectCard
         accounts={itemTest}
-        color={"#43A047"}
+        color={theme.palette.common.green600}
         title="KẾT NỐI WEBSITE TUYỂN DỤNG BÊN NGOÀI"
         type="outside"
       />
       <ConnectCard
         accounts={itemTestImage}
-        color={"#1E88E5"}
+        color={theme.palette.common.blue600}
         title="KẾT NỐI MẠNG XÃ HỘI"
       />
     </Container>

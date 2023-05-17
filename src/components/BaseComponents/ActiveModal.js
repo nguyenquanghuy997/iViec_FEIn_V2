@@ -11,7 +11,9 @@ import {
   Divider,
 } from "@mui/material";
 import React from "react";
+import {useTheme} from "@mui/material/styles";
 
+const theme = useTheme();
 const ActiveModal = ({
   showConfirmMultiple,
   onClose,
@@ -40,7 +42,7 @@ const ActiveModal = ({
                 src={`/assets/icons/candidate/status-active.png`}
                 style={{ margin: "0 auto" }}
               />
-              <TitleModelStyle className="title" style={{ color: "#1976D2" }}>
+              <TitleModelStyle className="title" style={{ color: theme.palette.common.blue700 }}>
                 Bật trạng thái hoạt động cho {title}
               </TitleModelStyle>
               <DialogContentTextModelStyle
@@ -59,7 +61,7 @@ const ActiveModal = ({
                 src={`/assets/icons/candidate/status-inactive.png`}
                 style={{ margin: "0 auto" }}
               />
-              <TitleModelStyle className="title" style={{ color: "#455570" }}>
+              <TitleModelStyle className="title" style={{ color: theme.palette.common.neutral700 }}>
                 Tắt trạng thái hoạt động cho {title}
               </TitleModelStyle>
               <DialogContentTextModelStyle
@@ -73,7 +75,7 @@ const ActiveModal = ({
             </>
           )}
         </DialogContent>
-        <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
+        <DialogActions sx={{ borderTop: "1px solid " + theme.palette.common.neutral100 }}>
           <ButtonCancel tittle="Hủy" onClick={onClose} />
 
           <ButtonDS tittle={isActivated != 1 ? "Bật" : "Tắt"} onClick={handleSave} />

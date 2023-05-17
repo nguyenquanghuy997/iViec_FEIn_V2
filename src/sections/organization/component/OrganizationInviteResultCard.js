@@ -2,10 +2,11 @@ import {memo} from "react";
 import {Box, Typography} from "@mui/material";
 import {styled} from "@mui/styles";
 import {EmailInviteIcon} from "@/sections/organization/component/Icon";
+import {useTheme} from "@mui/material/styles";
 
 const NameStyle = styled(Typography)(({theme, status}) => {
   return ({
-    color: status === false ? '#E53935' : '#388E3C',
+    color: status === false ? theme.palette.common.red600 : '#388E3C',
     fontSize: 14,
     fontWeight: 600,
     marginBottom: theme.spacing(0.5)
@@ -23,7 +24,7 @@ const renderStatus = (text, color = '#388E3C') => {
         fontWeight: 600
       }}><EmailInviteIcon fill={color}/><span style={{ marginLeft: 8 }}>{text}</span></Typography>
 }
-
+const theme = useTheme();
 const OrganizationInviteResultCard = ({item}) => {
   const {
     name = 'Name',
@@ -39,7 +40,7 @@ const OrganizationInviteResultCard = ({item}) => {
               display: 'flex',
               alignItems: 'flex-start',
               justifyContent: 'space-between',
-              backgroundColor: status ? '#E8F5E9' : '#FFEBEE',
+              backgroundColor: status ? theme.palette.common.green50 : theme.palette.common.red50,
               padding: 2,
               mb: 3,
               borderRadius: '6px'
@@ -48,7 +49,7 @@ const OrganizationInviteResultCard = ({item}) => {
             <NameStyle status={status}>{name}</NameStyle>
             <Box sx={{display: 'flex', alignItems: 'center'}}>
               <Typography sx={{ fontSize: 13, fontWeight: 400 }}>{email}</Typography>
-              <span style={{width: '3px', height: '3px', backgroundColor: '#172B4D', marginLeft: 8, marginRight: 8, borderRadius: '50%'}}/>
+              <span style={{width: '3px', height: '3px', backgroundColor: theme.palette.common.neutral800, marginLeft: 8, marginRight: 8, borderRadius: '50%'}}/>
               <Typography sx={{ fontSize: 13, fontWeight: 400 }}>{roleGroup}</Typography>
             </Box>
             <Box sx={{ mt: 3, display: 'flex', alignItems: 'center', flexWrap: 'wrap'}}>
@@ -57,10 +58,10 @@ const OrganizationInviteResultCard = ({item}) => {
                   return (
                       <Typography key={index} sx={{
                         padding: '5px 8px',
-                        backgroundColor: '#FDFDFD',
+                        backgroundColor: theme.palette.common.white,
                         fontSize: 12,
                         fontWeight: 500,
-                        color: '#172B4D',
+                        color: theme.palette.common.neutral800,
                         mr: 1,
                         mb: 1,
                         borderRadius: '4px'
@@ -71,12 +72,12 @@ const OrganizationInviteResultCard = ({item}) => {
             </Box>
           </Box>
           <Box sx={{textAlign: 'right'}}>
-            <Box sx={{color: status ? '#388E3C' : '#E53935'}}>
-              {status ? renderStatus('Gửi thành công') : renderStatus('Gửi thất bại', '#E53935')}
+            <Box sx={{color: status ? '#388E3C' : theme.palette.common.red600}}>
+              {status ? renderStatus('Gửi thành công') : renderStatus('Gửi thất bại', theme.palette.common.red600)}
             </Box>
             <Typography
                 sx={{
-                  color: '#E53935',
+                  color: theme.palette.common.red600,
                   fontSize: 13,
                   fontWeight: 400,
                   fontStyle: 'italic',

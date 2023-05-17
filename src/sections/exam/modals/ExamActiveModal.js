@@ -13,6 +13,8 @@ import {
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useUpdateStatusExamMutation } from "../ExamSlice";
+import {useTheme} from "@mui/material/styles";
+
 
 
 const ExamActiveModal = ({
@@ -24,7 +26,7 @@ const ExamActiveModal = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [status] = useUpdateStatusExamMutation();
-
+  const theme = useTheme();
   const handleChangeStatus = (async () => {
     try {
       const data = {
@@ -62,7 +64,7 @@ const ExamActiveModal = ({
                 src={`/assets/icons/candidate/status-active.png`}
                 style={{ margin: "0 auto" }}
               />
-              <TitleModelStyle className="title" style={{ color: "#1976D2" }}>
+              <TitleModelStyle className="title" style={{ color: theme.palette.common.blue700 }}>
                 Bật trạng thái hoạt động cho đề thi
               </TitleModelStyle>
               <DialogContentTextModelStyle
@@ -81,7 +83,7 @@ const ExamActiveModal = ({
                 src={`/assets/icons/candidate/status-inactive.png`}
                 style={{ margin: "0 auto" }}
               />
-              <TitleModelStyle className="title" style={{ color: "#455570" }}>
+              <TitleModelStyle className="title" style={{ color: theme.palette.common.neutral700 }}>
                 Tắt trạng thái hoạt động cho đề thi
               </TitleModelStyle>
               <DialogContentTextModelStyle

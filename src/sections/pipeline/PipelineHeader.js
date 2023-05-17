@@ -6,6 +6,7 @@ import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { InputAdornment, Stack } from "@mui/material";
 import { useState } from "react";
 import { PipelineFormModal } from "./modals";
+import {useTheme} from "@mui/material/styles";
 
 const PipelineHeader = ({
   methods,
@@ -13,6 +14,7 @@ const PipelineHeader = ({
   onSubmit,
   handleSubmit,
 }) => {
+  const  theme = useTheme();
   const [showForm, setShowForm] = useState(false);
   return (
     <>
@@ -43,7 +45,7 @@ const PipelineHeader = ({
                   <InputAdornment position="start" sx={{ ml: 0.5, mr:0 }}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
+                      sx={{ color: theme.palette.common.borderObject, width: 20, height: 20 }}
                     />
                   </InputAdornment>
                 ),
@@ -79,7 +81,7 @@ const PipelineHeader = ({
               icon={"material-symbols:add"}
               width={20}
               height={20}
-              color="#fff"
+              color={theme.palette.background.paper}
               mr={1}
             />
           }

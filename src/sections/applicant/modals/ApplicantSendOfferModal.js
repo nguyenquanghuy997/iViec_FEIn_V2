@@ -33,7 +33,6 @@ const SelectStyle = {
   minHeight: 44,
   minWidth: 752,
 }
-
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
   '&.file-upload-item': {
     marginBottom: theme.spacing(2),
@@ -42,25 +41,26 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    border: '1px solid #B9BFC9',
+    border: '1px solid ' + theme.palette.common.neutral300,
     borderRadius: 6,
     backgroundColor: theme.palette.background.paper
   }
 }));
 
 const renderFileUploadItem = (file, index, removeFileUpload) => {
+  const theme = useTheme();
   if (!file) return;
   let fileType = file.name.slice(file.name.lastIndexOf('.'));
   return (
       <BoxItemFileStyle className="file-upload-item" key={index}>
         {showIconByFileType(fileType)}
         <Stack sx={{mx: 1}}>
-          <Typography sx={{color: '#455570', fontSize: 13, fontWeight: 600}}>{file.name}</Typography>
-          <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
+          <Typography sx={{color: theme.palette.common.neutral700, fontSize: 13, fontWeight: 600}}>{file.name}</Typography>
+          <Typography sx={{color: theme.palette.common.neutral700, fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
         </Stack>
         <IconButton
             size='small'
-            sx={{color: '#1976D2', mx: 0.5}}
+            sx={{color: theme.palette.common.blue700, mx: 0.5}}
             onClick={() => {
               removeFileUpload(index)
             }}
@@ -150,7 +150,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title, showUploadFile})
           <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
               <EmailFormHeadStyle className="email-form-head">
-                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
+                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: theme.palette.common.neutral700}}>
                   {title}
                 </Typography>
                 <IconButton size="small" onClick={onClose}><Iconify icon="ic:baseline-close"/></IconButton>
@@ -271,7 +271,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title, showUploadFile})
                 <BoxFlex alignItems="flex-start">
                   <Stack>
                     <CropImage data={'01000000-ac12-0242-b3cd-08db10c50f70/20230224082523894.png'}/>
-                    <Typography sx={{fontSize: 13, fontWeight: 400, color: '#5C6A82', mt: 2}}>Logo công ty</Typography>
+                    <Typography sx={{fontSize: 13, fontWeight: 400, color: theme.palette.common.borderObject, mt: 2}}>Logo công ty</Typography>
                   </Stack>
                   <Box>
                     <RHFEmailEditor

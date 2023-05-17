@@ -221,14 +221,14 @@ const getTextStyle = (props) => {
     textDecorationLine: props.underline ? "underline" : undefined,
   };
 };
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({theme}) => ({
   scroll: {
     "&::-webkit-scrollbar": {
       width: "6px",
       marginRight: "3px",
     },
     "&::-webkit-scrollbar-thumb": {
-      background: "#B9BFC9",
+      background: theme.palette.common.neutral300,
       borderRadius: "30px",
       marginRight: "3px",
     },

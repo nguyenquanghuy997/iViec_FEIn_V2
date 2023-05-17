@@ -15,6 +15,7 @@ import { fDate } from "@/utils/formatTime";
 import { LIST_STATUS } from "@/utils/formatString";
 import { toRequestFilterData } from "@/utils/helper";
 import { useGetAllOrganizationUserQuery } from "@/sections/offer-form/OfferFormSlice";
+import {useTheme} from "@mui/material/styles";
 
 const columns = [
   {
@@ -72,7 +73,7 @@ function OfferFormFilterModal({methods, isOpen, handleOpen, onSubmit}) {
     }, undefined, {shallow: true});
     reset();
   }
-  
+  const  theme = useTheme();
   const handleValue = (values) => {
     onSubmit(toRequestFilterData(values));
   }
@@ -91,7 +92,7 @@ function OfferFormFilterModal({methods, isOpen, handleOpen, onSubmit}) {
     >
       <FormProvider methods={methods} onSubmit={handleSubmit(handleValue)}>
         <FilterModalHeadStyle>
-          <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
+          <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: theme.palette.common.neutral700}}>
             Bộ lọc
           </Typography>
           <IconButton size="small" onClick={() => handleOpen(false)}>

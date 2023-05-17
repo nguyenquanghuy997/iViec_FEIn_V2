@@ -41,7 +41,7 @@ const PreviewEmail = ({isOpen, onClose, content, signature, logo}) => {
             <IconButton onClick={onClose} sx={{mr: 1}}>
               <Iconify icon="material-symbols:arrow-back"/>
             </IconButton>
-            <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: "#455570"}}>
+            <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600, color: theme.palette.common.neutral700}}>
               Xem trước
             </Typography>
           </Box>
@@ -51,7 +51,7 @@ const PreviewEmail = ({isOpen, onClose, content, signature, logo}) => {
         <Box sx={{py: 2, px: 3, mt: 8, minWidth: '800px'}}>
           {/* Title */}
           <Box sx={{mb: 2}}>
-            <Typography sx={{color: '#172B4D', fontSize: 16, fontWeight: 600}}>
+            <Typography sx={{color: theme.palette.common.neutral800, fontSize: 16, fontWeight: 600}}>
               Tiêu đề email
             </Typography>
           </Box>
@@ -65,22 +65,22 @@ const PreviewEmail = ({isOpen, onClose, content, signature, logo}) => {
               />
               <Stack sx={{ml: 1}}>
                 <Typography
-                  sx={{color: '#172B4D', fontSize: 14, fontWeight: 500, display: 'flex', alignItems: 'center'}}>
+                  sx={{color: theme.palette.common.neutral800, fontSize: 14, fontWeight: 500, display: 'flex', alignItems: 'center'}}>
                   Nhà tuyển dụng
                   <Typography sx={{
-                    color: '#455570',
+                    color: theme.palette.common.neutral700,
                     fontSize: 14,
                     fontWeight: 400,
                     ml: 0.5
                   }}>{'<Example@email.com>'}</Typography>
                 </Typography>
-                <Typography sx={{color: '#455570', fontSize: 13, fontWeight: 400, ml: 0.5}}>
+                <Typography sx={{color: theme.palette.common.neutral700, fontSize: 13, fontWeight: 400, ml: 0.5}}>
                   Tới tôi, CC: example@email.com, BCC: xample@email.com
                 </Typography>
               </Stack>
             </Box>
             <Box>
-              <Typography sx={{color: '#455570', fontSize: 13, fontWeight: 400}}>
+              <Typography sx={{color: theme.palette.common.neutral700, fontSize: 13, fontWeight: 400}}>
                 15:00 17/02/2023
               </Typography>
             </Box>

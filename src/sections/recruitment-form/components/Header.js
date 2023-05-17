@@ -12,10 +12,12 @@ import {JobTitleStyle} from "@/sections/recruitment-form/style";
 import {useRouter} from "next/router";
 import {PATH_DASHBOARD} from "@/routes/paths";
 import {RECRUITMENT_STATUS} from '@/config'
+import {useTheme} from "@mui/material/styles";
 
 const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
   const name = useWatch({name: 'name'});
   const router= useRouter();
+  const theme = useTheme();
 
   const handleSetShowAlert = (data) => {
     if (data?.processStatus === RECRUITMENT_STATUS.EXPIRED || data?.processStatus === RECRUITMENT_STATUS.CLOSED) {
@@ -63,8 +65,8 @@ const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
                     boxShadow: 'none'
                   },
                   "&.Mui-disabled": {
-                    color: "#8a94a5",
-                    backgroundColor: "#d0d4db",
+                    color: theme.palette.common.neutral500,
+                    backgroundColor: theme.palette.common.neutral200,
                   }
                 }}
             />
@@ -81,8 +83,8 @@ const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
                       boxShadow: 'none'
                     },
                     "&.Mui-disabled": {
-                      color: "#8a94a5",
-                      backgroundColor: "#d0d4db",
+                      color: theme.palette.common.neutral500,
+                      backgroundColor: theme.palette.common.neutral200,
                     }
                   }}
               />
@@ -100,8 +102,8 @@ const Header = ({recruitment, title, errors, onOpenConfirm, setShowAlert}) => {
                     boxShadow: 'none'
                   },
                   "&.Mui-disabled": {
-                    color: "#8a94a5",
-                    backgroundColor: "#d0d4db",
+                    color: theme.palette.common.neutral500,
+                    backgroundColor: theme.palette.common.neutral200,
                   }
                 }}
             />

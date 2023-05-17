@@ -16,6 +16,7 @@ import {useSnackbar} from "notistack";
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 
 const defaultValues = {
@@ -25,6 +26,7 @@ const defaultValues = {
     benefit: "",
     isActivated: true,
 };
+const theme = useTheme();
 const ExamFormModal = ({data, show, onClose}) => {
     const isEditMode = !!data?.id;
 
@@ -136,7 +138,7 @@ const ExamFormModal = ({data, show, onClose}) => {
                         atcenter="center"
                         pv={12}
                         ph={24}
-                        bgcolor={"#FDFDFD"}
+                        bgcolor={theme.palette.common.white}
                     >
                         <Text flex="true" fontsize={16} fontweight={"600"}>
                             {isEditMode
@@ -146,7 +148,7 @@ const ExamFormModal = ({data, show, onClose}) => {
                         <ButtonDS
                             type="submit"
                             sx={{
-                                backgroundColor: "#fff",
+                                backgroundColor: theme.palette.background.paper,
                                 boxShadow: "none",
                                 ":hover": {
                                     backgroundColor: "#EFF3F7",
@@ -161,7 +163,7 @@ const ExamFormModal = ({data, show, onClose}) => {
                                     icon={"mi:close"}
                                     width={20}
                                     height={20}
-                                    color="#5C6A82"
+                                    color={theme.palette.common.borderObject}
                                 />
                             }
                         />

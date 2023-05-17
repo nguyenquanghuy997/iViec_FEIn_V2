@@ -12,6 +12,7 @@ import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 import {AvatarDS} from "@/components/DesignSystem";
 import {BoxFlex} from "@/sections/emailform/style";
 import HelperText from "@/components/BaseComponents/HelperText";
+import {useTheme} from "@mui/material/styles";
 
 RHFAutocomplete.propTypes = {
   name: PropTypes.string, options: PropTypes.array, AutocompleteProps: PropTypes.object,
@@ -46,7 +47,7 @@ export default function RHFAutocomplete(
         sx={{
           borderRadius: '4px',
           color: style.COLOR_TEXT_BLACK,
-          backgroundColor: '#EFF3F6',
+          backgroundColor: theme.palette.common.bgrObject,
           fontSize: style.FONT_13,
           fontWeight: style.FONT_MEDIUM,
         }}
@@ -59,7 +60,7 @@ export default function RHFAutocomplete(
   };
 
   const {onChange, renderTags, renderInput, ...rest} = props;
-
+  const theme = useTheme()
   return (<Controller
       name={name}
       control={control}

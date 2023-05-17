@@ -12,6 +12,7 @@ import React, { useState } from 'react'
 import { useEffect } from "react";
 import { useForm } from 'react-hook-form'
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 const defaultValues = {
   id: null,
@@ -22,10 +23,9 @@ const defaultValues = {
   showType: 0,
   type: 0
 };
-
 function ExamFormModal({ show, onClose, onSubmit, data }) {
   const [showType, setShowType] = useState(data?.showType ?? 0)
-
+  const theme = useTheme();
   const dataForm = data ? data : defaultValues;
 
   const schema = Yup.object().shape({
@@ -94,7 +94,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
           atcenter="center"
           pv={12}
           ph={24}
-          bgcolor={"#FDFDFD"}
+          bgcolor={theme.palette.common.white}
         >
           <Text flex="true" fontsize={16} fontweight={"600"}>
             {"Thêm mới đề thi"}
@@ -102,7 +102,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
           <ButtonDS
             type="button"
             sx={{
-              backgroundColor: "#fff",
+              backgroundColor: theme.palette.background.paper,
               boxShadow: "none",
               ":hover": {
                 backgroundColor: "#EFF3F7",
@@ -117,7 +117,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
                 icon={"mi:close"}
                 width={20}
                 height={20}
-                color="#5C6A82"
+                color={theme.palette.common.borderObject}
               />
             }
           />
@@ -158,13 +158,13 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
             <SwitchStatusDS
               sx={{
                 "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  backgroundColor: "#90CAF9 !important",
+                  backgroundColor: theme.palette.common.blue200  + " !important",
                 },
                 "& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb": {
-                  backgroundColor: "#1976D2 !important",
+                  backgroundColor: theme.palette.common.blue700 + " !important",
                 },
               }}
-              colorLabel={'#172B4D'}
+              colorLabel={theme.palette.common.neutral800}
               name={"isQuestionMixing"}
               label={'Đảo vị trí câu hỏi'}
             />
@@ -186,12 +186,12 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
                   label={x.label}
                   sx={{
                     "& .MuiFormControlLabel-label": {
-                      color: '#455570',
+                      color: theme.palette.common.neutral700,
                       fontSize: '14px',
                       fontWeight: 500
                     },
                     "& .Mui-checked": {
-                      color: '#1976D2 !important'
+                      color: theme.palette.common.blue700 + '!important'
                     }
                   }}
                 />)

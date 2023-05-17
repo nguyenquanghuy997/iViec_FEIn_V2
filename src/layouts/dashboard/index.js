@@ -15,7 +15,7 @@ import Page403 from '@/pages/403';
 const WrapperStyle = styled("div")(({ theme }) => ({
   maxWidth: "100%",
   minHeight: "100%",
-  backgroundColor: "#F2F4F5",
+  backgroundColor: theme.palette.common.bgrMaster,
   margin: theme.spacing(0),
   padding: theme.spacing(0),
 }));

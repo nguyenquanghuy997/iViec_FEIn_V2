@@ -14,6 +14,7 @@ import QuestionCardItem from "./QuestionCardItem"
 import { useRouter } from "next/router"
 import ExamFormModal from "@/sections/exam/components/ExamFormModal"
 import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal"
+import {useTheme} from "@mui/material/styles";
 
 // const defaultValues = {
 // 	name: "",
@@ -28,7 +29,7 @@ import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal"
 
 const CreateExamContent = () => {
 	const router = useRouter();
-
+	const theme = useTheme();
 	const { query = { name: "", description: "", examTime: 0, isQuestionMixing: true, showType: 0, type: 0 } } = router;
 	const [examSetting,setExamSetting] = useState(query);
 	const [openGroup, setOpenGroup] = useState(false);
@@ -73,7 +74,7 @@ const CreateExamContent = () => {
 					<Typography variant="h6" sx={{
 						fontSize: '1.5rem',
 						fontWeight: 600,
-						color: '#172B4D',
+						color: theme.palette.common.neutral800,
 					}}>
 						{examSetting.name}
 					</Typography>
@@ -116,7 +117,7 @@ const CreateExamContent = () => {
 						<Typography sx={{
 							fontSize: '13px',
 							lineHeight: '20px',
-							color: '#455570',
+							color: theme.palette.common.neutral700,
 							fontWeight: 500,
 						}}>Điểm sàn
 						</Typography>
@@ -131,7 +132,7 @@ const CreateExamContent = () => {
 						<Typography sx={{
 							fontSize: '13px',
 							lineHeight: '20px',
-							color: '#455570',
+							color: theme.palette.common.neutral700,
 							fontWeight: 500,
 						}}>Điểm tối đa
 						</Typography>
@@ -150,11 +151,11 @@ const CreateExamContent = () => {
 						variant={'outlined'}
 						onClick = {()=>setShowForm(true)}
 						sx={{
-							border: '1px solid #455570',
+							border: '1px solid ' + theme.palette.common.neutral700,
 							padding: '8px 12px',
 							fontWeight: 600,
 							fontSize: '14px',
-							color: '#455570'
+							color: theme.palette.common.neutral700
 						}}
 					/>
 				</Box>
@@ -201,7 +202,7 @@ const CreateExamContent = () => {
 							fontSize: 14,
 							lineHeight: '20px',
 							fontWeight: 600,
-							color: '#455570'
+							color: theme.palette.common.neutral700
 						}}>Chọn tất cả</label>
 					</View>
 

@@ -22,6 +22,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Controller, useFormContext } from "react-hook-form";
 import { GreenSwitch } from "@/utils/cssStyles";
+import {useTheme} from "@mui/material/styles";
 
 
 const SwitchForm = ({ name, handleChange, style, ...other }) => {
@@ -131,7 +132,7 @@ const DetailCard = ({ checked, accounts }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const  theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
   const handleOpenForm = () => setOpenForm(true);
   const handleCloseForm = () => setOpenForm(false);
@@ -143,7 +144,7 @@ const DetailCard = ({ checked, accounts }) => {
             height: 125,
             width: 250,
             display: "block",
-            background: "#F2F4F5",
+            background: theme.palette.common.bgrMaster,
             my: 2,
             mr: 2,
             borderRadius: "6px",
@@ -160,7 +161,7 @@ const DetailCard = ({ checked, accounts }) => {
             {isActive ? (
               <span style={{ color: "#388E3C" }}> Đã hoạt động</span>
             ) : (
-              <span style={{ color: "#8A94A5" }}>Không hoạt động"</span>
+              <span style={{ color: theme.palette.common.neutral500 }}>Không hoạt động"</span>
             )}
           </Typography>
           <Typography component="div" fontSize={"14px"} sx={{ mb: 3 }}>
@@ -196,7 +197,7 @@ const DetailCard = ({ checked, accounts }) => {
         }}
       >
         <CardActionArea>
-          <Typography sx={{ color: "#455570" }} onClick={handleOpenForm}>
+          <Typography sx={{ color: theme.palette.common.neutral700 }} onClick={handleOpenForm}>
             + Thêm tài khoản
           </Typography>
         </CardActionArea>

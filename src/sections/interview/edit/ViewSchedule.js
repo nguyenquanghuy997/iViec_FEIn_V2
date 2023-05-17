@@ -7,13 +7,14 @@ import { fTime } from "@/utils/formatTime";
 import { Box, CardContent, Divider, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { RiCalendarCheckFill, RiCalendarEventFill } from "react-icons/ri";
+import {useTheme} from "@mui/material/styles";
 
 const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
   // const { data: DetailData } = useGetDetailCalendarsQuery({
   //   BookingCalendarId: id,
   // });
   const { user } = useAuth();
-
+  const  theme = useTheme();
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
 
@@ -43,7 +44,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
               <Box
                 sx={{
                   borderRadius: "100%",
-                  background: "#E8F5E9",
+                  background: theme.palette.common.green50,
                   width: "32px",
                   height: "32px",
                   display: "flex",
@@ -58,7 +59,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
               <Box
                 sx={{
                   borderRadius: "100%",
-                  background: "#E3F2FD",
+                  background: theme.palette.common.blue50,
                   width: "32px",
                   height: "32px",
                   display: "flex",
@@ -67,13 +68,13 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
                   mr: 2,
                 }}
               >
-                <RiCalendarEventFill color={"#1565C0"} />
+                <RiCalendarEventFill color={theme.palette.common.blue800} />
               </Box>
             )}
           </Box>
-
+s
           <Box sx={{ width: "20%" }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 600 }} color="#172B4D">
+            <Typography sx={{ fontSize: 13, fontWeight: 600 }} color={theme.palette.common.neutral800}>
               {data?.name}
             </Typography>
             <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
@@ -155,7 +156,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
               padding: "6px 10px",
               backgroundColor: "#388E3C",
               "&:hover": {
-                backgroundColor: "#43A047 !important",
+                backgroundColor: theme.palette.common.green600 +  "!important",
               },
             }}
           />
@@ -165,7 +166,7 @@ const ViewSchedule = ({ data, check, handleClick, handleClickDialog }) => {
               sx={{
                 backgroundColor: "#388E3C",
                 "&:hover": {
-                  backgroundColor: "#43A047 !important",
+                  backgroundColor: theme.palette.common.green600 + " !important",
                 },
               }}
             />

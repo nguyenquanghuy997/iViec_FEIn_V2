@@ -16,11 +16,12 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import { Container } from "@mui/system";
 import React from "react";
 import { useState } from "react";
 
+const theme = useTheme();
 const NotificationBoard = ({
   icon,
   avatarSrc,
@@ -62,7 +63,7 @@ const NotificationBoard = ({
             display: "inline",
             fontSize: 13,
             margin: "16px 8px 12px 0",
-            color: "#5C6A82",
+            color: theme.palette.common.borderObject,
             width: "160px",
           }}
         >
@@ -74,7 +75,7 @@ const NotificationBoard = ({
             display: "inline",
             fontSize: 13,
             fontWeight: 500,
-            color: "#172B4D",
+            color: theme.palette.common.neutral800,
           }}
         >
           {reason}
@@ -125,11 +126,11 @@ const NotificationBoard = ({
         onClick={handleClick}
         sx={{
           padding: "20px 12px",
-          backgroundColor: !open ? "white" : "#F2F4F5",
-          color: "#172B4D",
+          backgroundColor: !open ? "white" : theme.palette.common.bgrMaster,
+          color: theme.palette.common.neutral800,
           fontSize: "0.9rem!important",
           "&:hover": {
-            background: "#F2F4F5",
+            background: theme.palette.common.bgrMaster,
           },
           "& .MuiListItemText-root+svg": {
             minWidth: "0.8rem",
@@ -166,7 +167,7 @@ const NotificationBoard = ({
                 }}
                 component="span"
                 variant="body2"
-                color="#5C6A82"
+                color= {theme.palette.common.borderObject}
               >
                 {fTimeDate(data?.occurredAt)}
               </Typography>
@@ -186,11 +187,11 @@ const NotificationBoard = ({
             timeout="auto"
             unmountOnExit
             sx={{
-              backgroundColor: "#F2F4F5",
+              backgroundColor: theme.palette.common.bgrMaster,
               pb: 2,
               pt: 2,
               "& .MuiButtonBase-root:hover": {
-                backgroundColor: "#F2F4F5",
+                backgroundColor: theme.palette.common.bgrMaster,
               },
             }}
           >
@@ -206,8 +207,8 @@ const NotificationBoard = ({
                       (data?.applicantReviewResultType == 0
                         ? "#388E3C"
                         : data?.applicantReviewResultType == 1
-                        ? "#F77A0C"
-                        : "#E53935"),
+                        ? theme.palette.common.orange700
+                        : theme.palette.common.red600),
                   }}
                 >
                   {PipelineStateType(2, data?.applicantReviewResultType)}
@@ -231,7 +232,7 @@ const NotificationBoard = ({
               <ListItemButton
                 sx={{
                   "& .MuiButtonBase-root:hover": {
-                    backgroundColor: "#F2F4F5",
+                    backgroundColor: theme.palette.common.bgrMaster,
                   },
                 }}
               >

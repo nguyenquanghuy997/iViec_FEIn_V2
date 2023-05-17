@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Box, Button, Typography} from '@mui/material'
-import {styled} from '@mui/material/styles'
+import {styled, useTheme} from '@mui/material/styles'
 import '@/utils/highlight'
 import {Editor} from "@tinymce/tinymce-react";
 import {API_KEY_EDITOR} from "@/config";
@@ -12,11 +12,10 @@ const RootStyle = styled(Box)(({theme}) => ({
       borderRadius: theme.spacing(0.5),
     })
 )
-
+const theme = useTheme();
 const renderValue = (value) => {
   return '&nbsp;<span style="font-weight: 500; font-size: 13px; padding: 5px 8px; color: #1565C0; background-color: #E3F2FD">' + value + '</span>&nbsp;'
 }
-
 export default function EmailEditor({
       error,
       value,
@@ -66,7 +65,7 @@ export default function EmailEditor({
               }}
           >
             <Iconify icon='eva:attach-fill' sx={{width: 20, height: 20}}/>
-            <Typography component="span" sx={{color: '#455570', fontSize: 14, fontWeight: 600, ml: 0.5}}>Đình kèm file</Typography>
+            <Typography component="span" sx={{color: theme.palette.common.neutral700, fontSize: 14, fontWeight: 600, ml: 0.5}}>Đình kèm file</Typography>
             <input hidden accept=".doc,.docx,.pdf,.xlsx,.xls" multiple type="file" onChange={handleFileChange}/>
           </Button>}
 

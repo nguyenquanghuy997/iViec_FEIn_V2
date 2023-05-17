@@ -52,15 +52,15 @@ const ButtonStyle = {
   padding: '8px 12px'
 }
 
-const ButtonAddInviteStyle = styled(Button)(() => ({
+const ButtonAddInviteStyle = styled(Button)(({theme}) => ({
   "&.button-add-invite": {
     ...ButtonStyle,
-    backgroundColor: '#FDFDFD',
+    backgroundColor: theme.palette.common.white,
     width: '100%',
-    color: '#1976D2',
+    color: theme.palette.common.blue700,
     ":hover": {
-      color: '#455570',
-      backgroundColor: '#FDFDFD',
+      color: theme.palette.common.neutral700,
+      backgroundColor: theme.palette.common.white,
     }
   }
 }));
@@ -210,7 +210,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
               atcenter="center"
               pv={12}
               ph={24}
-              bgcolor={"#FDFDFD"}
+              bgcolor={theme.palette.common.white}
             >
               <Text flex="true" fontsize={16} fontweight={"600"}>
                 {isEditMode
@@ -220,7 +220,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
               <ButtonDS
                 type="submit"
                 sx={{
-                  backgroundColor: "#fff",
+                  backgroundColor:theme.palette.background.paper,
                   boxShadow: "none",
                   ":hover": {
                     backgroundColor: "#EFF3F7",
@@ -235,7 +235,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                     icon={"mi:close"}
                     width={20}
                     height={20}
-                    color="#5C6A82"
+                    color={theme.palette.common.neutral600}
                   />
                 }
               />

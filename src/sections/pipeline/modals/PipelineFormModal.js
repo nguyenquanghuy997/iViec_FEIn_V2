@@ -23,6 +23,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 const defaultValues = {
   name: "",
@@ -35,7 +36,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
   // api
   const [addForm] = useAddPipelineMutation();
   const [updateForm] = useUpdatePipelineMutation();
-
+  const theme = useTheme();
   // form
   const Schema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tên quy trình tuyển dụng"),
@@ -252,7 +253,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
             <Divider />
             {/* dept */}
             <View pv={24}>
-              <Label required={true} sx={{ color: '#455570', fontSize: 16, fontWeight: 600 }}>{"Bước tuyển dụng"}</Label>
+              <Label required={true} sx={{ color: theme.palette.common.neutral700, fontSize: 16, fontWeight: 600 }}>{"Bước tuyển dụng"}</Label>
               <FormHelperText error sx={{ mt: 0, mb: 1 }}>
                 {errorStage && errorStage}
               </FormHelperText>

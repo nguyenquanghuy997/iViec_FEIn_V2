@@ -1,15 +1,18 @@
 import MuiButton from "@/components/BaseComponents/MuiButton"
 import { Box, Breadcrumbs, Link, Typography } from "@mui/material"
+import {useTheme} from "@mui/material/styles";
 
+const theme = useTheme();
 const CreateExamHeader = () => {
     return <>
+
         <Box sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flex: 1,
-            background: '#FDFDFD',
-            border: ' 1px solid #E7E9ED',
+            background: theme.palette.common.white,
+            border: ' 1px solid ' + theme.palette.common.neutral100,
             borderRadius: '4px',
             padding: '16px 24px',
         }}>
@@ -18,14 +21,14 @@ const CreateExamHeader = () => {
                     <Link color="inherit" href="/" sx={{
                         fontSize: '.875rem',
                         fontWeight: 600,
-                        color: '#8A94A5'
+                        color: theme.palette.common.neutral500
                     }}>
                         Danh sách đề thi
                     </Link>
                     <Typography sx={{
                         fontSize: '.875rem',
                         fontWeight: 600,
-                        color: '#455570'
+                        color: theme.palette.common.neutral700
                     }}>Tạo mới đề thi</Typography>
                 </Breadcrumbs>
             </Box>
@@ -55,8 +58,8 @@ const CreateExamHeader = () => {
                             boxShadow: 'none'
                         },
                         "&.Mui-disabled": {
-                            color: "#8a94a5",
-                            backgroundColor: "#d0d4db",
+                            color: theme.palette.common.neutral500,
+                            backgroundColor: theme.palette.common.neutral200,
                         }
                     }}
                 />
@@ -74,8 +77,8 @@ const CreateExamHeader = () => {
                             boxShadow: 'none'
                         },
                         "&.Mui-disabled": {
-                            color: "#8a94a5",
-                            backgroundColor: "#d0d4db",
+                            color: theme.palette.common.neutral500,
+                            backgroundColor: theme.palette.common.neutral200,
                         }
                     }}
                 />

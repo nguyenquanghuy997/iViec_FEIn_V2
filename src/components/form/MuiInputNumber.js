@@ -3,6 +3,7 @@ import { Box, FormHelperText } from "@mui/material";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import {useTheme} from "@mui/material/styles";
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
   props,
@@ -38,6 +39,7 @@ const MuiInputNumber = ({
   ...other
 }) => {
   const { control } = useFormContext();
+  const  theme = useTheme();
   return (
     <Controller
       name={name}
@@ -68,7 +70,7 @@ const MuiInputNumber = ({
               }}
               {...otherField}
               fullWidth
-              sx={{ background: "#fff" }}
+              sx={{ background: theme.palette.common.white }}
               placeholder={other.placeholder}
               // error={!!error}
               // helperText={error?.message}

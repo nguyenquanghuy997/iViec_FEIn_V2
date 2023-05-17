@@ -4,6 +4,8 @@ import {OrganizationEmptyIcon} from "@/sections/organization/component/Icon";
 import {styled} from '@mui/styles'
 import Iconify from "@/components/Iconify";
 
+
+
 const BoxEmptyStyle = styled(Box)(({theme}) => ({
   width: '100%',
   display: 'flex',
@@ -15,7 +17,7 @@ const BoxEmptyStyle = styled(Box)(({theme}) => ({
 
 const TypographyEmptyStyle = styled(Typography)(({theme}) => ({
   '&.organization-empty-text': {
-    color: '#A2AAB7',
+    color: theme.palette.common.neutral400,
     fontSize: '14px',
     fontWeight: 500,
     display: 'block',
@@ -26,16 +28,16 @@ const TypographyEmptyStyle = styled(Typography)(({theme}) => ({
 const ButtonAddEmptyStyle = styled(Button)(({theme}) => ({
   '&.organization-empty-button': {
     padding: theme.spacing(1.5, 2),
-    color: '#FDFDFD',
+    color: theme.palette.common.white,
     marginTop: theme.spacing(2),
     fontSize: 14,
     fontWeight: 600,
     minWidth: 144,
     height: 44,
     borderRadius: 6,
-    backgroundColor: '#1976D2',
+    backgroundColor: theme.palette.common.blue700,
     "&:hover": {
-      backgroundColor: '#1976D2',
+      backgroundColor: theme.palette.common.blue700,
     }
   }
 }));

@@ -5,6 +5,7 @@ import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonAddStyle } from "@/sections/emailform/style";
 import { Box, Button, ButtonGroup, ClickAwayListener, Divider, InputAdornment, MenuItem, MenuList, Stack, Typography } from "@mui/material";
 import { useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 export default ({
   methods,
@@ -14,7 +15,7 @@ export default ({
 }) => {
   // const [showDialogStage, setShowDialogStage] = useState(false);
   const [openGroup, setOpenGroup] = useState(false);
-  
+  const theme = useTheme();
   const handleCloseGroup = () => {
     setOpenGroup(false);
   };
@@ -32,8 +33,8 @@ export default ({
           padding: "16px",
           marginTop: "16px",
           borderRadius: "6px",
-          border: "1px solid #E7E9ED",
-          background: "#FDFDFD",
+          border: "1px solid " +  theme.palette.common.neutral100,
+          background: theme.palette.common.white,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -43,7 +44,7 @@ export default ({
               placeholder="Tìm kiếm theo nhóm câu hỏi..."
               sx={{
                 minWidth: "360px",
-                backgroundColor: '#F2F4F5',
+                backgroundColor: theme.palette.common.bgrMaster,
                 borderRadius: '6px',
                 '.MuiInput-root': {
                   border: 'none'
@@ -87,7 +88,7 @@ export default ({
           >
             <Button
               style={{
-                background: "#1976D2",
+                background: theme.palette.common.blue700,
                 padding: "8px 12px",
                 fontWeight: 600,
                 fontSize: ' .875rem',
@@ -100,7 +101,7 @@ export default ({
                 icon={"material-symbols:add"}
                 width={20}
                 height={20}
-                color="#fff"
+                color={theme.palette.background.paper}
                 mr={1}
               />
               Thêm câu hỏi
@@ -151,7 +152,7 @@ export default ({
                 aria-haspopup="menu"
                 onClick={handleOpenGroup}
                 style={{
-                  background: "#1976D2",
+                  background: theme.palette.common.blue700,
                   padding: "8px 12px",
                   borderRadius: '0px 6px 6px 0px',
                 }}
@@ -160,7 +161,7 @@ export default ({
                   icon={"material-symbols:arrow-drop-down"}
                   width={20}
                   height={20}
-                  color="#fff"
+                  color={theme.palette.background.paper}
                 />
               </Button>
             </LightTooltip>

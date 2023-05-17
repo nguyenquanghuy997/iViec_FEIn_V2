@@ -36,7 +36,6 @@ import {
 import { useSnackbar } from "notistack";
 import CropImage from "@/sections/offer-form/component/crop-image/CropImage";
 import { getFileUrl } from "@/utils/helper";
-
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
   '&.file-upload-item': {
     marginRight: theme.spacing(2),
@@ -49,7 +48,7 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
     borderRadius: 6,
   }
 }));
-
+const theme= useTheme();
 const defaultValues = {
   id: undefined,
   name: undefined,
@@ -61,7 +60,6 @@ const defaultValues = {
   isActive: undefined,
   templateAttachFiles: undefined,
 };
-
 export const renderFileUploadItem = (file, index, removeFileUpload, displayButtonDelete) => {
   if (!file) return;
   let fileType = file.name.slice(file.name.lastIndexOf('.'));
@@ -71,7 +69,7 @@ export const renderFileUploadItem = (file, index, removeFileUpload, displayButto
       <Stack sx={{mx: 1}}>
         <Typography
           sx={{
-            color: '#455570',
+            color: theme.palette.common.neutral700,
             fontSize: 13,
             fontWeight: 600,
             whiteSpace: "nowrap",
@@ -79,12 +77,12 @@ export const renderFileUploadItem = (file, index, removeFileUpload, displayButto
             textOverflow: 'ellipsis',
             maxWidth: '125px',
           }}>{file.name}</Typography>
-        <Typography sx={{color: '#455570', fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
+        <Typography sx={{color: theme.palette.common.neutral700, fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
       </Stack>
       {!displayButtonDelete &&
         <IconButton
           size='small'
-          sx={{color: '#1976D2', mx: 0.5}}
+          sx={{color: theme.palette.common.blue700, mx: 0.5}}
           onClick={() => {
             removeFileUpload(index)
           }}
@@ -226,10 +224,10 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
                 <ButtonDS
                   type="submit"
                   sx={{
-                    backgroundColor: "#fff",
+                    backgroundColor: theme.palette.background.paper,
                     boxShadow: "none",
                     ":hover": {
-                      backgroundColor: "#EFF3F7",
+                      backgroundColor: theme.palette.common.neutral100,
                     },
                     textTransform: "none",
                     padding: "12px",
@@ -241,7 +239,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
                       icon={"mi:close"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />
                   }
                 />

@@ -3,6 +3,7 @@ import MenuPopover from "@/components/MenuPopover";
 import SvgIcon from "@/components/SvgIcon";
 import SvgIconStyle from "@/components/SvgIconStyle";
 import { useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 export const ApplicantDraggableItem = ({
   data,
@@ -12,7 +13,7 @@ export const ApplicantDraggableItem = ({
   isDefault,
 }) => {
   const [openState, setOpenState] = useState(null);
-
+  const theme = useTheme();
   const pressOpen = (event) => {
     setOpenState(event.currentTarget);
   };
@@ -44,7 +45,7 @@ export const ApplicantDraggableItem = ({
         mv={16}
         borderWidth={1}
         borderRadius={6}
-        bgColor={"#fff"}
+        bgColor={theme.palette.background.paper}
         borderColor={"#C9D9E0"}
       >
         <View>
@@ -91,7 +92,7 @@ export const ApplicantDraggableItem = ({
             width={56}
             borderWidth={1}
             borderRadius={8}
-            bgColor={"#fff"}
+            bgColor={theme.palette.background.paper}
             borderColor={"#01B6A7"}
           >
             <View onPress={pressAdd}>

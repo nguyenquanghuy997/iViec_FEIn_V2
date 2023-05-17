@@ -41,6 +41,7 @@ import {
 import { styled } from "@mui/styles";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 function ApplicantPreviewItem() {
   const router = useRouter();
@@ -57,7 +58,7 @@ function ApplicantPreviewItem() {
       ApplicantCorrelationId: ApplicantCorrelationId,
       OrganizationId,
     });
-
+  const  theme = useTheme();
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
   const [open, setOpen] = useState(false);
@@ -119,7 +120,7 @@ function ApplicantPreviewItem() {
                     icon={"ri:edit-2-fill"}
                     width={20}
                     height={20}
-                    color="#8A94A5"
+                    color= {theme.palette.common.neutral500}
                   />
                 }
               />
@@ -128,7 +129,7 @@ function ApplicantPreviewItem() {
               direction="row"
               divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
-              color="#172B4D"
+              color= {theme.palette.common.neutral800}
             >
               <Typography fontSize="14px">{data?.phoneNumber}</Typography>
               <Typography fontSize="14px">{data?.email}</Typography>
@@ -139,9 +140,9 @@ function ApplicantPreviewItem() {
               ml={1}
               color={
                 logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
-                  ? "#E53935"
+                  ? theme.palette.common.red600
                   : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                  ? "#F77A0C"
+                  ? theme.palette.common.orange700
                   : "#388E3C"
               }
               border={"1px solid #388E3C"}
@@ -150,9 +151,9 @@ function ApplicantPreviewItem() {
               textAlign={"center"}
               borderColor={
                 logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
-                  ? "#E53935"
+                  ? theme.palette.common.red600
                   : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                  ? "#F77A0C"
+                  ? theme.palette.common.orange700
                   : "#388E3C"
               }
             >
@@ -202,7 +203,7 @@ function ApplicantPreviewItem() {
             type="submit"
             sx={{
               ":hover": {
-                backgroundColor: "#1565C0",
+                backgroundColor: theme.palette.common.blue800,
               },
               marginRight: "12px",
               fontSize: "14px",
@@ -213,7 +214,7 @@ function ApplicantPreviewItem() {
                 icon={"mdi:calendar-check"}
                 width={20}
                 height={20}
-                color="#fdfdfd"
+                color= {theme.palette.common.white}
                 mr={1}
               />
             }
@@ -228,7 +229,7 @@ function ApplicantPreviewItem() {
             mr={2}
             sx={{
               ":hover": {
-                backgroundColor: "#1565C0",
+                backgroundColor: theme.palette.common.blue800,
               },
               marginRight: "12px",
               fontSize: "14px",
@@ -239,7 +240,7 @@ function ApplicantPreviewItem() {
                 icon={"ph:user-focus-fill"}
                 width={20}
                 height={20}
-                color={isReview ? "fff" : "#8A94A5"}
+                color={isReview ? theme.palette.background.paper : theme.palette.common.neutral500}
                 mr={1}
               />
             }
@@ -277,7 +278,7 @@ function ApplicantPreviewItem() {
     width: "100%",
     boxShadow:
       "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-    backgroundColor: "#FDFDFD",
+    backgroundColor: theme.palette.common.white,
     padding: "8px 24px",
     position: "fixed",
     zIndex: 1,
@@ -454,21 +455,21 @@ function ApplicantPreviewItem() {
                           placeholder="Chọn tin tuyển dụng"
                           sx={{
                             fontSize: "14px",
-                            background: "#F3F4F6",
+                            background: theme.palette.common.neutral50,
                             fontWeight: 500,
                             "&.MuiOutlinedInput-root": {
                               minHeight: "36px",
                             },
                             "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#F3F4F6",
+                              borderColor: theme.palette.common.neutral50,
                               borderRadius: "6px",
                             },
                             "&:hover, &.Mui-focused": {
-                              background: "#E7E9ED",
+                              background: theme.palette.common.neutral100,
                             },
                             "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
                               {
-                                borderColor: "#E7E9ED",
+                                borderColor: theme.palette.common.neutral100,
                               },
                           }}
                         />
@@ -492,11 +493,11 @@ function ApplicantPreviewItem() {
                             tittle={"Chuyển bước"}
                             type="submit"
                             sx={{
-                              color: "#455570",
-                              backgroundColor: "#F3F4F6",
+                              color: theme.palette.common.neutral700,
+                              backgroundColor: theme.palette.common.neutral50,
                               boxShadow: "none",
                               ":hover": {
-                                backgroundColor: "#E7E9ED",
+                                backgroundColor: theme.palette.common.neutral100,
                               },
                               textTransform: "none",
                             }}
@@ -506,7 +507,7 @@ function ApplicantPreviewItem() {
                                 icon={"ci:transfer"}
                                 width={16}
                                 height={16}
-                                color="#455570"
+                                color={theme.palette.common.neutral700}
                                 mr={1}
                               />
                             }
@@ -536,7 +537,7 @@ function ApplicantPreviewItem() {
                           /> */}
                         </Grid>
                       </Grid>
-                      <Grid color="#455570" fontSize="13px">
+                      <Grid color={theme.palette.common.neutral700} fontSize="13px">
                         <div>{"Phụ trách"}</div>
                         <Grid sx={{ display: "flex", marginTop: "8px" }}>
                           {isSuccess ? (
@@ -554,7 +555,7 @@ function ApplicantPreviewItem() {
                             sx={{
                               fontSize: 14,
                               fontWeight: 600,
-                              color: "#172B4D",
+                              color: theme.palette.common.neutral800,
                             }}
                           >
                             {ownerName}

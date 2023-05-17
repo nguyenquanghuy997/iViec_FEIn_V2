@@ -40,7 +40,7 @@ const InputStyle = {
   marginBottom: 24,
 };
 const FormModal = ({ isOpen, onClose, item, title, showUploadFile }) => {
-  const theme = useTheme();
+
 
   const reactQuillContentRef = useRef(null);
   const reactQuillSignatureRef = useRef(null);
@@ -96,7 +96,7 @@ const FormModal = ({ isOpen, onClose, item, title, showUploadFile }) => {
   const handleClosePreviewEmail = () => {
     setIsOpenPreview(false);
   };
-
+  const theme = useTheme();
   const onSubmit = async (data) => {
     return data;
   };
@@ -124,7 +124,7 @@ const FormModal = ({ isOpen, onClose, item, title, showUploadFile }) => {
             <EmailFormHeadStyle className="email-form-head">
               <Typography
                 variant="body1"
-                sx={{ fontSize: "16px", fontWeight: 600, color: "#455570" }}
+                sx={{ fontSize: "16px", fontWeight: 600, color: theme.palette.common.neutral700 }}
               >
                 {title}
               </Typography>
@@ -174,7 +174,7 @@ const FormModal = ({ isOpen, onClose, item, title, showUploadFile }) => {
                     sx={{
                       fontSize: 13,
                       fontWeight: 400,
-                      color: "#5C6A82",
+                      color: theme.palette.common.borderObject,
                       mt: 2,
                     }}
                   >

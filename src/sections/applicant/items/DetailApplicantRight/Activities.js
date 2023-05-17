@@ -8,11 +8,13 @@ import List from "@mui/material/List";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { iconLogPipe } from "./config";
+import {useTheme} from "@mui/material/styles";
 
 export const Activities = ({ dataLog, dataApplicant }) => {
   const methods = useForm({
     defaultValues: { isActive: !false },
   });
+  const  theme = useTheme();
   const isActive = methods.watch("isActive");
   return (
     <Grid item sx={{ padding: "12px 0 0 0" }}>
@@ -121,7 +123,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                                 </span>
                                 {" đã "}
                                 <span
-                                  style={{ fontWeight: 600, color: "#E53935" }}
+                                  style={{ fontWeight: 600, color: theme.palette.common.red600 }}
                                 >
                                   {" Loại "}
                                 </span>
@@ -167,7 +169,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                                       p?.recruitmentPipelineStateType == 3 &&
                                       (p?.pipelineStateResultType == 0
                                         ? "#388E3C"
-                                        : "#F77A0C"),
+                                        : theme.palette.common.orange700),
                                   }}
                                 >
                                   {PipelineStateType(
@@ -238,7 +240,7 @@ export const Activities = ({ dataLog, dataApplicant }) => {
                                       p?.recruitmentPipelineStateType == 2 &&
                                       (p?.applicantReviewResultType == 0
                                         ? "#388E3C"
-                                        : p?.applicantReviewResultType == 1? "#F77A0C": "#E53935"),
+                                        : p?.applicantReviewResultType == 1? theme.palette.common.orange700: theme.palette.common.red600),
                                   }}
                                 >
                                   {PipelineStateType(

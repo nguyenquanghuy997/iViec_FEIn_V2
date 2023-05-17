@@ -24,15 +24,15 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       },
       '&.Mui-selected': {
         "&.Mui-expanded": {
-          backgroundColor: '#F2F4F5 !important',
+          backgroundColor: theme.palette.common.bgrMaster + '!important',
           borderLeft: '1px solid #d0d4db',
         },
         "&.Mui-focused": {
-          backgroundColor: '#F2F4F5 !important',
+          backgroundColor: theme.palette.common.bgrMaster + '!important',
           borderLeft: '1px solid #d0d4db',
         },
         "&:hover": {
-          backgroundColor: '#F2F4F5 !important',
+          backgroundColor: theme.palette.common.bgrMaster + '!important',
         }
       },
       "& .MuiTreeItem-label": {
@@ -46,7 +46,7 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
           width: 18,
           left: -8,
           top: 24,
-          borderBottom: `1px solid #D0D4DB`
+          borderBottom: `1px solid ` + theme.palette.common.neutral200
         },
       },
       "& .MuiTreeItem-iconContainer": {
@@ -62,7 +62,7 @@ const TreeItemStyle = styled(TreeItem)(({theme}) => ({
       "& .tree-label-title": {
         marginLeft: theme.spacing(2.5),
         fontSize: '14px',
-        color: '#455570',
+        color: theme.palette.common.neutral700,
         height: '20px',
         fontWeight: 600,
         display: 'inline-block',
@@ -120,7 +120,7 @@ const TreeViewStyle = styled(TreeView)(({theme}) => ({
         width: 1,
         left: 0,
         top: 0,
-        backgroundColor: '#D0D4DB'
+        backgroundColor: theme.palette.common.neutral200
       }
     },
 }));
@@ -130,7 +130,7 @@ const ButtonTreeStyle = styled(Button)(({theme}) => ({
       marginLeft: theme.spacing(1.5),
       backgroundColor: 'transparent',
       position: 'relative',
-      color: '#1976D2',
+      color: theme.palette.common.blue700,
       fontSize: '12px',
       fontWeight: 600,
       "&:hover": {

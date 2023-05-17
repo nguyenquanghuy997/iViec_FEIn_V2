@@ -15,6 +15,7 @@ import {useMemo} from "react";
 import ExamActiveModal from "@/sections/exam/modals/ExamActiveModal";
 import ExamFormModal from "@/sections/exam/modals/ExamFormModal";
 import ExamDeleteModal from "@/sections/exam/modals/ExamDeleteModal";
+import {useTheme} from "@mui/material/styles";
 
 const ExamBottumonNav = ({
                            selectedList,
@@ -32,7 +33,7 @@ const ExamBottumonNav = ({
     setSelectedList([]);
     setItemSelected([]);
   };
-
+  const theme = useTheme();
   const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB_POS), []);
 
@@ -111,7 +112,7 @@ const ExamBottumonNav = ({
 
                     <Typography
                       variant="body2"
-                      sx={{color: "#5C6A82", fontSize: 13}}
+                      sx={{color: theme.palette.common.borderObject, fontSize: 13}}
                     >
                       Không hoạt động
                     </Typography>
@@ -130,7 +131,7 @@ const ExamBottumonNav = ({
                   icon={"ri:edit-2-fill"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />
@@ -159,7 +160,7 @@ const ExamBottumonNav = ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{mx: 2, width: "2px", backgroundColor: "#E7E9ED"}}
+              sx={{mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100}}
             />
             <ButtonIcon
               sx={{
@@ -171,7 +172,7 @@ const ExamBottumonNav = ({
                   icon={"ic:baseline-close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />

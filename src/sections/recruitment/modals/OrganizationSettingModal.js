@@ -19,7 +19,7 @@ const DialogStyle = styled(Dialog)(({theme}) => ({
   "& .dialog-delete": {
     boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
     borderRadius: '6px',
-    backgroundColor: "#FDFDFD",
+    backgroundColor: theme.palette.common.white,
     padding: theme.spacing(3)
   },
   "& .MuiDialog-container": {
@@ -38,10 +38,10 @@ const TitleAlertStyle = styled(Typography)(({theme}) => ({
     width: '100%',
     fontSize: '16px',
     fontWeight: 600,
-    color: '#1976D2',
+    color: theme.palette.common.blue700,
     marginTop: theme.spacing(2),
     "&.title-inactive": {
-      color: '#455570 !important'
+      color: theme.palette.common.neutral700 +  ' !important'
     }
   }
 }))
@@ -60,29 +60,29 @@ const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
   }
 }))
 
-const ButtonCancelStyle = styled(Button)(() => ({
+const ButtonCancelStyle = styled(Button)(({theme}) => ({
   "&.button-cancel": {
     fontSize: 14,
     fontWeight: 600,
-    color: '#455570',
+    color: theme.palette.common.neutral700,
     backgroundColor: 'transparent',
     borderRadius: 6,
     "&:hover": {
-      color: '#455570',
+      color: theme.palette.common.neutral700,
       backgroundColor: 'transparent',
     }
   }
 }));
-const ButtonActiveStyle = styled(Button)(() => ({
+const ButtonActiveStyle = styled(Button)(({theme}) => ({
   "&.button-active": {
     fontSize: 14,
     fontWeight: 600,
-    color: '#FDFDFD',
-    backgroundColor: '#1976D2',
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.common.blue700,
     borderRadius: 6,
     "&:hover": {
-      color: '#FDFDFD',
-      backgroundColor: '#1976D2',
+      color: theme.palette.common.white,
+      backgroundColor: theme.palette.common.blue700,
     }
   }
 }));

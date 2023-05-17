@@ -3,18 +3,18 @@ import { Switch as MuiSwitch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { STYLE_CONSTANT } from "@/theme/palette";
 
-const SwitchItem = styled(MuiSwitch)(() => ({
+const SwitchItem = styled(MuiSwitch)(({theme}) => ({
   "& .MuiSwitch-track": {
-    backgroundColor: "#E7E9ED",
+    backgroundColor: theme.palette.common.neutral100,
     borderRadius: "10px",
   },
   "& .MuiSwitch-thumb": {
     boxShadow: "0px 3px 5px rgb(9 30 66 / 20%), 0px 0px 1px rgb(9 30 66 / 30%)",
-    background: "#F3F4F6",
+    background: theme.palette.common.neutral50
   },
   
   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#A5D6A7",
+    backgroundColor: theme.palette.common.green200,
   },
   "& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb": {
     backgroundColor: "#388E3C",

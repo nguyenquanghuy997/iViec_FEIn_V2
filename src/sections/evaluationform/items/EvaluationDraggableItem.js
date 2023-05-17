@@ -3,7 +3,8 @@ import Iconify from "@/components/Iconify";
 import { Label } from "@/components/hook-form/style";
 import { Tooltip } from "@mui/material";
 import { Stack } from "@mui/system";
-
+import {useTheme} from "@mui/material/styles";
+const  theme = useTheme();
 export const EvaluationDraggableItem = ({
   data,
   onPressEdit,
@@ -25,24 +26,24 @@ export const EvaluationDraggableItem = ({
         p={16}
         mb={16}
         borderradius={6}
-        bgcolor={"#F2F4F5"}
+        bgcolor={theme.palette.common.bgrMaster}
       >
         <View>
           <Iconify
             icon={"fluent:re-order-dots-vertical-16-filled"}
             width={20}
             height={20}
-            color="#A2AAB7"
+            color={theme.palette.common.neutral400}
           />
         </View>
 
-        <View flex="true" mh={12} color="#455570" width={"50%"}>
+        <View flex="true" mh={12} color={theme.palette.common.neutral700} width={"50%"}>
           <Label
             style={{
               fontSize: 13,
               fontWeight: 600,
               marginBottom: "2px",
-              color: "#455570",
+              color: theme.palette.common.neutral700,
             }}
             title={data?.name}
             required={data?.isRequired ? true : false}
@@ -56,7 +57,7 @@ export const EvaluationDraggableItem = ({
               textOverflow: "ellipsis",
               overflow: "hidden",
               fontSize: 12,
-              color: "#455570",
+              color: theme.palette.common.neutral700,
             }}
           >
             {data?.des}
@@ -70,7 +71,7 @@ export const EvaluationDraggableItem = ({
                 icon={"ri:edit-2-fill"}
                 width={20}
                 height={20}
-                color="#5C6A82"
+                color={theme.palette.common.borderObject}
               />
             </Stack>
           </Tooltip>
@@ -78,7 +79,7 @@ export const EvaluationDraggableItem = ({
             icon={"fluent:divider-short-16-filled"}
             width={20}
             height={20}
-            color="#A2AAB7"
+            color={theme.palette.common.neutral400}
           />
           <Tooltip title="Xóa">
             <Stack onClick={pressDelete} cursor="pointer">
@@ -86,7 +87,7 @@ export const EvaluationDraggableItem = ({
                 icon={"material-symbols:delete-outline-rounded"}
                 width={20}
                 height={20}
-                color="#5C6A82"
+                color={theme.palette.common.neutral600}
               />
             </Stack>
           </Tooltip>

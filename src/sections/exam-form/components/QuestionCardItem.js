@@ -19,17 +19,19 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
+const theme = useTheme();
 const questionInfoTitle = {
   fontSize: '14px',
   fontWeight: 600,
-  color: '#455570'
+  color: theme.palette.common.neutral700
 };
 
 const questionAnswer = {
   fontSize: '14px',
   fontWeight: 400,
-  color: '#455570',
+  color: theme.palette.common.neutral700,
   marginBottom: '12px'
 }
 
@@ -42,7 +44,7 @@ function QuestionCardItem({ index }) {
       <div style={{
         display: "inline-flex",
         fontSize: '14px',
-        color: "#455570",
+        color: theme.palette.common.neutral700,
         marginBottom: '12px',
         fontWeight: 400,
       }}>
@@ -90,7 +92,7 @@ function QuestionCardItem({ index }) {
                   icon={"ri:edit-2-fill"}
                   width={16}
                   height={16}
-                  color="#455570"
+                  color={theme.palette.common.neutral700}
                 />
               }
             />
@@ -101,7 +103,7 @@ function QuestionCardItem({ index }) {
                   icon={"material-symbols:delete-outline-rounded"}
                   width={14}
                   height={14}
-                  color="#455570"
+                  color={theme.palette.common.neutral700}
                 />
               }
             />
@@ -115,7 +117,7 @@ function QuestionCardItem({ index }) {
                   icon="material-symbols:keyboard-arrow-down-sharp"
                   width={14}
                   height={14}
-                  color="#455570"
+                  color={theme.palette.common.neutral700}
                 />
               }
             />
@@ -139,18 +141,18 @@ function QuestionCardItem({ index }) {
               icon={<CheckboxIconDefault />}
               checkedIcon={<CheckboxIconChecked />}
             />
-            <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={'#455570'} ml={2} >Câu hỏi 1
+            <Typography maxWidth={'25%'} fontSize={14} fontWeight={600} color={theme.palette.common.neutral700} ml={2} >Câu hỏi 1
 
             </Typography>
 
-            <Typography fontSize={14} ml={2} color={"#455570"} maxWidth={'75%'} component="span">
+            <Typography fontSize={14} ml={2} color={theme.palette.common.neutral700} maxWidth={'75%'} component="span">
               Trong các tỉnh tây nguyên, thành phố nào có nhiều đơn vị hành chính nhất ?
             </Typography>
           </CardFormItemTitleStyle>
         </BoxFlex>
       </AccordionSummary>
       <AccordionDetails sx={{ mt: "0px !important" }}>
-        <Divider sx={{ color: '#E7E9ED' }} />
+        <Divider sx={{ color: theme.palette.common.neutral100 }} />
         <View flexRow jcBetween style={{ margin: '24px' }}>
           <View>
             <Typography sx={questionInfoTitle}>Đáp án</Typography>
@@ -162,7 +164,7 @@ function QuestionCardItem({ index }) {
                   width={14}
                   height={14}
                   marginLeft={'12px'}
-                  color="#43A047"
+                  color={theme.palette.common.green600}
                 />
               </Typography>
               <Typography sx={questionAnswer}>{'B) Buôn ma thuột'}</Typography>

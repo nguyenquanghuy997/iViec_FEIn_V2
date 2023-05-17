@@ -3,9 +3,9 @@ import { API_UPLOAD_FILE_APPLICANTS } from "@/routes/api";
 import { Grid, Typography } from "@mui/material";
 import { Upload } from "antd";
 import React from "react";
+import {useTheme} from "@mui/material/styles";
 
 const { Dragger } = Upload;
-
 export default function UploadFileDragAndDrop({
   setFileList,
   maxFile,
@@ -17,7 +17,7 @@ export default function UploadFileDragAndDrop({
   autoUpload = true,
 }) {
   const token = "Bearer " + localStorage.getItem("accessToken");
-
+  const theme = useTheme();
   const props = {
     name: "file",
     action: DOMAIN_SERVER_API + url,
@@ -51,12 +51,12 @@ export default function UploadFileDragAndDrop({
       style={{ background: "white" }}
     >
       <Grid>
-        <Typography variant={"textSize14500"} color={"#1976D2"}>
+        <Typography variant={"textSize14500"} color={theme.palette.common.blue700}>
           Nhấn hoặc kéo thả để Tải lên và Scan CV
         </Typography>
       </Grid>
       <Grid>
-        <Typography variant={"textSize13"} color={"#5C6A82"}>
+        <Typography variant={"textSize13"} color={theme.palette.common.borderObject}>
           Tải lên file .pdf, .png, .jpg tối đa 15MB
         </Typography>
       </Grid>

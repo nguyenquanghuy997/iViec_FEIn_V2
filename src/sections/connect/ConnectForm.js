@@ -24,7 +24,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 // import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
-
+import {useTheme} from "@mui/material/styles";
+const theme = useTheme();
 const ActiveSwitch = styled(Switch)(() => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
     color: "#388E3C",
@@ -117,7 +118,7 @@ const ConnectForm = (props) => {
             component="h5"
             sx={{
               ml: 3,
-              color: "#172B4D",
+              color: theme.palette.common.neutral800,
               display: "flex",
               alignItems: "center",
             }}
@@ -194,7 +195,7 @@ const ConnectForm = (props) => {
             control={<ActiveSwitch defaultChecked />}
             label="Đang hoạt động"
           />
-          <Button onClick={onClose} sx={{ color: "#455570" }}>
+          <Button onClick={onClose} sx={{ color: theme.palette.common.neutral700 }}>
             Hủy
           </Button>
           <Button

@@ -2,8 +2,10 @@ import { View } from "../FlexStyled";
 import { LoadingButton } from "@mui/lab";
 import PropTypes from "prop-types";
 import { memo } from 'react'
+import {useTheme} from "@mui/material/styles";
 
 function ButtonDS(props) {
+  const theme = useTheme();
   const {
     size,
     isSubmitting,
@@ -20,8 +22,8 @@ function ButtonDS(props) {
     <View
       sx={{
         "&:hover": {
-          backgroundColor: "#E7E9ED !important",
-          color: "#000",
+          backgroundColor: theme.palette.common.neutral100 + " !important",
+          color: theme.palette.common.black,
         },
       }}
     >
@@ -35,13 +37,13 @@ function ButtonDS(props) {
         disabled={isDisabled}
         sx={{
           borderRadius: "6px",
-          backgroundColor: "#1976D2",
+          backgroundColor: theme.palette.common.blue700,
           fontWeight: 600,
           boxShadow: "unset",
           textTransform: "none",
           "&:disabled": {
-            backgroundColor: "#D0D4DB",
-            color: "#8A94A5",
+            backgroundColor: theme.palette.common.neutral200,
+            color: theme.palette.common.neutral500,
           },
           ...sx,
         }}

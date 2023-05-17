@@ -9,6 +9,7 @@ import { ButtonCancel, DialogModelStyle, ButtonIcon } from "@/utils/cssStyles";
 import Iconify from "@/components/Iconify";
 import { useSnackbar } from "notistack";
 import { useEffect } from "react";
+import {useTheme} from "@mui/material/styles";
 
 const QuestionTransferModal = ({ questionGroupId, data, getData, isShowTransferQuestionGroup, onCloseTransfer }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -17,7 +18,7 @@ const QuestionTransferModal = ({ questionGroupId, data, getData, isShowTransferQ
   const [selectedOption, setSelectedOption] = useState("");
 
   const [transferQuestion] = useTransferQuestionGroupMutation();
-
+  const theme = useTheme();
   const onChangeQuestionGroup = (e) => {
     setSelectedOption(e.target.value);
   }
@@ -73,7 +74,7 @@ const QuestionTransferModal = ({ questionGroupId, data, getData, isShowTransferQ
           padding: "22px 24px",
         }}
       >
-        <div style={{ color: "#172B4D", fontWeight: 600 }}>
+        <div style={{ color: theme.palette.common.neutral800, fontWeight: 600 }}>
           Chuyển nhóm câu hỏi
         </div>
         <div>
@@ -84,7 +85,7 @@ const QuestionTransferModal = ({ questionGroupId, data, getData, isShowTransferQ
                 width={20}
                 height={20}
                 icon="ic:baseline-close"
-                color="#455570"
+                color={theme.palette.common.neutral700}
               />
             }
           ></ButtonIcon>

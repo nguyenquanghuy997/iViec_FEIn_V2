@@ -39,10 +39,9 @@ export const RoleContainer = () => {
   const { canAccess } = useRole();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-
   const [open, setOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
-
+  const theme = useTheme();
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data = {}, isLoading } = useGetRoleGroupListQuery(query, { skip: !isReady });
 
@@ -142,7 +141,7 @@ export const RoleContainer = () => {
             }}
             name={record?.isDefault == true ? "iVIEC" : record?.creatorEmail}
           ></AvatarDS>
-          <span fontSize="14px" fontWeight="600" color="#172B4D">
+          <span fontSize="14px" fontWeight="600" color={theme.palette.common.neutral800}>
             {record?.isDefault == true ? "iVIEC" : record?.creatorEmail}
           </span>
         </div>
@@ -250,8 +249,8 @@ export const RoleContainer = () => {
     confirmModal({
       title: isChecked ? 'Bật trạng thái hoạt động cho vai trò' : 'Tắt trạng thái hoạt động cho vai trò',
       confirmType: 'info',
-      confirmIcon: isChecked ? <RiToggleFill size={55} color="#1976D2" />
-        : <RiToggleLine size={55} color="#455570" />,
+      confirmIcon: isChecked ? <RiToggleFill size={55} color={theme.palette.common.blue700} />
+        : <RiToggleLine size={55} color={theme.palette.common.neutral700} />,
       content: (
         <Typography variant="body2" color={palette.text.sub}>
           Bạn chắc chắn muốn { isChecked ? 'bật' : 'tắt' } {' '}
