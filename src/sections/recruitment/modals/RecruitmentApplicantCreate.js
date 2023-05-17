@@ -1,6 +1,7 @@
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
+import MuiDatePicker from "@/components/form/MuiDatePicker";
 import { RHFTextField } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import RHFMuiAutocomplete from "@/components/hook-form/RHFMuiAutocomplete";
@@ -26,6 +27,7 @@ import {
 import { setValueFieldScan } from "@/sections/recruitment/helper";
 import { ViewModel } from "@/utils/cssStyles";
 import {
+  LIST_CURRENCY_TYPE,
   LIST_EXPERIENCE_NUMBER,
   LIST_GENDER,
   LIST_MARITAL_STATUSES,
@@ -41,6 +43,7 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
+import moment from "moment/moment";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -78,6 +81,13 @@ const defaultValues = {
   livingAddress: {
     address: undefined,
   },
+  activitiesAndProjects: undefined,
+  careerObjective: undefined,
+  achievements: undefined,
+  currencyUnit: undefined,
+  expectedWorkingAddress: {
+    address: undefined,
+  },
 };
 
 export const RecruitmentApplicantCreate = ({
@@ -96,20 +106,20 @@ export const RecruitmentApplicantCreate = ({
   const [uploadFile] = useUploadFileApplicantMutation();
   const [uploadFileApplicantRecruitment] =
     useUploadFileApplicantRecruitmentMutation();
-  const { data: { items: listJobSources = [] } = {} } =
+  const {data: {items: listJobSources = []} = {}} =
     useGetAllJobSourcesQuery();
-  const { data: { items: listCategory = [] } = {} } =
+  const {data: {items: listCategory = []} = {}} =
     useGetJobCategoriesQuery();
-  let { data: preview = {} } = useGetApplicantByIdQuery(
-    { applicantId: data?.id },
-    { skip: !data?.id }
+  let {data: preview = {}} = useGetApplicantByIdQuery(
+    {applicantId: data?.id},
+    {skip: !data?.id}
   );
-  let { data: extendData = null } = useGetApplicantRecruitmentQuery(
+  let {data: extendData = null} = useGetApplicantRecruitmentQuery(
     {
       applicantId: data?.id,
       recruitmentId: data?.recruitmentId,
     },
-    { skip: !(data?.id && data?.recruitmentId) }
+    {skip: !(data?.id && data?.recruitmentId)}
   );
   const isLoading = isEditMode && !preview?.id && !extendData?.id;
   const [isUpload, setIsUpload] = useState(false);
@@ -120,38 +130,37 @@ export const RecruitmentApplicantCreate = ({
     recruitmentTitle: Yup.string().required("Chưa có dữ liệu tin tuyển dụng"),
     recruitmentPipelineStageId: Yup.string().nullable(),
     pipelineStateResultType: Yup.string().nullable(),
+    dateOfBirth: Yup.string().nullable().required("Chưa chọn ngày sinh"),
     jobCategoryIds: Yup.array().required("Chưa chọn ngành nghề"),
     jobSourceId: Yup.string().required("Chưa chọn nguồn"),
     fullName: Yup.string()
-      .max(50, "Họ tên không quá 50 ký tự")
-      .required("Chưa nhập họ tên"),
+    .max(50, "Họ tên không quá 50 ký tự")
+    .required("Chưa nhập họ tên"),
     portraitImage: Yup.string(),
-    email: Yup.string()
-      .email("Email cần nhập đúng định dạng")
-      .required("Chưa nhập email"),
+    email: Yup.string().email("Email cần nhập đúng định dạng"),
     phoneNumber: Yup.string()
-      .required("Chưa nhập số điện thoại")
-      .matches(phoneRegExp, "Số điện thoại không đúng định dạng"),
+    .required("Chưa nhập số điện thoại")
+    .matches(phoneRegExp, "Số điện thoại không đúng định dạng"),
     weight: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .nullable(),
     height: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .nullable(),
     cvFile: Yup.string().nullable(),
     cvFileName: Yup.string().nullable(),
     yearOfExperience: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .nullable(),
     experience: Yup.string(),
     identityNumber: Yup.string(),
     education: Yup.string(),
     sex: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .nullable(),
     maritalStatus: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable(),
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .nullable(),
     homeTower: Yup.object().shape({
       address: Yup.string(),
     }),
@@ -159,19 +168,29 @@ export const RecruitmentApplicantCreate = ({
       address: Yup.string(),
     }),
     rawApplicantSkills: Yup.string(),
+    expectedSalaryFrom: Yup.number(),
+    expectedSalaryTo: Yup.number(),
+    activitiesAndProjects: Yup.string(),
+    careerObjective: Yup.string(),
+    achievements: Yup.string(),
+    currencyUnit: Yup.number().transform((value) => (isNaN(value) ? undefined : value))
+    .nullable(),
+    expectedWorkingAddress: Yup.object().shape({
+      address: Yup.string(),
+    }),
   });
-
+  
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-
+  
   const {
     reset,
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methods;
   const pressHide = () => {
     reset();
@@ -186,11 +205,12 @@ export const RecruitmentApplicantCreate = ({
     }));
     setShow(false);
   };
-  const { enqueueSnackbar } = useSnackbar();
-
+  const {enqueueSnackbar} = useSnackbar();
+  
   const pressSave = handleSubmit(async (body) => {
     let pathFile = "";
     body.jobCategoryIds = body.jobCategoryIds?.map((item) => item?.value);
+    body.dateOfBirth = moment(body?.dateOfBirth).toISOString();
     if (isEditMode) {
       if (cv && cv.length > 0) {
         const file = new FormData();
@@ -198,54 +218,55 @@ export const RecruitmentApplicantCreate = ({
         file.append("ApplicantRecruitmentId", extendData.id);
         pathFile = await uploadFileApplicantRecruitment(file).unwrap();
       }
-      await updateForm({ ...body, cvFile: pathFile })
-        .unwrap()
-        .then(() => {
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
-          });
-          dispatch(
-            ApplicantFormSlice.util.invalidateTags([
-              { type: "GetListApplicantPipeline" },
-              { type: "GetListsApplicants" },
-            ])
-          );
-          pressHide();
-        })
-        .catch(() => {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
+      await updateForm({...body, cvFile: pathFile})
+      .unwrap()
+      .then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
         });
+        dispatch(
+          ApplicantFormSlice.util.invalidateTags([
+            {type: "GetListApplicantPipeline"},
+            {type: "GetListsApplicants"},
+          ])
+        );
+        pressHide();
+      })
+      .catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      });
     } else {
       if (cv && cv.length > 0) {
         const file = new FormData();
         file.append("File", cv[0].originFileObj);
         pathFile = await uploadFile(file).unwrap();
       }
-      await addForm({ ...body, cvFile: pathFile })
-        .unwrap()
-        .then(() => {
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
-          });
-          dispatch(
-            ApplicantFormSlice.util.invalidateTags([
-              { type: "APPLICANT", id: "LIST_APPLICANT_PIPELINE" },
-            ])
-          );
-          pressHide();
-        })
-        .catch(() => {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 2000,
-            variant: "error",
-          });
+      await addForm({...body, cvFile: pathFile})
+      .unwrap()
+      .then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
         });
+        dispatch(
+          ApplicantFormSlice.util.invalidateTags([
+            {type: "APPLICANT", id: "LIST_FILTER"},
+            {type: "APPLICANT", id: "LIST_APPLICANT_PIPELINE"},
+          ])
+        );
+        pressHide();
+      })
+      .catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 2000,
+          variant: "error",
+        });
+      });
     }
   });
-
+  
   // effect
   useEffect(() => {
     if (!show) return;
@@ -255,10 +276,11 @@ export const RecruitmentApplicantCreate = ({
     setValue("recruitmentPipelineStateId", data.stage);
     setValue("pipelineStateResultType", data.stageResult);
   }, [show]);
-
+  
   useEffect(() => {
     if (!preview?.id) return;
     setValue("fullName", preview.fullName ?? undefined);
+    setValue("dateOfBirth", preview.dateOfBirth ?? undefined);
     setValue(
       "portraitImage",
       preview.portraitImage?.includes("base64")
@@ -290,20 +312,33 @@ export const RecruitmentApplicantCreate = ({
       })) ?? undefined
     );
     setValue("jobSourceId", preview.jobSourceId ?? undefined);
+    setValue("expectedSalaryFrom", preview.expectedSalaryFrom ?? undefined);
+    setValue("expectedSalaryTo", preview.expectedSalaryTo ?? undefined);
+    setValue(
+      "activitiesAndProjects",
+      preview.activitiesAndProjects ?? undefined
+    );
+    setValue("careerObjective", preview.careerObjective ?? undefined);
+    setValue("achievements", preview.achievements ?? undefined);
+    setValue("currencyUnit", preview.currencyUnit ?? undefined);
+    setValue(
+      "expectedWorkingAddress.address",
+      preview.expectedWorkingAddress?.address ?? undefined
+    );
   }, [preview]);
-
+  
   useEffect(() => {
     if (!extendData?.id) return;
     setValue("cvFile", extendData?.applicantCvPath);
     setValue("cvFileName", extendData?.applicantCvPath);
   }, [extendData]);
-
+  
   useEffect(() => {
     if (avatar && avatar.length > 0) {
       setValue("portraitImage", getFileUrl(avatar[0].response));
     }
   }, [avatar]);
-
+  
   useEffect(() => {
     if (cv && cv.length > 0) {
       setIsEdit(false);
@@ -315,13 +350,13 @@ export const RecruitmentApplicantCreate = ({
       }
     }
   }, [cv]);
-
+  
   return (
     <FormProvider {...methods}>
       <Modal
         open={show}
         onClose={pressHide}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
+        sx={{display: "flex", justifyContent: "flex-end"}}
       >
         <ViewModel
           sx={{
@@ -365,7 +400,7 @@ export const RecruitmentApplicantCreate = ({
                 }
               />
             </View>
-            <Divider />
+            <Divider/>
           </View>
           {/* body */}
           <View
@@ -377,7 +412,7 @@ export const RecruitmentApplicantCreate = ({
           >
             {isLoading ? (
               <View flex="true" contentcenter="true">
-                <CircularProgress />
+                <CircularProgress/>
               </View>
             ) : (
               <Grid
@@ -389,7 +424,7 @@ export const RecruitmentApplicantCreate = ({
               >
                 <Grid
                   container
-                  sx={{ width: "600px", overflowY: "auto" }}
+                  sx={{width: "600px", overflowY: "auto"}}
                   height={"100%"}
                   flexWrap={"nowrap"}
                   flexDirection={"column"}
@@ -433,7 +468,7 @@ export const RecruitmentApplicantCreate = ({
                       <Grid container alignItems={"center"}>
                         <Grid item mr={3}>
                           <Avatar
-                            sx={{ width: 120, height: 120 }}
+                            sx={{width: 120, height: 120}}
                             src={watch("portraitImage")}
                           />
                         </Grid>
@@ -447,12 +482,25 @@ export const RecruitmentApplicantCreate = ({
                         />
                       </Grid>
                     </Grid>
-                    <Grid mb={3}>
-                      <Label required={true}>{"Họ và tên"}</Label>
-                      <RHFTextField
-                        name={"fullName"}
-                        placeholder="Nhập họ và tên ứng viên"
-                      />
+                    <Grid container flexDirection={"row"} mb={3}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <Label required={true}>{"Họ và tên"}</Label>
+                        <RHFTextField
+                          name={"fullName"}
+                          placeholder="Nhập họ và tên ứng viên"
+                        />
+                      </Grid>
+                      <Grid item xs={6} pl={"12px"}>
+                        <Label required={true}>{"Ngày sinh"}</Label>
+                        <MuiDatePicker
+                          name="dateOfBirth"
+                          placeholder="Chọn ngày"
+                          DatePickerProps={{
+                            maxDate: new Date(),
+                          }}
+                          sx
+                        />
+                      </Grid>
                     </Grid>
                     <Grid mb={3} container flexDirection={"row"}>
                       <Grid item xs={6} pr={"12px"}>
@@ -466,7 +514,6 @@ export const RecruitmentApplicantCreate = ({
                       <Grid item xs={6} pl={"12px"}>
                         <RHFTextField
                           title={"Email"}
-                          isRequired={true}
                           name={"email"}
                           placeholder="Nhập email ứng viên"
                         />
@@ -504,7 +551,7 @@ export const RecruitmentApplicantCreate = ({
                   </Grid>
                   <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
                     <Typography variant={"subtitle2"} color={"#5C6A82"}>
-                      KINH NGHIỆM LÀM VIỆC VÀ HỌC VẤN
+                      KINH NGHIỆM LÀM VIỆC
                     </Typography>
                   </Grid>
                   <Grid item p={3}>
@@ -531,10 +578,80 @@ export const RecruitmentApplicantCreate = ({
                       />
                     </Grid>
                     <Grid mb={3}>
+                      <Label>Dự án và hoạt động</Label>
+                      <TextAreaDS
+                        name={"activitiesAndProjects"}
+                        placeholder="VD: Thời gian - Tên dự án - Vị trí trong dự án - Mô tả cụ thể..."
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
+                    <Typography variant={"subtitle2"} color={"#5C6A82"}>
+                      HỌC VẤN VÀ CHỨNG CHỈ
+                    </Typography>
+                  </Grid>
+                  <Grid item p={3}>
+                    <Grid mb={3}>
                       <Label>Học vấn</Label>
                       <TextAreaDS
                         name={"education"}
                         placeholder="VD: Thời gian - Trình độ - Nơi đào tạo - Chuyên ngành..."
+                      />
+                    </Grid>
+                    <Grid mb={3}>
+                      <Label>Chứng chỉ</Label>
+                      <TextAreaDS
+                        name={"achievements"}
+                        placeholder="VD: Thời gian - Tên chứng chỉ - Nơi đào tạo - Mô tả cụ thể..."
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item py={"12px"} px={3} bgcolor={"#F2F4F5"}>
+                    <Typography variant={"subtitle2"} color={"#5C6A82"}>
+                      KỲ VỌNG Ở CÔNG VIỆC MỚI
+                    </Typography>
+                  </Grid>
+                  <Grid item p={3}>
+                    <Grid mb={3} container flexDirection={"row"}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <RHFDropdown
+                          title={"Loại tiền tệ"}
+                          options={LIST_CURRENCY_TYPE}
+                          name={"currencyUnit"}
+                          placeholder="Chọn loại tiền tệ"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid mb={3} container flexDirection={"row"}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <RHFTextField
+                          title={"Mức lương mong muốn tối thiểu"}
+                          name={"expectedSalaryFrom"}
+                          type={"number"}
+                          placeholder="Nhập số tiền"
+                        />
+                      </Grid>
+                      <Grid item xs={6} pl={"12px"}>
+                        <RHFTextField
+                          title={"Mức lương mong muốn tối đa"}
+                          name={"expectedSalaryTo"}
+                          type={"number"}
+                          placeholder="Nhập số tiền"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid mb={3}>
+                      <Label>Nơi làm việc mong muốn</Label>
+                      <TextAreaDS
+                        name={"expectedWorkingAddress.address"}
+                        placeholder="VD: Quận Huyện, Tỉnh/Thành..."
+                      />
+                    </Grid>
+                    <Grid mb={3}>
+                      <Label>Mục tiêu nghề nghiệp</Label>
+                      <TextAreaDS
+                        name={"careerObjective"}
+                        placeholder="Nhập mục tiêu nghề nghiệp của ứng viên"
                       />
                     </Grid>
                   </Grid>
@@ -630,7 +747,7 @@ export const RecruitmentApplicantCreate = ({
                 </Grid>
                 {(isUpload || watch("cvFile")) && (
                   <>
-                    <Divider orientation={"vertical"} />
+                    <Divider orientation={"vertical"}/>
                     <Grid
                       sx={{
                         minWidth: "750px",
@@ -641,15 +758,15 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        <div style={{ width: "100%", height: "100%" }}>
+                        <div style={{width: "100%", height: "100%"}}>
                           <iframe
                             src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
-                            style={{ width: "100%", height: "100%" }}
+                            style={{width: "100%", height: "100%"}}
                           ></iframe>
                         </div>
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
-                          <CircularProgress />
+                          <CircularProgress/>
                         </View>
                       )}
                     </Grid>

@@ -1,6 +1,6 @@
 import { DOMAIN_SERVER_API } from "@/config";
-import { useUploadImageCompanyMutation } from "@/sections/companyinfor/companyInforSlice";
 import { cropImage } from "@/sections/companyinfor/cropUtils";
+import { useUploadImageOfferMutation } from "@/sections/offer-form/OfferFormSlice";
 import {
   Box,
   Button,
@@ -17,20 +17,17 @@ import Cropper from "react-easy-crop";
 import { Controller, useFormContext } from "react-hook-form";
 import ImageUploading from "react-images-uploading";
 
-export default function CropImage({ id, logo, handleSubmit }) {
+export default function CropImage({ logo, handleSubmit }) {
   const [image, setImage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
-
   const { control } = useFormContext();
-  const [uploadImage] = useUploadImageCompanyMutation();
-
+  const [uploadImage] = useUploadImageOfferMutation();
   const onSubmitImage = async () => {
     try {
-      const res = await uploadImage({
-        File: croppedImage.file,
-        OrganizationId: id,
-      }).unwrap();
+      const file = new FormData();
+      file.append("Files", new File([croppedImage.file], image[0].file.name));
+      const res = await uploadImage(file).unwrap();
       handleSubmit?.(res);
     } catch (error) {
       //
@@ -38,9 +35,9 @@ export default function CropImage({ id, logo, handleSubmit }) {
   };
 
   useEffect(() => {
-    if (!id || !croppedImage) return;
+    if (!croppedImage) return;
     onSubmitImage();
-  }, [id, croppedImage]);
+  }, [croppedImage]);
 
   const ImageCropper = ({
     open,
@@ -236,6 +233,7 @@ export default function CropImage({ id, logo, handleSubmit }) {
     <div className="cropImage">
       {croppedImage?.url ? (
         <img
+          alt=""
           src={croppedImage.url}
           style={{
             width: 140,
@@ -243,7 +241,6 @@ export default function CropImage({ id, logo, handleSubmit }) {
             maxWidth: 140,
             borderRadius: 0,
             cursor: "pointer",
-            border: "1px solid #000",
           }}
           onClick={() => setDialogOpen(true)}
         />
@@ -257,6 +254,7 @@ export default function CropImage({ id, logo, handleSubmit }) {
           {({ onImageUpload }) => {
             return (
               <img
+                alt=""
                 src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${logo}`}
                 style={{
                   width: 140,
@@ -264,9 +262,12 @@ export default function CropImage({ id, logo, handleSubmit }) {
                   maxWidth: 140,
                   borderRadius: 0,
                   cursor: "pointer",
-                  border: "1px solid #000",
                 }}
                 onClick={onImageUpload}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = "/assets/ImageDefaultAdd.svg";
+                }}
               />
             );
           }}
@@ -275,8 +276,8 @@ export default function CropImage({ id, logo, handleSubmit }) {
       <ImageCropper
         open={dialogOpen}
         image={(image.length > 0 && image[0].dataURL) || image}
-        onComplete={(imagePromisse) => {
-          imagePromisse.then((image) => {
+        onComplete={(imagePromise) => {
+          imagePromise.then((image) => {
             setCroppedImage(image);
             setDialogOpen(false);
           });

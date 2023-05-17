@@ -21,7 +21,7 @@ import PropTypes from "prop-types";
 //   outline: "none",
 //   padding: theme.spacing(5, 1),
 //   borderRadius: theme.shape.borderRadius,
-//   backgroundColor: theme.palette.background.neutral,
+//   backgroundColor: theme.palette.background.greyDetail,
 //   border: `1px dashed ${theme.palette.grey[500_32]}`,
 //   justifyContent: "center",
 //   alignItems: "center",

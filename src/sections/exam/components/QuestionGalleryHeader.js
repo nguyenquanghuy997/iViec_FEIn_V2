@@ -11,17 +11,18 @@ export default ({
   onSubmit,
   handleSubmit,
   pressAddQuestionGallery,
+  handlerCreateQuestion
 }) => {
   // const [showDialogStage, setShowDialogStage] = useState(false);
   const [openGroup, setOpenGroup] = useState(false);
-  
+
   const handleCloseGroup = () => {
     setOpenGroup(false);
   };
   const handleOpenGroup = () => {
     setOpenGroup(true);
   };
-  
+
   return (
     <>
       <Box
@@ -94,7 +95,7 @@ export default ({
                 borderRadius: '6px 0px 0px 6px',
                 textTransform: 'none'
               }}
-              // onClick={() => setShowDialogStage(true)}
+              onClick={handlerCreateQuestion}
             >
               <Iconify
                 icon={"material-symbols:add"}
@@ -115,7 +116,7 @@ export default ({
               open={openGroup}
               title={
                 <ClickAwayListener
-                onClickAway={handleCloseGroup}
+                  onClickAway={handleCloseGroup}
                 >
                   <MenuList
                     autoFocusItem

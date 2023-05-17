@@ -18,8 +18,8 @@ import { Button } from '@/components/DesignSystem';
 import FilterModal from './FilterModal';
 
 import { HeaderStyle } from './styles';
-import {isEmpty} from "lodash";
-import {AddIcon} from "@/assets/ActionIcon";
+import { isEmpty } from "lodash";
+import { AddIcon } from "@/assets/ActionIcon";
 
 export default function TableHeader({
   columns = [],
@@ -33,29 +33,29 @@ export default function TableHeader({
   contentProps,
   inputProps, actions,
 }) {
-  const { query = {} } = useRouter();
-  const { palette } = useTheme();
+  const {query = {}} = useRouter();
+  const {palette} = useTheme();
   const [openFilter, setOpenFilter] = useState(false);
   const _timeoutSearch = useRef();
   const _filterBtn = useRef();
   const buttonHeight = isInside ? 36 : 44;
-
+  
   const onSubmit = (value, timeout = 0) => {
     clearTimeout(_timeoutSearch.current);
     _timeoutSearch.current = setTimeout(() => {
-      onSubmitFilter({ SearchKey: value, PageIndex: 1, PageSize: 10 });
+      onSubmitFilter({SearchKey: value, PageIndex: 1, PageSize: 10});
     }, timeout);
   }
-
+  
   const countFilter = () => {
     /* eslint-disable */
-    let { PageSize, PageIndex, SearchKey, ...restQuery } = query;
+    let {PageSize, PageIndex, SearchKey, ...restQuery} = query;
     /* eslint-enable */
     return Object.keys(restQuery).length;
   }
-
+  
   if (display === "none") return null;
-
+  
   return (
     <HeaderStyle className={isInside ? 'inside' : ''} {...headerProps}>
       <Content className="table-header-container" {...contentProps}>
@@ -66,7 +66,7 @@ export default function TableHeader({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>
-                      <RiSearch2Line size={16} color={palette.text.secondary} />
+                      <RiSearch2Line size={16} color={palette.text.secondary}/>
                     </InputAdornment>
                   )
                 }}
@@ -83,30 +83,30 @@ export default function TableHeader({
                 }}
                 {...inputProps}
               />
-
+              
               {!isEmpty(columns) && (
-                  <Badge badgeContent={countFilter()} color="secondary">
-                    <Button
-                        onRef={ref => _filterBtn.current = ref}
-                        variant="contained"
-                        color="default"
-                        startIcon={<RiFilterLine size={18} color={palette.text.sub} />}
-                        onClick={() => {
-                          setOpenFilter(true);
-                        }}
-                        height={buttonHeight}
-                    >
-                      Bộ lọc
-                    </Button>
-                  </Badge>
+                <Badge badgeContent={countFilter()} color="secondary">
+                  <Button
+                    onRef={ref => _filterBtn.current = ref}
+                    variant="contained"
+                    color="default"
+                    startIcon={<RiFilterLine size={18} color={palette.text.sub}/>}
+                    onClick={() => {
+                      setOpenFilter(true);
+                    }}
+                    height={buttonHeight}
+                  >
+                    Bộ lọc
+                  </Button>
+                </Badge>
               )}
             </Stack>
           </Box>
-
+          
           {createText && (
             <Box mr={1}>
               <Button
-                startIcon={<AddIcon />}
+                startIcon={<AddIcon/>}
                 onClick={onClickCreate}
                 variant="contained"
                 color="primary"
@@ -119,7 +119,7 @@ export default function TableHeader({
           {actions && <>{actions}</>}
         </Box>
       </Content>
-
+      
       <FilterModal
         open={openFilter}
         onClose={() => {

@@ -1,17 +1,18 @@
 import { DOMAIN_SERVER_API } from "@/config";
 import {
-  API_GET_JOB_CATEGORIES,
+  API_ADD_ORGANIZATION_BUSINESS,
   API_GET_COMPANY_INFOR,
-  API_GET_PROVINCE,
-  API_GET_DISTRICT,
   API_GET_COMPANY_INFOR_BY_IDS,
+  API_GET_DISTRICT,
+  API_GET_JOB_CATEGORIES,
+  API_GET_PROVINCE,
   API_UPDATE_COMPANY_INFOR,
-  API_UPLOAD_IMAGE,
-  API_UPDATE_ORGANIZATION_HUMAN,
   API_UPDATE_ORGANIZATION_BUSINESS,
-  API_UPDATE_ORGANIZATION_PIPELINE,
   API_UPDATE_ORGANIZATION_ENDING,
-  API_ADD_ORGANIZATION_BUSINESS, API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT,
+  API_UPDATE_ORGANIZATION_HUMAN,
+  API_UPDATE_ORGANIZATION_PIPELINE,
+  API_UPDATE_ORGANIZATION_WORKING_ENVIRONMENT,
+  API_UPLOAD_IMAGE,
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -151,6 +152,7 @@ export const companyServiceApi = createApi({
 
 export const {
   useGetCompanyInfoQuery,
+  useLazyGetCompanyInfoQuery,
   useGetJobCategoriesQuery,
   useGetProvinceQuery,
   useGetDistrictByProvinceIdQuery,
@@ -161,5 +163,5 @@ export const {
   useUpdateCompanyPipelineMutation,
   useUpdateCompanyEndingMutation,
   useUpdateCompanyEnvironmentMutation,
-  useAddOrganizationBusinessMutation
+  useAddOrganizationBusinessMutation,
 } = companyServiceApi;

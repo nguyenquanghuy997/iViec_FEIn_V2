@@ -8,7 +8,7 @@ export default function ToggleButton(theme) {
         borderColor: alpha(theme.palette[color].main, 0.48),
         backgroundColor: alpha(
           theme.palette[color].main,
-          theme.palette.action.hoverOpacity
+          0.08
         ),
       },
       '&.Mui-selected': {

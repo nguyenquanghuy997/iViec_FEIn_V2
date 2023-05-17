@@ -65,7 +65,7 @@ const MuiDatePicker = forwardRef((props, ref) => {
               }}
               renderInput={(params) => (
                 <MuiTextField
-                  sx={{ mb: 2 }}
+                  sx={{ background: "#fff", }}
                   {...params}
                   ref={ref}
                   inputProps={{
@@ -80,7 +80,7 @@ const MuiDatePicker = forwardRef((props, ref) => {
           </LocalizationProvider>
           {error && (
             <FormHelperText
-              sx={{ color: "#FF4842", fontSize: 12, fontWeight: 400, mt: 0 }}
+              sx={{ color: "#FF4842", fontSize: 12, fontWeight: 400, mt: 1 }}
             >
               {error?.message}
             </FormHelperText>

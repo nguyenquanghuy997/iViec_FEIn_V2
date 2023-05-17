@@ -98,3 +98,20 @@ export const toRequestFilterData = (data = {}, removeEmpty = true) => {
   }
   return reqData;
 }
+
+export const findIndex = (needle, haystack) => {
+  let results = [];
+  let idx = haystack.indexOf(needle);
+  while (idx != -1) {
+    results.push(idx);
+    idx = haystack.indexOf(needle, idx + 1);
+  }
+  return results;
+}
+
+export const replaceValueOffer = (data, objectReplace) => {
+  data = data.replace('<span class="tag">T&ecirc;n ứng vi&ecirc;n</span>', '<b>' + objectReplace.applicantName + '</b>');
+  data = data.replace('<span class="tag">T&ecirc;n ứng vi&ecirc;n</span>', '<b>' + objectReplace.applicantName + '</b>');
+  return data;
+}
+

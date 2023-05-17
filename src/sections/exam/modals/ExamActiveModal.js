@@ -63,14 +63,14 @@ const ExamActiveModal = ({
                 style={{ margin: "0 auto" }}
               />
               <TitleModelStyle className="title" style={{ color: "#1976D2" }}>
-                Bật trạng thái hoạt động cho vị trí công việc
+                Bật trạng thái hoạt động cho đề thi
               </TitleModelStyle>
               <DialogContentTextModelStyle
                 id="alert-dialog-description"
                 className="subtite"
                 style={{ fontWeight: 400 }}
               >
-                Bạn có chắc chắn muốn bật hoạt động cho vị trí công việc ?
+                Bạn có chắc chắn muốn bật hoạt động cho đề thi?
               </DialogContentTextModelStyle>
               <Divider />
             </>
@@ -82,14 +82,14 @@ const ExamActiveModal = ({
                 style={{ margin: "0 auto" }}
               />
               <TitleModelStyle className="title" style={{ color: "#455570" }}>
-                Tắt trạng thái hoạt động cho vị trí công việc
+                Tắt trạng thái hoạt động cho đề thi
               </TitleModelStyle>
               <DialogContentTextModelStyle
                 id="alert-dialog-description"
                 className="subtite"
                 style={{ fontWeight: 400 }}
               >
-                Bạn có chắc chắn muốn tắt hoạt động cho vị trí công việc ?
+                Bạn có chắc chắn muốn tắt hoạt động cho đề thi?
               </DialogContentTextModelStyle>
               <Divider />
             </>

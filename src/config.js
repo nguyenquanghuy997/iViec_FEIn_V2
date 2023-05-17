@@ -219,6 +219,8 @@ export const TBL_FILTER_TYPE = {
   RANGE_NUMBER: 'range_number',
   CHECKBOX: 'checkbox',
   RADIO: 'radio',
+  RANGE_POINT: 'range_point',
+  RANGE_QUESTION: 'range_question'
 };
 
 export const RECRUITMENT_CREATE_TYPE = {

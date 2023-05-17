@@ -13,9 +13,10 @@ import {
   API_GET_APPLICANT_RECRUITMENT,
   API_UPLOAD_FILE_APPLICANTS,
   API_UPLOAD_FILE_APPLICANT_RECRUITMENT,
-  API_UPDATE_RECRUITMENT,
+  API_UPDATE_RECRUITMENT, API_GET_JOB_CATEGORIES_INTERNAL,
 } from "@/routes/api";
 import { toRequestFilterData } from "@/utils/helper";
+import * as qs from "qs";
 
 const apiWithTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["RECRUITMENT", "GetColumn"],
@@ -121,6 +122,12 @@ export const RecruitmentSlice = apiWithTag.injectEndpoints({
       }),
       providesTags: ["GetColumn"],
     }),
+    getListJobCategoriesInternal: builder.query({
+      query: (data) => ({
+        url: `${API_GET_JOB_CATEGORIES_INTERNAL}?${qs.stringify(data)}`,
+        method: "GET",
+      }),
+    }),
     updateListRecruitmentColumns: builder.mutation({
       query: (data) => {
         const { id, ...restData } = data;
@@ -162,6 +169,7 @@ export const {
   useGetRecruitmentBySlugQuery,
   useCreateApplicantRecruitmentMutation,
   useGetRecruitmentsQuery,
+  useGetListJobCategoriesInternalQuery,
   useCreateRecruitmentMutation,
   useUpdateRecruitmentDraftMutation,
   useCloseRecruitmentMutation,

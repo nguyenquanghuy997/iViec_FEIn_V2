@@ -67,12 +67,16 @@ export const Status = (item) => {
   }
 };
 //Địa chỉ
-export const Address = (item) =>
-  `${item?.address ? item?.address + "," : ""} ${
-    item?.villageName ? item?.villageName + "," : ""
-  }  ${item?.districtName ? item?.districtName + "," : ""} ${
-    item?.provinceName ? item?.provinceName : ""
-  }`;
+export const Address = (item) => {
+  return [
+    item?.address,
+    item?.villageName,
+    item?.districtName,
+    item?.provinceName,
+  ]
+    .filter((i) => i)
+    .join(", ");
+};
 //Đơn vị tiền tệ
 export const Currency = (item) => {
   switch (item) {
@@ -194,5 +198,14 @@ export const OrganizationSize = (item) => {
       return "Trên 10000 nhân sự";
     default:
       return "Khác";
+  }
+};
+
+export const ExamType = (item) => {
+  switch (item) {
+    case 0:
+      return "Đề thi câu hỏi cố định";
+    case 1:
+      return "Đề thi câu hỏi trắc nghiệm";
   }
 };

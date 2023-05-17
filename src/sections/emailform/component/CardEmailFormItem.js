@@ -10,21 +10,28 @@ import {
   CardFormItemStyle,
   CardFormItemTitleStyle,
 } from "@/sections/emailform/style";
+import { useLazyGetPreviewOfferTemplateQuery } from "@/sections/offer-form/OfferFormSlice";
+import { renderFileUploadItem } from "@/sections/offer-form/component/OfferFormModal";
 import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
-import { ButtonIcon, TextElipsis } from "@/utils/cssStyles";
+import { ButtonIcon } from "@/utils/cssStyles";
+import { getFileUrl } from "@/utils/helper";
 import {
   AccordionDetails,
   AccordionSummary,
   Box,
   Checkbox,
+  CircularProgress,
   Divider,
   IconButton,
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { Image } from "antd";
+import moment from "moment/moment";
 import React from "react";
 
 const CardEmailFormItem = ({
@@ -38,15 +45,34 @@ const CardEmailFormItem = ({
   onOpenConfirmDelete,
   onOpenActiveModal,
   onOpenFormModal,
-  canEdit
+  canEdit,
+  data,
 }) => {
+  // theme
+  const theme = useTheme();
+
+  // api
+  const [getPreviewOffer, { data: Data }] = data
+    ? [() => {}, { data }]
+    : useLazyGetPreviewOfferTemplateQuery();
+
+  // handle
+  const handleExpandCallDataExtend = async () => {
+    if (!Data) {
+      await getPreviewOffer({ id: item.id }).unwrap();
+    }
+    onChangeExpand();
+  };
 
   return (
-    <CardFormItemStyle className="card-item" expanded={expanded}>
+    <CardFormItemStyle
+      className="card-item"
+      expanded={expanded}
+      onChange={handleExpandCallDataExtend}
+    >
       <AccordionSummary
         expandIcon={
           <ButtonIcon
-            onClick={onChangeExpand}
             icon={
               <Iconify
                 icon="material-symbols:keyboard-arrow-down-sharp"
@@ -71,16 +97,16 @@ const CardEmailFormItem = ({
                 checkedIcon={<CheckboxIconChecked />}
               />
             )}
-            {item.title}
+            {item.name}
             <Typography className="card-item-subtitle" component="span">
-              {item.subtitle}
+              (Đã gửi 0)
             </Typography>
           </CardFormItemTitleStyle>
           {item.isActive && (
             <Typography
               sx={{ color: "#388E3C", fontSize: 12, fontWeight: 500, mr: 6 }}
             >
-              Đang áp dụng
+              Đang hoạt động
             </Typography>
           )}
         </BoxFlex>
@@ -93,23 +119,23 @@ const CardEmailFormItem = ({
                 borderRadius: "100px",
                 fontSize: "8px",
               }}
-              name={item.user}
+              name={item.creatorName}
             />
             <CardFormItemContentStyle className="card-item-content-text">
-              {item.user}
+              {item.creatorName}
               <Typography
                 component="span"
                 className="card-item-content-subtext"
               >
-                đã tạo ngày {item.createdDate}
+                đã tạo ngày {moment(item.createdTime).format("DD/MM/YYYY")}
               </Typography>
             </CardFormItemContentStyle>
           </BoxFlex>
           <BoxFlex>
-            {
-              canEdit && <>
+            {canEdit && (
+              <>
                 <ButtonIcon
-                  onClick={() => onOpenActiveModal("status")}
+                  onClick={() => onOpenActiveModal(item)}
                   sx={{
                     backgroundColor: "unset !important",
                     cursor: "pointer",
@@ -127,9 +153,10 @@ const CardEmailFormItem = ({
                 <Tooltip title="Sửa">
                   <IconButton
                     style={{
-                      margin: '0 8px'
+                      margin: "0 8px",
                     }}
-                    onClick={onOpenFormModal}>
+                    onClick={() => onOpenFormModal(item)}
+                  >
                     <Iconify
                       icon={"ri:edit-2-fill"}
                       width={16}
@@ -140,9 +167,7 @@ const CardEmailFormItem = ({
                 </Tooltip>
 
                 <Tooltip title="Xóa">
-                  <IconButton
-                    onClick={onOpenConfirmDelete}
-                  >
+                  <IconButton onClick={() => onOpenConfirmDelete(item)}>
                     <Iconify
                       icon={"material-symbols:delete-outline-rounded"}
                       width={16}
@@ -152,31 +177,78 @@ const CardEmailFormItem = ({
                   </IconButton>
                 </Tooltip>
               </>
-            }
+            )}
           </BoxFlex>
         </BoxFlex>
       </AccordionSummary>
-      <AccordionDetails sx={{ mt: '12px !important' }}>
-        <Divider />
-        <Typography fontWeight={600} fontSize={14} color={'#172B4D'} mt={2.5}>Tiêu chí đánh giá</Typography>
-        <BoxFlex>
-          {item?.reviewFormCriterias?.map((p) => {
-            return (
-              <Box
-                sx={{
-                  background: "#F2F4F5",
-                  borderRadius: "6px",
-                  width: "49%",
-                  padding: "16px 24px",
-                  marginTop: 2
-                }}
-              >
-                <TextElipsis fontWeight={600} fontSize={13} marginBottom={0.5} title={p?.name}>{p?.name}</TextElipsis>
-                <TextElipsis fontWeight={400} fontSize={13} title={p?.description}>{p?.description}</TextElipsis>
+      <AccordionDetails sx={{ mt: "12px !important" }}>
+        {!Data ? (
+          <Box my={3} textAlign={"center"}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <Divider />
+            <Box sx={{ m: 3 }}>
+              {!!Data.title && (
+                <>
+                  <Box sx={{ mb: "12px" }}>
+                    <Typography
+                      variant={"subtitle1"}
+                      sx={theme.palette.text.primary}
+                    >
+                      Tiêu đề email
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mb: "36px" }}>
+                    <Typography
+                      variant={"body2"}
+                      color={theme.palette.text.sub}
+                    >
+                      {Data.title}
+                    </Typography>
+                  </Box>
+                </>
+              )}
+              <Box sx={{ mb: "12px" }}>
+                <Typography
+                  variant={"subtitle1"}
+                  sx={theme.palette.text.primary}
+                >
+                  Nội dung email
+                </Typography>
               </Box>
-            );
-          })}
-        </BoxFlex>
+              <Box display={"flex"} sx={{ overflowX: "auto", my: "12px" }}>
+                {Data.templateAttachFiles?.map((file, index) =>
+                  renderFileUploadItem(file, index, undefined, true)
+                )}
+              </Box>
+              <Box sx={{ mb: "36px" }}>
+                <div dangerouslySetInnerHTML={{ __html: Data.content }} />
+              </Box>
+              <Box sx={{ mb: "12px" }}>
+                <Typography
+                  variant={"subtitle1"}
+                  sx={theme.palette.text.primary}
+                >
+                  Chữ ký email
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", mt: 3 }}>
+                <Image
+                  width={124}
+                  height={124}
+                  src={getFileUrl(Data.signatureLogo)}
+                  preview={false}
+                />
+                <div
+                  style={{ marginLeft: 24 }}
+                  dangerouslySetInnerHTML={{ __html: Data.signatureContent }}
+                />
+              </Box>
+            </Box>
+          </>
+        )}
       </AccordionDetails>
     </CardFormItemStyle>
   );

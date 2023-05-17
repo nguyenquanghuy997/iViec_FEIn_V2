@@ -106,7 +106,7 @@ const ConfirmModal = ({confirmDelete, onCloseConfirmDelete, onSubmit, item, titl
         </DialogContent>
         <DialogActions sx={{borderTop: '1px solid #E7E9ED'}}>
           <ButtonCancelStyle className="button-cancel" onClick={onCloseConfirmDelete}>Hủy</ButtonCancelStyle>
-          <ButtonDeleteStyle className="button-delete" onClick={() => onSubmit(item)}>
+          <ButtonDeleteStyle className="button-delete" onClick={() => onSubmit([item?.id])}>
             Xóa
           </ButtonDeleteStyle>
         </DialogActions>

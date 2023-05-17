@@ -1,16 +1,14 @@
-import {
-  Address,
-  MaritalStatus,
-  Sex,
-  YearOfExperience,
-} from "@/utils/enum";
+import { useGetAllJobSourcesQuery } from "../ApplicantFormSlice";
+import { Address, MaritalStatus, Sex, YearOfExperience } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
 import { fDate } from "@/utils/formatTime";
-import { Grid, Divider } from "@mui/material";
+import { Divider, Grid } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
-import React from "react";
 
 export const ApplicantInfo = ({ data }) => {
+  const { data: { items: listJobSources = [] } = {} } =
+    useGetAllJobSourcesQuery();
+
   const renderText = (title, value) => {
     return (
       <div>
@@ -40,7 +38,7 @@ export const ApplicantInfo = ({ data }) => {
                 fontSize: "13px",
                 fontWeight: 600,
                 color: "#172B4D",
-                whiteSpace: "pre-line"
+                whiteSpace: "pre-line",
               },
             }}
           />
@@ -72,65 +70,29 @@ export const ApplicantInfo = ({ data }) => {
       </Divider>
     );
   };
+
   return (
     <Grid item>
       <DividerInfo text="THÔNG TIN CƠ BẢN" />
       {renderText("Họ và tên:", data?.fullName)}
-      <div>
-        <span
-          style={{
-            display: "inline-flex",
-            fontSize: 13,
-            margin: "12px 0",
-            color: "#5C6A82",
-            width: "160px",
-            fontWeight: 400,
-          }}
-        >
-          {"Ngành nghề:"}
-        </span>
-
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            fontSize: 13,
-            fontWeight: 600,
-            color: "#172B4D",
-            width: "calc(100% - 160px)",
-          }}
-        >
-          {data?.jobCategories?.length > 0
-            ? data?.jobCategories.map((p, index) => {
-              return (
-                <div key={index}>
-                  <ListItemText
-                    primary={p?.name}
-                    sx={{
-                      "& .MuiTypography-root": {
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: "#172B4D",
-                      },
-                    }}
-                  />
-                  {data?.jobCategories.length - 1 > index ? (
-                    <span style={{ marginRight: 5 }}>,</span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              );
-            })
-            : "-"}
-        </span>
-      </div>
-      {renderText("Nguồn:", data?.jobSourceName)}
-      {renderText("Ngày sinh:", data?.dateOfBirth ? fDate(data?.dateOfBirth) : '')}
+      {renderText(
+        "Ngành nghề",
+        data?.jobCategories?.length > 0
+          ? data?.jobCategories.map((i) => i.jobCategoryName).join(", ")
+          : "-"
+      )}
+      {renderText(
+        "Nguồn:",
+        listJobSources?.find((i) => i.id === data.jobSourceId)?.name
+      )}
+      {renderText(
+        "Ngày sinh:",
+        data?.dateOfBirth ? fDate(data?.dateOfBirth) : ""
+      )}
       {renderText("Giới tính", Sex(data?.sex))}
       {renderText("Tình trạng hôn nhân:", MaritalStatus(data?.maritalStatus))}
-      {renderText("Chiều cao:", `${data?.height ? data?.height + "  cm" : ''}`)}
-      {renderText("Cân nặng:", `${data?.weight ? data?.weight + "  kg" : ''}`)}
+      {renderText("Chiều cao:", `${data?.height ? data?.height + "  cm" : ""}`)}
+      {renderText("Cân nặng:", `${data?.weight ? data?.weight + "  kg" : ""}`)}
       {renderText("Nơi ở hiện tại:", Address(data?.livingAddress))}
       {renderText("Quê quán:", Address(data?.homeTower))}
       {renderText("Số CMND/CCCD:", data?.identityNumber)}
@@ -152,10 +114,11 @@ export const ApplicantInfo = ({ data }) => {
       <DividerInfo text="KỲ VỌNG Ở CÔNG VIỆC MỚI" />
       {renderText(
         "Mức lương mong muốn:",
-        `${fCurrency(data?.expectedSalaryFrom) +
-        "  -  " +
-        fCurrency(data?.expectedSalaryTo) +
-        " VNĐ"
+        `${
+          fCurrency(data?.expectedSalaryFrom) +
+          "  -  " +
+          fCurrency(data?.expectedSalaryTo) +
+          " VNĐ"
         }`
       )}
       {renderText("Nơi làm mong muốn:", Address(data?.expectedWorkingAddress))}

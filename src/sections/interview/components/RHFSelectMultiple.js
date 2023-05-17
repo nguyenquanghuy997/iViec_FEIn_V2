@@ -1,6 +1,7 @@
 import DragCandidate from "./DragCandidate";
 // import PlusIcon from "@/assets/interview/PlusIcon";
 import Iconify from "@/components/Iconify";
+import Image from "@/components/Image";
 import {
   LabelStyle,
   MenuItemStyle,
@@ -11,7 +12,16 @@ import {
 } from "@/components/hook-form/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { containsText } from "@/utils/function";
-import { Avatar, Box, Button, FormHelperText, InputAdornment, MenuItem, Stack, Typography, } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  FormHelperText,
+  InputAdornment,
+  MenuItem,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -84,13 +94,10 @@ function RHFSelectMultiple({ name, ...props }) {
   } = props;
 
   const renderChipsSelect = (options, value) => {
-    
     return (
       <Stack height={"100%"} sx={{ "> div": { height: "100%" } }}>
         <DragCandidate
-          data={options?.filter((option) =>
-            value.includes(option?.value)
-          )}
+          data={options?.filter((option) => value.includes(option?.value))}
         />
       </Stack>
     );
@@ -163,18 +170,37 @@ function RHFSelectMultiple({ name, ...props }) {
             }}
             MenuProps={{ ...MenuProps, classes: { paper: classes.paper } }}
           >
-            {options?.length > 3 && (
-              <TextFieldStyle
-                placeholder="Tìm kiếm..."
-                fullWidth
-                autoFocus
-                sx={{ ...SearchInputStyle }}
-                InputProps={{ ...InputProps }}
-                onChange={(e) => setSearchText(e.target.value)}
-                onKeyDown={(e) => e.stopPropagation()}
-              />
+            <TextFieldStyle
+              placeholder="Tìm kiếm..."
+              fullWidth
+              autoFocus
+              sx={{ ...SearchInputStyle }}
+              InputProps={{ ...InputProps }}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={(e) => e.stopPropagation()}
+            />
+            {/* {renderOptions(filterOptions)} */}
+            {options?.length > 0 ? (
+              renderOptions(filterOptions)
+            ) : (
+              <>
+                <Image
+                  alt="empty content"
+                  src="/assets/illustrations/nodata.svg"
+                  sx={{ height: 120, width: 120, margin: "0 auto" }}
+                />
+
+                <Typography
+                  textAlign={"center"}
+                  mb={3}
+                  fontSize={14}
+                  fontWeight={500}
+                  color={"#8A94A5"}
+                >
+                  Không có dữ liệu
+                </Typography>
+              </>
             )}
-            {renderOptions(filterOptions)}
           </SelectFieldStyle>
           {listApplicant}
           {multiple && renderChipsSelect(options, field.value)}

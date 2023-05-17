@@ -3,8 +3,7 @@ import { View } from "./FlexStyled";
 export default function SvgIcon({ children, style }) {
   return (
     <View
-      zIndex={0}
-      style={style}
+      style={{ ...style, zIndex: 0 }}
       dangerouslySetInnerHTML={{ __html: children }}
     />
   );

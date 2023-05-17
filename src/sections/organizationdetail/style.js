@@ -29,7 +29,7 @@ const CardUserFormItemTitleStyle = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     color: style.COLOR_TEXT_PRIMARY,
     fontSize: style.FONT_BASE,
-    fontWeight: style.FONT_SEMIBOLD,
+    fontWeight: style.FONT_SEMI_BOLD,
     marginBottom: theme.spacing(2),
     "& .MuiCheckbox-root": {
       padding: 0,

@@ -17,7 +17,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
 }))
 
 export default function LoadingScreen() {

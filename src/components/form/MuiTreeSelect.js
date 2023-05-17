@@ -165,7 +165,7 @@ const MuiTreeSelect = forwardRef((
     fontSize: pxToRem(14),
     borderRadius: '6px',
     '.placeholder': {
-      color: theme.palette.text.placeholder,
+      color: theme.palette.text.search,
     },
     'fieldset': {
       borderColor: theme.palette.text.border + '!important',
