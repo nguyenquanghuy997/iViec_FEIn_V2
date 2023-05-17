@@ -34,8 +34,12 @@ export default function EmailEditor({
   dataTag,
   ...other
 }) {
-  
   const [loading, setLoading] = useState(true);
+  
+  // useEffect(() => {
+  //   console.log(dataTag);
+  // }, [dataTag])
+  
   return (
     <div>
       <RootStyle
@@ -167,7 +171,7 @@ export default function EmailEditor({
                       text: 'Vị trí công việc',
                       icon: 'groupIcon',
                       onAction: function () {
-                        editor.insertContent(renderValue('Vị trí công việc', dataTagShow));
+                        editor.insertContent(renderValue(dataTagShow ? dataTag.jobPositionName : 'Vị trí công việc', dataTagShow));
                       },
                     },
                     {

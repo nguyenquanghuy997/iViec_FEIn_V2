@@ -309,11 +309,11 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
                         }
                       </Stack>
                       <Box flex={1} pl={2}>
-                        <RHFEmailEditor
-                          name="signatureContent"
-                          placeholder="Nhập nội dung email..."
-                          sx={{minHeight: '230px'}}
-                        />
+                        {/*<RHFEmailEditor*/}
+                        {/*  name="signatureContent"*/}
+                        {/*  placeholder="Nhập nội dung email..."*/}
+                        {/*  sx={{minHeight: '230px'}}*/}
+                        {/*/>*/}
                       </Box>
                     </Box>
                   </Grid>
