@@ -721,13 +721,17 @@ function TaskCard({ item, index, pipelineStateType }) {
                         divider={true}
                         disableGutters={true}
                       >
-                        <MenuItem onClick={pressGetFromIVIEC}>
-                          <LogoIcon />
-                          <Typography ml={"12px"} variant={"textSize13600"}>
-                            Lấy từ kho iVIEC
-                          </Typography>
-                        </MenuItem>
-                        <Divider />
+                        {false && (
+                          <>
+                            <MenuItem onClick={pressGetFromIVIEC}>
+                              <LogoIcon />
+                              <Typography ml={"12px"} variant={"textSize13600"}>
+                                Lấy từ kho iVIEC
+                              </Typography>
+                            </MenuItem>
+                            <Divider />
+                          </>
+                        )}
                         <MenuItem onClick={pressEdit}>
                           <EditIcon sx={{ mr: "12px" }} />
                           <Typography ml={"12px"} variant={"textSize13600"}>
