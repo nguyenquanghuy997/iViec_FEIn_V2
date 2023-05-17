@@ -52,6 +52,7 @@ export const ApplicantReviewModal = ({
   const [points, setPoints] = useState({});
   const [mediumScore, setMediumScore] = useState(0);
   const [currentAction, setCurrentAction] = useState();
+  const isReject = currentAction === 2;
 
   const Schema = Yup.object().shape({
     ...data?.reviewFormCriterias?.reduce(
@@ -66,7 +67,9 @@ export const ApplicantReviewModal = ({
       }),
       {}
     ),
-    result: Yup.string().required("Chưa nhập kết luận"),
+    result: isReject
+      ? Yup.string().required("Chưa nhập kết luận")
+      : Yup.string(),
   });
 
   const methodss = useForm({
@@ -86,6 +89,11 @@ export const ApplicantReviewModal = ({
   const { enqueueSnackbar } = useSnackbar();
   const [reviewForm] = useAddApplicantReviewMutation();
   const pressSave = handleSubmit(async (d) => {
+    if (typeof currentAction !== "number") {
+      setError("result", { message: "Chưa chọn kết luận" });
+      return;
+    }
+
     const data = {
       applicantId,
       recruitmentId,
@@ -124,6 +132,10 @@ export const ApplicantReviewModal = ({
     if (list.length !== data?.reviewFormCriterias?.length) return;
     setMediumScore(total / list.length);
   }, [points]);
+
+  useEffect(() => {
+    setError("result", false);
+  }, [currentAction]);
 
   return (
     <Modal
@@ -201,7 +213,7 @@ export const ApplicantReviewModal = ({
                 className="block-review block-review-result"
                 style={{ background: "#F2F4F5" }}
               >
-                <Label required={true} className="title" title="Kết luận">
+                <Label required={isReject} className="title" title="Kết luận">
                   {"Kết luận"}
                 </Label>
                 <div className="input-content">
