@@ -281,6 +281,8 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
                       name="content"
                       placeholder="Nhập nội dung email..."
                       showPreview
+                      dataTagShow={true}
+                      dataTag={dataInfo}
                       showUploadFile={true}
                       handleFileChange={handleFileChange}
                       onOpenPreview={handleOpenPreviewEmail}
