@@ -86,7 +86,6 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
 
   return (
     <>
-    {console.log('listQuestions', listQuestions)}
       <Box>
         {listQuestions.length == 0 && (
           <div
