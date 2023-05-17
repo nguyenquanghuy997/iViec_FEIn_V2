@@ -9,7 +9,13 @@ import { useGetQuestionGroupQuery } from "@/sections/exam/ExamSlice";
 import { ViewModel } from "@/utils/cssStyles";
 import { LIST_QUESTION_TYPE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Divider, Grid, InputAdornment, Modal, Tooltip } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  InputAdornment,
+  Modal,
+  Tooltip,
+} from "@mui/material";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -27,9 +33,10 @@ export const AddQuestionGroupModel = ({
   onSubmit,
 }) => {
   const isEdit = !!editData?.name;
-  const { data: { items: Data = [] } = {} } =
-    useGetQuestionGroupQuery({ IsActive: "true" });
-    var ListQuestionGroup = Data?.filter((p)=> p.numOfQuestion > 0)
+  const { data: { items: Data = [] } = {} } = useGetQuestionGroupQuery({
+    IsActive: "true",
+  });
+  var ListQuestionGroup = Data?.filter((p) => p.numOfQuestion > 0);
   // form
   const Schema = Yup.object().shape({
     questionGroup: Yup.array().of(
@@ -39,7 +46,10 @@ export const AddQuestionGroupModel = ({
         quantity: Yup.number()
           .transform((value) => (isNaN(value) ? undefined : value))
           .min(1, "Số câu hỏi phải lớn hơn 0")
-          .max(Yup.ref('quantityOfQuestion'), "Số câu hỏi phải nhỏ hơn số câu hỏi trong nhóm")
+          .max(
+            Yup.ref("quantityOfQuestion"),
+            "Số câu hỏi phải nhỏ hơn số câu hỏi trong nhóm"
+          )
           .required("Chưa nhập số câu hỏi"),
       })
     ),
@@ -63,10 +73,17 @@ export const AddQuestionGroupModel = ({
     setShow(false);
   };
   const pressSave = handleSubmit(async (d) => {
-    const data = {
-      ...d,
-      questionGroup: ListQuestionGroup.find((x) => x.id === d.questionGroupId),
-    };
+    const data = d.questionGroup.map((x) => {
+      return {
+        ...x,
+        questionGroup: ListQuestionGroup.find(
+          (y) => y.id === x.questionGroupId
+        ),
+      };
+    });
+    // const data = {
+    //   ...d,
+    // };
     onSubmit?.(data);
     pressHide();
   });
@@ -89,13 +106,18 @@ export const AddQuestionGroupModel = ({
   const changeQuestionType = (index, value) => {
     if (watch(`questionGroup.${index}.questionGroupId`)) {
       const number = ListQuestionGroup.find(
-        (p) =>
-          p?.id == watch(`questionGroup.${index}.questionGroupId`)
+        (p) => p?.id == watch(`questionGroup.${index}.questionGroupId`)
       );
-      if(value == 1){
-        setValue(`questionGroup.${index}.quantityOfQuestion`, number?.numOfQuestionMultipleChoice);
-      } else{
-        setValue(`questionGroup.${index}.quantityOfQuestion`, number?.numOfQuestionEssay);
+      if (value == 1) {
+        setValue(
+          `questionGroup.${index}.quantityOfQuestion`,
+          number?.numOfQuestionMultipleChoice
+        );
+      } else {
+        setValue(
+          `questionGroup.${index}.quantityOfQuestion`,
+          number?.numOfQuestionEssay
+        );
       }
     }
   };
@@ -182,7 +204,7 @@ export const AddQuestionGroupModel = ({
                           name={`questionGroup.${index}.questionTypeId`}
                           placeholder="Chọn loại câu hỏi"
                           fullWidth
-                          onChange={(e)=> changeQuestionType(index, e)}
+                          onChange={(e) => changeQuestionType(index, e)}
                         />
                       </Grid>
                       <Grid item xs={6}>
@@ -192,7 +214,10 @@ export const AddQuestionGroupModel = ({
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position="start">
-                                / {watch(`questionGroup.${index}.quantityOfQuestion`) || 0}
+                                /{" "}
+                                {watch(
+                                  `questionGroup.${index}.quantityOfQuestion`
+                                ) || 0}
                               </InputAdornment>
                             ),
                           }}
@@ -203,15 +228,21 @@ export const AddQuestionGroupModel = ({
 
                   <View flexrow="false" atcenter="true">
                     <Tooltip title="Xóa">
-                      {fields.length > 1 ? (
-                        <RiDeleteBin6Line
-                          color="#E53935"
-                          onClick={() => remove(index)}
-                          cursor="pointer"
-                        />
-                      ) : (
-                        <RiDeleteBin6Line color="#A2AAB7" cursor="pointer" />
-                      )}
+                      <>
+                        {fields.length > 1 ? (
+                          <RiDeleteBin6Line
+                            color="#E53935"
+                            onClick={() => remove(index)}
+                            cursor="pointer"
+                          />
+                        ) : (
+                          <RiDeleteBin6Line
+                            color="#E53935"
+                            onClick={() => remove(index)}
+                            cursor="#A2AAB7"
+                          />
+                        )}
+                      </>
                     </Tooltip>
                   </View>
                 </View>

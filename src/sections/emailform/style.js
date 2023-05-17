@@ -106,6 +106,7 @@ const CardFormItemTitleStyle = styled(Typography)(({ theme }) => ({
     "& .MuiCheckbox-root": {
       padding: 0,
       marginRight: theme.spacing(2),
+      marginTop: theme.spacing(0.5),
     },
     "& .card-item-subtitle": {
       color: "#455570",

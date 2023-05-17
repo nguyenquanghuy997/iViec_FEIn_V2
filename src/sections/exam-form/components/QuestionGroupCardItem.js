@@ -3,9 +3,9 @@ import {
   CheckboxIconDefault,
 } from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
-import { Text } from "@/components/DesignSystem/FlexStyled";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import { TextFieldStyle } from "@/components/hook-form/style";
 import useAuth from "@/hooks/useAuth";
 import {
   BoxFlex,
@@ -19,6 +19,8 @@ import {
   Box,
   Checkbox,
   Divider,
+  FormHelperText,
+  InputAdornment,
   Typography,
 } from "@mui/material";
 import moment from "moment";
@@ -30,35 +32,15 @@ const questionInfoTitle = {
   color: "#455570",
 };
 
-const questionAnswer = {
-  fontSize: "14px",
-  fontWeight: 400,
-  color: "#455570",
-  marginBottom: "12px",
-};
-
-const LIST_QUESTION_TYPE = [
-  {
-    value: 0,
-    label: "Trắc nghiệm - 1 đáp án đúng",
-    name: "Trắc nghiệm - 1 đáp án đúng",
-  },
-  {
-    value: 1,
-    label: "Trắc nghiệm - nhiều đáp án đúng",
-    name: "Trắc nghiệm - nhiều đáp án đúng",
-  },
-  {
-    value: 2,
-    label: "Tự luận",
-    name: "Tự luận",
-  },
-];
-
-function QuestionGroupCardItem({ index, item, onEdit, onDelete }) {
+function QuestionGroupCardItem({
+  index,
+  item,
+  onEdit,
+  onDelete,
+  onChangeQuantity,
+}) {
   const { user } = useAuth();
-  const [expanded, setExpanded] = useState(true);
-
+  const [expanded, setExpanded] = useState(false);
   const renderText = (title, value) => {
     return (
       <div
@@ -85,77 +67,117 @@ function QuestionGroupCardItem({ index, item, onEdit, onDelete }) {
       </div>
     );
   };
+  const [error, setError] = React.useState("");
+
+  const handleChange = (e) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      if (e.target.value > item?.quantityOfQuestion) {
+        setError("Số câu hỏi phải nhỏ hơn số câu hỏi trong nhóm");
+      } else if (e.target.value == 0) {
+        setError("Số câu hỏi phải nhỏ hơn số câu hỏi trong nhóm");
+      } else {
+        setError("");
+      }
+      onChangeQuantity(Number(e.target.value), error);
+    }
+  };
 
   return (
-    <CardFormItemStyle className="card-item" expanded={expanded}>
+    <CardFormItemStyle
+      className="card-item"
+      expanded={expanded}
+      sx={{
+        "& .MuiAccordionSummary-expandIconWrapper": {
+          top: "0 !important",
+        },
+      }}
+    >
       <AccordionSummary
         sx={{
           ".MuiAccordionSummary-content": {
             width: "100%",
           },
+          "&.Mui-focusVisible": {
+            backgroundColor: "unset !important",
+          },
         }}
         expandIcon={
-          <BoxFlex>
-            <Typography
-              sx={{
-                width: "25px",
-                height: "25px",
-                fontSize: 12,
-                textAlign: "center",
-                lineHeight: "25px",
-                borderRadius: "50%",
-                border: "1px solid #455570",
-                marginRight: "8px",
-              }}
-            >
-              {item.questionPoint}
-            </Typography>
-            <ButtonIcon
-              onClick={() => onEdit(item, index)}
-              icon={
-                <Iconify
-                  icon={"ri:edit-2-fill"}
-                  width={16}
-                  height={16}
-                  color="#455570"
-                />
-              }
-            />
+          <Box>
+            <BoxFlex>
+              <TextFieldStyle
+                label={item?.questionTypeId == 1 ? "Trắc nghiệm" : "Tự luận"}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => handleChange(e)}
+                value={item.quantity}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      / {item?.quantityOfQuestion}
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: "170px" }}
+              />
 
-            <ButtonIcon
-              onClick={() => onDelete(item, index)}
-              icon={
-                <Iconify
-                  icon={"material-symbols:delete-outline-rounded"}
-                  width={14}
-                  height={14}
-                  color="#455570"
-                />
-              }
-            />
+              <ButtonIcon
+                onClick={() => onEdit(item, index)}
+                icon={
+                  <Iconify
+                    icon={"ri:edit-2-fill"}
+                    width={18}
+                    height={18}
+                    color="#455570"
+                  />
+                }
+              />
 
-            <ButtonIcon
-              onClick={() => {
-                setExpanded(!expanded);
-              }}
-              icon={
-                <Iconify
-                  icon="material-symbols:keyboard-arrow-down-sharp"
-                  width={14}
-                  height={14}
-                  color="#455570"
-                />
-              }
-            />
-          </BoxFlex>
+              <ButtonIcon
+                onClick={() => onDelete(item, index)}
+                icon={
+                  <Iconify
+                    icon={"material-symbols:delete-outline-rounded"}
+                    width={18}
+                    height={18}
+                    color="#455570"
+                  />
+                }
+              />
+
+              <ButtonIcon
+                onClick={() => {
+                  setExpanded(!expanded);
+                }}
+                icon={
+                  <Iconify
+                    icon="material-symbols:keyboard-arrow-down-sharp"
+                    width={18}
+                    height={18}
+                    color="#455570"
+                  />
+                }
+              />
+            </BoxFlex>
+            {error && (
+              <FormHelperText
+                sx={{
+                  color: "#FF4842",
+                  fontSize: 12,
+                  fontWeight: 400,
+                  mt: 1,
+                }}
+              >
+                {error}
+              </FormHelperText>
+            )}
+          </Box>
         }
         aria-controls={`panel${index}a-content`}
         id={`panel${index}a-header`}
       >
-        <BoxFlex
-          alignItems={"start"}
-          style={{ marginBottom: 24, minWidth: "95%" }}
-        >
+        <BoxFlex alignItems={"start"} style={{ minWidth: "95%" }}>
           <CardFormItemTitleStyle
             className="card-item-title"
             sx={{
@@ -170,30 +192,30 @@ function QuestionGroupCardItem({ index, item, onEdit, onDelete }) {
               icon={<CheckboxIconDefault />}
               checkedIcon={<CheckboxIconChecked />}
             />
-            <Typography
-              maxWidth={"25%"}
-              fontSize={14}
-              fontWeight={600}
-              color={"#455570"}
-              ml={2}
-            >
-              Câu hỏi {index + 1}
-            </Typography>
-
-            <Typography
-              fontSize={14}
-              ml={2}
-              color={"#455570"}
-              maxWidth={"75%"}
-              component="span"
-            >
-              {item.questionTitle}
-            </Typography>
+            <Box maxWidth={"80%"}>
+              <Typography
+                fontSize={14}
+                fontWeight={600}
+                color={"#455570"}
+                ml={2}
+              >
+                {item?.questionGroup?.name}
+              </Typography>
+              <Typography
+                fontSize={14}
+                ml={2}
+                color={"#455570"}
+                maxWidth={"75%"}
+                component="span"
+              >
+                {item?.questionGroup?.description}
+              </Typography>
+            </Box>
           </CardFormItemTitleStyle>
         </BoxFlex>
       </AccordionSummary>
       <AccordionDetails sx={{ mt: "0px !important" }}>
-        <Divider sx={{ color: "#E7E9ED" }} />
+        <Divider sx={{ color: "#E7E9ED", marginTop: "24px" }} />
         <View
           flexRow={true}
           jcbetween={true}
@@ -203,7 +225,7 @@ function QuestionGroupCardItem({ index, item, onEdit, onDelete }) {
             <View>
               <Typography sx={questionInfoTitle}>Đáp án</Typography>
               <Box mt={"12px"}>
-                {item.answers.map((x, index) => (
+                {/* {item.answers.map((x, index) => (
                   <Typography key={index} sx={questionAnswer}>
                     <Text
                       style={{ display: "inline-block", marginRight: "8px" }}
@@ -219,7 +241,7 @@ function QuestionGroupCardItem({ index, item, onEdit, onDelete }) {
                       />
                     )}
                   </Typography>
-                ))}
+                ))} */}
               </Box>
             </View>
           )}
@@ -234,11 +256,11 @@ function QuestionGroupCardItem({ index, item, onEdit, onDelete }) {
             <Typography sx={questionInfoTitle}>Thông tin câu hỏi</Typography>
             <View mt={"12px"}>
               {renderText("Nhóm câu hỏi:", item?.questionGroupName)}
-              {renderText(
+              {/* {renderText(
                 "Kiểu câu hỏi:",
                 LIST_QUESTION_TYPE.find((x) => x.value == item.questionType)
                   .name
-              )}
+              )} */}
               {renderText(
                 "Ngày tạo:",
                 moment(new Date()).format("DD/MM/YYYY HH:mm")

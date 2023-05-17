@@ -1,19 +1,30 @@
 import { AddQuestionGroupModel } from "./AddQuestionGroupModel";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
+import QuestionGroupCardItem from "./QuestionGroupCardItem";
 import {
   CheckboxIconChecked,
   CheckboxIconDefault,
 } from "@/assets/CheckboxIcon";
+import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import { ButtonDS } from "@/components/DesignSystem";
-import { View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
-import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
-import { Checkbox, Button, ButtonGroup, Box, useTheme } from "@mui/material";
+import { AlertIcon } from "@/sections/organization/component/Icon";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {
+  Checkbox,
+  Button,
+  ButtonGroup,
+  Box,
+  useTheme,
+} from "@mui/material";
 import React from "react";
 import { useState } from "react";
-import QuestionGroupCardItem from "./QuestionGroupCardItem";
 
-function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
+function ListQuestionGroupDefault({
+  listQuestions,
+  setListQuestions,
+  updateListQuestion,
+}) {
   const [showQuestionGroup, setShowQuestionGroup] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [
@@ -44,15 +55,8 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
    * @param {*} data
    */
   const handleCreateEditQuestion = (data) => {
-    if (currentIndexQuestion == -1) {
-      // setListData([...listData, data])
-      listQuestions.push(data);
-    } else {
-      listQuestions[currentIndexQuestion] = data;
-      // setListData([...listData])
-    }
-
-    updateListQuestion(listQuestions);
+    setListQuestions([...listQuestions, ...data]);
+    // updateListQuestion(listQuestions);
 
     setShowQuestionGroup(false);
     // reset choose index && data
@@ -79,14 +83,14 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
     setCurrentIndexQuestion(index);
     setShowDeleteModal(true);
   };
-
+  const [error, setError] = React.useState("");
   // useEffect(()=>{
   //   updateListQuestion(listData)
   // },[listQuestions])
-
+console.log('errorerror', error)
   return (
     <>
-    {console.log('listQuestions', listQuestions)}
+      {console.log("listQuestions", listQuestions)}
       <Box>
         {listQuestions.length == 0 && (
           <div
@@ -140,16 +144,13 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
         )}
         {listQuestions.length > 0 && (
           <>
-            <View mh={24} flexrow={"true"} jcbetween={"true"}>
-              <View flexrow={true} atcenter={true}>
+            <Box display={'flex'} justifyContent={'space-between'} ml={2} flexrow={"true"} jcbetween={"true"}>
+              <Box display={'flex'} alignItems={'center'}>
                 <Checkbox
                   // onChange={pressCheckbox}
                   icon={<CheckboxIconDefault />}
                   checkedIcon={<CheckboxIconChecked />}
                   title="Chọn tất cả"
-                  style={{
-                    margin: "-6px 24px 0 -6px",
-                  }}
                 />
                 <label
                   style={{
@@ -157,11 +158,12 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                     lineHeight: "20px",
                     fontWeight: 600,
                     color: "#455570",
+                    marginLeft: '24px'
                   }}
                 >
                   Chọn tất cả
                 </label>
-              </View>
+              </Box>
 
               <ButtonGroup
                 variant="contained"
@@ -182,7 +184,6 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                     padding: "8px 12px",
                     fontWeight: 600,
                     fontSize: " .875rem",
-                    borderRadius: "6px 0px 0px 6px",
                     textTransform: "none",
                   }}
                   onClick={() => setShowQuestionGroup(true)}
@@ -197,9 +198,9 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                   Thêm nhóm câu hỏi
                 </Button>
               </ButtonGroup>
-            </View>
+            </Box>
 
-            <View mt={24} mb={28}>
+            <Box mt={3} mb={2}>
               {listQuestions.map((item, index) => (
                 <QuestionGroupCardItem
                   key={index}
@@ -207,9 +208,13 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                   item={item}
                   onDelete={openDeleteQuestionModal}
                   onEdit={openEditQuestionForm}
+                  onChangeQuantity={(v, err) => {
+                    updateListQuestion(listQuestions.map((i, j) => j ===index ? ({...i, quantity: Number(v)}): i))
+                    setError([err])
+                  }}
                 />
               ))}
-            </View>
+            </Box>
           </>
         )}
       </Box>
@@ -231,12 +236,35 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
         onClose={() => setShowQuestionGallaryInternalModal(false)}
       />
 
-      <ConfirmModal
+      {/* <ConfirmModal
         confirmDelete={showDeleteModal}
-        title="Xác nhận xóa câu hỏi"
-        subtitle={"Bạn có chắc chắn muốn xóa câu hỏi"}
+        title="Xác nhận xóa nhóm câu hỏi"
+        subtitle={"Bạn có chắc chắn muốn xóa nhóm câu hỏi"}
         onSubmit={handlerDeleteQuestion}
         onCloseConfirmDelete={handleCloseDeleModal}
+      /> */}
+
+      <ConfirmModal
+        open={showDeleteModal}
+        onClose={handleCloseDeleModal}
+        icon={<AlertIcon />}
+        title={"Xác nhận xóa ứng viên"}
+        titleProps={{
+          sx: {
+            color: style.COLOR_TEXT_DANGER,
+            fontWeight: 600,
+            marginBottom: 1,
+          },
+        }}
+        subtitle={"Bạn có chắc chắn muốn xóa nhóm câu hỏi?"}
+        onSubmit={handlerDeleteQuestion}
+        btnCancelProps={{
+          title: "Hủy",
+        }}
+        btnConfirmProps={{
+          title: "Xóa",
+          color: 'error'
+        }}
       />
     </>
   );

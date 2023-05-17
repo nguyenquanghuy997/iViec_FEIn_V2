@@ -235,6 +235,7 @@ const CreateExamContent = () => {
         ) : (
           <ListQuestionGroupDefault
             listQuestions={examQuestions}
+            setListQuestions={setExamQuestions}
             updateListQuestion={handleUpdateListQuestion}
           />
         )}

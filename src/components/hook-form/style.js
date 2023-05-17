@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
     borderTopRightRadius: "6px !important",
     borderBottomLeftRadius: "6px !important",
     borderBottomRightRadius: "6px !important",
-    marginTop: '4px',
+    marginTop: "4px",
     "& li": {
       fontFamily: "Inter",
       fontWeight: "400",
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
       padding: "10px 16px",
       background: "#FDFDFD",
       // boxShadow: "inset 0px -1px 0px #E7E9ED",
-      minHeight: '44px'
+      minHeight: "44px",
     },
     "& .MuiList-root": {
       padding: 0,
@@ -54,6 +54,15 @@ const useStyles = makeStyles(() => ({
 
 const TextFieldStyle = styled(TextField)(({ theme }) => ({
   display: "flex",
+  ".Mui-focused": {
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    borderColor: "#D0D4DB",
+    color: "#172B4D !important",
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "1px solid #D0D4DB !important",
+    },
+  },
   "& input": {
     "&:-webkit-autofill": {
       WebkitBoxShadow: "0 0 0 30px white inset !important",
@@ -75,10 +84,15 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
     fontSize: style.FONT_SM,
     borderRadius: theme.spacing(0.75),
     width: style.WIDTH_FULL,
-    "&.Mui-focused": {
+    "&. Mui-focused": {
       backgroundColor: "transparent",
       boxShadow: "none",
-      borderColor: "#D0D4DB",
+      borderColor: "#D0D4DB !important",
+      color: "#fff !important",
+      border: "2px solid red",
+      "& .MuiOutlinedInput-notchedOutline": {
+        border: "none",
+      },
     },
   },
   "& .MuiInput-root.Mui-error": {
@@ -98,7 +112,7 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
   "& .MuiInputAdornment-positionStart": {
     marginLeft: 8,
   },
-  '& .Mui-disabled': {
+  "& .Mui-disabled": {
     backgroundColor: theme.palette.background.disabled,
   },
 }));
@@ -210,15 +224,15 @@ const Label = styled(InputLabel)(({ theme }) => ({
 const SearchInputStyle = {
   boxShadow: "inset 0px -1px 0px #E7E9ED",
   minHeight: "44px",
-  padding: '10px 16px',
+  padding: "10px 16px",
   "& .MuiInputBase-root": {
     border: 0,
     borderRadius: 0,
-    paddingLeft: 0
+    paddingLeft: 0,
   },
   "& .MuiInputBase-input": {
     color: style.COLOR_TEXT_SECONDARY,
-    padding: '0 !important',
+    padding: "0 !important",
     fontFamily: "Inter",
     fontWeight: style.FONT_MEDIUM,
     fontSize: style.FONT_SM,
