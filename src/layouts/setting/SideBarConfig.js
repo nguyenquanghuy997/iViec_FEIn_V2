@@ -68,11 +68,11 @@ export const sidebarConfig = [
   {
     subheader: "Thiết lập mẫu",
     items: [
-      // {
-      //   title: "Mẫu đánh giá",
-      //   path: "/settings/evaluation-form",
-      //   permissions: [PERS.VIEW_EVA_TPL],
-      // },
+      {
+        title: "Mẫu đánh giá",
+        path: "/settings/evaluation-form",
+        permissions: [PERS.VIEW_EVA_TPL],
+      },
       {
         title: "Mẫu thư mời nhận việc",
         path: "/settings/offer-form",

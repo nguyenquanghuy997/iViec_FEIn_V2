@@ -23,6 +23,7 @@ const DynamicColumnsTable = (props) => {
     selectedRowKeys,
     setSelectedRowKeys,
     itemSelected,
+
     setItemSelected,
     useGetColumnsFunc,
     useUpdateColumnsFunc,

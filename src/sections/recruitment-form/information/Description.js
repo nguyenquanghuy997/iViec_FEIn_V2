@@ -22,7 +22,7 @@ const Description = ({ recruitment: Recruitment }) => {
     { skip: !jobPositionId }
   );
   const { data: { items: ListJobPosition = [] } = {} } =
-    useGetAllJobTypeQuery();
+    useGetAllJobTypeQuery({ IsActive: 'true' });
   useEffect(() => {
     if (!isEmpty(JobPosition)) {
       if (isInit.current) {

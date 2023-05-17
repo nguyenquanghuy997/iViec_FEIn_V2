@@ -303,18 +303,15 @@ export const API_DELETE_CALENDAR =
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID =
   "/examination/Examination/GetExamination";
-export const API_GET_COLUMN_EXAMS =
-    "/aggregator/ExamVisible/GetExamsVisible";
+export const API_GET_COLUMN_EXAMS = "/aggregator/ExamVisible/GetExamsVisible";
 export const API_UPDATE_COLUMN_EXAMS =
-    "/aggregator/ExamVisible/UpdateExamVisible";
+  "/aggregator/ExamVisible/UpdateExamVisible";
 export const API_UPDATE_STATUS_EXAM =
-    "/examination/Examination/SetExaminationActivated";
-export const API_CREATE_EXAM =
-    "/examination/Examination/CreateExamination";
+  "/examination/Examination/SetExaminationActivated";
+export const API_CREATE_EXAM = "/examination/Examination/CreateExamination";
 export const API_UPDATE_EXAM =
-    "/examination/Examination/UpdateExamination/{id}";
-export const API_DELETE_EXAMS =
-    "/examination/Examination/RemoveExaminations";
+  "/examination/Examination/UpdateExamination/{id}";
+export const API_DELETE_EXAMS = "/examination/Examination/RemoveExaminations";
 
 // QuestionGroup
 export const API_GET_QUESTION_GROUP =
@@ -341,6 +338,7 @@ export const API_UPDATE_QUESTION_VISIBLE =
 export const API_UPDATE_ACTIVE_QUESTION =
   "/applicant/Question/UpdateActiveQuestions";
 export const API_REMOVE_QUESTION = "/applicant/Question/RemoveQuestions";
+export const API_UPLOAD_FILE_EXAM = "/File/UploadFileExamination";
 
 // Offer
 export const API_GET_OFFER_TEMPLATE = "/notification/OfferTemplate/GetOfferTemplate";
@@ -359,3 +357,13 @@ export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
 export const API_GET_INTERNAL_ACCOUNT = "/internal/Internal/GetInternalAccount";
 export const API_GET_JOB_CATEGORIES_INTERNAL = "/internal/Internal/GetJobCategories";
 export const API_SET_ACTIVE_ACCOUNT = "/integrator/ConnectionAccount/SetConnectAccountActive";
+
+// Email
+export const API_GET_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/GetEmailTemplateOrganizations";
+export const API_CREATE_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/CreateEmailTemplateOrganization";
+export const API_UPDATE_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/UpdateEmailTemplateOrganization";
+export const API_DELETE_EMAIL_TEMPLATE =
+  "/notification/EmailTemplateOrganization/RemoveEmailTemplateOrganizations";
