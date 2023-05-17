@@ -1,21 +1,26 @@
-import MuiButton from "@/components/BaseComponents/MuiButton"
-import { Text } from "@/components/FlexStyled"
-import Iconify from "@/components/Iconify"
-import { SubTitleStyle } from "@/sections/emailform/style"
-import { ButtonIcon } from "@/utils/cssStyles"
-import { Box, Divider, Typography } from "@mui/material"
-import { useState } from "react"
-import { useRouter } from "next/router"
-import ExamFormModal from "@/sections/exam/components/ExamFormModal"
-import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal"
-import ListQuestionDefault from "./ListQuestionDefault"
-import { View } from "@/components/DesignSystem/FlexStyled"
-import CreateExamHeader from "./CreateExamHeader"
-import { useCreateExamMutation, useGetExaminationByIdQuery, useUpdateExamMutation } from "@/sections/exam/ExamSlice"
-import { useSnackbar } from "notistack"
-import React from "react"
-import { useEffect } from "react"
-import ListQuestionGroupDefault from "./ListQuestionGroupDefault"
+import CreateExamHeader from "./CreateExamHeader";
+import ListQuestionDefault from "./ListQuestionDefault";
+import ListQuestionGroupDefault from "./ListQuestionGroupDefault";
+import MuiButton from "@/components/BaseComponents/MuiButton";
+import { View } from "@/components/DesignSystem/FlexStyled";
+import { Text } from "@/components/FlexStyled";
+import Iconify from "@/components/Iconify";
+import { SubTitleStyle } from "@/sections/emailform/style";
+import {
+  useCreateExamMutation,
+  useGetExaminationByIdQuery,
+  useUpdateExamMutation,
+} from "@/sections/exam/ExamSlice";
+import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal";
+import ExamFormModal from "@/sections/exam/components/ExamFormModal";
+import { ButtonIcon } from "@/utils/cssStyles";
+import { NumericFormatCustom } from "@/utils/formatNumber";
+import { Box, Divider, TextField, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
+import { useState } from "react";
+import React from "react";
+import { useEffect } from "react";
 
 const CreateExamContent = () => {
   const router = useRouter();
@@ -23,14 +28,26 @@ const CreateExamContent = () => {
   const [updateExam] = useUpdateExamMutation();
   const { enqueueSnackbar } = useSnackbar();
   const examId = router.query.slug;
-  const { data: data } = useGetExaminationByIdQuery({
-    Id: examId,
-  });
-  const { query = { name: "", description: "", examTime: 0, isQuestionMixing: true, showType: 0, type: 0 } } = router;
+  const { data: data } = useGetExaminationByIdQuery(
+    {
+      Id: examId,
+    },
+    { skip: !examId }
+  );
+  const {
+    query = {
+      name: "",
+      description: "",
+      examTime: 0,
+      isQuestionMixing: true,
+      showType: 0,
+      type: 0,
+    },
+  } = router;
   const queryDataDefault = {
     ...query,
-    isQuestionMixing: query.isQuestionMixing == 'true'
-  }
+    isQuestionMixing: query.isQuestionMixing == "true",
+  };
   const [examData, setExamData] = useState(queryDataDefault);
   const [examQuestions, setExamQuestions] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -59,9 +76,9 @@ const CreateExamContent = () => {
   };
 
   const minutesFromTime = (times) => {
-    var a = times.split(':');
-    return (+a[0]) * 60 + (+a[1]);
-  }
+    var a = times.split(":");
+    return +a[0] * 60 + +a[1];
+  };
 
   const handleUpdateListQuestion = (data) => {
     setExamQuestions([...data]);
@@ -91,33 +108,56 @@ const CreateExamContent = () => {
   };
 
   const handleSave = async () => {
-    if (examQuestions.length == 0) {
+    if (examQuestions.length == 0 && examData.type == 0) {
       enqueueSnackbar("Bạn cần thêm câu hỏi vào đề thi", {
+        variant: "error",
+      });
+      return;
+    }
+    if (examQuestions.length == 0 && examData.type == 2) {
+      enqueueSnackbar("Bạn cần thêm nhóm câu hỏi vào đề thi", {
         variant: "error",
       });
       return;
     }
     const body = {
       ...examData,
+      examTime: new Date(examData.examTime * 60 * 1000)
+        .toISOString()
+        .substr(11, 8),
       totalQuestion: examQuestions.length,
-      examTime: new Date(examData.examTime * 60 * 1000).toISOString().substr(11, 8),
       standardPoint: examData.standardPoint ?? 1,
-      maximumPoint: examQuestions.reduce(function (a, b) {
-        return a + b.questionPoint;
-      }, 0),
-      examinationQuestions: examQuestions.map((x) => {
-        return { ...x, questionId: x.id };
-      }),
+      maximumPoint:
+        examQuestions.reduce(function (a, b) {
+          return a + b.questionPoint;
+        }, 0) || 1,
+      showType: examData.type,
+      examinationQuestions:
+        (examData.type == 0 &&
+          examQuestions.map((x) => {
+            return { ...x, questionId: x.id };
+          })) ||
+        null,
+      examinationQuestionGroups:
+        (examData.type == 1 &&
+          examQuestions.map((x) => {
+            return {
+              questionGroupId: x.questionGroupId,
+              totalQuestion: x.quantity,
+              type: x.questionTypeId == 1 ? 0 : 1,
+            };
+          })) ||
+        null,
     };
+
     try {
       if (!examId) {
         await createExam(body).unwrap();
-      }
-      else {
+      } else {
         await updateExam(body).unwrap();
       }
-      enqueueSnackbar("Lưu đề thi thành công")
-      router.push("/settings/exam/exam-business")
+      enqueueSnackbar("Lưu đề thi thành công");
+      router.push("/settings/exam/exam-business");
     } catch {
       enqueueSnackbar("Lưu đề thi thất bại", {
         variant: "error",
@@ -131,17 +171,25 @@ const CreateExamContent = () => {
 
   useEffect(() => {
     if (data) {
-      setExamData({ ...data, examTime: minutesFromTime(data.examTime) })
-      setExamQuestions(data.questions ?? [])
+      setExamData({ ...data, examTime: minutesFromTime(data.examTime) });
+      setExamQuestions(data.questions ?? []);
     }
-  }, [data])
+  }, [data]);
 
-  return <>
-    <CreateExamHeader
-      isCreate={!examId}
-      handleSaveDraft={handleSaveDraft}
-      handleCancel={handleCancel}
-      handleSave={handleSave} />
+  const [values, setValues] = React.useState();
+
+  const handleChange = (event) => {
+    setValues(event.target.value);
+  };
+
+  return (
+    <>
+      <CreateExamHeader
+        isCreate={!examId}
+        handleSaveDraft={handleSaveDraft}
+        handleCancel={handleCancel}
+        handleSave={handleSave}
+      />
 
       <View>
         {/* title */}
@@ -167,29 +215,9 @@ const CreateExamContent = () => {
             >
               {examData.description}
             </SubTitleStyle>
-            <span style={{ fontSize: '16px', fontWeight: 600, lineHeight: '24px', marginTop: 4 }}>{examData.standardPoint ?? '-'}</span>
           </View>
 
           <View flexrow={"true"} atcenter={"true"}>
-            <ButtonIcon
-              sx={{
-                marginLeft: "16px",
-                backgroundColor: "transparent",
-                "&:hover": {
-                  backgroundColor: "unset",
-                },
-              }}
-              // onClick={() => handleShowConfirmMultiple("delete")}
-              icon={
-                <Iconify
-                  icon={"ri:edit-2-fill"}
-                  width={20}
-                  height={20}
-                  color="#5C6A82"
-                />
-              }
-            />
-
             <View
               allcenter={"true"}
               style={{
@@ -209,16 +237,44 @@ const CreateExamContent = () => {
               >
                 Điểm sàn
               </Typography>
-              <span
+
+              <div
                 style={{
                   fontSize: "16px",
                   fontWeight: 600,
                   lineHeight: "24px",
-                  marginTop: 4,
                 }}
               >
-                -
-              </span>
+                <ButtonIcon
+                  sx={{
+                    backgroundColor: "transparent",
+                    "&:hover": {
+                      backgroundColor: "unset",
+                    },
+                  }}
+                  onClick={(e) => e.target.value}
+                  icon={
+                    <Iconify
+                      icon={"ri:edit-2-fill"}
+                      width={20}
+                      height={20}
+                      color="#5C6A82"
+                    />
+                  }
+                />
+                {/* {examData.standardPoint ?? "-"} */}
+                <TextField
+                  value={values}
+                  onChange={handleChange}
+                  name="numberformat"
+                  id="formatted-numberformat-input"
+                  InputProps={{
+                    disableUnderline: true,
+                    inputComponent: NumericFormatCustom,
+                  }}
+                  variant="standard"
+                />
+              </div>
             </View>
 
             <View
@@ -278,46 +334,45 @@ const CreateExamContent = () => {
             />
           </Box>
 
-        <View flexrow={'true'} atcenter={'true'} mt={24}>
-          {renderExamSettingInfo(
-            "mdi:clock-time-three-outline",
-            `${examData.examTime} phút`
-          )}
-          {renderExamSettingInfo(
-            `ri:shuffle-fill`,
-            examData.isQuestionMixing == true
-              ? "Đảo vị trí câu hỏi"
-              : "Câu hỏi theo thứ tự"
-          )}
-          {renderExamSettingInfo(
-            `ri:order-play-line`,
-            examData.showType == 0
-              ? "Hiển thị 1 câu hỏi trên một trang"
-              : "Hiển thị toàn bộ câu hỏi trên một trang"
-          )}
-          {renderExamSettingInfo(
-            `ri:list-settings-line`,
-            examData.type == 0
-              ? "Đề thi câu hỏi cố định"
-              : "Đề thi câu hỏi ngẫu nhiên"
-          )}
+          <View flexrow={"true"} atcenter={"true"} mt={24}>
+            {renderExamSettingInfo(
+              "mdi:clock-time-three-outline",
+              `${examData.examTime} phút`
+            )}
+            {renderExamSettingInfo(
+              `ri:shuffle-fill`,
+              examData.isQuestionMixing == true
+                ? "Đảo vị trí câu hỏi"
+                : "Câu hỏi theo thứ tự"
+            )}
+            {renderExamSettingInfo(
+              `ri:order-play-line`,
+              examData.showType == 0
+                ? "Hiển thị 1 câu hỏi trên một trang"
+                : "Hiển thị toàn bộ câu hỏi trên một trang"
+            )}
+            {renderExamSettingInfo(
+              `ri:list-settings-line`,
+              examData.type == 0
+                ? "Đề thi câu hỏi cố định"
+                : "Đề thi câu hỏi ngẫu nhiên"
+            )}
+          </View>
 
+          <Divider sx={{ margin: "24px 0" }} />
+          {examData.type == 0 ? (
+            <ListQuestionDefault
+              listQuestions={examQuestions}
+              updateListQuestion={handleUpdateListQuestion}
+            />
+          ) : (
+            <ListQuestionGroupDefault
+              listQuestions={examQuestions}
+              setListQuestions={setExamQuestions}
+              updateListQuestion={handleUpdateListQuestion}
+            />
+          )}
         </View>
-
-        <Divider sx={{ margin: "24px 0" }} />
-        {examData.type == 0 ? (
-          <ListQuestionDefault
-            listQuestions={examQuestions}
-            updateListQuestion={handleUpdateListQuestion}
-          />
-        ) : (
-          <ListQuestionGroupDefault
-            listQuestions={examQuestions}
-            setListQuestions={setExamQuestions}
-            updateListQuestion={handleUpdateListQuestion}
-          />
-        )}
-      </View>
       </View>
 
       <ExamFormModal
@@ -333,6 +388,7 @@ const CreateExamContent = () => {
         onSubmit={handleExamSetting}
       />
     </>
+  );
 };
 
 export default React.memo(CreateExamContent);
