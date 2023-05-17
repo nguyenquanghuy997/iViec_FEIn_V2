@@ -90,7 +90,6 @@ function ListQuestionGroupDefault({
 console.log('errorerror', error)
   return (
     <>
-      {console.log("listQuestions", listQuestions)}
       <Box>
         {listQuestions.length == 0 && (
           <div

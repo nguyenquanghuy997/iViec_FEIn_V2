@@ -82,8 +82,8 @@ function Question() {
           return questionType === 2
             ? "Tự luận"
             : questionType === 1
-            ? "Trắc nghiệm - nhiều đáp án đúng"
-            : "Trắc nghiệm - một đáp án đúng";
+              ? "Trắc nghiệm - nhiều đáp án đúng"
+              : "Trắc nghiệm - một đáp án đúng";
         },
       },
       {
@@ -218,6 +218,16 @@ function Question() {
     getData();
   };
 
+  const handlerOpenCopyQuestion = () => {
+    setItemSelected(itemSelected.map(x => {
+      return {
+        ...x,
+        id: null
+      }
+    }))
+    setShowForm(true)
+  }
+
   //   effect
   useEffect(() => {
     getData();
@@ -270,13 +280,20 @@ function Question() {
           setShowTransferQuestionGroup={() =>
             setShowTransferQuestionGroup(true)
           }
+
+          setShowCopyQuestion={() => handlerOpenCopyQuestion()}
         />
       </Content>
 
       <QuestionFormModal
         data={itemSelected[0]}
         show={showForm}
-        onClose={() => setShowForm(false)}
+        isNotSave={false}
+        onClose={() => {
+          setShowForm(false);
+          setItemSelected([]);
+          setSelectedRowKeys([]);
+        }}
         getData={getData}
       />
 

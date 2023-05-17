@@ -1,7 +1,7 @@
 import MuiButton from "@/components/BaseComponents/MuiButton"
 import { Box, Breadcrumbs, Link, Typography } from "@mui/material"
 
-const CreateExamHeader = ({handleSaveDraft, handleSave, handleCancel}) => {
+const CreateExamHeader = ({ isCreate, handleSaveDraft, handleSave, handleCancel }) => {
     return <>
         <Box sx={{
             display: 'flex',
@@ -26,7 +26,7 @@ const CreateExamHeader = ({handleSaveDraft, handleSave, handleCancel}) => {
                         fontSize: '.875rem',
                         fontWeight: 600,
                         color: '#455570'
-                    }}>Tạo mới đề thi</Typography>
+                    }}>{isCreate ? 'Tạo mới đề thi' : 'Chỉnh sửa đề thi'}</Typography>
                 </Breadcrumbs>
             </Box>
             <Box sx={{

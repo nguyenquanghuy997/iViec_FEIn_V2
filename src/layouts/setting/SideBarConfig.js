@@ -38,10 +38,15 @@ export const sidebarConfig = [
         permissions: [PERS.VIEW_JOB_POS],
       },
       // {
-      //   title: "Kết nối",
-      //   path: "/settings/connect",
-      //   permissions: [PERS.VIEW_CONNECT],
+      //   title: "Mẫu đánh giá",
+      //   path: "/settings/evaluation-form",
+      //   permissions: [PERS.VIEW_EVA_TPL],
       // },
+      {
+        title: "Kết nối",
+        path: "/settings/connect",
+        permissions: [PERS.VIEW_CONNECT],
+      },
       {
         title: "Quản lý đề thi",
         path: "/settings/exam",

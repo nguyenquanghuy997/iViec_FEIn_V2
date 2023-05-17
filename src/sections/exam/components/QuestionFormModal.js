@@ -68,7 +68,7 @@ const defaultAnswer = {
 
 export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, handleNoSave }) => {
   // props
-  const isEditMode = !!data?.id || data?.questionTitle;
+  const isEditMode = (!isNotSave && !!data?.id) || (isNotSave && data?.questionTitle);
 
   // hooks
   const theme = useTheme();
@@ -123,19 +123,48 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
   // form
   const schema = Yup.object().shape({
     questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
-    questionTitle: Yup.string().required("Chưa nhập câu hỏi"),
+    questionTitle: Yup.string().required("Chưa nhập câu hỏi")
+      .max(500, 'Ký tự quá dài')
+      .when("questionType", {
+        is: 2,
+        then: Yup.string().max(2000, 'Ký tự quá dài')
+      }),
     questionPoint: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
-      .required("Chưa nhập điểm câu hỏi"),
-    answers: Yup.mixed()
+      .required("Chưa nhập điểm câu hỏi")
+      .min(1, 'Điểm câu hỏi phải lớn hơn 0')
+      .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
+    answers: Yup.mixed().when(["questionType"], {
+      is: (questionType) => {
+        return questionType == 0 || questionType == 1
+      },
+      then: Yup.mixed()
+        .test({
+          message: "Vui lòng nhập đầy đủ nội dung đáp án",
+          test: (val) => !val.some((i) => !i.content),
+        })
+        .test({
+          message: "Nội dung đáp án quá dài",
+          test: (val) => !val.some((i) => i.content.length > 255),
+        })
+        .test({
+          message: "Vui lòng chọn ít nhất 2 đáp án ",
+          test: (val) => !(val.length < 2),
+        })
+        .test({
+          message: "Vui lòng chọn nhiều nhất 6 đáp án ",
+          test: (val) => !(val.length > 6),
+        })
+        .test({
+          message: "Vui lòng chọn ít nhất một đáp án đúng",
+          test: (val) => !val.length || val.some((i) => i.isCorrect),
+        })
+    }),
+    questionFilePaths: Yup.mixed()
       .test({
-        message: "Vui lòng nhập đầy đủ nội dung đáp án",
-        test: (val) => !val.some((i) => !i.content),
+        message: 'Tối đa 6 file',
+        test: (val) => !(val.length > 6)
       })
-      .test({
-        message: "Vui lòng chọn ít nhất một đáp án đúng",
-        test: (val) => !val.length || val.some((i) => i.isCorrect),
-      }),
   });
 
   const methods = useForm({
@@ -159,7 +188,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
   // state
   const [listMedia, setListMedia] = useState([]);
   const [listAnswer, setListAnswer] = useState([defaultAnswer]);
-  const isUploading = listMedia.some((i) => !i.uploadedUrl);
+  const isUploading = listMedia?.some((i) => !i.uploadedUrl);
 
   // handle
   const pressAddAnswer = () => {
@@ -181,7 +210,10 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
         handleNoSave(data)
       }
       else {
-        const body = { ...e, answers: e.answers.length?e.answers: null };
+        const body = {
+          ...e,
+          answers: e.answers.length > 0 && !isEssay ? e.answers : null
+        };
         await (e.id ? updateForm(body) : addForm(body)).unwrap();
         enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
         getData();
@@ -239,7 +271,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
 
   const renderButton = (content, onPress) => {
     return (
-      <View contentcenter='true' size={44} ml={16} onClick={onPress}>
+      <View contentcenter='true' size={44} ml={16} onclick={onPress}>
         <SvgIcon>{content}</SvgIcon>
       </View>
     );
@@ -346,25 +378,28 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
   }, []);
 
   useEffect(() => {
-    if (!show || !isEditMode) {
-      reset({ ...defaultValues, questionGroupId: router.query.slug });
-      setListAnswer([defaultAnswer]);
-
+    if (data?.id || data?.questionTitle) {
+      setValue("id", data.id);
+      setValue("questionType", data.questionType);
+      setValue("questionTitle", data.questionTitle);
+      setValue("questionPoint", data.questionPoint);
+      setValue("questionGroupId", data.questionGroupId);
+      setValue("isActive", !!data.isActive);
+      setListAnswer(data.answers);
+      setListMedia(data.questionFilePaths?.map((i) => ({ uploadedUrl: i })));
       return;
     }
+    if (!show) {
+      reset({ ...defaultValues, questionGroupId: router.query.slug });
+      setListAnswer([defaultAnswer]);
+      setListMedia([])
+    }
 
-    setValue("id", data.id);
-    setValue("questionType", data.questionType);
-    setValue("questionTitle", data.questionTitle);
-    setValue("questionPoint", data.questionPoint);
-    setValue("questionGroupId", data.questionGroupId);
-    setValue("isActive", !!data.isActive);
-    setListAnswer(data.answers);
-    setListMedia(data.questionFilePaths.map((i) => ({ uploadedUrl: i })));
   }, [show, isEditMode]);
 
   useEffect(() => {
-    setListAnswer(isEssay ? [] : [defaultAnswer]);
+    // setListAnswer(isEssay ? [] : [defaultAnswer]);
+      setValue("questionPoint", isEssay ? data?.questionPoint ?? 1 : 1)
   }, [isEssay]);
 
   useEffect(() => {
@@ -380,7 +415,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
   useEffect(() => {
     setValue(
       "questionFilePaths",
-      listMedia.map((i) => i.uploadedUrl)
+      listMedia?.map((i) => i.uploadedUrl)
     );
   }, [listMedia]);
 
@@ -469,14 +504,15 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
             </View>
 
             <View flexrow mt={24}>
-              {[...listMedia, null].slice(0, 6).map(renderMediaItem)}
+              {[...(listMedia ?? []), null].slice(0, 6).map(renderMediaItem)}
             </View>
 
-            <View mv={24}>
+            <View mv={24} width={'50%'}>
               {renderTitle("Điểm câu hỏi", true)}
 
               <RHFTextField
                 name={"questionPoint"}
+                disabled={!isEssay}
                 placeholder={"Nhập điểm câu hỏi"}
               />
             </View>
@@ -496,7 +532,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
                     </Alert>
                   )}
 
-                  {listAnswer.map(renderAnswerItem)}
+                  {listAnswer?.map(renderAnswerItem)}
                 </View>
               </>
             )}
