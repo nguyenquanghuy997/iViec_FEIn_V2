@@ -70,15 +70,26 @@ const DynamicColumnsTable = (props) => {
         let renderFunc = col.render;
         if (renderFunc) {
           col.render = (text, record, index) => {
-            return renderFunc(
-              text,
-              record,
-              index,
-              parseInt(PageIndex),
-              parseInt(PageSize)
+            return (
+              <p
+                style={{
+                  maxWidth: col.width,
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {renderFunc(
+                  text,
+                  record,
+                  index,
+                  parseInt(PageIndex),
+                  parseInt(PageSize)
+                )}
+              </p>
             );
           };
-        } else if (col.width) {
+        } else {
           col.render = (text) => (
             <p
               style={{
