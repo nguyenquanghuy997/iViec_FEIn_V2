@@ -4,7 +4,7 @@ import { Label } from "@/components/hook-form/style";
 import { Tooltip } from "@mui/material";
 import { Stack } from "@mui/system";
 import {useTheme} from "@mui/material/styles";
-const  theme = useTheme();
+
 export const EvaluationDraggableItem = ({
   data,
   onPressEdit,
@@ -14,7 +14,7 @@ export const EvaluationDraggableItem = ({
   const pressEdit = () => {
     onPressEdit?.();
   };
-
+  const  theme = useTheme();
   const pressDelete = () => {
     onPressDelete?.();
   };

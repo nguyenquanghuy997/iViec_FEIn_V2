@@ -24,8 +24,9 @@ const renderStatus = (text, color = '#388E3C') => {
         fontWeight: 600
       }}><EmailInviteIcon fill={color}/><span style={{ marginLeft: 8 }}>{text}</span></Typography>
 }
-const theme = useTheme();
+
 const OrganizationInviteResultCard = ({item}) => {
+  const theme = useTheme();
   const {
     name = 'Name',
     email = 'Email',

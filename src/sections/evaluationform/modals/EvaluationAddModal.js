@@ -19,7 +19,7 @@ const defaultValuess = {
   name:"",
   des: ""
 };
-const theme = useTheme();
+
 export const EvaluationAddModal = ({
   show,
   setShow,
@@ -33,7 +33,7 @@ export const EvaluationAddModal = ({
       name: Yup.string().required("Chưa nhập tên tiêu chí").max(50, 'Độ dài không được quá 50 ký tự'),
       des: Yup.string().max(255, 'Độ dài không được quá 255 ký tự'),
     });
-
+  const theme = useTheme();
   const methodss = useForm({
     defaultValuess,
     resolver: yupResolver(Schema),

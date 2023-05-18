@@ -28,7 +28,7 @@ import React from "react";
 import { useMemo } from "react";
 import {useTheme} from "@mui/material/styles";
 
-const  theme = useTheme();
+
 const EvaluationItemBlock = ({
   // isCheckbox,
   // expanded,
@@ -39,7 +39,7 @@ const EvaluationItemBlock = ({
   item,
   onOpenModel,
 }) => {
-
+  const  theme = useTheme();
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
 

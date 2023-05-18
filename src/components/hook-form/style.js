@@ -1,5 +1,5 @@
 import Iconify from "@/components/Iconify";
-import { STYLE_CONSTANT as style } from "@/theme/palette";
+import palette, { STYLE_CONSTANT as style } from "@/theme/palette";
 import {
   Autocomplete,
   Input,
@@ -15,7 +15,7 @@ import React from "react";
 
 
 
-const useStyles = makeStyles(({theme}) => ({
+const useStyles = makeStyles(() => ({
   paper: {
     maxHeight: "330px !important",
     borderTopLeftRadius: "6px !important",
@@ -29,7 +29,7 @@ const useStyles = makeStyles(({theme}) => ({
       fontSize: "14px",
       lineHeight: "20px",
       padding: "10px 16px",
-      background: theme.palette.common.white,
+      background: palette.light.common.white,
       // boxShadow: "inset 0px -1px 0px #E7E9ED",
       minHeight: '44px'
     },
@@ -41,10 +41,10 @@ const useStyles = makeStyles(({theme}) => ({
       borderRadius: "6px",
     },
     "&::-webkit-scrollbar-track": {
-      background: theme.palette.common.bgrObject,
+      background: palette.light.common.bgrObject,
     },
     "&::-webkit-scrollbar-thumb": {
-      background: theme.palette.common.neutral300,
+      background: palette.light.common.neutral300,
       borderRadius: "30px",
       marginRight: "3px",
     },
