@@ -15,7 +15,6 @@ import { useState } from "react";
 
 function ListQuestionGroupDefault({
   listQuestions,
-  setListQuestions,
   updateListQuestion,
 }) {
   const [showQuestionGroup, setShowQuestionGroup] = useState(false);
@@ -75,7 +74,7 @@ function ListQuestionGroupDefault({
         return;
       } else newData.push(item);
     }
-    setListQuestions([...listQuestions, ...newData]);
+    updateListQuestion([...listQuestions, ...newData]);
     setShowQuestionGroup(false);
     resetSelectItem();
   };
@@ -113,6 +112,7 @@ function ListQuestionGroupDefault({
       return;
     }
     listQuestions[currentIndexQuestion] = data;
+    updateListQuestion(listQuestions)
     setShowEdit(false);
     resetSelectItem();
   };

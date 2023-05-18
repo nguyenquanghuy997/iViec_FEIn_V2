@@ -15,7 +15,7 @@ import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal"
 import ExamFormModal from "@/sections/exam/components/ExamFormModal";
 import { ButtonIcon } from "@/utils/cssStyles";
 import { NumericFormatCustom } from "@/utils/formatNumber";
-import { Box, Divider, TextField, Typography } from "@mui/material";
+import { Box, Divider, TextField, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
@@ -49,6 +49,7 @@ const CreateExamContent = () => {
   };
   const [examData, setExamData] = useState(queryDataDefault);
   const [examQuestions, setExamQuestions] = useState([]);
+  const [examQuestionGroups, setExamQuestionGroups] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showChooseType, setShowChooseType] = useState(false);
   const [showInputStandardPoint, setShowInputStandardPoint] = useState(false)
@@ -67,7 +68,7 @@ const CreateExamContent = () => {
   }
 
   const handleSubmitForm = (data) => {
-    setExamData(data);
+    setExamData({ ...examData, ...data });
     setShowForm(false);
     setShowChooseType(true);
   };
@@ -93,15 +94,32 @@ const CreateExamContent = () => {
     return +a[0] * 60 + +a[1];
   };
 
-  const handleUpdateListQuestion = (data) => {
-    setExamQuestions([...data]);
-    setExamData({
-      ...examData,
-      maximumPoint:
-        examQuestions.reduce(function (a, b) {
-          return a + b.questionPoint;
-        }, 0) || 1,
-    })
+  const handleUpdateListQuestion = (datas) => {
+    if (examData.type == 0) {
+      setExamQuestions([...datas]);
+      setExamData({
+        ...examData,
+        maximumPoint:
+          examQuestions.reduce(function (a, b) {
+            return a + b.questionPoint;
+          }, 0) || 1,
+      })
+    }
+    else {
+      setExamQuestionGroups([...datas])
+      const ESSAY_QUESTION = 2;
+      if (datas.some(x => x.questionTypeId == ESSAY_QUESTION)) {
+        setExamData({ ...examData, maximumPoint: null })
+      }
+      else
+        setExamData({
+          ...examData,
+          maximumPoint:
+            datas.reduce(function (a, b) {
+              return a + b.quantity;
+            }, 0),
+        })
+    }
   };
 
   const handleSaveDraft = async () => {
@@ -141,7 +159,7 @@ const CreateExamContent = () => {
         null,
       examinationQuestionGroups:
         (examData.type == 1 &&
-          examQuestions.map((x) => {
+          examQuestionGroups.map((x) => {
             return {
               ...x,
               questionGroupId: x.questionGroupId,
@@ -224,7 +242,7 @@ const CreateExamContent = () => {
         null,
       examinationQuestionGroups:
         (examData.type == 1 &&
-          examQuestions.map((x) => {
+          examQuestionGroups.map((x) => {
             return {
               questionGroupId: x.questionGroupId,
               totalQuestion: x.quantity,
@@ -257,11 +275,11 @@ const CreateExamContent = () => {
   useEffect(() => {
     if (data) {
       setExamData({ ...data, examTime: minutesFromTime(data.examTime) });
-      if (data.showType == 0) {
+      if (data.type == 0) {
         setExamQuestions(data.questions ?? []);
       }
-      if (data.showType == 1) {
-        setExamQuestions(
+      if (data.type == 1) {
+        setExamQuestionGroups(
           data.examinationQuestionGroups.map((p) => {
             return {
               ...p,
@@ -320,7 +338,7 @@ const CreateExamContent = () => {
               style={{
                 margin: "0 24px 0 8px",
                 padding: "6px 8px",
-                border: examData.standardPoint > examData.maximumPoint || examData.standardPoint == 0 ? "1px solid #E53935" : "1px solid #455570",
+                border: (examData.standardPoint > examData.maximumPoint && examData.maximumPoint) || examData.standardPoint == 0 ? "1px solid #E53935" : "1px solid #455570",
                 borderRadius: "4px",
               }}
             >
@@ -378,8 +396,8 @@ const CreateExamContent = () => {
                     sx={{
                       width: "70px",
                       "& .MuiInputBase-input": {
-                        fontSize: '16px !important',
-                        height: '24px !important',
+                        fontSize: '11px !important',
+                        height: '18px !important',
                         fontWeight: 600,
                         textAlign: 'center !important',
                         padding: '0 !important',
@@ -391,39 +409,47 @@ const CreateExamContent = () => {
 
               </Box>
             </View>
+            <View>
+              <Tooltip title={
+                examData.type == 1 && !examData.maximumPoint
+                  ? 'Không thể xác định điểm tối đa do trong đề có ít nhất 1 câu hỏi câu hỏi tự luận ngẫu nhiên'
+                  : ''}>
+                <Box style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: "6px 8px",
+                  border: "1px solid #455570",
+                  borderRadius: "4px",
+                }}>
+                  <Typography
+                    sx={{
+                      minWidth: '70px',
+                      textAlign: 'center',
+                      fontSize: "13px",
+                      lineHeight: "20px",
+                      color: "#455570",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Điểm tối đa
+                  </Typography>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      lineHeight: "18px",
+                      marginTop: 4,
+                    }}
+                  >
+                    {examData.maximumPoint ?? 'Không xác định'}
+                  </span>
 
-            <View
-              allcenter={"true"}
-              style={{
-                padding: "6px 8px",
-                border: "1px solid #455570",
-                borderRadius: "4px",
-              }}
-            >
-              <Typography
-                sx={{
-                  minWidth: '70px',
-                  textAlign: 'center',
-                  fontSize: "13px",
-                  lineHeight: "20px",
-                  color: "#455570",
-                  fontWeight: 500,
-                }}
-              >
-                Điểm tối đa
-              </Typography>
-              <span
-                style={{
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  lineHeight: "24px",
-                  marginTop: 4,
-                }}
-              >
-                {examQuestions.reduce((accumulator, object) => {
-                  return accumulator + object.questionPoint;
-                }, 0)}
-              </span>
+                </Box>
+              </Tooltip>
+
+
             </View>
           </View>
         </View>
@@ -484,8 +510,8 @@ const CreateExamContent = () => {
             />
           ) : (
             <ListQuestionGroupDefault
-              listQuestions={examQuestions}
-              setListQuestions={setExamQuestions}
+              listQuestions={examQuestionGroups}
+              setListQuestions={setExamQuestionGroups}
               updateListQuestion={handleUpdateListQuestion}
             />
           )}
