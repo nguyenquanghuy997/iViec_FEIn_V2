@@ -37,6 +37,7 @@ import { useSnackbar } from "notistack";
 import CropImage from "@/sections/offer-form/component/crop-image/CropImage";
 import { getFileUrl } from "@/utils/helper";
 import useAuth from "@/hooks/useAuth";
+import palette from "@/theme/palette";
 
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
   '&.file-upload-item': {
@@ -50,7 +51,6 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
     borderRadius: 6,
   }
 }));
-const theme= useTheme();
 const defaultValues = {
   id: undefined,
   name: undefined,
@@ -71,7 +71,7 @@ export const renderFileUploadItem = (file, index, removeFileUpload, displayButto
       <Stack sx={{mx: 1}}>
         <Typography
           sx={{
-            color: theme.palette.common.neutral700,
+            color: palette.light.common.neutral700,
             fontSize: 13,
             fontWeight: 600,
             whiteSpace: "nowrap",
@@ -79,12 +79,12 @@ export const renderFileUploadItem = (file, index, removeFileUpload, displayButto
             textOverflow: 'ellipsis',
             maxWidth: '125px',
           }}>{file.name}</Typography>
-        <Typography sx={{color: theme.palette.common.neutral700, fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
+        <Typography sx={{color: palette.light.common.neutral700, fontSize: 12, fontWeight: 400}}>{calcFileSize(file.size)}</Typography>
       </Stack>
       {!displayButtonDelete &&
         <IconButton
           size='small'
-          sx={{color: theme.palette.common.blue700, mx: 0.5}}
+          sx={{color: palette.light.blue700, mx: 0.5}}
           onClick={() => {
             removeFileUpload(index)
           }}
@@ -94,7 +94,6 @@ export const renderFileUploadItem = (file, index, removeFileUpload, displayButto
   )
 }
 const OfferFormModal = ({isOpen, onClose, item, title}) => {
-  const theme = useTheme();
   const auth = useAuth();
   const isEditMode = !!item?.id;
   const {data: preview = {}} = useGetPreviewOfferTemplateQuery(
@@ -105,6 +104,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
     {OrganizationId: auth.user.organizationId},
     {skip: item?.id}
   );
+  const theme= useTheme();
   const [addForm] = useAddOfferTemplateMutation();
   const [updateForm] = useUpdateOfferTemplateMutation();
   const [uploadFiles] = useUploadImageOfferMutation();

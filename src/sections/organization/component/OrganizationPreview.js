@@ -9,20 +9,21 @@ import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBot
 import {FaRegTrashAlt} from "react-icons/fa";
 import {RiArrowRightLine} from "react-icons/ri";
 import {useTheme} from "@mui/material/styles";
+import palette from "@/theme/palette";
 
-const  theme = useTheme();
+
 const renderInfoOrganization = (key, value) => {
   return (
       <Box sx={{display: 'flex', alignItems: 'flex-start', my: 3}}>
-        <Typography sx={{fontSize: 14, fontWeight: 400, color: theme.palette.common.neutral700, minWidth: '150px'}}>{key}:</Typography>
-        <Typography sx={{fontSize: 14, fontWeight: 400, color: theme.palette.common.neutral700, minWidth: '120px'}}>{value}</Typography>
+        <Typography sx={{fontSize: 14, fontWeight: 400, color: palette.light.common.neutral700, minWidth: '150px'}}>{key}:</Typography>
+        <Typography sx={{fontSize: 14, fontWeight: 400, color: palette.light.common.neutral700, minWidth: '120px'}}>{value}</Typography>
       </Box>
   )
 }
 
 const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParentNode, onOpenForm, setActionType}) => {
   const router = useRouter();
-  const theme = useTheme();
+
   const {data: organization, isLoading} = useGetOrganizationByIdQuery({
     OrganizationId: nodes?.id
   }, {skip: !nodes?.id});
@@ -43,7 +44,7 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
     setActionType(1);
     onGetParentNode(node);
   }
-
+  const theme = useTheme();
   return (
       <>
         <Drawer
