@@ -139,8 +139,8 @@ function Question() {
                   fontSize: "10px",
                   borderRadius: "20px",
                 }}
-                src={updatedUser.avatar}
-                name={updatedUser.name}
+                src={updatedUser?.avatar}
+                name={updatedUser?.name}
               />
 
               {updatedUser?.name}

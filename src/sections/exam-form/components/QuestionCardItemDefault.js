@@ -223,7 +223,8 @@ function QuestionCardItemDefault({ index, item, showIndex, hasRoleEdit, checked,
                     borderRadius: "100px",
                     fontSize: "8px",
                   }}
-                  name={user && `${user?.lastName || ""} ${user?.firstName}`} />{user && `${user?.lastName || ""} ${user?.firstName}`}
+                  name={item.id ? item?.createdUser?.name : user && `${user?.lastName || ""} ${user?.firstName}`} />
+                {item.id ? item?.createdUser?.name : user && `${user?.lastName || ""} ${user?.firstName}`}
               </>
               )}
             </View>

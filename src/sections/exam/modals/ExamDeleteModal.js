@@ -10,6 +10,7 @@ import {
 import { DialogActions, DialogContent, Divider } from "@mui/material";
 import { useSnackbar } from "notistack";
 import React from "react";
+import { View } from "@/components/DesignSystem/FlexStyled";
 
 const ExamDeleteModal = ({
   showConfirmMultiple,
@@ -22,7 +23,7 @@ const ExamDeleteModal = ({
 
   const handleChangeStatus = async () => {
     try {
-      await deleteExam({"ids":examIds}).unwrap();
+      await deleteExam({ "ids": examIds }).unwrap();
       enqueueSnackbar("Thực hiện thành công !");
       onClose();
     } catch (err) {
@@ -39,6 +40,37 @@ const ExamDeleteModal = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
+      <View
+        flexrow="true"
+        atcenter="center"
+        jcend={'true'}
+        pv={12}
+        ph={24}
+        bgcolor={"#FFF"}
+      >
+        <ButtonDS
+          type="button"
+          sx={{
+            backgroundColor: "#fff",
+            boxShadow: "none",
+            ":hover": {
+              backgroundColor: "#EFF3F7",
+            },
+            textTransform: "none",
+            padding: "12px",
+            minWidth: "unset",
+          }}
+          onClick={onClose}
+          icon={
+            <Iconify
+              icon={"mi:close"}
+              width={20}
+              height={20}
+              color="#5C6A82"
+            />
+          }
+        />
+      </View>
       <DialogContent
         sx={{
           display: "flex",
@@ -65,7 +97,7 @@ const ExamDeleteModal = ({
         </DialogContentTextModelStyle>
         <Divider />
       </DialogContent>
-      <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
+      <DialogActions sx={{ borderTop: "1px solid #E7E9ED", padding: '16px 24px !important' }}>
         <ButtonCancel tittle="Hủy" onClick={onClose} />
 
         <ButtonDS

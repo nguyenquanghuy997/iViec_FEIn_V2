@@ -1,38 +1,37 @@
 import DynamicColumnsTable from "@/components/BaseComponents/table";
-import {View} from "@/components/FlexStyled";
+import { View } from "@/components/FlexStyled";
 import {
   useGetAllExaminationQuery,
   useGetListColumnExamsQuery,
   useUpdateListColumnExamsMutation,
 } from "@/sections/exam/ExamSlice"
-import {useRouter} from "next/router";
-import {useMemo, useState} from "react";
+import { useRouter } from "next/router";
+import { useMemo, useState } from "react";
 import TextMaxLine from "@/components/TextMaxLine";
-import {PATH_DASHBOARD} from "@/routes/paths";
-import {Box, Button, ButtonGroup, ClickAwayListener, MenuItem, MenuList, Typography} from "@mui/material";
+import { Box, Button, ButtonGroup, ClickAwayListener, MenuItem, MenuList, Typography } from "@mui/material";
 import Iconify from "@/components/Iconify";
-import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
-import {DownloadLineIcon, ImportLinkIcon, TeamLineIcon} from "@/assets/ActionIcon";
+import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
+import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
 import Divider from "@mui/material/Divider";
 import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
-import {QuestionFormModal} from "@/sections/exam/components/QuestionFormModal";
+import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
 import ExamFormModal from "../components/ExamFormModal";
 import ExamChooseTypeModal from "../components/ExamChooseTypeModal";
-import {TBL_FILTER_TYPE} from "@/config";
-import {LIST_EXAM_TYPE, LIST_STATUS} from "@/utils/formatString";
-import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
-import {ExamType, Status} from "@/utils/enum";
-import {fDate} from "@/utils/formatTime";
+import { TBL_FILTER_TYPE } from "@/config";
+import { LIST_EXAM_TYPE, LIST_STATUS } from "@/utils/formatString";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import { ExamType, Status } from "@/utils/enum";
+import { fDate } from "@/utils/formatTime";
 
 export const ExamItem = ({
-                           hideTable,
-                           headerProps,
-                         }) => {
+  hideTable,
+  headerProps,
+}) => {
   const router = useRouter();
 
   const listArrayOtherIdsFilter = ["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
   const [showFormQuestion, setShowFormQuestion] = useState(false);
-  const {query = {PageIndex: 1, PageSize: 10}, isReady} = router;
+  const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   let reqData = {};
   for (let f in query) {
     let val = query[f];
@@ -42,7 +41,7 @@ export const ExamItem = ({
     reqData[f] = val;
   }
 
-  const {data: Data, isLoading} = useGetAllExaminationQuery(reqData, {
+  const { data: Data, isLoading } = useGetAllExaminationQuery(reqData, {
     skip: !isReady,
   });
 
@@ -63,18 +62,8 @@ export const ExamItem = ({
         dataIndex: "name",
         title: "Đề thi",
         width: "150px",
-        render: (item, record) => (
-          <TextMaxLine
-            sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
-            onClick={() => router.push({
-              pathname: PATH_DASHBOARD.applicant.view(record?.applicantId), query: {
-                correlationId: record?.correlationId,
-                organizationId: record?.organizationId,
-                recruitmentId: record?.recruitmentId,
-                applicantId: record?.applicantId,
-              }
-            }, undefined, { shallow: true })}
-          >
+        render: (item) => (
+          <TextMaxLine sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }} >
             {item}
           </TextMaxLine>
         ),
@@ -341,21 +330,21 @@ export const ExamItem = ({
                 disableGutters={true}
               >
                 <MenuItem>
-                  <TeamLineIcon sx={{mr: "12px"}}/>
+                  <TeamLineIcon sx={{ mr: "12px" }} />
                   <Typography ml={"12px"} variant={"textSize13600"}>
                     Lấy từ kho iVIEC
                   </Typography>
                 </MenuItem>
-                <Divider/>
+                <Divider />
                 <MenuItem>
-                  <DownloadLineIcon/>
+                  <DownloadLineIcon />
                   <Typography ml={"12px"} variant={"textSize13600"}>
                     Tải mẫu Excel
                   </Typography>
                 </MenuItem>
-                <Divider/>
+                <Divider />
                 <MenuItem>
-                  <ImportLinkIcon sx={{mr: "12px"}}/>
+                  <ImportLinkIcon sx={{ mr: "12px" }} />
                   <Typography ml={"12px"} variant={"textSize13600"}>
                     Import Excel
                   </Typography>
@@ -387,7 +376,7 @@ export const ExamItem = ({
   }
 
   return (
-    <View style={{margin: '-32px'}}>
+    <View style={{ margin: '-32px' }}>
       <View>
         <DynamicColumnsTable
           columns={columns}
@@ -434,9 +423,9 @@ export const ExamItem = ({
           setItemSelected={setItemSelected}
         />
 
-        <ExamFormModal show={showForm} onClose={onCloseExamForm} onSubmit={handleSubmitForm}/>
+        <ExamFormModal show={showForm} onClose={onCloseExamForm} onSubmit={handleSubmitForm} />
         <ExamChooseTypeModal data={dataForm} show={showChooseType} onClose={onCloseExamChooseTypeForm}
-                             onSubmit={handleSubmitCreate}/>
+          onSubmit={handleSubmitCreate} />
       </View>
     </View>
   );

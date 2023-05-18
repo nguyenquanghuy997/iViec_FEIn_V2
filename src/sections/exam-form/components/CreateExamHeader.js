@@ -15,7 +15,7 @@ const CreateExamHeader = ({ isCreate, handleSaveDraft, handleSave, handleCancel 
         }}>
             <Box>
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link color="inherit" href="/" sx={{
+                    <Link color="inherit" href="/settings/exam/exam-business" sx={{
                         fontSize: '.875rem',
                         fontWeight: 600,
                         color: '#8A94A5'

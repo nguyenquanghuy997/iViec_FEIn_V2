@@ -48,6 +48,7 @@ const examinationSlice = apiWithTag.injectEndpoints({
         method: "GET",
         params,
       }),
+      providesTags: [{ type: "EXAMINATION", id: "GetById" }],
     }),
     getQuestionGroup: builder.query({
       query: (params = {}) => ({
@@ -68,6 +69,7 @@ const examinationSlice = apiWithTag.injectEndpoints({
         method: "PATCH",
         data,
       }),
+      invalidatesTags: [{ type: "EXAMINATION", id: "GetById" }],
     }),
     updateActiveQuestionGroup: builder.mutation({
       query: (data) => ({

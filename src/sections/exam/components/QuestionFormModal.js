@@ -54,7 +54,7 @@ const defaultValues = {
   questionType: 0,
   questionPoint: 1,
   questionState: 0,
-  questionGroupId: "",
+  questionGroupId: null,
   questionTitle: "",
   questionFilePaths: [],
   isActive: true,
@@ -204,8 +204,8 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
       if (isNotSave) {
         const data = {
           ...e,
-          answers: e.answers.length?e.answers: null,
-          questionGroupName: items.find(x => x.id === e.questionGroupId).name
+          answers: e.answers.length > 0 && !isEssay ? e.answers : null,
+          questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name
         }
         handleNoSave(data)
       }
@@ -393,6 +393,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
       reset({ ...defaultValues, questionGroupId: router.query.slug });
       setListAnswer([defaultAnswer]);
       setListMedia([])
+      getQuestionGroup()
     }
 
   }, [show, isEditMode]);

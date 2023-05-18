@@ -24,7 +24,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showQuestionGallaryInternalModal, setShowQuestionGallaryInternalModal] = useState(false);
   const [showQuestionGallaryDetailModal, setShowQuestionGallaryDetailModal] = useState(false);
-  const [currentIndexQuestion, setCurrentIndexQuestion] = useState(0);
+  const [currentIndexQuestion, setCurrentIndexQuestion] = useState(-1);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionGallary, setQuestionGallary] = useState(null);
   const [itemIndexSelected, setItemIndexSelected] = useState([]);
@@ -56,29 +56,27 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
    */
   const handleCreateEditQuestion = (data) => {
     //create
-    if (currentIndexQuestion == -1) {
+    if (currentIndexQuestion === -1) {
       // check duplicate
-      if (listQuestions.find(x => x.questionTitle == data.questionTitle)) {
+      if (listQuestions.some(x => x.questionTitle === data.questionTitle)) {
         enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
           variant: 'error'
         })
         return;
       }
-      listQuestions.push(data);
+      listQuestions = [...listQuestions, data];
     }
     //edit
     else {
       // check duplicate
-      if (listQuestions.find((x, index) => x.questionTitle == data.questionTitle && index != currentIndexQuestion)) {
+      if (listQuestions.some((x, index) => x.questionTitle == data.questionTitle && index != currentIndexQuestion)) {
         enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
           variant: 'error'
         })
         return;
       }
       listQuestions[currentIndexQuestion] = data;
-      // setListData([...listData])
     }
-
     updateListQuestion(listQuestions)
 
     setShowQuestionForm(false)
@@ -93,12 +91,11 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   }
 
   const handlerDeleteQuestion = () => {
-    if(currentIndexQuestion >= 0){
-      listQuestions.splice(currentIndexQuestion, 1)
-      updateListQuestion(listQuestions)
+    if (currentIndexQuestion != -1) {
+      updateListQuestion(listQuestions.filter((el, i) => i != currentIndexQuestion))
     }
-    else{
-      updateListQuestion(listQuestions.filter((el,i)=>!itemIndexSelected.some(j => i === j)))
+    else {
+      updateListQuestion(listQuestions.filter((el, i) => !itemIndexSelected?.some(j => i === j)))
     }
     // setListData([...listData])
 
@@ -123,7 +120,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     setShowQuestionGallaryDetailModal(true)
   }
 
-  const resetSelectItem = ()=>{
+  const resetSelectItem = () => {
     setCurrentIndexQuestion(-1)
     setCurrentQuestion(null)
     setItemIndexSelected([])
@@ -139,16 +136,16 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     }
   }
 
-  const isSelected = (index) =>{
-    return itemIndexSelected.some(x=>x==index)
+  const isSelected = (index) => {
+    return itemIndexSelected.some(x => x == index)
   }
 
-  const handleSelectAll = ()=>{
-    if(itemIndexSelected.length == listQuestions.length){
+  const handleSelectAll = () => {
+    if (itemIndexSelected.length == listQuestions.length) {
       setItemIndexSelected([])
     }
-    else{
-      setItemIndexSelected(listQuestions.map((x,i)=>i))
+    else {
+      setItemIndexSelected(listQuestions.map((x, i) => i))
     }
   }
 
@@ -170,7 +167,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                     onChange={handleSelectAll}
                     icon={<CheckboxIconDefault />}
                     checkedIcon={<CheckboxIconChecked />}
-                    indeterminateIcon={<CheckboxIconIndeterminate/>}
+                    indeterminateIcon={<CheckboxIconIndeterminate />}
                     title="Chọn tất cả"
                     style={{
                       margin: '-6px 24px 0 -6px'
@@ -338,8 +335,8 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         open={itemIndexSelected.length > 0}
         itemSelected={itemIndexSelected}
         canEdit={!listQuestions[itemIndexSelected[0]]?.id}
-        onClose={()=>setItemIndexSelected([])}
-        onDelete={() => openDeleteQuestionModal()}
+        onClose={() => setItemIndexSelected([])}
+        onDelete={() => openDeleteQuestionModal(null,-1)}
         onEdit={() => openEditQuestionForm(listQuestions[itemIndexSelected[0]], itemIndexSelected[0])} />
     </>
   )

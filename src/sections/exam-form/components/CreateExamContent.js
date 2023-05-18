@@ -28,12 +28,11 @@ const CreateExamContent = () => {
   const [updateExam] = useUpdateExamMutation();
   const { enqueueSnackbar } = useSnackbar();
   const examId = router.query.slug;
-  const { data: data } = useGetExaminationByIdQuery(
-    {
-      Id: examId,
-    },
-    { skip: !examId }
-  );
+  const { data: data } = useGetExaminationByIdQuery({
+    Id: examId
+  }, {
+    skip: !examId
+  });
   const {
     query = {
       name: "",
@@ -52,6 +51,20 @@ const CreateExamContent = () => {
   const [examQuestions, setExamQuestions] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showChooseType, setShowChooseType] = useState(false);
+  const [showInputStandardPoint, setShowInputStandardPoint] = useState(false)
+
+  const handleChangeStandardPoint = (event) => {
+    setExamData({
+      ...examData,
+      standardPoint: event.target.value
+    });
+  };
+
+  const onOutFocusInput = () => {
+    if (!examData.standardPoint) {
+      setShowInputStandardPoint(false)
+    }
+  }
 
   const handleSubmitForm = (data) => {
     setExamData(data);
@@ -82,60 +95,48 @@ const CreateExamContent = () => {
 
   const handleUpdateListQuestion = (data) => {
     setExamQuestions([...data]);
-  };
-
-  const handleSaveDraft = async () => {
-    const body = {
+    setExamData({
       ...examData,
-      totalQuestion: examQuestions.length,
-      standardPoint: 1,
-      maximumPoint: examQuestions.reduce(function (a, b) {
-        return a + b.questionPoint;
-      }, 0),
-      examinationQuestions: examQuestions.map((x) => {
-        return { ...x, questionId: x.id };
-      }),
-    };
-    try {
-      await createExam(body).unwrap();
-      enqueueSnackbar("Lưu đề thi thành công");
-      router.push("/settings/exam/exam-business");
-    } catch {
-      enqueueSnackbar("Lưu đề thi thất bại", {
-        variant: "error",
-      });
-    }
-  };
-
-  const handleSave = async () => {
-    if (examQuestions.length == 0 && examData.type == 0) {
-      enqueueSnackbar("Bạn cần thêm câu hỏi vào đề thi", {
-        variant: "error",
-      });
-      return;
-    }
-    if (examQuestions.length == 0 && examData.type == 2) {
-      enqueueSnackbar("Bạn cần thêm nhóm câu hỏi vào đề thi", {
-        variant: "error",
-      });
-      return;
-    }
-    const body = {
-      ...examData,
-      examTime: new Date(examData.examTime * 60 * 1000)
-        .toISOString()
-        .substr(11, 8),
-      totalQuestion: examQuestions.length,
-      standardPoint: examData.standardPoint ?? 1,
       maximumPoint:
         examQuestions.reduce(function (a, b) {
           return a + b.questionPoint;
         }, 0) || 1,
-      showType: examData.type,
+    })
+  };
+
+  const handleSaveDraft = async () => {
+    const body = {
+      id: examData.id,
+      name: examData.name,
+      description: examData.description,
+      showType: examData.showType,
+      type: examData.type,
+      totalQuestion: examQuestions.length,
+      standardPoint: examData.standardPoint ?? 1,
+      isQuestionMixing: examData.isQuestionMixing,
+      examTime: new Date(examData.examTime * 60 * 1000)
+        .toISOString()
+        .substr(11, 8),
+      maximumPoint:
+        examQuestions.reduce(function (a, b) {
+          return a + b.questionPoint;
+        }, 0) || 1,
       examinationQuestions:
         (examData.type == 0 &&
           examQuestions.map((x) => {
-            return { ...x, questionId: x.id };
+            return {
+              questionId: x.id,
+              questionCreation: !x.id ? {
+                questionTitle: x.questionTitle,
+                answers: x.answers,
+                questionPoint: x.questionPoint,
+                questionType: x.questionType,
+                questionState: x.questionState,
+                questionGroupId: x.questionGroupId,
+                isActive: x.isActive,
+                questionFilePaths: x.questionFilePaths
+              } : null
+            };
           })) ||
         null,
       examinationQuestionGroups:
@@ -165,6 +166,89 @@ const CreateExamContent = () => {
     }
   };
 
+  const handleSave = async () => {
+    if (examQuestions.length == 0 && examData.type == 0) {
+      enqueueSnackbar("Bạn cần thêm câu hỏi vào đề thi", {
+        variant: "error",
+      });
+      return;
+    }
+    if (examQuestions.length == 0 && examData.type == 1) {
+      enqueueSnackbar("Bạn cần thêm nhóm câu hỏi vào đề thi", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (!examData.standardPoint || examData.standardPoint == 0) {
+      enqueueSnackbar("Bạn cần nhập điểm sàn", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const body = {
+      id: examData.id,
+      name: examData.name,
+      description: examData.description,
+      showType: examData.showType,
+      type: examData.type,
+      totalQuestion: examQuestions.length,
+      standardPoint: examData.standardPoint,
+      isQuestionMixing: examData.isQuestionMixing,
+      examTime: new Date(examData.examTime * 60 * 1000)
+        .toISOString()
+        .substr(11, 8),
+      maximumPoint:
+        examQuestions.reduce(function (a, b) {
+          return a + b.questionPoint;
+        }, 0) || 1,
+      examinationQuestions:
+        (examData.type == 0 &&
+          examQuestions.map((x) => {
+            return {
+              questionId: x.id,
+              questionCreation: !x.id ? {
+                questionTitle: x.questionTitle,
+                answers: x.answers,
+                questionPoint: x.questionPoint,
+                questionType: x.questionType,
+                questionState: x.questionState,
+                questionGroupId: x.questionGroupId,
+                isActive: x.isActive,
+                questionFilePaths: x.questionFilePaths
+              } : null
+            };
+          })) ||
+        null,
+      examinationQuestionGroups:
+        (examData.type == 1 &&
+          examQuestions.map((x) => {
+            return {
+              questionGroupId: x.questionGroupId,
+              totalQuestion: x.quantity,
+              type: x.questionTypeId == 1 ? 0 : 1,
+            };
+          })) ||
+        null,
+    };
+
+    try {
+      if (!examId) {
+        await createExam(body).unwrap();
+      } else {
+        await updateExam(body).unwrap();
+      }
+      enqueueSnackbar("Lưu đề thi thành công");
+      router.push("/settings/exam/exam-business");
+
+    } catch {
+      enqueueSnackbar("Lưu đề thi thất bại", {
+        variant: "error",
+      });
+    }
+  };
+
   const handleCancel = async () => {
     router.push("/settings/exam/exam-business");
   };
@@ -175,12 +259,6 @@ const CreateExamContent = () => {
       setExamQuestions(data.questions ?? []);
     }
   }, [data]);
-
-  const [values, setValues] = React.useState();
-
-  const handleChange = (event) => {
-    setValues(event.target.value);
-  };
 
   return (
     <>
@@ -217,18 +295,20 @@ const CreateExamContent = () => {
             </SubTitleStyle>
           </View>
 
-          <View flexrow={"true"} atcenter={"true"}>
+          <View flexrow={"true"} allcenter={"true"}>
             <View
               allcenter={"true"}
               style={{
                 margin: "0 24px 0 8px",
                 padding: "6px 8px",
-                border: "1px solid #455570",
+                border: examData.standardPoint > examData.maximumPoint || examData.standardPoint == 0 ? "1px solid #E53935" : "1px solid #455570",
                 borderRadius: "4px",
               }}
             >
               <Typography
                 sx={{
+                  minWidth: '70px',
+                  textAlign: 'center',
                   fontSize: "13px",
                   lineHeight: "20px",
                   color: "#455570",
@@ -238,43 +318,59 @@ const CreateExamContent = () => {
                 Điểm sàn
               </Typography>
 
-              <div
+              <Box
                 style={{
                   fontSize: "16px",
                   fontWeight: 600,
                   lineHeight: "24px",
                 }}
               >
-                <ButtonIcon
-                  sx={{
-                    backgroundColor: "transparent",
-                    "&:hover": {
-                      backgroundColor: "unset",
-                    },
-                  }}
-                  onClick={(e) => e.target.value}
-                  icon={
-                    <Iconify
-                      icon={"ri:edit-2-fill"}
-                      width={20}
-                      height={20}
-                      color="#5C6A82"
-                    />
-                  }
-                />
-                {/* {examData.standardPoint ?? "-"} */}
-                <TextField
-                  value={values}
-                  onChange={handleChange}
-                  name="numberformat"
-                  id="formatted-numberformat-input"
-                  InputProps={{
-                    disableUnderline: true,
-                    inputComponent: NumericFormatCustom,
-                  }}
-                  variant="standard"
-                />
-              </div>
+                {
+                  (!showInputStandardPoint && !examData.standardPoint) && <ButtonIcon
+                    sx={{
+                      backgroundColor: "transparent",
+                      "&:hover": {
+                        backgroundColor: "unset",
+                      },
+                    }}
+                    onClick={() => setShowInputStandardPoint(true)}
+                    icon={
+                      <Iconify
+                        icon={"ri:edit-2-fill"}
+                        width={14}
+                        height={14}
+                        color="#5C6A82"
+                      />
+                    }
+                  />
+                }
+                {
+                  (showInputStandardPoint || examData.standardPoint) && <TextField
+                    value={examData.standardPoint}
+                    onChange={handleChangeStandardPoint}
+                    onBlur={(e) => onOutFocusInput(e)}
+                    name="numberformat"
+                    id="formatted-numberformat-input"
+                    InputProps={{
+                      disableUnderline: true,
+                      inputComponent: NumericFormatCustom,
+                    }}
+                    variant="standard"
+                    sx={{
+                      width: "70px",
+                      "& .MuiInputBase-input": {
+                        fontSize: '16px !important',
+                        height: '24px !important',
+                        fontWeight: 600,
+                        textAlign: 'center !important',
+                        padding: '0 !important',
+                        marginTop: '4px !important'
+                      }
+                    }}
+                  />
+                }
+
+              </Box>
             </View>
 
             <View
@@ -287,6 +383,8 @@ const CreateExamContent = () => {
             >
               <Typography
                 sx={{
+                  minWidth: '70px',
+                  textAlign: 'center',
                   fontSize: "13px",
                   lineHeight: "20px",
                   color: "#455570",
