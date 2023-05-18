@@ -23,7 +23,7 @@ import {useTheme} from "@mui/material/styles";
 
 export const PipelineItem = () => {
   const router = useRouter();
-  const  theme = useTheme();
+  const theme = useTheme();
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllPipelineQuery(query, {
     skip: !isReady,

@@ -24,7 +24,7 @@ export const JobTypeItem = () => {
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllJobTypeQuery(query, { skip: !isReady });
-  const  theme = useTheme();
+  const theme = useTheme();
   const [openEdit, setOpenEdit] = useState(false);
 
   const { canAccess } = useRole();

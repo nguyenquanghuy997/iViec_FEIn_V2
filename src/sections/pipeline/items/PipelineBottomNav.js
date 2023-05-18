@@ -32,7 +32,7 @@ const PipelineBottomNav = ({
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
-  const  theme = useTheme();
+  const theme = useTheme();
   const { canAccess } = useRole();
   // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);

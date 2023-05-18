@@ -22,7 +22,7 @@ export default function CropImage({ logo, handleSubmit }) {
   const [image, setImage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
-  const  theme = useTheme();
+  const theme = useTheme();
   const { control } = useFormContext();
   const [uploadImage] = useUploadImageOfferMutation();
   const onSubmitImage = async () => {

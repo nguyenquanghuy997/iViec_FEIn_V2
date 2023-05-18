@@ -62,7 +62,7 @@ function RecruitmentPreviewItem({
   const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_JOB), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB), []);
   const router = useRouter();
-  const  theme = useTheme();
+  const theme = useTheme();
   const RecruitmentId = router.query.slug;
   const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
     Id: RecruitmentId,

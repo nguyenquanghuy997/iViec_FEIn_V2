@@ -21,7 +21,7 @@ const RecruitmentAdBottomNav = ({
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
   };
-  const  theme = useTheme();
+  const theme = useTheme();
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
     setselectedList([]);

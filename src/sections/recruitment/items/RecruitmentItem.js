@@ -66,7 +66,7 @@ import {useTheme} from "@mui/material/styles";
 export const RecruitmentItem = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const  theme = useTheme();
+  const theme = useTheme();
   // modal redux
   const dispatch = useDispatch();
   const toggleModalState = useSelector((state) => state.modalReducer.openState);

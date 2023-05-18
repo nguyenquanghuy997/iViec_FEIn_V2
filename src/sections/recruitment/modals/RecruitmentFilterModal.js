@@ -27,7 +27,7 @@ RecruitmentFilterModal.propTypes = {
 };
 
 function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
-  const  theme = useTheme();
+  const theme = useTheme();
   const router = useRouter();
   const { query } = router;
   const defaultValues = {

@@ -27,7 +27,7 @@ const JobTypeBottomNav = ({
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
-  const  theme = useTheme();
+  const theme = useTheme();
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
     setselectedList([]);

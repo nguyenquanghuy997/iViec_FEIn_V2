@@ -50,7 +50,7 @@ const RecruitmentPreview = ({ data, open, onClose }) => {
     data?.slug,
     { skip: !data?.slug }
   );
-  const  theme = useTheme();
+  const theme = useTheme();
   const { data: Organization = {} } = useGetOrganizationPreviewQuery(
     data?.organizationId,
     { skip: !data?.organizationId }

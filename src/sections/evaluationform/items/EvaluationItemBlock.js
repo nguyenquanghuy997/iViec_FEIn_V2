@@ -39,7 +39,7 @@ const EvaluationItemBlock = ({
   item,
   onOpenModel,
 }) => {
-  const  theme = useTheme();
+  const theme = useTheme();
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
 

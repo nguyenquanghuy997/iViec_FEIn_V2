@@ -15,7 +15,7 @@ const ViewSchedule = ({data, check, handleClick, handleClickDialog}) => {
   //   BookingCalendarId: id,
   // });
   const { user } = useAuth();
-  const  theme = useTheme();
+  const theme = useTheme();
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
   const renderSwitch = (param) => {

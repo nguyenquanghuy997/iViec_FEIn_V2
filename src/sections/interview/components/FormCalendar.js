@@ -116,7 +116,7 @@ export const FormCalendar = ({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  const  theme = useTheme();
+  const theme = useTheme();
   const {
     reset,
     setValue,

@@ -25,7 +25,7 @@ const JobTypeActiveModal = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [status] = useUpdateStatusJobTypeMutation();
-  const  theme = useTheme();
+  const theme = useTheme();
   const handleChangeStatus = (async () => {
     try {
       const data = {

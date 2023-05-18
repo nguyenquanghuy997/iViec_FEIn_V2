@@ -14,7 +14,7 @@ export const EvaluationDraggableItem = ({
   const pressEdit = () => {
     onPressEdit?.();
   };
-  const  theme = useTheme();
+  const theme = useTheme();
   const pressDelete = () => {
     onPressDelete?.();
   };

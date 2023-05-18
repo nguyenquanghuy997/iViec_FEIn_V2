@@ -49,7 +49,7 @@ function RecruitmentAdFilterModal({ columns, isOpen, onClose, onSubmit}) {
     // defaultValues: useMemo(() => defaultValues, [query]),
     defaultValues,
   });
-  const  theme = useTheme();
+  const theme = useTheme();
   const {
     watch,
     handleSubmit,

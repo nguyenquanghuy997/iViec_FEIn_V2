@@ -33,7 +33,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
     { BookingCalendarId: item?.id },
     { skip: !item?.id }
   );
-  const  theme = useTheme();
+  const theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
   const [deleteCalendar] = useDeleteCalendarMutation();
   const { enqueueSnackbar } = useSnackbar();
