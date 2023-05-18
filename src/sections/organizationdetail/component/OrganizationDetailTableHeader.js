@@ -7,8 +7,8 @@ import { AddIcon } from "@/assets/ActionIcon";
 import React from "react";
 import { FilterIcon } from "@/assets/FilterIcon";
 import {useTheme} from "@mui/material/styles";
-const theme = useTheme();
 const OrganizationDetailTableHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit, onOpenInviteForm, onOpenListInvite }) => {
+    const theme = useTheme();
     return (
         <>
             <Stack
