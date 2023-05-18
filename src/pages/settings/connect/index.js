@@ -7,6 +7,8 @@ import React, { useEffect, useState } from "react";
 import useAuth from "@/hooks/useAuth";
 import { useLazyGetInternalAccountQuery, useSetActiveInternalAccountMutation } from "@/sections/connect/ConnectSlice";
 import { useSnackbar } from "notistack";
+import {useTheme} from "@mui/material/styles";
+// import { DragDropContext } from "react-beautiful-dnd";
 
 Board.getLayout = function getLayout(pageProps, page) {
   return <SettingLayout permissions={PERMISSION_PAGES.connect} {...pageProps} >{page}</SettingLayout>;
@@ -19,6 +21,8 @@ export default function Board() {
   const [activeInter] = useSetActiveInternalAccountMutation();
   const [itemData, setItemData] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
+
   useEffect(async () => {
     await dataInternal({OrganizationId: auth.user.organizationId}).unwrap().then((response) => {
       setItemData([
@@ -29,12 +33,12 @@ export default function Board() {
         },
       ]);
     })
-    .catch(() => {
-    
-    });
-    
+      .catch(() => {
+
+      });
+
   }, [])
-  
+
   const handleChangeFE = async (value) => {
     await activeInter({isActive: value, id: Data.id}).unwrap().then(() => {
       enqueueSnackbar("Thực hiện thành công!", {
@@ -47,12 +51,12 @@ export default function Board() {
       });
     })
   }
-  
+
   return (
     <Container maxWidth={themeStretch ? false : "xl"}>
       <ConnectCard
         accounts={itemData}
-        color={"#FB8906"}
+        color={theme.palette.common.green600}
         title="KẾT NỐI WEBSITE TUYỂN DỤNG NỘI BỘ"
         type='outside'
         handleChange={handleChangeFE}

@@ -8,6 +8,7 @@ import Cropper from "react-easy-crop";
 import { Controller, useFormContext } from "react-hook-form";
 import ImageUploading from "react-images-uploading";
 import { useUploadImageOfferMutation } from "@/sections/offer-form/OfferFormSlice";
+import {useTheme} from "@mui/material/styles";
 
 export default function CropImage({logo, handleSubmit }) {
   const [image, setImage] = useState("");
@@ -15,6 +16,7 @@ export default function CropImage({logo, handleSubmit }) {
   const [croppedImage, setCroppedImage] = useState(null);
   const { control } = useFormContext();
   const [uploadImage] = useUploadImageOfferMutation();
+  const  theme = useTheme();
   const onSubmitImage = async () => {
     try {
       const file = new FormData();
@@ -63,7 +65,7 @@ export default function CropImage({logo, handleSubmit }) {
             <span
               style={{
                 fontSize: 16,
-                color: "#455570",
+                color: theme.palette.common.neutral700,
                 fontWeight: 600,
                 display: "inline",
                 mr: 2,
@@ -78,8 +80,8 @@ export default function CropImage({logo, handleSubmit }) {
                 sx={{
                   width: "fit-content",
                   height: "30px",
-                  color: "#455570",
-                  borderColor: "#455570",
+                  color: theme.palette.common.neutral700,
+                  borderColor: theme.palette.common.neutral700,
                   fontSize: "12px",
                   cursor: "pointer",
                 }}
@@ -175,12 +177,12 @@ export default function CropImage({logo, handleSubmit }) {
                   }}
                   className="zoom-range"
                   sx={{
-                    color: "#E7E9ED",
+                    color: theme.palette.common.neutral100,
                     height: 5,
                     "& .MuiSlider-thumb": {
                       height: 20,
                       width: 20,
-                      backgroundColor: "#455570",
+                      backgroundColor: theme.palette.common.neutral700,
                       border: "4px solid white",
                       "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
                         boxShadow: "none",
@@ -196,7 +198,7 @@ export default function CropImage({logo, handleSubmit }) {
               <div>
                 <Button
                   variant="text"
-                  sx={{ color: "#455570" }}
+                  sx={{ color: theme.palette.common.neutral700 }}
                   onClick={() => setDialogOpen(false)}
                 >
                   Hủy
@@ -208,7 +210,7 @@ export default function CropImage({logo, handleSubmit }) {
                     onComplete(cropImage(image, croppedAreaPixels));
                   }}
                   sx={{
-                    backgroundColor: "#1976D2",
+                    backgroundColor: theme.palette.common.blue700,
                   }}
                 >
                   Lưu

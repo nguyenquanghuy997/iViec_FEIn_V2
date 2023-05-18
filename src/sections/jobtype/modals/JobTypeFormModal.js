@@ -16,6 +16,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 
 const defaultValues = {
@@ -46,7 +47,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
+  const  theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
     setIsDisabled(true);
@@ -137,7 +138,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
             atcenter="center"
             pv={12}
             ph={24}
-            bgcolor={"#FDFDFD"}
+            bgcolor={theme.palette.common.white}
           >
             <Text flex="true" fontsize={16} fontweight={"600"}>
               {isEditMode
@@ -147,7 +148,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
             <ButtonDS
               type="submit"
               sx={{
-                backgroundColor: "#fff",
+                backgroundColor: theme.palette.background.paper,
                 boxShadow: "none",
                 ":hover": {
                   backgroundColor: "#EFF3F7",
@@ -162,7 +163,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
                   icon={"mi:close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />

@@ -71,18 +71,14 @@ const CardEmailFormItem = ({
       onChange={handleExpandCallDataExtend}
     >
       <AccordionSummary
-        expandIcon={
-          <ButtonIcon
-            icon={
-              <Iconify
-                icon="material-symbols:keyboard-arrow-down-sharp"
-                width={18}
-                height={18}
-                color="#455570"
-              />
-            }
-          />
-        }
+        expandIcon={<ButtonIcon
+          icon={<Iconify
+            icon="material-symbols:keyboard-arrow-down-sharp"
+            width={18}
+            height={18}
+            color={theme.palette.common.neutral700}
+          />}
+        />}
         aria-controls={`panel${index}a-content`}
         id={`panel${index}a-header`}
       >
@@ -161,7 +157,7 @@ const CardEmailFormItem = ({
                       icon={"ri:edit-2-fill"}
                       width={16}
                       height={16}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />
                   </IconButton>
                 </Tooltip>
@@ -172,7 +168,7 @@ const CardEmailFormItem = ({
                       icon={"material-symbols:delete-outline-rounded"}
                       width={16}
                       height={16}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />
                   </IconButton>
                 </Tooltip>

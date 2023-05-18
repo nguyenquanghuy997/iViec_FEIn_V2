@@ -12,7 +12,7 @@ const TextFieldStyle = styled(TextField)(({theme}) => ({
         '&.Mui-focused': {
             backgroundColor: 'transparent',
             boxShadow: 'none',
-            borderColor: '#D0D4DB',
+            borderColor: theme.palette.common.neutral200,
         },
     },
     "&.MuiInput-root.Mui-error": {

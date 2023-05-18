@@ -1,6 +1,7 @@
 import {pxToRem} from "@/utils/getFontValue";
+import palette from "@/theme/palette";
 
-export const EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT = (primaryColor = '#455570') => {
+export const EMAIL_ACCOUNT_EDITOR_DEFAULT_TEXT = (primaryColor = palette.common.neutral700) => {
   const fontSize = pxToRem(16)
   return {
     contentEmail: `<p>Thân chào Anh/Chị&nbsp;<span style="font-weight: 500; font-size: 13px; padding: 5px 8px; color: #1565C0; background-color: #E3F2FD">Tên ứng viên</span>&nbsp;</p>`,

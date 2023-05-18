@@ -33,7 +33,7 @@ function ForbiddenIllustration({ ...other }) {
           y2='142.436'
           gradientUnits='userSpaceOnUse'
         >
-          <stop stopColor='#FFE16A' />
+          <stop stopColor={theme.palette.warning.light} />
           <stop offset='1' stopColor='#B78103' />
         </linearGradient>
 

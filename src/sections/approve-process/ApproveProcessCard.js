@@ -20,11 +20,12 @@ import { useSnackbar } from "notistack";
 import { GreenSwitch } from "@/utils/cssStyles";
 import useRole from "@/hooks/useRole";
 import { PERMISSIONS } from "@/config";
+import {useTheme} from "@mui/material/styles";
+
 
 
 const SwitchForm = ({name, handleChange, style, value, ...other}) => {
   const {control} = useFormContext();
-  
   return (<FormControlLabel
     sx={{...style}}
     control={<Controller
@@ -50,7 +51,7 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
   const [removeItem] = useDeleteApproveProcessMutation();
   const [setAvailable] = useSetApproveProcessAvailableMutation();
   const {enqueueSnackbar} = useSnackbar();
-  
+  const theme = useTheme();
   const {canAccess} = useRole();
   const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_APPR_PROCESS), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_APPR_PROCESS), []);
@@ -94,9 +95,9 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
       });
     }
   }
-  
+
   return (
-    
+
     <Box sx={{
       display: "flex",
       width: "100%",
@@ -104,7 +105,7 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
       marginBottom: "16px",
       padding: "16px",
       borderRadius: "6px",
-      backgroundColor: "#F2F4F5"
+      backgroundColor: theme.palette.common.bgrMaster
     }}
          onMouseOver={handleMouseOver}
          onMouseLeave={handleMouseOut}
@@ -114,39 +115,39 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
           <Typography sx={{
             fontSize: '14px',
             fontWeight: 600,
-            color: '#455570'
+            color: theme.palette.common.neutral700
           }}>
             {approveProcess?.name}
           </Typography>
           <Grid container>
-            <Typography variant="textSize13" color="#5C6A82" mr={1}>
+            <Typography variant="textSize13" color={theme.palette.common.borderObject} mr={1}>
               Ngày tạo:
             </Typography>
-            <Typography variant="textSize13500" color="#455570">
+            <Typography variant="textSize13500" color={theme.palette.common.neutral700}>
               {fDate(approveProcess?.createdTime, "dd/MM/yyyy")}
             </Typography>
             <Divider orientation="vertical" variant="middle" flexItem
-                     sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
-            <Typography variant="textSize13" color="#5C6A82" mr={1}>
+                     sx={{margin: "4px 8px 5px 8px", borderColor: theme.palette.common.neutral400}}/>
+            <Typography variant="textSize13" color={theme.palette.common.neutral600} mr={1}>
               Người tạo:
             </Typography>
-            <Typography variant="textSize13500" color="#455570">
+            <Typography variant="textSize13500" color={theme.palette.common.neutral700}>
               {approveProcess?.creatorName}
             </Typography>
             <Divider orientation="vertical" variant="middle" flexItem
-                     sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
-            <Typography variant="textSize13" color="#5C6A82" mr={1}>
+                     sx={{margin: "4px 8px 5px 8px", borderColor: theme.palette.common.neutral400}}/>
+            <Typography variant="textSize13" color={theme.palette.common.neutral600} mr={1}>
               Đang áp dụng:
             </Typography>
-            <Typography variant="textSize13500" color="#455570">
+            <Typography variant="textSize13500" color={theme.palette.common.neutral700}>
               {approveProcess?.appliedCounting}
             </Typography>
             <Divider orientation="vertical" variant="middle" flexItem
-                     sx={{margin: "4px 8px 5px 8px", borderColor: "#A2AAB7"}}/>
-            <Typography variant="textSize13" color="#5C6A82" mr={1}>
+                     sx={{margin: "4px 8px 5px 8px", borderColor: theme.palette.common.neutral400}}/>
+            <Typography variant="textSize13" color={theme.palette.common.neutral600} mr={1}>
               Cấp phê duyệt:
             </Typography>
-            <Typography variant="textSize13500" color="#455570">
+            <Typography variant="textSize13500" color={theme.palette.common.neutral700} >
               {approveProcess?.levelCounting}
             </Typography>
           </Grid>

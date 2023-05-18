@@ -3,6 +3,7 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {Box} from "@mui/material";
 import {pxToRem} from "@/utils/getFontValue";
 
+
 const JobDetailHeader = styled(Box)(({theme}) => ({
     "&.job-detail-header": {
         width: '100%',
@@ -24,7 +25,6 @@ const JobLogo = styled(Box)(() => ({
         marginRight: 24
     }
 }));
-
 const JobTitleBox = styled(Box)(({theme}) => ({
     "&.job-title-box": {
         "& .job-title": {
@@ -33,7 +33,7 @@ const JobTitleBox = styled(Box)(({theme}) => ({
             color: style.COLOR_TEXT_BLACK,
             marginBottom: 6,
             "&:hover": {
-                color: "#F77A0C"
+                color: theme.palette.common.orange700
             }
         },
         "& .job-company": {
@@ -46,7 +46,7 @@ const JobTitleBox = styled(Box)(({theme}) => ({
                 fontSize: pxToRem(12),
                 fontWeight: style.FONT_SEMI_BOLD,
                 color: '#2E7D32',
-                backgroundColor: "#E8F5E9",
+                backgroundColor: theme.palette.common.green50,
                 borderRadius: 6,
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -127,11 +127,11 @@ const JobSummary = styled(Box)(() => ({
 }));
 
 // right content
-const JobCompanyIntro = styled(Box)(() => ({
+const JobCompanyIntro = styled(Box)(({theme}) => ({
     "&.job-company-intro": {
         width: '100%',
         border: '1px solid #CCD4DC',
-        backgroundColor: '#FFF',
+        backgroundColor: theme.palette.background.paper,
         borderRadius: 0.5,
         overFlow: 'auto',
         "& .poster": {

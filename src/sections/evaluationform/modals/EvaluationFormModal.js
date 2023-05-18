@@ -23,6 +23,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 const defaultValues = {
   name: "",
@@ -33,7 +34,7 @@ const defaultValues = {
 };
 export const EvaluationFormModal = ({ id, show, onClose }) => {
   const isEditMode = !!id;
-
+  const theme = useTheme();
   const { data: data } = useGetReviewFormByIdQuery(
     {
       Id: id,
@@ -194,7 +195,7 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
             atcenter="center"
             pv={12}
             ph={24}
-            bgcolor={"#FDFDFD"}
+            bgcolor={theme.palette.common.white}
           >
             <Text flex="true" fontsize={16} fontweight={"600"}>
               {isEditMode ? "Chỉnh sửa mẫu đánh giá" : "Thêm mới mẫu đánh giá"}
@@ -202,7 +203,7 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
             <ButtonDS
               type="submit"
               sx={{
-                backgroundColor: "#fff",
+                backgroundColor: theme.palette.background.paper,
                 boxShadow: "none",
                 ":hover": {
                   backgroundColor: "#EFF3F7",
@@ -217,7 +218,7 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
                   icon={"mi:close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />
@@ -247,7 +248,7 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
             <View pv={24}>
               <Label
                 required={true}
-                sx={{ color: "#455570", fontSize: 16, fontWeight: 600 }}
+                sx={{ color: theme.palette.common.neutral700, fontSize: 16, fontWeight: 600 }}
               >
                 {"Tiêu chí đánh giá"}
               </Label>
@@ -270,9 +271,9 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
                   marginBottom: "16px",
                   textTransform: "unset",
                   boxShadow: "unset",
-                  backgroundColor: "#fff",
-                  color: "#1976D2",
-                  border: "1px solid #1976D2",
+                  backgroundColor: theme.palette.background.paper,
+                  color: theme.palette.common.blue700,
+                  border: "1px solid " + theme.palette.common.blue700,
                   "&:hover": { backgroundColor: "#EFF3F7" },
                 }}
                 icon={
@@ -280,7 +281,7 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
                     icon={"material-symbols:add"}
                     width={20}
                     height={20}
-                    color="#1976D2"
+                    color={theme.palette.common.blue700}
                     mr={1}
                   />
                 }

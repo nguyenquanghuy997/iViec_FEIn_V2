@@ -26,23 +26,23 @@ const BoxFlex = styled(Box)(
 const ButtonAddStyle = styled(Button)(({ theme }) => ({
   "&.button-add": {
     padding: theme.spacing(1, 1.5),
-    backgroundColor: "#1976D2",
+    backgroundColor: theme.palette.common.blue700,
     borderRadius: 6,
-    color: "#FDFDFD",
+    color: theme.palette.common.white,
     minHeight: "36px",
     fontSize: 14,
     fontWeight: 600,
     textTransform: "none",
     "&:hover": {
-      backgroundColor: "#1976D2",
-      color: "#FDFDFD",
+      backgroundColor: theme.palette.common.blue700,
+      color: theme.palette.common.white,
     },
   },
 }));
 
-const TitleStyle = styled(Typography)(() => ({
+const TitleStyle = styled(Typography)(({theme}) => ({
   "&.form-title": {
-    color: "#172B4D",
+    color: theme.palette.common.neutral800,
     fontSize: 20,
     fontWeight: 700,
   },
@@ -50,7 +50,7 @@ const TitleStyle = styled(Typography)(() => ({
 
 const SubTitleStyle = styled(Typography)(({ theme }) => ({
   "&.form-subtitle": {
-    color: "#455570",
+    color: theme.palette.common.neutral700,
     fontSize: 14,
     fontWeight: 400,
     marginTop: theme.spacing(1),
@@ -59,8 +59,8 @@ const SubTitleStyle = styled(Typography)(({ theme }) => ({
 
 const CardFormItemStyle = styled(Accordion)(({ theme }) => ({
   "&.card-item": {
-    border: "1px solid #E7E9ED",
-    backgroundColor: "#FDFDFD",
+    border: "1px solid " + theme.palette.common.neutral100,
+    backgroundColor: theme.palette.common.neutral700,
     padding: theme.spacing(2.5, 3),
     marginBottom: theme.spacing(2),
     borderRadius: 4,
@@ -100,7 +100,7 @@ const CardFormItemTitleStyle = styled(Typography)(({ theme }) => ({
   "&.card-item-title": {
     display: "flex",
     alignItems: "center",
-    color: "#172B4D",
+    color: theme.palette.common.neutral800,
     fontSize: 16,
     fontWeight: 600,
     "& .MuiCheckbox-root": {
@@ -109,7 +109,7 @@ const CardFormItemTitleStyle = styled(Typography)(({ theme }) => ({
       marginTop: theme.spacing(0.5),
     },
     "& .card-item-subtitle": {
-      color: "#455570",
+      color: theme.palette.common.neutral700,
       fontSize: 13,
       fontWeight: 400,
       marginLeft: theme.spacing(1),
@@ -119,7 +119,7 @@ const CardFormItemTitleStyle = styled(Typography)(({ theme }) => ({
 
 const CardFormItemSubTitleStyle = styled(Typography)(({ theme }) => ({
   "& .card-item-subtitle": {
-    color: "#455570",
+    color: theme.palette.common.neutral700,
     fontSize: 13,
     fontWeight: 400,
     marginLeft: theme.spacing(0.5),
@@ -130,11 +130,11 @@ const CardFormItemContentStyle = styled(Typography)(({ theme }) => ({
   "&.card-item-content-text": {
     display: "flex",
     alignItems: "flex-end",
-    color: "#172B4D",
+    color: theme.palette.common.neutral800,
     fontSize: 12,
     fontWeight: 500,
     "& .card-item-content-subtext": {
-      color: "#5C6A82",
+      color: theme.palette.common.borderObject,
       fontSize: 12,
       fontWeight: 400,
       marginLeft: theme.spacing(0.5),
@@ -149,9 +149,9 @@ const EmailFormHeadStyle = styled(Box)(({ theme }) => ({
     top: 0,
     right: 0,
     minWidth: 800,
-    backgroundColor: "#FDFDFD",
+    backgroundColor: theme.palette.common.white,
     zIndex: 1,
-    borderBottom: "1px solid #E7E9ED",
+    borderBottom: "1px solid " + theme.palette.common.neutral100,
     padding: theme.spacing(2),
     height: theme.spacing(8),
     display: "flex",
@@ -166,9 +166,9 @@ const EmailFormFooterStyle = styled(Box)(({ theme }) => ({
     bottom: 0,
     right: 0,
     minWidth: 800,
-    backgroundColor: "#FDFDFD",
+    backgroundColor: theme.palette.common.w,
     zIndex: 1,
-    borderTop: "1px solid #E7E9ED",
+    borderTop: "1px solid " + theme.palette.common.neutral100,
     padding: theme.spacing(2),
     height: theme.spacing(8),
     display: "flex",

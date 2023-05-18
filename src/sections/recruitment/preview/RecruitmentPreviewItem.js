@@ -41,6 +41,7 @@ import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const defaultStyleRecruitmentStatus = {
   borderRadius: "100px",
@@ -61,6 +62,7 @@ function RecruitmentPreviewItem({
   const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_JOB), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_JOB), []);
   const router = useRouter();
+  const  theme = useTheme();
   const RecruitmentId = router.query.slug;
   const { data: RecruitmentData } = useGetRecruitmentByIdQuery({
     Id: RecruitmentId,
@@ -202,7 +204,7 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#455570",
+              color: theme.palette.common.neutral700,
               border: "1px solid #455570",
             }}
           >
@@ -214,8 +216,8 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#F77A0C",
-              border: "1px solid #F77A0C",
+              color: theme.palette.common.orange700,
+              border: "1px solid " + theme.palette.common.orange700,
             }}
           >
             Chờ nội bộ phê duyệt
@@ -226,7 +228,7 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#E53935",
+              color: theme.palette.common.red600,
               border: "1px solid #E53935",
             }}
           >
@@ -238,8 +240,8 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#F77A0C",
-              border: "1px solid #F77A0C",
+              color: theme.palette.common.orange700,
+              border: "1px solid " + theme.palette.common.orange700,
             }}
           >
             Chờ iVIEC phê duyệt
@@ -250,8 +252,8 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#E53935",
-              border: "1px solid #E53935",
+              color: theme.palette.common.red600,
+              border: "1px solid " + theme.palette.common.red600,
             }}
           >
             iVIEC từ chối
@@ -262,8 +264,8 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#388E3C",
-              border: "1px solid #388E3C",
+              color: theme.palette.common.white,
+              border: "1px solid " + theme.palette.common.white,
             }}
           >
             Đang tuyển dụng
@@ -274,8 +276,8 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#388E3C",
-              border: "1px solid #388E3C",
+              color: theme.palette.common.white,
+              border: "1px solid" + theme.palette.common.white,
             }}
           >
             Đã lên lịch
@@ -286,7 +288,7 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#455570",
+              color: theme.palette.common.neutral700,
               border: "1px solid #455570",
             }}
           >
@@ -298,7 +300,7 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: "#455570",
+              color: theme.palette.common.neutral700,
               border: "1px solid #455570",
             }}
           >
@@ -333,8 +335,8 @@ function RecruitmentPreviewItem({
                     componentsProps={{
                       tooltip: {
                         sx: {
-                          color: "#455570",
-                          backgroundColor: "#FDFDFD",
+                          color: theme.palette.common.neutral700,
+                          backgroundColor: theme.palette.common.white,
                           fontSize: 13,
                           border: "1px solid #E7E9ED",
                           boxShadow:
@@ -361,7 +363,7 @@ function RecruitmentPreviewItem({
                         sx={{
                           marginTop: 0,
                           padding: 0,
-                          color: "#172B4D",
+                          color:theme.palette.common.neutral800,
                           fontWeight: 700,
                         }}
                         link={PATH_DASHBOARD.recruitment.root}
@@ -392,7 +394,7 @@ function RecruitmentPreviewItem({
                           icon={"ri:edit-2-fill"}
                           width={20}
                           height={20}
-                          color="#8A94A5"
+                          color={theme.palette.common.neutral500}
                         />
                       }
                     />
@@ -424,7 +426,7 @@ function RecruitmentPreviewItem({
                         icon={"ri:share-box-line"}
                         width={20}
                         height={20}
-                        color="#5C6A82"
+                        color={theme.palette.common.borderObject}
                         mr={1}
                       />
                     }
@@ -438,13 +440,13 @@ function RecruitmentPreviewItem({
                     aria-label="lab API tabs example"
                     sx={{
                       "& .MuiTab-root": {
-                        color: "#8A94A5",
+                        color: theme.palette.common.neutral500    ,
                         // minHeight: "36px",
                         // textTransform: "unset",
                         // padding: "8px 12px",
                       },
                       "& .Mui-selected": {
-                        color: "#1976D2",
+                        color: theme.palette.common.blue700,
                         fontWeight: 700,
                         // color: "white !important",
                         // backgroundColor: "#455570",
@@ -493,8 +495,8 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 1 ? "#1976D2" : "#fdfdfd",
-                        color: viewModeDefault == 1 ? "#fdfdfd" : "#455570",
+                          viewModeDefault == 1 ? theme.palette.common.blue700 : "#fdfdfd",
+                        color: viewModeDefault == 1 ? "#fdfdfd" : theme.palette.common.neutral700,
                         borderColor:
                           viewModeDefault == 1 ? "none" : "#D0D4DB !important",
                         borderRadius: "6px 0px 0px 6px",
@@ -517,8 +519,8 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 2 ? "#1976D2" : "#fdfdfd",
-                        color: viewModeDefault == 2 ? "#fdfdfd" : "#455570",
+                          viewModeDefault == 2 ? theme.palette.common.blue700 : "#fdfdfd",
+                        color: viewModeDefault == 2 ? "#fdfdfd" : theme.palette.common.neutral700,
                         borderColor:
                           viewModeDefault == 2 ? "none" : "#D0D4DB !important",
                         borderRadius: "0 6px 6px 0",
@@ -588,7 +590,7 @@ function RecruitmentPreviewItem({
                   >
                     <Button
                       style={{
-                        background: "#1976D2",
+                        background: theme.palette.common.blue700,
                         padding: "12px 16px",
                       }}
                       onClick={() => setShowDialogStage(true)}
@@ -646,7 +648,7 @@ function RecruitmentPreviewItem({
                         aria-haspopup="menu"
                         onClick={handleOpenGroup}
                         style={{
-                          background: "#1976D2",
+                          background: theme.palette.common.blue700,
                           padding: "12px 16px",
                         }}
                       >
@@ -769,7 +771,7 @@ function RecruitmentPreviewItem({
                 >
                   <Button
                     style={{
-                      background: "#1976D2",
+                      background: theme.palette.common.blue700,
                       padding: "12px 16px",
                     }}
                     onClick={() => setOpen(true)}
@@ -866,7 +868,7 @@ function RecruitmentPreviewItem({
                 }
                 width={20}
                 height={20}
-                color="#5C6A82"
+                color={theme.palette.common.borderObject}
               />
             }
           />

@@ -17,13 +17,14 @@ import { LIST_STATUS } from "@/utils/formatString";
 import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 import { JobTypeFormModal } from "@/sections/jobtype";
 import useRole from "@/hooks/useRole";
+import {useTheme} from "@mui/material/styles";
 
 export const JobTypeItem = () => {
   const router = useRouter();
 
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllJobTypeQuery(query, { skip: !isReady });
-
+  const  theme = useTheme();
   const [openEdit, setOpenEdit] = useState(false);
 
   const { canAccess } = useRole();
@@ -59,7 +60,7 @@ export const JobTypeItem = () => {
         title: "Trạng thái",
         width: "180px",
         render: (item) => (
-          <span style={{ color: item ? "#388E3C" : "#455570" }}>
+          <span style={{ color: item ? "#388E3C" : theme.palette.common.neutral700 }}>
             {Status(item)}
           </span>
         ),
@@ -95,7 +96,7 @@ export const JobTypeItem = () => {
               }}
               name={item}
             ></AvatarDS>
-            <span fontSize="14px" fontWeight="600" color="#172B4D">
+            <span fontSize="14px" fontWeight="600" color={theme.palette.common.neutral800}>
               {item}
             </span>
           </div>

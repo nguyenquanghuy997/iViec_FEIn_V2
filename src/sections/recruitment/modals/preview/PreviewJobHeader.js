@@ -5,8 +5,11 @@ import {BookmarkIcon, ReportIcon, SearchPreviewIcon, ShareIcon} from "@/sections
 import {pxToRem} from "@/utils/getFontValue";
 import {renderRemainDay} from "@/sections/recruitment/helper";
 import {DOMAIN_SERVER_API} from "@/config";
+import {useTheme} from "@mui/material/styles";
+
 
 const PreviewJobHeader = ({ Recruitment, Organization }) => {
+  const theme = useTheme();
   return (
       <JobDetailHeader className="job-detail-header">
         <Grid container>
@@ -33,12 +36,12 @@ const PreviewJobHeader = ({ Recruitment, Organization }) => {
                     color="error"
                     variant="outlined"
                     sx={{
-                      color: '#F77A0C',
+                      color: theme.palette.common.orange700,
                       fontSize: pxToRem(12),
                       fontWeight: 600,
                       ml: 1,
                       px: '10px',
-                      border: '1px solid #F77A0C',
+                      border: '1px solid ' + theme.palette.common.orange700,
                       height: '36px'
                     }}
                 />
@@ -58,9 +61,9 @@ const PreviewJobHeader = ({ Recruitment, Organization }) => {
                     title="Ứng tuyển"
                     color="warning"
                     sx={{
-                      backgroundColor: "#F77A0C",
+                      backgroundColor: theme.palette.common.orange700,
                       px: 2,
-                      color: '#FFF',
+                      color: theme.palette.background.paper,
                       width: '100%',
                       justifyContent: 'center',
                       fontWeight: 600,

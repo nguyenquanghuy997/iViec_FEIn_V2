@@ -14,7 +14,9 @@ import { JobSummary } from "@/sections/recruitment/style";
 import { Box, Divider, IconButton, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
+
 const renderJobDescription = (title, content) => {
+
   return (
     <Box sx={{ mt: 0.5, mb: 4 }}>
       <Typography variant="body1" className="typoTitle" sx={{ mb: 1.5 }}>

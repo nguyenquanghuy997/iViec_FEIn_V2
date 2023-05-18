@@ -2,9 +2,11 @@ import MuiTextField from "@/components/form/MuiTextField";
 import { FormHelperText } from "@mui/material";
 import { memo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 function RHFTextField({ name, beforeChange, maxLength, ...other }) {
   const { control } = useFormContext();
+  const theme = useTheme();
   return (
     <Controller
       name={name}
@@ -17,7 +19,7 @@ function RHFTextField({ name, beforeChange, maxLength, ...other }) {
         return (
           <>
             <MuiTextField
-              sx={{ background: "#fff" }}
+              sx={{ background: theme.palette.common.white}}
               {...field}
               inputProps={{
                 maxLength: maxLength,

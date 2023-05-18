@@ -3,11 +3,13 @@ import { FormHelperText } from "@mui/material";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Controller, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 dayjs.extend(customParseFormat);
 
 export default function MuiTimePicker({ name, ref, ...other }) {
   const { control } = useFormContext();
+  const theme = useTheme();
   return (
     <Controller
       name={name}
@@ -15,7 +17,7 @@ export default function MuiTimePicker({ name, ref, ...other }) {
       render={({ field, fieldState: { error } }) => (
         <>
           <MuiTextField
-            sx={{ background: "#fff" }}
+            sx={{ background: theme.palette.common.white }}
             {...field}
             ref={ref}
             inputProps={{

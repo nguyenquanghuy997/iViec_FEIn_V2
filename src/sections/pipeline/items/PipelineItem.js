@@ -19,10 +19,11 @@ import { fDate } from "@/utils/formatTime";
 import { Tag } from "antd";
 import { useRouter } from "next/router";
 import { useState, useMemo } from "react";
+import {useTheme} from "@mui/material/styles";
 
 export const PipelineItem = () => {
   const router = useRouter();
-
+  const  theme = useTheme();
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   const { data: Data = {}, isLoading } = useGetAllPipelineQuery(query, {
     skip: !isReady,
@@ -74,7 +75,7 @@ export const PipelineItem = () => {
                     <span
                       key={index}
                       style={{
-                        color: "#172B4D",
+                        color: theme.palette.common.neutral800,
                         fontWeight: 400,
                         fontSize: 13,
                         display: "flex",
@@ -102,7 +103,7 @@ export const PipelineItem = () => {
                       style={{
                         background: "#EFF3F7",
                         borderRadius: "100px",
-                        color: "#172B4D",
+                        color: theme.palette.common.neutral800,
                         border: "none",
                         marginLeft: "8px",
                         fontWeight: 500,
@@ -136,7 +137,7 @@ export const PipelineItem = () => {
         title: "Trạng thái",
         width: "180px",
         render: (item) => (
-          <span style={{ color: item ? "#388E3C" : "#455570" }}>
+          <span style={{ color: item ? "#388E3C" : theme.palette.common.neutral700 }}>
             {Status(item)}
           </span>
         ),
@@ -175,7 +176,7 @@ export const PipelineItem = () => {
               }}
               name={record?.isDefault == true ? "iVIEC" : item}
             ></AvatarDS>
-            <span fontSize="14px" fontWeight="600" color="#172B4D">
+            <span fontSize="14px" fontWeight="600" color={theme.palette.common.neutral800}>
               {record?.isDefault == true ? "iVIEC" : item}
             </span>
           </div>

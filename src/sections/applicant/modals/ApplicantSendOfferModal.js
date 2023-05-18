@@ -64,7 +64,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
     const newFileList = [...fileList].filter((item, idx) => idx !== index);
     setFileList(newFileList);
   }
-  
+
   const Schema = Yup.object().shape({
     offerTemplateId: Yup.string().required("Chưa chọn mẫu thư mời nhận việc có sẵn"),
     recruitmentId: Yup.string(),
@@ -80,12 +80,12 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
     isActive: Yup.boolean(),
     offerTemplateApplicantAttachFiles: Yup.array().of(Yup.string()),
   });
-  
+
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  
+
   const {watch, setValue, handleSubmit, formState: {isSubmitting, errors}} = methods;
   useEffect(() => {
     if (!item?.applicantId) return;
@@ -93,12 +93,12 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
     setValue("applicantEmail", item.applicantEmail);
     setValue("recruitmentId", item.recruitmentId);
   }, [item]);
-  
+
   useEffect(async () => {
     if (!watch("offerTemplateId")) return;
     await getDataOffer({id: watch("offerTemplateId")}).unwrap();
   }, [watch("offerTemplateId")])
-  
+
   useEffect(() => {
     if (Data && dataInfo) {
       setValue("title", Data.title);
@@ -108,19 +108,19 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
       setFileList(Data.templateAttachFiles);
     }
   }, [Data, dataInfo])
-  
+
   const handleOpenPreviewEmail = () => {
     setIsOpenPreview(true);
   };
-  
+
   const handleClosePreviewEmail = () => {
     setIsOpenPreview(false);
   }
-  
+
   const handleSetSignatureLogo = (e) => {
     setValue("signatureLogo", e.fileTemplates[0].path);
   };
-  
+
   const pressSave = async (body, action) => {
     if (fileList.length > 0) {
       const file = new FormData();
@@ -151,7 +151,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
       });
     });
   };
-  
+
   return (
     <>
       <FormProvider {...methods}>

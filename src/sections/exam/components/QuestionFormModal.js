@@ -196,7 +196,6 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
   const pressAddAnswer = () => {
     setListAnswer((l) => [...l, defaultAnswer]);
   };
-
   const pressDeleteAnswer = (index) => {
     setListAnswer((l) => l.filter((_, i) => i !== index));
   };
@@ -330,7 +329,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
         mt={24}
         p={16}
         borderradius={6}
-        bgcolor={"#F2F4F5"}
+        bgcolor={theme.palette.common.bgrMaster}
       >
         <Cb
           checked={isCorrect}
@@ -353,7 +352,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
             flex: 1,
             marginLeft: 12,
             borderRadius: 6,
-            background: "#fff",
+            background: theme.palette.background.paper,
           }}
         />
 
@@ -436,7 +435,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
             atcenter="center"
             pv={12}
             ph={24}
-            bgcolor={"#FDFDFD"}
+            bgcolor={theme.palette.common.white}
           >
             <Text flex="true" fontsize={16} fontweight={"600"}>
               {isEditMode ? "Chỉnh sửa câu hỏi" : "Thêm mới câu hỏi"}
@@ -444,7 +443,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
             <ButtonDS
               type="submit"
               sx={{
-                backgroundColor: "#fff",
+                backgroundColor: theme.palette.background.paper,
                 boxShadow: "none",
                 ":hover": {
                   backgroundColor: "#EFF3F7",
@@ -459,7 +458,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
                   icon={"mi:close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />

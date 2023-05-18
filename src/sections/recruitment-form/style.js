@@ -22,7 +22,7 @@ const BoxInnerStyle = styled(Box)(() => ({
 }))
 
 const DividerCardStyle = styled(Box)(({theme}) => ({
-  backgroundColor: '#455570',
+  backgroundColor: theme.palette.common.neutral700,
   width: '844px',
   height: '52px',
   padding: theme.spacing(2, 3),

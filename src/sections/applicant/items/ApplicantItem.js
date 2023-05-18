@@ -25,6 +25,7 @@ import {
   Sex,
   YearOfExperience,
 } from "@/utils/enum";
+import { fCurrency } from "@/utils/formatNumber";
 import {
   LIST_EXPERIENCE_NUMBER,
   LIST_GENDER,
@@ -239,7 +240,12 @@ export const ApplicantItem = (props) => {
         title: "Ngành nghề",
         width: "200px",
         render: (jobCats = []) => {
-          return jobCats.map((cat) => cat.name).join(", ");
+          return (
+            jobCats
+              .map((cat) => cat.name)
+              .filter((i) => i)
+              .join(", ") || "-"
+          );
         },
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
@@ -357,6 +363,13 @@ export const ApplicantItem = (props) => {
           placeholder: "Nhập số tiền",
           name: ["expectedSalaryFrom", "expectedSalaryTo"],
         },
+        render: (_, i) =>
+          `${
+            fCurrency(i?.expectedSalaryFrom) +
+            "  -  " +
+            fCurrency(i?.expectedSalaryTo) +
+            " VNĐ"
+          }`,
       },
       {
         dataIndex: "livingAddress",

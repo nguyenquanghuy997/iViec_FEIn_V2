@@ -20,6 +20,7 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 const RecruitmentAdRejectModal = ({
   showConfirmMultiple,
@@ -50,6 +51,7 @@ const RecruitmentAdRejectModal = ({
   const Schema = Yup.object().shape({
     reason: Yup.string().required("Chưa nhập lý do loại ứng viên"),
   });
+  const theme = useTheme();
   const methods = useForm({
     defaultValuess,
     resolver: yupResolver(Schema),
@@ -94,9 +96,9 @@ const RecruitmentAdRejectModal = ({
             icon={"mdi:alert-circle-outline"}
             width={60}
             height={60}
-            color="#E53935"
+            color={theme.palette.common.red600}
           />
-          <TitleModelStyle className="title" style={{ color: "#455570" }}>
+          <TitleModelStyle className="title" style={{ color: theme.palette.common.neutral700 }}>
             Từ chối duyệt tin
           </TitleModelStyle>
           <DialogContentTextModelStyle
@@ -111,12 +113,12 @@ const RecruitmentAdRejectModal = ({
           <Typography
             fontWeight={"500"}
             fontSize={14}
-            color="#172B4D"
+            color={theme.palette.common.neutral800}
             mt="14px"
             mb="8px"
             width={"100%"}
           >
-            {"Lý do từ chối"} <span style={{ color: "#E53935" }}>*</span>
+            {"Lý do từ chối"} <span style={{ color: theme.palette.common.red600 }}>*</span>
           </Typography>
           <div style={{ width: "100%" }}>
             <TextAreaDS

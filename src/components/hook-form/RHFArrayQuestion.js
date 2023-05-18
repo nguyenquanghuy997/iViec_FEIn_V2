@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import React, { useCallback } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 export default function RHFArrayQuestion({ name }) {
   const { control } = useFormContext();
@@ -29,7 +30,7 @@ export default function RHFArrayQuestion({ name }) {
   const removeQuestion = useCallback((index) => {
     remove(index);
   }, []);
-
+  const theme = useTheme();
   return (
     <Controller
       name="answers"
@@ -45,7 +46,7 @@ export default function RHFArrayQuestion({ name }) {
                 alignItems="center"
                 spacing={2}
                 sx={{ marginBottom: 4 }}
-                bgcolor="#F2F4F5"
+                bgcolor={theme.palette.common.bgrMaster}
                 p={2}
               >
                 <FormControlLabel

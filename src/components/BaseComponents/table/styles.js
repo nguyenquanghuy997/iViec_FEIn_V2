@@ -1,8 +1,8 @@
-import { styled } from '@mui/material/styles';
+import {styled } from '@mui/material/styles';
 import { pxToRem } from '@/utils/getFontValue';
 
-export const HeaderStyle = styled('div')(() => ({
-  background: '#fff',
+export const HeaderStyle = styled('div')(({theme}) => ({
+  background: theme.palette.background.paper,
   boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
   '.search-form': {
     width: '520px',
@@ -13,7 +13,7 @@ export const HeaderStyle = styled('div')(() => ({
     '.MuiInputBase-root': {
       height: '44px',
       borderRadius: '6px',
-      background: '#F2F4F5',
+      background: theme.palette.common.bgrMaster,
       'fieldset': {
         border: 'none',
       },
@@ -23,7 +23,7 @@ export const HeaderStyle = styled('div')(() => ({
   '&.inside': {
     borderRadius: '4px',
     boxShadow:'unset',
-    background: '#FDFDFD',
+    background: theme.palette.common.white,
     '.table-header-container': {
       padding: 16,
     },
@@ -42,14 +42,14 @@ export const HeaderStyle = styled('div')(() => ({
       borderLeft: 'none',
     },
     'form': {
-      background: '#fff',
+      background: theme.palette.background.paper,
       boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
     },
   },
 }));
 
-export const TableStyle = styled('div')(() => ({
-  background: "#FDFDFD",
+export const TableStyle = styled('div')(({theme}) => ({
+  background: theme.palette.common.white,
   boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
   borderRadius: "4px",
 
@@ -62,15 +62,15 @@ export const TableStyle = styled('div')(() => ({
     borderRadius: "8px",
   },
   ".ant-table-thead >tr>th": {
-    background: "#FDFDFD",
+    background: theme.palette.common.white,
     height: "72px",
     padding: "13px 8px",
-    borderBottom: "2px solid #CCD4DC",
+    borderBottom: "2px solid " + theme.palette.common.strokeDividerLine,
     wordBreak: "break-all",
   },
   ".ant-table-tbody >tr >td": {
     padding: "13px 8px",
-    color: '#172B4D',
+    color: theme.palette.common.neutral800,
     fontWeight: 400,
     wordBreak: 'break-all'
   },
@@ -80,13 +80,13 @@ export const TableStyle = styled('div')(() => ({
   ".ant-pagination .ant-pagination-total-text": {
     position: "absolute",
     left: 16,
-    color: "#455570",
+    color: theme.palette.common.neutral700,
     fontWeight: 600,
     fontSize: 12,
   },
 
   ".ant-pagination .ant-pagination-item a": {
-    color: "#8A94A5",
+    color: theme.palette.common.neutral500,
     fontWeight: 600,
     fontSize: 12,
   },
@@ -96,28 +96,28 @@ export const TableStyle = styled('div')(() => ({
     border: "none",
   },
   ".ant-pagination .ant-pagination-item-active a": {
-    color: "#455570",
+    color: theme.palette.common.neutral700,
     fontWeight: 700,
   },
   ".ant-pagination .ant-select-selection-item": {
-    color: "#455570",
+    color: theme.palette.common.neutral700,
     fontWeight: 600,
     fontSize: 12,
   },
   ".ant-select .ant-select-arrow": {
     marginTop: "-5px",
     fontSize: 10,
-    color: "#455570",
+    color: theme.palette.common.neutral700,
   },
   ".ant-pagination .ant-pagination-next button": {
-    color: "#455570",
+    color: theme.palette.common.neutral700,
   },
   ".ant-select-dropdown.ant-select-dropdown-placement-bottomLeft": {
     zIndex: 10000,
   },
   ".ant-pagination .ant-pagination-item a:hover, .ant-pagination .ant-pagination-next:hover .ant-pagination-item-link": {
     backgroundColor: "#EFF3F7",
-    color: "#455570",
+    color: theme.palette.common.neutral700,
     fontWeight: 700,
   },
   

@@ -6,7 +6,9 @@ import { Modal } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {useUpdateApplicantFormMutation} from "@/sections/applicant";
+import {useTheme} from "@mui/material/styles";
 
+const  theme = useTheme();
 export const ApplicantPreviewModal = ({
   show,
   setShow,
@@ -82,7 +84,7 @@ export const ApplicantPreviewModal = ({
         width={568}
         height={766}
         borderRadius={8}
-        bgColor={"#fff"}
+        bgColor={theme.palette.background.paper}
       >
         <View flexRow atCenter>
           <Text flex1 fontSize={22} fontWeight={"700"}>

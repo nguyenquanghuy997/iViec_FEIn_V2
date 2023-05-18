@@ -7,11 +7,12 @@ import {
 } from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import React from "react";
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
   const {enqueueSnackbar} = useSnackbar();
   const [deleteOrganization] = useDeleteOrganizationMutation();
-
+  const theme = useTheme();
   const onClose = () => {
     setShowDelete(false);
   }
@@ -61,7 +62,7 @@ const OrganizationConfirmModal = ({showDelete, setShowDelete, node}) => {
                 width: '100%',
                 fontSize: 16,
                 fontWeight: 600,
-                color: '#E53935',
+                color: theme.palette.common.red600,
                 marginBottom: 1
               }}
           >

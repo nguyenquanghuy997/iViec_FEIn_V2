@@ -2,9 +2,11 @@ import { View } from "../FlexStyled";
 import { LoadingButton } from "@mui/lab";
 import { Tooltip } from "@mui/material";
 import PropTypes from "prop-types";
-import { memo } from "react";
+import { memo } from 'react'
+import {useTheme} from "@mui/material/styles";
 
 function ButtonDS(props) {
+  const theme = useTheme();
   const {
     size,
     isSubmitting,
@@ -22,8 +24,8 @@ function ButtonDS(props) {
     <View
       sx={{
         "&:hover": {
-          backgroundColor: "#E7E9ED !important",
-          color: "#000",
+          backgroundColor: theme.palette.common.neutral100 + " !important",
+          color: theme.palette.common.black,
         },
       }}
     >

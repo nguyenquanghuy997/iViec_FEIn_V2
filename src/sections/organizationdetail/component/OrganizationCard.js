@@ -14,6 +14,7 @@ import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { DOMAIN_SERVER_API } from "@/config";
 import { fDate } from "@/utils/formatTime";
 import Switch from '@/components/form/Switch';
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationCard = (
     {
@@ -26,7 +27,7 @@ const OrganizationCard = (
         onOpenFormModal,
         handleOpenActive
     }) => {
-
+    const theme = useTheme();
     const [showAll, setShowAll] = useState(false);
 
     const toggleShow = () => {
@@ -81,12 +82,12 @@ const OrganizationCard = (
                     {
                         item?.organizations?.length == 1 ?
                             <Box
-                                sx={{ padding: '5px 8px', ml: 1, backgroundColor: '#EFF3F6', borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
+                                sx={{ padding: '5px 8px', ml: 1, backgroundColor: theme.palette.common.bgrObject, borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
                             >
                                 <Typography sx={{
                                     fontSize: 12,
                                     fontWeight: 500,
-                                    color: '#172B4D',
+                                    color: theme.palette.common.neutral800,
                                     display: 'flex',
                                     alignItems: 'center'
                                 }}>
@@ -95,13 +96,13 @@ const OrganizationCard = (
                             </Box>
                             :
                             <Box
-                                sx={{ padding: '5px 8px', ml: 1, backgroundColor: '#EFF3F6', borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
+                                sx={{ padding: '5px 8px', ml: 1, backgroundColor: theme.palette.common.bgrObject , borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
                                 onClick={toggleShow}
                             >
                                 {!showAll && <Typography sx={{
                                     fontSize: 12,
                                     fontWeight: 500,
-                                    color: '#172B4D',
+                                    color: theme.palette.common.neutral800,
                                     display: 'flex',
                                     alignItems: 'center'
                                 }}>
@@ -116,10 +117,10 @@ const OrganizationCard = (
                 <BoxFlex>
                     {(showAll || selected?.length > 1) ? null : (
                         <>
-                            <IconButton size='small' sx={{ color: '#5C6A82', ml: 2 }} onClick={onOpenFormModal}>
+                            <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenFormModal}>
                                 <EditIcon width={12} height={12} />
                             </IconButton>
-                            <IconButton size='small' sx={{ color: '#5C6A82', ml: 2 }} onClick={onOpenConfirmDelete}>
+                            <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenConfirmDelete}>
                                 <Iconify icon='ci:trash-full' sx={{ width: 12, height: 12 }} />
                             </IconButton>
                         </>
@@ -137,10 +138,10 @@ const OrganizationCard = (
                                         className={"organization-card"}
                                         sx={{
                                             padding: '12px 16px',
-                                            backgroundColor: '#FDFDFD',
+                                            backgroundColor: theme.palette.common.white,
                                             minHeight: '70px',
                                             minWidth: '230px',
-                                            border: '1px solid #A2AAB7',
+                                            border: '1px solid ' + theme.palette.common.neutral400,
                                             borderRadius: '6px',
                                             display: 'flex', alignItems: 'center',
                                             mr: 1.5, mb: 1.5
@@ -162,8 +163,8 @@ const OrganizationCard = (
                                             }
                                         </Box>
                                         <Stack>
-                                            <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#172B4D' }}>{organization?.name}</Typography>
-                                            <Typography sx={{ fontSize: 12, fontWeight: 400, color: '#455570' }}>{organization?.code}</Typography>
+                                            <Typography sx={{ fontSize: 13, fontWeight: 500, color: theme.palette.common.neutral800 }}>{organization?.name}</Typography>
+                                            <Typography sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.neutral700 }}>{organization?.code}</Typography>
                                         </Stack>
                                     </Box>
                                 ))
@@ -171,20 +172,20 @@ const OrganizationCard = (
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Typography sx={{ fontSize: 12, fontWeight: 400, color: '#5C6A82', mr: 1 }}>
+                                <Typography sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.borderObject, mr: 1 }}>
                                     Ngày tham gia: {fDate(item?.registrationTime)}
                                 </Typography>
                                 <Box
                                     sx={{
                                         padding: '5px 8px',
-                                        backgroundColor: '#EFF3F6',
+                                        backgroundColor: theme.palette.common.bgrObject,
                                         borderRadius: '100px',
                                         display: !showAll ? 'none' : 'block',
                                         cursor: 'pointer',
                                     }}
                                     onClick={toggleShow}
                                 >
-                                    <Typography sx={{ fontSize: 12, fontWeight: 500, color: '#172B4D', display: 'flex', alignItems: 'center' }}>
+                                    <Typography sx={{ fontSize: 12, fontWeight: 500, color: theme.palette.common.neutral800, display: 'flex', alignItems: 'center' }}>
                                         Thu gọn
                                         <Iconify icon={"material-symbols:arrow-drop-up"} height={16} width={16} sx={{ ml: 1 }} />
                                     </Typography>
@@ -199,10 +200,10 @@ const OrganizationCard = (
                                                 handleOpenActive(e.target.checked);
                                             }}
                                         />
-                                        <IconButton size='small' sx={{ color: '#5C6A82' }} onClick={onOpenFormModal}>
+                                        <IconButton size='small' sx={{ color: theme.palette.common.borderObject }} onClick={onOpenFormModal}>
                                             <EditIcon width={12} height={12} />
                                         </IconButton>
-                                        <IconButton size='small' sx={{ color: '#5C6A82', ml: 2 }} onClick={onOpenConfirmDelete}>
+                                        <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenConfirmDelete}>
                                             <Iconify icon='ci:trash-full' sx={{ width: 12, height: 12 }} />
                                         </IconButton>
                                     </>

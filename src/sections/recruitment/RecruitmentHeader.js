@@ -12,11 +12,12 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import { FilterIcon } from "@/assets/FilterIcon";
 import { AddIcon } from "@/assets/ActionIcon";
 import { SearchIcon } from "@/assets/SearchIcon";
+import {useTheme} from "@mui/material/styles";
 
 const RecruitmentHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit }) => {
   const router = useRouter();
   const { data: Organization = {} } = useGetOrganizationQuery();
-
+  const theme = useTheme();
   const [isOpenSettingOrganization, setIsOpenSettingOrganization] = useState(false);
 
   const handleCheckNavigate = () => {
@@ -37,7 +38,7 @@ const RecruitmentHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit }
               placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
               sx={{
                 minWidth: '510px',
-                background: '#F2F4F5',
+                background: theme.palette.common.bgrMaster,
                 borderRadius: '6px',
                 '.MuiInput-root': {
                   border: 'none'

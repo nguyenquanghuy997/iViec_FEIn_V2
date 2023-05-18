@@ -15,7 +15,7 @@ import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal"
 import ExamFormModal from "@/sections/exam/components/ExamFormModal";
 import { ButtonIcon } from "@/utils/cssStyles";
 import { NumericFormatCustom } from "@/utils/formatNumber";
-import { Box, Divider, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, Divider, TextField, Tooltip, Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
@@ -26,6 +26,7 @@ const CreateExamContent = () => {
   const router = useRouter();
   const [createExam] = useCreateExamMutation();
   const [updateExam] = useUpdateExamMutation();
+	const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const examId = router.query.slug;
   const { data: data } = useGetExaminationByIdQuery({
@@ -315,7 +316,7 @@ const CreateExamContent = () => {
               sx={{
                 fontSize: "1.5rem",
                 fontWeight: 600,
-                color: "#172B4D",
+                color: theme.palette.common.neutral700,
               }}
             >
               {examData.name}

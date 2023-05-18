@@ -23,6 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 Recruitment.getLayout = function getLayout(pageProps, page) {
   return (
@@ -34,7 +35,7 @@ Recruitment.getLayout = function getLayout(pageProps, page) {
 
 export default function Recruitment() {
   const [pipelineStateResultType, setPipelineStateResultType] = useState(0);
-
+  const theme = useTheme();
   const Schema = Yup.object().shape({
     note:
       pipelineStateResultType == 0 || pipelineStateResultType == 1
@@ -206,9 +207,9 @@ export default function Recruitment() {
   const windowWidth = useRef(window.innerWidth);
   const windowHeight = useRef(window.innerHeight);
   const LIST_ACTION = [
-    { id: 0, name: "Đạt", color: "#4CAF50" },
-    { id: 1, name: "Cân nhắc", color: "#FF9800" },
-    { id: 2, name: "Loại", color: "#F44336" },
+    { id: 0, name: "Đạt", color: theme.palette.common.green500 },
+    { id: 1, name: "Cân nhắc", color: theme.palette.common.orange500 },
+    { id: 2, name: "Loại", color: theme.palette.common.red500 },
   ];
 
   const [viewMode, setViewMode] = useState(1);
@@ -314,7 +315,7 @@ export default function Recruitment() {
                 >
                   <>
                     <FormProvider methods={methods}>
-                      <View width={600} borderRadius={8} bgColor={"#fff"}>
+                      <View width={600} borderRadius={8} bgColor={theme.palette.background.paper}>
                         <View pt={20} pb={36} ph={24}>
                           {/* button close */}
                           <View asEnd mr={12} onPress={() => handleCancel()}>
@@ -362,7 +363,7 @@ export default function Recruitment() {
                             mt={24}
                             borderRadius={6}
                             borderWidth={1}
-                            borderColor={"#D0D4DB"}
+                            borderColor={theme.palette.common.neutral600}
                           >
                             {LIST_ACTION.map((item, index) => {
                               const isActive =
@@ -380,7 +381,7 @@ export default function Recruitment() {
                                   <Typography
                                     fontSize={14}
                                     fontWeight={"600"}
-                                    color={isActive ? "#FDFDFD" : "#455570"}
+                                    color={isActive ? theme.palette.common.white : theme.palette.common.neutral700}
                                     textAlign={"center"}
                                   >
                                     {item.name}
@@ -392,7 +393,7 @@ export default function Recruitment() {
 
                           <Typography
                             fontWeight={"600"}
-                            color="#5C6A82"
+                            color= {theme.palette.common.neutral600}
                             mt="24px"
                             mb="8px"
                           >
@@ -416,11 +417,11 @@ export default function Recruitment() {
                             tittle={"Hủy"}
                             type="button"
                             sx={{
-                              color: "#455570",
-                              backgroundColor: "#fff",
+                              color: theme.palette.common.neutral700,
+                              backgroundColor: theme.palette.background.paper,
                               boxShadow: "none",
                               ":hover": {
-                                backgroundColor: "#fff",
+                                backgroundColor: theme.palette.background.paper,
                                 textDecoration: "underline",
                               },
                               fontSize: "14px",
@@ -434,7 +435,7 @@ export default function Recruitment() {
                             type="button"
                             sx={{
                               textTransform: "unset",
-                              color: "#fff",
+                              color: theme.palette.background.paper,
                               boxShadow: "none",
                               fontSize: "14px",
                               padding: "6px 12px",

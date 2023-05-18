@@ -7,6 +7,7 @@ import {RiCloseFill, RiImage2Fill, RiUpload2Fill} from "react-icons/ri";
 import Cropper from "react-easy-crop";
 import {useUpdateCompanyInfoMutation, useUploadImageCompanyMutation} from "@/sections/companyinfor/companyInforSlice";
 import {STYLE_CONSTANT as style} from "@/theme/palette";
+import {useTheme} from "@mui/material/styles";
 
 const renderTitle = (title) => {
   return (
@@ -36,7 +37,7 @@ const ImageCropper = (
   const [zoom, setZoom] = useState(1);
 
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-
+  const theme = useTheme();
   const [uploadImg] = useUploadImageCompanyMutation();
   const [updateImageCompany] = useUpdateCompanyInfoMutation();
   const uploadImage = (e) => {
@@ -93,12 +94,12 @@ const ImageCropper = (
                   onChange={uploadImage}
                   variant={"outlined"}
                   startIcon={<RiUpload2Fill/>}
-                  sx={{border: "1px solid #455570", height: 30, maxWidth: 120, color: '#455570', fontWeight: 600}}
+                  sx={{border: "1px solid " + theme.palette.common.neutral700, height: 30, maxWidth: 120, color: theme.palette.common.neutral700, fontWeight: 600}}
                   component="label"
               />
             </Box>
             <IconButton edge={"end"} onClick={onClose}>
-              <RiCloseFill color="#5C6A82" size={24}/>
+              <RiCloseFill color={theme.palette.common.borderObject} size={24}/>
             </IconButton>
           </Box>
         </DialogTitle>
@@ -132,12 +133,12 @@ const ImageCropper = (
                     }}
                     className="zoom-range"
                     sx={{
-                      color: "#E7E9ED",
+                      color: theme.palette.common.neutral100,
                       height: 5,
                       "& .MuiSlider-thumb": {
                         height: 20,
                         width: 20,
-                        backgroundColor: "#455570",
+                        backgroundColor: theme.palette.common.neutral700,
                         border: "4px solid white",
                         "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
                           boxShadow: "none",

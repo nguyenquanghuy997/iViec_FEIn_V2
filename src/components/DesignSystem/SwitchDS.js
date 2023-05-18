@@ -1,33 +1,33 @@
 // @mui
 import { FormControlLabel, Switch } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 // form
 import { Controller, useFormContext } from "react-hook-form";
 
-const Switchh = styled(Switch)(() => ({
+const Switchh = styled(Switch)(({theme}) => ({
   "& .MuiSwitch-track": {
-    backgroundColor: "#E7E9ED",
+    backgroundColor: theme.palette.common.neutral100,
     borderRadius: "10px",
   },
   "& .MuiSwitch-thumb": {
     boxShadow: "0px 3px 5px rgb(9 30 66 / 20%), 0px 0px 1px rgb(9 30 66 / 30%)",
-    background: "#F3F4F6",
+    background: theme.palette.common.neutral50,
   },
 
   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#2196F3",
+    backgroundColor: theme.palette.common.blue500,
   },
   "& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb": {
-    backgroundColor: "#1976D2",
+    backgroundColor: theme.palette.common.blue700,
   },
 }));
-
 export default function SwitchDS({ name, ...other }) {
+  const  theme = useTheme();
   const { control } = useFormContext();
   return (
     <FormControlLabel
       sx={{
-        color: "#5C6A82",
+        color: theme.palette.common.borderObject,
         fontWeight: 600,
         fontSize: 14,
         lineHeight: 20,

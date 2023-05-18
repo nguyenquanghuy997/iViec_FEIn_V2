@@ -39,9 +39,9 @@ const MenuProps = {
 
 const InputProps = {
     startAdornment: (
-        <InputAdornment position="start">
-            <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
-        </InputAdornment>
+      <InputAdornment position="start">
+          <Iconify icon={"ri:search-2-line"} color="#5c6a82"/>
+      </InputAdornment>
     )
 }
 
@@ -59,7 +59,7 @@ const renderOptions = (options, value) => {
                 '.MuiListItemText-secondary': {color: "#5C6A82", fontSize: 13, fontWeight: 400}
             }}/>
             {value?.includes(option.value) ?
-                <Checkbox checked={true}/> : <Checkbox checked={false}/>}
+              <Checkbox checked={true}/> : <Checkbox checked={false}/>}
         </MenuItem>
     })
 }
@@ -118,42 +118,42 @@ function RHFDropdownAvatarGroup({name, ...props}) {
     }, [searchText, options])
 
     return (
-        <Controller
-            name={name}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-                <Stack direction="column">
-                    {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
-                    <SelectFieldStyle
-                        {...field}
-                        displayEmpty
-                        multiple={multiple}
-                        disabled={disabled}
-                        error={!!error}
-                        onClose={() => {
-                            setSearchText("");
-                        }}
-                        renderValue={() => renderValue(options, field.value, placeholder, multiple)}
-                        MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
-                    >
-                        {options?.length > 3 && (
-                            <TextFieldStyle
-                                placeholder="Tìm kiếm..."
-                                fullWidth
-                                autoFocus
-                                InputProps={{...InputProps}}
-                                sx={{...SearchInputStyle}}
-                                onChange={(e) => setSearchText(e.target.value)}
-                                onKeyDown={(e) => e.stopPropagation()}
-                            />
-                        )}
-                        {renderOptions(filterOptions, field.value)}
-                    </SelectFieldStyle>
-                    <FormHelperText
-                        sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
-                </Stack>
-            )}
-        />
+      <Controller
+        name={name}
+        control={control}
+        render={({field, fieldState: {error}}) => (
+          <Stack direction="column">
+              {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
+              <SelectFieldStyle
+                {...field}
+                displayEmpty
+                multiple={multiple}
+                disabled={disabled}
+                error={!!error}
+                onClose={() => {
+                    setSearchText("");
+                }}
+                renderValue={() => renderValue(options, field.value, placeholder, multiple)}
+                MenuProps={{...MenuProps, classes: {paper: classes.paper}}}
+              >
+                  {options?.length > 3 && (
+                    <TextFieldStyle
+                      placeholder="Tìm kiếm..."
+                      fullWidth
+                      autoFocus
+                      InputProps={{...InputProps}}
+                      sx={{...SearchInputStyle}}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    />
+                  )}
+                  {renderOptions(filterOptions, field.value)}
+              </SelectFieldStyle>
+              <FormHelperText
+                sx={{color: "#FF4842", fontSize: 12, fontWeight: 400}}>{error?.message}</FormHelperText>
+          </Stack>
+        )}
+      />
     );
 }
 

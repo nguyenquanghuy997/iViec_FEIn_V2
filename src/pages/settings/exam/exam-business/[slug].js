@@ -20,6 +20,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
+
 Question.getLayout = function getLayout(pageProps, page) {
   return (
     <SettingLayout permissions={PERMISSION_PAGES.exam} {...pageProps}>

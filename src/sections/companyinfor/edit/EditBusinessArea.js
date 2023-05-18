@@ -23,6 +23,7 @@ import Iconify from "@/components/Iconify";
 import {RiDeleteBin6Line} from "react-icons/ri";
 import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {useTheme} from "@mui/material/styles";
 
 const InputStyle = {width: "100%", minHeight: 40, background: "white"};
 
@@ -32,7 +33,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
   const [updateCompanyBusiness] = useUpdateCompanyBusinessMutation();
   const [uploadImage] = useUploadImageCompanyMutation();
   const {enqueueSnackbar} = useSnackbar();
-
+  const theme = useTheme();
   const [bg, setBg] = useState(null);
   const [imageBg, setImageBg] = useState(null);
   const handleImage = (e) => {
@@ -170,7 +171,7 @@ const EditBusinessArea = ({data: Data, onClose}) => {
                     width: "100%",
                     height: '100%',
                     maxHeight: 222,
-                    background: "#EFF3F7",
+                    background: theme.palette.common.bgrMaster,
                     margin: "16px 0 24px 0",
                     objectFit: 'contain'
                   }}
@@ -191,12 +192,12 @@ const EditBusinessArea = ({data: Data, onClose}) => {
                             <Draggable key={`organizationHumans[${index}]`} draggableId={`organizationHumans-${index}`} index={index}>
                               {(provided) => (
                                   <li key={item.id} ref={provided.innerRef} {...provided.draggableProps}>
-                                    <Box sx={{my: 3, px: 3, py: 2, background: "#F2F4F5",}} key={item.id}>
+                                    <Box sx={{my: 3, px: 3, py: 2, background: theme.palette.common.bgrMaster,}} key={item.id}>
                                       <Box sx={{py: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                                         <div {...provided.dragHandleProps}>
-                                          <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color="#A2AAB7"/>
+                                          <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color={theme.palette.common.neutral400}/>
                                         </div>
-                                        <RiDeleteBin6Line color="#E53935" onClick={() => remove(index)} cursor="pointer"/>
+                                        <RiDeleteBin6Line color={theme.palette.common.red600} onClick={() => remove(index)} cursor="pointer"/>
                                       </Box>
                                       <Stack justifyContent="space-between" sx={{mb: 3}}>
                                         <RHFTextField
@@ -206,9 +207,9 @@ const EditBusinessArea = ({data: Data, onClose}) => {
                                             placeholder="Nhập lĩnh vực kinh doanh"
                                             style={{...InputStyle}}
                                             sx={{
-                                              backgroundColor: '#FDFDFD',
+                                              backgroundColor: theme.palette.common.white,
                                               '& .MuiFormHelperText-root.Mui-error': {
-                                                backgroundColor: '#F2F4F5',
+                                                backgroundColor: theme.palette.common.bgrMaster,
                                                 marginTop: 0,
                                                 paddingTop: 1
                                               }

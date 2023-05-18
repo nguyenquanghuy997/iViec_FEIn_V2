@@ -15,6 +15,7 @@ import {AddIcon} from "@/assets/ActionIcon";
 import HelperText from "@/components/BaseComponents/HelperText";
 import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {useTheme} from "@mui/material/styles";
 
 const LIST_PIPELINE = [
   {description: "", organizationProfilePipelineType: 0, type: 0, isFixed: true, isOpen: true},
@@ -27,7 +28,7 @@ const LIST_PIPELINE = [
 const EditHirePipeline = ({data, onClose}) => {
   const {enqueueSnackbar} = useSnackbar();
   const [pipeLineState, setPipeLineState] = useState(LIST_PIPELINE);
-
+  const theme = useTheme();
   const [updatePipeline, { isLoading: isSubmitting }] = useUpdateCompanyPipelineMutation();
 
   useEffect(() => {
@@ -176,7 +177,7 @@ const EditHirePipeline = ({data, onClose}) => {
                             {PipelineStateType(pipeline?.organizationProfilePipelineType)}
                           </Typography>
                         </div>
-                        <RiDeleteBin6Line color="#E53935" onClick={() => handleRemovePipeLine(index)} cursor="pointer"/>
+                        <RiDeleteBin6Line color={theme.palette.common.red600} onClick={() => handleRemovePipeLine(index)} cursor="pointer"/>
                       </div>
                       <LabelStyle required>Mô tả</LabelStyle>
                       <AntdTextArea
@@ -203,9 +204,9 @@ const EditHirePipeline = ({data, onClose}) => {
                           <Typography sx={{
                             fontSize: 14,
                             fontWeight: 600,
-                            color: '#172B4D'
+                            color: theme.palette.common.neutral800
                           }}>{PipelineStateType(pipeline?.organizationProfilePipelineType)}</Typography>
-                          <Typography sx={{fontSize: 13, fontWeight: 400, color: '#5C6A82'}}>Không hiển thị</Typography>
+                          <Typography sx={{fontSize: 13, fontWeight: 400, color: theme.palette.common.borderObject }}>Không hiển thị</Typography>
                         </Stack>
                         <Box>
                           <MuiButton

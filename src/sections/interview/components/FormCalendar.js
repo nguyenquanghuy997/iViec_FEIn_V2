@@ -22,6 +22,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { dispatch } from "@/redux/store";
+import {useTheme} from "@mui/material/styles";
 
 const defaultValues = {
   id: undefined,
@@ -115,7 +116,7 @@ export const FormCalendar = ({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-
+  const  theme = useTheme();
   const {
     reset,
     setValue,
@@ -262,7 +263,7 @@ export const FormCalendar = ({
                   atcenter="center"
                   pv={12}
                   ph={24}
-                  bgcolor={"#FDFDFD"}
+                  bgcolor={theme.palette.common.white}
                 >
                   <Text flex="true" fontsize={16} fontweight={"600"}>
                     {isEditMode
@@ -272,7 +273,7 @@ export const FormCalendar = ({
                   <ButtonDS
                     type="submit"
                     sx={{
-                      backgroundColor: "#fff",
+                      backgroundColor: theme.palette.background.paper,
                       boxShadow: "none",
                       ":hover": {
                         backgroundColor: "#EFF3F7",
@@ -287,7 +288,7 @@ export const FormCalendar = ({
                         icon={"mi:close"}
                         width={20}
                         height={20}
-                        color="#5C6A82"
+                        color={theme.palette.common.borderObject}
                       />
                     }
                   />
@@ -362,7 +363,7 @@ export const FormCalendar = ({
                 variant="contained"
                 loading={isSubmitting}
                 onClick={pressSave}
-                sx={{ backgroundColor: "#1976D2", p: 1, fontSize: 14 }}
+                sx={{ backgroundColor: theme.palette.common.blue700, p: 1, fontSize: 14 }}
               >
                 {"Lưu"}
               </LoadingButton>
@@ -370,7 +371,7 @@ export const FormCalendar = ({
 
               <LoadingButton
                 variant="text"
-                sx={{ color: "#455570" }}
+                sx={{ color: theme.palette.common.neutral700 }}
                 onClick={onClose}
               >
                 {"Hủy"}

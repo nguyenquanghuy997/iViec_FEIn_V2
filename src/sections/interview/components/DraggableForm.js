@@ -15,6 +15,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 function DraggableForm({ model, index, removeItem }) {
   const {
@@ -27,7 +28,7 @@ function DraggableForm({ model, index, removeItem }) {
   const [open, setOpen] = useState(true);
   const [first, setFirst] = useState(false);
   const [time, setTime] = useState(false);
-
+  const theme = useTheme();
   useEffect(() => {
     if (first) return;
     setValue(
@@ -121,7 +122,7 @@ function DraggableForm({ model, index, removeItem }) {
         >
           <div
             style={{
-              background: "#F2F4F5",
+              background: theme.palette.common.bgrMaster,
               padding: "16px",
               marginBottom: "16px",
               borderRadius: "6px ",
@@ -134,7 +135,7 @@ function DraggableForm({ model, index, removeItem }) {
                 border: "none",
                 mb: 2,
                 borderRadius: "6px",
-                background: "#F2F4F5",
+                background: theme.palette.common.bgrMaster,
               }}
             >
               <div
@@ -171,7 +172,7 @@ function DraggableForm({ model, index, removeItem }) {
                         {model.name}
                       </Typography>
                       <Typography
-                        color="#455570"
+                        color={theme.palette.common.neutral700}
                         sx={{
                           fontSize: "12px",
                           fontWeight: "400",
@@ -252,9 +253,9 @@ function DraggableForm({ model, index, removeItem }) {
                   <Button
                     onClick={() => setOpen(false)}
                     sx={{
-                      color: "#172B4D",
+                      color: theme.palette.common.neutral800,
                       "&:hover": {
-                        bgcolor: "#F2F4F5",
+                        bgcolor: theme.palette.common.bgrMaster,
                       },
                     }}
                   >
@@ -263,7 +264,7 @@ function DraggableForm({ model, index, removeItem }) {
                   <Button
                     onClick={checkForm}
                     variant="contained"
-                    sx={{ background: "#1976D2" }}
+                    sx={{ background: theme.palette.common.blue700 }}
                   >
                     Lưu
                   </Button>

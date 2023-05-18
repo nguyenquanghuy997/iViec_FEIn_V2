@@ -16,10 +16,9 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import { Container } from "@mui/system";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const NotificationBoard = ({
   icon,
@@ -29,9 +28,11 @@ const NotificationBoard = ({
   isShow,
   data,
   option,
+  children,
 }) => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
+  const theme = useTheme();
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -62,7 +63,7 @@ const NotificationBoard = ({
             display: "inline",
             fontSize: 13,
             margin: "16px 8px 12px 0",
-            color: "#5C6A82",
+            color: theme.palette.common.borderObject,
             width: "160px",
           }}
         >
@@ -74,7 +75,7 @@ const NotificationBoard = ({
             display: "inline",
             fontSize: 13,
             fontWeight: 500,
-            color: "#172B4D",
+            color: theme.palette.common.neutral800,
           }}
         >
           {reason}
@@ -125,11 +126,11 @@ const NotificationBoard = ({
         onClick={handleClick}
         sx={{
           padding: "20px 12px",
-          backgroundColor: !open ? "white" : "#F2F4F5",
-          color: "#172B4D",
+          backgroundColor: !open ? "white" : theme.palette.common.bgrMaster,
+          color: theme.palette.common.neutral800,
           fontSize: "0.9rem!important",
           "&:hover": {
-            background: "#F2F4F5",
+            background: theme.palette.common.bgrMaster,
           },
           "& .MuiListItemText-root+svg": {
             minWidth: "0.8rem",
@@ -166,12 +167,12 @@ const NotificationBoard = ({
                 }}
                 component="span"
                 variant="body2"
-                color="#5C6A82"
+                color= {theme.palette.common.borderObject}
               >
                 {fTimeDate(data?.occurredAt)}
               </Typography>
-              {data?.recruitmentPipelineStateType == 3 &&
-                (data.pipelineStateResultType == 2
+              {data?.recruitmentPipelineStateType === 3 &&
+                (data.pipelineStateResultType === 2
                   ? renderText(
                       "Lý do loại:",
                       data?.note,
@@ -186,11 +187,11 @@ const NotificationBoard = ({
             timeout="auto"
             unmountOnExit
             sx={{
-              backgroundColor: "#F2F4F5",
+              backgroundColor: theme.palette.common.bgrMaster,
               pb: 2,
               pt: 2,
               "& .MuiButtonBase-root:hover": {
-                backgroundColor: "#F2F4F5",
+                backgroundColor: theme.palette.common.bgrMaster,
               },
             }}
           >
@@ -202,12 +203,12 @@ const NotificationBoard = ({
                     marginLeft: "13px",
                     fontWeight: 600,
                     color:
-                      data?.applicantReviewResultType == 2 &&
-                      (data?.applicantReviewResultType == 0
+                      data?.applicantReviewResultType === 2 &&
+                      (data?.applicantReviewResultType === 0
                         ? "#388E3C"
-                        : data?.applicantReviewResultType == 1
-                        ? "#F77A0C"
-                        : "#E53935"),
+                        : data?.applicantReviewResultType === 1
+                        ? theme.palette.common.orange700
+                        : theme.palette.common.red600),
                   }}
                 >
                   {PipelineStateType(2, data?.applicantReviewResultType)}
@@ -216,14 +217,17 @@ const NotificationBoard = ({
             </List>
             <List>
               <Typography fontSize={13}>
-                Điểm TB: <span style={{ marginLeft: "13px", fontWeight: 600 }}>{data?.averagePoint?.toFixed(2)}</span>
+                Điểm TB:{" "}
+                <span style={{ marginLeft: "13px", fontWeight: 600 }}>
+                  {data?.averagePoint?.toFixed(2)}
+                </span>
               </Typography>
             </List>
             <List component="div" disablePadding>
               <Typography fontSize={13}>
                 Kết luận:
                 <span style={{ marginLeft: "13px", fontWeight: 600 }}>
-                {data?.comment}
+                  {data?.comment}
                 </span>
               </Typography>
             </List>
@@ -231,7 +235,7 @@ const NotificationBoard = ({
               <ListItemButton
                 sx={{
                   "& .MuiButtonBase-root:hover": {
-                    backgroundColor: "#F2F4F5",
+                    backgroundColor: theme.palette.common.bgrMaster,
                   },
                 }}
               >
@@ -266,6 +270,7 @@ const NotificationBoard = ({
               </ListItemButton>
             )}
 
+            {children}
           </Collapse>
         </div>
         <div style={{ margin: "auto" }}>
