@@ -310,7 +310,7 @@ export const API_UPDATE_STATUS_EXAM =
   "/examination/Examination/SetExaminationActivated";
 export const API_CREATE_EXAM = "/examination/Examination/CreateExamination";
 export const API_UPDATE_EXAM =
-  "/examination/Examination/UpdateExamination/{id}";
+  "/examination/Examination/UpdateExamination";
 export const API_DELETE_EXAMS = "/examination/Examination/RemoveExaminations";
 
 // QuestionGroup

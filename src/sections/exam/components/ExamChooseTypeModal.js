@@ -7,18 +7,29 @@ import { Divider, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/m
 import React, { useState } from 'react'
 import {useTheme} from "@mui/material/styles";
 
+const showTypeOptions = [
+  {
+    value: 0,
+    title: 'Đề thi câu hỏi cố định',
+    description: 'Đề thi chứa các câu hỏi cố định, giống nhau đối với các ứng viên khác nhau'
+  },
+  {
+    value: 1,
+    title: 'Đề thi câu hỏi ngẫu nhiên',
+    description: 'Đề thi chứa các câu hỏi được hệ thống chọn ngẫu nhiên theo điều kiện cài đặt'
+  }
+]
 
 function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
-
-  const [type, setType] = useState(data?.type ?? 0);
+  const [type, setType] = useState(data?.type);
 
   const handleChange = (e) => {
     setType(parseInt(e.target.value))
   }
   const theme = useTheme()
 
-  const handleClickItem = (type)=>{
-    setType(type)
+  const handleClickItem = (type) => {
+    setType(parseInt(type))
   }
 
   const pressSave = () => {
@@ -26,18 +37,6 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
     onSubmit(data);
   }
 
-  const showTypeOptions = [
-    {
-      value: 0,
-      title: 'Đề thi câu hỏi cố định',
-      description: 'Đề thi chứa các câu hỏi cố định, giống nhau đối với các ứng viên khác nhau'
-    },
-    {
-      value: 1,
-      title: 'Đề thi câu hỏi ngẫu nhiên',
-      description: 'Đề thi chứa các câu hỏi được hệ thống chọn ngẫu nhiên theo điều kiện cài đặt'
-    }
-  ]
 
   return (
     <DialogModelStyle
@@ -92,13 +91,13 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
         <View>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue={0}
+            defaultValue={type}
             name={'showType'}
             onChange={handleChange}
           >
             {
               showTypeOptions.map((x, index) =>
-                <View key={`option-key-${index}`}
+                <View key={`option-key-${x.value}`}
                   flexrow='true'
                   atcenter='true'
                   style={{
@@ -107,7 +106,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
                     padding: '24px 16px',
                     marginTop: index !== 0 ? '28px' : '0'
                   }}
-                  onclick={()=>handleClickItem(x.value)}
+                  onclick={() => handleClickItem(x.value)}
                 >
                   <View>
                     <FormControlLabel

@@ -46,7 +46,6 @@ const MuiInputNumber = ({
       control={control}
       render={({ field, fieldState: { error } }) => {
         const { onChange: onFieldChange, ...otherField } = field;
-
         return (
           <>
             {title && (
@@ -70,6 +69,7 @@ const MuiInputNumber = ({
               }}
               {...otherField}
               fullWidth
+              disabled={other.disabled}
               sx={{ background: theme.palette.common.white }}
               placeholder={other.placeholder}
               // error={!!error}

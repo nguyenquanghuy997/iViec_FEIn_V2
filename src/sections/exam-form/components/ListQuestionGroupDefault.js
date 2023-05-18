@@ -1,29 +1,34 @@
 import { AddQuestionGroupModel } from "./AddQuestionGroupModel";
+import ListQuestionBottomNav from "./ListQuestionBottomNav";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
-import {
-  CheckboxIconChecked,
-  CheckboxIconDefault,
-} from "@/assets/CheckboxIcon";
+import QuestionGroupCardItem from "./QuestionGroupCardItem";
+import { UpdateQuestionGroupModel } from "./UpdateQuestionGroupModel";
+import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import { ButtonDS } from "@/components/DesignSystem";
-import { View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
-import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
+import { AlertIcon } from "@/sections/organization/component/Icon";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { Checkbox, Button, ButtonGroup, Box, useTheme } from "@mui/material";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useState } from "react";
-import QuestionGroupCardItem from "./QuestionGroupCardItem";
 
-function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
+function ListQuestionGroupDefault({
+  listQuestions,
+  updateListQuestion,
+}) {
   const [showQuestionGroup, setShowQuestionGroup] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [
     showQuestionGallaryInternalModal,
     setShowQuestionGallaryInternalModal,
   ] = useState(false);
   const [currentIndexQuestion, setCurrentIndexQuestion] = useState(0);
-  const [, setCurrentQuestion] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
   const { palette } = useTheme();
-
+  const [itemIndexSelected, setItemIndexSelected] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
   /**
    * Đóng form thêm hoặc sửa câu hỏi
    */
@@ -33,57 +38,124 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
   //   setShowQuestionGroup(false);
   // };
 
-  const handleCloseDeleModal = () => {
-    setCurrentIndexQuestion(-1);
-    setCurrentQuestion(null);
+  const handleCloseDeleteModal = () => {
+    resetSelectItem();
     setShowDeleteModal(false);
   };
-
+  const handleCloseEditModal = () => {
+    resetSelectItem();
+    setShowEdit(false);
+  };
   /**
    * Hàm xử lý sự kiện thêm hoặc sửa câu hỏi
    * @param {*} data
    */
+
   const handleCreateEditQuestion = (data) => {
-    if (currentIndexQuestion == -1) {
-      // setListData([...listData, data])
-      listQuestions.push(data);
-    } else {
-      listQuestions[currentIndexQuestion] = data;
-      // setListData([...listData])
+    if (!Array.isArray(data)) return;
+    let newData = [];
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      if (
+        listQuestions.some(
+          (j) =>
+            j.questionGroupId === item.questionGroupId &&
+            j.questionTypeId == Number(item.questionTypeId)
+        )
+      ) {
+        enqueueSnackbar(
+          `${item.questionGroup.name} - ${
+            item.questionTypeId == 1 ? "Trắc nghiệm" : "Tự luận"
+          } đã tồn tại trong đề thi`,
+          {
+            variant: "error",
+          }
+        );
+        return;
+      } else newData.push(item);
     }
-
-    updateListQuestion(listQuestions);
-
+    updateListQuestion([...listQuestions, ...newData]);
     setShowQuestionGroup(false);
-    // reset choose index && data
-    setCurrentQuestion(null);
-    setCurrentIndexQuestion(-1);
+    resetSelectItem();
   };
 
   const handlerDeleteQuestion = () => {
-    listQuestions.splice(currentIndexQuestion, 1);
-    // setListData([...listData])
-    updateListQuestion(listQuestions);
+    if (currentIndexQuestion >= 0) {
+      listQuestions.splice(currentIndexQuestion, 1);
+      updateListQuestion(listQuestions);
+    } else {
+      updateListQuestion(
+        listQuestions.filter((el, i) => !itemIndexSelected.some((j) => i === j))
+      );
+    }
 
     setShowDeleteModal(false);
-    setCurrentIndexQuestion(-1);
+    resetSelectItem();
   };
-
-  const openEditQuestionForm = (item, index) => {
+  const handleEditQuestion = (data) => {
+    if (
+      listQuestions.some(
+        (j, index) =>
+          currentIndexQuestion != index &&
+          j.questionGroupId === data.questionGroupId &&
+          j.questionTypeId == Number(data.questionTypeId)
+      )
+    ) {
+      enqueueSnackbar(
+        `${data.questionGroup.name} - ${
+          data.questionTypeId == 1 ? "Trắc nghiệm" : "Tự luận"
+        } đã tồn tại trong đề thi`,
+        {
+          variant: "error",
+        }
+      );
+      return;
+    }
+    listQuestions[currentIndexQuestion] = data;
+    updateListQuestion(listQuestions)
+    setShowEdit(false);
+    resetSelectItem();
+  };
+  const openEditQuestionModel = (item, index) => {
     setCurrentIndexQuestion(index);
     setCurrentQuestion(item);
-    setShowQuestionGroup(true);
+    setShowEdit(true);
   };
 
   const openDeleteQuestionModal = (item, index) => {
     setCurrentIndexQuestion(index);
     setShowDeleteModal(true);
   };
+  const resetSelectItem = () => {
+    setCurrentIndexQuestion(-1);
+    setCurrentQuestion(null);
+    setItemIndexSelected([]);
+  };
 
+  const handleSelected = (data, index) => {
+    const isExits = itemIndexSelected.some((x) => x == index);
+    if (isExits) {
+      setItemIndexSelected(itemIndexSelected.filter((x) => x != index));
+    } else {
+      setItemIndexSelected([...itemIndexSelected, index]);
+    }
+  };
+
+  const isSelected = (index) => {
+    return itemIndexSelected.some((x) => x == index);
+  };
+
+  const handleSelectAll = () => {
+    if (itemIndexSelected.length == listQuestions.length) {
+      setItemIndexSelected([]);
+    } else {
+      setItemIndexSelected(listQuestions.map((x, i) => i));
+    }
+  };
+  const [, setError] = React.useState("");
   // useEffect(()=>{
   //   updateListQuestion(listData)
   // },[listQuestions])
-
   return (
     <>
       <Box>
@@ -139,16 +211,25 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
         )}
         {listQuestions.length > 0 && (
           <>
-            <View mh={24} flexrow={"true"} jcbetween={"true"}>
-              <View flexrow={true} atcenter={true}>
+            <Box
+              display={"flex"}
+              justifyContent={"space-between"}
+              ml={2}
+              flexrow={"true"}
+              jcbetween={"true"}
+            >
+              <Box display={"flex"} alignItems={"center"}>
                 <Checkbox
-                  // onChange={pressCheckbox}
-                  icon={<CheckboxIconDefault />}
-                  checkedIcon={<CheckboxIconChecked />}
+                  checked={
+                    itemIndexSelected.length > 0 &&
+                    itemIndexSelected.length == listQuestions.length
+                  }
+                  indeterminate={
+                    itemIndexSelected.length > 0 &&
+                    itemIndexSelected.length < listQuestions.length
+                  }
+                  onChange={handleSelectAll}
                   title="Chọn tất cả"
-                  style={{
-                    margin: "-6px 24px 0 -6px",
-                  }}
                 />
                 <label
                   style={{
@@ -156,11 +237,12 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                     lineHeight: "20px",
                     fontWeight: 600,
                     color: "#455570",
+                    marginLeft: "24px",
                   }}
                 >
                   Chọn tất cả
                 </label>
-              </View>
+              </Box>
 
               <ButtonGroup
                 variant="contained"
@@ -181,7 +263,6 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                     padding: "8px 12px",
                     fontWeight: 600,
                     fontSize: " .875rem",
-                    borderRadius: "6px 0px 0px 6px",
                     textTransform: "none",
                   }}
                   onClick={() => setShowQuestionGroup(true)}
@@ -196,19 +277,29 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
                   Thêm nhóm câu hỏi
                 </Button>
               </ButtonGroup>
-            </View>
+            </Box>
 
-            <View mt={24} mb={28}>
+            <Box mt={3} mb={2}>
               {listQuestions.map((item, index) => (
                 <QuestionGroupCardItem
                   key={index}
                   index={index}
                   item={item}
                   onDelete={openDeleteQuestionModal}
-                  onEdit={openEditQuestionForm}
+                  onEdit={openEditQuestionModel}
+                  onChangeQuantity={(v, err) => {
+                    updateListQuestion(
+                      listQuestions.map((i, j) =>
+                        j === index ? { ...i, quantity: Number(v) } : i
+                      )
+                    );
+                    setError([err]);
+                  }}
+                  checked={isSelected(index)}
+                  onChangeSelected={() => handleSelected(item, index)}
                 />
               ))}
-            </View>
+            </Box>
           </>
         )}
       </Box>
@@ -229,14 +320,51 @@ function ListQuestionGroupDefault({ listQuestions, updateListQuestion }) {
         show={showQuestionGallaryInternalModal}
         onClose={() => setShowQuestionGallaryInternalModal(false)}
       />
+      <ListQuestionBottomNav
+        open={itemIndexSelected.length > 0}
+        itemSelected={itemIndexSelected}
+        canEdit={listQuestions[itemIndexSelected[0]]?.questionGroupId}
+        onClose={() => setItemIndexSelected([])}
+        onDelete={() => openDeleteQuestionModal()}
+        onEdit={() =>
+          openEditQuestionModel(
+            listQuestions[itemIndexSelected[0]],
+            itemIndexSelected[0]
+          )
+        }
+      />
 
       <ConfirmModal
-        confirmDelete={showDeleteModal}
-        title="Xác nhận xóa câu hỏi"
-        subtitle={"Bạn có chắc chắn muốn xóa câu hỏi"}
+        open={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        icon={<AlertIcon />}
+        title={"Xác nhận nhóm câu hỏi"}
+        titleProps={{
+          sx: {
+            color: style.COLOR_TEXT_DANGER,
+            fontWeight: 600,
+            marginBottom: 1,
+          },
+        }}
+        subtitle={"Bạn có chắc chắn muốn xóa nhóm câu hỏi?"}
         onSubmit={handlerDeleteQuestion}
-        onCloseConfirmDelete={handleCloseDeleModal}
+        btnCancelProps={{
+          title: "Hủy",
+        }}
+        btnConfirmProps={{
+          title: "Xóa",
+          color: "error",
+        }}
       />
+      {showEdit && (
+        <UpdateQuestionGroupModel
+          show={showEdit}
+          editData={currentQuestion}
+          setShow={setShowEdit}
+          onSubmit={handleEditQuestion}
+          onClose={handleCloseEditModal}
+        />
+      )}
     </>
   );
 }

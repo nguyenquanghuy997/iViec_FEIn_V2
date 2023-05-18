@@ -1,23 +1,25 @@
-import numeral from 'numeral'
+import numeral from "numeral";
+import React from "react";
+import { NumericFormat } from "react-number-format";
 
 export function fCurrency(number) {
-  return numeral(number).format(Number.isInteger(number) ? '0,0' : '0,0.00')
+  return numeral(number).format(Number.isInteger(number) ? "0,0" : "0,0.00");
 }
 
 export function fPercent(number) {
-  return numeral(number / 100).format('0.0%')
+  return numeral(number / 100).format("0.0%");
 }
 
 export function fNumber(number) {
-  return numeral(number).format()
+  return numeral(number).format();
 }
 
 export function fShortenNumber(number) {
-  return numeral(number).format('0.00a').replace('.00', '')
+  return numeral(number).format("0.00a").replace(".00", "");
 }
 
 export function fData(number) {
-  return numeral(number).format('0.0 b')
+  return numeral(number).format("0.0 b");
 }
 export function currencyFormat(
   amount,
@@ -28,54 +30,77 @@ export function currencyFormat(
   const isVn = unitType === 0;
   let {
     decimalCount = isVn ? 0 : 2,
-    decimal = isVn ? ',' : '.',
-    thousands = isVn ? '.' : ',',
-    unit = isVn ? 'VNĐ' : '$',
+    decimal = isVn ? "," : ".",
+    thousands = isVn ? "." : ",",
+    unit = isVn ? "VNĐ" : "$",
   } = options;
 
   try {
-    if (typeof amount === 'undefined' || amount === null) {
-      return null
+    if (typeof amount === "undefined" || amount === null) {
+      return null;
     }
 
-    const negativeSign = amount < 0 ? '-' : ''
-    amount = Math.abs(Number(amount)) || 0
+    const negativeSign = amount < 0 ? "-" : "";
+    amount = Math.abs(Number(amount)) || 0;
 
-    let amountStr = amount
+    let amountStr = amount;
     if (decimalCount > 0) {
-      amountStr.toFixed(decimalCount)
+      amountStr.toFixed(decimalCount);
     }
-    amountStr = parseInt(amountStr).toString()
+    amountStr = parseInt(amountStr).toString();
 
-    const surLen = amountStr.length > 3 ? amountStr.length % 3 : 0
-    let format = negativeSign
+    const surLen = amountStr.length > 3 ? amountStr.length % 3 : 0;
+    let format = negativeSign;
 
     if (surLen > 0) {
-      format += amountStr.substr(0, surLen) + thousands
+      format += amountStr.substr(0, surLen) + thousands;
     }
 
     format += amountStr
       .substr(surLen)
-      .replace(/(\d{3})(?=\d)/g, '$1' + thousands)
+      .replace(/(\d{3})(?=\d)/g, "$1" + thousands);
 
     if (decimalCount > 0) {
       format +=
         decimal +
         Math.abs(amount - amountStr)
           .toFixed(decimalCount)
-          .slice(2)
+          .slice(2);
     }
 
     if (showCurrency) {
       if (isVn) {
-        format += ' ' + unit;
+        format += " " + unit;
       } else {
-        format = unit + ' ' + format
+        format = unit + " " + format;
       }
     }
 
-    return format
+    return format;
   } catch (e) {
-    return amount
+    return amount;
   }
 }
+
+export const NumericFormatCustom = React.forwardRef(
+  function NumericFormatCustom(props, ref) {
+    const { onChange, ...other } = props;
+
+    return (
+      <NumericFormat
+        {...other}
+        getInputRef={ref}
+        onValueChange={(values) => {
+          onChange({
+            target: {
+              name: props.name,
+              value: values.value,
+            },
+          });
+        }}
+        thousandSeparator
+        valueIsNumericString
+      />
+    );
+  }
+);

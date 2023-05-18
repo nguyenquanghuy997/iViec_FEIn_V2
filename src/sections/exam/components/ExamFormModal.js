@@ -75,7 +75,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
       reset({ ...dataForm });
       return;
     }
-  }, [show]);
+  }, [show, data]);
 
   return (
     <DialogModelStyle
@@ -177,13 +177,13 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               name={'showType'}
+              defaultValue={dataForm.showType}
               onChange={handleChange}
             >
               {
-                showTypeOptions.map((x, index) => <FormControlLabel
-                  key={`option-key-${index}`}
+                showTypeOptions.map((x,) => <FormControlLabel
+                  key={`option-key-${x.value}`}
                   value={x.value}
-                  checked={x.value == showType}
                   control={<Radio name="showType" />}
                   label={x.label}
                   sx={{

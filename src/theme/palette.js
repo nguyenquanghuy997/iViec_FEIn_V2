@@ -205,8 +205,9 @@ const palette = {
     background: {
       active: COMMON.common.orange50,
       MasterBg: COMMON.common.bgrMaster,
-      paper: "#fff",
-      greyDetail: "#F4F6F8",
+      paper: '#fff',
+      greyDetail: '#F4F6F8',
+      disabled: COMMON.common.bgrUnActive,
       bgrObject: "#EFF3F6",
     },
     action: {
@@ -233,8 +234,9 @@ const palette = {
     background: {
       active: COMMON.common.orange50,
       MasterBg: COMMON.common.bgrMaster,
-      paper: "#fff",
-      greyDetail: "#F4F6F8",
+      paper: '#fff',
+      greyDetail: '#F4F6F8',
+      disabled: COMMON.common.bgrUnActive,
     },
     action: {
       active: "#637381",

@@ -60,7 +60,7 @@ const SubTitleStyle = styled(Typography)(({ theme }) => ({
 const CardFormItemStyle = styled(Accordion)(({ theme }) => ({
   "&.card-item": {
     border: "1px solid " + theme.palette.common.neutral100,
-    backgroundColor: theme.palette.common.neutral700,
+    backgroundColor: theme.palette.common.white,
     padding: theme.spacing(2.5, 3),
     marginBottom: theme.spacing(2),
     borderRadius: 4,
@@ -106,6 +106,7 @@ const CardFormItemTitleStyle = styled(Typography)(({ theme }) => ({
     "& .MuiCheckbox-root": {
       padding: 0,
       marginRight: theme.spacing(2),
+      marginTop: theme.spacing(0.5),
     },
     "& .card-item-subtitle": {
       color: theme.palette.common.neutral700,

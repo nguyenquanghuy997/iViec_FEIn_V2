@@ -6,16 +6,23 @@ import { FormProvider, RHFSelect } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { useGetQuestionGroupQuery } from "@/sections/exam/ExamSlice";
-import { ViewModel } from "@/utils/cssStyles";
+import { ButtonIcon, ViewModel } from "@/utils/cssStyles";
+import { LIST_QUESTION_TYPE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Divider, Modal, Tooltip } from "@mui/material";
+import { Divider, Grid, InputAdornment, Modal, Tooltip } from "@mui/material";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import * as Yup from "yup";
 
 const defaultValuess = {
-  name: "",
-  des: "",
+  questionGroup: [
+    {
+      questionGroupId: "",
+      questionTypeId: "",
+      quantity: "",
+      quantityOfQuestion: "",
+    },
+  ],
 };
 
 export const AddQuestionGroupModel = ({
@@ -25,19 +32,30 @@ export const AddQuestionGroupModel = ({
   onSubmit,
 }) => {
   const isEdit = !!editData?.name;
-  const { data: { items: ListQuestionGroup = [] } = {} } =
-    useGetQuestionGroupQuery({ IsActive: "true" });
-
+  const { data: { items: Data = [] } = {} } = useGetQuestionGroupQuery({
+    IsActive: "true",
+  });
+  var ListQuestionGroup = Data?.filter((p) => p.numOfQuestion > 0);
   // form
   const Schema = Yup.object().shape({
-    questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
-    quantity: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .min(1, "Số câu hỏi phải lớn hơn 0")
-      .required("Chưa nhập số câu hỏi"),
+    questionGroup: Yup.array().of(
+      Yup.object().shape({
+        questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
+        questionTypeId: Yup.string().required("Chưa chọn loại câu hỏi"),
+        quantity: Yup.number()
+          .transform((value) => (isNaN(value) ? undefined : value))
+          .min(1, "Số câu hỏi phải lớn hơn 0")
+          .max(
+            Yup.ref("quantityOfQuestion"),
+            "Số câu hỏi phải nhỏ hơn số câu hỏi trong nhóm"
+          )
+          .required("Chưa nhập số câu hỏi"),
+      })
+    ),
   });
 
   const methodss = useForm({
+    mode: "onChange",
     defaultValuess,
     resolver: yupResolver(Schema),
   });
@@ -45,6 +63,9 @@ export const AddQuestionGroupModel = ({
   const {
     handleSubmit,
     control,
+    watch,
+    setValue,
+    reset,
     formState: { isSubmitting },
   } = methodss;
 
@@ -52,37 +73,60 @@ export const AddQuestionGroupModel = ({
     setShow(false);
   };
   const pressSave = handleSubmit(async (d) => {
-    const data = {
-      ...d,
-      questionGroup: ListQuestionGroup.find((x) => x.id === d.questionGroupId),
-    };
+    const data = d.questionGroup.map((x) => {
+      return {
+        ...x,
+        questionGroup: ListQuestionGroup.find(
+          (y) => y.id === x.questionGroupId
+        ),
+      };
+    });
+    // const data = {
+    //   ...d,
+    // };
     onSubmit?.(data);
-    pressHide();
   });
 
-  // useEffect(() => {
-  //   if (!isEdit) {
-  //     setValue("id", "");
-  //     setValue("name", "");
-  //     setValue("des", "");
-  //     setIsActive(false);
-  //     return;
-  //   } else {
-  //     setValue("id", editData.id);
-  //     setValue("name", editData.name);
-  //     setValue("des", editData.description);
-  //     setIsActive(editData.isActive);
-  //   }
-  // }, []);
-
-  /**
-   * Hàm xử lý sự kiện thêm hoặc sửa câu hỏi
-   * @param {*} data
-   */
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questionGroup",
   });
+
+  // const isInit = useRef(true);
+  // useEffect(() => {
+  //   if (isInit.current) {
+  //     append({
+  //       questionGroupId: "",
+  //       quantity: "",
+  //     });
+  //     isInit.current = false;
+  //   }
+  // }, []);
+  const changeQuestionType = (index, value) => {
+    if (watch(`questionGroup.${index}.questionGroupId`)) {
+      const number = ListQuestionGroup.find(
+        (p) => p?.id == watch(`questionGroup.${index}.questionGroupId`)
+      );
+      if (value == 1) {
+        setValue(
+          `questionGroup.${index}.quantityOfQuestion`,
+          number?.numOfQuestionMultipleChoice
+        );
+      } else {
+        setValue(
+          `questionGroup.${index}.quantityOfQuestion`,
+          number?.numOfQuestionEssay
+        );
+      }
+    }
+  };
+  // effect
+  useEffect(() => {
+    if (!show) {
+      reset(defaultValuess);
+      return;
+    }
+  }, [show]);
   return (
     <FormProvider methods={methodss}>
       <Modal
@@ -151,28 +195,80 @@ export const AddQuestionGroupModel = ({
                         }))}
                         name={`questionGroup.${index}.questionGroupId`}
                         placeholder="Chọn nhóm câu hỏi"
-                        allowClear
                         fullWidth
                       />
                     </View>
-                    <View mb={16}>
-                      <Label required={true}>
-                        {"Số câu hỏi đưa vào đề thi"}
-                      </Label>
-                      <MuiInputNumber
-                        name={`questionGroup.${index}.quantity`}
-                        placeholder={"Nhập số câu hỏi đưa vào đề thi"}
-                      />
-                    </View>
+                    <Label required={true}>{"Số câu hỏi đưa vào đề thi"}</Label>
+                    <Grid container mb={3} flexDirection={"row"}>
+                      <Grid item xs={6} pr={"12px"}>
+                        <RHFSelect
+                          options={LIST_QUESTION_TYPE?.map((p) => ({
+                            value: p?.id,
+                            label: p?.name,
+                          }))}
+                          name={`questionGroup.${index}.questionTypeId`}
+                          placeholder="Chọn loại câu hỏi"
+                          fullWidth
+                          onChange={(e) => changeQuestionType(index, e)}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <MuiInputNumber
+                          name={`questionGroup.${index}.quantity`}
+                          placeholder={"Nhập số câu hỏi"}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="start">
+                                /{" "}
+                                {watch(
+                                  `questionGroup.${index}.quantityOfQuestion`
+                                ) || 0}
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
                   </View>
 
                   <View flexrow="false" atcenter="true">
                     <Tooltip title="Xóa">
-                      <RiDeleteBin6Line
-                        color="#E53935"
-                        onClick={() => remove(index)}
-                        cursor="pointer"
-                      />
+                      <>
+                        {fields.length > 1 ? (
+                          <ButtonIcon
+                            sx={{
+                              marginLeft: "16px",
+                              backgroundColor: "unset",
+                            }}
+                            tooltip="Xóa"
+                            onClick={() => remove(index)}
+                            icon={
+                              <Iconify
+                                icon={"material-symbols:delete-outline-rounded"}
+                                width={20}
+                                height={20}
+                                color="#E53935"
+                              />
+                            }
+                          />
+                        ) : (
+                          <ButtonIcon
+                            sx={{
+                              marginLeft: "16px",
+                              backgroundColor: "unset",
+                            }}
+                            tooltip="Xóa"
+                            icon={
+                              <Iconify
+                                icon={"material-symbols:delete-outline-rounded"}
+                                width={20}
+                                height={20}
+                                color="#A2AAB7"
+                              />
+                            }
+                          />
+                        )}
+                      </>
                     </Tooltip>
                   </View>
                 </View>
@@ -213,7 +309,7 @@ export const AddQuestionGroupModel = ({
               />
             </View>
           </View>
-          ;{/* footer */}
+          {/* footer */}
           <View
             flexrow="true"
             pv={12}

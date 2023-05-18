@@ -54,16 +54,55 @@ const defaultValues = {
   questionType: 0,
   questionPoint: 1,
   questionState: 0,
-  questionGroupId: "",
+  questionGroupId: null,
   questionTitle: "",
   questionFilePaths: [],
   isActive: true,
-  answers: [],
+  answers: null,
 };
 
 const defaultAnswer = {
   content: "",
   isCorrect: false,
+};
+
+const MediaItem = ({ data, onUploaded, onPressDelete }) => {
+  const { file, uploadedUrl } = data;
+  const [uploadFile] = useUploadFileExamMutation();
+
+  const startUpload = async () => {
+    if (!file || uploadedUrl) return;
+
+    const formData = new FormData();
+    formData.append("files", file);
+    const res = await uploadFile(formData).unwrap();
+    onUploaded?.(res?.fileTemplates?.[0]?.path);
+  };
+
+  useEffect(() => {
+    startUpload();
+  }, [file, uploadedUrl]);
+
+  const Media = String(file?.type).includes("video") ? "video" : "img";
+
+  return uploadedUrl ? (
+    <View size={"100%"}>
+      <Media
+        src={getFileUrl(uploadedUrl)}
+        style={{ width:"100%", height:"100%", borderRadius: 4, objectFit: "cover" }}
+      />
+
+      <View absolute t={-12} r={-12} onclick={onPressDelete}>
+        <SvgIcon>
+          {
+            '<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_7599_56904)"><path d="M12 22.127C6.477 22.127 2 17.65 2 12.127C2 6.60395 6.477 2.12695 12 2.12695C17.523 2.12695 22 6.60395 22 12.127C22 17.65 17.523 22.127 12 22.127ZM7 11.127V13.127H17V11.127H7Z" fill="#E53935"/></g><defs><clipPath id="clip0_7599_56904"><rect width="24" height="24" fill="white" transform="translate(0 0.126953)"/></clipPath></defs></svg>'
+          }
+        </SvgIcon>
+      </View>
+    </View>
+  ) : (
+    <CircularProgress size={16} />
+  );
 };
 
 export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, handleNoSave }) => {
@@ -75,44 +114,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const MediaItem = ({ data, onUploaded, onPressDelete }) => {
-    const { file, uploadedUrl } = data;
-    const [uploadFile] = useUploadFileExamMutation();
-
-    const startUpload = async () => {
-      if (!file || uploadedUrl) return;
-
-      const formData = new FormData();
-      formData.append("files", file);
-      const res = await uploadFile(formData).unwrap();
-      onUploaded?.(res?.fileTemplates?.[0]?.path);
-    };
-
-    useEffect(() => {
-      startUpload();
-    }, [file, uploadedUrl]);
-
-    const Media = String(file?.type).includes("video") ? "video" : "img";
-
-    return uploadedUrl ? (
-      <View size={"100%"}>
-        <Media
-          src={getFileUrl(uploadedUrl)}
-          style={{ flex: 1, borderRadius: 4, objectFit: "cover" }}
-        />
-
-        <View absolute t={-12} r={-12} onclick={onPressDelete}>
-          <SvgIcon>
-            {
-              '<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_7599_56904)"><path d="M12 22.127C6.477 22.127 2 17.65 2 12.127C2 6.60395 6.477 2.12695 12 2.12695C17.523 2.12695 22 6.60395 22 12.127C22 17.65 17.523 22.127 12 22.127ZM7 11.127V13.127H17V11.127H7Z" fill="#E53935"/></g><defs><clipPath id="clip0_7599_56904"><rect width="24" height="24" fill="white" transform="translate(0 0.126953)"/></clipPath></defs></svg>'
-            }
-          </SvgIcon>
-        </View>
-      </View>
-    ) : (
-      <CircularProgress size={16} />
-    );
-  };
+  
 
   // api
   const [addForm] = useCreateQuestionMutation();
@@ -203,7 +205,8 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
       if (isNotSave) {
         const data = {
           ...e,
-          questionGroupName: items.find(x => x.id === e.questionGroupId).name
+          answers: e.answers?.length > 0 && !isEssay ? e.answers : null,
+          questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name
         }
         handleNoSave(data)
       }
@@ -391,6 +394,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
       reset({ ...defaultValues, questionGroupId: router.query.slug });
       setListAnswer([defaultAnswer]);
       setListMedia([])
+      getQuestionGroup()
     }
 
   }, [show, isEditMode]);
@@ -530,7 +534,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
                     </Alert>
                   )}
 
-                  {listAnswer.map(renderAnswerItem)}
+                  {listAnswer?.map(renderAnswerItem)}
                 </View>
               </>
             )}
