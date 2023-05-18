@@ -14,9 +14,10 @@ import {useGetExaminationByIdQuery} from "@/sections/exam/ExamSlice";
 
 import {API_GET_EXAMINATION} from "@/routes/api";
 import {MuiDialogTitle} from "@/components/BaseComponents/ConfirmModal";
+import {useTheme} from "@mui/material/styles";
 
 const ExaminationForm = ({open, onClose, data, onSaveExamination}) => {
-
+    const theme = useTheme();
     const defaultValues = {
         examinationId: data?.examinationId || '',
         expiredTime: data?.expiredTime || '',
@@ -59,7 +60,7 @@ const ExaminationForm = ({open, onClose, data, onSaveExamination}) => {
             >
                 <FormProvider methods={methods}>
                     <MuiDialogTitle onClose={onClose}>
-                        <Typography sx={{color: '#172B4D', fontSize: 16, fontWeight: 600}}>Chọn đề thi</Typography>
+                        <Typography sx={{color: theme.palette.common.neutral800, fontSize: 16, fontWeight: 600}}>Chọn đề thi</Typography>
                     </MuiDialogTitle>
                     <DialogContent
                     sx={{

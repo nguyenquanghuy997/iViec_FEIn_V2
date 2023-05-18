@@ -19,6 +19,7 @@ import ChipDS from "@/components/DesignSystem/ChipDS";
 import HelperText from "@/components/BaseComponents/HelperText";
 
 const renderOptions = (options, value, multiple) => {
+
   if (multiple) {
     return options?.map((option, i) => {
       return <MenuItem

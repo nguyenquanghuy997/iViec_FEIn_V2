@@ -15,8 +15,11 @@ import { containsText } from "@/utils/function";
 import { Box, IconButton, MenuItem, Stack, TextField } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
+
 
 export const CheckedIconOutlined = () => {
+
   return (
     <Iconify
       color="#1e5ef3"
@@ -94,7 +97,7 @@ const RHFDropdown = React.forwardRef((props, ref) => {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
-
+  const theme = useTheme();
   useEffect(() => {
     if (searchText) {
       setFilterOptions(
@@ -126,7 +129,7 @@ const RHFDropdown = React.forwardRef((props, ref) => {
                       sx={{
                         "& .MuiSelect-iconOutlined": {
                           display: field.value && allowClear == true ? "none" : "",
-                          color: "#455570",
+                          color: theme.palette.common.neutral700,
                           width: "20px",
                           height: "20px",
                         },
@@ -141,7 +144,7 @@ const RHFDropdown = React.forwardRef((props, ref) => {
                                   icon={"ic:round-clear"}
                                   width={16}
                                   height={16}
-                                  color="#5c6a82"
+                                  color={theme.palette.common.borderObject}
                               />
                             </IconButton>
                         ) : (

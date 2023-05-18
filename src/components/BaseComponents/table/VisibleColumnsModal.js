@@ -17,6 +17,7 @@ import {
 import { useSnackbar } from 'notistack';
 import Iconify from "@/components/Iconify";
 import { getErrorMessage } from '@/utils/helper';
+import {useTheme} from "@mui/material/styles";
 
 export default function ColumnsModal({
   open,
@@ -27,7 +28,7 @@ export default function ColumnsModal({
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [showColumns, setShowColumns] = useState({});
-
+  const theme = useTheme();
   const [updateColumns, { isLoading: updating }] = useUpdateColumnsFunc ? useUpdateColumnsFunc() : [undefined, {}];
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function ColumnsModal({
             padding: "16px 24px",
           }}
         >
-          <div style={{ color: "#172B4D", fontWeight: 600 }}>Quản lý cột</div>
+          <div style={{ color: theme.palette.common.neutral800, fontWeight: 600 }}>Quản lý cột</div>
           <div>
             <ButtonIcon
               onClick={() => onClose()}
@@ -96,7 +97,7 @@ export default function ColumnsModal({
                   width={20}
                   height={20}
                   icon="ic:baseline-close"
-                  color="#455570"
+                  color= {theme.palette.common.neutral700}
                 />
               }
             ></ButtonIcon>
@@ -118,7 +119,7 @@ export default function ColumnsModal({
                 label={p.title}
                 sx={{
                   "& .MuiFormControlLabel-label": {
-                    color: "#172B4D",
+                    color: theme.palette.common.neutral800,
                     fontWeight: 400,
                     fontSize: 14,
                   },

@@ -13,11 +13,13 @@ import { View } from "@/components/DesignSystem/FlexStyled"
 import CreateExamHeader from "./CreateExamHeader"
 import { useCreateExamMutation } from "@/sections/exam/ExamSlice"
 import { useSnackbar } from "notistack"
+import {useTheme} from "@mui/material/styles";
 import React from "react"
 
 const CreateExamContent = () => {
   const router = useRouter();
   const [createExam] = useCreateExamMutation();
+	const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { query = { name: "", description: "", examTime: 0, isQuestionMixing: true, showType: 0, type: 0 } } = router;
   const queryDataDefault = {
@@ -163,7 +165,7 @@ const CreateExamContent = () => {
             <Typography sx={{
               fontSize: '13px',
               lineHeight: '20px',
-              color: '#455570',
+							color: theme.palette.common.neutral700,
               fontWeight: 500,
             }}>Điểm sàn
             </Typography>
@@ -178,7 +180,7 @@ const CreateExamContent = () => {
             <Typography sx={{
               fontSize: '13px',
               lineHeight: '20px',
-              color: '#455570',
+							color: theme.palette.common.neutral700,
               fontWeight: 500,
             }}>Điểm tối đa
             </Typography>
@@ -203,11 +205,11 @@ const CreateExamContent = () => {
             variant={'outlined'}
             onClick={() => setShowForm('true')}
             sx={{
-              border: '1px solid #455570',
+							border: '1px solid ' + theme.palette.common.neutral700,
               padding: '8px 12px',
               fontWeight: 600,
               fontSize: '14px',
-              color: '#455570'
+							color: theme.palette.common.neutral700
             }}
           />
         </Box>

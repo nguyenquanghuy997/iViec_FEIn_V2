@@ -4,7 +4,8 @@ import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { InputAdornment, Stack, Button } from "@mui/material";
 import SvgIcon from "@/components/SvgIcon";
-
+import {useTheme} from "@mui/material/styles";
+const  theme = useTheme();
 const RolegroupHeader = ({
   methods,
   onOpenFilterForm,
@@ -29,7 +30,7 @@ const RolegroupHeader = ({
               sx={{
                 minWidth: "360px",
                 borderRadius: '6px',
-                background: '#F2F4F5',
+                background: theme.palette.common.bgrMaster,
                 height: "36px",
                 ".MuiInput-root": {
                   height: "36px",

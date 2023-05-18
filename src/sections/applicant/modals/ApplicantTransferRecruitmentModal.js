@@ -27,6 +27,7 @@ import {
 import { useSnackbar } from "notistack";
 import React, {  useState } from "react";
 import { useForm } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const ApplicantTransferRecruitmentModal = ({
   showConfirmMultiple,
@@ -49,7 +50,7 @@ const ApplicantTransferRecruitmentModal = ({
   //     });
   //   }
   // };
-
+  const theme = useTheme();
   const methods = useForm({
 
   });
@@ -126,7 +127,7 @@ const ApplicantTransferRecruitmentModal = ({
             padding: "22px 24px",
           }}
         >
-          <div style={{ color: "#172B4D", fontWeight: 600 }}>
+          <div style={{ color: theme.palette.neutral800, fontWeight: 600 }}>
             Thêm vào tin tuyển dụng khác
           </div>
           <div>
@@ -137,7 +138,7 @@ const ApplicantTransferRecruitmentModal = ({
                   width={20}
                   height={20}
                   icon="ic:baseline-close"
-                  color="#455570"
+                  color= {theme.palette.common.neutral700}
                 />
               }
             ></ButtonIcon>

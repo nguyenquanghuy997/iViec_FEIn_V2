@@ -20,6 +20,7 @@ import {
 import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
 import { convertFlatDataToTree } from "@/utils/function";
 import { useGetAllUserFromOrganizationQuery, useGetOrganizationsDataWithChildQuery } from "../RecruitmentAdSlice";
+import {useTheme} from "@mui/material/styles";
 
 
 
@@ -48,7 +49,7 @@ function RecruitmentAdFilterModal({ columns, isOpen, onClose, onSubmit}) {
     // defaultValues: useMemo(() => defaultValues, [query]),
     defaultValues,
   });
-
+  const  theme = useTheme();
   const {
     watch,
     handleSubmit,
@@ -105,7 +106,7 @@ const watchOrganizationIds = watch("organizationIds");
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <FilterModalHeadStyle>
-              <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
+              <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: theme.palette.common.neutral700}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>

@@ -5,6 +5,7 @@ import { ButtonCancelStyle } from '@/sections/applicant/style'
 import { DialogModelStyle } from '@/utils/cssStyles'
 import { Divider, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import React, { useState } from 'react'
+import {useTheme} from "@mui/material/styles";
 
 
 function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
@@ -14,6 +15,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
   const handleChange = (e) => {
     setType(parseInt(e.target.value))
   }
+  const theme = useTheme()
 
   const handleClickItem = (type)=>{
     setType(type)
@@ -55,7 +57,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
         atcenter="center"
         pv={12}
         ph={24}
-        bgcolor={"#FDFDFD"}
+        bgcolor={theme.palette.common.white}
       >
         <Text flex="true" fontsize={16} fontweight={"600"}>
           {"Chọn kiểu đề thi"}
@@ -63,7 +65,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
         <ButtonDS
           type="button"
           sx={{
-            backgroundColor: "#fff",
+            backgroundColor: theme.palette.background.paper,
             boxShadow: "none",
             ":hover": {
               backgroundColor: "#EFF3F7",
@@ -78,7 +80,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
               icon={"mi:close"}
               width={20}
               height={20}
-              color="#5C6A82"
+              color={theme.palette.common.borderObject}
             />
           }
         />
@@ -115,7 +117,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
                       sx={{
                         marginRight: 0,
                         "& .MuiFormControlLabel-label": {
-                          color: '#455570',
+                          color: theme.palette.common.neutral700,
                           fontSize: '14px',
                           fontWeight: 500,
                         },
@@ -128,12 +130,12 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
 
                   <View>
                     <Typography sx={{
-                      color: '#455570',
+                      color: theme.palette.common.neutral700,
                       fontSize: '14px',
                       fontWeight: 600
                     }}>{x.title}</Typography>
                     <Typography sx={{
-                      color: '#455570',
+                      color: theme.palette.common.neutral700,
                       fontSize: '13px',
                       fontWeight: 400
                     }}>{x.description}</Typography>

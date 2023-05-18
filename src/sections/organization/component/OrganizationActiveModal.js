@@ -8,6 +8,7 @@ import {
 } from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationActiveModal = ({ selectedList, isOpenActive, setIsOpenActive, node, actionTypeActive, onCloseBottomNav }) => {
   const {enqueueSnackbar} = useSnackbar();
@@ -17,7 +18,7 @@ const OrganizationActiveModal = ({ selectedList, isOpenActive, setIsOpenActive, 
     setIsOpenActive(false);
     onCloseBottomNav();
   }
-
+  const theme = useTheme();
   const handleSetActiveOrganization = async () => {
     if(selectedList.length > 1) {
       const body = {
@@ -82,7 +83,7 @@ const OrganizationActiveModal = ({ selectedList, isOpenActive, setIsOpenActive, 
                 width: '100%',
                 fontSize: 16,
                 fontWeight: 600,
-                color: '#E53935',
+                color: theme.palette.common.red600,
                 marginBottom: 1
               }}
 

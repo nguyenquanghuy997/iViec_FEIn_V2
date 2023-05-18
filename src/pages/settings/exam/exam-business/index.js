@@ -6,6 +6,7 @@ import { ExamItem, QuestionGallary } from "@/sections/exam";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Tab } from "@mui/material";
 import { useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 Setting.getLayout = function getLayout(pageProps, page) {
   return (
@@ -18,6 +19,7 @@ Setting.getLayout = function getLayout(pageProps, page) {
 export default function Setting() {
 
   // tab
+  const theme = useTheme();
   const [tab, setTab] = useState(1);
   const tabs = [
     {
@@ -60,8 +62,8 @@ export default function Setting() {
                     minHeight: 'auto'
                   },
                   "&.Mui-selected": {
-                    color: "#fff",
-                    backgroundColor: "#455570",
+                    color: theme.palette.background.paper,
+                    backgroundColor: theme.palette.common.neutral700,
                   },
 
                 }

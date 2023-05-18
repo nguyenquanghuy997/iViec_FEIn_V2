@@ -1,4 +1,4 @@
-import { useGetPipelineByIdQuery } from "../PipelineFormSlice";
+import { useGetPipelineByIdQuery } from "@/sections/pipeline";
 import PipelineActiveModal from "../modals/PipelineActiveModal";
 import Content from "@/components/BaseComponents/Content";
 import Iconify from "@/components/Iconify";
@@ -21,6 +21,7 @@ import { PipelineFormModal } from "../modals";
 import useRole from "@/hooks/useRole";
 import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
+import {useTheme} from "@mui/material/styles";
 
 const PipelineBottomNav = ({
   open,
@@ -31,7 +32,7 @@ const PipelineBottomNav = ({
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
-
+  const  theme = useTheme();
   const { canAccess } = useRole();
   // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
@@ -82,7 +83,7 @@ const PipelineBottomNav = ({
           }}
         >
           <Stack flexDirection="row" alignItems="center">
-            {itemSelected[0]?.isDefault == false && checkSameValue(isDefault) && (<>
+            {itemSelected[0]?.isDefault === false && checkSameValue(isDefault) && (<>
               {checkSameValue(item) && (
                 <>
                   {item.includes(true) ? (
@@ -112,7 +113,7 @@ const PipelineBottomNav = ({
                       />
                       <Typography
                         variant="body2"
-                        sx={{ color: "#5C6A82", fontSize: 13 }}
+                        sx={{ color: theme.palette.common.borderObject, fontSize: 13 }}
                       >
                         Không hoạt động
                       </Typography>
@@ -120,7 +121,7 @@ const PipelineBottomNav = ({
                   )}
                 </>
               )}
-              {itemSelected.length === 1 && itemSelected[0]?.recruitmentAppliedCount == 0 && canEdit && (
+              {itemSelected.length === 1 && itemSelected[0]?.recruitmentAppliedCount === 0 && canEdit && (
                 <ButtonIcon
                   sx={{
                     marginLeft: "16px",
@@ -131,7 +132,7 @@ const PipelineBottomNav = ({
                       icon={"ri:edit-2-fill"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />
                   }
                 />
@@ -162,7 +163,7 @@ const PipelineBottomNav = ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
+              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
             />
             <ButtonIcon
               sx={{
@@ -174,7 +175,7 @@ const PipelineBottomNav = ({
                   icon={"ic:baseline-close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />

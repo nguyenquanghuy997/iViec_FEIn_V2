@@ -7,6 +7,7 @@ import Iconify from "@/components/Iconify";
 import { ButtonGray, ButtonIcon } from "@/utils/cssStyles";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 const RecruitmentAdBottomNav = ({
   selectedList,
@@ -20,6 +21,7 @@ const RecruitmentAdBottomNav = ({
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
   };
+  const  theme = useTheme();
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
     setselectedList([]);
@@ -57,7 +59,7 @@ const RecruitmentAdBottomNav = ({
                   icon={"material-symbols:check-circle-outline-rounded"}
                   width={20}
                   height={20}
-                  color="#FDFDFD"
+                  color={theme.palette.common.white}
                   mr={1}
                 />
               }
@@ -76,7 +78,7 @@ const RecruitmentAdBottomNav = ({
                       icon={"tabler:hexagon-off"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                       mr={1}
                     />
                   }
@@ -93,7 +95,7 @@ const RecruitmentAdBottomNav = ({
                       icon={"ri:share-box-line"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                       mr={1}
                     />
                   }
@@ -108,7 +110,7 @@ const RecruitmentAdBottomNav = ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
+              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
             />
             <ButtonIcon
               sx={{
@@ -120,7 +122,7 @@ const RecruitmentAdBottomNav = ({
                   icon={"ic:baseline-close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />

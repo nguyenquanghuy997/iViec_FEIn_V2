@@ -1,22 +1,15 @@
 import Iconify from "../Iconify";
-import {
-  FormControl,
-  Select,
-  MenuItem,
-  TextField,
-  InputAdornment,
-  IconButton,
-  ListSubheader,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import React, { useState, useMemo } from "react";
+import {FormControl, IconButton, InputAdornment, ListSubheader, MenuItem, Select, TextField,} from "@mui/material";
+import {useTheme} from "@mui/material/styles";
+import {makeStyles} from "@mui/styles";
+import React, {useMemo, useState} from "react";
 
 const containsText = (text, searchText) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const usePlaceholderStyles = makeStyles(() => ({
+const usePlaceholderStyles = makeStyles(({theme}) => ({
   placeholder: {
-    color: "#8A94A5",
+    color: theme.palette.common.neutral500,
     fontWeight: "400",
     fontSize: "14px",
     lineHeight: "20px",
@@ -33,15 +26,15 @@ const usePlaceholderStyles = makeStyles(() => ({
       fontSize: "15px",
       lineHeight: "20px",
       padding: "10px 16px",
-      background: "#FDFDFD",
-      boxShadow: "inset 0px -1px 0px #E7E9ED",
+      background: theme.palette.common.white,
+      boxShadow: "inset 0px -1px 0px " + theme.palette.common.neutral100,
     },
     "&::-webkit-scrollbar": {
       width: "5px",
       marginRight: "3px",
     },
     "&::-webkit-scrollbar-thumb": {
-      background: "#B9BFC9",
+      background: theme.palette.common.neutral300,
       borderRadius: "30px",
       marginRight: "3px",
     },
@@ -49,6 +42,7 @@ const usePlaceholderStyles = makeStyles(() => ({
 }));
 
 export default function SelectAutoCompleteDS(props) {
+  const theme = useTheme();
   const {
     width,
     sx,
@@ -89,23 +83,23 @@ export default function SelectAutoCompleteDS(props) {
           "&.MuiOutlinedInput-root":{
             fontSize:'14px',
             minHeight:'44px',
-            color:'#172b4d'
+            color: theme.palette.common.neutral800
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             border: "1px solid #D0D4DB !important",
           },
           "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":{
-            borderColor:'#D0D4DB'
+            borderColor: theme.palette.common.neutral200
           },
           "& .MuiSelect-iconOutlined": {
             display: selectedOption && allowClear == true ? "none" : "",
-            color: "#455570",
+            color: theme.palette.common.neutral700,
             width: "20px",
             height: "20px",
           },
           "&.Mui-focused .MuiIconButton-root": { color: "primary.main" },
           "& .Mui-selected": {
-            backgroundColor: "#000 !important",
+            backgroundColor: theme.palette.common.black +  "!important",
           },
           ...sx,
         }}
@@ -120,7 +114,7 @@ export default function SelectAutoCompleteDS(props) {
                 icon={"ic:round-clear"}
                 width={16}
                 height={16}
-                color="#5c6a82"
+                color={theme.palette.common.borderObject}
               />
             </IconButton>
           ) : (
@@ -135,9 +129,9 @@ export default function SelectAutoCompleteDS(props) {
           placeholder="Tìm kiếm..."
           fullWidth
           sx={{
-            boxShadow: "inset 0px -1px 0px #E7E9ED",
+            boxShadow: "inset 0px -1px 0px " + theme.palette.common.neutral100,
             "& .MuiInputBase-input": {
-              color: "#5C6A82",
+              color: theme.palette.common.borderObject,
               padding: "10px 0",
               fontFamily: "Inter",
               fontWeight: "500",
@@ -156,7 +150,7 @@ export default function SelectAutoCompleteDS(props) {
                   icon={"ri:search-2-line"}
                   width={16}
                   height={16}
-                  color="#5c6a82"
+                  color={theme.palette.common.neutral600}
                 />
               </InputAdornment>
             ),

@@ -30,6 +30,7 @@ import { AlertIcon } from "@/sections/organization/component/Icon";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { useSnackbar } from "notistack";
 import { useDeleteApplicantsMutation } from "../ApplicantFormSlice";
+import {useTheme} from "@mui/material/styles";
 const ApplicantBottomNav = ({
   selectedList,
   open,
@@ -43,7 +44,7 @@ const ApplicantBottomNav = ({
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
-
+  const theme = useTheme();
   const { canAccess } = useRole();
   const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_CDD), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_CDD), []);
@@ -188,7 +189,7 @@ const ApplicantBottomNav = ({
                       icon={"ci:transfer"}
                       width={20}
                       height={20}
-                      color="#FDFDFD"
+                      color= {theme.palette.common.white}
                       mr={1}
                     />
                   }
@@ -211,7 +212,7 @@ const ApplicantBottomNav = ({
                         icon={"ri:eye-2-line"}
                         width={20}
                         height={20}
-                        color="#5C6A82"
+                        color={theme.palette.common.neutral600}
                       /></IconButton>
                   </Tooltip>
 
@@ -231,7 +232,7 @@ const ApplicantBottomNav = ({
                         icon={"ri:edit-2-fill"}
                         width={20}
                         height={20}
-                        color="#5C6A82"
+                        color={theme.palette.common.borderObject}
                       />
                     </IconButton>
                   </Tooltip>
@@ -251,7 +252,7 @@ const ApplicantBottomNav = ({
                         icon={"ri:share-forward-2-fill"}
                         width={20}
                         height={20}
-                        color="#5C6A82"
+                        color={theme.palette.common.borderObject}
                       />
                     </IconButton>
                   </Tooltip>
@@ -301,7 +302,7 @@ const ApplicantBottomNav = ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
+              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
             />
             <ButtonIcon
               sx={{
@@ -313,7 +314,7 @@ const ApplicantBottomNav = ({
                   icon={"ic:baseline-close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color= {theme.palette.common.borderObject}
                 />
               }
             />

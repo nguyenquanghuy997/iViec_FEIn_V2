@@ -20,6 +20,7 @@ import OrganizationInviteResultCard from "@/sections/organization/component/Orga
 import OrganizationUserInviteTab from "@/sections/organization/component/OrganizationUserInviteTab";
 import { AlertIcon, EmailInviteIcon } from "@/sections/organization/component/Icon";
 import { useGetRoleGroupListQuery } from "@/sections/rolegroup";
+import {useTheme} from "@mui/material/styles";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -47,7 +48,7 @@ function a11yProps(index) {
 
 const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenInviteForm, valueTabDefault, organizationId }) => {
     const [valueTab, setValueTab] = useState(valueTabDefault);
-
+    const theme = useTheme();
     const [isShowResult, setIsShowResult] = useState(false);
     const [invitesResult, setInviteResult] = useState([])
 
@@ -198,7 +199,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                 {isShowResult && <IconButton edge="start" size={"small"} sx={{ mr: 2 }} onClick={() => setIsShowResult(false)}>
                     <Iconify icon="material-symbols:arrow-back" />
                 </IconButton>}
-                <Typography variant="body1" sx={{ fontSize: '16px', fontWeight: 600, color: "#455570" }}>
+                <Typography variant="body1" sx={{ fontSize: '16px', fontWeight: 600, color: theme.palette.common.neutral700 }}>
                     {isShowResult ? 'Kết quả' : 'Mời người dùng'}
                 </Typography>
             </MuiDialogTitle>
@@ -216,7 +217,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                         },
                         "& .Mui-selected": {
                             color: "white !important",
-                            backgroundColor: "#455570",
+                            backgroundColor: theme.palette.common.neutral700,
                             borderRadius: "6px",
                         },
                         "& .MuiTabs-indicator": {
@@ -295,7 +296,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                                                 justifyContent: 'space-between',
                                                 alignItems: 'center',
                                                 width: '100%',
-                                                backgroundColor: '#F2F4F5',
+                                                backgroundColor: theme.palette.common.bgrMaster,
                                                 padding: 2,
                                                 mb: 2,
                                                 borderRadius: .5
@@ -311,9 +312,9 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                                                                 placeholder="Nhập email người được mời"
                                                                 sx={{
                                                                     minWidth: '248px',
-                                                                    backgroundColor: '#FDFDFD',
+                                                                    backgroundColor: theme.palette.common.bgrMaster,
                                                                     '& .MuiFormHelperText-root.Mui-error': {
-                                                                        backgroundColor: '#F2F4F5',
+                                                                        backgroundColor: theme.palette.common.bgrMaster,
                                                                         marginTop: 0,
                                                                         paddingTop: 1
                                                                     }
@@ -328,9 +329,9 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                                                                 placeholder="Họ và tên người được mời"
                                                                 sx={{
                                                                     minWidth: '248px',
-                                                                    backgroundColor: '#FDFDFD',
+                                                                    backgroundColor: theme.palette.common.white,
                                                                     '& .MuiFormHelperText-root.Mui-error': {
-                                                                        backgroundColor: '#F2F4F5',
+                                                                        backgroundColor: theme.palette.common.bgrMaster,
                                                                         marginTop: 0,
                                                                         paddingTop: 1
                                                                     }
@@ -350,9 +351,9 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                                                                 placeholder="Chọn 1 vai trò"
                                                                 sx={{
                                                                     minWidth: '248px',
-                                                                    backgroundColor: '#FDFDFD',
+                                                                    backgroundColor: theme.palette.common.white,
                                                                     '& .MuiFormHelperText-root.Mui-error': {
-                                                                        backgroundColor: '#F2F4F5',
+                                                                        backgroundColor: theme.palette.common.bgrMaster,
                                                                         marginTop: 0,
                                                                         paddingTop: 1
                                                                     }
@@ -374,9 +375,9 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                                                         placeholder="Chọn 1 hoặc nhiều đơn vị"
                                                         sx={{
                                                             // minWidth: '276px',
-                                                            backgroundColor: '#FDFDFD',
+                                                            backgroundColor: theme.palette.common.white,
                                                             '& .MuiFormHelperText-root.Mui-error': {
-                                                                backgroundColor: '#F2F4F5',
+                                                                backgroundColor: theme.palette.common.bgrMaster,
                                                                 marginTop: 0,
                                                                 paddingTop: 1.5
                                                             }
@@ -449,7 +450,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                         title={"Xác nhận xóa lời mời"}
                         titleProps={{
                             sx: {
-                                color: '#E53935',
+                                color: theme.palette.common.red600,
                                 fontWeight: 600,
                                 marginBottom: 1
                             }
@@ -476,7 +477,7 @@ const OrganizationInviteForm = ({ ListOrganization, isOpenInviteForm, setIsOpenI
                         title={"Xác nhận gửi yêu cầu active tài khoản"}
                         titleProps={{
                             sx: {
-                                color: '#1976D2',
+                                color: theme.palette.common.blue700,
                                 fontWeight: 600,
                                 marginBottom: 1
                             }

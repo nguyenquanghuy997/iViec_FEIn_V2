@@ -3,6 +3,7 @@ import { getFileUrl } from "@/utils/helper";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const defaultValues = {
   cvFile: undefined,
@@ -11,7 +12,7 @@ const defaultValues = {
 
 export const ApplicantCV = ({ dataLog }) => {
   const [cv] = useState(undefined);
-
+  const theme = useTheme();
   const methods = useForm({
     defaultValues,
   });
@@ -44,7 +45,7 @@ export const ApplicantCV = ({ dataLog }) => {
             autoUpload={false}
           />
         </Grid> */}
-        <Box sx={{ backgroundColor: "#F2F4F5", borderRadius: "4px", p: 2 }}>
+        <Box sx={{ backgroundColor: theme.palette.common.bgrMaster, borderRadius: "4px", p: 2 }}>
           <Divider orientation={"vertical"} />
           <Grid
             sx={{
@@ -70,7 +71,7 @@ export const ApplicantCV = ({ dataLog }) => {
                     textAlign: "center",
                     fontSize: 14,
                     fontWeight: 400,
-                    color: "#A2AAB7",
+                    color: theme.palette.common.neutral400,
                   }}
                 >
                   {"Ứng viên chưa có CV cho tin tuyển dụng này."}

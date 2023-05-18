@@ -10,11 +10,12 @@ import useRole from "@/hooks/useRole";
 import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import {useTheme} from "@mui/material/styles";
 
 export default function OrganizationTree({ selected, setSelected, treeData, dataRoot, data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType }) {
 
     const selectedSet = React.useMemo(() => new Set(selected), [selected]);
-
+    const theme = useTheme();
     const { canAccess } = useRole();
 
     const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
@@ -143,7 +144,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                 {
                                     canEditUnit && <IconButton
                                         size='small'
-                                        sx={{ color: '#1976D2' }}
+                                        sx={{ color: theme.palette.common.blue700 }}
                                         onClick={() => {
                                             handleOpenFormWithCurrentNode(nodes);
                                             setActionType(0)
@@ -156,7 +157,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                 {
                                     (canEditUnit || canViewUnit) && <IconButton
                                         size='small'
-                                        sx={{ color: '#1976D2', mx: 0.5 }}
+                                        sx={{ color: theme.palette.common.blue700, mx: 0.5 }}
                                         onClick={() => handleOpenPreview(nodes)}
                                     ><PreviewIcon /></IconButton>
                                 }
@@ -164,7 +165,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                 {
                                     canEditUnit && <IconButton
                                         size='small'
-                                        sx={{ color: '#1976D2', mx: 0.5 }}
+                                        sx={{ color: theme.palette.common.blue700, mx: 0.5 }}
                                         onClick={() => {
                                             handleOpenFormWithCurrentNode(nodes);
                                             setActionType(1)
@@ -175,7 +176,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                 {
                                     canEditUnit && <IconButton
                                         size='small'
-                                        sx={{ color: '#1976D2', mx: 0.5 }}
+                                        sx={{ color: theme.palette.common.blue700, mx: 0.5 }}
                                         onClick={() => {
                                             handleShowDelete(nodes)
                                         }}
@@ -185,7 +186,7 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
                                 {
                                     (canEditUnit || canViewUnit) && <NextLink href={PATH_DASHBOARD.organization.view(nodes.id)} passHref>
                                         <Link>
-                                            <IconButton size='small' sx={{ color: '#1976D2', mx: 0.5 }}>
+                                            <IconButton size='small' sx={{ color: theme.palette.common.blue700, mx: 0.5 }}>
                                                 <ForwardIcon />
                                             </IconButton>
                                         </Link>

@@ -19,6 +19,7 @@ import {
 import { useSnackbar } from "notistack";
 import React, {Fragment, useState} from "react";
 import { useForm } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const ApplicantTransferPipelineModal = ({
   showConfirmMultiple,
@@ -30,6 +31,7 @@ const ApplicantTransferPipelineModal = ({
   setActionShow,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const  theme = useTheme();
   const methods = useForm({});
   const { handleSubmit } = methods;
   const [valueChecked, setValueChecked] = useState("");
@@ -109,7 +111,7 @@ const ApplicantTransferPipelineModal = ({
             padding: "22px 24px",
           }}
         >
-          <div style={{ color: "#172B4D", fontWeight: 600 }}>Chuyển bước</div>
+          <div style={{ color: theme.palette.common.neutral800, fontWeight: 600 }}>Chuyển bước</div>
           <div>
             <ButtonIcon
               onClick={() => setShowConfirmMultiple(false)}
@@ -118,7 +120,7 @@ const ApplicantTransferPipelineModal = ({
                   width={20}
                   height={20}
                   icon="ic:baseline-close"
-                  color="#455570"
+                  color= {theme.palette.common.neutral700}
                 />
               }
             ></ButtonIcon>

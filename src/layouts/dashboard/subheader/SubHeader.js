@@ -8,7 +8,7 @@ const RootStyle = styled('div')(({ theme }) => ({
     boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
     zIndex: theme.zIndex.appBar + 1,
     transition: theme.transitions.create(["width", "height"], { duration: theme.transitions.duration.shorter, }),
-    backgroundColor: '#FDFDFD',
+    backgroundColor: theme.palette.common.white,
     width: '100%',
 }));
 

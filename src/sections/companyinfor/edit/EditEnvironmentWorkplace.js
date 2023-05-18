@@ -19,11 +19,13 @@ import {TextAreaDS} from "@/components/DesignSystem";
 import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 import {get, isEmpty} from "lodash";
+import {useTheme} from "@emotion/react";
 
 const EditEnvironmentWorkplace = ({data, onClose}) => {
 
         const [updateCompanyWorkingEnvironment] = useUpdateCompanyEnvironmentMutation();
         const [uploadImage] = useUploadImageCompanyMutation();
+        const theme = useTheme();
         const {enqueueSnackbar} = useSnackbar();
 
         const defaultValues = {
@@ -154,7 +156,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                 mb: 3,
                                                                 px: 3,
                                                                 py: 2,
-                                                                background: "#F2F4F5",
+                                                                background: theme.palette.common.bgrMaster,
                                                                 borderRadius: "4px"
                                                             }}>
                                                                 <Box sx={{
@@ -164,9 +166,9 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                     justifyContent: 'space-between'
                                                                 }}>
                                                                     <div {...provided.dragHandleProps}>
-                                                                        <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color="#A2AAB7"/>
+                                                                        <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color={theme.palette.common.neutral400}/>
                                                                     </div>
-                                                                    <RiDeleteBin6Line color="#E53935" onClick={() => remove(index)} cursor="pointer"/>
+                                                                    <RiDeleteBin6Line color={theme.palette.common.red600} onClick={() => remove(index)} cursor="pointer"/>
                                                                 </Box>
 
                                                                 <Box sx={{flex: 1}}>
@@ -184,7 +186,7 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                         )
                                                                         : (
                                                                             <Box sx={{minHeight: '400px', border: "1px dashed #1976D2", display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                                                                <RiImageFill color={"#8A94A5"} size={'1.25em'}/>
+                                                                                <RiImageFill color={theme.palette.common.neutral500} size={'1.25em'}/>
                                                                             </Box>
                                                                         )
                                                                     }
@@ -203,9 +205,9 @@ const EditEnvironmentWorkplace = ({data, onClose}) => {
                                                                             name={`organizationWorkingEnvironments.${index}.name`}
                                                                             placeholder="Nhập môi trường làm việc"
                                                                             sx={{
-                                                                                backgroundColor: '#FDFDFD',
+                                                                                backgroundColor: theme.palette.common.white,
                                                                                 '& .MuiFormHelperText-root.Mui-error': {
-                                                                                    backgroundColor: '#F2F4F5',
+                                                                                    backgroundColor: theme.palette.common.bgrMaster,
                                                                                     marginTop: 0,
                                                                                     paddingTop: 1
                                                                                 }

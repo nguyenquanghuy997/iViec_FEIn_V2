@@ -1,7 +1,8 @@
 import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {styled, useTheme} from '@mui/material/styles';
 
 export const ModalBox = styled(Box)(({ width = 600 }) => {
+  const  theme = useTheme();
   return {
     '.modal-content-box': {
       minHeight: "10px",
@@ -18,7 +19,7 @@ export const ModalBox = styled(Box)(({ width = 600 }) => {
       justifyContent: "space-between",
       padding: "15px 24px",
       borderBottom: "1px solid #E7E9ED",
-      color: "#172B4D",
+      color: theme.palette.common.neutral800,
     },
     ".modal-body": {
       padding: "4px 24px 24px",

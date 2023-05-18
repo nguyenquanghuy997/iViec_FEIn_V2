@@ -1,5 +1,5 @@
 import {get, isEmpty} from 'lodash'
-import {Box, CircularProgress, Drawer, IconButton, Typography, useTheme} from "@mui/material";
+import {Box, CircularProgress, Drawer, IconButton, Typography} from "@mui/material";
 import {useGetOrganizationByIdQuery} from "@/sections/organization/OrganizationSlice";
 import {useRouter} from "next/router";
 import MuiButton from "@/components/BaseComponents/MuiButton";
@@ -8,12 +8,14 @@ import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead"
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 import {FaRegTrashAlt} from "react-icons/fa";
 import {RiArrowRightLine} from "react-icons/ri";
+import {useTheme} from "@mui/material/styles";
 
+const  theme = useTheme();
 const renderInfoOrganization = (key, value) => {
   return (
       <Box sx={{display: 'flex', alignItems: 'flex-start', my: 3}}>
-        <Typography sx={{fontSize: 14, fontWeight: 400, color: '#455570', minWidth: '150px'}}>{key}:</Typography>
-        <Typography sx={{fontSize: 14, fontWeight: 400, color: '#455570', minWidth: '120px'}}>{value}</Typography>
+        <Typography sx={{fontSize: 14, fontWeight: 400, color: theme.palette.common.neutral700, minWidth: '150px'}}>{key}:</Typography>
+        <Typography sx={{fontSize: 14, fontWeight: 400, color: theme.palette.common.neutral700, minWidth: '120px'}}>{value}</Typography>
       </Box>
   )
 }
@@ -74,7 +76,7 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
             ) : (
                 <div className="edit-container">
                     <Box>
-                        <Typography sx={{fontSize: 24, fontWeight: 700, color: '#455570'}}>
+                        <Typography sx={{fontSize: 24, fontWeight: 700, color: theme.palette.common.neutral700}}>
                             {get(organization, 'name') && get(organization, 'name')}
                         </Typography>
                         {renderInfoOrganization('Mã đơn vị', get(organization, 'code') && get(organization, 'code'))}
@@ -91,7 +93,7 @@ const OrganizationPreview = ({isOpen, onClose, nodes, setShowDelete, onGetParent
                             <MuiButton
                                 title={"Danh sách người dùng"}
                                 onClick={() => handleRedirectViewDetail(get(organization, 'id'))}
-                                endIcon={<RiArrowRightLine color={'#FFF'}/>}
+                                endIcon={<RiArrowRightLine color={theme.palette.background.paper}/>}
                                 sx={{width: '100%', fontWeight: 600, justifyContent: 'center'}}
                             />
                         </Box>

@@ -5,9 +5,11 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Grid, Box } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import React, { useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
   const [value, setValue] = useState("1");
+  const theme = useTheme();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -62,7 +64,7 @@ export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
                 },
                 "& .Mui-selected": {
                   color: "white !important",
-                  backgroundColor: "#455570",
+                  backgroundColor: theme.palette.common.neutral700,
                   borderRadius: "6px",
                 },
                 "& .MuiTabs-indicator": {

@@ -61,11 +61,12 @@ import { get } from "lodash";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
+  const  theme = useTheme();
   // modal redux
   const dispatch = useDispatch();
   const toggleModalState = useSelector((state) => state.modalReducer.openState);
@@ -199,7 +200,7 @@ export const RecruitmentItem = () => {
                     icon={"mdi:question-mark-circle-outline"}
                     width={20}
                     height={20}
-                    color="#E53935"
+                    color={theme.palette.common.red600}
                     ml={1}
                     style={{ marginTop: "4px" }}
                   />
@@ -300,7 +301,7 @@ export const RecruitmentItem = () => {
                   }}
                   name={record?.ownerName}
                 ></AvatarDS>
-                <span fontSize="14px" fontWeight="600" color="#172B4D">
+                <span fontSize="14px" fontWeight="600" color={theme.palette.common.neutral800}>
                   {record?.ownerEmail}
                 </span>
               </div>
@@ -329,7 +330,7 @@ export const RecruitmentItem = () => {
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
-                      color: "#5C6A82",
+                      color: theme.palette.common.borderObject,
                       border: "none",
                     }}
                   >
@@ -344,7 +345,7 @@ export const RecruitmentItem = () => {
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
-                      color: "#5C6A82",
+                      color: theme.palette.common.borderObject,
                       border: "none",
                     }}
                   >
@@ -480,7 +481,7 @@ export const RecruitmentItem = () => {
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
-                      color: "#5C6A82",
+                      color: theme.palette.common.borderObject,
                       border: "none",
                     }}
                   >
@@ -495,7 +496,7 @@ export const RecruitmentItem = () => {
                     style={{
                       background: "#EFF3F7",
                       borderRadius: "4px",
-                      color: "#5C6A82",
+                      color: theme.palette.common.borderObject,
                       border: "none",
                     }}
                   >

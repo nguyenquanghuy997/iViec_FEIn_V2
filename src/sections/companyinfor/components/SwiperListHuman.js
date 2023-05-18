@@ -13,28 +13,28 @@ import "swiper/swiper-bundle.css";
 import {DOMAIN_SERVER_API} from "@/config";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
-export const SliderStyle = styled("div")(() => ({
+export const SliderStyle = styled("div")(({theme}) => ({
   "& .swiper-button-prev": {
-    color: "#455570",
-    background: "#F3F4F6",
+    color: theme.palette.common.neutral700,
+    background: theme.palette.common.neutral50,
     borderRadius: "100px",
     width: "48px",
     height: "48px",
     "&::after": {
       content: { RiArrowDropLeftLine },
-      color: "#455570",
+      color: theme.palette.common.neutral700,
       fontSize: 14,
       fontWeight: 600,
     },
   },
   "& .swiper-button-next": {
-    background: "#F3F4F6",
+    background: theme.palette.common.neutral50,
     borderRadius: "100px",
     width: "48px",
     height: "48px",
     "&::after": {
       content: { RiArrowDropRightLine },
-      color: "#455570",
+      color: theme.palette.common.neutral700,
       fontSize: 14,
       fontWeight: 600,
     },

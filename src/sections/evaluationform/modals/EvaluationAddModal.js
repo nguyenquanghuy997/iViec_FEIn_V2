@@ -13,12 +13,13 @@ import { Divider, Modal } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 const defaultValuess = {
   name:"",
   des: ""
 };
-
+const theme = useTheme();
 export const EvaluationAddModal = ({
   show,
   setShow,
@@ -78,7 +79,7 @@ export const EvaluationAddModal = ({
     >
       <>
         <FormProvider methods={methodss}>
-          <View hidden width={668} borderradius={8} bgcolor={"#FDFDFD"}>
+          <View hidden width={668} borderradius={8} bgcolor={theme.palette.common.white}>
             <View flexrow="true" atcenter="true" pv={22} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
                 {isEdit ? "Sửa tiêu chí đánh giá" : "Thêm tiêu chí đánh giá"}
@@ -91,7 +92,7 @@ export const EvaluationAddModal = ({
                     icon={"ic:baseline-close"}
                     width={20}
                     height={20}
-                    color="#455570"
+                    color={theme.palette.common.neutral700}
                   />
                 }
               />

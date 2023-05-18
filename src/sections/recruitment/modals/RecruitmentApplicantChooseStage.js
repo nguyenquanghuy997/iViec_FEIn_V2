@@ -13,6 +13,7 @@ import Iconify from "@/components/Iconify";
 import {ButtonDS} from "@/components/DesignSystem";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
 import {PipelineStateType} from "@/utils/enum";
+import {useTheme} from "@mui/material/styles";
 
 export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow}) => {
   const onClose = () => {
@@ -24,7 +25,7 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
   const handleChange = (event) => {
     setValueChecked(event.target.value);
   };
-  
+  const theme = useTheme();
   const handleAccept = () => {
     if (valueChecked.indexOf(",")) {
       let valueSplit = valueChecked.split(",");
@@ -46,13 +47,13 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
     >
       <Grid px={"24px"} py={"12px"} container alignItems={"center"} direction={"row"} justifyContent={"space-between"}>
         <Grid item>
-          <Typography variant={"subtitle1"} color={"#172B4D"}>Thêm ứng viên</Typography>
+          <Typography variant={"subtitle1"} color={theme.palette.common.neutral800}>Thêm ứng viên</Typography>
         </Grid>
         <Grid item>
           <ButtonDS
             type="submit"
             sx={{
-              backgroundColor: "#fff",
+              backgroundColor: theme.palette.common.white,
               boxShadow: "none",
               ":hover": {
                 backgroundColor: "#EFF3F7",
@@ -67,14 +68,14 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
                 icon={"mi:close"}
                 width={20}
                 height={20}
-                color="#5C6A82"
+                color={theme.palette.common.borderObject}
               />
             }
           />
         </Grid>
       </Grid>
       <DialogContent dividers sx={{paddingLeft: "30%"}}>
-        <Typography variant={"subtitle1"} color={"#172B4D"}>Chọn bước tuyển dụng</Typography>
+        <Typography variant={"subtitle1"} color={theme.palette.common.neutral800}>Chọn bước tuyển dụng</Typography>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
           onChange={handleChange}

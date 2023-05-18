@@ -4,16 +4,17 @@ import React from "react";
 import useRole from "@/hooks/useRole";
 import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
+import {useTheme} from "@mui/material/styles";
 
 const HeaderCard = ({ text, onOpen, checked, handleChange }) => {
-
+  const theme = useTheme();
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.EDIT_COMPANY), []);
 
   return (
     <Box
       sx={{
-        background: "#FDFDFD",
+        background: theme.palette.common.white,
         mt: 3,
         py: 2.5,
         px: 5,

@@ -2,6 +2,7 @@ import HelperText from "@/components/BaseComponents/HelperText";
 import MuiSelect from "@/components/form/MuiSelect";
 import { makeStyles } from "@mui/styles";
 import { Controller, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 export default function RHFSelect({ name, onChange, ...props }) {
   const { control, setValue } = useFormContext();
@@ -10,14 +11,14 @@ export default function RHFSelect({ name, onChange, ...props }) {
     const newOptions = value.filter((item) => item !== valueDelete);
     field.onChange(newOptions);
   };
-
+const  theme = useTheme();
   const handleClearValue = (name, value) => {
     setValue(name, value);
   };
   const useStyles = makeStyles({
     readOnlySelect: {
       "&.Mui-disabled": {
-        backgroundColor: "#EFF3F6",
+        backgroundColor: theme.palette.common.bgrObject,
         fontSize: 14,
       },
     },

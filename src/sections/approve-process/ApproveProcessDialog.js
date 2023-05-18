@@ -5,9 +5,11 @@ import React from "react";
 import {ACTION_CONTENT} from './config';
 import ToggleLineIcon from "@/assets/ToggleLineIcon";
 import ToggleFillIcon from "@/assets/ToggleFillIcon";
+import {useTheme} from "@mui/material/styles";
 
 const ApproveProcessDialog = (props) => {
   const {onClose, onAccept, open, type, content} = props;
+  const theme = useTheme();
   return (
     <Dialog
       onClose={onClose}
@@ -55,7 +57,7 @@ const ApproveProcessDialog = (props) => {
       </DialogContent>
       <Divider/>
       <DialogActions>
-        <Button onClick={onClose} sx={{color: "#455570"}}>
+        <Button onClick={onClose} sx={{color: theme.palette.common.neutral700}}>
           Hủy
         </Button>
         <Button

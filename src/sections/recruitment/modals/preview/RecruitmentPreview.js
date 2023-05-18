@@ -17,6 +17,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+import {useTheme} from "@mui/material/styles";
 
 const links = [
   {
@@ -28,6 +29,7 @@ const links = [
     href: "#",
   },
 ];
+
 const Keyframes = styled(Drawer)({
   "@keyframes pulsate": {
     from: {
@@ -48,6 +50,7 @@ const RecruitmentPreview = ({ data, open, onClose }) => {
     data?.slug,
     { skip: !data?.slug }
   );
+  const  theme = useTheme();
   const { data: Organization = {} } = useGetOrganizationPreviewQuery(
     data?.organizationId,
     { skip: !data?.organizationId }
@@ -90,16 +93,16 @@ const RecruitmentPreview = ({ data, open, onClose }) => {
           <BoxFlex>
             <Typography
               variant="body1"
-              sx={{ color: "#172B4D", fontSize: 16, fontWeight: 600 }}
+              sx={{ color: theme.palette.common.neutral800, fontSize: 16, fontWeight: 600 }}
             >
               Xem trước tin tuyển dụng
             </Typography>
             <ButtonIcon
               sx={{
                 textTransform: "none",
-                background: "#E53935",
+                background: theme.palette.common.red600,
                 "&:hover": {
-                  background: "#E53935",
+                  background: theme.palette.common.red600,
                 },
               }}
               onClick={onClose}
@@ -108,7 +111,7 @@ const RecruitmentPreview = ({ data, open, onClose }) => {
                   icon={"ic:baseline-close"}
                   width={20}
                   height={20}
-                  color="#FDFDFD"
+                  color={theme.palette.common.white}
                 />
               }
             />

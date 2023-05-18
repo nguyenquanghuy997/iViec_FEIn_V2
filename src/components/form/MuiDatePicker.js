@@ -7,6 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import vi from "date-fns/locale/vi";
 import { forwardRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const renderDayVi = (day) => {
   switch (day) {
@@ -29,6 +30,7 @@ const renderDayVi = (day) => {
 const MuiDatePicker = forwardRef((props, ref) => {
   const { name, label, DatePickerProps, startIcon, endIcon, ...other } = props;
   const { control } = useFormContext();
+  const theme = useTheme();
   const propsInput = {
     inputFormat: DATE_FORMAT,
     InputProps: {
@@ -65,7 +67,7 @@ const MuiDatePicker = forwardRef((props, ref) => {
               }}
               renderInput={(params) => (
                 <MuiTextField
-                  sx={{ background: "#fff", }}
+                  sx={{ background: theme.palette.common.white, }}
                   {...params}
                   ref={ref}
                   inputProps={{

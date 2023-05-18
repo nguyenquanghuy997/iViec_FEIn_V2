@@ -12,6 +12,7 @@ import {AlertIcon, EmailInviteIcon, GuardIcon} from "@/sections/organization/com
 import {DeleteIcon} from "@/assets/ActionIcon";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import {useSnackbar} from "notistack";
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
   const [deleteInviteUser] = useDeleteInviteUserMutation();
   const [resendInviteUser] = useResendEmailMutation();
   const {enqueueSnackbar} = useSnackbar();
-
+  const theme = useTheme();
   const [selected, setSelected] = useState([]);
   const toggleModalState = useSelector((state) => state.modalReducer.openState);
 
@@ -112,7 +113,7 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
             title={"Xác nhận gửi yêu cầu active tài khoản"}
             titleProps={{
               sx: {
-                color: '#1976D2',
+                color: theme.palette.common.blue700,
                 fontWeight: 600,
                 marginBottom: 1
               }
@@ -153,7 +154,7 @@ const OrganizationUserInviteTab = ({ onOpenConfirmForm, onOpenConfirmResend }) =
             title={"Xác nhận xóa lời mời"}
             titleProps={{
               sx: {
-                color: '#E53935',
+                color: theme.palette.common.red600,
                 fontWeight: 600,
                 marginBottom: 1
               }

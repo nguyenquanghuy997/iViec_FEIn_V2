@@ -33,8 +33,8 @@ function PageNotFoundIllustration({ ...other }) {
           y2='142.436'
           gradientUnits='userSpaceOnUse'
         >
-          <stop stopColor='#FFE16A' />
-          <stop offset='1' stopColor='#B78103' />
+          <stop stopColor={theme.palette.warning.light} />
+          <stop offset='1' stopColor={theme.palette.warning.dark} />
         </linearGradient>
 
         <path

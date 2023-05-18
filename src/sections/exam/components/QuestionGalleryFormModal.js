@@ -14,6 +14,7 @@ import { Divider, Modal } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import {useTheme} from "@mui/material/styles";
 
 const defaultValuess = {
   name: "",
@@ -41,7 +42,7 @@ export const QuestionGalleryFormModal = ({
     defaultValuess,
     resolver: yupResolver(Schema),
   });
-
+  const  theme = useTheme();
   const {
     setValue,
     handleSubmit,
@@ -83,7 +84,7 @@ export const QuestionGalleryFormModal = ({
     >
       <>
         <FormProvider methods={methodss}>
-          <View hidden width={668} borderradius={8} bgcolor={"#FDFDFD"}>
+          <View hidden width={668} borderradius={8} bgcolor={theme.palette.common.white}>
             <View flexrow="true" atcenter="true" pv={22} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
                 {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm nhóm câu hỏi"}
@@ -96,7 +97,7 @@ export const QuestionGalleryFormModal = ({
                     icon={"ic:baseline-close"}
                     width={20}
                     height={20}
-                    color="#455570"
+                    color={theme.palette.common.neutral700}
                   />
                 }
               />
@@ -137,7 +138,7 @@ export const QuestionGalleryFormModal = ({
                 <Text
                   fontSize={12}
                   fontWeight={"500"}
-                  color={isActive ? "#388E3C" : "#5C6A82"}
+                  color={isActive ? "#388E3C" : theme.palette.common.borderObject}
                 >
                   {isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
                 </Text>

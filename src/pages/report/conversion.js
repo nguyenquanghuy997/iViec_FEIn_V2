@@ -241,7 +241,6 @@ function ReportItem({ data, filter }) {
 
 export default function Setting() {
   const { themeStretch } = useSettings();
-
   // ref
   const chartRef = useRef(null);
   const tableRef = useRef(null);

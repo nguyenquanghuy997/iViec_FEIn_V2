@@ -115,7 +115,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                     name={`${data?.lastName ? data?.lastName : ''}`}
                                 />
                                 <Stack sx={{ml: 1.5}}>
-                                    <Typography sx={{color: '#172B4D', fontSize: 16, fontWeight: 600}}>
+                                    <Typography sx={{color: theme.palette.common.neutral800, fontSize: 16, fontWeight: 600}}>
                                         {get(data, 'lastName') && get(data, 'lastName') || ''}
                                         {' '}
                                         {get(data, 'firstName') && get(data, 'firstName')}
@@ -123,7 +123,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                     {
                                         get(data, 'email') || get(data, 'phoneNumber') && (
                                             <Typography sx={{
-                                                color: '#455570',
+                                                color: theme.palette.common.neutral700,
                                                 fontSize: 12,
                                                 fontWeight: 400,
                                                 display: 'flex',
@@ -134,7 +134,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                                     display: 'inline-block',
                                                     width: '3px',
                                                     height: '3px',
-                                                    background: '#455570',
+                                                    background: theme.palette.common.neutral700,
                                                     borderRadius: '50%',
                                                     mx: 0.5
                                                 }}></Typography>
@@ -151,7 +151,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
                                         width: '100%',
-                                        backgroundColor: '#F2F4F5',
+                                        backgroundColor: theme.palette.common.bgrMaster,
                                         padding: 2,
                                         mb: 2
                                     }}
@@ -169,9 +169,9 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                                     placeholder="Chọn vai trò"
                                                     sx={{
                                                         minWidth: '452px',
-                                                        backgroundColor: '#FDFDFD',
+                                                        backgroundColor: theme.palette.common.white,
                                                         '& .MuiFormHelperText-root.Mui-error': {
-                                                            backgroundColor: '#F2F4F5',
+                                                            backgroundColor: theme.palette.common.bgrMaster,
                                                             marginTop: 0,
                                                             paddingTop: 1.5
                                                         }
@@ -193,9 +193,9 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                             placeholder="Chọn 1 hoặc nhiều đơn vị"
                                             sx={{
                                                 minWidth: '276px',
-                                                backgroundColor: '#FDFDFD',
+                                                backgroundColor: theme.palette.common.white ,
                                                 '& .MuiFormHelperText-root.Mui-error': {
-                                                    backgroundColor: '#F2F4F5',
+                                                    backgroundColor: theme.palette.common.bgrMaster,
                                                     marginTop: 0,
                                                     paddingTop: 1.5
                                                 }
@@ -222,7 +222,7 @@ const OrganizationUserForm = ({isOpen, onClose, data}) => {
                                         color: '#388E3C',
                                     },
                                     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                                        backgroundColor: '#A5D6A7',
+                                        backgroundColor: theme.palette.common.green200,
                                     },
                                 }}
                             />

@@ -8,7 +8,8 @@ import SettingLayout from "@/layouts/setting";
 // } from "@/sections/pipeline";
 // import { useRef } from "react";
 import PageWrapper from "@/components/PageWrapper";
-
+import {useTheme} from "@mui/material/styles";
+const  theme = useTheme()
 Setting.getLayout = function getLayout(pageProps, page) {
   return (
     <SettingLayout permissions={PERMISSION_PAGES.evaluationTemplate} {...pageProps}>
@@ -40,7 +41,7 @@ export default function Setting() {
             atCenter
             ph={24}
             pv={16}
-            bgColor={"#fff"}
+            bgColor={theme.palette.background.paper}
             boxShadow={"inset 0px -1px 0px #DBE6EB"}
         >
           {/* title */}
@@ -67,7 +68,7 @@ export default function Setting() {
 
             <Text
                 ml={12}
-                color={"#fff"}
+                color={theme.palette.background.paper}
                 fontSize={15}
                 lineHeight={20 / 15}
                 fontWeight={"600"}

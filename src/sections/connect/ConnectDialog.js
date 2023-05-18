@@ -1,6 +1,5 @@
 import CloseIcon from "../../assets/CloseIcon";
 import WarningIcon from "../../assets/WarningIcon";
-// import { FormProvider } from "@/components/hook-form";
 import {
   Dialog,
   DialogTitle,
@@ -13,11 +12,11 @@ import {
 import PropTypes from "prop-types";
 import React from "react";
 import {ACTION_CONTENT} from './config'
-// import { useForm } from "react-hook-form";
-// import { Controller, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const ConnectDialog = (props) => {
-  const { onClose, open,type,onDelete } = props;
+  const theme = useTheme();
+  const {onClose, open, type, onDelete} = props;
   return (
     <Dialog
       onClose={onClose}
@@ -29,40 +28,40 @@ const ConnectDialog = (props) => {
         },
       }}
     >
-      <DialogTitle sx={{p:0, display: "flex", justifyContent: "end" }}>
-        <DialogActions onClick={onClose} >
+      <DialogTitle sx={{p: 0, display: "flex", justifyContent: "end"}}>
+        <DialogActions onClick={onClose}>
           {" "}
-          <CloseIcon />
+          <CloseIcon/>
         </DialogActions>
       </DialogTitle>
-      <DialogTitle sx={{p:0, display: "flex", justifyContent: "center" }}>
-        <WarningIcon />
+      <DialogTitle sx={{p: 0, display: "flex", justifyContent: "center"}}>
+        <WarningIcon/>
       </DialogTitle>
 
       <DialogTitle
-        sx={{ color: ACTION_CONTENT[type].color, display: "flex", justifyContent: "center" }}
+        sx={{color: ACTION_CONTENT[type].color, display: "flex", justifyContent: "center"}}
       >
-       {ACTION_CONTENT[type].confirm}
+        {ACTION_CONTENT[type].confirm}
       </DialogTitle>
       <DialogContent>
         <DialogContentText
           id="alert-dialog-description"
-          sx={{ display: "flex", justifyContent: "center" }}
+          sx={{display: "flex", justifyContent: "center"}}
         >
           {ACTION_CONTENT[type].text}
         </DialogContentText>
       </DialogContent>
-      <Divider />
+      <Divider/>
       <DialogActions>
-        <Button onClick={onClose} sx={{ color: "#455570" }}>
+        <Button onClick={onClose} sx={{color: theme.palette.common.neutral700}}>
           Hủy
         </Button>
         <Button
           onClick={onDelete}
           autoFocus
-          sx={{ color: "white", background: ACTION_CONTENT[type].color,  }}
+          sx={{color: "white", background: ACTION_CONTENT[type].color,}}
         >
-           {ACTION_CONTENT[type].textButton}
+          {ACTION_CONTENT[type].textButton}
         </Button>
       </DialogActions>
     </Dialog>

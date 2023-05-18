@@ -8,11 +8,12 @@ import {
   MuiDialogTitle,
 } from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationConfirmMultipleModal = ({setSelected, showMultipleDelete, setShowMultipleDelete, organizationIds}) => {
   const {enqueueSnackbar} = useSnackbar();
   const [deleteMultipleOrganization] = useDeleteMultipleOrganizationMutation();
-
+  const theme = useTheme();
   const onClose = () => {
     setShowMultipleDelete(false);
     setSelected([])
@@ -63,7 +64,7 @@ const OrganizationConfirmMultipleModal = ({setSelected, showMultipleDelete, setS
                 width: '100%',
                 fontSize: 16,
                 fontWeight: 600,
-                color: '#E53935',
+                color: theme.palette.common.red600,
                 marginBottom: 1
               }}
           >

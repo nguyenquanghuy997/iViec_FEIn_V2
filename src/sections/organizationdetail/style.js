@@ -6,7 +6,7 @@ const OrganizationNameStyle = styled(Typography)(({ theme }) => ({
   "&.organization-title": {
     fontSize: 24,
     fontWeight: 600,
-    color: '#172B4D',
+    color: theme.palette.common.neutral800,
     mt: theme.spacing(2),
     display: 'flex',
     alignItems: 'center',
@@ -15,8 +15,8 @@ const OrganizationNameStyle = styled(Typography)(({ theme }) => ({
 
 const CardUserStyle = styled(Box)(({ theme }) => ({
   '&.card-user-item': {
-    border: '1px solid #E7E9ED',
-    backgroundColor: '#FDFDFD',
+    border: '1px solid ' + theme.palette.common.neutral100,
+    backgroundColor: theme.palette.common.white,
     padding: theme.spacing(2.5, 3),
     margin: theme.spacing(2, 0),
     borderRadius: 4,

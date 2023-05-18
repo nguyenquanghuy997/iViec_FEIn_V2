@@ -17,7 +17,7 @@ const BoxInfoStyle = styled(Box)(({theme}) => ({
         height: "120px",
         border: "3px solid #FDFDFD",
         backgroundColor: '#E7E9ED',
-        borderRadius: "50%",
+        borderRadiuA5D6A7s: "50%",
         zIndex: 1000,
         position: 'absolute',
         top: '0%',

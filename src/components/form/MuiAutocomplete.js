@@ -10,6 +10,7 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import axiosInstance from "@/utils/axios";
 import {containsText} from "@/utils/function";
 import {CustomPaper} from "@/components/hook-form/RHFAutocomplete";
+import {useTheme} from "@mui/material/styles";
 
 const MuiAutocomplete = forwardRef((
     {
@@ -139,6 +140,7 @@ const MuiAutocomplete = forwardRef((
     }
 
     const renderTags = (value, getTagProps) => {
+        const theme = useTheme();
         return value.map((option, index) => <ChipDS
                 {...getTagProps({index})}
                 key={index}
@@ -148,7 +150,7 @@ const MuiAutocomplete = forwardRef((
                 sx={{
                     borderRadius: '4px',
                     color: style.COLOR_TEXT_BLACK,
-                    backgroundColor: '#EFF3F6',
+                    backgroundColor: theme.palette.common.bgrObject,
                     fontSize: style.FONT_13,
                     fontWeight: style.FONT_MEDIUM,
                 }}

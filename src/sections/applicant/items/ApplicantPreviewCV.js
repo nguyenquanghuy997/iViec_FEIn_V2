@@ -6,11 +6,15 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Grid, Box } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import React, { useState } from "react";
+import {useTheme} from "@mui/material/styles";
 
 export const ApplicantPreviewCV = ({data, dataLog}) => {
   const [value, setValue] = useState("1");
+  const theme = useTheme();
   const handleChange = (event, newValue) => {
+
     setValue(newValue);
+
   };
   return (
     <Grid item sx={{ padding: "24px 24px 0 24px" }}>
@@ -28,7 +32,7 @@ export const ApplicantPreviewCV = ({data, dataLog}) => {
                 },
                 "& .Mui-selected": {
                   color: "white !important",
-                  backgroundColor: "#455570",
+                  backgroundColor: theme.palette.common.neutral700,
                   borderRadius: "6px",
                 },
                 "& .MuiTabs-indicator": {
