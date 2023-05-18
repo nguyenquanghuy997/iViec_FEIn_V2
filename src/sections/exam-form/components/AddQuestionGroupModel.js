@@ -6,19 +6,12 @@ import { FormProvider, RHFSelect } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { useGetQuestionGroupQuery } from "@/sections/exam/ExamSlice";
-import { ViewModel } from "@/utils/cssStyles";
+import { ButtonIcon, ViewModel } from "@/utils/cssStyles";
 import { LIST_QUESTION_TYPE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Divider,
-  Grid,
-  InputAdornment,
-  Modal,
-  Tooltip,
-} from "@mui/material";
+import { Divider, Grid, InputAdornment, Modal, Tooltip } from "@mui/material";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import * as Yup from "yup";
 
 const defaultValuess = {
@@ -92,7 +85,6 @@ export const AddQuestionGroupModel = ({
     //   ...d,
     // };
     onSubmit?.(data);
-    pressHide();
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -243,15 +235,37 @@ export const AddQuestionGroupModel = ({
                     <Tooltip title="Xóa">
                       <>
                         {fields.length > 1 ? (
-                          <RiDeleteBin6Line
-                            color="#E53935"
+                          <ButtonIcon
+                            sx={{
+                              marginLeft: "16px",
+                              backgroundColor: "unset",
+                            }}
+                            tooltip="Xóa"
                             onClick={() => remove(index)}
-                            cursor="pointer"
+                            icon={
+                              <Iconify
+                                icon={"material-symbols:delete-outline-rounded"}
+                                width={20}
+                                height={20}
+                                color="#E53935"
+                              />
+                            }
                           />
                         ) : (
-                          <RiDeleteBin6Line
-                            color="#A2AAB7"
-                            cursor="pointer"
+                          <ButtonIcon
+                            sx={{
+                              marginLeft: "16px",
+                              backgroundColor: "unset",
+                            }}
+                            tooltip="Xóa"
+                            icon={
+                              <Iconify
+                                icon={"material-symbols:delete-outline-rounded"}
+                                width={20}
+                                height={20}
+                                color="#A2AAB7"
+                              />
+                            }
                           />
                         )}
                       </>

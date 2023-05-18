@@ -1,5 +1,4 @@
 import { AvatarDS } from "@/components/DesignSystem";
-import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { TextFieldStyle } from "@/components/hook-form/style";
 import useAuth from "@/hooks/useAuth";
@@ -35,7 +34,7 @@ function QuestionGroupCardItem({
   onDelete,
   onChangeQuantity,
   onChangeSelected,
-  checked
+  checked,
 }) {
   const { user } = useAuth();
   const [expanded, setExpanded] = useState(false);
@@ -117,11 +116,11 @@ function QuestionGroupCardItem({
                     </InputAdornment>
                   ),
                 }}
-                sx={{ width: "170px" }}
+                sx={{ width: "170px", marginRight: 2 }}
               />
-
               <ButtonIcon
                 onClick={() => onEdit(item, index)}
+                tooltip="Sửa"
                 icon={
                   <Iconify
                     icon={"ri:edit-2-fill"}
@@ -134,6 +133,7 @@ function QuestionGroupCardItem({
 
               <ButtonIcon
                 onClick={() => onDelete(item, index)}
+                tooltip="Xóa"
                 icon={
                   <Iconify
                     icon={"material-symbols:delete-outline-rounded"}
@@ -143,7 +143,6 @@ function QuestionGroupCardItem({
                   />
                 }
               />
-
               <ButtonIcon
                 onClick={() => {
                   setExpanded(!expanded);
@@ -212,73 +211,33 @@ function QuestionGroupCardItem({
       </AccordionSummary>
       <AccordionDetails sx={{ mt: "0px !important" }}>
         <Divider sx={{ color: "#E7E9ED", marginTop: "24px" }} />
-        <View
-          flexRow={true}
-          jcbetween={true}
-          style={{ margin: "24px", justifyContent: "space-between" }}
-        >
-          {item.questionType != 2 && (
-            <View>
-              <Typography sx={questionInfoTitle}>Đáp án</Typography>
-              <Box mt={"12px"}>
-                {/* {item.answers.map((x, index) => (
-                  <Typography key={index} sx={questionAnswer}>
-                    <Text
-                      style={{ display: "inline-block", marginRight: "8px" }}
-                    >{`${String.fromCharCode(65 + index)})`}</Text>
-                    {x.content}
-                    {x.isCorrect && (
-                      <Iconify
-                        icon={"material-symbols:check-circle"}
-                        width={14}
-                        height={14}
-                        marginLeft={"12px"}
-                        color="#43A047"
-                      />
-                    )}
-                  </Typography>
-                ))} */}
-              </Box>
-            </View>
-          )}
-          <View
-            style={
-              item.questionType != 2 && {
-                borderLeft: "1px solid #E7E9ED",
-                paddingLeft: "48px",
-              }
-            }
-          >
-            <Typography sx={questionInfoTitle}>Thông tin câu hỏi</Typography>
-            <View mt={"12px"}>
-              {renderText("Nhóm câu hỏi:", item?.questionGroupName)}
-              {/* {renderText(
-                "Kiểu câu hỏi:",
-                LIST_QUESTION_TYPE.find((x) => x.value == item.questionType)
-                  .name
-              )} */}
-              {renderText(
-                "Ngày tạo:",
-                moment(new Date()).format("DD/MM/YYYY HH:mm")
-              )}
-              {renderText(
-                "Người tạo:",
-                <>
-                  <AvatarDS
-                    sx={{
-                      height: "20px",
-                      width: "20px",
-                      borderRadius: "100px",
-                      fontSize: "8px",
-                    }}
-                    name={user && `${user?.lastName || ""} ${user?.firstName}`}
-                  />
-                  {user && `${user?.lastName || ""} ${user?.firstName}`}
-                </>
-              )}
-            </View>
-          </View>
-        </View>
+        <Box style={{ margin: "24px" }}>
+          <Typography sx={questionInfoTitle}>Thông tin câu hỏi</Typography>
+          <Box mt={"12px"} display={"grid"}>
+            {renderText("Nhóm câu hỏi:", item?.questionGroup?.name)}
+            {renderText("Mô tả:", item?.questionGroup?.description)}
+            {renderText("Số câu hỏi:", item?.questionGroup?.numOfQuestion)}
+            {renderText(
+              "Ngày tạo:",
+              moment(new Date()).format("DD/MM/YYYY HH:mm")
+            )}
+            {renderText(
+              "Người tạo:",
+              <>
+                <AvatarDS
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                    borderRadius: "100px",
+                    fontSize: "8px",
+                  }}
+                  name={item?.questionGroup?.createdUserInFo?.email || user && `${user?.email}`}
+                />
+                {item?.questionGroup?.createdUserInFo?.email || user && `${user?.email}`}
+              </>
+            )}
+          </Box>
+        </Box>
       </AccordionDetails>
     </CardFormItemStyle>
   );
