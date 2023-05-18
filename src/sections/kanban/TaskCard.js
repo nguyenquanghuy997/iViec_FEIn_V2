@@ -119,7 +119,7 @@ function ExaminationItem(props) {
         <Stack
           direction="row"
           spacing={0.5}
-          p={0.5}
+          p={"8px 12px"}
           color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
         >
           <Typography fontSize="14px" fontWeight="600">
