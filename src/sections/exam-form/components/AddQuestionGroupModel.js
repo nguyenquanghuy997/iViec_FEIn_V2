@@ -16,14 +16,20 @@ import {
   Modal,
   Tooltip,
 } from "@mui/material";
-import { useRef } from "react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import * as Yup from "yup";
 
 const defaultValuess = {
-  questionGroup: [],
+  questionGroup: [
+    {
+      questionGroupId: "",
+      questionTypeId: "",
+      quantity: "",
+      quantityOfQuestion: "",
+    },
+  ],
 };
 
 export const AddQuestionGroupModel = ({
@@ -66,6 +72,7 @@ export const AddQuestionGroupModel = ({
     control,
     watch,
     setValue,
+    reset,
     formState: { isSubmitting },
   } = methodss;
 
@@ -93,16 +100,16 @@ export const AddQuestionGroupModel = ({
     name: "questionGroup",
   });
 
-  const isInit = useRef(true);
-  useEffect(() => {
-    if (isInit.current) {
-      append({
-        questionGroupId: "",
-        quantity: "",
-      });
-      isInit.current = false;
-    }
-  }, []);
+  // const isInit = useRef(true);
+  // useEffect(() => {
+  //   if (isInit.current) {
+  //     append({
+  //       questionGroupId: "",
+  //       quantity: "",
+  //     });
+  //     isInit.current = false;
+  //   }
+  // }, []);
   const changeQuestionType = (index, value) => {
     if (watch(`questionGroup.${index}.questionGroupId`)) {
       const number = ListQuestionGroup.find(
@@ -121,7 +128,13 @@ export const AddQuestionGroupModel = ({
       }
     }
   };
-
+  // effect
+  useEffect(() => {
+    if (!show) {
+      reset(defaultValuess);
+      return;
+    }
+  }, [show]);
   return (
     <FormProvider methods={methodss}>
       <Modal
@@ -237,9 +250,8 @@ export const AddQuestionGroupModel = ({
                           />
                         ) : (
                           <RiDeleteBin6Line
-                            color="#E53935"
-                            onClick={() => remove(index)}
-                            cursor="#A2AAB7"
+                            color="#A2AAB7"
+                            cursor="pointer"
                           />
                         )}
                       </>

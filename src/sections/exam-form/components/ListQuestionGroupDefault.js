@@ -1,22 +1,19 @@
 import { AddQuestionGroupModel } from "./AddQuestionGroupModel";
+import ListQuestionBottomNav from "./ListQuestionBottomNav";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
 import QuestionGroupCardItem from "./QuestionGroupCardItem";
 import {
   CheckboxIconChecked,
   CheckboxIconDefault,
+  CheckboxIconIndeterminate,
 } from "@/assets/CheckboxIcon";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import { AlertIcon } from "@/sections/organization/component/Icon";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
-import {
-  Checkbox,
-  Button,
-  ButtonGroup,
-  Box,
-  useTheme,
-} from "@mui/material";
+import { Checkbox, Button, ButtonGroup, Box, useTheme } from "@mui/material";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useState } from "react";
 
@@ -34,7 +31,8 @@ function ListQuestionGroupDefault({
   const [currentIndexQuestion, setCurrentIndexQuestion] = useState(0);
   const [, setCurrentQuestion] = useState(null);
   const { palette } = useTheme();
-
+  const [itemIndexSelected, setItemIndexSelected] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
   /**
    * Đóng form thêm hoặc sửa câu hỏi
    */
@@ -44,9 +42,8 @@ function ListQuestionGroupDefault({
   //   setShowQuestionGroup(false);
   // };
 
-  const handleCloseDeleModal = () => {
-    setCurrentIndexQuestion(-1);
-    setCurrentQuestion(null);
+  const handleCloseDeleteModal = () => {
+    resetSelectItem();
     setShowDeleteModal(false);
   };
 
@@ -55,22 +52,38 @@ function ListQuestionGroupDefault({
    * @param {*} data
    */
   const handleCreateEditQuestion = (data) => {
+    if (
+      listQuestions.find(
+        (x) =>
+          x.questionGroupId === data.questionGroupId &&
+          x.questionTypeId === data.questionTypeId
+      )
+    ) {
+      enqueueSnackbar("Nhóm câu hỏi đã tồn tại trong đề thi", {
+        variant: "error",
+      });
+      return;
+    }
     setListQuestions([...listQuestions, ...data]);
     // updateListQuestion(listQuestions);
 
     setShowQuestionGroup(false);
     // reset choose index && data
-    setCurrentQuestion(null);
-    setCurrentIndexQuestion(-1);
+    resetSelectItem();
   };
 
   const handlerDeleteQuestion = () => {
-    listQuestions.splice(currentIndexQuestion, 1);
-    // setListData([...listData])
-    updateListQuestion(listQuestions);
+    if (currentIndexQuestion >= 0) {
+      listQuestions.splice(currentIndexQuestion, 1);
+      updateListQuestion(listQuestions);
+    } else {
+      updateListQuestion(
+        listQuestions.filter((el, i) => !itemIndexSelected.some((j) => i === j))
+      );
+    }
 
     setShowDeleteModal(false);
-    setCurrentIndexQuestion(-1);
+    resetSelectItem();
   };
 
   const openEditQuestionForm = (item, index) => {
@@ -83,12 +96,40 @@ function ListQuestionGroupDefault({
     setCurrentIndexQuestion(index);
     setShowDeleteModal(true);
   };
+
+  const resetSelectItem = () => {
+    setCurrentIndexQuestion(-1);
+    setCurrentQuestion(null);
+    setItemIndexSelected([]);
+  };
+
+  const handleSelected = (data, index) => {
+    const isExits = itemIndexSelected.some((x) => x == index);
+    if (isExits) {
+      setItemIndexSelected(itemIndexSelected.filter((x) => x != index));
+    } else {
+      setItemIndexSelected([...itemIndexSelected, index]);
+    }
+  };
+
+  const isSelected = (index) => {
+    return itemIndexSelected.some((x) => x == index);
+  };
+
+  const handleSelectAll = () => {
+    if (itemIndexSelected.length == listQuestions.length) {
+      setItemIndexSelected([]);
+    } else {
+      setItemIndexSelected(listQuestions.map((x, i) => i));
+    }
+  };
   const [, setError] = React.useState("");
   // useEffect(()=>{
   //   updateListQuestion(listData)
   // },[listQuestions])
   return (
     <>
+      {console.log("lits", listQuestions)}
       <Box>
         {listQuestions.length == 0 && (
           <div
@@ -142,12 +183,27 @@ function ListQuestionGroupDefault({
         )}
         {listQuestions.length > 0 && (
           <>
-            <Box display={'flex'} justifyContent={'space-between'} ml={2} flexrow={"true"} jcbetween={"true"}>
-              <Box display={'flex'} alignItems={'center'}>
+            <Box
+              display={"flex"}
+              justifyContent={"space-between"}
+              ml={2}
+              flexrow={"true"}
+              jcbetween={"true"}
+            >
+              <Box display={"flex"} alignItems={"center"}>
                 <Checkbox
-                  // onChange={pressCheckbox}
+                  checked={
+                    itemIndexSelected.length > 0 &&
+                    itemIndexSelected.length == listQuestions.length
+                  }
+                  indeterminate={
+                    itemIndexSelected.length > 0 &&
+                    itemIndexSelected.length < listQuestions.length
+                  }
+                  onChange={handleSelectAll}
                   icon={<CheckboxIconDefault />}
                   checkedIcon={<CheckboxIconChecked />}
+                  indeterminateIcon={<CheckboxIconIndeterminate />}
                   title="Chọn tất cả"
                 />
                 <label
@@ -156,7 +212,7 @@ function ListQuestionGroupDefault({
                     lineHeight: "20px",
                     fontWeight: 600,
                     color: "#455570",
-                    marginLeft: '24px'
+                    marginLeft: "24px",
                   }}
                 >
                   Chọn tất cả
@@ -207,9 +263,15 @@ function ListQuestionGroupDefault({
                   onDelete={openDeleteQuestionModal}
                   onEdit={openEditQuestionForm}
                   onChangeQuantity={(v, err) => {
-                    updateListQuestion(listQuestions.map((i, j) => j ===index ? ({...i, quantity: Number(v)}): i))
-                    setError([err])
+                    updateListQuestion(
+                      listQuestions.map((i, j) =>
+                        j === index ? { ...i, quantity: Number(v) } : i
+                      )
+                    );
+                    setError([err]);
                   }}
+                  checked={isSelected(index)}
+                  onChangeSelected={() => handleSelected(item, index)}
                 />
               ))}
             </Box>
@@ -233,20 +295,25 @@ function ListQuestionGroupDefault({
         show={showQuestionGallaryInternalModal}
         onClose={() => setShowQuestionGallaryInternalModal(false)}
       />
-
-      {/* <ConfirmModal
-        confirmDelete={showDeleteModal}
-        title="Xác nhận xóa nhóm câu hỏi"
-        subtitle={"Bạn có chắc chắn muốn xóa nhóm câu hỏi"}
-        onSubmit={handlerDeleteQuestion}
-        onCloseConfirmDelete={handleCloseDeleModal}
-      /> */}
+      <ListQuestionBottomNav
+        open={itemIndexSelected.length > 0}
+        itemSelected={itemIndexSelected}
+        canEdit={!listQuestions[itemIndexSelected[0]]?.id}
+        onClose={() => setItemIndexSelected([])}
+        onDelete={() => openDeleteQuestionModal()}
+        onEdit={() =>
+          openEditQuestionForm(
+            listQuestions[itemIndexSelected[0]],
+            itemIndexSelected[0]
+          )
+        }
+      />
 
       <ConfirmModal
         open={showDeleteModal}
-        onClose={handleCloseDeleModal}
+        onClose={handleCloseDeleteModal}
         icon={<AlertIcon />}
-        title={"Xác nhận xóa ứng viên"}
+        title={"Xác nhận nhóm câu hỏi"}
         titleProps={{
           sx: {
             color: style.COLOR_TEXT_DANGER,
@@ -261,7 +328,7 @@ function ListQuestionGroupDefault({
         }}
         btnConfirmProps={{
           title: "Xóa",
-          color: 'error'
+          color: "error",
         }}
       />
     </>

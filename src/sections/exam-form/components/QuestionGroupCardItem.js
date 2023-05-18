@@ -1,7 +1,3 @@
-import {
-  CheckboxIconChecked,
-  CheckboxIconDefault,
-} from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -38,6 +34,8 @@ function QuestionGroupCardItem({
   onEdit,
   onDelete,
   onChangeQuantity,
+  onChangeSelected,
+  checked
 }) {
   const { user } = useAuth();
   const [expanded, setExpanded] = useState(false);
@@ -186,11 +184,9 @@ function QuestionGroupCardItem({
             }}
           >
             <Checkbox
-              // value={item}
-              // checked={checked}
-              // onChange={onChangeSelected}
-              icon={<CheckboxIconDefault />}
-              checkedIcon={<CheckboxIconChecked />}
+              value={item}
+              checked={checked}
+              onChange={onChangeSelected}
             />
             <Box maxWidth={"80%"}>
               <Typography
