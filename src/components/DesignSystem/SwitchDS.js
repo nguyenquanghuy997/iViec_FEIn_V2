@@ -21,8 +21,8 @@ const Switchh = styled(Switch)(({theme}) => ({
     backgroundColor: theme.palette.common.blue700,
   },
 }));
-const  theme = useTheme();
 export default function SwitchDS({ name, ...other }) {
+  const  theme = useTheme();
   const { control } = useFormContext();
   return (
     <FormControlLabel
