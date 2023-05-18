@@ -18,6 +18,7 @@ const ListQuestionBottomNav = ({ open, onClose, itemSelected, canEdit, onEdit, o
                 sx={{
                   marginLeft: "16px",
                 }}
+                tooltip="Sửa"
                 onClick={onEdit}
                 icon={
                   <Iconify
@@ -34,6 +35,7 @@ const ListQuestionBottomNav = ({ open, onClose, itemSelected, canEdit, onEdit, o
               sx={{
                 marginLeft: "16px",
               }}
+              tooltip="Xóa"
               onClick={onDelete}
               icon={
                 <Iconify

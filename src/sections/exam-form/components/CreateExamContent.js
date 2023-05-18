@@ -143,6 +143,7 @@ const CreateExamContent = () => {
         (examData.type == 1 &&
           examQuestions.map((x) => {
             return {
+              ...x,
               questionGroupId: x.questionGroupId,
               totalQuestion: x.quantity,
               type: x.questionTypeId == 1 ? 0 : 1,
@@ -256,7 +257,25 @@ const CreateExamContent = () => {
   useEffect(() => {
     if (data) {
       setExamData({ ...data, examTime: minutesFromTime(data.examTime) });
-      setExamQuestions(data.questions ?? []);
+      if (data.showType == 0) {
+        setExamQuestions(data.questions ?? []);
+      }
+      if (data.showType == 1) {
+        setExamQuestions(
+          data.examinationQuestionGroups.map((p) => {
+            return {
+              ...p,
+              quantity: Number(p.totalQuestion),
+              questionTypeId: p?.type == 0 ? 1 : 2,
+              questionGroupId: p?.questionGroup?.id,
+              quantityOfQuestion:
+                p?.type == 0
+                  ? Number(p?.questionGroup?.numOfQuestionMultipleChoice)
+                  : Number(p?.questionGroup?.numOfQuestionEssay),
+            };
+          })
+        );
+      }
     }
   }, [data]);
 
