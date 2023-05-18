@@ -2,12 +2,16 @@ import { Activities } from "./DetailApplicantRight/Activities";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Grid, Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import Tab from "@mui/material/Tab";
-import React, { useState } from "react";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 
-export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
+export const ApplicantPreviewLog = ({
+  dataLog,
+  dataApplicant,
+  onReExploiting,
+}) => {
   const [value, setValue] = useState("1");
   const theme = useTheme();
   const handleChange = (event, newValue) => {
@@ -86,18 +90,24 @@ export const ApplicantPreviewLog = ({ dataLog, dataApplicant }) => {
             </TabList>
           </Box>
           <TabPanel value="1">
-            <Activities dataLog={dataHistoryMap} dataApplicant={dataApplicant} />
+            <Activities
+              dataLog={dataHistoryMap}
+              dataApplicant={dataApplicant}
+              onReExploiting={onReExploiting}
+            />
           </TabPanel>
           <TabPanel value="2">
             <Activities
               dataLog={dataExamInterviewFilter}
               dataApplicant={dataApplicant}
+              onReExploiting={onReExploiting}
             />
           </TabPanel>
           <TabPanel value="3">
             <Activities
               dataLog={dataResultOfferFilter}
               dataApplicant={dataApplicant}
+              onReExploiting={onReExploiting}
             />
           </TabPanel>
         </TabContext>

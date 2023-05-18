@@ -18,8 +18,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
 import {styled, useTheme} from "@mui/material/styles";
 import { Container } from "@mui/system";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const NotificationBoard = ({
   icon,
@@ -29,6 +28,7 @@ const NotificationBoard = ({
   isShow,
   data,
   option,
+  children,
 }) => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
@@ -217,14 +217,17 @@ const NotificationBoard = ({
             </List>
             <List>
               <Typography fontSize={13}>
-                Điểm TB: <span style={{ marginLeft: "13px", fontWeight: 600 }}>{data?.averagePoint?.toFixed(2)}</span>
+                Điểm TB:{" "}
+                <span style={{ marginLeft: "13px", fontWeight: 600 }}>
+                  {data?.averagePoint?.toFixed(2)}
+                </span>
               </Typography>
             </List>
             <List component="div" disablePadding>
               <Typography fontSize={13}>
                 Kết luận:
                 <span style={{ marginLeft: "13px", fontWeight: 600 }}>
-                {data?.comment}
+                  {data?.comment}
                 </span>
               </Typography>
             </List>
@@ -267,6 +270,7 @@ const NotificationBoard = ({
               </ListItemButton>
             )}
 
+            {children}
           </Collapse>
         </div>
         <div style={{ margin: "auto" }}>

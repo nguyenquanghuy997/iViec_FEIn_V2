@@ -1,25 +1,47 @@
-import { useAddApplicantReviewMutation } from "@/sections/applicant";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
+import { useAddApplicantReviewMutation } from "@/sections/applicant";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
+import palette from "@/theme/palette";
 import { ButtonIcon, ReviewForm } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Divider, FormHelperText, Modal, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  FormHelperText,
+  Modal,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Rate } from "antd";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import palette from "@/theme/palette";
 
 const LIST_ACTION = [
-  { id: 0, name: "Đạt", color: palette.light.common.green500, icon: "bxs:like" },
-  { id: 1, name: "Cân nhắc", color: palette.light.common.orange500, icon: "ri:eye-fill" },
-  { id: 2, name: "Loại", color: palette.light.common.red500, icon: "bxs:dislike" },
+  {
+    id: 0,
+    name: "Đạt",
+    color: palette.light.common.green500,
+    icon: "bxs:like",
+  },
+  {
+    id: 1,
+    name: "Cân nhắc",
+    color: palette.light.common.orange500,
+    icon: "ri:eye-fill",
+  },
+  {
+    id: 2,
+    name: "Loại",
+    color: palette.light.common.red500,
+    icon: "bxs:dislike",
+  },
 ];
 
 const Point = ({ value, onChange }) => {
@@ -51,6 +73,8 @@ export const ApplicantReviewModal = ({
   const [points, setPoints] = useState({});
   const [mediumScore, setMediumScore] = useState(0);
   const [currentAction, setCurrentAction] = useState();
+  const isReject = currentAction === 2;
+
   const theme = useTheme();
   const Schema = Yup.object().shape({
     ...data?.reviewFormCriterias?.reduce(
@@ -65,7 +89,9 @@ export const ApplicantReviewModal = ({
       }),
       {}
     ),
-    result: Yup.string().required("Chưa nhập kết luận"),
+    result: isReject
+      ? Yup.string().required("Chưa nhập kết luận")
+      : Yup.string(),
   });
 
   const methodss = useForm({
@@ -85,6 +111,11 @@ export const ApplicantReviewModal = ({
   const { enqueueSnackbar } = useSnackbar();
   const [reviewForm] = useAddApplicantReviewMutation();
   const pressSave = handleSubmit(async (d) => {
+    if (typeof currentAction !== "number") {
+      setError("result", { message: "Chưa chọn kết luận" });
+      return;
+    }
+
     const data = {
       applicantId,
       recruitmentId,
@@ -124,6 +155,10 @@ export const ApplicantReviewModal = ({
     setMediumScore(total / list.length);
   }, [points]);
 
+  useEffect(() => {
+    setError("result", false);
+  }, [currentAction]);
+
   return (
     <Modal
       open={show}
@@ -132,7 +167,12 @@ export const ApplicantReviewModal = ({
     >
       <>
         <FormProvider methods={methodss}>
-          <View hidden width={668} borderradius={8} bgcolor={theme.palette.common.white}>
+          <View
+            hidden
+            width={668}
+            borderradius={8}
+            bgcolor={theme.palette.common.white}
+          >
             <View flexrow="true" atcenter="true" pv={22} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
                 {"Đánh giá ứng viên"}
@@ -200,7 +240,7 @@ export const ApplicantReviewModal = ({
                 className="block-review block-review-result"
                 style={{ background: theme.palette.common.bgrMaster }}
               >
-                <Label required={true} className="title" title="Kết luận">
+                <Label required={isReject} className="title" title="Kết luận">
                   {"Kết luận"}
                 </Label>
                 <div className="input-content">
@@ -225,7 +265,11 @@ export const ApplicantReviewModal = ({
                           <Typography
                             fontSize={14}
                             fontWeight={"600"}
-                            color={isActive ? theme.palette.common.white : theme.palette.common.neutral700}
+                            color={
+                              isActive
+                                ? theme.palette.common.white
+                                : theme.palette.common.neutral700
+                            }
                             textAlign={"center"}
                           >
                             {item.name}

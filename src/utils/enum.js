@@ -110,7 +110,8 @@ export const YearOfExperience = (item) => {
 
 //Link image
 export const srcImage = (image) => {
-  if (/data:.+;base64/g.test(image)) return image;
+  if (/data:.+;base64/g.test(image) || String(image).startsWith("http"))
+    return image;
   return DOMAIN_SERVER_API + "/Image/GetImage?imagePath=" + image;
 };
 

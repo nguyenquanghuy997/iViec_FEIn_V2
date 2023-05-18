@@ -1,7 +1,8 @@
 import {
-  useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery,
-  useUpdateApplicantRecruitmentToNextStateMutation,
+  useLazyGetAllFilterApplicantQuery,
+  useLazyGetApplicantCurrentStateWithRecruitmentStatesQuery,
 } from "../applicant";
+import { RejectApplicantModal } from "../applicant/modals/RejectApplicantModal";
 import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
 import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
 import { FormCalendar } from "../interview/components/FormCalendar";
@@ -32,7 +33,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 function Item(props) {
@@ -599,8 +600,9 @@ function TaskCard({ item, index, pipelineStateType }) {
   const { enqueueSnackbar } = useSnackbar();
   const [openGroup, setOpenGroup] = useState(false);
 
-  const [tranfer] = useUpdateApplicantRecruitmentToNextStateMutation();
-  const [getInfo] = useLazyGetRecruitmentPipelineStatesByRecruitmentsQuery();
+  const [getApplicant] = useLazyGetAllFilterApplicantQuery();
+  const [getPipeline] =
+    useLazyGetApplicantCurrentStateWithRecruitmentStatesQuery();
 
   const handleOpenGroup = () => {
     setOpenGroup(true);
@@ -616,15 +618,25 @@ function TaskCard({ item, index, pipelineStateType }) {
     });
   };
 
-  const pressEdit = () => {
+  const pressEdit = async () => {
+    const res = await getApplicant({
+      searchKey: item?.fullName,
+    }).unwrap();
+    const data = res?.items?.find((i) => i.applicantId === item?.applicantId);
+    if (!data || !data.applicantId) {
+      enqueueSnackbar("Xảy ra lỗi, thử lại sau!", {
+        variant: "error",
+      });
+      return;
+    }
     router.push(
       {
-        pathname: PATH_DASHBOARD.applicant.view(item?.applicantId),
+        pathname: PATH_DASHBOARD.applicant.view(data.applicantId),
         query: {
-          correlationId: item?.correlationId,
-          organizationId: item?.organizationId,
-          recruitmentId: item?.recruitmentId,
-          applicantId: item?.applicantId,
+          correlationId: data.correlationId,
+          organizationId: data.organizationId,
+          recruitmentId: data.recruitmentId,
+          applicantId: data.applicantId,
           mode: "edit",
         },
       },
@@ -633,18 +645,29 @@ function TaskCard({ item, index, pipelineStateType }) {
     );
   };
 
+  const [actionShow, setActionShow] = useState(false);
+  const [pipeline, setPipeline] = useState();
+
   const pressDelete = async () => {
-    const res = await getInfo({ RecruitmentId: item?.recruitmentId }).unwrap();
-    const body = {
-      applicantId: item?.applicantId,
-      recruitmentId: item?.recruitmentId,
-      recruitmentPipelineStateId: res.items?.find(
-        (i) => i.pipelineStateType === 3
-      )?.id,
-      pipelineStateResultType: "2",
-    };
-    await tranfer(body).unwrap();
+    if (pipeline) {
+      setActionShow(true);
+      return;
+    }
+    const r = await getPipeline({
+      ApplicantId: item?.applicantId,
+      RecruitmentId: item?.recruitmentId,
+    }).unwrap();
+    setPipeline(r);
   };
+
+  const onCloseModel = () => {
+    setActionShow(false);
+  };
+
+  useEffect(() => {
+    if (!pipeline) return;
+    setActionShow(true);
+  }, [pipeline]);
 
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -709,13 +732,17 @@ function TaskCard({ item, index, pipelineStateType }) {
                         divider={true}
                         disableGutters={true}
                       >
-                        <MenuItem onClick={pressGetFromIVIEC}>
-                          <LogoIcon />
-                          <Typography ml={"12px"} variant={"textSize13600"}>
-                            Lấy từ kho iVIEC
-                          </Typography>
-                        </MenuItem>
-                        <Divider />
+                        {false && (
+                          <>
+                            <MenuItem onClick={pressGetFromIVIEC}>
+                              <LogoIcon />
+                              <Typography ml={"12px"} variant={"textSize13600"}>
+                                Lấy từ kho iVIEC
+                              </Typography>
+                            </MenuItem>
+                            <Divider />
+                          </>
+                        )}
                         <MenuItem onClick={pressEdit}>
                           <EditIcon sx={{ mr: "12px" }} />
                           <Typography ml={"12px"} variant={"textSize13600"}>
@@ -768,6 +795,16 @@ function TaskCard({ item, index, pipelineStateType }) {
                   ></Box>
                 </Stack>
               </Box>
+
+              <RejectApplicantModal
+                applicantId={item?.applicantId}
+                recruimentId={item?.recruitmentId}
+                actionType={2}
+                show={actionShow}
+                stage={pipeline}
+                setShow={setActionShow}
+                onClose={onCloseModel}
+              />
             </Paper>
           </div>
         );
