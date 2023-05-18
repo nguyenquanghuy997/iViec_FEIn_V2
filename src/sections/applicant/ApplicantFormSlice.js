@@ -310,6 +310,7 @@ export const {
   useGetApplicantByIdQuery,
   useGetRecruitmentsByApplicantQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesQuery,
+  useLazyGetApplicantCurrentStateWithRecruitmentStatesQuery,
   useGetApplicantRecruitmentQuery,
   useUpdateApplicantRecruitmentToNextStateMutation,
   useAddApplicantRecruitmentMutation,
