@@ -65,7 +65,8 @@ export const PipelineAddModal = ({
   };
 
   const LIST_PIPELINE_STAGE = [
-    // { id: "0", value: "0", name: "Thi tuyển" },
+    //todo
+     { id: "0", value: "0", name: "Thi tuyển" },
     { id: "1", value: "1", name: "Phỏng vấn" },
   ];
   const [selectedStatge, setSelectedStatge] = useState("");

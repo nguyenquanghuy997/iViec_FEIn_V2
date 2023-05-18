@@ -26,12 +26,14 @@ import { forwardRef } from "react";
 import { useState } from "react";
 import { RiLinkM } from "react-icons/ri";
 import { DOMAIN_SERVER_API } from "@/config";
+import {useTheme} from "@mui/material/styles";
 
 const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   const { data: DetailData } = useGetDetailCalendarsQuery(
     { BookingCalendarId: item?.id },
     { skip: !item?.id }
   );
+  const  theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
   const [deleteCalendar] = useDeleteCalendarMutation();
   const { enqueueSnackbar } = useSnackbar();
@@ -59,7 +61,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
           style={{
             fontSize: 14,
             fontWeight: 400,
-            color: "#5C6A82",
+            color: theme.palette.common.borderObject,
             width: "160px",
           }}
         >
@@ -70,7 +72,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
           style={{
             fontSize: 14,
             fontWeight: 500,
-            color: "#172B4D",
+            color: theme.palette.common.neutral800,
           }}
         >
           {content}
@@ -101,7 +103,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
       onBackdropClick={onClose}
       ref={ref}
     >
-      <View hidden width={800} borderradius={8} bgcolor={"#FDFDFD"}>
+      <View hidden width={800} borderradius={8} bgcolor={theme.palette.common.white}>
         <View flexrow="true" atcenter="true" pv={22} ph={24}>
           <Text flex fontsize={16} fontweight={"700"}>
             {title}
@@ -145,7 +147,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
 
           <List sx={{ pt: 2 }}>
             <Typography
-              sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}
+              sx={{ color: theme.palette.common.neutral700, fontSize: 13, fontWeight: 600 }}
             >
               Danh sách ứng viên
             </Typography>
@@ -153,7 +155,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             {DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants.map(
               (item, index) => (
                 <ListItem
-                  sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}
+                  sx={{ bgcolor: index % 2 === 0 ? "white" : theme.palette.common.bgrMaster }}
                   key={index}
                 >
                 
@@ -196,12 +198,12 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
           <Divider />
           <List sx={{ pt: 2 }}>
             <Typography
-              sx={{ color: "#455570", fontSize: 13, fontWeight: 600 }}
+              sx={{ color: theme.palette.common.neutral700, fontSize: 13, fontWeight: 600 }}
             >
               Hội đồng phỏng vấn
             </Typography>
             {DetailData?.bookingCalendarCouncils.map((item, index) => (
-              <ListItem sx={{ bgcolor: index % 2 === 0 ? "white" : "#F2F4F5" }}>
+              <ListItem sx={{ bgcolor: index % 2 === 0 ? "white" : theme.palette.common.bgrMaster}}>
                 <ListItemAvatar>
                   <img
                     alt=""
@@ -229,11 +231,11 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               type="button"
               // onClick={() => setIsOpenSendOffer(true)}
               sx={{
-                color: "#455570",
-                backgroundColor: "#F3F4F6",
+                color: theme.palette.common.neutral700,
+                backgroundColor: theme.palette.common.neutral50,
                 boxShadow: "none",
                 ":hover": {
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: theme.palette.common.neutral50,
                 },
                 textTransform: "none",
               }}
@@ -246,11 +248,11 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               type="button"
               onClick={() => handleClose(DetailData?.id)}
               sx={{
-                color: "#455570",
-                backgroundColor: "#F3F4F6",
+                color: theme.palette.common.neutral700,
+                backgroundColor: theme.palette.common.neutral50,
                 boxShadow: "none",
                 ":hover": {
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: theme.palette.common.neutral50,
                 },
                 textTransform: "none",
               }}
@@ -263,10 +265,10 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               }}
               sx={{
                 color: "white",
-                backgroundColor: "#1976D2",
+                backgroundColor: theme.palette.common.blue700,
                 boxShadow: "none",
                 ":hover": {
-                  backgroundColor: "#1565C0",
+                  backgroundColor: theme.palette.common.blue800,
                 },
                 textTransform: "none",
               }}
@@ -285,7 +287,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               }
               sx={{
                 color: "white",
-                backgroundColor: "#43A047",
+                backgroundColor: theme.palette.common.green600,
                 boxShadow: "none",
                 ":hover": {
                   backgroundColor: "#388E3C",

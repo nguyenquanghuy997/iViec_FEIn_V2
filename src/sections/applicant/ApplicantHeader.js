@@ -15,10 +15,12 @@ import { Box, Button, Divider } from "@mui/material";
 import { fDate } from "@/utils/formatTime";
 import { cleanObject } from "@/utils/function";
 import { MaritalStatus, PipelineStateType, Sex, YearOfExperience } from "@/utils/enum";
+import {useTheme} from "@mui/material/styles";
 
+const theme =useTheme();
 const chipSx = {
-  backgroundColor: '#EFF3F6',
-  color: '#455570',
+  backgroundColor: theme.palette.common.bgrObject,
+  color: theme.palette.common.neutral700,
   fontSize: 12,
   fontWeight: 500,
   mr: 1
@@ -46,7 +48,7 @@ const ApplicantHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit, da
           placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
           sx={{
             minWidth: '510px',
-            background: '#F2F4F5',
+            background: theme.palette.common.bgrMaster,
             borderRadius: '6px',
             '.MuiInput-root':{
                border: 'none'
@@ -206,7 +208,7 @@ const ApplicantHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit, da
           <Button
             onClick={handleClearDataFilter}
             sx={{
-              color: '#172B4D',
+              color: theme.palette.common.neutral800,
               fontSize: 14,
               fontWeight: 500,
               "&:hover": {

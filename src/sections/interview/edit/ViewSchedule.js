@@ -3,19 +3,20 @@ import {ButtonDS} from "@/components/DesignSystem";
 import {PERMISSIONS} from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
+import { RiCalendarCheckFill} from "react-icons/ri";
+import {useTheme} from "@mui/material/styles";
 import {fTime} from "@/utils/formatTime";
 import {Box, CardContent, Divider, Typography} from "@mui/material";
 import React, {useMemo} from "react";
-import {RiCalendarCheckFill} from "react-icons/ri";
 import Iconify from "@/components/Iconify";
 
 const ViewSchedule = ({data, check, handleClick, handleClickDialog}) => {
   // const { data: Detaildata } = useGetDetailCalendarsQuery({
   //   BookingCalendarId: id,
   // });
-  const {user} = useAuth();
-
-  const {canAccess} = useRole();
+  const { user } = useAuth();
+  const  theme = useTheme();
+  const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
   const renderSwitch = (param) => {
     switch (param) {
@@ -265,7 +266,7 @@ const ViewSchedule = ({data, check, handleClick, handleClickDialog}) => {
               padding: "6px 10px",
               backgroundColor: "#388E3C",
               "&:hover": {
-                backgroundColor: "#43A047 !important",
+                backgroundColor: theme.palette.common.green600 +  "!important",
               },
             }}
           />
@@ -275,7 +276,7 @@ const ViewSchedule = ({data, check, handleClick, handleClickDialog}) => {
               sx={{
                 backgroundColor: "#388E3C",
                 "&:hover": {
-                  backgroundColor: "#43A047 !important",
+                  backgroundColor: theme.palette.common.green600 + " !important",
                 },
               }}
             />

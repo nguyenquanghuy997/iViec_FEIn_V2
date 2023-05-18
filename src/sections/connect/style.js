@@ -1,6 +1,7 @@
 import {styled} from "@mui/styles";
 import {Box, Button, Typography} from "@mui/material";
 
+
 // title
 export const TitleStyle = styled(Typography)(({theme}) => ({
   fontSize: 14,
@@ -20,9 +21,9 @@ export const ButtonStyle = styled(Button)(({theme}) => ({
 // item style
 export const BoxWrapperStyle = styled(Box)(({borderColor, theme}) => ({
   borderRadius: '6px',
-  backgroundColor: '#FDFDFD',
+  backgroundColor: theme.palette.common.white,
   minHeight: theme.spacing(8),
-  borderLeftColor: borderColor || "#FB8906",
+  borderLeftColor: borderColor || theme.palette.common.orange600,
   borderLeftWidth: '3px',
   borderLeftStyle: 'solid',
   padding: theme.spacing(2, 3),
@@ -39,7 +40,7 @@ export const BoxItemStyle = styled(Box)(() => ({
 export const ConnectCardStyle = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(2),
   paddingBottom: theme.spacing(2),
-  backgroundColor: "#F2F4F5",
+  backgroundColor: theme.palette.common.bgrMaster,
 
 }));
 

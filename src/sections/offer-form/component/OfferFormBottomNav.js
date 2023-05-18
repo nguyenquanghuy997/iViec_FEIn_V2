@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {useTheme} from "@mui/material/styles";
 
 function OfferFormBottomNav(props) {
   let {
@@ -25,6 +26,7 @@ function OfferFormBottomNav(props) {
     status,      // true if all item select is active = true,
   } = props;
   const [openDelete, setOpenDelete] = useState(false);
+  const theme = useTheme();
   const handleDeleteSubmit = () => {
     let ids = selectedList.map(item => item.id);
     onDelete(ids);
@@ -53,7 +55,7 @@ function OfferFormBottomNav(props) {
             {status ? (<>
               {
                 canEdit &&
-                <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}}
+                <IconButton size='small' sx={{color: theme.palette.blue700, mx: 0.5}}
                             onClick={() => handleShowActiveModal(selectedList[0])}>
                   <ActionSwitchCheckedIcon/>
                 </IconButton>
@@ -62,30 +64,30 @@ function OfferFormBottomNav(props) {
             </>) : (<>
               {
                 canEdit &&
-                <IconButton size='small' sx={{color: '#1976D2', mx: 0.5}}
+                <IconButton size='small' sx={{color: theme.palette.common.blue700, mx: 0.5}}
                             onClick={() => handleShowActiveModal(selectedList[0])}>
                   <ActionSwitchUnCheckedIcon/>
                 </IconButton>
               }
-              <Typography variant="body2" sx={{color: '#5C6A82', fontSize: 13}}>Không hoạt động</Typography>
+              <Typography variant="body2" sx={{color: theme.palette.common.borderObject, fontSize: 13}}>Không hoạt động</Typography>
             </>)}
           </>}
           {selectedList.length === 1 && canEdit && (<Box sx={{ml: 2}}>
-            <IconButton size='small' sx={{color: '#8A94A5', mx: 1}} onClick={() => handleOpenForm(selectedList[0])}>
+            <IconButton size='small' sx={{color: theme.palette.common.borderObject, mx: 1}} onClick={() => handleOpenForm(selectedList[0])}>
               <EditIcon/>
             </IconButton>
-            <IconButton size='small' sx={{color: '#1976D2', mx: 1}} onClick={() => setOpenDelete(true)}>
+            <IconButton size='small' sx={{color: theme.palette.common.blue700, mx: 1}} onClick={() => setOpenDelete(true)}>
               <DeleteIcon/>
             </IconButton>
           </Box>)}
           {selectedList.length > 1 && canEdit &&
-            <IconButton size='small' sx={{color: '#1976D2', mx: 2}} onClick={() => setOpenDelete(true)}>
+            <IconButton size='small' sx={{color: theme.palette.common.blue700, mx: 2}} onClick={() => setOpenDelete(true)}>
               <DeleteIcon/>
             </IconButton>}
         </Stack>
         <Box sx={{display: 'flex', alignItems: 'center'}}>
           <Typography sx={{fontSize: '14px', fontWeight: 500}}>Đã chọn: {selectedList.length}</Typography>
-          <Divider orientation="vertical" flexItem sx={{mx: 2, width: '2px', backgroundColor: '#E7E9ED'}}/>
+          <Divider orientation="vertical" flexItem sx={{mx: 2, width: '2px', backgroundColor: theme.palette.common.neutral100}}/>
           <IconButton size="medium" onClick={onClose}>
             <Iconify icon="ic:baseline-close"/>
           </IconButton>

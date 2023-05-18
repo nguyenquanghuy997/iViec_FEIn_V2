@@ -11,7 +11,11 @@ import useRole from "@/hooks/useRole";
 import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
 import {Box} from "@mui/material";
 import FormHeader from "@/sections/emailform/component/FormHeader";
-import {API_GET_ORGANIZATION_USERS, API_GET_ORGANIZATION_WITH_CHILD} from "@/routes/api";
+import {
+  API_GET_ORGANIZATION_USERS,
+  API_GET_ORGANIZATION_WITH_CHILD,
+  API_GET_RECRUITMENT_BY_ORGANIZATION
+} from "@/routes/api";
 import {LIST_STATUS} from "@/utils/formatString";
 
 
@@ -20,7 +24,7 @@ const columns = [
     dataIndex: "organizationName",
     title: "Đơn vị",
     colFilters: {
-      type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+      type: TBL_FILTER_TYPE.SELECT_TREE,
       name: "organizationIds",
       placeholder: "Chọn 1 hoặc nhiều đơn vị",
       remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
@@ -67,7 +71,7 @@ const columns = [
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
       name: "recruitmentIds",
       placeholder: "Chọn 1 hoặc nhiều tin tuyển dụng",
-      remoteUrl: API_GET_ORGANIZATION_USERS,
+      remoteUrl: API_GET_RECRUITMENT_BY_ORGANIZATION,
       showAvatar: true
     }
   },

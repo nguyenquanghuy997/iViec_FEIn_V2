@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {InputAdornment, TextField} from "@mui/material";
 import {LabelStyle} from "@/components/hook-form/style";
+import {useTheme} from "@mui/material/styles";
 
 const MuiTextField = forwardRef((props, ref) => {
     const { type, label, title, isRequired, value, variant, startIcon, endIcon, onChange, height = 44, multiline = false, sx, ...other } = props;
-
+    const  theme = useTheme();
     const sxProps = {
         "& .MuiInput-root": {
             border: "1px solid #D0D4DB",
@@ -19,7 +20,7 @@ const MuiTextField = forwardRef((props, ref) => {
             "&.Mui-focused": {
                 backgroundColor: "transparent",
                 boxShadow: "none",
-                borderColor: "#D0D4DB",
+                borderColor: theme.palette.common.neutral200,
             },
         },
         minWidth: "100px",

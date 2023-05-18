@@ -17,7 +17,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import {alpha, useTheme} from "@mui/material/styles";
 // next
 import NextLink from "next/link";
 import {useSnackbar} from "notistack";
@@ -32,7 +32,6 @@ const TypographyStyle = styled(Typography)(({ theme }) => ({
 export default function AccountPopover() {
   const { translate } = useLocales();
   const { logout, user } = useAuth();
-
   const MENU_OPTIONS = [
     {
       label: "Thông tin công ty",
@@ -46,6 +45,7 @@ export default function AccountPopover() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(null);
+  const theme = useTheme();
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -68,10 +68,10 @@ export default function AccountPopover() {
   return (
     <>
       <Stack justifyContent="flex-end" sx={{ textAlign: 'right' }}>
-        <TypographyStyle variant="subtitle2" noWrap sx={{ fontSize: 13, fontWeight: 700, color: '#E7E9ED' }}>
+        <TypographyStyle variant="subtitle2" noWrap sx={{ fontSize: 13, fontWeight: 700, color: theme.palette.common.neutral100 }}>
           {user && `${user?.lastName||''} ${user?.firstName}`}
         </TypographyStyle>
-        <TypographyStyle variant="body2" sx={{ fontSize: 12, fontWeight: 400, color: '#E7E9ED' }} noWrap>
+        <TypographyStyle variant="body2" sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.neutral100 }} noWrap>
           {user && user?.email}
         </TypographyStyle>
       </Stack>

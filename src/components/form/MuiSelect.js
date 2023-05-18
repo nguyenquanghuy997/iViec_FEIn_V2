@@ -320,10 +320,10 @@ const MuiSelect = forwardRef((
                 borderRadius: '6px'
             },
             "& ::-webkit-scrollbar-track": {
-                background: "#EFF3F6"
+                background: theme.palette.common.bgrObject
             },
             "& ::-webkit-scrollbar-thumb": {
-                background: "#B9BFC9"
+                background: theme.palette.common.neutral300
             },
             "& ::-webkit-scrollbar-thumb:hover": {
                 background: "#888"
@@ -488,7 +488,7 @@ const MuiSelect = forwardRef((
                             <Checkbox checked={value.includes(option.value)} icon={<CheckboxIconDefault />} checkedIcon={<CheckboxIconChecked/>} />
                         ) : (
                             value === option.value && (
-                                <RiCheckLine color="#1976D2" size={20} />
+                                <RiCheckLine color={theme.palette.common.blue700} size={20} />
                             )
                         )}
                     </MenuItem>

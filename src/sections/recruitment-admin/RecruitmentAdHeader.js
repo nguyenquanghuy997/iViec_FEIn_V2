@@ -4,7 +4,9 @@ import {FormProvider, RHFTextField} from "@/components/hook-form";
 import {InputAdornment, Stack} from "@mui/material";
 import {ButtonFilterStyle} from "@/sections/applicant/style";
 import {BoxFlex} from "@/sections/emailform/style";
+import {useTheme} from "@mui/material/styles";
 
+const theme = useTheme();
 const RecruitmentAdHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit}) => {
   return (
       <HeadingBar sx={{ mb: '28px', position: 'fixed', top: 8 }}>
@@ -16,7 +18,7 @@ const RecruitmentAdHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit
                   placeholder="Tìm kiếm theo tiêu đề tin tuyển dụng..."
                   sx={{
                     minWidth: '510px',
-                    background: '#F2F4F5',
+                    background: theme.palette.common.bgrMaster,
                     borderRadius: '6px',
                     '.MuiInput-root':{
                        border: 'none'

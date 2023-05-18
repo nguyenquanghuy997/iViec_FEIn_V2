@@ -144,7 +144,10 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
                                 </span>
                                 {" đã "}
                                 <span
-                                  style={{ fontWeight: 600, color: "#E53935" }}
+                                  style={{
+                                    fontWeight: 600,
+                                    color: theme.palette.common.red600,
+                                  }}
                                 >
                                   {" Loại "}
                                 </span>
@@ -192,7 +195,7 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
                                       p?.recruitmentPipelineStateType == 3 &&
                                       (p?.pipelineStateResultType == 0
                                         ? "#388E3C"
-                                        : "#F77A0C"),
+                                        : theme.palette.common.orange700),
                                   }}
                                 >
                                   {PipelineStateType(
@@ -270,8 +273,8 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
                                     (p?.applicantReviewResultType == 0
                                       ? "#388E3C"
                                       : p?.applicantReviewResultType == 1
-                                      ? "#F77A0C"
-                                      : "#E53935"),
+                                      ? theme.palette.common.orange700
+                                      : theme.palette.common.red600),
                                 }}
                               >
                                 {PipelineStateType(

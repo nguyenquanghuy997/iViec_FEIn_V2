@@ -148,6 +148,11 @@ const ApplicantTransferPipelineModal = ({
             <div style={{ color: "#172B4D", fontWeight: 600 }}>Chuyển bước</div>
           )}
 
+          <div
+            style={{ color: theme.palette.common.neutral800, fontWeight: 600 }}
+          >
+            Chuyển bước
+          </div>
           <div>
             <ButtonIcon
               onClick={() => setShowConfirmMultiple(false)}
@@ -156,7 +161,7 @@ const ApplicantTransferPipelineModal = ({
                   width={20}
                   height={20}
                   icon="ic:baseline-close"
-                  color="#455570"
+                  color={theme.palette.common.neutral700}
                 />
               }
             />

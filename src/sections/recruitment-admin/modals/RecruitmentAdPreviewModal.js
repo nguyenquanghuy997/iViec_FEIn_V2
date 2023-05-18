@@ -23,18 +23,19 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import React from "react";
+import {useTheme} from "@mui/material/styles";
 
-const BoxSummary = styled(Box)(() => ({
+const BoxSummary = styled(Box)(({theme}) => ({
   display: "flex",
   alignItems: "center",
   // minWidth: "282.33px",
   marginBottom: "24px",
   "& .MuiIconButton-root": {
-    backgroundColor: "#F2F4F5",
+    backgroundColor: theme.palette.common.bgrMaster,
     marginRight: "12px",
   },
   "& .title-summary": {
-    color: "#5C6A82",
+    color: theme.palette.common.borderObject,
     fontWeight: "500",
     fontSize: "13px",
     lineHeight: "20px",
@@ -45,10 +46,10 @@ const BoxSummary = styled(Box)(() => ({
     fontSize: "12px",
     lineHeight: "20px",
     alignText: "stretch",
-    color: "#172B4D",
+    color: theme.palette.common.neutral800,
   },
 }));
-const BoxDetail = styled(Box)(() => {
+const BoxDetail = styled(Box)(({theme}) => {
   return {
     marginTop: "4px",
     marginBottom: "32px",
@@ -56,13 +57,13 @@ const BoxDetail = styled(Box)(() => {
       fontSize: "16px",
       fontWeight: 600,
       lineHeight: "26px",
-      color: "#172B4D",
+      color: theme.palette.common.neutral800,
     },
     "& .typoContent": {
       fontSize: "14px",
       fontWeight: 400,
       lineHeight: "24px",
-      color: "#455570",
+      color: theme.palette.common.neutral700,
       whiteSpace: "pre-line",
     },
   };
@@ -139,6 +140,7 @@ const RecruitmentAdPreviewModal = ({
       currencyFormat(maxSalary, currencyUnit, true, options)
     );
   };
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const [internalApprovalRecruitments] =
     useAddInternalApprovalRecruitmentsMutation();
@@ -172,7 +174,7 @@ const RecruitmentAdPreviewModal = ({
         <HeaderPreviewStyle className="form-head">
           <Typography
             variant="body1"
-            sx={{ fontSize: "16px", fontWeight: 600, color: "#172B4D" }}
+            sx={{ fontSize: "16px", fontWeight: 600, color: theme.palette.common.neutral800 }}
           >
             Xem chi tiết tin tuyển dụng
           </Typography>
@@ -221,7 +223,7 @@ const RecruitmentAdPreviewModal = ({
                       icon={"ph:currency-circle-dollar"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />,
                     "Mức lương",
                     renderSalary(recruitment, true)
@@ -233,7 +235,7 @@ const RecruitmentAdPreviewModal = ({
                       icon={"icon-park-outline:handbag"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />,
                     "Ngành nghề",
                     recruitmentJobCategories
@@ -248,7 +250,7 @@ const RecruitmentAdPreviewModal = ({
                       icon={"ph:currency-circle-dollar"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />,
 
                     "Hình thứ làm việc",
@@ -267,7 +269,7 @@ const RecruitmentAdPreviewModal = ({
                       icon={"akar-icons:people-group"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />,
                     "Số lượng tuyển",
                     recruitment?.numberPosition
@@ -279,7 +281,7 @@ const RecruitmentAdPreviewModal = ({
                       icon={"carbon:location"}
                       width={20}
                       height={20}
-                      color="#5C6A82"
+                      color={theme.palette.common.borderObject}
                     />,
                     "Địa điểm làm việc",
                     `${recruitment?.address}`

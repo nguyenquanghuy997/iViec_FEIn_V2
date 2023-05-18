@@ -7,6 +7,9 @@ import { JobTypeFormModal } from "@/sections/jobtype";
 import { InputAdornment, Stack } from "@mui/material";
 import { useState } from "react";
 
+import {useTheme} from "@mui/material/styles";
+
+
 const JobTypeHeader = ({
   methods,
   onOpenFilterForm,
@@ -14,6 +17,7 @@ const JobTypeHeader = ({
   handleSubmit,
 }) => {
   const [showForm, setShowForm] = useState(false);
+  const theme = useTheme();
   return (
     <>
       <Stack
@@ -31,7 +35,7 @@ const JobTypeHeader = ({
               sx={{
                 minWidth: "360px",
                 borderRadius: '6px',
-                background: '#F2F4F5',
+                background: theme.palette.common.bgrMaster,
                 height: "36px",
                 ".MuiInput-root": {
                   height: "36px",
@@ -44,7 +48,7 @@ const JobTypeHeader = ({
                   <InputAdornment position="start" sx={{ ml: 0.5, mr:0 }}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
+                      sx={{ color: theme.palette.common.borderObject, width: 20, height: 20 }}
                     />
                   </InputAdornment>
                 ),
@@ -77,7 +81,7 @@ const JobTypeHeader = ({
               icon={"material-symbols:add"}
               width={20}
               height={20}
-              color="#fff"
+              color={theme.palette.background.paper}
               mr={1}
             />
           }

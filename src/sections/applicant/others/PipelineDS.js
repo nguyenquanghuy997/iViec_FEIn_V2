@@ -5,11 +5,13 @@ import StepConnector, {
 } from "@mui/material/StepConnector";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import { styled } from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import PropTypes from "prop-types";
 import * as React from "react";
 
-const ColorlibConnector = styled(StepConnector)(() => ({
+
+
+const ColorlibConnector = styled(StepConnector)(({theme}) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
     left: "calc(-50% + 30px)",
@@ -17,18 +19,18 @@ const ColorlibConnector = styled(StepConnector)(() => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundColor: "#43A047",
-      border: "1px solid #43A047",
+      backgroundColor: theme.palette.common.green600,
+      border: "1px solid " + theme.palette.common.green600,
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      border: "1px solid #43A047",
-      backgroundColor: "#43A047",
+      border: "1px solid " + theme.palette.common.green600,
+      backgroundColor: theme.palette.common.green600,
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
-    border: "1px dashed #8A94A5",
+    border: "1px dashed " + theme.palette.common.neutral500,
   },
 }));
 
@@ -77,8 +79,9 @@ ColorlibStepIcon.propTypes = {
 
 export const PipelineApplicant = (props) => {
   const { steps } = props;
+  const theme = useTheme();
   const activeStep = steps?.recruitmentPipelineStates.findIndex(
-    (i) => i.id == steps.currentApplicantPipelineState
+    (i) => i.id === steps.currentApplicantPipelineState
   );
   const renderName = (item) => {
     switch (item) {
@@ -119,18 +122,18 @@ export const PipelineApplicant = (props) => {
             marginTop: "7px",
           },
           ".MuiSvgIcon-root:not(.Mui-completed)": {
-            color: "#F3F4F6",
+            color: theme.palette.common.neutral50 ,
           },
           ".MuiStepIcon-text": {
-            fill: "#8A94A5",
+            fill: theme.palette.common.neutral500,
             fontWeight: 600,
             fontSize: "12px",
           },
           ".MuiStepLabel-label": {
-            color: "#8A94A5",
+            color: theme.palette.common.neutral500,
           },
           ".MuiStepLabel-label.Mui-completed": {
-            color: "#455570",
+            color: theme.palette.common.neutral700,
           },
           ".Mui-active .MuiStepIcon-text": {
             fill: "white",
@@ -157,10 +160,10 @@ export const PipelineApplicant = (props) => {
                       steps.pipelineStateResultType === 0
                         ? "#388E3C !important"
                         : steps.pipelineStateResultType === 1
-                        ? "#FF9800 !important"
+                        ? theme.palette.common.orange500 +  " !important"
                         : steps.pipelineStateResultType === 2
                         ? "#D32F2F !important"
-                        : "#1976D2 !important",
+                        : theme.palette.common.blue700 +  "!important",
                     borderRadius: "50%",
                     width: 32,
                     height: 32,
@@ -171,10 +174,10 @@ export const PipelineApplicant = (props) => {
                       steps.pipelineStateResultType === 0
                         ? "#2E7D32"
                         : steps.pipelineStateResultType === 1
-                        ? "#FF9800"
+                        ? theme.palette.common.orange500
                         : steps.pipelineStateResultType === 2
                         ? "#D32F2F"
-                        : "#1976D2",
+                        : theme.palette.common.blue700 ,
                   },
                 }}
               >

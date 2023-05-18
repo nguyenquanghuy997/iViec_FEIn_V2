@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import React, { memo, useEffect, useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const MenuProps = {
   PaperProps: {
@@ -76,7 +77,7 @@ function SelectCouncils({ name, ...props }) {
   const { remove } = useFieldArray({ control, name });
   const [searchText, setSearchText] = useState("");
   const [filterOptions, setFilterOptions] = useState([]);
-
+  const theme = useTheme();
   const renderChipsSelect = (options, value, remove) => {
     return (
       <Stack flexDirection="row" flexWrap="wrap" justifyContent="flex-start">
@@ -87,7 +88,7 @@ function SelectCouncils({ name, ...props }) {
               key={item.id}
               sx={{
                 p: 2,
-                background: "#F2F4F5",
+                background: theme.palette.common.bgrMaster,
                 mb: 2,
                 borderRadius: "6px",
               }}
@@ -123,7 +124,7 @@ function SelectCouncils({ name, ...props }) {
                       {item?.name}
                     </Typography>
                     <Typography
-                      color="#455570"
+                      color={theme.palette.common.neutral700}
                       sx={{ fontSize: "12px", fontWeight: "400" }}
                     >
                       {item?.mail}
@@ -183,7 +184,7 @@ function SelectCouncils({ name, ...props }) {
                     sx={{
                       width: "100%",
                       textTransform: "none",
-                      color: "#1976D2",
+                      color: theme.palette.common.blue700,
                       "&:hover": {
                         bgcolor: "white",
                       },

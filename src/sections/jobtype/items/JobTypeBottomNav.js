@@ -15,6 +15,7 @@ import { checkSameValue } from "@/utils/formatString";
 import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useMemo } from "react";
+import {useTheme} from "@mui/material/styles";
 
 const JobTypeBottomNav = ({
   selectedList,
@@ -26,7 +27,7 @@ const JobTypeBottomNav = ({
 }) => {
   const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
   const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
-
+  const  theme = useTheme();
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
     setselectedList([]);
@@ -110,7 +111,7 @@ const JobTypeBottomNav = ({
 
                     <Typography
                       variant="body2"
-                      sx={{ color: "#5C6A82", fontSize: 13 }}
+                      sx={{ color: theme.palette.common.borderObject, fontSize: 13 }}
                     >
                       Không hoạt động
                     </Typography>
@@ -129,7 +130,7 @@ const JobTypeBottomNav = ({
                     icon={"ri:edit-2-fill"}
                     width={20}
                     height={20}
-                    color="#5C6A82"
+                    color={theme.palette.common.borderObject}
                   />
                 }
               />
@@ -158,7 +159,7 @@ const JobTypeBottomNav = ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
+              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
             />
             <ButtonIcon
               sx={{
@@ -170,7 +171,7 @@ const JobTypeBottomNav = ({
                   icon={"ic:baseline-close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />

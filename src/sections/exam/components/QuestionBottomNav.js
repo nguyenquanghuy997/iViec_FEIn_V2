@@ -14,6 +14,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import {useTheme} from "@mui/material/styles";
 
 export default ({
   list,
@@ -28,7 +29,7 @@ export default ({
   const firstActiveStatus = list.find(
     (i) => i.id === listSelected[0]
   )?.isActive;
-
+const  theme = useTheme();
   const showSwitchActive = !list.some(
     (i) => listSelected.includes(i.id) && i.isActive !== firstActiveStatus
   );
@@ -60,7 +61,7 @@ export default ({
               <>
                 <IconButton
                   size="small"
-                  sx={{ color: "#1976D2", mx: 0.5 }}
+                  sx={{ color: theme.palette.common.blue200, mx: 0.5 }}
                   onClick={() => setShowConfirmSwitchActive(true)}
                 >
                   {firstActiveStatus ? (
@@ -72,7 +73,7 @@ export default ({
                 <Typography
                   variant="body2"
                   sx={{
-                    color: firstActiveStatus ? "#388E3C" : "#5C6A82",
+                    color: firstActiveStatus ? "#388E3C" : theme.palette.common.borderObject,
                     fontSize: 13,
                   }}
                 >
@@ -85,7 +86,7 @@ export default ({
               {showEdit && (
                 <IconButton
                   size="small"
-                  sx={{ color: "#8A94A5", mx: 1 }}
+                  sx={{ color: theme.palette.common.neutral500, mx: 1 }}
                   onClick={() => setShowForm(true)}
                 >
                   <EditIcon />
@@ -94,14 +95,14 @@ export default ({
 
               <IconButton
                 size="small"
-                sx={{ color: "#8A94A5", mx: 1 }}
+                sx={{ color: theme.palette.common.neutral500, mx: 1 }}
                 onClick={() => setShowTransferQuestionGroup()}
               >
                 <Iconify
                   icon={"ri:share-forward-2-fill"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               </IconButton>
 
@@ -117,7 +118,7 @@ export default ({
 
               <IconButton
                 size="small"
-                sx={{ color: "#1976D2", mx: 1 }}
+                sx={{ color: theme.palette.common.blue700, mx: 1 }}
                 onClick={() => setShowConfirmDelete(true)}
               >
                 <DeleteIcon />
@@ -129,7 +130,7 @@ export default ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
+              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
             />
             <IconButton size="medium" onClick={onClose}>
               <Iconify icon="ic:baseline-close" />

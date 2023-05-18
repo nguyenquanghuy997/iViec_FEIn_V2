@@ -10,7 +10,7 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
         border: '1px solid #D0D4DB',
         borderTop: theme.spacing(0),
         borderRadius: '0 !important',
-        backgroundColor: '#FDFDFD'
+        backgroundColor: theme.palette.common.white
     },
     "& .MuiAutocomplete-listbox": {
         padding: 0,
@@ -28,10 +28,10 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
             borderWidth: 0
         },
         "&[aria-selected='true']": {
-            backgroundColor: '#F2F4F5 !important'
+            backgroundColor: theme.palette.common.bgrMaster +'!important'
         },
         "&:hover": {
-            backgroundColor: '#F2F4F5 !important'
+            backgroundColor: theme.palette.common.bgrMaster + ' !important'
         }
     },
     "& ::-webkit-scrollbar": {
@@ -39,10 +39,10 @@ const PaperAutocompleteStyle = styled(Paper)(({theme}) => ({
         borderRadius: '6px'
     },
     "& ::-webkit-scrollbar-track": {
-        background: "#EFF3F6"
+        background: theme.palette.common.bgrObject
     },
     "& ::-webkit-scrollbar-thumb": {
-        background: "#B9BFC9"
+        background: theme.palette.common.neutral300
     },
     "& ::-webkit-scrollbar-thumb:hover": {
         background: "#888"

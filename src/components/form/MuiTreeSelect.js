@@ -192,12 +192,12 @@ const MuiTreeSelect = forwardRef((
     '.MuiList-root': {
       paddingTop: 0,
       paddingBottom: 0,
-      backgroundColor: '#fff',
+      backgroundColor: theme.palette.background.paper,
       '.select-list-options': {
         maxHeight: 320,
         overflow: 'auto',
       }
-    },
+    },      
     '.MuiPaper-root': {
       borderRadius: '6px',
       boxShadow: '0px 0px 5px rgba(9, 30, 66, 0.3)!important',

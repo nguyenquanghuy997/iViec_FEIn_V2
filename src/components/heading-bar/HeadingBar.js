@@ -5,7 +5,7 @@ import React from "react";
 const HeadingBarStyle = styled("div")(({ theme }) => ({
   width: "100%",
   boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-  backgroundColor: "#FDFDFD",
+  backgroundColor: theme.palette.common.white,
   padding: theme.spacing(3, 0),
   position: 'fixed',
   left: 0,
@@ -24,7 +24,7 @@ const HeadingBarInnerStyle = styled("div")(({ theme }) => ({
     position: 'absolute',
     right: 0,
     bottom: -40,
-    border: '1px solid #E7E9ED',
+    border: '1px solid ' + theme.palette.common.neutral100,
     boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
     borderRadius: '50%',
     padding: 0

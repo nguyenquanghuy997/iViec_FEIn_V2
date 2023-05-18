@@ -2,6 +2,7 @@ import useLocales from "@/hooks/useLocales";
 import { makeStyles } from "@mui/styles";
 import PropTypes from "prop-types";
 import { cloneElement } from "react";
+import palette from "@/theme/palette";
 
 const StyledProps = {
   //
@@ -228,7 +229,7 @@ const useStyles = makeStyles(() => ({
       marginRight: "3px",
     },
     "&::-webkit-scrollbar-thumb": {
-      background: "#B9BFC9",
+      background: palette.light.common.neutral300,
       borderRadius: "30px",
       marginRight: "3px",
     },

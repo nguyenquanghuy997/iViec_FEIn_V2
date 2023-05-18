@@ -15,7 +15,8 @@ import PreviewEmail from "@/sections/emailform/component/PreviewEmail";
 import { ViewModel } from "@/utils/cssStyles";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import {
-  useGetAllOfferTemplateQuery, useGetInfoDataOfferQuery,
+  useGetAllOfferTemplateQuery,
+  useGetInfoDataOfferQuery,
   useLazyGetPreviewOfferTemplateQuery,
   useSendOfferTemplateMutation,
   useUploadImageOfferMutation
@@ -42,7 +43,7 @@ const defaultValues = {
   signatureContent: undefined,
   isDefaultSignature: undefined,
   isActive: undefined,
-  templateAttachFiles: undefined,
+  offerTemplateApplicantAttachFiles: undefined,
 };
 
 const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
@@ -63,42 +64,41 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
     const newFileList = [...fileList].filter((item, idx) => idx !== index);
     setFileList(newFileList);
   }
-  
+
   const Schema = Yup.object().shape({
     offerTemplateId: Yup.string().required("Chưa chọn mẫu thư mời nhận việc có sẵn"),
     recruitmentId: Yup.string(),
     applicantId: Yup.string(),
     applicantEmail: Yup.string(),
-    cc: Yup.array().of(Yup.string()),
-    bcc: Yup.array().of(Yup.string()),
+    cc: Yup.array(),
+    bcc: Yup.array(),
     title: Yup.string().required("Tiêu đề mail không được bỏ trống"),
     content: Yup.string().required("Nội dung mail không được bỏ trống"),
     signatureLogo: Yup.string().required("Logo chữ ký không được bỏ trống"),
     signatureContent: Yup.string().required("Nội dung chữ ký không được bỏ trống"),
     isDefaultSignature: Yup.boolean(),
     isActive: Yup.boolean(),
-    templateAttachFiles: Yup.array().of(Yup.string()),
+    offerTemplateApplicantAttachFiles: Yup.array().of(Yup.string()),
   });
-  
+
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  
+
   const {watch, setValue, handleSubmit, formState: {isSubmitting, errors}} = methods;
-  
   useEffect(() => {
     if (!item?.applicantId) return;
     setValue("applicantId", item.applicantId);
     setValue("applicantEmail", item.applicantEmail);
     setValue("recruitmentId", item.recruitmentId);
   }, [item]);
-  
+
   useEffect(async () => {
     if (!watch("offerTemplateId")) return;
     await getDataOffer({id: watch("offerTemplateId")}).unwrap();
   }, [watch("offerTemplateId")])
-  
+
   useEffect(() => {
     if (Data && dataInfo) {
       setValue("title", Data.title);
@@ -108,19 +108,19 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
       setFileList(Data.templateAttachFiles);
     }
   }, [Data, dataInfo])
-  
+
   const handleOpenPreviewEmail = () => {
     setIsOpenPreview(true);
   };
-  
+
   const handleClosePreviewEmail = () => {
     setIsOpenPreview(false);
   }
-  
+
   const handleSetSignatureLogo = (e) => {
     setValue("signatureLogo", e.fileTemplates[0].path);
   };
-  
+
   const pressSave = async (body, action) => {
     if (fileList.length > 0) {
       const file = new FormData();
@@ -129,9 +129,16 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
         file.append("Files", item);
       });
       const fileResult = file.has("Files") ? await uploadFiles(file).unwrap() : {fileTemplates: []};
-      body.templateAttachFiles = fileResult.fileTemplates.concat(fileList.filter(item => item.id));
+      body.offerTemplateApplicantAttachFiles = fileResult.fileTemplates.concat(fileList.filter(item => item.id));
     }
-    body.IsSendMail = action;
+    body.isSendMail = action;
+    body.bcc = body.bcc?.map(item => item.value ? item.value : item);
+    body.cc = body.cc?.map(item => item.value ? item.value : item);
+    body.contents = [
+      body.content,
+      getFileUrl(body.signatureLogo),
+      body.signatureContent
+    ];
     await addForm(body).unwrap().then(() => {
       enqueueSnackbar("Thực hiện thành công!", {
         autoHideDuration: 2000,
@@ -144,7 +151,7 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
       });
     });
   };
-  
+
   return (
     <>
       <FormProvider {...methods}>
@@ -239,7 +246,6 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
                       options={dataPersons.map((i) => ({
                         value: i.email,
                         label: i.email,
-                        name: i.email,
                       }))}
                       name="cc"
                       title="Cc"
@@ -253,7 +259,6 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
                       options={dataPersons.map((i) => ({
                         value: i.email,
                         label: i.email,
-                        name: i.email,
                       }))}
                       name="bcc"
                       title="BCC"
@@ -277,15 +282,19 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
                     <Box display={"flex"} sx={{overflowX: 'auto'}}>
                       {!isEmpty(fileList) && fileList.map((file, index) => renderFileUploadItem(file, index, removeFileUpload))}
                     </Box>
-                    <RHFEmailEditor
-                      name="content"
-                      placeholder="Nhập nội dung email..."
-                      showPreview
-                      showUploadFile={true}
-                      handleFileChange={handleFileChange}
-                      onOpenPreview={handleOpenPreviewEmail}
-                      sx={{width: '752px', minHeight: '370px'}}
-                    />
+                    {dataInfo &&
+                      <RHFEmailEditor
+                        name="content"
+                        placeholder="Nhập nội dung email..."
+                        showPreview
+                        dataTagShow={true}
+                        dataTag={dataInfo}
+                        showUploadFile={true}
+                        handleFileChange={handleFileChange}
+                        onOpenPreview={handleOpenPreviewEmail}
+                        sx={{width: '752px', minHeight: '370px'}}
+                      />
+                    }
                   </Grid>
                   <Grid mb={3}>
                     <Box display={"flex"} mb={2} justifyContent={"space-between"} alignItems={"center"}>
@@ -307,11 +316,15 @@ const ApplicantSendOfferModal = ({isOpen, onClose, item, title}) => {
                         }
                       </Stack>
                       <Box flex={1} pl={2}>
-                        <RHFEmailEditor
-                          name="signatureContent"
-                          placeholder="Nhập nội dung email..."
-                          sx={{minHeight: '230px'}}
-                        />
+                        {dataInfo &&
+                          <RHFEmailEditor
+                            name="signatureContent"
+                            placeholder="Nhập nội dung email..."
+                            sx={{minHeight: '230px'}}
+                            dataTagShow={true}
+                            dataTag={dataInfo}
+                          />
+                        }
                       </Box>
                     </Box>
                   </Grid>

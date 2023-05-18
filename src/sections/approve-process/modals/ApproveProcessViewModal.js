@@ -8,11 +8,12 @@ import React from "react";
 import {ButtonCancelStyle} from "@/sections/applicant/style";
 import AvatarDS from "../../../components/DesignSystem/AvatarDS";
 import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
+import {useTheme} from "@mui/material/styles";
 
 export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}) => {
   const {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id || !show});
   const isLoading = !preview.id;
-
+  const theme = useTheme();
   // action
   const pressHide = () => {
     setShow(false);
@@ -47,7 +48,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
           atcenter="center"
           pv={12}
           ph={24}
-          bgcolor={"#FDFDFD"}
+          bgcolor={theme.palette.common.white}
         >
           <Text flex="true" fontsize={16} fontweight={"600"}>
             Xem {title.toLowerCase()}
@@ -55,7 +56,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
           <ButtonDS
             type="submit"
             sx={{
-              backgroundColor: "#fff",
+              backgroundColor: theme.palette.background.paper,
               boxShadow: "none",
               ":hover": {
                 backgroundColor: "#EFF3F7",
@@ -70,7 +71,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                 icon={"mi:close"}
                 width={20}
                 height={20}
-                color="#5C6A82"
+                color={theme.palette.common.borderObject}
               />
             }
           />
@@ -84,7 +85,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
         ) : (
           (
             <View flex="true" p={24} pb={28} style={{overflowY: "scroll"}}>
-              <Typography variant={"h3"} color={"#172B4D"}>
+              <Typography variant={"h3"} color={theme.palette.common.neutral800}>
                 {preview.name}
               </Typography>
               <Grid mt={3} container direction="row" justifyContent="flex-start"
@@ -95,7 +96,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                 </Grid>
               </Grid>
               <Divider sx={{my: 3}}/>
-              <Typography variant={"subtitle1"} color={"#455570"} mb={2}>
+              <Typography variant={"subtitle1"} color={theme.palette.common.neutral700} mb={2}>
                 Cán bộ phê duyệt
               </Typography>
               {preview.approvalProcessLevels.map((item, index) => {
@@ -104,17 +105,17 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                     padding: 16,
                     marginBottom: 24,
                     borderRadius: 6,
-                    backgroundColor: "#F2F4F5"
+                    backgroundColor: theme.palette.common.bgrMaster
                   }}
                   key={item.id}>
                   <Grid container direction="row" justifyContent="space-between" alignItems="center">
                     <Grid item>
-                      <Typography variant={"subtitle1"} color={"#455570"}>
+                      <Typography variant={"subtitle1"} color={theme.palette.common.neutral700}>
                         Cấp {index + 1}
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant={"textSize13500"} color={"#455570"}>
+                      <Typography variant={"textSize13500"} color={theme.palette.common.neutral700}>
                         Đã
                         chọn {mapResult(item?.approvalProcessLevelDetails).filter(x => x !== undefined).length}
                       </Typography>
@@ -122,7 +123,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                     <Grid mb={"10px"} mt={"10px"} container direction="row" justifyContent="flex-start"
                           alignItems="baseline">
                       <Grid item pr={1}>
-                        <Typography variant={"textSize13500"} color={"#455570"}>
+                        <Typography variant={"textSize13500"} color={theme.palette.common.neutral700}>
                           Vai trò:
                         </Typography>
                       </Grid>
@@ -130,7 +131,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                         {item?.approvalProcessLevelDetails.map((itemRole, index) => {
                           if (itemRole.processLevelDetailType === 0)
                             return (<Typography key={itemRole.id} variant={"subtitle2"}
-                                                mb={1} color={"#455570"}>
+                                                mb={1} color={theme.palette.common.neutral700}>
                               {itemRole.roleGroupName} ({itemRole.processLevelDetailPersonInCharges.length}) {(index + 1) < item?.approvalProcessLevelDetails.length ? "," : ""}
                             </Typography>)
                         })}
@@ -139,7 +140,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                     <Grid mb={1} container direction="column" justifyContent="flex-start"
                           alignItems="baseline">
                       <Grid item pr={1} mb={"10px"}>
-                        <Typography variant={"textSize13500"} color={"#455570"}>
+                        <Typography variant={"textSize13500"} color={theme.palette.common.neutral700}>
                           Cán bộ:
                         </Typography>
                       </Grid>
@@ -165,13 +166,13 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                                     <Grid item container direction={"column"} sx={{overflowWrap: "anywhere"}}>
                                       <Grid item>
                                         <Typography variant={"subtitle2"}
-                                                    color={"#172B4D"}>
+                                                    color={theme.palette.common.neutral800}>
                                           {itemUser?.personInChargeName}
                                         </Typography>
                                       </Grid>
                                       <Grid item>
                                         <Typography variant={"caption"}
-                                                    color={"#172B4D"}>
+                                                    color={theme.palette.common.neutral800}>
                                           {itemUser?.personInChargeEmail}
                                         </Typography>
                                       </Grid>
@@ -191,7 +192,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                                     }}/>
                                   <Typography
                                     variant={"textSize13500"}
-                                    color={"#455570"}>
+                                    color={theme.palette.common.neutral700}>
                                     {itemUser?.personInChargeName}
                                   </Typography>
                                 </Grid>

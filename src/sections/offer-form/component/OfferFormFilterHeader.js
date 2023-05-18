@@ -16,6 +16,7 @@ const OfferFormFilterHeader = ({methods, handleFilterForm, onSubmitFilter, onOpe
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_OFFER_TPL), []);
   const _timeoutSearch = useRef();
   const {palette} = useTheme();
+  const theme = useTheme()
   const onSubmit = (value, timeout = 0) => {
     clearTimeout(_timeoutSearch.current);
     _timeoutSearch.current = setTimeout(() => {
@@ -36,7 +37,7 @@ const OfferFormFilterHeader = ({methods, handleFilterForm, onSubmitFilter, onOpe
         display: 'flex',
         alignItems: "center",
         justifyContent: "space-between",
-        backgroundColor: '#FDFDFD',
+        backgroundColor: theme.palette.common.white ,
         padding: '16px',
         marginBottom: 3
       }}>
@@ -61,7 +62,7 @@ const OfferFormFilterHeader = ({methods, handleFilterForm, onSubmitFilter, onOpe
                   <InputAdornment position="start" sx={{ml: 0.5, mr: 0}}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{color: "#5C6A82", width: 20, height: 20}}
+                      sx={{color: theme.palette.common.borderObject, width: 20, height: 20}}
                     />
                   </InputAdornment>
                 ),

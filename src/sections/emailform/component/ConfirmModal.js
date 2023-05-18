@@ -12,11 +12,12 @@ import {AlertIcon} from "@/sections/organization/component/Icon";
 import {styled} from "@mui/styles";
 import DialogTitle from "@/sections/organization/component/OrganizationDialogTitle";
 
+
 const DialogStyle = styled(Dialog)(({theme}) => ({
   "& .dialog-delete": {
     boxShadow: ' 0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
     borderRadius: '6px',
-    backgroundColor: "#FDFDFD",
+    backgroundColor: theme.palette.common.white,
     padding: theme.spacing(3)
   },
   "& .MuiDialog-container": {
@@ -29,13 +30,14 @@ const DialogStyle = styled(Dialog)(({theme}) => ({
     },
   },
 }))
+
 const TitleAlertStyle = styled(Typography)(({theme}) => ({
   "&.title-delete": {
     textAlign: 'center',
     width: '100%',
     fontSize: '16px',
     fontWeight: 600,
-    color: '#E53935',
+    color: theme.palette.common.red600,
     marginTop: theme.spacing(2),
   }
 }))
@@ -55,28 +57,28 @@ const DialogContentTextStyle = styled(DialogContentText)(({theme}) => ({
   }
 }))
 
-const ButtonCancelStyle = styled(Button)(() => ({
+const ButtonCancelStyle = styled(Button)(({theme}) => ({
   "&.button-cancel": {
     fontSize: 14,
     fontWeight: 600,
-    color: '#455570',
+    color: theme.palette.common.neutral700,
     backgroundColor: 'transparent',
     borderRadius: 6,
     "&:hover": {
-      color: '#455570',
+      color: theme.palette.common.neutral700,
       backgroundColor: 'transparent',
     }
   }
 }));
-const ButtonDeleteStyle = styled(Button)(() => ({
+const ButtonDeleteStyle = styled(Button)(({theme}) => ({
   "&.button-delete": {
     fontSize: 14,
     fontWeight: 600,
-    color: '#FDFDFD',
+    color: theme.palette.common.white,
     backgroundColor: '#D32F2F',
     borderRadius: 6,
     "&:hover": {
-      color: '#FDFDFD',
+      color: theme.palette.common.white,
       backgroundColor: '#D32F2F',
     }
   }

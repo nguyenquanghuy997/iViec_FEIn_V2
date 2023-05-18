@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
+import {useTheme} from "@mui/material/styles";
 
 const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
   ssr: false,
@@ -31,7 +32,7 @@ const defaultValues = {
 };
 export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => {
   const isEditMode = !!data?.id;
-
+  const theme = useTheme();
   const [description, setDescription] = useState(null);
   const [requirement, setRequirement] = useState(null);
   const [benefit, setBenefit] = useState(null);
@@ -170,7 +171,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
             atcenter="center"
             pv={12}
             ph={24}
-            bgcolor={"#FDFDFD"}
+            bgcolor={theme.palette.common.white}
           >
             <Text flex="true" fontsize={16} fontweight={"600"}>
               {isEditMode
@@ -180,7 +181,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
             <ButtonDS
               type="submit"
               sx={{
-                backgroundColor: "#fff",
+                backgroundColor: theme.palette.common.white,
                 boxShadow: "none",
                 ":hover": {
                   backgroundColor: "#EFF3F7",
@@ -195,7 +196,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
                   icon={"mi:close"}
                   width={20}
                   height={20}
-                  color="#5C6A82"
+                  color={theme.palette.common.borderObject}
                 />
               }
             />

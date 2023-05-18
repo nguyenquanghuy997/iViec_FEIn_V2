@@ -26,6 +26,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useMemo } from "react";
+import {useTheme} from "@mui/material/styles";
+
 
 const EvaluationItemBlock = ({
   // isCheckbox,
@@ -37,7 +39,7 @@ const EvaluationItemBlock = ({
   item,
   onOpenModel,
 }) => {
-
+  const  theme = useTheme();
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EVA_TPL), []);
 
@@ -57,7 +59,7 @@ const EvaluationItemBlock = ({
                 icon="material-symbols:keyboard-arrow-down-sharp"
                 width={18}
                 height={18}
-                color="#455570"
+                color={theme.palette.common.neutral700}
               />
             }
           />
@@ -101,7 +103,7 @@ const EvaluationItemBlock = ({
           )}
           {!item.isActive && (
             <Typography
-              sx={{ color: "#5C6A82", fontSize: 12, fontWeight: 500, mr: 6 }}
+              sx={{ color: theme.palette.common.neutral600, fontSize: 12, fontWeight: 500, mr: 6 }}
             >
               Không hoạt động
             </Typography>
@@ -160,7 +162,7 @@ const EvaluationItemBlock = ({
                           icon={"ri:edit-2-fill"}
                           width={16}
                           height={16}
-                          color="#5C6A82"
+                          color={theme.palette.common.neutral600}
                         />
                       </IconButton>
                     </Tooltip>
@@ -172,7 +174,7 @@ const EvaluationItemBlock = ({
                           icon={"material-symbols:delete-outline-rounded"}
                           width={16}
                           height={16}
-                          color="#5C6A82"
+                          color={theme.palette.common.neutral600}
                         />
                       </IconButton>
                     </Tooltip>
@@ -185,7 +187,7 @@ const EvaluationItemBlock = ({
       </AccordionSummary>
       <AccordionDetails sx={{ mt: "12px !important" }}>
         <Divider />
-        <Typography fontWeight={600} fontSize={14} color={"#172B4D"} mt={2.5}>
+        <Typography fontWeight={600} fontSize={14} color={theme.palette.common.neutral800} mt={2.5}>
           Tiêu chí đánh giá
         </Typography>
         <BoxFlex>
@@ -194,7 +196,7 @@ const EvaluationItemBlock = ({
               <Box
                 key={index}
                 sx={{
-                  background: "#F2F4F5",
+                  background: theme.palette.common.bgrMaster,
                   borderRadius: "6px",
                   width: "49%",
                   padding: "16px 24px",
@@ -208,7 +210,7 @@ const EvaluationItemBlock = ({
                     fontSize: 13,
                     fontWeight: 600,
                     marginBottom: "4px",
-                    color: "#172B4D",
+                    color: theme.palette.common.neutral800,
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
                     overflow: "hidden",

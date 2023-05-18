@@ -18,6 +18,7 @@ import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
 import {QuestionFormModal} from "@/sections/exam/components/QuestionFormModal";
 import ExamFormModal from "../components/ExamFormModal";
 import ExamChooseTypeModal from "../components/ExamChooseTypeModal";
+import {useTheme} from "@mui/material/styles";
 import {TBL_FILTER_TYPE} from "@/config";
 import {LIST_EXAM_TYPE, LIST_STATUS} from "@/utils/formatString";
 import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
@@ -29,7 +30,7 @@ export const ExamItem = ({
                            headerProps,
                          }) => {
   const router = useRouter();
-
+  const  theme = useTheme();
   const listArrayOtherIdsFilter = ["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
   const [showFormQuestion, setShowFormQuestion] = useState(false);
   const {query = {PageIndex: 1, PageSize: 10}, isReady} = router;
@@ -123,7 +124,7 @@ export const ExamItem = ({
             {/*  }}*/}
             {/*  name={record.creatorEmail}*/}
             {/*></AvatarDS>*/}
-            <span fontSize="14px" fontWeight="600" color="#172B4D">
+            <span fontSize="14px" fontWeight="600" color={"#172B4D"}>
               {record.creatorEmail}
             </span>
           </div>
@@ -157,7 +158,7 @@ export const ExamItem = ({
             {/*  }}*/}
             {/*  name={record.updaterEmail}*/}
             {/*></AvatarDS>*/}
-            <span fontSize="14px" fontWeight="600" color="#172B4D">
+            <span fontSize="14px" fontWeight="600" color={theme.palette.common.neutral800}>
               {record.updaterEmail}
             </span>
           </div>
@@ -220,7 +221,7 @@ export const ExamItem = ({
         title: "Trạng thái",
         width: "200px",
         render: (item) => (
-          <span style={{ color: item ? "#388E3C" : "#455570" }}>
+          <span style={{color: item ? "#388E3C" : theme.palette.common.neutral700}}>
             {Status(item)}
           </span>
         ),
@@ -305,7 +306,7 @@ export const ExamItem = ({
       >
         <Button
           style={{
-            background: "#1976D2",
+            background: theme.palette.common.blue700,
             padding: "6px 12px",
             fontWeight: 600,
             fontSize: ' .875rem',
@@ -318,7 +319,7 @@ export const ExamItem = ({
             icon={"material-symbols:add"}
             width={20}
             height={20}
-            color="#fff"
+            color={theme.palette.background.paper}
             mr={1}
           />
           Thêm câu hỏi
@@ -369,7 +370,7 @@ export const ExamItem = ({
             aria-haspopup="menu"
             onClick={handleOpenGroup}
             style={{
-              background: "#1976D2",
+              background: theme.palette.common.blue700,
               padding: "6px 12px",
               borderRadius: '0px 6px 6px 0px',
             }}
@@ -378,7 +379,7 @@ export const ExamItem = ({
               icon={"material-symbols:arrow-drop-down"}
               width={20}
               height={20}
-              color="#fff"
+              color={theme.palette.background.paper}
             />
           </Button>
         </LightTooltip>

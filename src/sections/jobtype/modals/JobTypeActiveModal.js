@@ -13,6 +13,7 @@ import {
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useUpdateStatusJobTypeMutation } from "../jobTypeSlice";
+import {useTheme} from "@mui/material/styles";
 
 
 const JobTypeActiveModal = ({
@@ -24,7 +25,7 @@ const JobTypeActiveModal = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [status] = useUpdateStatusJobTypeMutation();
-
+  const  theme = useTheme();
   const handleChangeStatus = (async () => {
     try {
       const data = {
@@ -62,7 +63,7 @@ const JobTypeActiveModal = ({
                 src={`/assets/icons/candidate/status-active.png`}
                 style={{ margin: "0 auto" }}
               />
-              <TitleModelStyle className="title" style={{ color: "#1976D2" }}>
+              <TitleModelStyle className="title" style={{ color: theme.palette.common.blue700}}>
                 Bật trạng thái hoạt động cho vị trí công việc
               </TitleModelStyle>
               <DialogContentTextModelStyle
@@ -81,7 +82,7 @@ const JobTypeActiveModal = ({
                 src={`/assets/icons/candidate/status-inactive.png`}
                 style={{ margin: "0 auto" }}
               />
-              <TitleModelStyle className="title" style={{ color: "#455570" }}>
+              <TitleModelStyle className="title" style={{ color: theme.palette.common.neutral700}}>
                 Tắt trạng thái hoạt động cho vị trí công việc
               </TitleModelStyle>
               <DialogContentTextModelStyle

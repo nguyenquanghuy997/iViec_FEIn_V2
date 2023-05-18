@@ -10,7 +10,7 @@ import { GreenSwitch } from "@/utils/cssStyles";
 
 export const SwitchForm = ({name, handleChange, style, ...other}) => {
   const {control} = useFormContext();
-  
+
   return (
     <FormControlLabel
       sx={{...style}}
@@ -38,7 +38,7 @@ const ConnectCardItem = ({account, color, handleChange}) => {
   const methods = useForm({
     defaultValues: {checked: account.active},
   });
-  
+
   const {
     setValue,
   } = methods;
@@ -46,7 +46,7 @@ const ConnectCardItem = ({account, color, handleChange}) => {
     setValue("checked", value.target.checked);
     handleChange(value.target.checked);
   }
-  
+
   return (
     <FormProvider methods={methods}>
       <Card
@@ -116,7 +116,7 @@ const ConnectCardItem = ({account, color, handleChange}) => {
 //   const [open, setOpen] = useState(false);
 //   const handleOpen = () => setOpen(true);
 //   const handleClose = () => setOpen(false);
-//
+//   const  theme = useTheme();
 //   const [openForm, setOpenForm] = useState(false);
 //   const handleOpenForm = () => setOpenForm(true);
 //   const handleCloseForm = () => setOpenForm(false);
@@ -128,7 +128,7 @@ const ConnectCardItem = ({account, color, handleChange}) => {
 //             height: 125,
 //             width: 250,
 //             display: "block",
-//             background: "#F2F4F5",
+//             background: theme.palette.common.bgrMaster,
 //             my: 2,
 //             mr: 2,
 //             borderRadius: "6px",
@@ -145,7 +145,7 @@ const ConnectCardItem = ({account, color, handleChange}) => {
 //             {isActive ? (
 //               <span style={{ color: "#388E3C" }}> Đã hoạt động</span>
 //             ) : (
-//               <span style={{ color: "#8A94A5" }}>Không hoạt động"</span>
+//               <span style={{ color: theme.palette.common.neutral500 }}>Không hoạt động"</span>
 //             )}
 //           </Typography>
 //           <Typography component="div" fontSize={"14px"} sx={{ mb: 3 }}>
@@ -181,7 +181,7 @@ const ConnectCardItem = ({account, color, handleChange}) => {
 //         }}
 //       >
 //         <CardActionArea>
-//           <Typography sx={{ color: "#455570" }} onClick={handleOpenForm}>
+//           <Typography sx={{ color: theme.palette.common.neutral700 }} onClick={handleOpenForm}>
 //             + Thêm tài khoản
 //           </Typography>
 //         </CardActionArea>
@@ -192,7 +192,7 @@ const ConnectCardItem = ({account, color, handleChange}) => {
 //     ""
 //   );
 // };
-
+//
 // const DetailSocial = ({ checked, accounts }) => {
 //   const methods = useForm({
 //     // defaultValues: { isActive: true },
@@ -263,13 +263,13 @@ const ConnectCard = ({accounts, color, title, handleChange}) => {
       >
         {title}
       </Typography>
-      
+
       <Tooltip title="Question">
         <IconButton>
           <InforIcon/>
         </IconButton>
       </Tooltip>
-      
+
       <ConnectCardStyle>
         {accounts?.map((account, id) => (
           <ConnectCardItem

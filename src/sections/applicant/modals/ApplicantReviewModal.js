@@ -1,26 +1,47 @@
-import { useAddApplicantReviewMutation } from "../ApplicantFormSlice";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
+import { useAddApplicantReviewMutation } from "@/sections/applicant";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
+import palette from "@/theme/palette";
 import { ButtonIcon, ReviewForm } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Divider, FormHelperText, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  FormHelperText,
+  Modal,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Rate } from "antd";
 import { useSnackbar } from "notistack";
-// import { Rate } from "antd";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 const LIST_ACTION = [
-  { id: 0, name: "Đạt", color: "#4CAF50", icon: "bxs:like" },
-  { id: 1, name: "Cân nhắc", color: "#FF9800", icon: "ri:eye-fill" },
-  { id: 2, name: "Loại", color: "#F44336", icon: "bxs:dislike" },
+  {
+    id: 0,
+    name: "Đạt",
+    color: palette.light.common.green500,
+    icon: "bxs:like",
+  },
+  {
+    id: 1,
+    name: "Cân nhắc",
+    color: palette.light.common.orange500,
+    icon: "ri:eye-fill",
+  },
+  {
+    id: 2,
+    name: "Loại",
+    color: palette.light.common.red500,
+    icon: "bxs:dislike",
+  },
 ];
 
 const Point = ({ value, onChange }) => {
@@ -54,6 +75,7 @@ export const ApplicantReviewModal = ({
   const [currentAction, setCurrentAction] = useState();
   const isReject = currentAction === 2;
 
+  const theme = useTheme();
   const Schema = Yup.object().shape({
     ...data?.reviewFormCriterias?.reduce(
       (res, item) => ({
@@ -145,7 +167,12 @@ export const ApplicantReviewModal = ({
     >
       <>
         <FormProvider methods={methodss}>
-          <View hidden width={668} borderradius={8} bgcolor={"#FDFDFD"}>
+          <View
+            hidden
+            width={668}
+            borderradius={8}
+            bgcolor={theme.palette.common.white}
+          >
             <View flexrow="true" atcenter="true" pv={22} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
                 {"Đánh giá ứng viên"}
@@ -158,7 +185,7 @@ export const ApplicantReviewModal = ({
                     icon={"ic:baseline-close"}
                     width={20}
                     height={20}
-                    color="#455570"
+                    color={theme.palette.common.neutral700}
                   />
                 }
               />
@@ -211,7 +238,7 @@ export const ApplicantReviewModal = ({
 
               <ReviewForm
                 className="block-review block-review-result"
-                style={{ background: "#F2F4F5" }}
+                style={{ background: theme.palette.common.bgrMaster }}
               >
                 <Label required={isReject} className="title" title="Kết luận">
                   {"Kết luận"}
@@ -219,7 +246,7 @@ export const ApplicantReviewModal = ({
                 <div className="input-content">
                   <ul className="pagination-review">
                     {LIST_ACTION.map((item, index) => {
-                      const isActive = item.id == currentAction;
+                      const isActive = item.id === currentAction;
                       return (
                         <li
                           key={index}
@@ -238,7 +265,11 @@ export const ApplicantReviewModal = ({
                           <Typography
                             fontSize={14}
                             fontWeight={"600"}
-                            color={isActive ? "#FDFDFD" : "#455570"}
+                            color={
+                              isActive
+                                ? theme.palette.common.white
+                                : theme.palette.common.neutral700
+                            }
                             textAlign={"center"}
                           >
                             {item.name}
@@ -271,9 +302,9 @@ export const ApplicantReviewModal = ({
               <BoxFlex
                 color={
                   mediumScore.toFixed(2) < 4.9
-                    ? "#E53935"
+                    ? theme.palette.common.red600
                     : mediumScore.toFixed(2) < 6.9
-                    ? "#F77A0C"
+                    ? theme.palette.common.orange700
                     : "#388E3C"
                 }
               >

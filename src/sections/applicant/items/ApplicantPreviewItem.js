@@ -1,11 +1,3 @@
-import {
-  useGetApplicantByIdQuery,
-  useGetApplicantCurrentStateWithRecruitmentStatesQuery,
-  useGetApplicantRecruitmentQuery,
-  useGetApplicantReviewFormQuery,
-  useGetCheckReviewQuery,
-  useGetRecruitmentsByApplicantQuery,
-} from "../ApplicantFormSlice";
 import { ApplicantReviewModal } from "../modals/ApplicantReviewModal";
 import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
 import { RejectApplicantModal } from "../modals/RejectApplicantModal";
@@ -23,6 +15,14 @@ import { HEADER } from "@/config";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
+import {
+  useGetApplicantByIdQuery,
+  useGetApplicantCurrentStateWithRecruitmentStatesQuery,
+  useGetApplicantRecruitmentQuery,
+  useGetApplicantReviewFormQuery,
+  useGetCheckReviewQuery,
+  useGetRecruitmentsByApplicantQuery,
+} from "@/sections/applicant";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
@@ -223,11 +223,12 @@ function ApplicantPreviewItem() {
             }
             onClick={() => setOpen(true)}
           />
+
           <ButtonDS
             tittle={"Đánh giá"}
             type="submit"
             onClick={() => setIsOpenReview(true)}
-            isDisabled={isReview ? false : true}
+            isDisabled={!isReview}
             mr={2}
             sx={{
               ":hover": {
@@ -364,7 +365,7 @@ function ApplicantPreviewItem() {
 
   useEffect(() => {
     if (!isFetching) {
-      const recruitment = options.filter((p) => p.id == RecruitmentId);
+      const recruitment = options.filter((p) => p.id === RecruitmentId);
       setSelectedOption(recruitment[0]);
       setOwnerName(recruitment[0]?.ownerName?.trim());
     }

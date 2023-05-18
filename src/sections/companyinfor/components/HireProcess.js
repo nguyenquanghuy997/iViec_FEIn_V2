@@ -85,7 +85,7 @@ const HireProcess = ({data}) => {
           {data?.organizationProfilePipelines.length > 0 ? (
               <Box
                   sx={{
-                    background: "#FDFDFD",
+                    background: theme.palette.common.white,
                     py: 2,
                     display: "flex",
                     px: 5,
@@ -109,12 +109,11 @@ const HireProcess = ({data}) => {
                         }}>
                           {renderIconByPipelineType(item?.type)}
                         </Box>
-                        <Typography sx={{fontSize: 28, color: "#F77A0C", display: "flex", justifyContent: "center"}} color="text.secondary" gutterBottom>
+                        <Typography sx={{fontSize: 28, color: theme.palette.common.orange700, display: "flex", justifyContent: "center"}} color="text.secondary" gutterBottom>
                           {index + 1}
                         </Typography>
                         <Typography
-                            sx={{mb: 1.5, fontSize: 16, fontWeight: 600, display: "flex", justifyContent: "center"}}
-                            color="#172B4D">
+                            sx={{mb: 1.5, fontSize: 16, fontWeight: 600, display: "flex", justifyContent: "center"}} color = {theme.palette.common.neutral800}>
                           {PipelineStateType(item?.type)}
                         </Typography>
                         <Typography variant="body2" sx={{

@@ -17,6 +17,7 @@ import QuestionGalleryItem from "@/sections/exam/components/QuestionGalleryItem"
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 import { QuestionFormModal } from "../components/QuestionFormModal";
 
 export const QuestionGallary = () => {
@@ -71,7 +72,7 @@ export const QuestionGallary = () => {
     await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body));
     onHandleFinish();
   };
-
+  const theme = useTheme();
   const onCloseConfirmDelete = () => {
     setCurrentItem(null);
     setShowConfirmDelete(false);
@@ -164,7 +165,7 @@ export const QuestionGallary = () => {
             ) : (
               <>
                 <EmptyIcon />
-                <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
+                <Text mt={12} fontWeight={"500"} color={theme.palette.common.neutral400}>
                   {"Hiện chưa có nhóm câu hỏi nào."}
                 </Text>
               </>

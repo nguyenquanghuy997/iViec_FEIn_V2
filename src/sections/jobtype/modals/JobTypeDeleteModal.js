@@ -10,6 +10,7 @@ import {
 import { DialogActions, DialogContent, Divider } from "@mui/material";
 import { useSnackbar } from "notistack";
 import React from "react";
+import {useTheme} from "@mui/material/styles";
 
 const JobTypeDeleteModal = ({
   showConfirmMultiple,
@@ -19,7 +20,7 @@ const JobTypeDeleteModal = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [deletejob] = useDeleteJobTypeMutation();
-
+  const theme = useTheme();
   const handleChangeStatus = async () => {
     try {
       await deletejob({"ids":jobTypeIds}).unwrap();
@@ -51,9 +52,9 @@ const JobTypeDeleteModal = ({
           icon={"mdi:alert-circle-outline"}
           width={60}
           height={60}
-          color="#E53935"
+          color={theme.palette.common.red600}
         />
-        <TitleModelStyle className="title" style={{ color: "#E53935" }}>
+        <TitleModelStyle className="title" style={{ color: theme.palette.common.red600 }}>
           Xác nhận xóa vị trí công việc
         </TitleModelStyle>
         <DialogContentTextModelStyle
@@ -72,10 +73,10 @@ const JobTypeDeleteModal = ({
           tittle="Xóa"
           onClick={handleChangeStatus}
           sx={{
-            color: "#FDFDFD",
+            color: theme.palette.common.white,
             backgroundColor: "#D32F2F",
             "&:hover": {
-              backgroundColor: "#E53935",
+              backgroundColor: theme.palette.common.red600,
             },
           }}
         />

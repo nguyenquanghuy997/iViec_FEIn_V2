@@ -3,12 +3,13 @@ import {Box} from "@mui/material";
 import {DOMAIN_SERVER_API} from "@/config";
 import {RiImageFill} from "react-icons/ri";
 import ImageCropper from "@/sections/companyinfor/upload/ImageCropper";
+import {useTheme} from "@mui/material/styles";
 
 const CropImage = ({ defaultImage, size, companyInfor }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const theme = useTheme();
   // const [croppedImage, setCroppedImage] = useState(null);
   const [image, setImage] = useState(null);
-
   const handleCloseModal = () => {
     setDialogOpen(false);
     // setImage(null);
@@ -27,7 +28,7 @@ const CropImage = ({ defaultImage, size, companyInfor }) => {
                      width: "100%", height: "185px",
                      display: "flex", justifyContent: "center", alignItems: "center",
                      position: "relative", cursor: "pointer",
-                     backgroundColor: '#E7E9ED',
+                     backgroundColor: theme.palette.common.neutral100,
                      "> img": {
                        width: "100%",
                        height: "185px",
@@ -39,7 +40,7 @@ const CropImage = ({ defaultImage, size, companyInfor }) => {
               >
                 {defaultImage ? <img src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${defaultImage}`} alt="cover"/> : (
                     <Box sx={{display: 'flex', alignItems: "center", justifyContent: 'center'}}>
-                      <RiImageFill size={24} color="#8A94A5"/>
+                      <RiImageFill size={24} color={theme.palette.common.neutral500}/>
                     </Box>
                 )}
               </Box>
@@ -52,7 +53,7 @@ const CropImage = ({ defaultImage, size, companyInfor }) => {
                     src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${defaultImage}`}
                 /> : (
                     <Box onClick={() => setDialogOpen(true)} className={"avatar-image"} sx={{display: 'flex', alignItems: "center", justifyContent: 'center'}}>
-                      <RiImageFill size={24} color="#8A94A5"/>
+                      <RiImageFill size={24} color={theme.palette.common.neutral500}/>
                     </Box>
                 )}
               </Box>

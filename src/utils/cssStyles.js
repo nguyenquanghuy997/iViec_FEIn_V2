@@ -6,7 +6,7 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import {alpha} from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 
 function getDirection(value = "bottom") {
@@ -17,7 +17,6 @@ function getDirection(value = "bottom") {
     left: "to left",
   }[value];
 }
-
 export default function cssStyles(theme) {
   return {
     bgBlur: (props) => {
@@ -60,49 +59,49 @@ export default function cssStyles(theme) {
   };
 }
 
-export const ViewModel = styled("div")(() => ({
+export const ViewModel = styled("div")(({theme}) => ({
   width: "42vw",
-  background: "#fff",
+  background: theme.palette.background.paper,
   display: "flex",
   flexDirection: "column",
 }));
 
-export const ButtonIcon = styled(ButtonDS)(() => ({
+export const ButtonIcon = styled(ButtonDS)(({theme}) => ({
   padding: "8px",
   minWidth: "unset",
-  backgroundColor: "#fff",
+  backgroundColor: theme.palette.background.paper,
   boxShadow: "none",
   "&:hover": {
     backgroundColor: "#EFF3F7",
   },
   textTransform: "none",
 }));
-export const ButtonCancel = styled(ButtonDS)(() => ({
-  color: "#455570",
+export const ButtonCancel = styled(ButtonDS)(({theme}) => ({
+  color: theme.palette.common.neutral700,
   backgroundColor: "transparent",
   borderRadius: 6,
   "&:hover": {
-    color: "#455570",
+    color:theme.palette.common.neutral700,
     backgroundColor: "transparent",
   },
 }));
-export const ButtonGray = styled(ButtonDS)(() => ({
-  color: "#455570",
-  backgroundColor: "#F3F4F6",
+export const ButtonGray = styled(ButtonDS)(({theme}) => ({
+  color: theme.palette.common.neutral700,
+  backgroundColor: theme.palette.common.neutral50,
   boxShadow: "none",
   "&:hover": {
-    backgroundColor: "#E7E9ED",
+    backgroundColor: theme.palette.common.neutral100,
   },
   textTransform: "none",
 }));
 //Model
-export const TitleModelStyle = styled(Typography)(() => ({
+export const TitleModelStyle = styled(Typography)(({theme}) => ({
   "&.title": {
     textAlign: "center",
     width: "100%",
     fontSize: "16px",
     fontWeight: 700,
-    color: "#1976D2",
+    color: theme.palette.common.blue700,
     marginTop: "12px",
   },
 }));
@@ -135,7 +134,7 @@ export const DialogContentTextModelStyle = styled(DialogContentText)(
       fontSize: "14px",
       fontWeight: 700,
       display: "block",
-      color: "#455570",
+      color: theme.palette.common.neutral700,
       marginTop: theme.spacing(1),
       "& .subtitle-name": {
         fontWeight: 600,
@@ -149,7 +148,7 @@ export const HeaderPreviewStyle = styled(Box)(({ theme }) => ({
     top: 0,
     right: 0,
     width: `600px`,
-    backgroundColor: "#FDFDFD",
+    backgroundColor: theme.palette.common.white,
     zIndex: 1,
     borderBottom: "1px solid #E7E9ED",
     padding: theme.spacing(2),
@@ -166,7 +165,7 @@ export const FooterPreviewStyle = styled(Box)(({ theme }) => ({
     bottom: 0,
     right: 0,
     width: 600,
-    backgroundColor: "#FDFDFD",
+    backgroundColor: theme.palette.common.white,
     zIndex: 1,
     borderTop: "1px solid #E7E9ED",
     padding: theme.spacing(2),
@@ -176,11 +175,11 @@ export const FooterPreviewStyle = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
   },
 }));
-export const GreenSwitch = styled(Switch)(() => ({
+export const GreenSwitch = styled(Switch)(({theme}) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
     color: "#388E3C",
     "&:hover": {
-      backgroundColor: alpha("#A5D6A7", 0.08),
+      backgroundColor: alpha(theme.palette.common.green200, 0.08),
     },
   },
   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
@@ -194,9 +193,9 @@ export const TextElipsis = styled(Typography)(() => ({
   overflow: "hidden",
   width: "100%",
 }));
-export const ReviewForm = styled("div")(() => ({
+export const ReviewForm = styled("div")(({theme}) => ({
   "&.block-review": {
-    background: "#F2F4F5",
+    background: theme.palette.common.neutral800,
     borderRadius: "6px",
     padding: "16px",
     marginBottom: "28px",
@@ -205,14 +204,14 @@ export const ReviewForm = styled("div")(() => ({
     fontWeight: 600,
     fontSize: "14px",
     lineHeight: "20px",
-    color: "#172B4D;",
+    color: theme.palette.common.neutral800,
     marginBottom: "8px",
   },
   "&.block-review .subTitleForm ": {
     fontWeight: 400,
     fontSize: "13px",
     lineHeight: "20px",
-    color: "#455570;",
+    color: theme.palette.common.neutral700,
     marginBottom: "16px",
   },
   "& .MuiBox-root": {
@@ -237,7 +236,7 @@ export const ReviewForm = styled("div")(() => ({
     fontWeight: "600",
     fontSize: "14px",
     lineHeight: "24px",
-    background: "#fff",
+    background: theme.palette.background.paper,
   },
   "& .ant-rate .ant-rate-star-second": {
     color: "#393b3e",
@@ -251,8 +250,8 @@ export const ReviewForm = styled("div")(() => ({
     borderRadius: "0 4px 4px 0",
   },
   "& .ant-rate .ant-rate-star-full": {
-    background: "#1976D2 !important",
-    color: '#fff',
+    background: theme.palette.common.blue700 + "!important",
+    color: theme.palette.background.paper,
     borderColor: '#1976D2'
   },
   "& .ant-rate .ant-rate-star-first": {
@@ -262,7 +261,7 @@ export const ReviewForm = styled("div")(() => ({
     transform: 'unset'
   },
   "& .ant-rate .ant-rate-star-full .ant-rate-star-second": {
-    color: '#fff'
+    color: theme.palette.background.paper
   },
   "& .pagination-review": {
     display: "flex",
@@ -274,7 +273,7 @@ export const ReviewForm = styled("div")(() => ({
     marginTop: 0,
   },
   "&.block-review-result .pagination-review li:hover": {
-    background: "#F2F4F5",
+    background: theme.palette.common.bgrMaster,
   },
   "&.block-review-result .pagination-review li": {
     border: "1px solid #C9D9E0",

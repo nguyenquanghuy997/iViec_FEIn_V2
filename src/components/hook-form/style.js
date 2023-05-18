@@ -1,5 +1,5 @@
 import Iconify from "@/components/Iconify";
-import { STYLE_CONSTANT as style } from "@/theme/palette";
+import palette, { STYLE_CONSTANT as style } from "@/theme/palette";
 import {
   Autocomplete,
   Input,
@@ -9,9 +9,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import React from "react";
+
+
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles(() => ({
       fontSize: "14px",
       lineHeight: "20px",
       padding: "10px 16px",
-      background: "#FDFDFD",
+      background: palette.light.common.white,
       // boxShadow: "inset 0px -1px 0px #E7E9ED",
       minHeight: '44px'
     },
@@ -39,10 +41,10 @@ const useStyles = makeStyles(() => ({
       borderRadius: "6px",
     },
     "&::-webkit-scrollbar-track": {
-      background: "#EFF3F6",
+      background: palette.light.common.bgrObject,
     },
     "&::-webkit-scrollbar-thumb": {
-      background: "#B9BFC9",
+      background: palette.light.common.neutral300,
       borderRadius: "30px",
       marginRight: "3px",
     },
@@ -78,7 +80,7 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
     "&.Mui-focused": {
       backgroundColor: "transparent",
       boxShadow: "none",
-      borderColor: "#D0D4DB",
+      borderColor: theme.palette.common.neutral200,
     },
   },
   "& .MuiInput-root.Mui-error": {
@@ -105,7 +107,7 @@ const SelectFieldStyle = styled(Select)(({ theme }) => ({
     border: "1px solid #D0D4DB !important",
   },
   "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-    borderColor: "#D0D4DB",
+    borderColor: theme.palette.common.neutral200,
   },
   "&.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
     border: "1px solid red",
@@ -115,7 +117,7 @@ const SelectFieldStyle = styled(Select)(({ theme }) => ({
     fontSize: style.FONT_SM,
     borderRadius: 6,
     width: style.WIDTH_FULL,
-    color: "#172b4d",
+    color: theme.palette.common.neutral800,
   },
   "& .MuiSelect-select": {
     borderRadius: 6,
@@ -126,7 +128,7 @@ const SelectFieldStyle = styled(Select)(({ theme }) => ({
   },
   "&.Mui-focused .MuiIconButton-root": { color: "primary.main" },
   "& .Mui-selected": {
-    backgroundColor: "#000 !important",
+    backgroundColor:  theme.palette.common.black +" !important",
   },
 }));
 
@@ -141,16 +143,16 @@ const AutocompleteFieldStyle = styled(Autocomplete)(({ theme }) => ({
     borderWidth: 1,
   },
   "& .MuiAutocomplete-inputRoot .MuiOutlinedInput-notchedOutline": {
-    border: "1px solid #D0D4DB",
+    border: "1px solid " + theme.palette.common.neutral200,
     "&:hover": {
-      border: "1px solid #D0D4DB",
+      border: "1px solid " + theme.palette.common.neutral200,
     },
   },
   "& .MuiAutocomplete-inputRoot:hover .MuiOutlinedInput-notchedOutline": {
-    border: "1px solid #D0D4DB",
+    border: "1px solid " + theme.palette.common.neutral200,
   },
   "& .MuiAutocomplete-inputRoot.Mui-focused .MuiOutlinedInput-notchedOutline": {
-    border: "1px solid #D0D4DB",
+    border: "1px solid " + theme.palette.common.neutral200,
   },
   "& .MuiAutocomplete-inputRoot.Mui-error .MuiOutlinedInput-notchedOutline": {
     border: "1px solid red",
@@ -275,7 +277,7 @@ const InputProps = {
     <InputAdornment position="start">
       <Iconify
         icon={"ri:search-2-line"}
-        color="#5c6a82"
+        color='#5C6A82'
         width={16}
         height={16}
       />

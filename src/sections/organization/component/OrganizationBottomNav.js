@@ -5,6 +5,7 @@ import Content from "@/components/BaseComponents/Content";
 import {DeleteIcon, EditIcon} from "@/assets/ActionIcon";
 import {useGetOrganizationByIdQuery} from "@/sections/organization/OrganizationSlice";
 import {ActionSwitchCheckedIcon, ActionSwitchUnCheckedIcon} from "@/sections/organization/component/Icon";
+import {useTheme} from "@mui/material/styles";
 
 const OrganizationBottomNav = ({
       selectedList,
@@ -22,7 +23,7 @@ const OrganizationBottomNav = ({
   const {data: organization} = useGetOrganizationByIdQuery({
     OrganizationId: selectedList[0]
   }, {skip: selectedList.length !== 1});
-
+  const theme = useTheme();
   const handleShowDelete = (node) => {
     setShowDelete(true);
     onGetParentNode(node);
@@ -53,17 +54,17 @@ const OrganizationBottomNav = ({
                     {
                       status ? (
                           <>
-                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
+                            <IconButton disableRipple size='small' sx={{color: theme.palette.common.blue700, mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
                               <ActionSwitchCheckedIcon/>
                             </IconButton>
                             <Typography variant="body2" sx={{ color: '#388E3C', fontSize: 13 }}>Đang hoạt động</Typography>
                           </>
                       ) : (
                           <>
-                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
+                            <IconButton disableRipple size='small' sx={{color: theme.palette.common.blue700, mx: 0.5}} onClick={() => handleShowActiveModal(organization)}>
                               <ActionSwitchUnCheckedIcon />
                             </IconButton>
-                            <Typography variant="body2" sx={{ color: '#5C6A82', fontSize: 13 }}>Không hoạt động</Typography>
+                            <Typography variant="body2" sx={{ color: theme.palette.common.borderObject, fontSize: 13 }}>Không hoạt động</Typography>
                           </>
                       )
                     }
@@ -74,17 +75,17 @@ const OrganizationBottomNav = ({
                     {
                       status ? (
                           <>
-                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
+                            <IconButton disableRipple size='small' sx={{color: theme.palette.common.blue700, mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
                               <ActionSwitchCheckedIcon/>
                             </IconButton>
                             <Typography variant="body2" sx={{ color: '#388E3C', fontSize: 13 }}>Đang hoạt động</Typography>
                           </>
                       ) : (
                           <>
-                            <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
+                            <IconButton disableRipple size='small' sx={{color: theme.palette.common.blue700, mx: 0.5}} onClick={() => handleShowActiveModal(null)}>
                               <ActionSwitchUnCheckedIcon/>
                             </IconButton>
-                            <Typography variant="body2" sx={{ color: '#5C6A82', fontSize: 13 }}>Không hoạt động</Typography>
+                            <Typography variant="body2" sx={{ color: theme.palette.common.borderObject, fontSize: 13 }}>Không hoạt động</Typography>
                           </>
                       )
                     }
@@ -93,23 +94,23 @@ const OrganizationBottomNav = ({
               {
                   selectedList.length === 1 && (
                       <Box sx={{ ml: 2 }}>
-                        <IconButton disableRipple size='small' sx={{color: '#8A94A5', mx: 1}} onClick={() => handleOpenFormWithCurrentNode(organization)}>
+                        <IconButton disableRipple size='small' sx={{color: theme.palette.common.neutral500, mx: 1}} onClick={() => handleOpenFormWithCurrentNode(organization)}>
                           <EditIcon/>
                         </IconButton>
-                        <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 1}} onClick={() => handleShowDelete(organization)}>
+                        <IconButton disableRipple size='small' sx={{color: theme.palette.common.blue700, mx: 1}} onClick={() => handleShowDelete(organization)}>
                           <DeleteIcon/>
                         </IconButton>
                       </Box>
                   )
               }
               {selectedList.length > 1 &&
-                  <IconButton disableRipple size='small' sx={{color: '#1976D2', mx: 2}} onClick={handleShowMultipleDelete}>
+                  <IconButton disableRipple size='small' sx={{color: theme.palette.common.blue700, mx: 2}} onClick={handleShowMultipleDelete}>
                     <DeleteIcon/>
                   </IconButton>}
             </Stack>
             <Box sx={{display: 'flex', alignItems: 'center'}}>
               <Typography>Đã chọn: {selectedList.length}</Typography>
-              <Divider orientation="vertical" flexItem sx={{mx: 2, width: '2px', backgroundColor: '#E7E9ED'}}/>
+              <Divider orientation="vertical" flexItem sx={{mx: 2, width: '2px', backgroundColor: theme.palette.common.neutral100}}/>
               <IconButton size="medium" onClick={onClose}>
                 <Iconify icon="ic:baseline-close"/>
               </IconButton>

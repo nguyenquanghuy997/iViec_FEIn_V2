@@ -6,7 +6,8 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import { AddIcon } from "@/assets/ActionIcon";
 import React from "react";
 import { FilterIcon } from "@/assets/FilterIcon";
-
+import {useTheme} from "@mui/material/styles";
+const theme = useTheme();
 const OrganizationDetailTableHeader = ({ methods, onOpenFilterForm, onSubmit, handleSubmit, onOpenInviteForm, onOpenListInvite }) => {
     return (
         <>
@@ -15,7 +16,7 @@ const OrganizationDetailTableHeader = ({ methods, onOpenFilterForm, onSubmit, ha
                 alignItems="center"
                 justifyContent="space-between"
                 padding="16px"
-                backgroundColor={"#FDFDFD"}
+                backgroundColor={theme.palette.common.white}
             >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -24,7 +25,7 @@ const OrganizationDetailTableHeader = ({ methods, onOpenFilterForm, onSubmit, ha
                             placeholder="Tìm kiếm theo tên, email hoặc SĐT..."
                             sx={{
                                 minWidth: "360px",
-                                backgroundColor: '#F2F4F5',
+                                backgroundColor: theme.palette.common.bgrMaster,
                                 borderRadius: '6px',
                                 '.MuiInput-root': {
                                     border: 'none'

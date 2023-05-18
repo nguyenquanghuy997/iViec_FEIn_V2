@@ -9,11 +9,16 @@ import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import palette from "@/theme/palette";
+import {useTheme} from "@mui/material/styles";
+
+
 
 const LIST_ACTION = [
-  { id: 0, name: "Đạt", color: "#4CAF50" },
-  { id: 1, name: "Cân nhắc", color: "#FF9800" },
-  { id: 2, name: "Loại", color: "#F44336" },
+
+  { id: 0, name: "Đạt", color: palette.light.common.green500},
+  { id: 1, name: "Cân nhắc", color: palette.light.common.orange500},
+  { id: 2, name: "Loại", color: palette.light.common.red500},
 ];
 
 export const RejectApplicantModal = ({
@@ -36,7 +41,7 @@ export const RejectApplicantModal = ({
 
   // state
   const [currentAction, setCurrentAction] = useState(actionType);
-
+  const theme = useTheme();
   // form
   const Schema = Yup.object().shape({
     note: (currentAction == 0 || currentAction == 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
@@ -80,7 +85,7 @@ export const RejectApplicantModal = ({
       onBackdropClick={() => setShow(false)}
     >
       <FormProvider methods={methods}>
-        <View width={600} borderRadius={8} bgColor={"#fff"}>
+        <View width={600} borderRadius={8} bgColor={theme.palette.background.paper}>
           <View pt={20} pb={36} ph={24}>
             {/* button close */}
             <View asEnd mr={12} onPress={() => setShow(false)}>
@@ -105,7 +110,7 @@ export const RejectApplicantModal = ({
               mt={"12px"}
               fontSize={16}
               fontWeight={"600"}
-              color="#455570"
+              color= {theme.palette.common.neutral700}
               textAlign={"center"}
             >
               {"Chuyển ứng viên sang bước kết quả"}
@@ -115,7 +120,7 @@ export const RejectApplicantModal = ({
             <Typography
               mt={"8px"}
               fontSize={14}
-              color="#455570"
+              color= {theme.palette.common.neutral700}
               textAlign={"center"}
             >
               {`Lưu ý: Bạn chỉ có thể gửi Offer khi ứng viên ở trạng thái `}
@@ -128,7 +133,7 @@ export const RejectApplicantModal = ({
               mt={24}
               borderRadius={6}
               borderWidth={1}
-              borderColor={"#D0D4DB"}
+              borderColor={palette.light.common.neutral200}
             >
               {LIST_ACTION.map((item) => {
                 const isActive = item.id == currentAction;
@@ -143,7 +148,7 @@ export const RejectApplicantModal = ({
                     <Typography
                       fontSize={14}
                       fontWeight={"600"}
-                      color={isActive ? "#FDFDFD" : "#455570"}
+                      color={isActive ? palette.light.common.white : palette.light.common.neutral700}
                       textAlign={"center"}
                     >
                       {item.name}
@@ -153,7 +158,7 @@ export const RejectApplicantModal = ({
               })}
             </View>
 
-            <Typography fontWeight={"600"} color="#5C6A82" mt="24px" mb="8px">
+            <Typography fontWeight={"600"} color={palette.light.common.borderObject} mt="24px" mb="8px">
               {"Ghi chú"}
             </Typography>
             <TextAreaDS
@@ -168,17 +173,17 @@ export const RejectApplicantModal = ({
             padding="16px 24px"
             borderTop="1px solid #E7E9ED"
             justifyContent="end"
-            background="#FDFDFD"
+            background= {palette.light.background.paper}
           >
             <ButtonDS
               tittle={"Hủy"}
               type="submit"
               sx={{
-                color: "#455570",
-                backgroundColor: "#fff",
+                color: palette.light.common.neutral700,
+                backgroundColor: palette.light.common.white,
                 boxShadow: "none",
                 ":hover": {
-                  backgroundColor: "#fff",
+                  backgroundColor: palette.light.common.white,
                   textDecoration: "underline",
                 },
                 fontSize: "14px",
@@ -192,7 +197,7 @@ export const RejectApplicantModal = ({
               type="submit"
               sx={{
                 textTransform: "unset",
-                color: "#fff",
+                color: palette.light.common.white,
                 boxShadow: "none",
                 fontSize: "14px",
                 padding: "6px 12px",

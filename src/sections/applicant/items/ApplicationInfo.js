@@ -1,11 +1,13 @@
-import { useGetAllJobSourcesQuery } from "../ApplicantFormSlice";
+import { useGetAllJobSourcesQuery } from "@/sections/applicant";
 import { Address, MaritalStatus, Sex, YearOfExperience } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
 import { fDate } from "@/utils/formatTime";
 import { Divider, Grid } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
+import {useTheme} from "@mui/material/styles";
 
 export const ApplicantInfo = ({ data }) => {
+  const theme = useTheme();
   const { data: { items: listJobSources = [] } = {} } =
     useGetAllJobSourcesQuery();
 
@@ -17,7 +19,7 @@ export const ApplicantInfo = ({ data }) => {
             display: "inline-flex",
             fontSize: 13,
             margin: "12px 0",
-            color: "#5C6A82",
+            color: theme.palette.common.borderObject,
             width: "160px",
             fontWeight: 400,
           }}
@@ -37,7 +39,7 @@ export const ApplicantInfo = ({ data }) => {
               "& .MuiTypography-root": {
                 fontSize: "13px",
                 fontWeight: 600,
-                color: "#172B4D",
+                color: theme.palette.common.neutral800,
                 whiteSpace: "pre-line",
               },
             }}

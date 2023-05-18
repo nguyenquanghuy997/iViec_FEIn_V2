@@ -9,7 +9,7 @@ import useAuth from "@/hooks/useAuth";
 
 const renderLabelTab = (title, subtitle) => {
   return (
-    <Stack sx={{padding: 2,}}>
+    <Stack sx={{ padding: 2, }}>
       <Typography sx={{fontSize: 14, fontWeight: 700, textTransform: 'none'}}>{title}</Typography>
       <Typography sx={{fontSize: 13, fontWeight: 500, textTransform: 'none'}}>{subtitle}</Typography>
     </Stack>
@@ -43,10 +43,10 @@ const RecruitmentTabList = ({onChange, isValid, ...props}) => {
       }
     })
     .catch(() => {
-    
+
     });
   }, [tabs])
-  
+
   return (
     <Box
       sx={{

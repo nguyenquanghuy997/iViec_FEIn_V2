@@ -4,7 +4,9 @@ import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { Box, InputAdornment } from "@mui/material";
 import React from "react";
+import {useTheme} from "@mui/material/styles";
 
+const  theme = useTheme();
 const EvaluationFormHeader = ({
   methods,
   onOpenFilterForm,
@@ -19,7 +21,7 @@ const EvaluationFormHeader = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: "#FDFDFD",
+          backgroundColor: theme.palette.common.white,
           padding: "16px",
           borderRadius: "6px",
           marginBottom: 3,
@@ -33,7 +35,7 @@ const EvaluationFormHeader = ({
               sx={{
                 minWidth: "360px",
                 borderRadius: "6px",
-                background: "#F2F4F5",
+                background: theme.palette.common.bgrMaster,
                 height: "36px",
                 ".MuiInput-root": {
                   height: "36px",
@@ -46,7 +48,7 @@ const EvaluationFormHeader = ({
                   <InputAdornment position="start" sx={{ ml: 0.5, mr: 0 }}>
                     <Iconify
                       icon={"eva:search-fill"}
-                      sx={{ color: "#5C6A82", width: 20, height: 20 }}
+                      sx={{ color: theme.palette.common.borderObject, width: 20, height: 20 }}
                     />
                   </InputAdornment>
                 ),
@@ -75,7 +77,7 @@ const EvaluationFormHeader = ({
               icon={"material-symbols:add"}
               width={20}
               height={20}
-              color="#fff"
+              color={theme.palette.background.paper}
               mr={1}
             />
           }

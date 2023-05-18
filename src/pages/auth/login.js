@@ -9,8 +9,11 @@ import { STYLE_CONSTANT } from "@/sections/auth/register/constants";
 import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
 import { Box, Stack, Typography, Link } from "@mui/material";
 import NextLink from "next/link";
+import {useTheme} from "@mui/material/styles";
+
 
 export default function Login() {
+  const theme = useTheme();
   return (
     <GuestGuard>
       <Page title="Đăng nhập">
@@ -37,7 +40,7 @@ export default function Login() {
                 align="center"
                 sx={{
                   mt: 2,
-                  color: "#8A94A5",
+                  color: theme.palette.common.neutral500,
                   fontSize: STYLE_CONSTANT.FONT_SM,
                   fontWeight: STYLE_CONSTANT.FONT_NORMAL,
                 }}
@@ -55,7 +58,7 @@ export default function Login() {
                   <Link
                     variant="subtitle2"
                     sx={{
-                      color: "#1976D2",
+                      color: theme.palette.common.blue700,
                       fontSize: STYLE_CONSTANT.FONT_SM,
                       fontWeight: STYLE_CONSTANT.FONT_SEMIBOLD,
                     }}

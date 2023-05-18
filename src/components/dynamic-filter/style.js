@@ -33,7 +33,7 @@ export const BoxLabelStyle = styled(Box)(({theme}) => ({
 export const LabelTextStyle = styled(Typography)(({theme}) => ({
   marginLeft: theme.spacing(1),
   fontSize: 14,
-  color: '#172B4D',
+  color: theme.palette.common.neutral800,
   width: '100%',
   display: 'flex',
   alignItems: 'center',

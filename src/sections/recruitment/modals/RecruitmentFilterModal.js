@@ -18,6 +18,7 @@ import {
   HelperTextTypography
 } from "@/sections/applicant/style";
 import DynamicFilterForm from "@/components/dynamic-filter/DynamicFilterForm";
+import {useTheme} from "@mui/material/styles";
 
 
 
@@ -26,7 +27,7 @@ RecruitmentFilterModal.propTypes = {
 };
 
 function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
-
+  const  theme = useTheme();
   const router = useRouter();
   const { query } = router;
   const defaultValues = {
@@ -113,7 +114,7 @@ function RecruitmentFilterModal({ columns, isOpen, onClose, onSubmit}) {
         <Scrollbar sx={{zIndex: 9999, "& label": {zIndex: 0}}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <FilterModalHeadStyle>
-              <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: "#455570"}}>
+              <Typography variant="body1" sx={{fontSize: '20px', fontWeight: 600, color: theme.palette.common.neutral700}}>
                 Bộ lọc
               </Typography>
               <IconButton size="small" onClick={onClose}>

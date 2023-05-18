@@ -13,7 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import RadioGroup from "@mui/material/RadioGroup";
 // import CloseIcon from '@mui/icons-material/Close';
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import PropTypes from "prop-types";
 import * as React from "react";
 
@@ -57,7 +57,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function ModalReload() {
   const [open, setOpen] = React.useState(false);
-
+  const theme = useTheme();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -114,7 +114,7 @@ export default function ModalReload() {
             style={{
               display: "flex",
               justifyContent: "center",
-              color: "#1976D2",
+              color: theme.palette.common.blue700,
               marginTop: "17px",
             }}
           >
@@ -126,7 +126,7 @@ export default function ModalReload() {
           <FormControl>
             <FormLabel
               id="demo-radio-buttons-group-label"
-              sx={{ color: "#172B4D", fontWeight: 600, fontSize: "14px",my:2 }}
+              sx={{ color: theme.palette.common.neutral800, fontWeight: 600, fontSize: "14px",my:2 }}
             >
               Chọn bước tuyển dụng
             </FormLabel>
@@ -175,8 +175,8 @@ export default function ModalReload() {
         </DialogContent>
         <Divider />
         <DialogActions>
-          <Button onClick={handleClose} sx={{color:'#455570'}}>Hủy</Button>
-          <Button variant="contained" onClick={handleClose} sx={{backgroundColor:'#1976D2'}}>
+          <Button onClick={handleClose} sx={{color: theme.palette.common.neutral700}}>Hủy</Button>
+          <Button variant="contained" onClick={handleClose} sx={{backgroundColor:theme.palette.common.blue700}}>
             Tái khai thác
           </Button>
         </DialogActions>

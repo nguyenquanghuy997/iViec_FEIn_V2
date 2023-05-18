@@ -8,6 +8,7 @@ import {
 } from "@/utils/cssStyles";
 import { DialogActions, DialogContent, Divider } from "@mui/material";
 import React from "react";
+import palette from "@/theme/palette";
 
 const DeleteModal = ({
   showConfirmMultiple,
@@ -36,7 +37,7 @@ const DeleteModal = ({
           height={60}
           color="#E53935"
         />
-        <TitleModelStyle className="title" style={{ color: "#E53935" }}>
+        <TitleModelStyle className="title" style={{ color: palette.light.common.red600 }}>
           Xác nhận xóa {title}
         </TitleModelStyle>
         <DialogContentTextModelStyle
@@ -55,10 +56,10 @@ const DeleteModal = ({
           tittle="Xóa"
           onClick={handleSave}
           sx={{
-            color: "#FDFDFD",
+            color: palette.light.common.white,
             backgroundColor: "#D32F2F",
             "&:hover": {
-              backgroundColor: "#E53935",
+              backgroundColor: palette.light.common.red600,
             },
           }}
         />

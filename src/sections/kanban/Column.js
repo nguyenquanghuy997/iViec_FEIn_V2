@@ -5,10 +5,12 @@ import { Box, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { memo, useRef } from "react";
 import { Droppable } from "react-beautiful-dnd";
+import {useTheme} from "@mui/material/styles";
 
 const Column = ({ droppableId, column }) => {
   // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
   const windowHeight = useRef(window.innerHeight - 120);
+  const  theme = useTheme();
   return (
     <Stack spacing={2} sx={{ p: 1, py: 0 }}>
       <div
@@ -38,7 +40,7 @@ const Column = ({ droppableId, column }) => {
             width={13}
             height={13}
             fontWeight={600}
-            color="#455570"
+            color={theme.palette.common.neutral700}
             mt={0.5}
           />
 
@@ -53,7 +55,7 @@ const Column = ({ droppableId, column }) => {
               icon={"material-symbols:square-rounded"}
               width={15}
               height={15}
-              color="#1E88E5"
+              color={theme.palette.common.blue600}
               mr={1}
               mt={0.5}
             />
@@ -62,7 +64,7 @@ const Column = ({ droppableId, column }) => {
               fontSize="14px"
               fontWeight="700"
               alignItems="center"
-              color="#455570"
+              color={theme.palette.common.neutral700}
             >
               {PipelineStateType(column.pipelineStateType)}
             </Typography>
@@ -71,7 +73,7 @@ const Column = ({ droppableId, column }) => {
               fontSize="14px"
               fontWeight="700"
               alignItems="center"
-              color="#455570"
+              color={theme.palette.common.neutral700}
               ml={1}
             >
               {column.items.length}
@@ -81,7 +83,7 @@ const Column = ({ droppableId, column }) => {
             icon={"material-symbols:filter-list-rounded"}
             width={13}
             height={13}
-            color="#455570"
+            color={theme.palette.common.neutral700}
             mt={0.5}
           />
         </Box>

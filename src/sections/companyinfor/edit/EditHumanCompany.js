@@ -19,13 +19,14 @@ import RHFUploadImage from "@/sections/companyinfor/upload/RHFUploadImage";
 import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
 import {isEmpty, get} from "lodash";
+import {useTheme} from "@mui/material/styles";
 
 const EditHumanCompany = ({data, onClose}) => {
 
       const [updateCompanyHuman] = useUpdateCompanyHumanMutation();
       const [uploadImage] = useUploadImageCompanyMutation();
       const {enqueueSnackbar} = useSnackbar();
-
+      const theme = useTheme();
       // const defaultValues = {
       //   organizationHumans: data?.organizationHumans?.map(item => ({
       //     id: item.id,
@@ -140,7 +141,7 @@ const EditHumanCompany = ({data, onClose}) => {
                                           mb: 3,
                                           px: 3,
                                           py: 2,
-                                          background: "#F2F4F5",
+                                          background: theme.palette.common.bgrMaster,
                                           display: "flex",
                                           borderRadius: "4px"
                                         }}>
@@ -149,7 +150,7 @@ const EditHumanCompany = ({data, onClose}) => {
                                             alignItems: "center",
                                             pr: 1
                                           }} {...provided.dragHandleProps}>
-                                            <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color="#A2AAB7"/>
+                                            <Iconify icon={"fluent:re-order-dots-vertical-16-filled"} width={20} height={20} color={theme.palette.common.neutral400}/>
                                           </Box>
                                           {item?.avatar || organizationHumans[index]?.imagePreview?.url ? (
                                                   <Image
@@ -181,7 +182,7 @@ const EditHumanCompany = ({data, onClose}) => {
                                               marginTop: "12px"
                                             }}>
                                               <RHFUploadImage name={`organizationHumans.${index}.avatar`}/>
-                                              <RiDeleteBin6Line color="#E53935" onClick={() => remove(index)} cursor="pointer"/>
+                                              <RiDeleteBin6Line color={theme.palette.common.red600} onClick={() => remove(index)} cursor="pointer"/>
                                             </Box>
                                             <Stack sx={{mb: 3}}>
                                               <LabelStyle required>Họ và tên</LabelStyle>
@@ -189,9 +190,9 @@ const EditHumanCompany = ({data, onClose}) => {
                                                   name={`organizationHumans.${index}.name`}
                                                   placeholder="Nhập họ và tên cán bộ"
                                                   sx={{
-                                                    backgroundColor: '#FDFDFD',
+                                                    backgroundColor: theme.palette.common.white,
                                                     '& .MuiFormHelperText-root.Mui-error': {
-                                                      backgroundColor: '#F2F4F5',
+                                                      backgroundColor: theme.palette.common.bgrMaster,
                                                       marginTop: 0,
                                                       paddingTop: 1
                                                     }
@@ -204,9 +205,9 @@ const EditHumanCompany = ({data, onClose}) => {
                                                   name={`organizationHumans.${index}.description`}
                                                   placeholder="Nhập chức vụ của cán bộ"
                                                   sx={{
-                                                    backgroundColor: '#FDFDFD',
+                                                    backgroundColor: theme.palette.common.white,
                                                     '& .MuiFormHelperText-root.Mui-error': {
-                                                      backgroundColor: '#F2F4F5',
+                                                      backgroundColor: theme.palette.common.bgrMaster,
                                                       marginTop: 0,
                                                       paddingTop: 1
                                                     }

@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import FormModalHead from "@/components/BaseComponents/form-modal/FormModalHead";
 import FormModalBottom from "@/components/BaseComponents/form-modal/FormModalBottom";
+import {useTheme} from "@mui/material/styles";
 
 const InputStyle = { width: "100%", minHeight: 40 };
 
@@ -30,6 +31,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
   const [bg, setBg] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imageBg, setImageBg] = useState(null);
+  const theme = useTheme();
   const imageHandler = (e) => {
     setImageFile(e.target.files[0]);
     const reader = new FileReader();
@@ -222,7 +224,7 @@ const FormCompanyInfor = ({ data, onClose }) => {
                 width: 142,
                 height: 142,
                 borderRadius: "50%",
-                backgroundColor: "#EFF3F6",
+                backgroundColor: theme.palette.common.bgrObject,
                 marginTop: "16px",
                 marginRight: "24px",
               }}

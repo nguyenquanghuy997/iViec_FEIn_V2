@@ -10,6 +10,7 @@ import {
 } from "@/sections/pipeline";
 import { useRef, useState } from "react";
 import PageWrapper from "@/components/PageWrapper";
+import {useTheme} from "@mui/material/styles";
 
 Setting.getLayout = function getLayout(pageProps, page) {
   return (
@@ -22,7 +23,7 @@ Setting.getLayout = function getLayout(pageProps, page) {
 export default function Setting() {
   // ref
   const refRequest = useRef({});
-
+  const theme = useTheme();
   // state
   const [showForm, setShowForm] = useState(false);
 
@@ -42,7 +43,7 @@ export default function Setting() {
             atCenter
             ph={24}
             pv={16}
-            bgColor={"#fff"}
+            bgColor={theme.palette.background.paper}
             boxShadow={"inset 0px -1px 0px #DBE6EB"}
         >
           {/* title */}
@@ -69,7 +70,7 @@ export default function Setting() {
 
             <Text
                 ml={12}
-                color={"#fff"}
+                color={theme.palette.background.paper}
                 fontSize={15}
                 lineHeight={20 / 15}
                 fontWeight={"600"}

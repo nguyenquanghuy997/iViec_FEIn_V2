@@ -2,6 +2,7 @@ import ImageIcon from "../../assets/ImageIcon";
 import { Box, Stack, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useController, useFormContext } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 
 const FileUpload = ({ limit, multiple, name }) => {
   const {
@@ -14,7 +15,7 @@ const FileUpload = ({ limit, multiple, name }) => {
   const [fileList, setFileList] = useState([]);
   const wrapperRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
-
+  const theme = useTheme();
   const onDragEnter = () => wrapperRef.current?.classList.add("dragover");
   const onDragLeave = () => wrapperRef.current?.classList.remove("dragover");
 
@@ -100,7 +101,7 @@ const FileUpload = ({ limit, multiple, name }) => {
             position: "relative",
             width: 80,
             height: 80,
-            background: "#EFF3F6",
+            background: theme.palette.common.bgrObject,
             borderRadius: "4px",
           }}
           ref={wrapperRef}
