@@ -2,6 +2,7 @@ import useLocales from "@/hooks/useLocales";
 import { makeStyles } from "@mui/styles";
 import PropTypes from "prop-types";
 import { cloneElement } from "react";
+import palette from "@/theme/palette";
 
 const StyledProps = {
   //
@@ -221,14 +222,14 @@ const getTextStyle = (props) => {
     textDecorationLine: props.underline ? "underline" : undefined,
   };
 };
-const useStyles = makeStyles(({theme}) => ({
+const useStyles = makeStyles(() => ({
   scroll: {
     "&::-webkit-scrollbar": {
       width: "6px",
       marginRight: "3px",
     },
     "&::-webkit-scrollbar-thumb": {
-      background: theme.palette.common.neutral300,
+      background: palette.light.common.neutral300,
       borderRadius: "30px",
       marginRight: "3px",
     },

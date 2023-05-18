@@ -50,7 +50,6 @@ const BoxItemFileStyle = styled(Box)(({theme}) => ({
     borderRadius: 6,
   }
 }));
-const theme= useTheme();
 const defaultValues = {
   id: undefined,
   name: undefined,
@@ -65,6 +64,8 @@ const defaultValues = {
 export const renderFileUploadItem = (file, index, removeFileUpload, displayButtonDelete) => {
   if (!file) return;
   let fileType = file.name.slice(file.name.lastIndexOf('.'));
+  const theme= useTheme();
+  
   return (
     <BoxItemFileStyle className="file-upload-item" key={index}>
       {showIconByFileType(fileType)}
