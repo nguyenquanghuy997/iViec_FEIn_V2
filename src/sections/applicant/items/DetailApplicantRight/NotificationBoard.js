@@ -21,7 +21,6 @@ import { Container } from "@mui/system";
 import React from "react";
 import { useState } from "react";
 
-const theme = useTheme();
 const NotificationBoard = ({
   icon,
   avatarSrc,
@@ -33,6 +32,7 @@ const NotificationBoard = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
+  const theme = useTheme();
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -171,8 +171,8 @@ const NotificationBoard = ({
               >
                 {fTimeDate(data?.occurredAt)}
               </Typography>
-              {data?.recruitmentPipelineStateType == 3 &&
-                (data.pipelineStateResultType == 2
+              {data?.recruitmentPipelineStateType === 3 &&
+                (data.pipelineStateResultType === 2
                   ? renderText(
                       "Lý do loại:",
                       data?.note,
@@ -203,10 +203,10 @@ const NotificationBoard = ({
                     marginLeft: "13px",
                     fontWeight: 600,
                     color:
-                      data?.applicantReviewResultType == 2 &&
-                      (data?.applicantReviewResultType == 0
+                      data?.applicantReviewResultType === 2 &&
+                      (data?.applicantReviewResultType === 0
                         ? "#388E3C"
-                        : data?.applicantReviewResultType == 1
+                        : data?.applicantReviewResultType === 1
                         ? theme.palette.common.orange700
                         : theme.palette.common.red600),
                   }}

@@ -1,10 +1,9 @@
 import SvgIconStyle from "@/components/SvgIconStyle";
-import {useTheme} from "@mui/material/styles";
-const theme = useTheme();
+import palette from "@/theme/palette";
 const getIcon = (name, color) => (
   <SvgIconStyle
     src={`/assets/icons/candidate/${name}.svg`}
-    sx={{ minWidth: "20px", height: "20px", color: color || theme.palette.common.neutral400 }}
+    sx={{ minWidth: "20px", height: "20px", color: color || palette.light.common.neutral400 }}
   />
 );
 

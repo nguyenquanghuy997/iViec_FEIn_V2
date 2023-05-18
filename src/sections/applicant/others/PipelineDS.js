@@ -11,7 +11,7 @@ import * as React from "react";
 
 
 
-const ColorlibConnector = styled(StepConnector)((theme) => ({
+const ColorlibConnector = styled(StepConnector)(({theme}) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
     left: "calc(-50% + 30px)",
@@ -81,7 +81,7 @@ export const PipelineApplicant = (props) => {
   const { steps } = props;
   const theme = useTheme();
   const activeStep = steps?.recruitmentPipelineStates.findIndex(
-    (i) => i.id == steps.currentApplicantPipelineState
+    (i) => i.id === steps.currentApplicantPipelineState
   );
   const renderName = (item) => {
     switch (item) {

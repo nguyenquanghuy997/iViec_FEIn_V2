@@ -3,13 +3,14 @@ import {FormControl, IconButton, InputAdornment, ListSubheader, MenuItem, Select
 import {useTheme} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
 import React, {useMemo, useState} from "react";
+import palette from "@/theme/palette";
 
 const containsText = (text, searchText) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const usePlaceholderStyles = makeStyles(({theme}) => ({
+const usePlaceholderStyles = makeStyles(() => ({
   placeholder: {
-    color: theme.palette.common.neutral500,
+    color: palette.light.common.neutral500,
     fontWeight: "400",
     fontSize: "14px",
     lineHeight: "20px",
@@ -26,15 +27,15 @@ const usePlaceholderStyles = makeStyles(({theme}) => ({
       fontSize: "15px",
       lineHeight: "20px",
       padding: "10px 16px",
-      background: theme.palette.common.white,
-      boxShadow: "inset 0px -1px 0px " + theme.palette.common.neutral100,
+      background: palette.light.common.white,
+      boxShadow: "inset 0px -1px 0px " + palette.light.common.neutral100,
     },
     "&::-webkit-scrollbar": {
       width: "5px",
       marginRight: "3px",
     },
     "&::-webkit-scrollbar-thumb": {
-      background: theme.palette.common.neutral300,
+      background: palette.light.common.neutral300,
       borderRadius: "30px",
       marginRight: "3px",
     },
@@ -92,7 +93,7 @@ export default function SelectAutoCompleteDS(props) {
             borderColor: theme.palette.common.neutral200
           },
           "& .MuiSelect-iconOutlined": {
-            display: selectedOption && allowClear == true ? "none" : "",
+            display: selectedOption && allowClear === true ? "none" : "",
             color: theme.palette.common.neutral700,
             width: "20px",
             height: "20px",
@@ -105,7 +106,7 @@ export default function SelectAutoCompleteDS(props) {
         }}
         onClose={() => setSearchText("")}
         endAdornment={
-          allowClear == true ? (
+          allowClear === true ? (
             <IconButton
               sx={{ visibility: selectedOption ? "visible" : "hidden" }}
               onClick={handleClearClick}

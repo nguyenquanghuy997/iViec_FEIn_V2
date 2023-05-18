@@ -8,21 +8,18 @@ import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { BoxFlex } from "@/sections/emailform/style";
 import { ButtonIcon, ReviewForm } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Divider, FormHelperText, Modal, Typography } from "@mui/material";
+import { Box, Divider, FormHelperText, Modal, Typography, useTheme } from "@mui/material";
 import { Rate } from "antd";
 import { useSnackbar } from "notistack";
-// import { Rate } from "antd";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useTheme} from "@mui/material/styles";
+import palette from "@/theme/palette";
 
-const theme = useTheme();
 const LIST_ACTION = [
-  { id: 0, name: "Đạt", color: theme.palette.common.green500, icon: "bxs:like" },
-  { id: 1, name: "Cân nhắc", color: theme.palette.common.orange500, icon: "ri:eye-fill" },
-  { id: 2, name: "Loại", color: theme.palette.common.red500, icon: "bxs:dislike" },
+  { id: 0, name: "Đạt", color: palette.light.common.green500, icon: "bxs:like" },
+  { id: 1, name: "Cân nhắc", color: palette.light.common.orange500, icon: "ri:eye-fill" },
+  { id: 2, name: "Loại", color: palette.light.common.red500, icon: "bxs:dislike" },
 ];
 
 const Point = ({ value, onChange }) => {
@@ -54,7 +51,7 @@ export const ApplicantReviewModal = ({
   const [points, setPoints] = useState({});
   const [mediumScore, setMediumScore] = useState(0);
   const [currentAction, setCurrentAction] = useState();
-
+  const theme = useTheme();
   const Schema = Yup.object().shape({
     ...data?.reviewFormCriterias?.reduce(
       (res, item) => ({
@@ -209,7 +206,7 @@ export const ApplicantReviewModal = ({
                 <div className="input-content">
                   <ul className="pagination-review">
                     {LIST_ACTION.map((item, index) => {
-                      const isActive = item.id == currentAction;
+                      const isActive = item.id === currentAction;
                       return (
                         <li
                           key={index}
