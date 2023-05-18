@@ -6,7 +6,7 @@ import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import CardEmailFormItem from "@/sections/emailform/component/CardEmailFormItem";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
 import FormHeader from "@/sections/emailform/component/FormHeader";
-import { findIndexs, toRequestFilterData } from "@/utils/helper";
+import { findIndex, toRequestFilterData } from "@/utils/helper";
 import { Box, Stack } from "@mui/material";
 import { isArray } from "lodash";
 import { useRouter } from "next/router";
@@ -279,7 +279,7 @@ const EmailForm = ({ title = "", subtitle = "", type }) => {
         onClose={handleCloseBottomNav}
         onDelete={handleDelete}
         setIsOpenActive={setIsOpenActive}
-        selectedList={findIndexs(true, selected)?.map((i) => data[i]) || []}
+        selectedList={findIndex(true, selected)?.map((i) => data[i]) || []}
         onGetParentNode={setItem}
         setActionType={setActionType}
         setActionTypeActive={setActionTypeActive}

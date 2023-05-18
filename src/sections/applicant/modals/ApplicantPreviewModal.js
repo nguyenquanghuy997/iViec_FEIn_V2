@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import {useUpdateApplicantFormMutation} from "@/sections/applicant";
 import {useTheme} from "@mui/material/styles";
 
-const  theme = useTheme();
 export const ApplicantPreviewModal = ({
   show,
   setShow,
@@ -18,7 +17,7 @@ export const ApplicantPreviewModal = ({
   onRefreshData,
 }) => {
   const [updateForm] = useUpdateApplicantFormMutation();
-
+  const theme = useTheme();
   const form = useForm({
     defaultValues: { isActive: !!data.Status },
   });

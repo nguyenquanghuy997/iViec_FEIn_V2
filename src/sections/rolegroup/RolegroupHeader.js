@@ -5,7 +5,6 @@ import { ButtonFilterStyle } from "@/sections/applicant/style";
 import { InputAdornment, Stack, Button } from "@mui/material";
 import SvgIcon from "@/components/SvgIcon";
 import {useTheme} from "@mui/material/styles";
-const  theme = useTheme();
 const RolegroupHeader = ({
   methods,
   onOpenFilterForm,
@@ -14,6 +13,8 @@ const RolegroupHeader = ({
   onOpenAddForm,
   canEdit,
 }) => {
+  const theme = useTheme();
+  
   return (
     <>
       <Stack

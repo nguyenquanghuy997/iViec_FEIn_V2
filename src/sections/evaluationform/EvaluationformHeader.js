@@ -6,7 +6,6 @@ import { Box, InputAdornment } from "@mui/material";
 import React from "react";
 import {useTheme} from "@mui/material/styles";
 
-const  theme = useTheme();
 const EvaluationFormHeader = ({
   methods,
   onOpenFilterForm,
@@ -14,6 +13,7 @@ const EvaluationFormHeader = ({
   handleSubmit,
   onOpenForm,
 }) => {
+  const  theme = useTheme();
   return (
     <>
       <Box

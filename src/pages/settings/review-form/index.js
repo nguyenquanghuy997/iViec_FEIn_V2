@@ -9,7 +9,6 @@ import SettingLayout from "@/layouts/setting";
 // import { useRef } from "react";
 import PageWrapper from "@/components/PageWrapper";
 import {useTheme} from "@mui/material/styles";
-const  theme = useTheme()
 Setting.getLayout = function getLayout(pageProps, page) {
   return (
     <SettingLayout permissions={PERMISSION_PAGES.evaluationTemplate} {...pageProps}>
@@ -19,6 +18,7 @@ Setting.getLayout = function getLayout(pageProps, page) {
 };
 
 export default function Setting() {
+  const  theme = useTheme()
   // ref
   // const refRequest = useRef({});
 
