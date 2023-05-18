@@ -28,7 +28,7 @@ export const QuestionGalleryFormModal = ({
   onSubmit,
 }) => {
   const isEdit = !!editData?.name;
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
 
   // form
   const Schema = Yup.object().shape({
@@ -66,7 +66,7 @@ export const QuestionGalleryFormModal = ({
       setValue("id", "");
       setValue("name", "");
       setValue("des", "");
-      setIsActive(false);
+      setIsActive(true);
       return;
     } else {
       setValue("id", editData.id);

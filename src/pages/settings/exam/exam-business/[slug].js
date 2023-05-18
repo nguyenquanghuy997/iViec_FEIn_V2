@@ -41,7 +41,8 @@ function Question() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showConfirmSwitchActive, setShowConfirmSwitchActive] = useState(false);
-  const [showTransferQuestionGroup, setShowTransferQuestionGroup] = useState(false);
+  const [showTransferQuestionGroup, setShowTransferQuestionGroup] =
+    useState(false);
 
   const { isActive, questionTitle = "" } = itemSelected[0] || {};
   const isMulti = itemSelected.length > 1;
@@ -152,8 +153,8 @@ function Question() {
         dataIndex: "description",
         title: "Điểm",
         width: "160px",
-        render: () => {
-          return "-";
+        render: (_, { questionPoint }) => {
+          return questionPoint;
         },
       },
       {
@@ -218,6 +219,16 @@ function Question() {
     getData();
   };
 
+  const handlerOpenCopyQuestion = () => {
+    setItemSelected(itemSelected.map(x => {
+      return {
+        ...x,
+        id: null
+      }
+    }))
+    setShowForm(true)
+  }
+
   //   effect
   useEffect(() => {
     getData();
@@ -267,14 +278,23 @@ function Question() {
           setShowForm={setShowForm}
           setShowConfirmDelete={() => setShowConfirmDelete(true)}
           setShowConfirmSwitchActive={() => setShowConfirmSwitchActive(true)}
-          setShowTransferQuestionGroup={() => setShowTransferQuestionGroup(true)}
+          setShowTransferQuestionGroup={() =>
+            setShowTransferQuestionGroup(true)
+          }
+
+          setShowCopyQuestion={() => handlerOpenCopyQuestion()}
         />
       </Content>
 
       <QuestionFormModal
         data={itemSelected[0]}
         show={showForm}
-        onClose={() => setShowForm(false)}
+        isNotSave={false}
+        onClose={() => {
+          setShowForm(false);
+          setItemSelected([]);
+          setSelectedRowKeys([]);
+        }}
         getData={getData}
       />
 
@@ -324,11 +344,12 @@ function Question() {
       />
 
       <QuestionTransferModal
-        questionGroupId = {QuestionGroupId}
+        questionGroupId={QuestionGroupId}
         data={selectedRowKeys}
         getData={getData}
         isShowTransferQuestionGroup={showTransferQuestionGroup}
-        onCloseTransfer={onCloseTransfer} />
+        onCloseTransfer={onCloseTransfer}
+      />
     </View>
   );
 }

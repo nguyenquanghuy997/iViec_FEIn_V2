@@ -18,6 +18,7 @@ import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {useTheme} from "@mui/material/styles";
+import { QuestionFormModal } from "../components/QuestionFormModal";
 
 export const QuestionGallary = () => {
   // state
@@ -50,6 +51,8 @@ export const QuestionGallary = () => {
 
   const _name = isMulti ? "" : name;
 
+  const [showFormQuestion, setShowFormQuestion] = useState(false);
+
   // form
   const methods = useForm({
     mode: "onChange",
@@ -57,6 +60,7 @@ export const QuestionGallary = () => {
       searchKey: "",
     },
   });
+
   const searchKey = useDebounce(methods.watch("searchKey"), 500);
 
   // callback
@@ -148,6 +152,7 @@ export const QuestionGallary = () => {
         methods={methods}
         handleSubmit={methods.handleSubmit}
         pressAddQuestionGallery={() => setShowForm(true)}
+        handlerCreateQuestion={() => setShowFormQuestion(true)}
       />
 
       <View flex1>
@@ -214,6 +219,11 @@ export const QuestionGallary = () => {
           onSubmit={onSubmitForm}
         />
       )}
+
+      <QuestionFormModal
+        show={showFormQuestion}
+        onClose={() => setShowFormQuestion(false)}
+      />
     </View>
   );
 }

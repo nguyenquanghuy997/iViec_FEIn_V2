@@ -28,7 +28,7 @@ import { calcFileSize, showIconByFileType } from "@/utils/function";
 import { ViewModel } from "@/utils/cssStyles";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import {
-  useAddOfferTemplateMutation,
+  useAddOfferTemplateMutation, useGetDefaultOfferTemplateQuery,
   useGetPreviewOfferTemplateQuery,
   useUpdateOfferTemplateMutation,
   useUploadImageOfferMutation
@@ -36,6 +36,8 @@ import {
 import { useSnackbar } from "notistack";
 import CropImage from "@/sections/offer-form/component/crop-image/CropImage";
 import { getFileUrl } from "@/utils/helper";
+import useAuth from "@/hooks/useAuth";
+
 const BoxItemFileStyle = styled(Box)(({theme}) => ({
   '&.file-upload-item': {
     marginRight: theme.spacing(2),
@@ -93,10 +95,15 @@ export const renderFileUploadItem = (file, index, removeFileUpload, displayButto
 }
 const OfferFormModal = ({isOpen, onClose, item, title}) => {
   const theme = useTheme();
+  const auth = useAuth();
   const isEditMode = !!item?.id;
-  let {data: preview = {}} = useGetPreviewOfferTemplateQuery(
+  const {data: preview = {}} = useGetPreviewOfferTemplateQuery(
     {Id: item?.id},
     {skip: !item?.id}
+  );
+  const {data: dataDefault} = useGetDefaultOfferTemplateQuery(
+    {OrganizationId: auth.user.organizationId},
+    {skip: item?.id}
   );
   const [addForm] = useAddOfferTemplateMutation();
   const [updateForm] = useUpdateOfferTemplateMutation();
@@ -146,6 +153,12 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
     setFileList(preview.templateAttachFiles);
   }, [isEditMode, item, preview]);
   
+  useEffect(() => {
+    if(!dataDefault) return;
+    setValue("signatureLogo", dataDefault.signatureLogo);
+    setValue("signatureContent", dataDefault.signatureContent);
+  }, [dataDefault])
+
   const handleOpenPreviewEmail = () => {
     setIsOpenPreview(true);
   };
@@ -344,7 +357,6 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
                   loading={isSubmitting}
                   variant="contained"
                   tittle={"Lưu"}
-                  sx={{mr: 1}}
                   onClick={pressSave}
                 />
                 <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>

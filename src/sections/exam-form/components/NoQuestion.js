@@ -5,7 +5,7 @@ import { Button, ButtonGroup, ClickAwayListener, Divider, MenuItem, MenuList, Ty
 import { useState } from "react";
 import {useTheme} from "@mui/material/styles";
 
-const NoQuestion = () => {
+const NoQuestion = ({ setShowQuestionForm, setShowQuestionGallaryInternalModal }) => {
     const [openGroup, setOpenGroup] = useState(false);
 
     const handleCloseGroup = () => {
@@ -15,6 +15,7 @@ const NoQuestion = () => {
         setOpenGroup(true);
     };
     const theme = useTheme();
+
     return <div style={{ margin: "40px 0", minHeight: "250px", textAlign: 'center' }}>
         <img
             src={`/assets/icons/candidate/notfound.png`}
@@ -43,7 +44,7 @@ const NoQuestion = () => {
                     borderRadius: '6px 0px 0px 6px',
                     textTransform: 'none'
                 }}
-            // onClick={() => setShowDialogStage(true)}
+                onClick={setShowQuestionForm}
             >
                 <Iconify
                     icon={"material-symbols:add"}
@@ -59,7 +60,7 @@ const NoQuestion = () => {
                 onClose={handleCloseGroup}
                 disableFocusListener
                 disableHoverList
-                ener
+                ener={'true'}
                 disableTouchListener
                 open={openGroup}
                 title={
@@ -68,9 +69,16 @@ const NoQuestion = () => {
                     >
                         <MenuList
                             autoFocusItem
-                            divider={true}
-                            disableGutters={true}
+                            divider={'true'}
+                            disableGutters={'true'}
                         >
+                            <MenuItem onClick={setShowQuestionGallaryInternalModal}>
+                                <TeamLineIcon sx={{ mr: "12px" }} />
+                                <Typography ml={"12px"} variant={"textSize13600"}>
+                                    Lấy từ kho nội bộ
+                                </Typography>
+                            </MenuItem>
+                            <Divider />
                             <MenuItem>
                                 <TeamLineIcon sx={{ mr: "12px" }} />
                                 <Typography ml={"12px"} variant={"textSize13600"}>

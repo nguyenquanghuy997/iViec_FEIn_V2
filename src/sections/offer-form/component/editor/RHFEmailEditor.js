@@ -5,7 +5,7 @@ import { LabelStyle } from "@/components/hook-form/style";
 import React from "react";
 import EmailEditor from "@/sections/offer-form/component/editor/EmailEditor";
 
-const RHFEmailEditor = ({ name, title, isRequired = false, ...other }) => {
+const RHFEmailEditor = ({ name, title, isRequired = false, dataTagShow, dataTag, ...other }) => {
   const {control} = useFormContext()
 
   return (
@@ -25,6 +25,8 @@ const RHFEmailEditor = ({ name, title, isRequired = false, ...other }) => {
                         {error?.message}
                       </FormHelperText>
                     }
+                    dataTagShow={dataTagShow}
+                    dataTag={dataTag}
                     {...other}
                 />
                 {/*<FormHelperText error sx={{px: 2, textTransform: 'capitalize'}}>*/}

@@ -1,6 +1,6 @@
 import { DOMAIN_SERVER_API } from "@/config";
-import { useUploadImageCompanyMutation } from "@/sections/companyinfor/companyInforSlice";
 import { cropImage } from "@/sections/companyinfor/cropUtils";
+import { useUploadImageOfferMutation } from "@/sections/offer-form/OfferFormSlice";
 import {
   Box,
   Button,
@@ -18,20 +18,18 @@ import { Controller, useFormContext } from "react-hook-form";
 import ImageUploading from "react-images-uploading";
 import {useTheme} from "@mui/material/styles";
 
-export default function CropImage({ id, logo, handleSubmit }) {
+export default function CropImage({ logo, handleSubmit }) {
   const [image, setImage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
   const  theme = useTheme();
   const { control } = useFormContext();
-  const [uploadImage] = useUploadImageCompanyMutation();
-
+  const [uploadImage] = useUploadImageOfferMutation();
   const onSubmitImage = async () => {
     try {
-      const res = await uploadImage({
-        File: croppedImage.file,
-        OrganizationId: id,
-      }).unwrap();
+      const file = new FormData();
+      file.append("Files", new File([croppedImage.file], image[0].file.name));
+      const res = await uploadImage(file).unwrap();
       handleSubmit?.(res);
     } catch (error) {
       //
@@ -39,9 +37,9 @@ export default function CropImage({ id, logo, handleSubmit }) {
   };
 
   useEffect(() => {
-    if (!id || !croppedImage) return;
+    if (!croppedImage) return;
     onSubmitImage();
-  }, [id, croppedImage]);
+  }, [croppedImage]);
 
   const ImageCropper = ({
     open,

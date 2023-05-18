@@ -5,6 +5,7 @@ import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
+import { CopyIcon } from "@/sections/recruitment/others/Icon";
 import {
   Box,
   Divider,
@@ -23,6 +24,7 @@ export default ({
   setShowConfirmDelete,
   setShowConfirmSwitchActive,
   setShowTransferQuestionGroup,
+  setShowCopyQuestion
 }) => {
   const firstActiveStatus = list.find(
     (i) => i.id === listSelected[0]
@@ -103,6 +105,16 @@ const  theme = useTheme();
                   color={theme.palette.common.borderObject}
                 />
               </IconButton>
+
+              {
+                showEdit && <IconButton
+                  size="small"
+                  sx={{ color: "#5C6A82", mx: 1 }}
+                  onClick={() => setShowCopyQuestion()}
+                >
+                  <CopyIcon />
+                </IconButton>
+              }
 
               <IconButton
                 size="small"

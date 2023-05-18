@@ -20,7 +20,7 @@ import {
 import moment from "moment";
 import React from "react";
 
-const PreviewEmail = ({isOpen, onClose, content, signature, logo}) => {
+const PreviewEmail = ({isOpen, title, onClose, content, signature, logo}) => {
   const theme = useTheme();
   return (
     <Drawer
@@ -52,7 +52,7 @@ const PreviewEmail = ({isOpen, onClose, content, signature, logo}) => {
           {/* Title */}
           <Box sx={{mb: 2}}>
             <Typography sx={{color: theme.palette.common.neutral800, fontSize: 16, fontWeight: 600}}>
-              Tiêu đề email
+              {title}
             </Typography>
           </Box>
           <Box sx={{display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between'}}>

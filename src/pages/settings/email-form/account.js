@@ -13,6 +13,7 @@ Account.getLayout = function getLayout(pageProps, page) {
 function Account() {
   return (
     <EmailForm
+      type={0}
       title="Email thông báo tài khoản"
       subtitle="Gửi tới Ứng viên khi Nhà tuyển dụng chuyển Ứng viên vào tin và thực hiện thao tác tuyển dụng đầu tiên."
     />

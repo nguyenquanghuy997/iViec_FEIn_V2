@@ -3,9 +3,8 @@ import { Box, Breadcrumbs, Link, Typography } from "@mui/material"
 import {useTheme} from "@mui/material/styles";
 
 const theme = useTheme();
-const CreateExamHeader = () => {
+const CreateExamHeader = ({handleSaveDraft, handleSave, handleCancel}) => {
     return <>
-
         <Box sx={{
             display: 'flex',
             alignItems: 'center',
@@ -37,6 +36,7 @@ const CreateExamHeader = () => {
                 justifyContent: 'flex-end'
             }}>
                 <MuiButton
+                    onClick={handleCancel}
                     title={'Hủy'}
                     color="basic"
                     className={'btn-actions btn-cancel'}
@@ -68,7 +68,7 @@ const CreateExamHeader = () => {
                     title="Lưu nháp"
                     color="default"
                     // disabled={!name || isDisabled}
-                    // onClick={() => onOpenConfirm({ openSaveDraft: true })}
+                    onClick={handleSaveDraft}
                     sx={{
                         marginRight: '1rem',
                         padding: '8px 12px',
@@ -84,6 +84,7 @@ const CreateExamHeader = () => {
                 />
 
                 <MuiButton
+                    onClick={handleSave}
                     title={'Lưu'}
                     color={"primary"}
                     className={'btn-actions btn-confirm'}

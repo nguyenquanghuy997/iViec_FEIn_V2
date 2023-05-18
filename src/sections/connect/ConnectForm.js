@@ -1,26 +1,26 @@
 import CloseIcon from "../../assets/CloseIcon";
 import Iconify from "@/components/Iconify";
-import { FormProvider } from "@/components/hook-form";
-import { RHFTextField } from "@/components/hook-form";
+import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Alert,
+  Button,
   Dialog,
+  DialogActions,
+  DialogContent,
   DialogTitle,
   Divider,
-  DialogContent,
+  FormControlLabel,
+  IconButton,
   InputAdornment,
   Stack,
-  DialogActions,
-  Button,
-  Typography,
   Switch,
-  FormControlLabel,
+  Typography,
 } from "@mui/material";
-import { Alert, IconButton } from "@mui/material";
 import { styled } from "@mui/styles";
 // import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 // import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
@@ -71,7 +71,6 @@ const ConnectForm = (props) => {
   } = methods;
 
   const onSubmit = async () => {
-    // console.log(errors);
     // try {
     //   await login(data.email, data.password, data.userLoginType, data.remember);
     //   enqueueSnackbar("Đăng nhập thành công!");

@@ -9,12 +9,18 @@ import {useTheme} from "@mui/material/styles";
 
 
 function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
-  
-  const [type, setType] = useState(0);
+
+  const [type, setType] = useState(data?.type ?? 0);
+
   const handleChange = (e) => {
     setType(parseInt(e.target.value))
   }
   const theme = useTheme()
+
+  const handleClickItem = (type)=>{
+    setType(type)
+  }
+
   const pressSave = () => {
     data.type = type;
     onSubmit(data);
@@ -101,7 +107,7 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
                     padding: '24px 16px',
                     marginTop: index !== 0 ? '28px' : '0'
                   }}
-                  onClick={() => setType(x.value)}
+                  onclick={()=>handleClickItem(x.value)}
                 >
                   <View>
                     <FormControlLabel
