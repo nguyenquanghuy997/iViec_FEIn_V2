@@ -4,7 +4,9 @@ import {
 } from "../ApplicantFormSlice";
 import { ButtonDS } from "@/components/DesignSystem";
 import { View } from "@/components/DesignSystem/FlexStyled";
+import { Text } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import SvgIcon from "@/components/SvgIcon";
 import { FormProvider } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancel, ButtonIcon, DialogModelStyle } from "@/utils/cssStyles";
@@ -15,12 +17,14 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  useTheme,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, {Fragment, useState} from "react";
+import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const ApplicantTransferPipelineModal = ({
+  isReExploiting,
   showConfirmMultiple,
   setShowConfirmMultiple,
   itemSelected,
@@ -29,6 +33,7 @@ const ApplicantTransferPipelineModal = ({
   setActionType,
   setActionShow,
 }) => {
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const methods = useForm({});
   const { handleSubmit } = methods;
@@ -109,7 +114,40 @@ const ApplicantTransferPipelineModal = ({
             padding: "22px 24px",
           }}
         >
-          <div style={{ color: "#172B4D", fontWeight: 600 }}>Chuyển bước</div>
+          <View opacity={0}>
+            <ButtonIcon
+              icon={
+                <Iconify
+                  width={20}
+                  height={20}
+                  icon="ic:baseline-close"
+                  color="#455570"
+                />
+              }
+            />
+          </View>
+
+          {isReExploiting ? (
+            <View contentcenter>
+              <SvgIcon>
+                {
+                  '<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 5C43.8075 5 55 16.1925 55 30C55 43.8075 43.8075 55 30 55C16.1925 55 5 43.8075 5 30H10C10 41.045 18.955 50 30 50C41.045 50 50 41.045 50 30C50 18.955 41.045 10 30 10C23.125 10 17.06 13.4675 13.4625 18.75H20V23.75H5V8.75H10V15C14.56 8.925 21.8225 5 30 5Z" fill="#1976D2"/></svg>'
+                }
+              </SvgIcon>
+
+              <Text
+                mt={12}
+                fontSize={16}
+                color={theme.palette.common.blue700}
+                fontWeight={"600"}
+              >
+                {"Tái khai thác ứng viên"}
+              </Text>
+            </View>
+          ) : (
+            <div style={{ color: "#172B4D", fontWeight: 600 }}>Chuyển bước</div>
+          )}
+
           <div>
             <ButtonIcon
               onClick={() => setShowConfirmMultiple(false)}
@@ -121,7 +159,7 @@ const ApplicantTransferPipelineModal = ({
                   color="#455570"
                 />
               }
-            ></ButtonIcon>
+            />
           </div>
         </View>
         <Divider />
@@ -159,7 +197,7 @@ const ApplicantTransferPipelineModal = ({
                 } else if (p?.pipelineStateType != 4) {
                   return (
                     <FormControlLabel
-                        key={index}
+                      key={index}
                       value={p?.id}
                       control={<Radio />}
                       label={PipelineStateType(p?.pipelineStateType)}
@@ -172,7 +210,10 @@ const ApplicantTransferPipelineModal = ({
         </View>
         <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
           <ButtonCancel tittle="Hủy" onClick={onClose} />
-          <ButtonDS tittle="Tiếp tục" onClick={handleTranfer} />
+          <ButtonDS
+            tittle={isReExploiting ? "Tái khai thác" : "Tiếp tục"}
+            onClick={handleTranfer}
+          />
         </DialogActions>
       </FormProvider>
     </DialogModelStyle>

@@ -60,6 +60,7 @@ function ApplicantPreviewItem() {
 
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
+  const [isReExploiting, setIsReExploiting] = useState(false);
   const [open, setOpen] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
@@ -352,6 +353,7 @@ function ApplicantPreviewItem() {
 
   const onCloseModel = () => {
     setActionShow(false);
+    setIsReExploiting(false);
     setShowConfirmMultiple(false);
   };
 
@@ -397,6 +399,11 @@ function ApplicantPreviewItem() {
       undefined,
       { shallow: false }
     );
+  };
+
+  const onReExploiting = () => {
+    setIsReExploiting(true);
+    setShowConfirmMultiple(true);
   };
 
   return (
@@ -565,18 +572,22 @@ function ApplicantPreviewItem() {
                     <ApplicantPreviewLog
                       dataLog={logApplicant}
                       dataApplicant={data}
+                      onReExploiting={onReExploiting}
                     />
                   </Grid>
                 </Grid>
               </CardContent>
               {showConfirmMultiple && (
                 <ApplicantTransferPipelineModal
+                  isReExploiting={isReExploiting}
                   showConfirmMultiple={showConfirmMultiple}
                   setShowConfirmMultiple={setShowConfirmMultiple}
                   onClose={onCloseModel}
                   itemSelected={{
                     applicantId: ApplicantId,
                     recruitmentId: RecruitmentId,
+                    recruitmentPipelineStateId:
+                      pipelines?.currentApplicantPipelineState,
                   }}
                   setActionId={setActionId}
                   setActionType={setActionType}

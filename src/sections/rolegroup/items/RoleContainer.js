@@ -59,8 +59,6 @@ export const RoleContainer = () => {
     skip: !isReady,
   });
 
-  console.log(formatBody(query));
-
   const [removeRoleGroup] = useRemoveRoleGroupMutation();
   const [setStatusRoleGroup] = useSetStatusRoleGroupMutation();
 
