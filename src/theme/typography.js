@@ -99,9 +99,18 @@ const typography = {
     lineHeight: 1.5,
     fontSize: pxToRem(14),
   },
+  textSize14600: {
+    fontWeight: 600,
+    lineHeight: 1.5,
+    fontSize: pxToRem(14),
+  },
   textSize12: {
     fontWeight: 400,
     fontSize: pxToRem(12),
+  },
+  textSize18600: {
+    fontWeight: 600,
+    fontSize: pxToRem(18),
   },
 }
 

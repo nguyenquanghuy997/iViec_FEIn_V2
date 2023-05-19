@@ -4,7 +4,7 @@ import {Controller, useFormContext} from 'react-hook-form';
 import TinyEditor from "./TinyEditor";
 
 
-const RHFTinyEditor = ({ name, ...other }) => {
+const RHFTinyEditor = ({ name, enableTags, toolbar, ...other }) => {
   const {control} = useFormContext()
 
   return (
@@ -18,6 +18,8 @@ const RHFTinyEditor = ({ name, ...other }) => {
                     value={field.value}
                     onChange={field.onChange}
                     error={!!error}
+                    enableTags={enableTags}
+                    toolbar={toolbar}
                     helperText={
                       <FormHelperText error sx={{px: 0}}>
                         {error?.message}

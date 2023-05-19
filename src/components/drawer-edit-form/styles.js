@@ -12,7 +12,7 @@ export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) =
   '> form': {
     display: 'flex',
     flexDirection: 'column',
-    height: '100vh',
+    height: 'calc(100vh - 64px)',
   },
   '.role-actions-table': {
     '.MuiTableHead-root': {

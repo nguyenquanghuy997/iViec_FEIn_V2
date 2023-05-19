@@ -109,6 +109,12 @@ export const sidebarConfig = [
           },
         ],
       },
+      {
+        title: "Thông báo tự động",
+        path: "/settings/notification",
+        // Todo edit permission
+        permissions: [PERS.VIEW_JOB_POS],
+      },
     ],
   },
   {
