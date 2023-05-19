@@ -219,6 +219,7 @@ export const {
   useUpdateQuestionGroupMutation,
   useUpdateActiveQuestionGroupMutation,
   useRemoveQuestionGroupMutation,
+  useGetQuestionsQuery,
   useLazyGetQuestionsQuery,
   useCreateQuestionMutation,
   useUpdateQuestionMutation,

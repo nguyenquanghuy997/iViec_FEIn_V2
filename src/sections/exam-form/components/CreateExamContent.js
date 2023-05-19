@@ -26,7 +26,7 @@ const CreateExamContent = () => {
   const router = useRouter();
   const [createExam] = useCreateExamMutation();
   const [updateExam] = useUpdateExamMutation();
-	const theme = useTheme();
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const examId = router.query.slug;
   const { data: data } = useGetExaminationByIdQuery({
@@ -69,14 +69,14 @@ const CreateExamContent = () => {
   }
 
   const handleSubmitForm = (data) => {
-    setExamData({ ...examData, ...data });
+    setExamData({ ...data });
     setShowForm(false);
     setShowChooseType(true);
   };
 
   const handleExamSetting = (data) => {
     setShowChooseType(false);
-    setExamData(data);
+    setExamData({ ...data });
   };
 
   const renderExamSettingInfo = (icon, title) => {
@@ -193,7 +193,7 @@ const CreateExamContent = () => {
       });
       return;
     }
-    if (examQuestions.length == 0 && examData.type == 1) {
+    if (examQuestionGroups.length == 0 && examData.type == 1) {
       enqueueSnackbar("Bạn cần thêm nhóm câu hỏi vào đề thi", {
         variant: "error",
       });
@@ -333,7 +333,7 @@ const CreateExamContent = () => {
             </SubTitleStyle>
           </View>
 
-          <View flexrow={"true"} allcenter={"true"}>
+          <View flexrow={"true"} allcenter={"true"} style={{ alignItems: 'stretch' }}>
             <View
               allcenter={"true"}
               style={{
@@ -410,7 +410,7 @@ const CreateExamContent = () => {
 
               </Box>
             </View>
-            <View>
+            <View style={{ flexDirection: 'row' }}>
               <Tooltip title={
                 examData.type == 1 && !examData.maximumPoint
                   ? 'Không thể xác định điểm tối đa do trong đề có ít nhất 1 câu hỏi câu hỏi tự luận ngẫu nhiên'
@@ -446,11 +446,8 @@ const CreateExamContent = () => {
                   >
                     {examData.maximumPoint ?? 'Không xác định'}
                   </span>
-
                 </Box>
               </Tooltip>
-
-
             </View>
           </View>
         </View>

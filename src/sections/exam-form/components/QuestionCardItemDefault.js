@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
+import { ImageIcon } from "./icons/Icon";
 
 const questionInfoTitle = {
   fontSize: "14px",
@@ -175,7 +176,7 @@ function QuestionCardItemDefault({
             className="card-item-title"
             sx={{
               width: "100%",
-              alignItems: "start !important",
+              alignItems: "center !important",
             }}
           >
             {
@@ -203,9 +204,11 @@ function QuestionCardItemDefault({
               color={"#455570"}
               maxWidth={"75%"}
               component="span"
+              mr={1}
             >
               {item.questionTitle}
             </Typography>
+            {item.questionFilePaths?.length > 0 && <ImageIcon />}
           </CardFormItemTitleStyle>
         </BoxFlex>
       </AccordionSummary>
