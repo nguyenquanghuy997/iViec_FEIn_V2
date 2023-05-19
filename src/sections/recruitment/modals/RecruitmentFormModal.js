@@ -156,6 +156,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
     setBenefit(preview.benefit);
   }, [isEditMode, preview.id]);
   const isActivated = methods.watch("isActivated");
+  console.log("setDescription",description);
   return (
     <FormProvider methods={methods}>
       <Modal
@@ -227,10 +228,10 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
                 {renderTitle("Mô tả công việc")}
                 <Editor
                   data={description}
-                  onChange={(_, e) => {
-                    const text = e.getData();
-                    setValue("description", text);
-                  }}
+                  // onChange={(_, e) => {
+                  //   const text = e.getData();
+                  //   setValue("description", text);
+                  // }}
                   config={{
                     toolbar: [
                       "bold",
@@ -258,10 +259,10 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
 
                 <Editor
                   data={requirement}
-                  onChange={(_, e) => {
-                    const text = e.getData();
-                    setValue("requirement", text);
-                  }}
+                  // onChange={(_, e) => {
+                  //   const text = e.getData();
+                  //   setValue("requirement", text);
+                  // }}
                   config={{
                     toolbar: [
                       "bold",
@@ -289,10 +290,10 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
 
                 <Editor
                   data={benefit}
-                  onChange={(_, e) => {
-                    const text = e.getData();
-                    setValue("benefit", text);
-                  }}
+                  // onChange={(_, e) => {
+                  //   const text = e.getData();
+                  //   setValue("benefit", text);
+                  // }}
                   config={{
                     toolbar: [
                       "bold",
