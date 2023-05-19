@@ -4,8 +4,8 @@ import Iconify from '@/components/Iconify'
 import { ButtonCancelStyle } from '@/sections/applicant/style'
 import { DialogModelStyle } from '@/utils/cssStyles'
 import { Divider, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import {useTheme} from "@mui/material/styles";
+import React, { useEffect, useState } from 'react'
+import { useTheme } from "@mui/material/styles";
 
 const showTypeOptions = [
   {
@@ -21,8 +21,8 @@ const showTypeOptions = [
 ]
 
 function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
-  const [type, setType] = useState(data?.type);
-
+  
+  const [type, setType] = useState(data?.type??0);
   const handleChange = (e) => {
     setType(parseInt(e.target.value))
   }
@@ -37,6 +37,9 @@ function ExamChooseTypeModal({ show, onClose, onSubmit, data }) {
     onSubmit(data);
   }
 
+  useEffect(()=>{
+    setType(data.type)
+  },[data])
 
   return (
     <DialogModelStyle

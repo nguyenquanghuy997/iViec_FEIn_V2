@@ -1,11 +1,9 @@
-import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
 import { ButtonAddStyle } from "@/sections/emailform/style";
-import { Box, Button, ButtonGroup, ClickAwayListener, Divider, InputAdornment, MenuItem, MenuList, Stack, Typography } from "@mui/material";
-import { useState } from "react";
-import {useTheme} from "@mui/material/styles";
+import { Box, Button, ButtonGroup, InputAdornment, Stack } from "@mui/material";
+// import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 
 export default ({
   methods,
@@ -15,15 +13,15 @@ export default ({
   handlerCreateQuestion
 }) => {
   // const [showDialogStage, setShowDialogStage] = useState(false);
-  const [openGroup, setOpenGroup] = useState(false);
+  // const [openGroup, setOpenGroup] = useState(false);
   const theme = useTheme();
 
-  const handleCloseGroup = () => {
-    setOpenGroup(false);
-  };
-  const handleOpenGroup = () => {
-    setOpenGroup(true);
-  };
+  // const handleCloseGroup = () => {
+  //   setOpenGroup(false);
+  // };
+  // const handleOpenGroup = () => {
+  //   setOpenGroup(true);
+  // };
 
   return (
     <>
@@ -35,7 +33,7 @@ export default ({
           padding: "16px",
           marginTop: "16px",
           borderRadius: "6px",
-          border: "1px solid " +  theme.palette.common.neutral100,
+          border: "1px solid " + theme.palette.common.neutral100,
           background: theme.palette.common.white,
         }}
       >
@@ -94,7 +92,8 @@ export default ({
                 padding: "8px 12px",
                 fontWeight: 600,
                 fontSize: ' .875rem',
-                borderRadius: '6px 0px 0px 6px',
+                // borderRadius: '6px 0px 0px 6px',
+                borderRadius: '6px',
                 textTransform: 'none'
               }}
               onClick={handlerCreateQuestion}
@@ -108,7 +107,7 @@ export default ({
               />
               Thêm câu hỏi
             </Button>
-            <LightTooltip
+            {/* <LightTooltip
               placement="bottom-end"
               onClose={handleCloseGroup}
               disableFocusListener
@@ -166,7 +165,7 @@ export default ({
                   color={theme.palette.background.paper}
                 />
               </Button>
-            </LightTooltip>
+            </LightTooltip> */}
           </ButtonGroup>
         </Stack>
       </Box>

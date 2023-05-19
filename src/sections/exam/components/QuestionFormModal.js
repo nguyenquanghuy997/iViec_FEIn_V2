@@ -89,7 +89,7 @@ const MediaItem = ({ data, onUploaded, onPressDelete }) => {
     <View size={"100%"}>
       <Media
         src={getFileUrl(uploadedUrl)}
-        style={{ width:"100%", height:"100%", borderRadius: 4, objectFit: "cover" }}
+        style={{ width: "100%", height: "100%", borderRadius: 4, objectFit: "cover" }}
       />
 
       <View absolute t={-12} r={-12} onclick={onPressDelete}>
@@ -105,7 +105,7 @@ const MediaItem = ({ data, onUploaded, onPressDelete }) => {
   );
 };
 
-export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, handleNoSave }) => {
+export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = false, handleNoSave }) => {
   // props
   const isEditMode = (!isNotSave && !!data?.id) || (isNotSave && data?.questionTitle);
 
@@ -114,7 +114,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  
+
 
   // api
   const [addForm] = useCreateQuestionMutation();
@@ -216,6 +216,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
           answers: e.answers.length > 0 && !isEssay ? e.answers : null
         };
         await (e.id ? updateForm(body) : addForm(body)).unwrap();
+        onClose();
         enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
         getData();
       }
@@ -401,7 +402,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave, han
 
   useEffect(() => {
     // setListAnswer(isEssay ? [] : [defaultAnswer]);
-      setValue("questionPoint", isEssay ? data?.questionPoint ?? 1 : 1)
+    setValue("questionPoint", isEssay ? data?.questionPoint ?? 1 : 1)
   }, [isEssay]);
 
   useEffect(() => {

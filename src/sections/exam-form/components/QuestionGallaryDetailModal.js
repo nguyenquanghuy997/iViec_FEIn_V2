@@ -2,7 +2,7 @@ import { ButtonDS } from '@/components/DesignSystem'
 import Iconify from '@/components/Iconify'
 import { Text } from '@/components/DesignSystem/FlexStyled'
 
-import { Box, Dialog, DialogActions, DialogContent, Divider, Grid, InputAdornment } from '@mui/material'
+import { Box, CircularProgress, Dialog, DialogActions, DialogContent, Divider, Grid, InputAdornment } from '@mui/material'
 import React, { useState } from 'react'
 import { ButtonCancel } from '@/utils/cssStyles'
 import { FormProvider, RHFSelect, RHFTextField } from '@/components/hook-form'
@@ -36,14 +36,19 @@ const LIST_QUESTION_TYPE = [
 
 
 function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuestions, handleAddQuestionFromInternal }) {
+  const [isLoading, setIsLoading] = useState(true)
   const [getQuestions, { data: { items = [], totalRecord } = {} }] = useLazyGetQuestionsQuery();
-    
+
   const [questionSelected, setQuestionSelected] = useState([])
 
   const methods = useForm({
     mode: "onChange",
     defaultValues: {
-      searchKey: "",
+      searchKey: null,
+      createdTimeFrom: null,
+      createdTimeTo: null,
+      type: null,
+      creatorIds: null
     },
   });
 
@@ -53,16 +58,13 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
     setValue
   } = methods;
 
-  const searchKey = useDebounce(watch('searchKey'), 200)
+  const searchKey = useDebounce(watch('searchKey'), 300)
   const type = watch('type')
   const createdTimeFrom = watch('createdTimeFrom')
   const createdTimeTo = watch('createdTimeTo')
-  const OrganizationIds = watch('OrganizationIds')
+  const creatorIds = watch('creatorIds')
 
   const handleSelected = (data) => {
-    //neu disable thi khong cho check
-    // if (isDisable(data))
-    //   return;
     const isExits = questionSelected.some(x => x.id == data.id)
     if (isExits) {
       setQuestionSelected(questionSelected.filter(x => x.id != data.id))
@@ -88,14 +90,15 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
     return listQuestions.filter(x => x.questionGroupId == questionGallary?.id).length + questionSelected.length;
   }
 
-  useEffect(() => {
-    if (questionGallary?.id)
-      getQuestions({ QuestionGroupId: questionGallary?.id, searchKey, type, createdTimeFrom, createdTimeTo, OrganizationIds });
-  }, [questionGallary, searchKey, type, createdTimeFrom, createdTimeTo, OrganizationIds]);
+  useEffect(async () => {
+    setIsLoading((await getQuestions({ QuestionGroupId: questionGallary.id, searchKey, type, createdTimeFrom, createdTimeTo, creatorIds })).isLoading)
+  }, [searchKey, type, createdTimeFrom, createdTimeTo, creatorIds]);
 
   useEffect(() => {
-    setQuestionSelected([])
-    setValue("searchKey", "")
+    if (!show) {
+      setQuestionSelected([])
+      setValue("searchKey", null)
+    }
   }, [show])
 
   return (
@@ -161,7 +164,6 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
           <Grid item xs={3} sx={{ background: '#FDFDFD' }}>
             <Box padding={'24px'}>
               <FormProvider methods={methods} onSubmit={handleSubmit}>
-
                 <RHFTextField
                   name="searchKey"
                   placeholder="Tìm kiếm câu hỏi..."
@@ -217,7 +219,7 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
                   <LabelStyle>Người tạo</LabelStyle>
                   <RHFSelect
                     remoteUrl={`${API_GET_ORGANIZATION_USERS}`}
-                    name="OrganizationIds"
+                    name="creatorIds"
                     multiple
                     placeholder="Chọn người tạo"
                     fullWidth
@@ -230,7 +232,7 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
           </Grid>
           <Grid item xs={9}>
             <Box >
-              <Box sx={{ display: 'flex', justifyContent: 'space-between',padding: '24px 24px 0 24px' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '24px 24px 0 24px' }}>
                 <Box sx={{ display: 'flex' }}>
                   <Iconify
                     onClick={onClose}
@@ -248,26 +250,43 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
 
                 <Box>
                   <Text fontsize={13} fontweight={"600"} color={"#455570"}>
-                    {`Đã chọn ${getTotalSelected()}/${totalRecord??0} câu hỏi`}
+                    {`Đã chọn ${getTotalSelected()}/${totalRecord ?? 0} câu hỏi`}
                   </Text>
                 </Box>
               </Box>
-              <Box mt={2} sx={{
-                height: 'calc(100vh - 64px - 68px - 70px - 60px)',
-                overflowY: 'scroll',
-                padding: '24px 24px 0px 24px'
-              }}>
-                {
-                  items?.map((item, index) => <QuestionCardItemDefault
-                    key={item.id}
-                    index={index}
-                    checked={isSelected(item)}
-                    isDisable={isDisable(item)}
-                    onChangeSelected={() => handleSelected(item)}
-                    item={{ ...item, questionGroupName: questionGallary?.name }}
-                  />)
-                }
-              </Box>
+              {
+                isLoading &&
+                <Box sx={{
+                  width:'100%',
+                  height: 'calc(100vh - 64px - 68px - 70px - 60px)',
+                  minHeight: 'calc(100vh - 64px - 68px - 70px - 60px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <CircularProgress />
+                </Box>
+              }
+              {
+                !isLoading &&
+                <Box mt={2} sx={{
+                  height: 'calc(100vh - 64px - 68px - 70px - 60px)',
+                  minHeight: 'calc(100vh - 64px - 68px - 70px - 60px)',
+                  overflowY: 'scroll',
+                  padding: '24px 24px 0px 24px'
+                }}>
+                  {
+                    items?.map((item, index) => <QuestionCardItemDefault
+                      key={item.id}
+                      index={index}
+                      checked={isSelected(item)}
+                      isDisable={isDisable(item)}
+                      onChangeSelected={() => handleSelected(item)}
+                      item={{ ...item, questionGroupName: questionGallary?.name }}
+                    />)
+                  }
+                </Box>
+              }
             </Box>
           </Grid>
         </Grid>

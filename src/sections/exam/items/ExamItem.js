@@ -8,28 +8,25 @@ import {
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import TextMaxLine from "@/components/TextMaxLine";
-import { Box, Button, ButtonGroup, ClickAwayListener, MenuItem, MenuList, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup } from "@mui/material";
 import Iconify from "@/components/Iconify";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
-import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
-import Divider from "@mui/material/Divider";
 import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
 import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
 import ExamFormModal from "../components/ExamFormModal";
 import ExamChooseTypeModal from "../components/ExamChooseTypeModal";
-import {useTheme} from "@mui/material/styles";
-import {TBL_FILTER_TYPE} from "@/config";
-import {LIST_EXAM_TYPE, LIST_STATUS} from "@/utils/formatString";
-import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
-import {ExamType, Status} from "@/utils/enum";
-import {fDate} from "@/utils/formatTime";
+import { useTheme } from "@mui/material/styles";
+import { TBL_FILTER_TYPE } from "@/config";
+import { LIST_EXAM_TYPE, LIST_STATUS } from "@/utils/formatString";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import { ExamType, Status } from "@/utils/enum";
+import { fDate } from "@/utils/formatTime";
 
 export const ExamItem = ({
   hideTable,
   headerProps,
 }) => {
   const router = useRouter();
-  const  theme = useTheme();
+  const theme = useTheme();
   const listArrayOtherIdsFilter = ["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
   const [showFormQuestion, setShowFormQuestion] = useState(false);
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
@@ -63,8 +60,11 @@ export const ExamItem = ({
         dataIndex: "name",
         title: "Đề thi",
         width: "150px",
-        render: (item) => (
-          <TextMaxLine sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }} >
+        render: (item, record) => (
+          <TextMaxLine sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
+            onClick={() => {
+              router.push(`/settings/exam/exam-business/update/${record.id}`)
+            }}>
             {item}
           </TextMaxLine>
         ),
@@ -210,7 +210,7 @@ export const ExamItem = ({
         title: "Trạng thái",
         width: "200px",
         render: (item) => (
-          <span style={{color: item ? "#388E3C" : theme.palette.common.neutral700}}>
+          <span style={{ color: item ? "#388E3C" : theme.palette.common.neutral700 }}>
             {Status(item)}
           </span>
         ),
@@ -238,15 +238,15 @@ export const ExamItem = ({
       "css-6pqpl8"
     )[0].style.paddingBottom = null;
   };
-  const [openGroup, setOpenGroup] = useState(false);
+  // const [openGroup, setOpenGroup] = useState(false);
 
-  const handleCloseGroup = () => {
-    setOpenGroup(false);
-  };
+  // const handleCloseGroup = () => {
+  //   setOpenGroup(false);
+  // };
 
-  const handleOpenGroup = () => {
-    setOpenGroup(true);
-  };
+  // const handleOpenGroup = () => {
+  //   setOpenGroup(true);
+  // };
 
   const handleSubmitForm = (data) => {
     setDataForm(data)
@@ -299,7 +299,8 @@ export const ExamItem = ({
             padding: "6px 12px",
             fontWeight: 600,
             fontSize: ' .875rem',
-            borderRadius: '6px 0px 0px 6px',
+            // borderRadius: '6px 0px 0px 6px',
+            borderRadius: '6px',
             textTransform: 'none'
           }}
           onClick={() => setShowFormQuestion(true)}
@@ -313,7 +314,7 @@ export const ExamItem = ({
           />
           Thêm câu hỏi
         </Button>
-        <LightTooltip
+        {/* <LightTooltip
           placement="bottom-end"
           onClose={handleCloseGroup}
           disableFocusListener
@@ -371,7 +372,7 @@ export const ExamItem = ({
               color={theme.palette.background.paper}
             />
           </Button>
-        </LightTooltip>
+        </LightTooltip> */}
       </ButtonGroup>
     </Box>
   }
