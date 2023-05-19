@@ -14,7 +14,7 @@ import "moment/locale/vi";
 export default function InterviewSchedule({Data}) {
   const check = false;
   const [openForm, setOpenForm] = useState(false);
-  const [setItem] = useState({});
+  const [itemSelect, setItemSelect] = useState({});
   const [itemDialog, setItemDialog] = useState({});
   const {palette} = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
@@ -24,7 +24,7 @@ export default function InterviewSchedule({Data}) {
 
   const handleClick = (data) => {
     setOpenForm(true);
-    setItem(data);
+    setItemSelect(data);
   };
 
   const handleClickDialog = (data) => {
@@ -78,20 +78,21 @@ export default function InterviewSchedule({Data}) {
                 />
               ))
             }
-            {openForm && (
-              <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
-            )}
-            {canEdit && openDialog && (
-              <DetailDialog
-                title="Chi tiết lịch phỏng vấn"
-                open={openDialog}
-                item={itemDialog}
-                onClose={() => setOpenDialog(false)}
-              />
-            )}
+
           </Card>
         </>)
       }
+      {openForm && (
+        <FormCalendar open={openForm} data={itemSelect} setOpen={setOpenForm}/>
+      )}
+      {canEdit && openDialog && (
+        <DetailDialog
+          title="Chi tiết lịch phỏng vấn"
+          open={openDialog}
+          item={itemDialog}
+          onClose={() => setOpenDialog(false)}
+        />
+      )}
     </>
   );
 }
