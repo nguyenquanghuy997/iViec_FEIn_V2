@@ -25,6 +25,7 @@ export const PATH_AUTH = {
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   dashboard: path(ROOTS_DASHBOARD, "settings/company-info"),
+  settingNotification: path(ROOTS_DASHBOARD, "settings/notification"),
   applicant: {
     root: path(ROOTS_DASHBOARD, "applicant"),
     view: (id) => path(ROOTS_DASHBOARD, `applicant/${id}`),
