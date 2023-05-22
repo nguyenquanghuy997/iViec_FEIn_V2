@@ -39,7 +39,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
         </Tooltip>
 
       case 11: // interview expried
-        return <Tooltip title='Ứng viên xin đổi lịch'>
+        return <Tooltip title='Lịch phỏng vấn quá hạn'>
           <Box
             sx={{
               borderRadius: "100%",
@@ -127,7 +127,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
           </Box>
         </Tooltip>
       case 10: // interview finish
-        return <Tooltip title='Đã kết thúc'>
+        return <Tooltip title='Đã k'>
           <Box
             sx={{
               borderRadius: "100%",
@@ -149,22 +149,20 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
           </Box>
         </Tooltip>
       default:
-        return <Tooltip title='Ứng viên đã xác nhận'>
-          <Box
-            sx={{
-              borderRadius: "100%",
-              background: "#E8F5E9",
-              width: "32px",
-              height: "32px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mr: 2,
-            }}
-          >
-            <RiCalendarCheckFill color={"#388E3C"} />
-          </Box>
-        </Tooltip>
+        return <Box
+          sx={{
+            borderRadius: "100%",
+            background: "#E8F5E9",
+            width: "32px",
+            height: "32px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mr: 2,
+          }}
+        >
+          <RiCalendarCheckFill color={"#388E3C"} />
+        </Box>
     }
   }
 

@@ -101,7 +101,7 @@ export default function InterviewSchedule({ Data }) {
         </>)
       }
       {openForm && (
-        <FormCalendar open={openForm} data={itemSelect} setOpen={setOpenForm}/>
+        <FormCalendar open={openForm} data={itemSelect} setOpen={setOpenForm} />
       )}
       {canEdit && openDialog && (
         <DetailDialog
