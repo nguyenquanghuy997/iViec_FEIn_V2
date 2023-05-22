@@ -10,7 +10,13 @@ import { Box, Grid, useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import { useForm } from "react-hook-form";
 
-export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
+export const Activities = ({
+  dataLog,
+  dataApplicant,
+  onReExploiting,
+  recruitmentId,
+  reviewFormCriterias,
+}) => {
   const methods = useForm({
     defaultValues: { isActive: !false },
   });
@@ -32,6 +38,8 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
           >
             {dataLog?.events &&
               dataLog?.events.map((p, index) => {
+                const isSeftApply =
+                  dataApplicant?.applicationUserId === p?.creatorId;
                 return (
                   <div key={index}>
                     {p.eventType.includes("AddApplicantToRecruitmentEvent") && (
@@ -42,21 +50,31 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
                           p.pipelineStateResultType
                         )}
                         title={
-                          <div>
+                          isSeftApply ? (
                             <p>
-                              <span style={{ fontWeight: 600 }}>
-                                {p?.creatorName}
-                              </span>
-                              {" đã chuyển "}
+                              {"Ứng viên "}
                               <span style={{ fontWeight: 600 }}>
                                 {dataApplicant?.fullName}
                               </span>
-                              {" vào tin tuyển dụng "}
-                              <span style={{ fontWeight: 600 }}>
-                                {dataLog?.recruitmentName}
-                              </span>
+                              {" đã ứng tuyển."}
                             </p>
-                          </div>
+                          ) : (
+                            <div>
+                              <p>
+                                <span style={{ fontWeight: 600 }}>
+                                  {p?.creatorName}
+                                </span>
+                                {" đã chuyển "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataApplicant?.fullName}
+                                </span>
+                                {" vào tin tuyển dụng "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataLog?.recruitmentName}
+                                </span>
+                              </p>
+                            </div>
+                          )
                         }
                         action="add"
                         avatarName={p?.creatorName}
@@ -249,7 +267,11 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
                       ))}
                     {p.eventType.includes("CreateApplicantReviewEvent") && (
                       <NotificationBoard
-                        isShow={true}
+                        isShow
+                        isReview
+                        recruitmentId={recruitmentId}
+                        dataApplicant={dataApplicant}
+                        reviewFormCriterias={reviewFormCriterias}
                         icon={iconLogPipe(
                           "review",
                           p.recruitmentPipelineStateType
