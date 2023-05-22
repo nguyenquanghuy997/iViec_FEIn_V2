@@ -11,6 +11,8 @@ export const ApplicantPreviewLog = ({
   dataLog,
   dataApplicant,
   onReExploiting,
+  recruitmentId,
+  reviewFormCriterias,
 }) => {
   const [value, setValue] = useState("1");
   const theme = useTheme();
@@ -91,6 +93,8 @@ export const ApplicantPreviewLog = ({
           </Box>
           <TabPanel value="1">
             <Activities
+              recruitmentId={recruitmentId}
+              reviewFormCriterias={reviewFormCriterias}
               dataLog={dataHistoryMap}
               dataApplicant={dataApplicant}
               onReExploiting={onReExploiting}
@@ -98,6 +102,8 @@ export const ApplicantPreviewLog = ({
           </TabPanel>
           <TabPanel value="2">
             <Activities
+              recruitmentId={recruitmentId}
+              reviewFormCriterias={reviewFormCriterias}
               dataLog={dataExamInterviewFilter}
               dataApplicant={dataApplicant}
               onReExploiting={onReExploiting}
@@ -105,6 +111,8 @@ export const ApplicantPreviewLog = ({
           </TabPanel>
           <TabPanel value="3">
             <Activities
+              recruitmentId={recruitmentId}
+              reviewFormCriterias={reviewFormCriterias}
               dataLog={dataResultOfferFilter}
               dataApplicant={dataApplicant}
               onReExploiting={onReExploiting}

@@ -10,7 +10,13 @@ import { Box, Grid, useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import { useForm } from "react-hook-form";
 
-export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
+export const Activities = ({
+  dataLog,
+  dataApplicant,
+  onReExploiting,
+  recruitmentId,
+  reviewFormCriterias,
+}) => {
   const methods = useForm({
     defaultValues: { isActive: !false },
   });
@@ -261,7 +267,11 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
                       ))}
                     {p.eventType.includes("CreateApplicantReviewEvent") && (
                       <NotificationBoard
-                        isShow={true}
+                        isShow
+                        isReview
+                        recruitmentId={recruitmentId}
+                        dataApplicant={dataApplicant}
+                        reviewFormCriterias={reviewFormCriterias}
                         icon={iconLogPipe(
                           "review",
                           p.recruitmentPipelineStateType
