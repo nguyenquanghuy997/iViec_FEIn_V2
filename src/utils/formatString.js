@@ -120,7 +120,7 @@ export const LIST_EXAM_TYPE = [
   {id: false, value: 0, name: "Đề thi câu hỏi cố định"},
 ]
 
-export const LIST_QUESTION_TYPE = [
+export const LIST_OPTIONS_QUESTION_TYPE = [
   {id: 3, value: 3, name: "Tất cả"},
   {id: 2, value: 2, name: "Tự luận"},
   {id: 0, value: 0, name: "Trắc nghiệm - một đáp án đúng"},

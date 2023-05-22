@@ -54,7 +54,6 @@ function Item(props) {
 function Baseitem(props) {
   const {item} = props;
   const router = useRouter();
-  console.log("props", props);
   return (
     <Grid
       display="flex"

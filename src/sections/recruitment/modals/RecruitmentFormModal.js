@@ -157,7 +157,6 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
     setBenefit(preview.benefit);
   }, [isEditMode, preview.id]);
   const isActivated = methods.watch("isActivated");
-  console.log("setDescription",description);
   return (
     <FormProvider methods={methods}>
       <Modal

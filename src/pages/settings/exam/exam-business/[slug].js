@@ -19,7 +19,7 @@ import QuestionTransferModal from "@/sections/exam/components/QuestionTransferMo
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { LIST_QUESTION_TYPE, LIST_STATUS} from "@/utils/formatString";
+import { LIST_OPTIONS_QUESTION_TYPE, LIST_STATUS} from "@/utils/formatString";
 import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 
@@ -172,7 +172,7 @@ function Question() {
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           name: 'type',
-          options: LIST_QUESTION_TYPE.map(item => ({ value: item.id, label: item.name })),
+          options: LIST_OPTIONS_QUESTION_TYPE.map(item => ({ value: item.id, label: item.name })),
           placeholder: "Tất cả"
         },
       },
