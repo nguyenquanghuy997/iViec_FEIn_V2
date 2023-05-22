@@ -27,7 +27,7 @@ import { useState } from "react";
 import { RiLinkM } from "react-icons/ri";
 import { DOMAIN_SERVER_API } from "@/config";
 import {useTheme} from "@mui/material/styles";
-
+import { INTERVIEW_PROCESS_STATUS } from "@/utils/formatString";
 const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   const { data: DetailData } = useGetDetailCalendarsQuery(
     { BookingCalendarId: item?.id },
@@ -131,7 +131,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             "Loại phỏng vấn:",
             DetailData?.bookingCalendarGroups.map(
               (item) => item?.interviewGroupType
-            ) === "0"
+            ) == 0
               ? "Phỏng vấn cá nhân"
               : "Phỏng vấn nhóm"
           )}
@@ -140,7 +140,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants
               .length
           )}
-          {renderText("Trạng thái:", "")}
+          {renderText("Trạng thái:", INTERVIEW_PROCESS_STATUS.find(x=>x.id == DetailData?.bookingCalendarProcessStatus)?.name)}
           {renderText("Lý do hủy:", DetailData?.removeReason || 'Không có')}
 
           <Divider />

@@ -10,7 +10,6 @@ import {isEmpty as _isEmpty} from "lodash";
 import useRole from "@/hooks/useRole";
 import {PERMISSIONS, TBL_FILTER_TYPE} from "@/config";
 import {Box} from "@mui/material";
-import FormHeader from "@/sections/emailform/component/FormHeader";
 import {
   API_GET_ORGANIZATION_USERS,
   API_GET_ORGANIZATION_WITH_CHILD,
@@ -116,10 +115,7 @@ export const InterviewTimeline = () => {
   }
   return (
     <View>
-      <FormHeader
-        showButton={false}
-      />
-      <Box sx={{mb: 2}}>
+      <Box>
         <TableHeader
           columns={columns}
           onSubmitFilter={onSubmitFilter}

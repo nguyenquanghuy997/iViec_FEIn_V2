@@ -120,7 +120,7 @@ export const ExamItem = ({
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: "creatorEmail",
+          name: "creatorIds",
           placeholder: "Chọn 1 hoặc nhiều người",
           remoteUrl: API_GET_ORGANIZATION_USERS,
           showAvatar: true,
@@ -154,7 +154,7 @@ export const ExamItem = ({
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: "updaterName",
+          name: "updaterIds",
           placeholder: "Chọn 1 hoặc nhiều người",
           remoteUrl: API_GET_ORGANIZATION_USERS,
           showAvatar: true,

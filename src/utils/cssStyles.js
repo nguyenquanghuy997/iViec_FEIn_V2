@@ -195,7 +195,7 @@ export const TextElipsis = styled(Typography)(() => ({
 }));
 export const ReviewForm = styled("div")(({theme}) => ({
   "&.block-review": {
-    background: theme.palette.common.neutral800,
+    background: theme.palette.common.bgrMaster,
     borderRadius: "6px",
     padding: "16px",
     marginBottom: "28px",
