@@ -11,7 +11,7 @@ import {
   useGetRecruitmentPipelineStatesByRecruitmentQuery,
   useUpdateApplicantRecruitmentToNextStateMutation,
 } from "@/sections/applicant";
-import { useGetBookingCalendarsByRecruitmentQuery } from "@/sections/interview";
+import { useGetBookingCalendarsByRecruitmentIdQuery } from "@/sections/interview";
 import InterviewSchedule from "@/sections/interview/InterviewSchedule";
 import { Column } from "@/sections/kanban";
 import { useGetRecruitmentByIdQuery } from "@/sections/recruitment";
@@ -222,7 +222,7 @@ export default function Recruitment() {
   const onChangeTab = (value) => {
     setTab(value);
   };
-  const { data: DataInterview } = useGetBookingCalendarsByRecruitmentQuery(
+  const { data: DataInterview } = useGetBookingCalendarsByRecruitmentIdQuery(
     { RecruitmentId: RecruitmentId },
     { skip: !isReady }
   );

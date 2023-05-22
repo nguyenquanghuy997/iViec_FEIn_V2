@@ -65,6 +65,7 @@ export const FormCalendar = ({
     { BookingCalendarId: data?.id },
     { skip: !data?.id }
   );
+  console.log("data", DetailData);
   const isLoading = isEditMode && !DetailData?.id;
   const [addCalendar] = useAddCalendarMutation();
   const [updateCalendar] = useUpdateCalendarMutation();

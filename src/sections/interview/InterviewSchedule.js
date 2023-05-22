@@ -15,7 +15,7 @@ export default function InterviewSchedule({ Data }) {
   const check = false;
   const { palette } = useTheme();
   const [openForm, setOpenForm] = useState(false);
-  const [itemForm, setItemForm] = useState({});
+  const [itemSelect, setItemSelect] = useState({});
   const [itemDialog, setItemDialog] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -24,7 +24,7 @@ export default function InterviewSchedule({ Data }) {
 
   const handleClick = (data) => {
     setOpenForm(true);
-    setItemForm(data);
+    setItemSelect(data);
   };
 
   const handleClickDialog = (data) => {
@@ -100,11 +100,9 @@ export default function InterviewSchedule({ Data }) {
 
         </>)
       }
-
       {openForm && (
-        <FormCalendar open={openForm} data={itemForm} setOpen={setOpenForm} />
+        <FormCalendar open={openForm} data={itemSelect} setOpen={setOpenForm}/>
       )}
-
       {canEdit && openDialog && (
         <DetailDialog
           title="Chi tiết lịch phỏng vấn"

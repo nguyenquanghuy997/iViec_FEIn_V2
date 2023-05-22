@@ -2,7 +2,7 @@ import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
-import { PERMISSION_PAGES } from "@/config";
+import {PERMISSION_PAGES, TBL_FILTER_TYPE} from "@/config";
 import SettingLayout from "@/layouts/setting";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
@@ -19,6 +19,8 @@ import QuestionTransferModal from "@/sections/exam/components/QuestionTransferMo
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+import { LIST_QUESTION_TYPE, LIST_STATUS} from "@/utils/formatString";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 
 Question.getLayout = function getLayout(pageProps, page) {
@@ -76,23 +78,16 @@ function Question() {
         },
       },
       {
-        dataIndex: "questionType",
-        title: "Loại câu hỏi",
-        width: "214px",
-        render: (_, { questionType }) => {
-          return questionType === 2
-            ? "Tự luận"
-            : questionType === 1
-              ? "Trắc nghiệm - nhiều đáp án đúng"
-              : "Trắc nghiệm - một đáp án đúng";
-        },
-      },
-      {
         dataIndex: "createDate",
         title: "Ngày tạo",
         width: "180px",
         render: (_, { createdTime }) => {
           return moment(createdTime).format("DD/MM/YYYY");
+        },
+        filters: {
+          type: TBL_FILTER_TYPE.RANGE_DATE,
+          name: ['createdTimeFrom', 'createdTimeTo'],
+          placeholder: 'Chọn ngày',
         },
       },
       {
@@ -113,9 +108,16 @@ function Question() {
                 name={createdUser.name}
               />
 
-              {createdUser?.name}
+              {createdUser?.email}
             </View>
           );
+        },
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "creatorIds",
+          placeholder: "Chọn 1 hoặc nhiều người",
+          remoteUrl: API_GET_ORGANIZATION_USERS,
+          showAvatar: true,
         },
       },
       {
@@ -144,9 +146,34 @@ function Question() {
                 name={updatedUser?.name}
               />
 
-              {updatedUser?.name}
+              {updatedUser?.email}
             </View>
           );
+        },
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+          name: "updaterIds",
+          placeholder: "Chọn 1 hoặc nhiều người",
+          remoteUrl: API_GET_ORGANIZATION_USERS,
+          showAvatar: true,
+        },
+      },
+      {
+        dataIndex: "questionType",
+        title: "Kiểu câu hỏi",
+        width: "214px",
+        render: (_, { questionType }) => {
+          return questionType === 2
+            ? "Tự luận"
+            : questionType === 1
+              ? "Trắc nghiệm - nhiều đáp án đúng"
+              : "Trắc nghiệm - một đáp án đúng";
+        },
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT,
+          name: 'type',
+          options: LIST_QUESTION_TYPE.map(item => ({ value: item.id, label: item.name })),
+          placeholder: "Tất cả"
         },
       },
       {
@@ -176,6 +203,11 @@ function Question() {
             </span>
           );
         },
+        filters: {
+          type: TBL_FILTER_TYPE.SELECT,
+          placeholder: 'Tất cả',
+          options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+        }
       },
     ];
   }, [PageIndex, PageSize]);

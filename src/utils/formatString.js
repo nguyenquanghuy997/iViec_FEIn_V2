@@ -120,6 +120,13 @@ export const LIST_EXAM_TYPE = [
   {id: false, value: 0, name: "Đề thi câu hỏi cố định"},
 ]
 
+export const LIST_QUESTION_TYPE = [
+  {id: 3, value: 3, name: "Tất cả"},
+  {id: 2, value: 2, name: "Tự luận"},
+  {id: 0, value: 0, name: "Trắc nghiệm - một đáp án đúng"},
+  {id: 1, value: 1, name: "Trắc nghiệm - nhiều đáp án đúng"},
+]
+
 export const PipelineStateType = (item, description = '') => {
   switch (item) {
     case 0:
