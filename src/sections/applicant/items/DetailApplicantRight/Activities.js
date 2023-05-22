@@ -32,6 +32,8 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
           >
             {dataLog?.events &&
               dataLog?.events.map((p, index) => {
+                const isSeftApply =
+                  dataApplicant?.applicationUserId === p?.creatorId;
                 return (
                   <div key={index}>
                     {p.eventType.includes("AddApplicantToRecruitmentEvent") && (
@@ -42,21 +44,31 @@ export const Activities = ({ dataLog, dataApplicant, onReExploiting }) => {
                           p.pipelineStateResultType
                         )}
                         title={
-                          <div>
+                          isSeftApply ? (
                             <p>
-                              <span style={{ fontWeight: 600 }}>
-                                {p?.creatorName}
-                              </span>
-                              {" đã chuyển "}
+                              {"Ứng viên "}
                               <span style={{ fontWeight: 600 }}>
                                 {dataApplicant?.fullName}
                               </span>
-                              {" vào tin tuyển dụng "}
-                              <span style={{ fontWeight: 600 }}>
-                                {dataLog?.recruitmentName}
-                              </span>
+                              {" đã ứng tuyển."}
                             </p>
-                          </div>
+                          ) : (
+                            <div>
+                              <p>
+                                <span style={{ fontWeight: 600 }}>
+                                  {p?.creatorName}
+                                </span>
+                                {" đã chuyển "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataApplicant?.fullName}
+                                </span>
+                                {" vào tin tuyển dụng "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataLog?.recruitmentName}
+                                </span>
+                              </p>
+                            </div>
+                          )
                         }
                         action="add"
                         avatarName={p?.creatorName}
