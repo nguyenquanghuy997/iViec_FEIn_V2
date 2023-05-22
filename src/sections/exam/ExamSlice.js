@@ -30,6 +30,7 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const examinationSlice = apiWithTag.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getAllExamination: builder.query({
       query: (params) => {

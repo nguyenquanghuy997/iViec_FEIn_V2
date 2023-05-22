@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import {alpha} from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
+import { pxToRem } from "./getFontValue";
 
 function getDirection(value = "bottom") {
   return {
@@ -283,5 +284,57 @@ export const ReviewForm = styled("div")(({theme}) => ({
   },
   "&.block-review-result .pagination-review li:last-child": {
     borderRadius: "0 4px 0 0",
+  },
+}));
+
+export const wrapStyle = {
+  border: "1px solid #CCD4DC",
+  borderRadius: 8,
+  backgroundColor: "#fff",
+  padding: "16px 24px",
+};
+
+export const WrapBox = styled(Box)(({noBorder, theme: {palette}}) => ({
+  ...wrapStyle,
+  ...(noBorder && {border: 'none'}),
+  '.box-title': {
+    padding: '0px 24px 14px',
+    margin: '0 -24px 12px',
+    borderBottom: '1px solid ' + palette.text.border,
+  },
+  '.box-title-line': {
+    position: 'relative',
+    paddingLeft: '11px',
+    '&:before': {
+      position: 'absolute',
+      top: 6, left: 0,
+      content: `""`,
+      width: 3,
+      height: 16,
+      background: palette.text.active,
+      display: 'block',
+    },
+  },
+  '.box-title-desc': {
+    '> svg': {marginRight: 6, transform: 'translateY(3px)',},
+    fontSize: pxToRem(13),
+    color: palette.text.secondary,
+    marginBottom: '8px',
+  },
+}));
+export const SliderStyle = styled("div")(() => ({
+  "& .swiper-pagination": {
+    display: "flex",
+    alignItems: "end",
+    marginLeft: "36px",
+    marginBottom: "30px",
+  },
+  "& .swiper-pagination-bullet": {
+    background: "white",
+  },
+  "& .swiper-pagination-bullet.swiper-pagination-bullet-active": {
+    background: "orange",
+    width: 24,
+    borderRadius: 8,
   },
 }));
