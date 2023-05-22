@@ -1,7 +1,7 @@
 import { CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate } from "@/assets/CheckboxIcon"
-import { Checkbox, Divider, Typography, Button, ButtonGroup, ClickAwayListener, MenuItem, MenuList } from "@mui/material"
+import { Checkbox, Typography, Button, ButtonGroup, ClickAwayListener, MenuItem, MenuList } from "@mui/material"
 import QuestionCardItemDefault from "./QuestionCardItemDefault"
-import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
+import { TeamLineIcon } from "@/assets/ActionIcon";
 import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 
 import React from 'react'
@@ -11,7 +11,7 @@ import NoQuestion from './NoQuestion';
 import ConfirmModal from '@/sections/emailform/component/ConfirmModal';
 import { View } from "@/components/DesignSystem/FlexStyled";
 import QuestionGallaryInternalModal from "./QuestionGallaryInternalModal";
-import QuestionGallaryDetailModal from "./QuestionGallaryDetailModal";
+// import QuestionGallaryDetailModal from "./QuestionGallaryDetailModal";
 import { useSnackbar } from "notistack";
 import ListQuestionBottomNav from "./ListQuestionBottomNav";
 import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
@@ -23,10 +23,10 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showQuestionGallaryInternalModal, setShowQuestionGallaryInternalModal] = useState(false);
-  const [showQuestionGallaryDetailModal, setShowQuestionGallaryDetailModal] = useState(false);
+  // const [showQuestionGallaryDetailModal, setShowQuestionGallaryDetailModal] = useState(false);
   const [currentIndexQuestion, setCurrentIndexQuestion] = useState(-1);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [questionGallary, setQuestionGallary] = useState(null);
+  // const [questionGallary, setQuestionGallary] = useState(null);
   const [itemIndexSelected, setItemIndexSelected] = useState([]);
 
   const handleCloseGroup = () => {
@@ -77,6 +77,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
       }
       listQuestions[currentIndexQuestion] = data;
     }
+    enqueueSnackbar('Lưu câu hỏi thành công')
     updateListQuestion(listQuestions)
 
     setShowQuestionForm(false)
@@ -87,7 +88,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const handleAddQuestionFromInternal = (datas) => {
     // loc nhung items da them vao danh sach
     updateListQuestion([...listQuestions, ...datas])
-    setShowQuestionGallaryDetailModal(false)
+    // setShowQuestionGallaryDetailModal(false)
   }
 
   const handlerDeleteQuestion = () => {
@@ -115,10 +116,10 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
     setShowDeleteModal(true)
   }
 
-  const handleOpenQuestionGallaryDetailModal = (questionGallary) => {
-    setQuestionGallary(questionGallary)
-    setShowQuestionGallaryDetailModal(true)
-  }
+  // const handleOpenQuestionGallaryDetailModal = (questionGallary) => {
+  //   setQuestionGallary(questionGallary)
+  //   setShowQuestionGallaryDetailModal(true)
+  // }
 
   const resetSelectItem = () => {
     setCurrentIndexQuestion(-1)
@@ -237,7 +238,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                               Lấy từ kho nội bộ
                             </Typography>
                           </MenuItem>
-                          <Divider />
+                          {/* <Divider />
                           <MenuItem>
                             <TeamLineIcon sx={{ mr: "12px" }} />
                             <Typography ml={"12px"} variant={"textSize13600"}>
@@ -257,7 +258,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                             <Typography ml={"12px"} variant={"textSize13600"}>
                               Import Excel
                             </Typography>
-                          </MenuItem>
+                          </MenuItem> */}
                         </MenuList>
                       </ClickAwayListener>
                     }
@@ -304,24 +305,25 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         }
       </View>
 
-      <QuestionFormModal
-        data={currentQuestion}
-        show={showQuestionForm}
-        onClose={handleCloseForm}
-        isNotSave={true}
-        handleNoSave={handleCreateEditQuestion} />
+      {
+        showQuestionForm &&
+        <QuestionFormModal
+          data={currentQuestion}
+          show={showQuestionForm}
+          onClose={handleCloseForm}
+          isNotSave={true}
+          handleNoSave={handleCreateEditQuestion} />
+      }
 
-      <QuestionGallaryInternalModal
-        show={showQuestionGallaryInternalModal}
-        handleViewDetail={handleOpenQuestionGallaryDetailModal}
-        onClose={() => setShowQuestionGallaryInternalModal(false)} />
-
-      <QuestionGallaryDetailModal
-        listQuestions={listQuestions?.filter(x => x.id)}
-        show={showQuestionGallaryDetailModal}
-        handleAddQuestionFromInternal={handleAddQuestionFromInternal}
-        onClose={() => setShowQuestionGallaryDetailModal(false)}
-        questionGallary={questionGallary} />
+      {
+        showQuestionGallaryInternalModal &&
+        <QuestionGallaryInternalModal
+          show={showQuestionGallaryInternalModal}
+          listQuestions={listQuestions}
+          handleAddQuestionFromInternal={handleAddQuestionFromInternal}
+          // handleViewDetail={handleOpenQuestionGallaryDetailModal}
+          onClose={() => setShowQuestionGallaryInternalModal(false)} />
+      }
 
       <ConfirmModal
         confirmDelete={showDeleteModal}
@@ -336,7 +338,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         itemSelected={itemIndexSelected}
         canEdit={!listQuestions[itemIndexSelected[0]]?.id}
         onClose={() => setItemIndexSelected([])}
-        onDelete={() => openDeleteQuestionModal(null,-1)}
+        onDelete={() => openDeleteQuestionModal(null, -1)}
         onEdit={() => openEditQuestionForm(listQuestions[itemIndexSelected[0]], itemIndexSelected[0])} />
     </>
   )

@@ -368,3 +368,11 @@ export const API_UPDATE_EMAIL_TEMPLATE =
   "/notification/EmailTemplateOrganization/UpdateEmailTemplateOrganization";
 export const API_DELETE_EMAIL_TEMPLATE =
   "/notification/EmailTemplateOrganization/RemoveEmailTemplateOrganizations";
+
+// NotifcationManagement
+export const API_GET_ALL_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/GetNotificationManagements";
+export const API_UPDATE_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/UpdateNotificationManagement";
+export const API_GET_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/GetNotificationManagement";
+export const API_UPDATE_STATUS_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/SetNotificationManagementsActive";
+export const API_GET_VISIBLE_NOTIFICATION_MANAGEMENT = "/aggregator/NotificationVisible/GetNotificationVisible";
+export const API_UPDATE_VISIBLE_NOTIFICATION_MANAGEMENT = "/aggregator/NotificationVisible/UpdateNotificationVisible";

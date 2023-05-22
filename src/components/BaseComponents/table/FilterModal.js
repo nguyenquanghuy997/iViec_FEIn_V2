@@ -48,6 +48,10 @@ export default function FilterModal({
         '.MuiModal-backdrop': {
           background: 'transparent',
         },
+        '.MuiDrawer-paper': {
+          marginTop: "64px",
+          height: "calc(100vh - 64px)"
+        },
       }}
       onSubmit={(data) => {
         handleSubmit(data, false);

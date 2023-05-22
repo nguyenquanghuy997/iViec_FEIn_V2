@@ -13,8 +13,12 @@ import moment from 'moment'
 import React from 'react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import QuestionGallaryDetailModal from './QuestionGallaryDetailModal'
+import { useState } from 'react'
 
-function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
+function QuestionGallaryInternalModal({ show, listQuestions, onClose, handleAddQuestionFromInternal }) {
+  const [showQuestionGallaryDetailModal, setShowQuestionGallaryDetailModal] = useState(false);
+  const [questionSelect, setQuestionSelect] = useState(null);
 
   const [getQuestionGroup, { isLoading, data: { items = [] } = {} }] =
     useLazyGetQuestionGroupQuery();
@@ -32,8 +36,13 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
 
   const searchKey = useDebounce(methods.watch("searchKey"), 500);
 
+  const handleViewDetail = (item) => {
+    setQuestionSelect(item)
+    setShowQuestionGallaryDetailModal(true)
+  }
+
   useEffect(() => {
-    if(show)
+    if (show)
       getQuestionGroup({ searchKey });
   }, [searchKey, show])
 
@@ -255,6 +264,19 @@ function QuestionGallaryInternalModal({ show, onClose, handleViewDetail }) {
           )}
         </View>
       </View>
+
+      {
+        showQuestionGallaryDetailModal &&
+        <QuestionGallaryDetailModal
+          listQuestions={listQuestions?.filter(x => x.id)}
+          show={showQuestionGallaryDetailModal}
+          handleAddQuestionFromInternal={(data) => {
+            setShowQuestionGallaryDetailModal(false)
+            handleAddQuestionFromInternal(data)
+          }}
+          onClose={() => setShowQuestionGallaryDetailModal(false)}
+          questionGallary={questionSelect} />
+      }
     </Dialog>
   )
 }

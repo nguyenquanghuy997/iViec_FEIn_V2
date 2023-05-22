@@ -1,7 +1,7 @@
-import { DownloadLineIcon, ImportLinkIcon, TeamLineIcon } from "@/assets/ActionIcon";
+import { TeamLineIcon } from "@/assets/ActionIcon";
 import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
-import { Button, ButtonGroup, ClickAwayListener, Divider, MenuItem, MenuList, Typography } from "@mui/material";
+import { Button, ButtonGroup, ClickAwayListener, MenuItem, MenuList, Typography } from "@mui/material";
 import { useState } from "react";
 import {useTheme} from "@mui/material/styles";
 
@@ -78,7 +78,7 @@ const NoQuestion = ({ setShowQuestionForm, setShowQuestionGallaryInternalModal }
                                     Lấy từ kho nội bộ
                                 </Typography>
                             </MenuItem>
-                            <Divider />
+                            {/* <Divider />
                             <MenuItem>
                                 <TeamLineIcon sx={{ mr: "12px" }} />
                                 <Typography ml={"12px"} variant={"textSize13600"}>
@@ -98,7 +98,7 @@ const NoQuestion = ({ setShowQuestionForm, setShowQuestionGallaryInternalModal }
                                 <Typography ml={"12px"} variant={"textSize13600"}>
                                     Import Excel
                                 </Typography>
-                            </MenuItem>
+                            </MenuItem> */}
                         </MenuList>
                     </ClickAwayListener>
                 }

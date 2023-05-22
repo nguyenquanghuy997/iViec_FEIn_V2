@@ -31,7 +31,7 @@ const TitleAlertStyle = styled(Typography)(({theme}) => ({
     color: theme.palette.common.neutral700,
     marginTop: theme.spacing(2),
     "&.title-inactive": {
-      color: theme.patch.common.blue700
+      color: theme.palette.common.blue700
     }
   }
 }))
