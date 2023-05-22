@@ -7,7 +7,8 @@ import {
 
 // import DoingExamStatus from "./DoingExamStatus";
 import QuestionItem from "./QuestionItem";
-import { WrapBox } from "@/utils/cssStyles";
+import { ExamContainer, WrapBox } from "@/utils/cssStyles";
+import DoingExamStatus from "./DoingExamStatus";
 
 export default function ExamContent({
   examination = null,
@@ -45,9 +46,8 @@ export default function ExamContent({
     _currentQuestions.current[questionItem.id] = true;
     clearTimeout(_timeoutAnswer.current);
   }
-console.log('examination', examination);
   return (
-    <Box className="exam-container" mb={4}>
+    <ExamContainer className="exam-container" mb={4}>
       <Typography variant="subtitle1" component="h2" sx={{ mb: 3 }}>
         {recruitment && (
           'Tin tuyển dụng: ' + recruitment.name
@@ -60,7 +60,7 @@ console.log('examination', examination);
           justifyContent="flex-start"
           className="exam-grid-content"
         >
-          <Box flex={1} className="exam-content" minHeight>
+          <Box flex={1} className="exam-content" minHeight width={'100%'}>
             {isLoading ? (
               <Skeleton
                 variant="rectangular"
@@ -89,21 +89,19 @@ console.log('examination', examination);
               )
             )}
           </Box>
-{/* 
+
           <DoingExamStatus
             isLoading={isLoading}
-            examination={examItem}
-            questions={questions}
+            examination={examination}
+            questions={examination?.questions}
             answers={answers}
-            applicantId={applicantId}
-            stateId={stateId}
-          /> */}
+          />
         </Box>
       ) : (
         <WrapBox textAlign="center" sx={{ border: 'none' }}>
           <Typography variant="textDesc">Không tìm thấy bài thi!</Typography>
         </WrapBox>
       )}
-    </Box>
+    </ExamContainer>
   )
 }

@@ -156,9 +156,11 @@ const CreateExamContent = () => {
       });
       setExamQuestionPreview(questions.flat(1));
       setShowPreview(true)
+    } else{
+      setExamQuestionPreview(examQuestions.flat(1));
+      setShowPreview(true)
     }
   };
-  console.log("examQuestionPreview", examQuestionPreview);
   const handleUpdateListQuestion = (datas) => {
     if (examData.type == 0) {
       setExamQuestions([...datas]);

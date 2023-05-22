@@ -1,3 +1,9 @@
+import {
+  CheckboxIconCircleChecked,
+  CheckboxIconCircleDefault,
+  CheckboxIconMultiCheck,
+  CheckboxIconMultiDefault,
+} from "@/assets/CheckboxIcon";
 import Editor from "@/components/editor";
 import { QUESTION_TYPE } from "@/config";
 import { SliderStyle, WrapBox } from "@/utils/cssStyles";
@@ -12,12 +18,27 @@ import {
   Checkbox,
   FormGroup,
 } from "@mui/material";
-import { useRef } from "react";
 import { useState, useEffect } from "react";
+import "react-multi-carousel/lib/styles.css";
+import SwiperCore, {
+  Navigation,
+  Pagination,
+  Autoplay,
+  Virtual,
+} from "swiper/core";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
 
+SwiperCore.use([Navigation, Pagination, Autoplay, Virtual]);
 const QuestionItem = ({ question, index, onChangeAnswer }) => {
   const { palette } = useTheme();
+  const [expandedImage, setExpandedImage] = useState(
+    question?.questionFilePaths[0]
+  );
+
+  const handleImageClick = (image) => {
+    setExpandedImage(image);
+  };
 
   return (
     <WrapBox
@@ -34,76 +55,88 @@ const QuestionItem = ({ question, index, onChangeAnswer }) => {
         <span style={{ color: palette.text.active }}>
           Câu hỏi {prefixZero(index + 1)}:{" "}
         </span>
-        {question.questionTitle}
+        {question.questionTitle} {`(${question.questionPoint} điểm)`}
       </Typography>
-      <SliderStyle>
-        <Swiper
-          id="swiper"
-          virtual
-          slidesPerView={1}
-          width={"100%"}
-          spaceBetween={50}
-        >
-          {question?.questionFilePaths &&
-            question?.questionFilePaths.map((p, index) => {
-              const videoRef = useRef();
-              const [stop, setStop] = useState(false);
-
-              const handleVideo = () => {
-                setStop(!stop);
-                if (stop === true) {
-                  videoRef.current.pause();
-                } else {
-                  videoRef.current.play();
-                }
-              };
-              return (
-                <SwiperSlide
-                  key={`slide-${index}`}
-                  style={{ listStyle: "none" }}
-                >
-                  {p?.includes("MOV") || p?.includes("mp4") ? (
-                    <Box
-                      onClick={handleVideo}
-                      width={"152px"}
-                      height={"86px"}
-                      mr={2}
-                    >
-                      <video
-                        ref={videoRef}
-                        src={getFileUrl(p)}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 4,
-                          objectFit: "cover",
-                        }}
-                      />
-                    </Box>
-                  ) : (
-                    <Box width={"152px"} height={"86px"} mr={2}>
-                      <img
-                        src={getFileUrl(p)}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 4,
-                        }}
-                      />
-                    </Box>
-                  )}
-                </SwiperSlide>
-              );
-            })}
-        </Swiper>
-      </SliderStyle>
-
+      {expandedImage && (
+        <Box mb={2}>
+          {expandedImage?.includes("MOV") || expandedImage?.includes("mp4") ? (
+            <video
+              controls
+              src={getFileUrl(expandedImage)}
+              style={{
+                borderRadius: 8,
+                objectFit: "contain",
+                maxWidth: "100%",
+                maxHeight: "548px",
+              }}
+            />
+          ) : (
+            <img
+              src={getFileUrl(expandedImage)}
+              style={{
+                borderRadius: 8,
+                maxWidth: "100%",
+                maxHeight: "548px",
+              }}
+            />
+          )}
+        </Box>
+      )}
+      {question?.questionFilePaths.length > 1 && (
+        <SliderStyle sx={{marginBottom: 2}}>
+          <Swiper
+            id="swiper"
+            virtual
+            navigation
+            slidesPerView={6}
+            spaceBetween={12}
+            style={{ width: "100%", marginLeft: 0, minHeight: 92 }}
+          >
+            {question?.questionFilePaths.map((item, index) => (
+              <SwiperSlide
+                key={`slide-${index}`}
+                style={{
+                  listStyle: "none",
+                  height: "86px",
+                  marginRight: "12px",
+                }}
+              >
+                {item?.includes("MOV") || item?.includes("mp4") ? (
+                  <Box onClick={() => handleImageClick(item)}>
+                    <video
+                      src={getFileUrl(item)}
+                      style={{
+                        borderRadius: 8,
+                        objectFit: "cover",
+                        width: "152px",
+                        height: "86px",
+                      }}
+                    />
+                  </Box>
+                ) : (
+                  <Box onClick={() => handleImageClick(item)}>
+                    <img
+                      src={getFileUrl(item)}
+                      style={{
+                        borderRadius: 8,
+                        width: "152px",
+                        height: "86px",
+                      }}
+                    />
+                  </Box>
+                )}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </SliderStyle>
+      )}
       <Box className="question-answers">
         <QuestionAnswers item={question} onChangeAnswer={onChangeAnswer} />
       </Box>
     </WrapBox>
   );
 };
+
 
 export default QuestionItem;
 
@@ -187,7 +220,13 @@ const QuestionAnswers = ({ item, onChangeAnswer }) => {
                     {getAnswerLetter(ansIndex) + ". " + answer.content}
                   </span>
                 }
-                control={<Radio checked={selectedAnswer.includes(answer.id)} />}
+                control={
+                  <Radio
+                    icon={<CheckboxIconCircleDefault />}
+                    checkedIcon={<CheckboxIconCircleChecked />}
+                    checked={selectedAnswer.includes(answer.id)}
+                  />
+                }
               />
             );
           })}
@@ -214,7 +253,11 @@ const QuestionAnswers = ({ item, onChangeAnswer }) => {
                 </span>
               }
               control={
-                <Checkbox checked={selectedAnswer.includes(answer.id)} />
+                <Checkbox
+                  icon={<CheckboxIconMultiDefault />}
+                  checkedIcon={<CheckboxIconMultiCheck />}
+                  checked={selectedAnswer.includes(answer.id)}
+                />
               }
             />
           );

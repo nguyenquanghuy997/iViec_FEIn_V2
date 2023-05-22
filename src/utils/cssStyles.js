@@ -1,3 +1,4 @@
+import { pxToRem } from "./getFontValue";
 import { ButtonDS } from "@/components/DesignSystem";
 import {
   Box,
@@ -6,9 +7,9 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import {alpha} from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
-import { pxToRem } from "./getFontValue";
+import { RiArrowDropLeftLine, RiArrowDropRightLine } from "react-icons/ri";
 
 function getDirection(value = "bottom") {
   return {
@@ -60,14 +61,14 @@ export default function cssStyles(theme) {
   };
 }
 
-export const ViewModel = styled("div")(({theme}) => ({
+export const ViewModel = styled("div")(({ theme }) => ({
   width: "42vw",
   background: theme.palette.background.paper,
   display: "flex",
   flexDirection: "column",
 }));
 
-export const ButtonIcon = styled(ButtonDS)(({theme}) => ({
+export const ButtonIcon = styled(ButtonDS)(({ theme }) => ({
   padding: "8px",
   minWidth: "unset",
   backgroundColor: theme.palette.background.paper,
@@ -77,16 +78,16 @@ export const ButtonIcon = styled(ButtonDS)(({theme}) => ({
   },
   textTransform: "none",
 }));
-export const ButtonCancel = styled(ButtonDS)(({theme}) => ({
+export const ButtonCancel = styled(ButtonDS)(({ theme }) => ({
   color: theme.palette.common.neutral700,
   backgroundColor: "transparent",
   borderRadius: 6,
   "&:hover": {
-    color:theme.palette.common.neutral700,
+    color: theme.palette.common.neutral700,
     backgroundColor: "transparent",
   },
 }));
-export const ButtonGray = styled(ButtonDS)(({theme}) => ({
+export const ButtonGray = styled(ButtonDS)(({ theme }) => ({
   color: theme.palette.common.neutral700,
   backgroundColor: theme.palette.common.neutral50,
   boxShadow: "none",
@@ -96,7 +97,7 @@ export const ButtonGray = styled(ButtonDS)(({theme}) => ({
   textTransform: "none",
 }));
 //Model
-export const TitleModelStyle = styled(Typography)(({theme}) => ({
+export const TitleModelStyle = styled(Typography)(({ theme }) => ({
   "&.title": {
     textAlign: "center",
     width: "100%",
@@ -176,7 +177,7 @@ export const FooterPreviewStyle = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
   },
 }));
-export const GreenSwitch = styled(Switch)(({theme}) => ({
+export const GreenSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
     color: "#388E3C",
     "&:hover": {
@@ -194,7 +195,7 @@ export const TextElipsis = styled(Typography)(() => ({
   overflow: "hidden",
   width: "100%",
 }));
-export const ReviewForm = styled("div")(({theme}) => ({
+export const ReviewForm = styled("div")(({ theme }) => ({
   "&.block-review": {
     background: theme.palette.common.neutral800,
     borderRadius: "6px",
@@ -253,16 +254,16 @@ export const ReviewForm = styled("div")(({theme}) => ({
   "& .ant-rate .ant-rate-star-full": {
     background: theme.palette.common.blue700 + "!important",
     color: theme.palette.background.paper,
-    borderColor: '#1976D2'
+    borderColor: "#1976D2",
   },
   "& .ant-rate .ant-rate-star-first": {
-    width:'100%'
+    width: "100%",
   },
   "& .ant-rate .ant-rate-star >div:hover": {
-    transform: 'unset'
+    transform: "unset",
   },
   "& .ant-rate .ant-rate-star-full .ant-rate-star-second": {
-    color: theme.palette.background.paper
+    color: theme.palette.background.paper,
   },
   "& .pagination-review": {
     display: "flex",
@@ -270,7 +271,7 @@ export const ReviewForm = styled("div")(({theme}) => ({
     marginTop: "16px",
   },
   "&.block-review-result .MuiBox-root": {
-    width: 'unset',
+    width: "unset",
     marginTop: 0,
   },
   "&.block-review-result .pagination-review li:hover": {
@@ -294,47 +295,141 @@ export const wrapStyle = {
   padding: "16px 24px",
 };
 
-export const WrapBox = styled(Box)(({noBorder, theme: {palette}}) => ({
+export const WrapBox = styled(Box)(({ noBorder, theme: { palette } }) => ({
   ...wrapStyle,
-  ...(noBorder && {border: 'none'}),
-  '.box-title': {
-    padding: '0px 24px 14px',
-    margin: '0 -24px 12px',
-    borderBottom: '1px solid ' + palette.text.border,
+  ...(noBorder && { border: "none" }),
+  ".box-title": {
+    padding: "0px 24px 14px",
+    margin: "0 -24px 12px",
+    borderBottom: "1px solid " + palette.text.border,
   },
-  '.box-title-line': {
-    position: 'relative',
-    paddingLeft: '11px',
-    '&:before': {
-      position: 'absolute',
-      top: 6, left: 0,
+  ".box-title-line": {
+    position: "relative",
+    paddingLeft: "11px",
+    "&:before": {
+      position: "absolute",
+      top: 6,
+      left: 0,
       content: `""`,
       width: 3,
       height: 16,
       background: palette.text.active,
-      display: 'block',
+      display: "block",
     },
   },
-  '.box-title-desc': {
-    '> svg': {marginRight: 6, transform: 'translateY(3px)',},
+  ".box-title-desc": {
+    "> svg": { marginRight: 6, transform: "translateY(3px)" },
     fontSize: pxToRem(13),
     color: palette.text.secondary,
-    marginBottom: '8px',
+    marginBottom: "8px",
   },
 }));
-export const SliderStyle = styled("div")(() => ({
-  "& .swiper-pagination": {
-    display: "flex",
-    alignItems: "end",
-    marginLeft: "36px",
-    marginBottom: "30px",
+
+export const SliderStyle = styled("div")(({ theme }) => ({
+  "& .swiper-button-prev": {
+    color: theme.palette.common.neutral700,
+    background: theme.palette.common.neutral50,
+    borderRadius: "100px",
+    width: "30px",
+    height: "30px",
+    "&::after": {
+      content: { RiArrowDropLeftLine },
+      color: theme.palette.common.neutral700,
+      fontSize: 14,
+      fontWeight: 600,
+    },
   },
-  "& .swiper-pagination-bullet": {
-    background: "white",
+  "& .swiper-button-next": {
+    background: theme.palette.common.neutral50,
+    borderRadius: "100px",
+    width: "30px",
+    height: "30px",
+    "&::after": {
+      content: { RiArrowDropRightLine },
+      color: theme.palette.common.neutral700,
+      fontSize: 14,
+      fontWeight: 600,
+    },
   },
-  "& .swiper-pagination-bullet.swiper-pagination-bullet-active": {
-    background: "orange",
-    width: 24,
-    borderRadius: 8,
+}));
+
+export const ExamContainer = styled(Box)(({ theme: { palette } }) => ({
+  minHeight: "500px",
+  ".exam-content": {
+    marginRight: "24px",
+    width: "calc(100% - 325px)",
+  },
+  ".exam-doing-status": {
+    width: "325px",
+    maxWidth: "100%",
+  },
+
+  ".question-item": {
+    border: "none",
+    padding: "24px",
+  },
+  ".answer-item": {
+    display: "block",
+    border: "1px solid " + palette.text.border,
+    borderRadius: "6px",
+    paddingLeft: "6px",
+    margin: "0 0 16px 0",
+    "&:last-of-type": {
+      marginBottom: 0,
+    },
+    ".answer-content": {
+      display: "inline-block",
+      padding: "12px 16px 12px 0",
+    },
+    ".MuiButtonBase-root.Mui-checked": {
+      color: palette.text.active,
+    },
+
+    "&.selected-answer": {
+      borderColor: palette.text.active,
+    },
+  },
+
+  ".status-content": {
+    background: palette.background.paper,
+    borderRadius: "4px",
+    ".timer-box": {
+      padding: "24px 20px 0 8px",
+    },
+    ".q-answers-box": {
+      padding: "20px",
+      paddingBottom:"8px",
+      
+    },
+    ".questions": {
+      display: "flex",
+      flexWrap: "wrap",
+      marginLeft: "-4px",
+      marginRight: "-4px",
+    },
+    ".q-answer-item": {
+      width: "20%",
+      paddingLeft: "4px",
+      paddingRight: "4px",
+      marginBottom: "16px",
+      ".MuiChip-root": {
+        minWidth: "50px",
+        minHeight: "32px",
+        color: palette.text.search,
+        fontWeight: 600,
+      },
+      "&.answered": {
+        ".MuiChip-root": {
+          background: palette.common.green50,
+          color: palette.text.money,
+        },
+      },
+      "&.active": {
+        ".MuiChip-root": {
+          background: palette.text.active,
+          color: palette.background.paper,
+        },
+      },
+    },
   },
 }));
