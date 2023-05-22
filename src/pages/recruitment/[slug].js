@@ -223,7 +223,7 @@ export default function Recruitment() {
     setTab(value);
   };
   const { data: DataInterview } = useGetBookingCalendarsByRecruitmentIdQuery(
-    { RecruitmentId: RecruitmentId },
+    { RecruitmentIds: RecruitmentId },
     { skip: !isReady }
   );
   return (
