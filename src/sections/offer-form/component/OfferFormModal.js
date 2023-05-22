@@ -102,7 +102,7 @@ const OfferFormModal = ({isOpen, onClose, item, title}) => {
     {Id: item?.id},
     {skip: !item?.id}
   );
-  const {data: dataDefault = {}} = useGetDefaultOfferTemplateQuery(
+  const {data: dataDefault} = useGetDefaultOfferTemplateQuery(
     {OrganizationId: auth.user.organizationId},
     {skip: item?.id}
   );
