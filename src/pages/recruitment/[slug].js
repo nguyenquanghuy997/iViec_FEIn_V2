@@ -23,7 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 Recruitment.getLayout = function getLayout(pageProps, page) {
   return (
@@ -393,7 +393,7 @@ export default function Recruitment() {
 
                           <Typography
                             fontWeight={"600"}
-                            color= {theme.palette.common.neutral600}
+                            color={theme.palette.common.neutral600}
                             mt="24px"
                             mb="8px"
                           >
@@ -476,9 +476,9 @@ export default function Recruitment() {
             marginTop: "25px",
           }}
         >
-          {DataInterview?.totalRecord > 0 && (
+          <Container maxWidth="xl">
             <InterviewSchedule Data={DataInterview} />
-          )}
+          </Container>
         </View>
       )}
     </Page>

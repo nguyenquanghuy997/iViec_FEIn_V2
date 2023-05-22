@@ -112,7 +112,7 @@ const QuestionTransferModal = ({ questionGroupId, data, getData, isShowTransferQ
 
       <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
         <ButtonCancel tittle="Hủy" onClick={onCloseTransfer} />
-        <ButtonDS tittle="Duyệt" onClick={handleTranfer} />
+        <ButtonDS tittle="Chuyển" onClick={handleTranfer} />
       </DialogActions>
     </FormProvider>
   </DialogModelStyle>
