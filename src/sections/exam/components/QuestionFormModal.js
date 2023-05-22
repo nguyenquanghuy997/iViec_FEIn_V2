@@ -30,6 +30,8 @@ import {
   useUpdateQuestionMutation,
   useUploadFileExamMutation,
 } from "../ExamSlice";
+import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
+import { OrangeAlertIcon } from "@/sections/recruitment-form/icon/HeaderIcon";
 
 const LIST_QUESTION_TYPE = [
   {
@@ -114,8 +116,6 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-
-
   // api
   const [addForm] = useCreateQuestionMutation();
   const [updateForm] = useUpdateQuestionMutation();
@@ -188,6 +188,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   const isMultipleChoice = methods.watch("questionType") === 1;
 
   // state
+  const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const [listMedia, setListMedia] = useState([]);
   const [listAnswer, setListAnswer] = useState([defaultAnswer]);
   const isUploading = listMedia?.some((i) => !i.uploadedUrl);
@@ -223,10 +224,11 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
     } catch (error) {
       if (error.status == "QGE_04")
-        enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
+        setShowDuplicateAlert(true)
+      // enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
+      //   autoHideDuration: 1000,
+      //   variant: "error",
+      // });
     }
   });
 
@@ -423,151 +425,178 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   }, [listMedia]);
 
   return (
-    <FormProvider methods={methods}>
-      <Modal
-        open={show}
-        onClose={onClose}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
-      >
-        <ViewModel>
-          {/* header */}
-          <View
-            flexrow="true"
-            atcenter="center"
-            pv={12}
-            ph={24}
-            bgcolor={theme.palette.common.white}
-          >
-            <Text flex="true" fontsize={16} fontweight={"600"}>
-              {isEditMode ? "Chỉnh sửa câu hỏi" : "Thêm mới câu hỏi"}
-            </Text>
-            <ButtonDS
-              type="submit"
-              sx={{
-                backgroundColor: theme.palette.background.paper,
-                boxShadow: "none",
-                ":hover": {
-                  backgroundColor: "#EFF3F7",
-                },
-                textTransform: "none",
-                padding: "12px",
-                minWidth: "unset",
-              }}
-              onClick={onClose}
-              icon={
-                <Iconify
-                  icon={"mi:close"}
-                  width={20}
-                  height={20}
-                  color={theme.palette.common.borderObject}
-                />
-              }
-            />
-          </View>
-          <Divider />
-
-          {/* body */}
-          <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
-            <View flexrow='true'>
-              <View flex={1}>
-                {renderTitle("Kiểu câu hỏi", true)}
-
-                <RHFDropdown
-                  options={LIST_QUESTION_TYPE}
-                  name={"questionType"}
-                  placeholder={"Chọn kiểu câu hỏi"}
-                />
-              </View>
-
-              <View flex={1} ml={24}>
-                {renderTitle("Nhóm câu hỏi", true)}
-
-                <RHFDropdown
-                  options={items?.map((i) => ({
-                    ...i,
-                    value: i.id,
-                    label: i.name,
-                  }))}
-                  name={"questionGroupId"}
-                  placeholder={"Chọn nhóm câu hỏi"}
-                />
-              </View>
-            </View>
-
-            <View mt={24}>
-              {renderTitle("Câu hỏi", true)}
-
-              <RHFTextField
-                multiline
-                isRequired
-                rows={4}
-                name={"questionTitle"}
-                placeholder={"Nhập nội dung câu hỏi..."}
+    <>
+      <FormProvider methods={methods}>
+        <Modal
+          open={show}
+          onClose={onClose}
+          sx={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          <ViewModel>
+            {/* header */}
+            <View
+              flexrow="true"
+              atcenter="center"
+              pv={12}
+              ph={24}
+              bgcolor={theme.palette.common.white}
+            >
+              <Text flex="true" fontsize={16} fontweight={"600"}>
+                {isEditMode ? "Chỉnh sửa câu hỏi" : "Thêm mới câu hỏi"}
+              </Text>
+              <ButtonDS
+                type="submit"
+                sx={{
+                  backgroundColor: theme.palette.background.paper,
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#EFF3F7",
+                  },
+                  textTransform: "none",
+                  padding: "12px",
+                  minWidth: "unset",
+                }}
+                onClick={onClose}
+                icon={
+                  <Iconify
+                    icon={"mi:close"}
+                    width={20}
+                    height={20}
+                    color={theme.palette.common.borderObject}
+                  />
+                }
               />
             </View>
+            <Divider />
 
-            <View flexrow mt={24}>
-              {[...(listMedia ?? []), null].slice(0, 6).map(renderMediaItem)}
-            </View>
+            {/* body */}
+            <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
+              <View flexrow='true'>
+                <View flex={1}>
+                  {renderTitle("Kiểu câu hỏi", true)}
 
-            <View mv={24} width={'50%'}>
-              {renderTitle("Điểm câu hỏi", true)}
-
-              <RHFTextField
-                name={"questionPoint"}
-                disabled={!isEssay}
-                placeholder={"Nhập điểm câu hỏi"}
-              />
-            </View>
-
-            {!isEssay && (
-              <>
-                <Divider />
-
-                <View mt={24}>
-                  <Text fontsize={16} fontweight={600}>
-                    {"Đáp án"}
-                  </Text>
-
-                  {errors.answers?.message && (
-                    <Alert severity="error" style={{ marginTop: 24 }}>
-                      {errors.answers?.message}
-                    </Alert>
-                  )}
-
-                  {listAnswer?.map(renderAnswerItem)}
+                  <RHFDropdown
+                    options={LIST_QUESTION_TYPE}
+                    name={"questionType"}
+                    placeholder={"Chọn kiểu câu hỏi"}
+                  />
                 </View>
-              </>
-            )}
-          </View>
 
-          {/* footer */}
-          <View
-            flexrow="true"
-            pv={16}
-            ph={24}
-            boxshadow={"inset 0px 1px 0px #EBECF4"}
-          >
-            <ButtonDS
-              type={"submit"}
-              variant={"contained"}
-              loading={isSubmitting}
-              isDisabled={isUploading}
-              tittle={isEditMode ? "Sửa" : "Thêm"}
-              onClick={pressSave}
-            />
-            <View width={8} />
-            <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
-            <View width={8} />
-            <View flex="true" />
+                <View flex={1} ml={24}>
+                  {renderTitle("Nhóm câu hỏi", true)}
 
-            <SwitchStatusDS
-              name={"isActive"}
-              label={isActive ? "Đang hoạt động" : "Không hoạt động"}
-            />
-          </View>
-        </ViewModel >
-      </Modal >
-    </FormProvider >
+                  <RHFDropdown
+                    options={items?.map((i) => ({
+                      ...i,
+                      value: i.id,
+                      label: i.name,
+                    }))}
+                    name={"questionGroupId"}
+                    placeholder={"Chọn nhóm câu hỏi"}
+                  />
+                </View>
+              </View>
+
+              <View mt={24}>
+                {renderTitle("Câu hỏi", true)}
+
+                <RHFTextField
+                  multiline
+                  isRequired
+                  rows={4}
+                  name={"questionTitle"}
+                  placeholder={"Nhập nội dung câu hỏi..."}
+                />
+              </View>
+
+              <View flexrow mt={24}>
+                {[...(listMedia ?? []), null].slice(0, 6).map(renderMediaItem)}
+              </View>
+
+              <View mv={24} width={'50%'}>
+                {renderTitle("Điểm câu hỏi", true)}
+
+                <RHFTextField
+                  name={"questionPoint"}
+                  disabled={!isEssay}
+                  placeholder={"Nhập điểm câu hỏi"}
+                />
+              </View>
+
+              {!isEssay && (
+                <>
+                  <Divider />
+
+                  <View mt={24}>
+                    <Text fontsize={16} fontweight={600}>
+                      {"Đáp án"}
+                    </Text>
+
+                    {errors.answers?.message && (
+                      <Alert severity="error" style={{ marginTop: 24 }}>
+                        {errors.answers?.message}
+                      </Alert>
+                    )}
+
+                    {listAnswer?.map(renderAnswerItem)}
+                  </View>
+                </>
+              )}
+            </View>
+
+            {/* footer */}
+            <View
+              flexrow="true"
+              pv={16}
+              ph={24}
+              boxshadow={"inset 0px 1px 0px #EBECF4"}
+            >
+              <ButtonDS
+                type={"submit"}
+                variant={"contained"}
+                loading={isSubmitting}
+                isDisabled={isUploading}
+                tittle={isEditMode ? "Sửa" : "Thêm"}
+                onClick={pressSave}
+              />
+              <View width={8} />
+              <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
+              <View width={8} />
+              <View flex="true" />
+
+              <SwitchStatusDS
+                name={"isActive"}
+                label={isActive ? "Đang hoạt động" : "Không hoạt động"}
+              />
+            </View>
+          </ViewModel >
+        </Modal >
+      </FormProvider >
+
+      {showDuplicateAlert && (
+        <ConfirmModal
+          open={showDuplicateAlert}
+          onClose={() => setShowDuplicateAlert(false)}
+          icon={<OrangeAlertIcon />}
+          title={"Câu hỏi đã tồn tại, không thể lưu"}
+          titleProps={{
+            sx: {
+              color: theme.palette.common.orange800,
+              fontWeight: 600,
+              marginBottom: 1,
+            },
+          }}
+          subtitle={
+            "Trong nhóm này đã tồn tại câu hỏi khác có cùng nội dung trùng khớp với câu hỏi vừa tạo. Vui lòng kiểm tra lại hoặc thay đổi nội dung."
+          }
+          onSubmit={() => setShowDuplicateAlert(false)}
+          btnCancelProps={{ title: "" }}
+          btnConfirmProps={{
+            title: "Tôi đã hiểu",
+            color: "dark",
+          }}
+        />
+      )}
+    </>
   );
 }
