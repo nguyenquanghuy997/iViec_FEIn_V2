@@ -26,6 +26,7 @@ const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
       thousandSeparator
       valueIsNumericString
       prefix=""
+      decimalScale={0}
     />
   );
 });
