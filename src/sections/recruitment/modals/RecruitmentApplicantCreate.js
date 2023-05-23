@@ -325,7 +325,7 @@ export const RecruitmentApplicantCreate = ({
       "expectedWorkingAddress.address",
       preview.expectedWorkingAddress?.address ?? undefined
     );
-  }, [preview]);
+  }, [preview, data]);
   
   useEffect(() => {
     if (!extendData?.id) return;

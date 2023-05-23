@@ -10,6 +10,7 @@ import {LIST_PROCESS_LEVEL_DETAIL_TYPE} from "@/utils/formatString";
 import {useGetApplicationByRoleGroupQuery} from "@/sections/auth/authSlice";
 import {useGetAllApplicantUserOrganizationByIdQuery} from "@/sections/organization/override/OverrideOrganizationSlice";
 import {RHFSelect} from "@/components/hook-form";
+import useAuth from "@/hooks/useAuth";
 
 const ConditionalInput = ({control, index, indexChild}) => {
     const value = useWatch({
@@ -21,9 +22,9 @@ const ConditionalInput = ({control, index, indexChild}) => {
         control,
         name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`
     });
-
+    const auth = useAuth()
     const {data: {items: Applications = []} = {}} = useGetApplicationByRoleGroupQuery({RoleGroupId: roleGroupId}, {skip: !roleGroupId});
-    const {data: {items: ApplicationOrganization = []} = {}} = useGetAllApplicantUserOrganizationByIdQuery();
+    const {data: {items: ApplicationOrganization = []} = {}} = useGetAllApplicantUserOrganizationByIdQuery({OrganizationId: auth.user.organizationId});
 
     return (
         (value === 0 ?

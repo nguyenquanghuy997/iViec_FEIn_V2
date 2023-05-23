@@ -6,7 +6,8 @@ import { ExamItem, QuestionGallary } from "@/sections/exam";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Tab } from "@mui/material";
 import { useState } from "react";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
 Setting.getLayout = function getLayout(pageProps, page) {
   return (
@@ -17,10 +18,11 @@ Setting.getLayout = function getLayout(pageProps, page) {
 };
 
 export default function Setting() {
-
+  const router = useRouter();
+  const { defaultTab } = router.query;
   // tab
   const theme = useTheme();
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState(parseInt(defaultTab == 2 ? 2 : 1));
   const tabs = [
     {
       value: 1,
@@ -34,6 +36,9 @@ export default function Setting() {
 
   const handleChangeTab = (event, newValue) => {
     setTab(newValue);
+    router.replace({
+      query: { ...router.query, defaultTab: newValue },
+    });
   };
 
   return (

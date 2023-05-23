@@ -198,7 +198,11 @@ export const ApplicantReviewModal = ({
                 const { isRequired, id, name, description } = item;
 
                 return (
-                  <ReviewForm className="block-review" key={index}>
+                  <ReviewForm
+                    className="block-review"
+                    key={index}
+                    style={{ background: theme.palette.common.bgrMaster }}
+                  >
                     <Label
                       required={isRequired}
                       className="title"

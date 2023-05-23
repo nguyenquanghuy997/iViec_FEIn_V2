@@ -10,6 +10,7 @@ import {
   API_GET_APPLICANT_BY_PIPELINESTETEID,
   API_GET_APPLICANT_CURRENT_STAGE_WITH_RECRUITMENT_STATES,
   API_GET_APPLICANT_RECRUITMENT,
+  API_GET_APPLICANT_REVIEW_EVENT,
   API_GET_APPLICANT_SKILLS,
   API_GET_COLUMN_APPLICANTS,
   API_GET_FILTER_ALL_APPLICANTS,
@@ -293,6 +294,12 @@ export const ApplicantFormSlice = createApi({
       }),
       providesTags: [{ type: "APPLICANT", id: "APPLICANT_REVIEW" }],
     }),
+    getReviewEvent: builder.query({
+      query: (data) => ({
+        url: API_GET_APPLICANT_REVIEW_EVENT + "?" + qs.stringify(data),
+      }),
+      providesTags: [{ type: "APPLICANT", id: "APPLICANT_REVIEW" }],
+    }),
   }),
 });
 
@@ -321,4 +328,5 @@ export const {
   useGetCheckReviewQuery,
   useAddApplicantReviewMutation,
   useGetAllJobSourcesQuery,
+  useGetReviewEventQuery,
 } = ApplicantFormSlice;

@@ -124,6 +124,7 @@ const ConfirmModal = (
 
   const actionsSxProps = {
     minHeight: '68px',
+    padding:' 16px 24px !important',
     borderTop: '1px solid #E7E9ED',
     '& .btn-actions': {
       height: '36px',
@@ -185,7 +186,7 @@ const ConfirmModal = (
           </DialogContentText>
           <Divider/>
         </DialogContent>
-        <DialogActions sx={{ ...actionsSxProps }} {...otherActionsProps}>
+        <DialogActions sx={{ ...actionsSxProps}} {...otherActionsProps}>
           <MuiButton
               title={btnTitleCancel}
               color="basic"

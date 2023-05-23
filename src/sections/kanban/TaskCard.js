@@ -12,11 +12,11 @@ import { CircleLineIcon, EditIcon, LogoIcon } from "@/assets/ActionIcon";
 import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
 import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
-import { ApplicantInterviewState } from "@/config";
-import { PATH_DASHBOARD } from "@/routes/paths";
+import {ApplicantInterviewState} from "@/config";
+import {PATH_DASHBOARD} from "@/routes/paths";
 import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
-import { srcImage } from "@/utils/enum";
-import { fDate, fTime } from "@/utils/formatTime";
+import {srcImage} from "@/utils/enum";
+import {fDate, fTime} from "@/utils/formatTime";
 import {
   Box,
   Button,
@@ -30,16 +30,16 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Divider } from "antd";
+import {Divider} from "antd";
 import moment from "moment";
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
+import {useRouter} from "next/router";
+import {useSnackbar} from "notistack";
 import PropTypes from "prop-types";
 import { memo, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 function Item(props) {
-  const { sx, ...other } = props;
+  const {sx, ...other} = props;
   return (
     <Box
       sx={{
@@ -54,7 +54,8 @@ function Item(props) {
 }
 
 function Baseitem(props) {
-  const { item } = props;
+  const {item} = props;
+  const router = useRouter();
   return (
     <Grid
       display="flex"
@@ -72,7 +73,7 @@ function Baseitem(props) {
       }}
     >
       <AvatarDS
-        sx={{ height: "32px", width: "32px", borderRadius: "14px" }}
+        sx={{height: "32px", width: "32px", borderRadius: "14px"}}
         src={item?.portraitImage && srcImage(item?.portraitImage)}
       />
 
@@ -82,6 +83,21 @@ function Baseitem(props) {
           display="flex"
           fontWeight="600"
           alignItems="center"
+          onClick={() =>
+            router.push(
+              {
+                pathname: PATH_DASHBOARD.applicant.view(props.item?.applicantId),
+                query: {
+                  correlationId: props.item?.correlationId,
+                  organizationId: props.item?.organizationId,
+                  recruitmentId: props.item?.recruitmentId,
+                  applicantId: props.item?.applicantId,
+                },
+              },
+              undefined,
+              {shallow: true}
+            )
+          }
         >
           {item?.fullName}
         </Typography>
@@ -106,7 +122,7 @@ function ExaminationItem(props) {
   // );
   return (
     <div>
-      <Baseitem item={item} />
+      <Baseitem item={item}/>
       <Box
         sx={{
           // backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE",
@@ -173,26 +189,26 @@ function ExaminationItem(props) {
 }
 
 function InterviewItem(props) {
-  const { item } = props;
+  const {item} = props;
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
   const handleClick = (item) => {
     setOpen(true);
     setData(item);
   };
-  const { data: { items: interview } = { items: [] } } =
+  const {data: {items: interview} = {items: []}} =
     useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery(
       {
         ApplicantId: item?.applicantId,
         RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
       },
-      { skip: !item }
+      {skip: !item}
     );
   const lastInterview = interview[interview.length - 1];
   var timeEnd = moment(lastInterview?.interviewTime).add(
     lastInterview?.interviewDuration
   );
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const [getCompanyInfo] = useLazyGetCompanyInfoQuery();
 
   const getLink = async (id) => {
@@ -257,11 +273,11 @@ function InterviewItem(props) {
           })}
         <Box>
           {lastInterview?.applicantInterviewState ==
-            ApplicantInterviewState.PENDING ||
+          ApplicantInterviewState.PENDING ||
           lastInterview?.applicantInterviewState ==
-            ApplicantInterviewState.CONFIRMED ||
+          ApplicantInterviewState.CONFIRMED ||
           lastInterview?.applicantInterviewState ==
-            ApplicantInterviewState.INTERVIEWING ? (
+          ApplicantInterviewState.INTERVIEWING ? (
             <Box
               sx={{
                 background: "#4CAF50",
@@ -296,10 +312,10 @@ function InterviewItem(props) {
                   >
                     {lastInterview?.interviewTime
                       ? fDate(lastInterview?.interviewTime) +
-                        " " +
-                        fTime(lastInterview?.interviewTime) +
-                        " - " +
-                        fTime(timeEnd)
+                      " " +
+                      fTime(lastInterview?.interviewTime) +
+                      " - " +
+                      fTime(timeEnd)
                       : ""}
                   </Typography>
                 </Box>
@@ -348,8 +364,8 @@ function InterviewItem(props) {
             </Box>
           ) : (
             <>
-              <Divider style={{ margin: 0 }} />
-              <Box style={{ padding: "12px 12px" }}>
+              <Divider style={{margin: 0}}/>
+              <Box style={{padding: "12px 12px"}}>
                 <ButtonDS
                   tittle={"Đặt lịch phỏng vấn"}
                   type="submit"
@@ -391,7 +407,7 @@ function InterviewItem(props) {
 
 function ResultItem(props) {
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
-  const { item } = props;
+  const {item} = props;
   return (
     <div>
       <Baseitem item={item} />
@@ -407,7 +423,7 @@ function ResultItem(props) {
             >
               <ButtonGroup
                 fullWidth={true}
-                style={{ border: "1px solid #E7E9ED" }}
+                style={{border: "1px solid #E7E9ED"}}
               >
                 <Button
                   type="submit"
@@ -532,11 +548,12 @@ function ResultItem(props) {
     </div>
   );
 }
+
 function OfferItem(props) {
-  const { item } = props;
+  const {item} = props;
   return (
     <div>
-      <Baseitem item={item} />
+      <Baseitem item={item}/>
       {item.offerStateResultType == 0 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
@@ -547,10 +564,10 @@ function OfferItem(props) {
               color="#172B4D"
             />
           </Item>
-          <Item sx={{ width: "100%", color: "#172B4D" }}>
+          <Item sx={{width: "100%", color: "#172B4D"}}>
             Đã tạo thư mời nhận việc
           </Item>
-          <Item sx={{ flexShrink: 0 }}>
+          <Item sx={{flexShrink: 0}}>
             <Iconify
               icon={"fluent-mdl2:circle-half-full"}
               width={20}
@@ -570,10 +587,10 @@ function OfferItem(props) {
               color="#F77A0C"
             />
           </Item>
-          <Item sx={{ width: "100%", color: "#F77A0C" }}>
+          <Item sx={{width: "100%", color: "#F77A0C"}}>
             Đã gửi, chờ phản hồi
           </Item>
-          <Item sx={{ flexShrink: 0 }}>
+          <Item sx={{flexShrink: 0}}>
             <Iconify
               icon={"fluent-mdl2:circle-half-full"}
               width={20}
@@ -593,8 +610,8 @@ function OfferItem(props) {
               color="#388E3C"
             />
           </Item>
-          <Item sx={{ width: "100%", color: "#388E3C" }}>Đồng ý nhận việc</Item>
-          <Item sx={{ flexShrink: 0 }}>
+          <Item sx={{width: "100%", color: "#388E3C"}}>Đồng ý nhận việc</Item>
+          <Item sx={{flexShrink: 0}}>
             <Iconify
               icon={"fluent-mdl2:circle-half-full"}
               width={20}
@@ -614,10 +631,10 @@ function OfferItem(props) {
               color="#D32F2F"
             />
           </Item>
-          <Item sx={{ width: "100%", color: "#D32F2F" }}>
+          <Item sx={{width: "100%", color: "#D32F2F"}}>
             Từ chối nhận việc
           </Item>
-          <Item sx={{ flexShrink: 0 }}>
+          <Item sx={{flexShrink: 0}}>
             <Iconify
               icon={"fluent-mdl2:circle-half-full"}
               width={20}
@@ -631,10 +648,10 @@ function OfferItem(props) {
   );
 }
 
-function TaskCard({ item, index, pipelineStateType }) {
+function TaskCard({item, index, pipelineStateType}) {
   const theme = useTheme();
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const [openGroup, setOpenGroup] = useState(false);
 
   const [getApplicant] = useLazyGetAllFilterApplicantQuery();
@@ -678,7 +695,7 @@ function TaskCard({ item, index, pipelineStateType }) {
         },
       },
       undefined,
-      { shallow: true }
+      {shallow: true}
     );
   };
 
@@ -781,14 +798,14 @@ function TaskCard({ item, index, pipelineStateType }) {
                           </>
                         )}
                         <MenuItem onClick={pressEdit}>
-                          <EditIcon sx={{ mr: "12px" }} />
+                          <EditIcon sx={{mr: "12px"}}/>
                           <Typography ml={"12px"} variant={"textSize13600"}>
                             Chỉnh sửa
                           </Typography>
                         </MenuItem>
-                        <Divider />
+                        <Divider/>
                         <MenuItem onClick={pressDelete}>
-                          <CircleLineIcon sx={{ mr: "12px" }} />
+                          <CircleLineIcon sx={{mr: "12px"}}/>
                           <Typography
                             color={theme.palette.text.warning}
                             ml={"12px"}
@@ -804,7 +821,7 @@ function TaskCard({ item, index, pipelineStateType }) {
                   <Button
                     size="small"
                     aria-haspopup="menu"
-                    style={{ minWidth: 0, padding: 0 }}
+                    style={{minWidth: 0, padding: 0}}
                     onClick={handleOpenGroup}
                   >
                     <Iconify
@@ -817,13 +834,13 @@ function TaskCard({ item, index, pipelineStateType }) {
                 </LightTooltip>
               </Box>
 
-              <Box sx={{ cursor: "pointer" }}>
-                <Stack sx={{ borderRadius: "8px", background: "#FDFDFD" }}>
-                  {pipelineStateType == 0 && <Baseitem item={item} />}
-                  {pipelineStateType == 1 && <ExaminationItem item={item} />}
-                  {pipelineStateType == 2 && <InterviewItem item={item} />}
-                  {pipelineStateType == 3 && <ResultItem item={item} />}
-                  {pipelineStateType == 4 && <OfferItem item={item} />}
+              <Box sx={{cursor: "pointer"}}>
+                <Stack sx={{borderRadius: "8px", background: "#FDFDFD"}}>
+                  {pipelineStateType == 0 && <Baseitem item={item}/>}
+                  {pipelineStateType == 1 && <ExaminationItem item={item}/>}
+                  {pipelineStateType == 2 && <InterviewItem item={item}/>}
+                  {pipelineStateType == 3 && <ResultItem item={item}/>}
+                  {pipelineStateType == 4 && <OfferItem item={item}/>}
 
                   <Box
                     display="Grid"
