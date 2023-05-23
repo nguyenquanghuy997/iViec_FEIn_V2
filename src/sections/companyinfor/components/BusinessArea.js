@@ -53,7 +53,6 @@ const BusinessArea = ({ data }) => {
   };
 
   const handleChangeChecked = async () => {
-    setLoading(true);
     try {
       await updateVisibleHuman({
         organizationId: data?.id,
