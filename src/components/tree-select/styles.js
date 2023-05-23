@@ -12,5 +12,8 @@ export const TreeSelectStyle = styled(TreeSelect)(({ theme: { palette }, height 
       fontSize: pxToRem(14),
       paddingLeft: 4,
     },
+    '.ant-select-selection-search': {
+      marginInlineStart: 0
+    }
   }
 }));

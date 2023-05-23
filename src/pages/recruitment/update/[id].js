@@ -479,13 +479,11 @@ export default function UpdateRecruitment() {
             recruitmentJobCategories: getValues(
               "recruitmentJobCategoryIds"
             )?.map((item) => ({
-              name: item?.label,
-              jobCategoryId: item?.value,
+              jobCategoryId: item,
             })),
             recruitmentWorkingForms: getValues("recruitmentWorkingForms")?.map(
               (item) => ({
-                workingForm: item?.value,
-                id: item?.value,
+                workingForm: item,
               })
             ),
             salaryDisplayType: getValues("salaryDisplayType"),
