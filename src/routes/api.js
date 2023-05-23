@@ -312,6 +312,7 @@ export const API_CREATE_EXAM = "/examination/Examination/CreateExamination";
 export const API_UPDATE_EXAM =
   "/examination/Examination/UpdateExamination";
 export const API_DELETE_EXAMS = "/examination/Examination/RemoveExaminations";
+export const API_GET_EXAM_APPLICANT_WITH_RESULT = "/examination/Examination/GetExamApplicantWithResult";
 
 // QuestionGroup
 export const API_GET_QUESTION_GROUP =

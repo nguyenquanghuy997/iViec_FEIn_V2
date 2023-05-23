@@ -7,6 +7,7 @@ import {
   API_GET_COLUMN_EXAMS,
   API_GET_EXAMINATION,
   API_GET_EXAMINATION_BY_ID,
+  API_GET_EXAM_APPLICANT_WITH_RESULT,
   API_GET_QUESTIONS,
   API_GET_QUESTION_GROUP,
   API_GET_QUESTION_VISIBLE,
@@ -208,6 +209,14 @@ const examinationSlice = apiWithTag.injectEndpoints({
         },
       }),
     }),
+
+    getExamApplicantWithResult: builder.query({
+      query: (params) => ({
+        url: API_GET_EXAM_APPLICANT_WITH_RESULT,
+        method: "GET",
+        params,
+      }),
+    }),
   }),
 });
 
@@ -236,4 +245,5 @@ export const {
   useRemoveQuestionMutation,
   useTransferQuestionGroupMutation,
   useUploadFileExamMutation,
+  useGetExamApplicantWithResultQuery,
 } = examinationSlice;
