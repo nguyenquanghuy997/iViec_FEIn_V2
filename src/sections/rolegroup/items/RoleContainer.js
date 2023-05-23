@@ -39,8 +39,8 @@ const formatBody = (query) => {
       query.isActivated === "2"
         ? false
         : query.isActivated === "1"
-        ? true
-        : null,
+          ? true
+          : null,
   };
 };
 
@@ -225,7 +225,7 @@ export const RoleContainer = () => {
     if (itemSelected.length < 1) {
       return false;
     }
-    return !itemSelected.some((x) => x.isDefault);
+    return !itemSelected.some((x) => x.isDefault || x.numOfPerson > 0);
   }, [itemSelected]);
 
   const selectedStatus = useMemo(() => {
@@ -256,7 +256,12 @@ export const RoleContainer = () => {
           setSelectedRowKeys([]);
           enqueueSnackbar("Xóa vai trò thành công!");
         } catch (err) {
-          enqueueSnackbar(getErrorMessage(err), { variant: "error" });
+          if (err.code == 'RGE_06') {
+            enqueueSnackbar('Vai trò đang sử dụng', { variant: "error" });
+          }
+          else {
+            enqueueSnackbar(getErrorMessage(err), { variant: "error" });
+          }
         }
       },
     });
@@ -351,53 +356,53 @@ export const RoleContainer = () => {
         actions={[
           ...(showActionStatus
             ? [
-                {
-                  component: (
-                    <Switch
-                      label={
-                        selectedStatus ? "Đang hoạt động" : "Không hoạt động"
-                      }
-                      checked={selectedStatus}
-                      onClick={(e) => {
-                        handleChangeStatus(e.target.checked);
-                      }}
-                    />
-                  ),
-                },
-              ]
+              {
+                component: (
+                  <Switch
+                    label={
+                      selectedStatus ? "Đang hoạt động" : "Không hoạt động"
+                    }
+                    checked={selectedStatus}
+                    onClick={(e) => {
+                      handleChangeStatus(e.target.checked);
+                    }}
+                  />
+                ),
+              },
+            ]
             : []),
           ...(canEdit &&
-          itemSelected.length === 1 &&
-          itemSelected[0]?.isDefault != true
+            itemSelected.length === 1 &&
+            itemSelected[0]?.isDefault != true
             ? [
-                {
-                  icon: (
-                    <RiEdit2Fill size={18} color={palette.text.secondary} />
-                  ),
-                  title: "Sửa",
-                  onClick: () => {
-                    if (itemSelected.length > 1) {
-                      return;
-                    }
-                    setEditItem(itemSelected[0]);
-                    setOpen(true);
-                  },
-                  disabled: selectedRowKeys.length > 1,
+              {
+                icon: (
+                  <RiEdit2Fill size={18} color={palette.text.secondary} />
+                ),
+                title: "Sửa",
+                onClick: () => {
+                  if (itemSelected.length > 1) {
+                    return;
+                  }
+                  setEditItem(itemSelected[0]);
+                  setOpen(true);
                 },
-              ]
+                disabled: selectedRowKeys.length > 1,
+              },
+            ]
             : []),
           ...(showDeleteBtn
             ? [
-                {
-                  icon: (
-                    <RiDeleteBin6Line size={18} color={palette.text.warning} />
-                  ),
-                  title: "Xóa",
-                  onClick: () => {
-                    handleConfirmDelete();
-                  },
+              {
+                icon: (
+                  <RiDeleteBin6Line size={18} color={palette.text.warning} />
+                ),
+                title: "Xóa",
+                onClick: () => {
+                  handleConfirmDelete();
                 },
-              ]
+              },
+            ]
             : []),
         ]}
       />

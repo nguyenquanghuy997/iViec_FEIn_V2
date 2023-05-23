@@ -325,21 +325,27 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
           onClose={() => setShowQuestionGallaryInternalModal(false)} />
       }
 
-      <ConfirmModal
-        confirmDelete={showDeleteModal}
-        title="Xác nhận xóa câu hỏi"
-        subtitle={'Bạn có chắc chắn muốn xóa câu hỏi'}
-        onSubmit={handlerDeleteQuestion}
-        onCloseConfirmDelete={handleCloseDeleteModal}
-      />
+      {
+        showDeleteModal &&
+        <ConfirmModal
+          confirmDelete={showDeleteModal}
+          title="Xác nhận xóa câu hỏi"
+          subtitle={'Bạn có chắc chắn muốn xóa câu hỏi'}
+          onSubmit={handlerDeleteQuestion}
+          onCloseConfirmDelete={handleCloseDeleteModal}
+        />
+      }
 
-      <ListQuestionBottomNav
-        open={itemIndexSelected.length > 0}
-        itemSelected={itemIndexSelected}
-        canEdit={!listQuestions[itemIndexSelected[0]]?.id}
-        onClose={() => setItemIndexSelected([])}
-        onDelete={() => openDeleteQuestionModal(null, -1)}
-        onEdit={() => openEditQuestionForm(listQuestions[itemIndexSelected[0]], itemIndexSelected[0])} />
+      {
+        itemIndexSelected.length > 0 &&
+        <ListQuestionBottomNav
+          open={itemIndexSelected.length > 0}
+          itemSelected={itemIndexSelected}
+          canEdit={!listQuestions[itemIndexSelected[0]]?.id}
+          onClose={() => setItemIndexSelected([])}
+          onDelete={() => openDeleteQuestionModal(null, -1)}
+          onEdit={() => openEditQuestionForm(listQuestions[itemIndexSelected[0]], itemIndexSelected[0])} />
+      }
     </>
   )
 }

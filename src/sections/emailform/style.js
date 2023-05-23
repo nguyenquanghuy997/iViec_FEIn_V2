@@ -34,13 +34,14 @@ const ButtonAddStyle = styled(Button)(({ theme }) => ({
     fontWeight: 600,
     textTransform: "none",
     "&:hover": {
+      opacity: 0.8,
       backgroundColor: theme.palette.common.blue700,
       color: theme.palette.common.white,
     },
   },
 }));
 
-const TitleStyle = styled(Typography)(({theme}) => ({
+const TitleStyle = styled(Typography)(({ theme }) => ({
   "&.form-title": {
     color: theme.palette.common.neutral800,
     fontSize: 20,

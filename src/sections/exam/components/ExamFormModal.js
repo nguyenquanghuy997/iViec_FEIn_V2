@@ -12,7 +12,7 @@ import React, { useState } from 'react'
 import { useEffect } from "react";
 import { useForm } from 'react-hook-form'
 import * as Yup from "yup";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 const defaultValues = {
   id: null,
@@ -99,7 +99,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
           bgcolor={theme.palette.common.white}
         >
           <Text flex="true" fontsize={16} fontweight={"600"}>
-            {"Thêm mới đề thi"}
+            {dataForm.name ? 'Chỉnh sửa đề thi' : "Thêm mới đề thi"}
           </Text>
           <ButtonDS
             type="button"
@@ -132,7 +132,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
             {renderTitle("Tên đề thi", true)}
             <RHFTextField
               name="name"
-              placeholder="Nhập tiêu đề tin hiển thị tại trang việc làm..."
+              placeholder="Nhập tên đề thi"
               fullWidth
               maxLength={255}
             />
@@ -160,7 +160,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
             <SwitchStatusDS
               sx={{
                 "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  backgroundColor: theme.palette.common.blue200  + " !important",
+                  backgroundColor: theme.palette.common.blue200 + " !important",
                 },
                 "& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb": {
                   backgroundColor: theme.palette.common.blue700 + " !important",

@@ -234,7 +234,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
   const changeAnswer = (index, key, value) => {
     setListAnswer((l) =>
-      l.map((i, j) =>
+      l?.map((i, j) =>
         j === index
           ? { ...i, [key]: value }
           : key === "isCorrect" && !isMultipleChoice
@@ -260,7 +260,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
   const onUploadedMedia = (index, url) => {
     setListMedia((l) =>
-      l.map((i, j) => (j === index ? { ...i, uploadedUrl: url } : i))
+      l?.map((i, j) => (j === index ? { ...i, uploadedUrl: url } : i))
     );
   };
 
@@ -409,7 +409,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
   useEffect(() => {
     if (isMultipleChoice) return;
-    setListAnswer((l) => l.map((i) => ({ ...i, isCorrect: false })));
+    setListAnswer((l) => l?.map((i) => ({ ...i, isCorrect: false })));
   }, [isMultipleChoice]);
 
   useEffect(() => {
@@ -442,7 +442,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
               bgcolor={theme.palette.common.white}
             >
               <Text flex="true" fontsize={16} fontweight={"600"}>
-                {isEditMode ? "Chỉnh sửa câu hỏi" : "Thêm mới câu hỏi"}
+                {isEditMode ? "Chỉnh sửa câu hỏi" : !data?.questionTitle ? "Thêm mới câu hỏi" : "Sao chép câu hỏi"}
               </Text>
               <ButtonDS
                 type="submit"
@@ -556,7 +556,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
                 variant={"contained"}
                 loading={isSubmitting}
                 isDisabled={isUploading}
-                tittle={isEditMode ? "Sửa" : "Thêm"}
+                tittle={'Lưu'}
                 onClick={pressSave}
               />
               <View width={8} />
