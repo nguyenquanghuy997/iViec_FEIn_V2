@@ -4,7 +4,7 @@ import {
 } from "../applicant";
 import { RejectApplicantModal } from "../applicant/modals/RejectApplicantModal";
 import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
-import { useGetExamApplicantWithResultQuery } from "../exam/ExamSlice";
+// import { useGetExamApplicantWithResultQuery } from "../exam/ExamSlice";
 import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
 import { FormCalendar } from "../interview/components/FormCalendar";
 import ExaminerModal from "../recruitment/modals/ExaminerModal";
@@ -97,14 +97,13 @@ function ExaminationItem(props) {
   const { item } = props;
   const [showExam, setShowExam] = useState(false);
 
-  const { data: ExamResult } = useGetExamApplicantWithResultQuery(
-    {
-      ApplicantId: item?.applicantId,
-      RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
-    },
-    { skip: !item }
-  );
-  console.log("ExamResult", ExamResult);
+  // const { data: ExamResult } = useGetExamApplicantWithResultQuery(
+  //   {
+  //     ApplicantId: item?.applicantId,
+  //     RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
+  //   },
+  //   { skip: !item }
+  // );
   return (
     <div>
       <Baseitem item={item} />
