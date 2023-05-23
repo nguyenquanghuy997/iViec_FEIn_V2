@@ -124,6 +124,7 @@ function QuestionCardItemDefault({
             {hasRoleEdit && (
               <>
                 <ButtonIcon
+                  tooltip='Chỉnh sửa'
                   onClick={() => onEdit(item, index)}
                   icon={
                     <Iconify
@@ -138,6 +139,7 @@ function QuestionCardItemDefault({
             )}
             {hasRoleDelete && (
               <ButtonIcon
+                tooltip='Xóa'
                 onClick={() => onDelete(item, index)}
                 icon={
                   <Iconify
@@ -255,7 +257,7 @@ function QuestionCardItemDefault({
             <View mt={'12px'}>
               {renderText('Nhóm câu hỏi:', item?.questionGroupName)}
               {renderText('Kiểu câu hỏi:', LIST_QUESTION_TYPE.find(x => x.value == item.questionType).name)}
-              {renderText('Ngày tạo:', moment(new Date).format('DD/MM/YYYY HH:mm'))}
+              {renderText('Ngày tạo:', item.creationTime ?? moment(new Date).format('DD/MM/YYYY HH:mm'))}
               {renderText('Người tạo:', <>
                 <AvatarDS
                   sx={{

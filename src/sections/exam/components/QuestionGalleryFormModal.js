@@ -1,4 +1,4 @@
-import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
+import { ButtonDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
@@ -14,7 +14,7 @@ import { Divider, Modal } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 const defaultValuess = {
   name: "",
@@ -33,7 +33,7 @@ export const QuestionGalleryFormModal = ({
   // form
   const Schema = Yup.object().shape({
     name: Yup.string()
-      .required("Chưa nhập tên nhóm câu hỏi")
+      .required("Tên nhóm câu hỏi không được bỏ trống")
       .max(50, "Độ dài không được quá 50 ký tự"),
     des: Yup.string().max(100, "Độ dài không được quá 100 ký tự"),
   });
@@ -42,7 +42,7 @@ export const QuestionGalleryFormModal = ({
     defaultValuess,
     resolver: yupResolver(Schema),
   });
-  const  theme = useTheme();
+  const theme = useTheme();
   const {
     setValue,
     handleSubmit,
@@ -85,7 +85,7 @@ export const QuestionGalleryFormModal = ({
       <>
         <FormProvider methods={methodss}>
           <View hidden width={668} borderradius={8} bgcolor={theme.palette.common.white}>
-            <View flexrow="true" atcenter="true" pv={22} ph={24}>
+            <View flexrow="true" atcenter="true" pv={16} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
                 {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm nhóm câu hỏi"}
               </Text>
@@ -104,7 +104,7 @@ export const QuestionGalleryFormModal = ({
             </View>
             <Divider />
             <View p={24}>
-              <View mb={12}>
+              <View mb={28}>
                 <Label required={true}>{"Tên nhóm câu hỏi"}</Label>
                 <RHFTextField
                   name={"name"}
@@ -112,10 +112,12 @@ export const QuestionGalleryFormModal = ({
                   maxLength={50}
                 />
               </View>
-              <View mb={24}>
+              <View mb={28}>
                 <Label>{"Mô tả"}</Label>
-                <TextAreaDS
+                <RHFTextField
                   initialValue=""
+                  multiline
+                  rows={4}
                   maxLength={100}
                   placeholder="Nhập nội dung mô tả nhóm câu hỏi"
                   name={"des"}

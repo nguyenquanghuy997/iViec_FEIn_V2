@@ -20,8 +20,7 @@ import { useSnackbar } from "notistack";
 import { GreenSwitch } from "@/utils/cssStyles";
 import useRole from "@/hooks/useRole";
 import { PERMISSIONS } from "@/config";
-import {useTheme} from "@mui/material/styles";
-
+import { useTheme } from "@mui/material/styles";
 
 
 const SwitchForm = ({name, handleChange, style, value, ...other}) => {
@@ -44,7 +43,6 @@ const SwitchForm = ({name, handleChange, style, value, ...other}) => {
   />);
 };
 const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) => {
-  const [hovered, setHovered] = useState(false);
   const [open, setOpen] = useState(false);
   const [openModelView, setOpenModelView] = useState(false);
   const [openActive, setOpenActive] = useState(false);
@@ -56,12 +54,6 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
   const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_APPR_PROCESS), []);
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_APPR_PROCESS), []);
   
-  const handleMouseOver = () => {
-    setHovered(true);
-  };
-  const handleMouseOut = () => {
-    setHovered(false);
-  };
   const handleClose = async (id) => {
     try {
       await removeItem(id).unwrap();
@@ -95,9 +87,9 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
       });
     }
   }
-
+  
   return (
-
+    
     <Box sx={{
       display: "flex",
       width: "100%",
@@ -106,10 +98,7 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
       padding: "16px",
       borderRadius: "6px",
       backgroundColor: theme.palette.common.bgrMaster
-    }}
-         onMouseOver={handleMouseOver}
-         onMouseLeave={handleMouseOut}
-    >
+    }}>
       <Grid container direction="row" justifyContent="space-between">
         <Grid item>
           <Typography sx={{
@@ -147,7 +136,7 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
             <Typography variant="textSize13" color={theme.palette.common.neutral600} mr={1}>
               Cấp phê duyệt:
             </Typography>
-            <Typography variant="textSize13500" color={theme.palette.common.neutral700} >
+            <Typography variant="textSize13500" color={theme.palette.common.neutral700}>
               {approveProcess?.levelCounting}
             </Typography>
           </Grid>
@@ -165,29 +154,27 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
                                   onAccept={() => handleActiveClose(approveProcess.id)}
                                   content={approveProcess.name}
                                   type={approveProcess.isAvailable ? 'approveProcessActive' : 'approveProcessDeActive'}/>
-            {hovered && <>
-              {
-                canView && <Tooltip title="Xem" onClick={() => setOpenModelView(true)}>
-                  <IconButton>
-                    <PreviewIcon width={16} height={16}/>
-                  </IconButton>
-                </Tooltip>
-              }
-              {
-                canEdit && <Tooltip title="Chỉnh sửa" onClick={handleEdit}>
-                  <IconButton>
-                    <EditIcon width={16} height={16}/>
-                  </IconButton>
-                </Tooltip>
-              }
-              {
-                canEdit && <Tooltip title="Xóa" onClick={() => setOpen(!open)}>
-                  <IconButton>
-                    <DeleteIconGrey width={16} height={16}/>
-                  </IconButton>
-                </Tooltip>
-              }
-            </>}
+            {
+              canView && <Tooltip title="Xem" onClick={() => setOpenModelView(true)}>
+                <IconButton>
+                  <PreviewIcon width={16} height={16}/>
+                </IconButton>
+              </Tooltip>
+            }
+            {
+              canEdit && approveProcess?.appliedCounting === 0 && <Tooltip title="Chỉnh sửa" onClick={handleEdit}>
+                <IconButton>
+                  <EditIcon width={16} height={16}/>
+                </IconButton>
+              </Tooltip>
+            }
+            {
+              canEdit && approveProcess?.appliedCounting === 0 && <Tooltip title="Xóa" onClick={() => setOpen(!open)}>
+                <IconButton>
+                  <DeleteIconGrey width={16} height={16}/>
+                </IconButton>
+              </Tooltip>
+            }
             <ApproveProcessDialog open={open} onAccept={() => handleClose(approveProcess.id)}
                                   onClose={() => setOpen(!open)}
                                   content={approveProcess.name}
@@ -198,7 +185,7 @@ const ApproveProcessCardItem = ({title, approveProcess, setData, setShowForm}) =
           </Grid>
         </Grid>
         <Grid item>
-          {approveProcess?.isAvailable && (<Typography variant="caption" color="#388E3C" fontWeight={500}>
+          {approveProcess?.appliedCounting > 0 && (<Typography variant="caption" color="#388E3C" fontWeight={500}>
             Đang áp dụng
           </Typography>)}
         </Grid>

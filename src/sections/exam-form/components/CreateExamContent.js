@@ -87,6 +87,7 @@ const CreateExamContent = () => {
   const queryDataDefault = {
     ...query,
     isQuestionMixing: query.isQuestionMixing == "true",
+    standardPoint: null,
   };
   const [examData, setExamData] = useState(queryDataDefault);
   const [examQuestions, setExamQuestions] = useState([]);
@@ -187,6 +188,27 @@ const CreateExamContent = () => {
   };
 
   const handleSaveDraft = async () => {
+    if (examData.standardPoint < 0) {
+      enqueueSnackbar("Điểm sàn phải lớn hơn không", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (examData.type == 0 && examData.standardPoint > examData.maximumPoint) {
+      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (examData.type == 1 && !!examData.maximumPoint && examData.standardPoint > examData.maximumPoint) {
+      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+        variant: "error",
+      });
+      return;
+    }
+
     const body = {
       id: examData.id,
       name: examData.name,
@@ -199,10 +221,7 @@ const CreateExamContent = () => {
       examTime: new Date(examData.examTime * 60 * 1000)
         .toISOString()
         .substr(11, 8),
-      maximumPoint:
-        examQuestions.reduce(function (a, b) {
-          return a + b.questionPoint;
-        }, 0) || 1,
+      maximumPoint: examData.maximumPoint,
       examinationQuestions:
         (examData.type == 0 &&
           examQuestions.map((x) => {
@@ -265,8 +284,22 @@ const CreateExamContent = () => {
       return;
     }
 
-    if (!examData.standardPoint || examData.standardPoint == 0) {
-      enqueueSnackbar("Bạn cần nhập điểm sàn", {
+    if (examData.standardPoint < 0) {
+      enqueueSnackbar("Điểm sàn phải lớn hơn không", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (examData.type == 0 && examData.standardPoint > examData.maximumPoint) {
+      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (examData.type == 1 && !!examData.maximumPoint && examData.standardPoint > examData.maximumPoint) {
+      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
         variant: "error",
       });
       return;
@@ -284,10 +317,7 @@ const CreateExamContent = () => {
       examTime: new Date(examData.examTime * 60 * 1000)
         .toISOString()
         .substr(11, 8),
-      maximumPoint:
-        examQuestions.reduce(function (a, b) {
-          return a + b.questionPoint;
-        }, 0) || 1,
+      maximumPoint: examData.maximumPoint,
       examinationQuestions:
         (examData.type == 0 &&
           examQuestions.map((x) => {
@@ -415,12 +445,7 @@ const CreateExamContent = () => {
               style={{
                 margin: "0 24px 0 8px",
                 padding: "6px 8px",
-                border:
-                  (examData.standardPoint > examData.maximumPoint &&
-                    examData.maximumPoint) ||
-                  examData.standardPoint == 0
-                    ? "1px solid #E53935"
-                    : "1px solid #455570",
+                border: (examData.standardPoint > examData.maximumPoint && examData.maximumPoint) ? "1px solid #E53935" : "1px solid #455570",
                 borderRadius: "4px",
               }}
             >
@@ -444,8 +469,8 @@ const CreateExamContent = () => {
                   lineHeight: "24px",
                 }}
               >
-                {!showInputStandardPoint && !examData.standardPoint && (
-                  <ButtonIcon
+                {
+                  (!showInputStandardPoint && (examData.standardPoint == null || examData.standardPoint == '')) && <ButtonIcon
                     sx={{
                       backgroundColor: "transparent",
                       "&:hover": {
@@ -462,9 +487,9 @@ const CreateExamContent = () => {
                       />
                     }
                   />
-                )}
-                {(showInputStandardPoint || examData.standardPoint) && (
-                  <TextField
+                }
+                {
+                  (showInputStandardPoint || (examData.standardPoint != null && examData.standardPoint != '')) && <TextField
                     value={examData.standardPoint}
                     onChange={handleChangeStandardPoint}
                     onBlur={(e) => onOutFocusInput(e)}
@@ -487,7 +512,7 @@ const CreateExamContent = () => {
                       },
                     }}
                   />
-                )}
+                }
               </Box>
             </View>
             <View style={{ flexDirection: "row" }}>

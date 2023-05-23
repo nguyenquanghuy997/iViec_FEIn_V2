@@ -37,7 +37,7 @@ const TreeSelect = ({ value: valueProps, onChange, ...props }) => {
     if (!valueProps || !Array.isArray(valueProps)) {
       return [];
     }
-    return value;
+    return valueProps;
   }, [valueProps]);
 
   const { data: { items } = { items: [] } } =

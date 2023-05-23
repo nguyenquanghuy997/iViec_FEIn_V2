@@ -21,7 +21,7 @@ const Time = ({ recruitment }) => {
               name="startDate"
               placeholder="Chọn ngày"
               DatePickerProps={{
-                minDate: !isEmpty(recruitment) ? startDate : new Date(),
+                minDate: !isEmpty(recruitment) && recruitment.startDate ? recruitment.startDate : new Date(),
               }}
             />
           </div>

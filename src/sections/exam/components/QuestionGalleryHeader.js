@@ -41,7 +41,7 @@ export default ({
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <RHFTextField
               name="searchKey"
-              placeholder="Tìm kiếm theo nhóm câu hỏi..."
+              placeholder="Tìm kiếm nhóm câu hỏi..."
               sx={{
                 minWidth: "360px",
                 backgroundColor: theme.palette.common.bgrMaster,
@@ -89,6 +89,7 @@ export default ({
             <Button
               style={{
                 background: theme.palette.common.blue700,
+                color: theme.palette.common.white,
                 padding: "8px 12px",
                 fontWeight: 600,
                 fontSize: ' .875rem',
