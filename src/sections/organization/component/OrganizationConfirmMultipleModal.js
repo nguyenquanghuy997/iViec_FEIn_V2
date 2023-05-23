@@ -25,6 +25,21 @@ const OrganizationConfirmMultipleModal = ({setSelected, showMultipleDelete, setS
       enqueueSnackbar("Xóa đơn vị thành công!");
       onClose();
     } catch (err) {
+      if(err.status == "OEE_05"){
+        enqueueSnackbar(
+          "Vui lòng không xóa đơn vị đã có người dùng, tin tuyển dụng!",
+          {
+            variant: "error",
+          }
+        );
+      } else{
+        enqueueSnackbar(
+          "Xóa đơn vị thất bại!",
+          {
+            variant: "error",
+          }
+        );
+      }
       throw err;
     }
   }
