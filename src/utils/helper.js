@@ -2,10 +2,23 @@ import { errorMessages } from "./errorMessages";
 import moment from 'moment';
 import {DOMAIN_SERVER_API} from "@/config";
 import { getWorkingFormName } from "@/sections/recruitment/helper";
+import { repeat as _repeat } from 'lodash';
 
 export function alphabetPosition(index) {
   return String.fromCharCode(index + "A".charCodeAt(0));
 }
+
+export const prefixZero = (number, numZero = 1) => {
+  let max = 1;
+  for (let i = 1; i <= numZero; i++) {
+    max = max * 10;
+  }
+  if (number >= max) {
+    return number;
+  }
+  return _repeat('0', numZero) + number;
+}
+
 export const convertArrayToObject = (array, key) => {
   const initialValue = {};
   return array.reduce((obj, item) => {

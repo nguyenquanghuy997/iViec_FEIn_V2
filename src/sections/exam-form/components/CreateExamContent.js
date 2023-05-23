@@ -1,3 +1,5 @@
+import { useGetQuestionGroupQuery } from "../ExamFormSlice";
+import ExamPreview from "../preview/ExamPreview";
 import CreateExamHeader from "./CreateExamHeader";
 import ListQuestionDefault from "./ListQuestionDefault";
 import ListQuestionGroupDefault from "./ListQuestionGroupDefault";
@@ -5,6 +7,7 @@ import MuiButton from "@/components/BaseComponents/MuiButton";
 import { View } from "@/components/DesignSystem/FlexStyled";
 import { Text } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import { QUESTION_TYPE } from "@/config";
 import { SubTitleStyle } from "@/sections/emailform/style";
 import {
   useCreateExamMutation,
@@ -15,12 +18,38 @@ import ExamChooseTypeModal from "@/sections/exam/components/ExamChooseTypeModal"
 import ExamFormModal from "@/sections/exam/components/ExamFormModal";
 import { ButtonIcon } from "@/utils/cssStyles";
 import { NumericFormatCustom } from "@/utils/formatNumber";
-import { Box, Divider, TextField, Tooltip, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  TextField,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import React from "react";
 import { useEffect } from "react";
+
+function randomArray(arr, count) {
+  let len = arr?.length;
+  let lookup = {};
+  let tmp = [];
+
+  if (count > len) count = len;
+
+  for (let i = 0; i < count; i++) {
+    let index;
+    do {
+      index = ~~(Math.random() * len);
+    } while (index in lookup);
+    lookup[index] = null;
+    tmp.push(arr[index]);
+  }
+
+  return tmp;
+}
 
 const CreateExamContent = () => {
   const router = useRouter();
@@ -29,11 +58,22 @@ const CreateExamContent = () => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const examId = router.query.slug;
-  const { data: data } = useGetExaminationByIdQuery({
-    Id: examId
-  }, {
-    skip: !examId
+  const { data: { items: Data = [] } = {} } = useGetQuestionGroupQuery({
+    IsActive: "true",
   });
+
+  var ListQuestionGroup = Data?.filter((p) => p.numOfQuestion > 0);
+
+
+  const { data: data } = useGetExaminationByIdQuery(
+    {
+      Id: examId,
+    },
+    {
+      skip: !examId,
+    }
+  );
+
   const {
     query = {
       name: "",
@@ -52,22 +92,24 @@ const CreateExamContent = () => {
   const [examData, setExamData] = useState(queryDataDefault);
   const [examQuestions, setExamQuestions] = useState([]);
   const [examQuestionGroups, setExamQuestionGroups] = useState([]);
+  const [examQuestionPreview, setExamQuestionPreview] = useState();
   const [showForm, setShowForm] = useState(false);
   const [showChooseType, setShowChooseType] = useState(false);
-  const [showInputStandardPoint, setShowInputStandardPoint] = useState(false)
+  const [showInputStandardPoint, setShowInputStandardPoint] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const handleChangeStandardPoint = (event) => {
     setExamData({
       ...examData,
-      standardPoint: event.target.value
+      standardPoint: event.target.value,
     });
   };
 
   const onOutFocusInput = () => {
     if (!examData.standardPoint) {
-      setShowInputStandardPoint(false)
+      setShowInputStandardPoint(false);
     }
-  }
+  };
 
   const handleSubmitForm = (data) => {
     setExamData({ ...data });
@@ -96,6 +138,30 @@ const CreateExamContent = () => {
     return +a[0] * 60 + +a[1];
   };
 
+  const handlePreview = async () => {
+    if (examData.type == 1) {
+      let questions = [];
+      let questionInType;
+      examQuestionGroups.map((p) => {
+        if (p?.questionTypeId == QUESTION_TYPE.ESSAY) {
+          questionInType = p?.questionGroup?.questions?.filter(
+            (x) => x?.questionType == QUESTION_TYPE.ESSAY
+          );
+        } else {
+          questionInType = p?.questionGroup?.questions?.filter(
+            (x) => x?.questionType != QUESTION_TYPE.ESSAY
+          );
+        }
+        let months = p && randomArray(questionInType, p.quantity);
+        questions.push(months);
+      });
+      setExamQuestionPreview(questions.flat(1));
+      setShowPreview(true)
+    } else{
+      setExamQuestionPreview(examQuestions.flat(1));
+      setShowPreview(true)
+    }
+  };
   const handleUpdateListQuestion = (datas) => {
     if (examData.type == 0) {
       setExamQuestions([...datas]);
@@ -105,22 +171,19 @@ const CreateExamContent = () => {
           examQuestions.reduce(function (a, b) {
             return a + b.questionPoint;
           }, 0) || 1,
-      })
-    }
-    else {
-      setExamQuestionGroups([...datas])
+      });
+    } else {
+      setExamQuestionGroups([...datas]);
       const ESSAY_QUESTION = 2;
-      if (datas.some(x => x.questionTypeId == ESSAY_QUESTION)) {
-        setExamData({ ...examData, maximumPoint: null })
-      }
-      else
+      if (datas.some((x) => x.questionTypeId == ESSAY_QUESTION)) {
+        setExamData({ ...examData, maximumPoint: null });
+      } else
         setExamData({
           ...examData,
-          maximumPoint:
-            datas.reduce(function (a, b) {
-              return a + b.quantity;
-            }, 0),
-        })
+          maximumPoint: datas.reduce(function (a, b) {
+            return a + b.quantity;
+          }, 0),
+        });
     }
   };
 
@@ -164,16 +227,18 @@ const CreateExamContent = () => {
           examQuestions.map((x) => {
             return {
               questionId: x.id,
-              questionCreation: !x.id ? {
-                questionTitle: x.questionTitle,
-                answers: x.answers,
-                questionPoint: x.questionPoint,
-                questionType: x.questionType,
-                questionState: x.questionState,
-                questionGroupId: x.questionGroupId,
-                isActive: x.isActive,
-                questionFilePaths: x.questionFilePaths
-              } : null
+              questionCreation: !x.id
+                ? {
+                    questionTitle: x.questionTitle,
+                    answers: x.answers,
+                    questionPoint: x.questionPoint,
+                    questionType: x.questionType,
+                    questionState: x.questionState,
+                    questionGroupId: x.questionGroupId,
+                    isActive: x.isActive,
+                    questionFilePaths: x.questionFilePaths,
+                  }
+                : null,
             };
           })) ||
         null,
@@ -258,16 +323,18 @@ const CreateExamContent = () => {
           examQuestions.map((x) => {
             return {
               questionId: x.id,
-              questionCreation: !x.id ? {
-                questionTitle: x.questionTitle,
-                answers: x.answers,
-                questionPoint: x.questionPoint,
-                questionType: x.questionType,
-                questionState: x.questionState,
-                questionGroupId: x.questionGroupId,
-                isActive: x.isActive,
-                questionFilePaths: x.questionFilePaths
-              } : null
+              questionCreation: !x.id
+                ? {
+                    questionTitle: x.questionTitle,
+                    answers: x.answers,
+                    questionPoint: x.questionPoint,
+                    questionType: x.questionType,
+                    questionState: x.questionState,
+                    questionGroupId: x.questionGroupId,
+                    isActive: x.isActive,
+                    questionFilePaths: x.questionFilePaths,
+                  }
+                : null,
             };
           })) ||
         null,
@@ -291,7 +358,6 @@ const CreateExamContent = () => {
       }
       enqueueSnackbar("Lưu đề thi thành công");
       router.push("/settings/exam/exam-business");
-
     } catch {
       enqueueSnackbar("Lưu đề thi thất bại", {
         variant: "error",
@@ -304,7 +370,7 @@ const CreateExamContent = () => {
   };
 
   useEffect(() => {
-    if (data) {
+    if (data ) {
       setExamData({ ...data, examTime: minutesFromTime(data.examTime) });
       if (data.type == 0) {
         setExamQuestions(data.questions ?? []);
@@ -317,6 +383,12 @@ const CreateExamContent = () => {
               quantity: Number(p.totalQuestion),
               questionTypeId: p?.type == 0 ? 1 : 2,
               questionGroupId: p?.questionGroup?.id,
+              questionGroup: {
+                ...p.questionGroup,
+                questions: ListQuestionGroup.filter(
+                  (x) => x.id === p?.questionGroup?.id
+                )?.[0]?.questions,
+              },
               quantityOfQuestion:
                 p?.type == 0
                   ? Number(p?.questionGroup?.numOfQuestionMultipleChoice)
@@ -327,7 +399,6 @@ const CreateExamContent = () => {
       }
     }
   }, [data]);
-
   return (
     <>
       <CreateExamHeader
@@ -335,6 +406,7 @@ const CreateExamContent = () => {
         handleSaveDraft={handleSaveDraft}
         handleCancel={handleCancel}
         handleSave={handleSave}
+        handlePreview={handlePreview}
       />
 
       <View>
@@ -363,7 +435,11 @@ const CreateExamContent = () => {
             </SubTitleStyle>
           </View>
 
-          <View flexrow={"true"} allcenter={"true"} style={{ alignItems: 'stretch' }}>
+          <View
+            flexrow={"true"}
+            allcenter={"true"}
+            style={{ alignItems: "stretch" }}
+          >
             <View
               allcenter={"true"}
               style={{
@@ -375,8 +451,8 @@ const CreateExamContent = () => {
             >
               <Typography
                 sx={{
-                  minWidth: '70px',
-                  textAlign: 'center',
+                  minWidth: "70px",
+                  textAlign: "center",
                   fontSize: "13px",
                   lineHeight: "20px",
                   color: "#455570",
@@ -427,37 +503,41 @@ const CreateExamContent = () => {
                     sx={{
                       width: "70px",
                       "& .MuiInputBase-input": {
-                        fontSize: '11px !important',
-                        height: '18px !important',
+                        fontSize: "11px !important",
+                        height: "18px !important",
                         fontWeight: 600,
-                        textAlign: 'center !important',
-                        padding: '0 !important',
-                        marginTop: '4px !important'
-                      }
+                        textAlign: "center !important",
+                        padding: "0 !important",
+                        marginTop: "4px !important",
+                      },
                     }}
                   />
                 }
-
               </Box>
             </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Tooltip title={
-                examData.type == 1 && !examData.maximumPoint
-                  ? 'Không thể xác định điểm tối đa do trong đề có ít nhất 1 câu hỏi câu hỏi tự luận ngẫu nhiên'
-                  : ''}>
-                <Box style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: "6px 8px",
-                  border: "1px solid #455570",
-                  borderRadius: "4px",
-                }}>
+            <View style={{ flexDirection: "row" }}>
+              <Tooltip
+                title={
+                  examData.type == 1 && !examData.maximumPoint
+                    ? "Không thể xác định điểm tối đa do trong đề có ít nhất 1 câu hỏi câu hỏi tự luận ngẫu nhiên"
+                    : ""
+                }
+              >
+                <Box
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "6px 8px",
+                    border: "1px solid #455570",
+                    borderRadius: "4px",
+                  }}
+                >
                   <Typography
                     sx={{
-                      minWidth: '70px',
-                      textAlign: 'center',
+                      minWidth: "70px",
+                      textAlign: "center",
                       fontSize: "13px",
                       lineHeight: "20px",
                       color: "#455570",
@@ -474,7 +554,7 @@ const CreateExamContent = () => {
                       marginTop: 4,
                     }}
                   >
-                    {examData.maximumPoint ?? 'Không xác định'}
+                    {examData.maximumPoint ?? "Không xác định"}
                   </span>
                 </Box>
               </Tooltip>
@@ -541,10 +621,22 @@ const CreateExamContent = () => {
               listQuestions={examQuestionGroups}
               setListQuestions={setExamQuestionGroups}
               updateListQuestion={handleUpdateListQuestion}
+              ListQuestionGroup={ListQuestionGroup}
             />
           )}
         </View>
       </View>
+      {showPreview && (
+        <ExamPreview
+          open={showPreview}
+          onClose={()=>setShowPreview(false)}
+          data={{
+            examData: examData,
+            questions: examQuestionPreview,
+            examQuestionGroups: examQuestionGroups,
+          }}
+        />
+      )}
 
       <ExamFormModal
         show={showForm}
