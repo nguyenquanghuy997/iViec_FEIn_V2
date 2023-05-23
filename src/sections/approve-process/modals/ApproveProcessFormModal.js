@@ -92,7 +92,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
               personInChargeIds: Yup.lazy(val => (Array.isArray(val) ? Yup.array().min(1, "Chưa chọn người phê duyệt") : Yup.string().required("Chưa chọn người phê duyệt"))),
             })
           ),
-          autoApprovedTimeInHours: Yup.string().transform((value) => (isNaN(value) ? undefined : value))
+          autoApprovedTimeInHours: Yup.string().transform((value) => (isNaN(value) ? undefined : value)).nullable()
         })
       ).when("isApprovalAuto", {
         is: true,
@@ -333,6 +333,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                     </Grid>
                     <Box className="box-content-wrapper" p={2} sx={{width: '100%'}}>
                       <ApproveProcessFormLevelItem
+                        isEditMode={isEditMode}
                         index={index}
                         key={item.id}
                       />
