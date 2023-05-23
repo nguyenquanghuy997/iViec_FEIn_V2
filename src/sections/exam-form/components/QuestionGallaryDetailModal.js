@@ -255,37 +255,34 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
                 </Box>
               </Box>
               {
-                isLoading &&
-                <Box sx={{
-                  width:'100%',
-                  height: 'calc(100vh - 64px - 68px - 70px - 60px)',
-                  minHeight: 'calc(100vh - 64px - 68px - 70px - 60px)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <CircularProgress />
-                </Box>
-              }
-              {
-                !isLoading &&
-                <Box mt={2} sx={{
-                  height: 'calc(100vh - 64px - 68px - 70px - 60px)',
-                  minHeight: 'calc(100vh - 64px - 68px - 70px - 60px)',
-                  overflowY: 'scroll',
-                  padding: '24px 24px 0px 24px'
-                }}>
-                  {
-                    items?.map((item, index) => <QuestionCardItemDefault
-                      key={item.id}
-                      index={index}
-                      checked={isSelected(item)}
-                      isDisable={isDisable(item)}
-                      onChangeSelected={() => handleSelected(item)}
-                      item={{ ...item, questionGroupName: questionGallary?.name }}
-                    />)
-                  }
-                </Box>
+                isLoading ?
+                  <Box sx={{
+                    width: '100%',
+                    height: 'calc(100vh - 64px - 68px - 70px - 60px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <CircularProgress />
+                  </Box>
+                  :
+                  <Box mt={2} sx={{
+                    height: 'calc(100vh - 64px - 68px - 70px - 60px)',
+                    minHeight: 'calc(100vh - 64px - 68px - 70px - 60px)',
+                    overflowY: 'scroll',
+                    padding: '24px 24px 0px 24px'
+                  }}>
+                    {
+                      items?.map((item, index) => <QuestionCardItemDefault
+                        key={item.id}
+                        index={index}
+                        checked={isSelected(item)}
+                        isDisable={isDisable(item)}
+                        onChangeSelected={() => handleSelected(item)}
+                        item={{ ...item, questionGroupName: questionGallary?.name }}
+                      />)
+                    }
+                  </Box>
               }
             </Box>
           </Grid>

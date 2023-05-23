@@ -2,7 +2,7 @@ import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { AvatarDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
-import {PERMISSION_PAGES, TBL_FILTER_TYPE} from "@/config";
+import { PERMISSION_PAGES, TBL_FILTER_TYPE } from "@/config";
 import SettingLayout from "@/layouts/setting";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
@@ -19,8 +19,8 @@ import QuestionTransferModal from "@/sections/exam/components/QuestionTransferMo
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { LIST_OPTIONS_QUESTION_TYPE, LIST_STATUS} from "@/utils/formatString";
-import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
+import { LIST_OPTIONS_QUESTION_TYPE, LIST_STATUS } from "@/utils/formatString";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 
 
 Question.getLayout = function getLayout(pageProps, page) {
@@ -337,11 +337,11 @@ function Question() {
           isMulti ? (
             <span>
               Bạn có chắc chắn muốn xóa{" "}
-              <b>{isMulti ? itemSelected.length : ""} câu hỏi</b>
+              <b>{isMulti ? itemSelected.length : ""} câu hỏi này</b>
             </span>
           ) : (
             <span>
-              Bạn có chắc chắn muốn xóa nhóm câu hỏi{" "}
+              Bạn có chắc chắn muốn xóa câu hỏi{" "}
               {!isMulti ? <b>{_name.trim()}</b> : ""} này
             </span>
           )
