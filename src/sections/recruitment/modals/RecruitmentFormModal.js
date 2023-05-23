@@ -228,7 +228,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
                 {renderTitle("Mô tả công việc")}
                 <Editor
                   data={description}
-                  // onChange={(_, e) => {
+                  // onClick={(_, e) => {
                   //   const text = e.getData();
                   //   setValue("description", text);
                   // }}
