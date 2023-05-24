@@ -348,14 +348,16 @@ export default function CloneRecruitment() {
                   organizationId: getValues('organizationId'),
                   numberPosition: getValues('numberPosition'),
                   address: getValues('address'),
-                  recruitmentJobCategories: getValues('recruitmentJobCategoryIds')?.map(item => ({
-                    name: item?.label,
-                    jobCategoryId: item?.value
+                  recruitmentJobCategories: getValues(
+                    "recruitmentJobCategoryIds"
+                  )?.map((item) => ({
+                    jobCategoryId: item,
                   })),
-                  recruitmentWorkingForms: getValues('recruitmentWorkingForms')?.map(item => ({
-                    workingForm: item?.value,
-                    id: item?.value
-                  })),
+                  recruitmentWorkingForms: getValues("recruitmentWorkingForms")?.map(
+                    (item) => ({
+                      workingForm: item,
+                    })
+                  ),
                   salaryDisplayType: getValues('salaryDisplayType'),
                   minSalary: getValues('minSalary'),
                   maxSalary: getValues('maxSalary'),

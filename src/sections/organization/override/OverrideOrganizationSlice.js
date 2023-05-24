@@ -78,7 +78,7 @@ export const organizationServiceApi = createApi({
         method: 'POST',
         data: data
       }),
-      invalidatesTags: [{type: 'ORGANIZATION', id: 'LIST'}]
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'LIST'}, {type: 'ORGANIZATION', id: 'ID'}]
     }),
     updateOrganization: build.mutation({
       query: (data) => ({
@@ -89,9 +89,7 @@ export const organizationServiceApi = createApi({
           "Content-Type": "application/json"
         }
       }),
-      invalidatesTags: (result, error, arg) => {
-        return [{type: 'ORGANIZATION', id: arg.organizationId}, {type: 'ORGANIZATION', id: 'LIST'}]
-      }
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'LIST'}, {type: 'ORGANIZATION', id: 'ID'}]
     }),
     deleteOrganization: build.mutation({
       query: (data) => ({

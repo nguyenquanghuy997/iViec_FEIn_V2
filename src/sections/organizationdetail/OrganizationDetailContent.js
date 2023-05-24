@@ -180,7 +180,7 @@ const OrganizationDetailContent = () => {
     setSelected([]);
   };
 
-  const handleDelete = async (data) => {
+  const handleDelete = async () => {
     if (selected?.length >= 1) {
       try {
         await deleteUserMulti({
@@ -192,30 +192,51 @@ const OrganizationDetailContent = () => {
           autoHideDuration: 1000,
         });
       } catch (e) {
-        enqueueSnackbar(
-          "Xóa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!",
-          {
-            autoHideDuration: 1000,
-            variant: "error",
-          }
-        );
+        if (e.status == "AUE_10") {
+          enqueueSnackbar(
+            "Không thể xóa do người dùng này đang có ít nhất 1 nhiệm vụ trong hệ thống!",
+            {
+              autoHideDuration: 1000,
+              variant: "error",
+            }
+          );
+        } else {
+          enqueueSnackbar(
+            "Xóa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!",
+            {
+              autoHideDuration: 1000,
+              variant: "error",
+            }
+          );
+        }
+
         throw e;
       }
     } else {
       try {
-        await deleteUserMulti({ userIds: [data?.id] }).unwrap();
+        await deleteUserMulti({ userIds: [item?.id] }).unwrap();
         handleCloseModal();
         enqueueSnackbar("Xóa người dùng thành công!", {
           autoHideDuration: 1000,
         });
       } catch (e) {
-        enqueueSnackbar(
-          "Xóa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!",
-          {
-            autoHideDuration: 1000,
-            variant: "error",
-          }
-        );
+        if (e.status == "AUE_10") {
+          enqueueSnackbar(
+            "Không thể xóa do người dùng này đang có ít nhất 1 nhiệm vụ trong hệ thống!",
+            {
+              autoHideDuration: 1000,
+              variant: "error",
+            }
+          );
+        } else {
+          enqueueSnackbar(
+            "Xóa người dùng không thành công. Vui lòng kiểm tra dữ liệu và thử lại!",
+            {
+              autoHideDuration: 1000,
+              variant: "error",
+            }
+          );
+        }
         throw e;
       }
     }
@@ -407,7 +428,7 @@ const OrganizationDetailContent = () => {
                   item={column}
                   checked={selected.map((i) => i.id).includes(column.id)}
                   onChangeSelected={() => handleSelected(column)}
-                  onOpenConfirmDelete={() => handleOpenConfirm([column])}
+                  onOpenConfirmDelete={() => handleOpenConfirm(column)}
                   onOpenFormModal={() => handleOpenFormUser(column)}
                   handleOpenActive={handleOpenActive}
                   selected={selected}

@@ -9,6 +9,7 @@ const apiWithTag = apiSlice.enhanceEndpoints({
 });
 
 const examFormSlice = apiWithTag.injectEndpoints({
+    overrideExisting: true,
     endpoints: (builder) => ({
         getQuestionGroup: builder.query({
             query: (params = {}) => ({

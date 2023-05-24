@@ -31,6 +31,11 @@ const Description = ({ recruitment: Recruitment }) => {
           setValue("requirement", Recruitment?.requirement);
           setValue("benefit", Recruitment?.benefit);
         }
+        else{
+          setValue("description", JobPosition?.description);
+          setValue("requirement", JobPosition?.requirement);
+          setValue("benefit", JobPosition?.benefit);
+        }
         isInit.current = false;
       } else {
         setValue("description", JobPosition?.description);

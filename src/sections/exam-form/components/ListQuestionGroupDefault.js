@@ -16,6 +16,7 @@ import { useState } from "react";
 function ListQuestionGroupDefault({
   listQuestions,
   updateListQuestion,
+  ListQuestionGroup
 }) {
   const [showQuestionGroup, setShowQuestionGroup] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -315,6 +316,7 @@ function ListQuestionGroupDefault({
         show={showQuestionGroup}
         setShow={setShowQuestionGroup}
         onSubmit={handleCreateEditQuestion}
+        ListQuestionGroup={ListQuestionGroup}
       />
       <QuestionGallaryInternalModal
         show={showQuestionGallaryInternalModal}

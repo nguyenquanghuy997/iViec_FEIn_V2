@@ -107,6 +107,7 @@ const DynamicColumnsTable = (props) => {
           ...col,
           colFilters: col.filters,
           filters: null,
+          sorter: col.sorter
         };
       });
   }, [columnsVisible, columns]);

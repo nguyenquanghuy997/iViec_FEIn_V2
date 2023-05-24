@@ -4,8 +4,10 @@ import {
 } from "../applicant";
 import { RejectApplicantModal } from "../applicant/modals/RejectApplicantModal";
 import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
+// import { useGetExamApplicantWithResultQuery } from "../exam/ExamSlice";
 import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
 import { FormCalendar } from "../interview/components/FormCalendar";
+import ExaminerModal from "../recruitment/modals/ExaminerModal";
 import { CircleLineIcon, EditIcon, LogoIcon } from "@/assets/ActionIcon";
 import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
 import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
@@ -108,19 +110,30 @@ function Baseitem(props) {
 }
 
 function ExaminationItem(props) {
-  const {item} = props;
+  const { item } = props;
+  const [showExam, setShowExam] = useState(false);
+
+  // const { data: ExamResult } = useGetExamApplicantWithResultQuery(
+  //   {
+  //     ApplicantId: item?.applicantId,
+  //     RecruitmentPipelineStateId: item?.recruitmentPipelineStateId,
+  //   },
+  //   { skip: !item }
+  // );
   return (
     <div>
       <Baseitem item={item}/>
       <Box
         sx={{
-          backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE",
+          // backgroundColor: item?.processStatus == 4 ? "#E8F5E9" : "#FFEBEE",
+          backgroundColor: "#F2F4F5",
           display: "flex",
           flexDirection: "column-reverse",
           alignItems: "flex-start",
+          borderRadius: "4px",
         }}
       >
-        <Stack
+        {/* <Stack
           direction="row"
           spacing={0.5}
           p={0.5}
@@ -132,13 +145,31 @@ function ExaminationItem(props) {
           <Typography fontSize="14px" fontWeight="600">
             {item?.processStatus == 4 ? "15/16" : "3/16"}
           </Typography>
-        </Stack>
+        </Stack> */}
+        <Box p={"8px 12px"} width={"100%"} pt={0}>
+          <ButtonDS
+            tittle={"Chấm thi"}
+            type="submit"
+            sx={{
+              fontSize: "12px",
+              fontWeight: 600,
+              padding: "4px 12px",
+            }}
+            onClick={() => setShowExam(true)}
+          />
+        </Box>
+
         <Stack
           direction="row"
           spacing={0.5}
           p={"8px 12px"}
-          color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
+          // color={item?.processStatus == 4 ? "##388E3C" : "#D32F2F"}
+          color={"#F2F4F5"}
         >
+          <Typography fontSize="14px" fontWeight="600" color="#172B4D">
+            {"Đã hoàn thành bài thi"}
+          </Typography>
+
           <Typography fontSize="14px" fontWeight="600">
             {"Kết quả :"}
           </Typography>
@@ -147,6 +178,12 @@ function ExaminationItem(props) {
           </Typography>
         </Stack>
       </Box>
+      {showExam && (
+                <ExaminerModal
+                  show={showExam}
+                  onClose={() => setShowExam(false)}
+                />
+              )}
     </div>
   );
 }
@@ -190,8 +227,8 @@ function InterviewItem(props) {
 
   return (
     <div>
-      <Baseitem item={item}/>
-      <Box style={{margin: "12px 0px 0px 0px"}}>
+      <Baseitem item={item} />
+      <Box style={{ margin: "12px 0px 0px 0px", borderRadius: "4px" }}>
         {/* Lịch sử cuộc pv */}
         {interview &&
           interview?.map((item, index) => {
@@ -373,10 +410,10 @@ function ResultItem(props) {
   const {item} = props;
   return (
     <div>
-      <Baseitem item={item}/>
-      <Box style={{margin: "12px 0px 0px 0px"}}>
-        <Divider style={{margin: "0px"}}/>
-        <Box style={{padding: "12px 12px "}}>
+      <Baseitem item={item} />
+      <Box style={{ margin: "12px 0px 0px 0px", borderRadius: "4px" }}>
+        <Divider style={{ margin: "0px" }} />
+        <Box style={{ padding: "12px 12px " }}>
           <Box>
             <Box
               sx={{
@@ -518,8 +555,8 @@ function OfferItem(props) {
     <div>
       <Baseitem item={item}/>
       {item.offerStateResultType == 0 && (
-        <Box sx={{display: "flex", pt: 1}}>
-          <Item sx={{flexShrink: 1}}>
+        <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
+          <Item sx={{ flexShrink: 1 }}>
             <Iconify
               icon={"ri:mail-check-fill"}
               width={20}
@@ -541,8 +578,8 @@ function OfferItem(props) {
         </Box>
       )}
       {item.offerStateResultType == 1 && (
-        <Box sx={{display: "flex", pt: 1}}>
-          <Item sx={{flexShrink: 1}}>
+        <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
+          <Item sx={{ flexShrink: 1 }}>
             <Iconify
               icon={"ic:round-mark-email-unread"}
               width={20}
@@ -564,8 +601,8 @@ function OfferItem(props) {
         </Box>
       )}
       {item.offerStateResultType == 2 && (
-        <Box sx={{display: "flex", pt: 1}}>
-          <Item sx={{flexShrink: 1}}>
+        <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
+          <Item sx={{ flexShrink: 1 }}>
             <Iconify
               icon={"material-symbols:check-circle"}
               width={20}
@@ -585,8 +622,8 @@ function OfferItem(props) {
         </Box>
       )}
       {item.offerStateResultType == 3 && (
-        <Box sx={{display: "flex", pt: 1}}>
-          <Item sx={{flexShrink: 1}}>
+        <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
+          <Item sx={{ flexShrink: 1 }}>
             <Iconify
               icon={"mdi:alpha-x-circle"}
               width={20}
@@ -812,7 +849,6 @@ function TaskCard({item, index, pipelineStateType}) {
                   ></Box>
                 </Stack>
               </Box>
-
               <RejectApplicantModal
                 applicantId={item?.applicantId}
                 recruimentId={item?.recruitmentId}

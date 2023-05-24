@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import {
   ButtonCancel,
   ButtonIcon,
   DialogModel,
 } from "@/utils/cssStyles";
-import { Button } from "@/components/DesignSystem";
+import {Button} from "@/components/DesignSystem";
 import {
   Box,
   Divider,
@@ -14,22 +14,22 @@ import {
   Checkbox,
   DialogActions,
 } from '@mui/material';
-import { useSnackbar } from 'notistack';
+import {useSnackbar} from 'notistack';
 import Iconify from "@/components/Iconify";
-import { getErrorMessage } from '@/utils/helper';
+import {getErrorMessage} from '@/utils/helper';
 import {useTheme} from "@mui/material/styles";
 
 export default function ColumnsModal({
-  open,
-  onClose,
-  columns = [],
-  columnsVisible = {},
-  useUpdateColumnsFunc,
-}) {
-  const { enqueueSnackbar } = useSnackbar();
+                                       open,
+                                       onClose,
+                                       columns = [],
+                                       columnsVisible = {},
+                                       useUpdateColumnsFunc,
+                                     }) {
+  const {enqueueSnackbar} = useSnackbar();
   const [showColumns, setShowColumns] = useState({});
   const theme = useTheme();
-  const [updateColumns, { isLoading: updating }] = useUpdateColumnsFunc ? useUpdateColumnsFunc() : [undefined, {}];
+  const [updateColumns, {isLoading: updating}] = useUpdateColumnsFunc ? useUpdateColumnsFunc() : [undefined, {}];
 
   useEffect(() => {
     setShowColumns(columnsVisible);
@@ -61,7 +61,7 @@ export default function ColumnsModal({
       await updateColumns(reqColumns).unwrap();
       onClose();
     } catch (err) {
-      enqueueSnackbar(getErrorMessage, { variant: 'error' });
+      enqueueSnackbar(getErrorMessage, {variant: 'error'});
     }
   };
 
@@ -88,7 +88,7 @@ export default function ColumnsModal({
             padding: "16px 24px",
           }}
         >
-          <div style={{ color: theme.palette.common.neutral800, fontWeight: 600 }}>Quản lý cột</div>
+          <div style={{color: theme.palette.common.neutral800, fontWeight: 600}}>Quản lý cột</div>
           <div>
             <ButtonIcon
               onClick={() => onClose()}
@@ -97,14 +97,14 @@ export default function ColumnsModal({
                   width={20}
                   height={20}
                   icon="ic:baseline-close"
-                  color= {theme.palette.common.neutral700}
+                  color={theme.palette.common.neutral700}
                 />
               }
             ></ButtonIcon>
           </div>
         </Box>
 
-        <Divider />
+        <Divider/>
 
         <MenuList
           style={{
@@ -114,7 +114,7 @@ export default function ColumnsModal({
           }}
         >
           {columns.map((p, index) => (
-            <MenuItem key={index} sx={{ padding: "2px 10px" }}>
+            <MenuItem key={index} sx={{padding: "2px 10px"}}>
               <FormControlLabel
                 label={p.title}
                 sx={{
@@ -150,7 +150,7 @@ export default function ColumnsModal({
 
           <Button
             variant="contained"
-            color="primary"
+            backgroundcolor={theme.palette.common.blue700}
             height={36}
             onClick={handleUpdateColumns}
             loading={updating}
