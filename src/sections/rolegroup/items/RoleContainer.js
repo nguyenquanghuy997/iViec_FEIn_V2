@@ -106,7 +106,6 @@ export const RoleContainer = () => {
       key: "numOfPerson",
       dataIndex: "number",
       width: "140px",
-      align: "center",
       render: (item, record) => record?.numOfPerson,
     },
 

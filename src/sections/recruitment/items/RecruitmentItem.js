@@ -61,7 +61,7 @@ import { get } from "lodash";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -428,11 +428,11 @@ export const RecruitmentItem = () => {
           <>
             {record?.minSalary !== 0
               ? `${fCurrency(record?.minSalary)} - ${fCurrency(
-                  record?.maxSalary
-                )} ${Currency(record?.currencyUnit)}`
+                record?.maxSalary
+              )} ${Currency(record?.currencyUnit)}`
               : record.salaryDisplayType === 0
-              ? "Không lương"
-              : "Thỏa thuận"}
+                ? "Không lương"
+                : "Thỏa thuận"}
           </>
         ),
         filters: {

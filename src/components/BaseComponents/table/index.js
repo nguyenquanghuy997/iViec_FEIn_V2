@@ -215,7 +215,7 @@ const DynamicColumnsTable = (props) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <ButtonIcon
                 onClick={showSetting}
-                sx={{ backgroundColor: "unset" }}
+                sx={{ backgroundColor: "unset", padding: '0 8px 0 0' }}
                 icon={
                   <RiSettings3Fill size={16} color={palette.text.primary} />
                 }

@@ -53,8 +53,8 @@ const LIST_QUESTION_TYPE = [
 
 const defaultValues = {
   id: null,
-  questionType: 0,
-  questionPoint: 1,
+  questionType: null,
+  questionPoint: null,
   questionState: 0,
   questionGroupId: null,
   questionTitle: "",
@@ -124,6 +124,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
   // form
   const schema = Yup.object().shape({
+    questionType: Yup.string().required("Chưa chọn kiểu câu hỏi").nullable(),
     questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
     questionTitle: Yup.string().required("Chưa nhập câu hỏi")
       .max(500, 'Ký tự quá dài')
