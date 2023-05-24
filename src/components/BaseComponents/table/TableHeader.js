@@ -49,7 +49,7 @@ export default function TableHeader({
     let { PageSize, PageIndex, SearchKey, ...restQuery } =
       qs.parseUrl(asPath).query;
     /* eslint-enable */
-    return Object.keys(restQuery).length;
+    return Object.keys(restQuery).filter(x => columns.find(y => y.dataIndex == x)).length;
   };
 
   if (display === "none") return null;

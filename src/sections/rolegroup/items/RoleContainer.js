@@ -84,8 +84,8 @@ export const RoleContainer = () => {
         <TextMaxLine
           sx={{
             width: 220,
-            fontWeight: "normal",
-            fontSize: 14,
+            fontWeight: 500,
+            fontSize: 13,
             ...(canEdit && { cursor: "pointer" }),
           }}
           onClick={(e) => {
