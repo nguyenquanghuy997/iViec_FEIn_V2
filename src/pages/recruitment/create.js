@@ -385,8 +385,30 @@ export default function CreateRecruitment() {
           subtitle={"Bạn có chắc chắn muốn gửi phê duyệt tin tuyển dụng này?"}
           data={getValues()}
           onSubmit={onSubmit}
-          btnCancelProps={{ title: "Hủy" }}
-          btnConfirmProps={{ title: "Gửi phê duyệt" }}
+          btnCancelProps={{
+            title: "Hủy",
+            sx: {
+              fontWeight: 600,
+            },
+          }}
+          btnConfirmProps={{
+            title: "Gửi phê duyệt",
+            sx: {
+              fontWeight: 600,
+            },
+          }}
+          dialogProps={{
+            wrapperSx: {
+              "& .MuiDialog-container": {
+                paddingTop: "100px",
+                alignItems: "flex-start",
+                "& .MuiPaper-root": {
+                  borderRadius: "6px",
+                  width: "100%",
+                },
+              },
+            },
+          }}
         />
       )}
       {openPreview && (
