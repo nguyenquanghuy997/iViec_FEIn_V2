@@ -21,8 +21,8 @@ export default function FilterFields({
 
   return (
     <>
-      {columns.filter(col => !!col.colFilters).map((col, index) => (
-        <FilterItemStyle key={index}>
+      {columns.filter(col => !!col.colFilters).map((col) => (
+        <FilterItemStyle key={col.dataIndex}>
           <FilterFieldItem
             column={col}
             setValue={setValue}
