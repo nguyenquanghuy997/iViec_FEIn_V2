@@ -6,11 +6,11 @@ import Page from "@/components/Page";
 import { FormProvider } from "@/components/hook-form";
 import {
   PERMISSION_PAGES,
-  SALARY_TYPE,
-  SEX_TYPE,
+  PIPELINE_TYPE,
   RECRUITMENT_CREATE_TYPE,
   RECRUITMENT_STATUS,
-  PIPELINE_TYPE,
+  SALARY_TYPE,
+  SEX_TYPE,
 } from "@/config";
 import Layout from "@/layouts";
 import { modalSlice } from "@/redux/common/modalSlice";
@@ -133,11 +133,11 @@ export default function UpdateRecruitment() {
   );
 
   const defaultValues = {
-    name: '',
+    name: "",
     organizationId: defaultOrganization?.id || null,
-    description: '',
-    benefit: '',
-    requirement: '',
+    description: "",
+    benefit: "",
+    requirement: "",
     numberPosition: 1,
     minSalary: null,
     maxSalary: null,
@@ -145,7 +145,7 @@ export default function UpdateRecruitment() {
     sex: null,
     startDate: null,
     endDate: null,
-    address: '',
+    address: "",
     recruitmentLanguageIds: [],
     coOwnerIds: [],
     tags: [],
@@ -160,7 +160,7 @@ export default function UpdateRecruitment() {
     recruitmentWorkingForms: [],
     organizationPipelineId: null,
     isAutomaticStepChange: false,
-  }
+  };
 
   const methods = useForm({
     mode: "onBlur",
@@ -237,8 +237,8 @@ export default function UpdateRecruitment() {
     }
     const body = {
       ...data,
-      startDate: moment(data?.startDate).toISOString(),
-      endDate: moment(data?.endDate).toISOString(),
+      startDate: moment(data?.startDate).startOf("date").toISOString(),
+      endDate: moment(data?.endDate).endOf("date").toISOString(),
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map((item) =>
         Number(item)
       ),
@@ -246,12 +246,12 @@ export default function UpdateRecruitment() {
         data.salaryDisplayType === SALARY_TYPE.NO_SALARY ||
         data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY
           ? null
-          : Number(data.minSalary)|| null,
+          : Number(data.minSalary) || null,
       maxSalary:
         data.salaryDisplayType === SALARY_TYPE.NO_SALARY ||
         data.salaryDisplayType === SALARY_TYPE.NEGOTIABLE_SALARY
           ? null
-          : Number(data.maxSalary)|| null,
+          : Number(data.maxSalary) || null,
       sex:
         data.sex || data.sex === SEX_TYPE.MALE
           ? data.sex
@@ -306,7 +306,8 @@ export default function UpdateRecruitment() {
         await updateRecruitmentDraft({
           ...dataSubmit,
           recruitmentCreationType:
-            Recruitment.processStatus === RECRUITMENT_STATUS.DRAFT && openSaveDraft
+            Recruitment.processStatus === RECRUITMENT_STATUS.DRAFT &&
+            openSaveDraft
               ? RECRUITMENT_CREATE_TYPE.DRAFT
               : RECRUITMENT_CREATE_TYPE.OFFICIAL,
         }).unwrap();
@@ -323,9 +324,7 @@ export default function UpdateRecruitment() {
         handleCloseConfirm();
         throw e;
       }
-    }
-
-    else if (
+    } else if (
       !openSaveDraft &&
       Recruitment.processStatus != RECRUITMENT_STATUS.DRAFT
     ) {
@@ -350,7 +349,7 @@ export default function UpdateRecruitment() {
         await createRecruitment({
           ...dataSubmit,
           id: null,
-          recruitmentCreationType: RECRUITMENT_CREATE_TYPE.DRAFT
+          recruitmentCreationType: RECRUITMENT_CREATE_TYPE.DRAFT,
         }).unwrap();
         handleCloseConfirm();
         enqueueSnackbar("Cập nhật tin tuyển dụng thành công!");
@@ -463,8 +462,30 @@ export default function UpdateRecruitment() {
           subtitle={"Bạn có chắc chắn muốn gửi phê duyệt tin tuyển dụng này?"}
           data={getValues()}
           onSubmit={onSubmit}
-          btnCancelProps={{ title: "Hủy" }}
-          btnConfirmProps={{ title: "Gửi phê duyệt" }}
+          btnCancelProps={{
+            title: "Hủy",
+            sx: {
+              fontWeight: 600,
+            },
+          }}
+          btnConfirmProps={{
+            title: "Gửi phê duyệt",
+            sx: {
+              fontWeight: 600,
+            },
+          }}
+          dialogProps={{
+            wrapperSx: {
+              "& .MuiDialog-container": {
+                paddingTop: "100px",
+                alignItems: "flex-start",
+                "& .MuiPaper-root": {
+                  borderRadius: "6px",
+                  width: "100%",
+                },
+              },
+            },
+          }}
         />
       )}
       {openPreview && (
@@ -479,13 +500,11 @@ export default function UpdateRecruitment() {
             recruitmentJobCategories: getValues(
               "recruitmentJobCategoryIds"
             )?.map((item) => ({
-              name: item?.label,
-              jobCategoryId: item?.value,
+              jobCategoryId: item,
             })),
             recruitmentWorkingForms: getValues("recruitmentWorkingForms")?.map(
               (item) => ({
-                workingForm: item?.value,
-                id: item?.value,
+                workingForm: item,
               })
             ),
             salaryDisplayType: getValues("salaryDisplayType"),
@@ -501,4 +520,3 @@ export default function UpdateRecruitment() {
     </Page>
   );
 }
-

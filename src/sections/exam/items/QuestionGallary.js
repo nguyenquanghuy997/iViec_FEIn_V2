@@ -17,7 +17,7 @@ import QuestionGalleryItem from "@/sections/exam/components/QuestionGalleryItem"
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { QuestionFormModal } from "../components/QuestionFormModal";
 
 export const QuestionGallary = () => {
@@ -38,7 +38,7 @@ export const QuestionGallary = () => {
   const [removeQuestionGroup] = useRemoveQuestionGroupMutation();
 
   // variable
-  const isMulti = listSelected.length > 1;
+  const isMulti = !currentItem && !!listSelected.length;
 
   const {
     id,
@@ -187,7 +187,7 @@ export const QuestionGallary = () => {
         confirmDelete={showConfirmDelete}
         title="Xác nhận xóa nhóm câu hỏi"
         subtitle={listSelected.length > 1
-          ? <span>Bạn có chắc chắn muốn xóa <b>{listSelected.length > 1 ? listSelected.length : ''} nhóm câu hỏi</b></span>
+          ? <span>Bạn có chắc chắn muốn xóa <b>{listSelected.length > 1 ? listSelected.length : ''} nhóm câu hỏi này</b></span>
           : <span>Bạn có chắc chắn muốn xóa nhóm câu hỏi {listSelected.length == 1 ? <b>{name.trim()}</b> : ''} này</span>
         }
         onSubmit={handleDelete}

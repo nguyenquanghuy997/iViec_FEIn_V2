@@ -37,6 +37,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
@@ -364,7 +365,7 @@ function RecruitmentPreviewItem({
                         sx={{
                           marginTop: 0,
                           padding: 0,
-                          color:theme.palette.common.neutral800,
+                          color: theme.palette.common.neutral800,
                           fontWeight: 700,
                         }}
                         link={PATH_DASHBOARD.recruitment.root}
@@ -441,7 +442,7 @@ function RecruitmentPreviewItem({
                     aria-label="lab API tabs example"
                     sx={{
                       "& .MuiTab-root": {
-                        color: theme.palette.common.neutral500    ,
+                        color: theme.palette.common.neutral500,
                         // minHeight: "36px",
                         // textTransform: "unset",
                         // padding: "8px 12px",
@@ -496,8 +497,13 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 1 ? theme.palette.common.blue700 : "#fdfdfd",
-                        color: viewModeDefault == 1 ? "#fdfdfd" : theme.palette.common.neutral700,
+                          viewModeDefault == 1
+                            ? theme.palette.common.blue700
+                            : "#fdfdfd",
+                        color:
+                          viewModeDefault == 1
+                            ? "#fdfdfd"
+                            : theme.palette.common.neutral700,
                         borderColor:
                           viewModeDefault == 1 ? "none" : "#D0D4DB !important",
                         borderRadius: "6px 0px 0px 6px",
@@ -520,8 +526,13 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 2 ? theme.palette.common.blue700 : "#fdfdfd",
-                        color: viewModeDefault == 2 ? "#fdfdfd" : theme.palette.common.neutral700,
+                          viewModeDefault == 2
+                            ? theme.palette.common.blue700
+                            : "#fdfdfd",
+                        color:
+                          viewModeDefault == 2
+                            ? "#fdfdfd"
+                            : theme.palette.common.neutral700,
                         borderColor:
                           viewModeDefault == 2 ? "none" : "#D0D4DB !important",
                         borderRadius: "0 6px 6px 0",
@@ -895,13 +906,11 @@ function RecruitmentPreviewItem({
         setData={setModelApplication}
       />
 
-      {openPreview && (
-        <RecruitmentPreview
-          data={RecruitmentData}
-          open={openPreview}
-          onClose={() => setOpenPreview(false)}
-        />
-      )}
+      <RecruitmentPreview
+        data={RecruitmentData}
+        open={openPreview}
+        onClose={() => setOpenPreview(false)}
+      />
       {open && (
         <FormCalendar
           open={open}

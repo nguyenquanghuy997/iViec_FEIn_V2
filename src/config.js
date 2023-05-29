@@ -9,7 +9,7 @@ export const DOMAIN_OUTSIDE = process.env.NEXT_PUBLIC_DOMAIN_OUTSIDE;
 export const DASHBOARD_TABLE_HEIGHT = 500;
 
 export const DASHBOARD_CONTENT_WIDTH = 1420;
-
+export const EDITOR_API_KEY = 'ei2oz8ovloadz2sbuycbnij2o50g4gesrpg8vhlgbzs0iwl2';
 // LAYOUT
 export const HEADER = {
   MOBILE_HEIGHT: 64,
@@ -267,4 +267,16 @@ export const SEX_TYPE = {
   FEMALE: 1,
   OTHER: 2,
   NOT_REQUIRED: 3
+}
+
+export const QUESTION_TYPE = {
+  MULTI_CHOICE_ONE_ANSWER: 0,
+  MULTI_CHOICE_MANY_ANSWER: 1,
+  ESSAY: 2,
+}
+export const BOOKING_CALENDAR_PROCCESS_STATUS= {
+  CALENDED_ONLY: 0,
+  INTERVIEWING: 1,
+  END_INTERVIEWING: 2,
+  CANCEL_INTERVIEWING: 3,
 }

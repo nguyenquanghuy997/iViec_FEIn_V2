@@ -571,6 +571,8 @@ function ApplicantPreviewItem() {
                   </Grid>
                   <Grid item xs={5} md={5}>
                     <ApplicantPreviewLog
+                      recruitmentId={selectedOption?.id}
+                      reviewFormCriterias={reviewFormCriterias}
                       dataLog={logApplicant}
                       dataApplicant={data}
                       onReExploiting={onReExploiting}

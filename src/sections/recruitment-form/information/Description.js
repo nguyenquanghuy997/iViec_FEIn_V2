@@ -21,8 +21,9 @@ const Description = ({ recruitment: Recruitment }) => {
     { Id: jobPositionId },
     { skip: !jobPositionId }
   );
-  const { data: { items: ListJobPosition = [] } = {} } =
-    useGetAllJobTypeQuery({ IsActive: 'true' });
+  const { data: { items: ListJobPosition = [] } = {} } = useGetAllJobTypeQuery({
+    IsActive: "true",
+  });
   useEffect(() => {
     if (!isEmpty(JobPosition)) {
       if (isInit.current) {
@@ -30,6 +31,10 @@ const Description = ({ recruitment: Recruitment }) => {
           setValue("description", Recruitment?.description);
           setValue("requirement", Recruitment?.requirement);
           setValue("benefit", Recruitment?.benefit);
+        } else {
+          setValue("description", JobPosition?.description);
+          setValue("requirement", JobPosition?.requirement);
+          setValue("benefit", JobPosition?.benefit);
         }
         isInit.current = false;
       } else {
@@ -83,6 +88,7 @@ const Description = ({ recruitment: Recruitment }) => {
           multiple
           freeSolo
           limitTags={6}
+          clearIcon={null}
         />
       </Box>
     </BoxInnerStyle>

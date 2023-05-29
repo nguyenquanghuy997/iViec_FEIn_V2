@@ -67,8 +67,8 @@ export const API_DELETE_APPLICANT = "/applicant/Applicant/RemoveApplicants";
 
 export const API_GET_APPLICANT_SKILLS =
   "/applicant/ApplicantSkill/GetApplicantSkills";
-export const API_SEND_OFFER_TEMPLATE = "/applicant/ApplicantRecruitment/SendOfferTemplateToApplicant"
-
+export const API_SEND_OFFER_TEMPLATE =
+  "/applicant/ApplicantRecruitment/SendOfferTemplateToApplicant";
 
 //Apply mẫu đánh giá
 export const API_APPLICANT_REVIEW_FORM =
@@ -77,6 +77,8 @@ export const API_CHECK_REVIEW =
   "/applicant/ApplicantReview/CheckIfApplicantCanBeReviewed";
 export const API_ADD_APPLICANT_REVIEW =
   "/applicant/ApplicantReview/CreateApplicantReview";
+export const API_GET_APPLICANT_REVIEW_EVENT =
+  "/applicant/ApplicantReview/GetApplicantReviewEvent";
 
 //Tin tuyển dụng
 export const API_LIST_JOBS = "/api/recruitment/Recruitment/GetRecruitments"; //new  danh sách tin
@@ -311,9 +313,9 @@ export const API_UPDATE_COLUMN_EXAMS =
 export const API_UPDATE_STATUS_EXAM =
   "/examination/Examination/SetExaminationActivated";
 export const API_CREATE_EXAM = "/examination/Examination/CreateExamination";
-export const API_UPDATE_EXAM =
-  "/examination/Examination/UpdateExamination";
+export const API_UPDATE_EXAM = "/examination/Examination/UpdateExamination";
 export const API_DELETE_EXAMS = "/examination/Examination/RemoveExaminations";
+export const API_GET_EXAM_APPLICANT_WITH_RESULT = "/examination/Examination/GetExamApplicantWithResult";
 
 // QuestionGroup
 export const API_GET_QUESTION_GROUP =
@@ -343,23 +345,34 @@ export const API_REMOVE_QUESTION = "/applicant/Question/RemoveQuestions";
 export const API_UPLOAD_FILE_EXAM = "/File/UploadFileExamination";
 
 // Offer
-export const API_GET_OFFER_TEMPLATE = "/notification/OfferTemplate/GetOfferTemplate";
-export const API_GET_OFFER_TEMPLATES = "/notification/OfferTemplate/GetOfferTemplates";
-export const API_CREATE_OFFER_TEMPLATE = "/notification/OfferTemplate/CreateOfferTemplate";
-export const API_UPDATE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplate";
-export const API_DELETE_OFFER_TEMPLATE = "/notification/OfferTemplate/RemoveOfferTemplates";
-export const API_UPDATE_ACTIVE_OFFER_TEMPLATE = "/notification/OfferTemplate/UpdateOfferTemplateActive";
-export const API_GET_OFFER_TEMPLATE_DEFAULT = "/notification/OfferTemplate/GetOfferTemplateDefaultSignature";
-export const API_GET_INFO_DATA_OFFER = "/applicant/ApplicantRecruitment/GetApplicantRecruitmentTagsData";
+export const API_GET_OFFER_TEMPLATE =
+  "/notification/OfferTemplate/GetOfferTemplate";
+export const API_GET_OFFER_TEMPLATES =
+  "/notification/OfferTemplate/GetOfferTemplates";
+export const API_CREATE_OFFER_TEMPLATE =
+  "/notification/OfferTemplate/CreateOfferTemplate";
+export const API_UPDATE_OFFER_TEMPLATE =
+  "/notification/OfferTemplate/UpdateOfferTemplate";
+export const API_DELETE_OFFER_TEMPLATE =
+  "/notification/OfferTemplate/RemoveOfferTemplates";
+export const API_UPDATE_ACTIVE_OFFER_TEMPLATE =
+  "/notification/OfferTemplate/UpdateOfferTemplateActive";
+export const API_GET_OFFER_TEMPLATE_DEFAULT =
+  "/notification/OfferTemplate/GetOfferTemplateDefaultSignature";
+export const API_GET_INFO_DATA_OFFER =
+  "/applicant/ApplicantRecruitment/GetApplicantRecruitmentTagsData";
 
 // File
 export const API_UPLOAD_FILE_OFFER = "/File/UploadOfferTemplateFiles";
 
 // InternalAccount
 export const API_GET_INTERNAL_ACCOUNT = "/internal/Internal/GetInternalAccount";
-export const API_GET_JOB_CATEGORIES_INTERNAL = "/internal/Internal/GetJobCategories";
-export const API_SET_ACTIVE_ACCOUNT = "/integrator/ConnectionAccount/SetConnectAccountActive";
-export const API_CREATE_JOB_MAPPING_INTERNAL = "/internal/InternalMasterData/CreateJobMapping"
+export const API_GET_JOB_CATEGORIES_INTERNAL =
+  "/internal/Internal/GetJobCategories";
+export const API_SET_ACTIVE_ACCOUNT =
+  "/integrator/ConnectionAccount/SetConnectAccountActive";
+export const API_CREATE_JOB_MAPPING_INTERNAL =
+  "/internal/InternalMasterData/CreateJobMapping";
 
 // Email
 export const API_GET_EMAIL_TEMPLATE =
@@ -372,9 +385,15 @@ export const API_DELETE_EMAIL_TEMPLATE =
   "/notification/EmailTemplateOrganization/RemoveEmailTemplateOrganizations";
 
 // NotifcationManagement
-export const API_GET_ALL_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/GetNotificationManagements";
-export const API_UPDATE_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/UpdateNotificationManagement";
-export const API_GET_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/GetNotificationManagement";
-export const API_UPDATE_STATUS_NOTIFICATION_MANAGEMENT = "/notification/NotificationManagement/SetNotificationManagementsActive";
-export const API_GET_VISIBLE_NOTIFICATION_MANAGEMENT = "/aggregator/NotificationVisible/GetNotificationVisible";
-export const API_UPDATE_VISIBLE_NOTIFICATION_MANAGEMENT = "/aggregator/NotificationVisible/UpdateNotificationVisible";
+export const API_GET_ALL_NOTIFICATION_MANAGEMENT =
+  "/notification/NotificationManagement/GetNotificationManagements";
+export const API_UPDATE_NOTIFICATION_MANAGEMENT =
+  "/notification/NotificationManagement/UpdateNotificationManagement";
+export const API_GET_NOTIFICATION_MANAGEMENT =
+  "/notification/NotificationManagement/GetNotificationManagement";
+export const API_UPDATE_STATUS_NOTIFICATION_MANAGEMENT =
+  "/notification/NotificationManagement/SetNotificationManagementsActive";
+export const API_GET_VISIBLE_NOTIFICATION_MANAGEMENT =
+  "/aggregator/NotificationVisible/GetNotificationVisible";
+export const API_UPDATE_VISIBLE_NOTIFICATION_MANAGEMENT =
+  "/aggregator/NotificationVisible/UpdateNotificationVisible";

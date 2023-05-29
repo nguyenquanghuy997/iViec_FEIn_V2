@@ -61,6 +61,8 @@ export const PipelineItem = () => {
             {item}
           </span>
         ),
+        sorter: (a, b) => a.name.localeCompare(b.name),
+        showSorterTooltip: false,
       },
       {
         dataIndex: "organizationPipelineStates",
@@ -131,6 +133,8 @@ export const PipelineItem = () => {
         title: "Số tin áp dụng",
         width: "160px",
         align: "left",
+        sorter: (a, b) => a.recruitmentAppliedCount - b.recruitmentAppliedCount,
+        showSorterTooltip: false,
       },
       {
         dataIndex: "isActivated",

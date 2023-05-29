@@ -68,7 +68,7 @@ export default function EmailEditor({
               }}
           >
             <Iconify icon='eva:attach-fill' sx={{width: 20, height: 20}}/>
-            <Typography component="span" sx={{color: '#455570', fontSize: 14, fontWeight: 600, ml: 0.5}}>Đình kèm
+            <Typography component="span" sx={{color: '#455570', fontSize: 14, fontWeight: 600, ml: 0.5}}>Đính kèm
               file</Typography>
             <input hidden accept=".doc,.docx,.pdf,.xlsx,.xls" multiple type="file" onChange={handleFileChange}/>
           </Button>}

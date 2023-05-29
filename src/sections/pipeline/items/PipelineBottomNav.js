@@ -1,41 +1,44 @@
-import { useGetPipelineByIdQuery } from "@/sections/pipeline";
+import { PipelineFormModal } from "../modals";
 import PipelineActiveModal from "../modals/PipelineActiveModal";
+import PipelineDeleteModal from "../modals/PipelineDeleteModal";
+import { PipelineViewModal } from "../modals/PipelineViewModal";
 import Content from "@/components/BaseComponents/Content";
 import Iconify from "@/components/Iconify";
+import { PERMISSIONS } from "@/config";
+import useRole from "@/hooks/useRole";
 import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
+import { useGetPipelineByIdQuery } from "@/sections/pipeline";
 import { ButtonIcon } from "@/utils/cssStyles";
-import {
-  Box,
-  Divider,
-  Drawer,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
 import { checkSameValue } from "@/utils/formatString";
-import PipelineDeleteModal from "../modals/PipelineDeleteModal";
-import { PipelineFormModal } from "../modals";
-import useRole from "@/hooks/useRole";
-import { useMemo } from "react";
-import { PERMISSIONS } from "@/config";
-import {useTheme} from "@mui/material/styles";
+import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React, { useMemo, useState } from "react";
 
 const PipelineBottomNav = ({
   open,
   onClose,
   itemSelected,
   setItemSelected,
-  setselectedList
+  setselectedList,
 }) => {
-  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
-  const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
   const theme = useTheme();
   const { canAccess } = useRole();
-  // const canView = useMemo(() => canAccess(PERMISSIONS.VIEW_RECRUIT_PROCESS), []);
-  const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS), []);
+
+  const canEdit = useMemo(
+    () => canAccess(PERMISSIONS.CRUD_RECRUIT_PROCESS),
+    []
+  );
+
+  const { data: pipeline } = useGetPipelineByIdQuery(
+    { Id: itemSelected[0]?.id },
+    { skip: itemSelected.length !== 1 }
+  );
+
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+  const [typeConfirmMultiple, setTypeConfirmMultiple] = useState("");
 
   const onCloseModel = () => {
     setShowConfirmMultiple(false);
@@ -43,29 +46,32 @@ const PipelineBottomNav = ({
     setselectedList([]);
   };
 
-  const { data: pipeline } = useGetPipelineByIdQuery(
-    {
-      Id: itemSelected[0]?.id,
-    },
-    { skip: itemSelected.length !== 1 }
-  );
-
   const handleShowConfirmMultiple = (type) => {
     setTypeConfirmMultiple(type);
     setShowConfirmMultiple(true);
   };
-  let item = itemSelected.map((p) => p.isActivated);
-  let isDefault = itemSelected.map((p) => p.isDefault);
-  let ids = itemSelected.map((p) => p.id);
-  let itemApply = itemSelected.map((p) => p.recruitmentAppliedCount);
-  function checkSameApply(arr) {
+
+  const checkSameApply = (arr) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] > 0) {
         return false;
       }
     }
     return true;
-  }
+  };
+
+  const item = itemSelected.map((p) => p.isActivated);
+  const isDefault = itemSelected.map((p) => p.isDefault);
+  const ids = itemSelected.map((p) => p.id);
+  const itemApply = itemSelected.map((p) => p.recruitmentAppliedCount);
+
+  const enableEdit =
+    itemSelected.length === 1 &&
+    itemSelected[0]?.recruitmentAppliedCount === 0 &&
+    canEdit;
+
+  const enableDelete = checkSameApply(itemApply) && canEdit;
+
   return (
     <Drawer
       anchor={"bottom"}
@@ -83,87 +89,113 @@ const PipelineBottomNav = ({
           }}
         >
           <Stack flexDirection="row" alignItems="center">
-            {itemSelected[0]?.isDefault === false && checkSameValue(isDefault) && (<>
-              {checkSameValue(item) && (
-                <>
-                  {item.includes(true) ? (
-                    <>
-                      <ButtonIcon
-                        onClick={() => handleShowConfirmMultiple("status")}
-                        sx={{
-                          backgroundColor: "unset !important",
-                        }}
-                        icon={<ActionSwitchCheckedIcon />}
+            {itemSelected[0]?.isDefault === false && checkSameValue(isDefault) && (
+              <>
+                {checkSameValue(item) && (
+                  <>
+                    {item.includes(true) ? (
+                      <>
+                        <ButtonIcon
+                          onClick={() => handleShowConfirmMultiple("status")}
+                          sx={{
+                            backgroundColor: "unset !important",
+                          }}
+                          icon={<ActionSwitchCheckedIcon />}
+                        />
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#388E3C", fontSize: 13 }}
+                        >
+                          Đang hoạt động
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        <ButtonIcon
+                          onClick={() => handleShowConfirmMultiple("status")}
+                          sx={{
+                            backgroundColor: "unset !important",
+                          }}
+                          icon={<ActionSwitchUnCheckedIcon />}
+                        />
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: theme.palette.common.borderObject,
+                            fontSize: 13,
+                          }}
+                        >
+                          Không hoạt động
+                        </Typography>
+                      </>
+                    )}
+                  </>
+                )}
+                {itemSelected.length === 1 && (
+                  <ButtonIcon
+                    sx={{
+                      marginLeft: "16px",
+                    }}
+                    onClick={() => handleShowConfirmMultiple("view")}
+                    icon={
+                      <Iconify
+                        icon={"ri:eye-2-line"}
+                        width={20}
+                        height={20}
+                        color={theme.palette.common.borderObject}
                       />
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "#388E3C", fontSize: 13 }}
-                      >
-                        Đang hoạt động
-                      </Typography>
-                    </>
-                  ) : (
-                    <>
-                      <ButtonIcon
-                        onClick={() => handleShowConfirmMultiple("status")}
-                        sx={{
-                          backgroundColor: "unset !important",
-                        }}
-                        icon={<ActionSwitchUnCheckedIcon />}
+                    }
+                  />
+                )}
+                {enableEdit && (
+                  <ButtonIcon
+                    sx={{
+                      marginLeft: "16px",
+                    }}
+                    onClick={() => handleShowConfirmMultiple("edit")}
+                    icon={
+                      <Iconify
+                        icon={"ri:edit-2-fill"}
+                        width={20}
+                        height={20}
+                        color={theme.palette.common.borderObject}
                       />
-                      <Typography
-                        variant="body2"
-                        sx={{ color: theme.palette.common.borderObject, fontSize: 13 }}
-                      >
-                        Không hoạt động
-                      </Typography>
-                    </>
-                  )}
-                </>
-              )}
-              {itemSelected.length === 1 && itemSelected[0]?.recruitmentAppliedCount === 0 && canEdit && (
-                <ButtonIcon
-                  sx={{
-                    marginLeft: "16px",
-                  }}
-                  onClick={() => handleShowConfirmMultiple("edit")}
-                  icon={
-                    <Iconify
-                      icon={"ri:edit-2-fill"}
-                      width={20}
-                      height={20}
-                      color={theme.palette.common.borderObject}
-                    />
-                  }
-                />
-              )}
-              {checkSameApply(itemApply) && canEdit && (
-                <ButtonIcon
-                  sx={{
-                    marginLeft: "16px",
-                  }}
-                  onClick={() => handleShowConfirmMultiple("delete")}
-                  icon={
-                    <Iconify
-                      icon={"material-symbols:delete-outline-rounded"}
-                      width={20}
-                      height={20}
-                      color="#D32F2F"
-                    />
-                  }
-                />
-              )}
-            </>
+                    }
+                  />
+                )}
+                {enableDelete && (
+                  <ButtonIcon
+                    sx={{
+                      marginLeft: "16px",
+                    }}
+                    onClick={() => handleShowConfirmMultiple("delete")}
+                    icon={
+                      <Iconify
+                        icon={"material-symbols:delete-outline-rounded"}
+                        width={20}
+                        height={20}
+                        color="#D32F2F"
+                      />
+                    }
+                  />
+                )}
+              </>
             )}
           </Stack>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{ marginLeft: "16px", display: "flex", alignItems: "center" }}
+          >
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
               Đã chọn: {itemSelected.length}
             </Typography>
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
+              sx={{
+                mx: 2,
+                width: "2px",
+                backgroundColor: theme.palette.common.neutral100,
+              }}
             />
             <ButtonIcon
               sx={{
@@ -191,12 +223,26 @@ const PipelineBottomNav = ({
           isActivated={item[0]}
         />
       )}
+      {showConfirmMultiple && typeConfirmMultiple.includes("view") && (
+        <PipelineViewModal
+          data={pipeline}
+          show={showConfirmMultiple}
+          onPressEdit={
+            enableEdit ? () => handleShowConfirmMultiple("edit") : undefined
+          }
+          onPressDelete={
+            enableDelete ? () => handleShowConfirmMultiple("delete") : undefined
+          }
+          onClose={onCloseModel}
+          setShow={setShowConfirmMultiple}
+        />
+      )}
       {showConfirmMultiple && typeConfirmMultiple.includes("edit") && (
         <PipelineFormModal
+          data={itemSelected[0]}
           show={showConfirmMultiple}
           setShow={setShowConfirmMultiple}
           onClose={onCloseModel}
-          data={pipeline}
         />
       )}
       {showConfirmMultiple && typeConfirmMultiple.includes("delete") && (

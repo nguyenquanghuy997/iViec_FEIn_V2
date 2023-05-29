@@ -1,22 +1,18 @@
-import CloseIcon from "../../../../../public/assets/icons/candidate/CloseIcon";
 import ExpanLess from "../../../../../public/assets/icons/candidate/ExpanLess";
 import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
+import { ApplicantReviewModal } from "../../modals/ApplicantReviewModal";
+import { ApplicantReviewViewModal } from "../../modals/ApplicantReviewViewModal";
 import { AvatarDS } from "@/components/DesignSystem";
+import { Text, View } from "@/components/FlexStyled";
 import { PipelineStateType } from "@/utils/enum";
 import { fTimeDate } from "@/utils/formatTime";
-import { Button } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
-import {styled, useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { Container } from "@mui/system";
 import React, { useState } from "react";
 
@@ -27,33 +23,20 @@ const NotificationBoard = ({
   title,
   isShow,
   data,
-  option,
+  dataApplicant,
   children,
+  isReview,
+  recruitmentId,
+  reviewFormCriterias,
 }) => {
-  const [open, setOpen] = useState(false);
-  const [openModal, setOpenModal] = React.useState(false);
   const theme = useTheme();
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+  const [open, setOpen] = useState(false);
+  const [isOpenReview, setIsOpenReview] = useState(false);
+  const [isOpenReviewView, setIsOpenReviewView] = useState(false);
+
   const handleClick = () => {
     setOpen(!open);
   };
-
-  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    "& .MuiDialogContent-root": {
-      padding: theme.spacing(2),
-    },
-    "& .MuiDialogActions-root": {
-      padding: theme.spacing(1),
-    },
-    "& .MuiPaper-rounded": {
-      borderRadius: "6px!important",
-    },
-  }));
 
   const renderText = (title, reason) => {
     return (
@@ -85,29 +68,7 @@ const NotificationBoard = ({
     );
   };
 
-  function BootstrapDialogTitle(props) {
-    const { children, onClose, ...other } = props;
-
-    return (
-      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-        {children}
-        {onClose ? (
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </DialogTitle>
-    );
-  }
+  isReview && console.log(dataApplicant);
 
   return (
     <Container
@@ -167,7 +128,7 @@ const NotificationBoard = ({
                 }}
                 component="span"
                 variant="body2"
-                color= {theme.palette.common.borderObject}
+                color={theme.palette.common.borderObject}
               >
                 {fTimeDate(data?.occurredAt)}
               </Typography>
@@ -182,96 +143,106 @@ const NotificationBoard = ({
             </React.Fragment>
           </div>
 
-          <Collapse
-            in={open}
-            timeout="auto"
-            unmountOnExit
-            sx={{
-              backgroundColor: theme.palette.common.bgrMaster,
-              pb: 2,
-              pt: 2,
-              "& .MuiButtonBase-root:hover": {
+          {isReview && (
+            <Collapse
+              in={open}
+              timeout="auto"
+              unmountOnExit
+              sx={{
                 backgroundColor: theme.palette.common.bgrMaster,
-              },
-            }}
-          >
-            <List component="div" disablePadding>
-              <Typography fontSize={13}>
-                Đánh giá:
-                <span
-                  style={{
-                    marginLeft: "13px",
-                    fontWeight: 600,
-                    color:
-                      data?.applicantReviewResultType === 2 &&
-                      (data?.applicantReviewResultType === 0
-                        ? "#388E3C"
-                        : data?.applicantReviewResultType === 1
-                        ? theme.palette.common.orange700
-                        : theme.palette.common.red600),
-                  }}
-                >
-                  {PipelineStateType(2, data?.applicantReviewResultType)}
-                </span>
-              </Typography>
-            </List>
-            <List>
-              <Typography fontSize={13}>
-                Điểm TB:{" "}
-                <span style={{ marginLeft: "13px", fontWeight: 600 }}>
-                  {data?.averagePoint?.toFixed(2)}
-                </span>
-              </Typography>
-            </List>
-            <List component="div" disablePadding>
-              <Typography fontSize={13}>
-                Kết luận:
-                <span style={{ marginLeft: "13px", fontWeight: 600 }}>
-                  {data?.comment}
-                </span>
-              </Typography>
-            </List>
-            {option?.includes("Xem chi tiết đánh giá") && (
-              <ListItemButton
-                sx={{
-                  "& .MuiButtonBase-root:hover": {
-                    backgroundColor: theme.palette.common.bgrMaster,
-                  },
-                }}
+                pb: 2,
+                pt: 2,
+                "& .MuiButtonBase-root:hover": {
+                  backgroundColor: theme.palette.common.bgrMaster,
+                },
+              }}
+            >
+              <List component="div" disablePadding>
+                <Typography fontSize={13}>
+                  Đánh giá:
+                  <span
+                    style={{
+                      marginLeft: "13px",
+                      fontWeight: 600,
+                      color:
+                        data?.applicantReviewResultType === 2 &&
+                        (data?.applicantReviewResultType === 0
+                          ? "#388E3C"
+                          : data?.applicantReviewResultType === 1
+                          ? theme.palette.common.orange700
+                          : theme.palette.common.red600),
+                    }}
+                  >
+                    {PipelineStateType(2, data?.applicantReviewResultType)}
+                  </span>
+                </Typography>
+              </List>
+
+              <List>
+                <Typography fontSize={13}>
+                  Điểm TB:{" "}
+                  <span style={{ marginLeft: "13px", fontWeight: 600 }}>
+                    {data?.averagePoint?.toFixed(2)}
+                  </span>
+                </Typography>
+              </List>
+
+              <List component="div" disablePadding>
+                <Typography fontSize={13}>
+                  Kết luận:
+                  <span style={{ marginLeft: "13px", fontWeight: 600 }}>
+                    {data?.comment}
+                  </span>
+                </Typography>
+              </List>
+
+              <View
+                flexRow
+                contentCenter
+                pv={5}
+                mt={16}
+                borderWidth={1}
+                borderRadius={6}
+                borderColor={theme.palette.common.blue700}
+                onPress={() => setIsOpenReviewView(true)}
               >
-                <Button
-                  variant="outlined"
-                  sx={{ width: "100%" }}
-                  onClick={handleOpenModal}
+                <Text
+                  ml={8}
+                  fontSize={12}
+                  fontWeight={"600"}
+                  color={theme.palette.common.blue700}
                 >
                   {"Xem chi tiết đánh giá"}
-                </Button>
-                <BootstrapDialog
-                  onClose={handleCloseModal}
-                  aria-labelledby="customized-dialog-title"
-                  open={openModal}
-                >
-                  <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleCloseModal}
-                  >
-                    {"Xem chi tiết đánh giá"}
-                  </BootstrapDialogTitle>
-                  <Divider />
-                  <DialogContent>
-                    <Typography gutterBottom>
-                      Cras mattis consectetur purus sit amet fermentum. Cras
-                      justo odio, dapibus ac facilisis in, egestas eget quam.
-                      Morbi leo risus, porta ac consectetur ac, vestibulum at
-                      eros.
-                    </Typography>
-                  </DialogContent>
-                </BootstrapDialog>
-              </ListItemButton>
-            )}
+                </Text>
+              </View>
 
-            {children}
-          </Collapse>
+              {children}
+            </Collapse>
+          )}
+
+          {isReview && isOpenReview && (
+            <ApplicantReviewModal
+              show={isOpenReview}
+              data={reviewFormCriterias}
+              applicantId={dataApplicant?.id}
+              recruitmentId={recruitmentId}
+              setShow={setIsOpenReview}
+            />
+          )}
+
+          {isReview && isOpenReviewView && (
+            <ApplicantReviewViewModal
+              show={isOpenReviewView}
+              aggregateId={data?.aggregateId}
+              applicantId={dataApplicant?.id}
+              recruitmentId={recruitmentId}
+              setShow={setIsOpenReviewView}
+              pressReview={() => {
+                setIsOpenReview(true);
+                setIsOpenReviewView(false);
+              }}
+            />
+          )}
         </div>
         <div style={{ margin: "auto" }}>
           {isShow && (open ? <ExpanMore /> : <ExpanLess />)}

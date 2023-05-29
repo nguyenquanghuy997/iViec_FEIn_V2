@@ -5,7 +5,6 @@ import MuiInputNumber from "@/components/form/MuiInputNumber";
 import { FormProvider, RHFSelect } from "@/components/hook-form";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
-import { useGetQuestionGroupQuery } from "@/sections/exam/ExamSlice";
 import { ButtonIcon, ViewModel } from "@/utils/cssStyles";
 import { LIST_QUESTION_TYPE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -30,12 +29,11 @@ export const AddQuestionGroupModel = ({
   setShow,
   editData,
   onSubmit,
+  ListQuestionGroup
 }) => {
   const isEdit = !!editData?.name;
-  const { data: { items: Data = [] } = {} } = useGetQuestionGroupQuery({
-    IsActive: "true",
-  });
-  var ListQuestionGroup = Data?.filter((p) => p.numOfQuestion > 0);
+
+  
   // form
   const Schema = Yup.object().shape({
     questionGroup: Yup.array().of(
