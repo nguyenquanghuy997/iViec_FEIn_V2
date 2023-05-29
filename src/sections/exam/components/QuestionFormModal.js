@@ -55,7 +55,7 @@ const LIST_QUESTION_TYPE = [
 const defaultValues = {
   id: null,
   questionType: null,
-  questionPoint: null,
+  questionPoint: 1,
   questionState: 0,
   questionGroupId: null,
   questionTitle: "",
