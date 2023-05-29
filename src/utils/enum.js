@@ -210,3 +210,17 @@ export const ExamType = (item) => {
       return "Đề thi câu hỏi trắc nghiệm";
   }
 };
+
+//RecruitmentProcessStatus
+export const BookingCalendarProcessStatus = (item) => {
+  switch (item) {
+    case 0:
+      return "Đã lên lịch";
+    case 1: 
+      return "Đang phỏng vấn";
+    case 2:
+      return "Kết thúc phỏng vấn";
+    case 3: 
+      return "Đã hủy lịch";
+  }
+};

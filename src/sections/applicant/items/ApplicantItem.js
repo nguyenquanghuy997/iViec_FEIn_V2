@@ -205,6 +205,7 @@ export const ApplicantItem = (props) => {
           remoteUrl: API_GET_ORGANIZATION_USERS,
         },
       },
+
       {
         dataIndex: "creatorName",
         title: "Cán bộ tạo ứng viên",
@@ -221,7 +222,7 @@ export const ApplicantItem = (props) => {
         dataIndex: "academicLevel",
         key: "name",
         width: "120px",
-        render: (text) => <Tag>{text}</Tag>,
+        render: (item) => <Tag>{item?.description}</Tag>,
         filters: {
           type: TBL_FILTER_TYPE.TEXT,
           name: "educations",

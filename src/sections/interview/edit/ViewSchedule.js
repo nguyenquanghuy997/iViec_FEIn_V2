@@ -1,6 +1,6 @@
 import { EditIcon } from "@/assets/ActionIcon";
 import { ButtonDS } from "@/components/DesignSystem";
-import { PERMISSIONS } from "@/config";
+import { BOOKING_CALENDAR_PROCCESS_STATUS, PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
 import { RiCalendarCheckFill } from "react-icons/ri";
@@ -262,7 +262,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             padding: '16px'
           }}
         >
-          {canEdit && (
+          {canEdit && data?.bookingCalendarProcessStatus == BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
             <div
               style={{ cursor: "pointer" }}
               onClick={() => handleClick(data)}
