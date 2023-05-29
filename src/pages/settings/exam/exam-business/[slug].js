@@ -199,7 +199,7 @@ function Question() {
         render: (_, record) => {
           return (
             <span style={{ color: record.isActive ? "#388E3C" : "#D32F2F" }}>
-              {record.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
+              {record.isActive ? "Đang hoạt động" : "Không hoạt động"}
             </span>
           );
         },
@@ -290,9 +290,9 @@ function Question() {
           useUpdateColumnsFunc={useUpdateQuestionColumnsMutation}
           createText={"Thêm câu hỏi"}
           onClickCreate={() => {
-            setShowForm(true);
             setItemSelected([]);
             setSelectedRowKeys([]);
+            setShowForm(true);
           }}
         />
 
@@ -318,17 +318,19 @@ function Question() {
         />
       </Content>
 
-      <QuestionFormModal
-        data={itemSelected[0]}
-        show={showForm}
-        isNotSave={false}
-        onClose={() => {
-          setShowForm(false);
-          setItemSelected([]);
-          setSelectedRowKeys([]);
-        }}
-        getData={getData}
-      />
+      {
+        showForm && <QuestionFormModal
+          data={itemSelected[0]}
+          show={showForm}
+          isNotSave={false}
+          onClose={() => {
+            setShowForm(false);
+            setItemSelected([]);
+            setSelectedRowKeys([]);
+          }}
+          getData={getData}
+        />
+      }
 
       <ConfirmModal
         confirmDelete={showConfirmDelete}
@@ -361,12 +363,12 @@ function Question() {
         subtitle={
           isActive ? (
             <span>
-              Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi{" "}
+              Bạn có chắc chắn muốn tắt hoạt động cho câu hỏi{" "}
               <b>{_name.trim()}</b>
             </span>
           ) : (
             <span>
-              Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi{" "}
+              Bạn có chắc chắn muốn bật hoạt động cho câu hỏi{" "}
               <b>{_name.trim()}</b>
             </span>
           )

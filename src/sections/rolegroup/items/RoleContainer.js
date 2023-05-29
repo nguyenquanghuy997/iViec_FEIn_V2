@@ -84,8 +84,8 @@ export const RoleContainer = () => {
         <TextMaxLine
           sx={{
             width: 220,
-            fontWeight: "normal",
-            fontSize: 14,
+            fontWeight: 500,
+            fontSize: 13,
             ...(canEdit && { cursor: "pointer" }),
           }}
           onClick={(e) => {
@@ -106,7 +106,6 @@ export const RoleContainer = () => {
       key: "numOfPerson",
       dataIndex: "number",
       width: "140px",
-      align: "center",
       render: (item, record) => record?.numOfPerson,
     },
 

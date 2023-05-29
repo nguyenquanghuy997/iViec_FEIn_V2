@@ -85,7 +85,7 @@ export default ({
   const renderButtonAction = (title, icon, onPress) => {
     return (
       <View ml={'16px'} onPress={onPress}>
-        <Tooltip title={title}>
+        <Tooltip title={title} arrow>
           <IconButton  >
             <SvgIcon>{icon}</SvgIcon>
           </IconButton>

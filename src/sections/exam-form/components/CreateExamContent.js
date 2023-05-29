@@ -134,7 +134,7 @@ const CreateExamContent = () => {
   };
 
   const minutesFromTime = (times) => {
-    var a = times.split(":");
+    const a = times.split(":");
     return +a[0] * 60 + +a[1];
   };
 
@@ -157,7 +157,7 @@ const CreateExamContent = () => {
       });
       setExamQuestionPreview(questions.flat(1));
       setShowPreview(true)
-    } else{
+    } else {
       setExamQuestionPreview(examQuestions.flat(1));
       setShowPreview(true)
     }
@@ -196,14 +196,14 @@ const CreateExamContent = () => {
     }
 
     if (examData.type == 0 && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
     }
 
     if (examData.type == 1 && !!examData.maximumPoint && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
@@ -216,7 +216,7 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: examData.standardPoint ?? 1,
+      standardPoint: examData.standardPoint ?? 0,
       isQuestionMixing: examData.isQuestionMixing,
       examTime: new Date(examData.examTime * 60 * 1000)
         .toISOString()
@@ -229,15 +229,15 @@ const CreateExamContent = () => {
               questionId: x.id,
               questionCreation: !x.id
                 ? {
-                    questionTitle: x.questionTitle,
-                    answers: x.answers,
-                    questionPoint: x.questionPoint,
-                    questionType: x.questionType,
-                    questionState: x.questionState,
-                    questionGroupId: x.questionGroupId,
-                    isActive: x.isActive,
-                    questionFilePaths: x.questionFilePaths,
-                  }
+                  questionTitle: x.questionTitle,
+                  answers: x.answers,
+                  questionPoint: x.questionPoint,
+                  questionType: x.questionType,
+                  questionState: x.questionState,
+                  questionGroupId: x.questionGroupId,
+                  isActive: x.isActive,
+                  questionFilePaths: x.questionFilePaths,
+                }
                 : null,
             };
           })) ||
@@ -292,14 +292,14 @@ const CreateExamContent = () => {
     }
 
     if (examData.type == 0 && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
     }
 
     if (examData.type == 1 && !!examData.maximumPoint && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
@@ -312,7 +312,7 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: examData.standardPoint,
+      standardPoint: examData.standardPoint ?? 0,
       isQuestionMixing: examData.isQuestionMixing,
       examTime: new Date(examData.examTime * 60 * 1000)
         .toISOString()
@@ -325,15 +325,15 @@ const CreateExamContent = () => {
               questionId: x.id,
               questionCreation: !x.id
                 ? {
-                    questionTitle: x.questionTitle,
-                    answers: x.answers,
-                    questionPoint: x.questionPoint,
-                    questionType: x.questionType,
-                    questionState: x.questionState,
-                    questionGroupId: x.questionGroupId,
-                    isActive: x.isActive,
-                    questionFilePaths: x.questionFilePaths,
-                  }
+                  questionTitle: x.questionTitle,
+                  answers: x.answers,
+                  questionPoint: x.questionPoint,
+                  questionType: x.questionType,
+                  questionState: x.questionState,
+                  questionGroupId: x.questionGroupId,
+                  isActive: x.isActive,
+                  questionFilePaths: x.questionFilePaths,
+                }
                 : null,
             };
           })) ||
@@ -370,7 +370,7 @@ const CreateExamContent = () => {
   };
 
   useEffect(() => {
-    if (data ) {
+    if (data) {
       setExamData({ ...data, examTime: minutesFromTime(data.examTime) });
       if (data.type == 0) {
         setExamQuestions(data.questions ?? []);
@@ -629,7 +629,7 @@ const CreateExamContent = () => {
       {showPreview && (
         <ExamPreview
           open={showPreview}
-          onClose={()=>setShowPreview(false)}
+          onClose={() => setShowPreview(false)}
           data={{
             examData: examData,
             questions: examQuestionPreview,
