@@ -1,6 +1,7 @@
-import { PERMISSIONS } from "@/config";
+import EmptyValue from "./components/EmptyValue";
 import EditInformation from "./edit/EditInformation";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import { PERMISSIONS } from "@/config";
 import useRole from "@/hooks/useRole";
 import useModal from "@/sections/companyinfor/hooks/useModal";
 import { BoxInfoStyle } from "@/sections/companyinfor/style";
@@ -8,8 +9,7 @@ import CropImage from "@/sections/companyinfor/upload/CropImage";
 import { OrganizationSize } from "@/utils/enum";
 import { Box, Divider, Typography } from "@mui/material";
 import { get } from "lodash";
-import { useMemo } from "react";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 
 const renderText = (title, content) => {
@@ -39,10 +39,10 @@ const renderText = (title, content) => {
     </Box>
   );
 };
-const renderItem = (title, content) => {
+const renderItem = (title, content, child) => {
   return (
     <Box sx={{ pt: 3, pb: 1, "&:first-of-type": { mt: 3 } }}>
-      {content && (
+      {!!(content || child) && (
         <>
           <Typography
             sx={{
@@ -56,14 +56,18 @@ const renderItem = (title, content) => {
           >
             {title}
           </Typography>
-          <Typography
-            sx={{
-              fontSize: 14,
-              fontWeight: 400,
-              lineHeight: "24px",
-            }}
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+          {content ? (
+            <Typography
+              sx={{
+                fontSize: 14,
+                fontWeight: 400,
+                lineHeight: "24px",
+              }}
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          ) : (
+            child
+          )}
         </>
       )}
     </Box>
@@ -71,7 +75,6 @@ const renderItem = (title, content) => {
 };
 
 export default function CompanyInfor({ data }) {
-
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.EDIT_COMPANY), []);
 
@@ -88,12 +91,12 @@ export default function CompanyInfor({ data }) {
       {/* Avatar & name */}
       <BoxInfoStyle className={"box-info"}>
         <Box className={"box-image"}>
-            <CropImage
-              defaultImage={get(data, "organizationInformation.avatar")}
-              companyInfor={data}
-              size={"avatar"}
-              className={"avatar-image"}
-            />
+          <CropImage
+            defaultImage={get(data, "organizationInformation.avatar")}
+            companyInfor={data}
+            size={"avatar"}
+            className={"avatar-image"}
+          />
         </Box>
         <Box sx={{ flex: 1, pl: 3 }}>
           <Box
@@ -147,23 +150,40 @@ export default function CompanyInfor({ data }) {
               </Box>
             </Box>
             <Box>
-              {
-                canEdit && <MuiButton
+              {canEdit && (
+                <MuiButton
                   color={"default"}
                   title={"Chỉnh sửa"}
                   sx={{ fontWeight: 500 }}
                   onClick={onOpen}
                 />
-              }
+              )}
             </Box>
           </Box>
           <Divider />
           <Box>
-            {renderText("Số điện thoại :", get(data, "organizationInformation.phoneNumber"))}
-            {renderText("Email doanh nghiệp :", get(data, "organizationInformation.email"))}
-            {renderText("Ngành nghề :", get(data, "organizationInformation.jobCategories")?.map((item) => item?.name)?.join(", "))}
-            {renderText("Quy mô :", OrganizationSize(get(data, "organizationInformation.organizationSize")))}
-            {renderText("Địa chỉ :",
+            {renderText(
+              "Số điện thoại :",
+              get(data, "organizationInformation.phoneNumber")
+            )}
+            {renderText(
+              "Email doanh nghiệp :",
+              get(data, "organizationInformation.email")
+            )}
+            {renderText(
+              "Ngành nghề :",
+              get(data, "organizationInformation.jobCategories")
+                ?.map((item) => item?.name)
+                ?.join(", ")
+            )}
+            {renderText(
+              "Quy mô :",
+              OrganizationSize(
+                get(data, "organizationInformation.organizationSize")
+              )
+            )}
+            {renderText(
+              "Địa chỉ :",
               <>
                 {get(data, "organizationInformation.address") &&
                   `${get(data, "organizationInformation.address")}, `}
@@ -175,7 +195,8 @@ export default function CompanyInfor({ data }) {
             )}
             {renderItem(
               "Giới thiệu công ty",
-              get(data, "organizationInformation.description")
+              get(data, "organizationInformation.description"),
+              <EmptyValue text={"Hiện chưa nội dung giới thiệu công ty"} />
             )}
           </Box>
         </Box>

@@ -1,11 +1,3 @@
-import {
-  useCloseRecruitmentMutation,
-  useDeleteRecruitmentMutation,
-  useGetListRecruitmentColumnsQuery,
-  useGetRecruitmentsQuery,
-  useUpdateListRecruitmentColumnsMutation,
-} from "../RecruitmentSlice";
-import OrganizationSettingModal from "../modals/OrganizationSettingModal";
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
@@ -56,12 +48,20 @@ import {
 } from "@/utils/formatString";
 import { fDate } from "@/utils/formatTime";
 import { Tooltip, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { Tag } from "antd";
 import { get } from "lodash";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
-import { useTheme } from "@mui/material/styles";
+import {
+  useCloseRecruitmentMutation,
+  useDeleteRecruitmentMutation,
+  useGetListRecruitmentColumnsQuery,
+  useGetRecruitmentsQuery,
+  useUpdateListRecruitmentColumnsMutation,
+} from "../RecruitmentSlice";
+import OrganizationSettingModal from "../modals/OrganizationSettingModal";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -751,13 +751,11 @@ export const RecruitmentItem = () => {
           }}
         />
       )}
-      {openPreview && (
-        <RecruitmentPreview
+      <RecruitmentPreview
           data={itemSelected[0]}
           open={openPreview}
           onClose={handleCloseModal}
         />
-      )}
       <BottomNavModal
         data={itemSelected}
         onClose={toggleDrawer(false)}
