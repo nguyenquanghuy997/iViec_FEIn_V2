@@ -119,3 +119,22 @@ export const convertDataGet = (model) => {
   });
   
 }
+
+export const ApplicantCalendarState = (item) => {
+  switch (item) {
+    case 0: //"Draft"
+      return <span style={{color: "#388E3C"}}>Chờ xác nhận phỏng vấn</span>;
+    case 1: //"WaitingOrganizationApproval":
+      return <span style={{color: "#F77A0C"}}>Đã xác nhận phỏng vấn</span>;
+    case 2: //"OrganizationReject":
+      return <span style={{color: "#E53935"}}>Hoãn lịch phỏng vấn</span>;
+    case 3: //"WaitingMedusaApproval":
+      return <span style={{color: "#F77A0C"}}>Từ chối phỏng vấn</span>;
+    case 4: //"MedusaReject":
+      return <span style={{color: "#E53935"}}>Đang phỏng vấn</span>;
+    case 5: //"Recruiting":
+      return <span style={{color: "#388E3C"}}>Không tham gia phỏng vấn</span>;
+    case 6: //"Calendared":
+      return <span style={{color: "#388E3C"}}>Kết thúc phỏng vấn</span>;
+  }
+};

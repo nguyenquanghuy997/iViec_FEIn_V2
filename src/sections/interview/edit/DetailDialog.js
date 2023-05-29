@@ -7,6 +7,7 @@ import CloseIcon from "@/assets/CloseIcon";
 import { ButtonDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import { DOMAIN_SERVER_API } from "@/config";
+import { BOOKING_CALENDAR_PROCCESS_STATUS } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import { BoxFlex } from "@/sections/emailform/style";
 import {
@@ -14,6 +15,7 @@ import {
   useGetDetailCalendarsQuery,
 } from "@/sections/interview/InterviewSlice";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
+import { BookingCalendarProcessStatus } from "@/utils/enum";
 import { INTERVIEW_PROCESS_STATUS } from "@/utils/formatString";
 import {
   Button,
@@ -155,6 +157,13 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             )?.name
           )}
           {renderText("Lý do hủy:", DetailData?.removeReason || "Không có")}
+          {renderText(
+            "Trạng thái:",
+            BookingCalendarProcessStatus(
+              DetailData?.bookingCalendarProcessStatus
+            )
+          )}
+          {renderText("Lý do hủy:", DetailData?.removeReason || "Không có")}
 
           <Divider />
 
@@ -289,22 +298,25 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                 textTransform: "none",
               }}
             />
-            <ButtonDS
-              tittle={"Chỉnh sửa"}
-              type="button"
-              onClick={() => {
-                setOpenForm(true);
-              }}
-              sx={{
-                color: "white",
-                backgroundColor: theme.palette.common.blue700,
-                boxShadow: "none",
-                ":hover": {
-                  backgroundColor: theme.palette.common.blue800,
-                },
-                textTransform: "none",
-              }}
-            />
+            {DetailData?.bookingCalendarProcessStatus ==
+              BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
+              <ButtonDS
+                tittle={"Chỉnh sửa"}
+                type="button"
+                onClick={() => {
+                  setOpenForm(true);
+                }}
+                sx={{
+                  color: "white",
+                  backgroundColor: theme.palette.common.blue700,
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: theme.palette.common.blue800,
+                  },
+                  textTransform: "none",
+                }}
+              />
+            )}
 
             <ButtonDS
               onClick={() => {

@@ -1,7 +1,7 @@
 import { EditIcon } from "@/assets/ActionIcon";
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import { PERMISSIONS } from "@/config";
+import { BOOKING_CALENDAR_PROCCESS_STATUS, PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
 import { fTime } from "@/utils/formatTime";
@@ -275,14 +275,16 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             padding: "16px",
           }}
         >
-          {canEdit && (
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => handleClick(data)}
-            >
-              <EditIcon width={12} height={12} />
-            </div>
-          )}
+          {canEdit &&
+            data?.bookingCalendarProcessStatus ==
+              BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => handleClick(data)}
+              >
+                <EditIcon width={12} height={12} />
+              </div>
+            )}
           {
             // interviewing status
             data?.bookingCalendarProcessStatus == 9 && (
