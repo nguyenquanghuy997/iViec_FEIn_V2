@@ -25,9 +25,9 @@ import { useSnackbar } from "notistack";
 import { forwardRef } from "react";
 import { useState } from "react";
 import { RiLinkM } from "react-icons/ri";
-import { DOMAIN_SERVER_API } from "@/config";
+import { BOOKING_CALENDAR_PROCCESS_STATUS, DOMAIN_SERVER_API } from "@/config";
 import {useTheme} from "@mui/material/styles";
-import { INTERVIEW_PROCESS_STATUS } from "@/utils/formatString";
+import { BookingCalendarProcessStatus } from "@/utils/enum";
 const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   const { data: DetailData } = useGetDetailCalendarsQuery(
     { BookingCalendarId: item?.id },
@@ -140,7 +140,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants
               .length
           )}
-          {renderText("Trạng thái:", INTERVIEW_PROCESS_STATUS.find(x=>x.id == DetailData?.bookingCalendarProcessStatus)?.name)}
+          {renderText("Trạng thái:", BookingCalendarProcessStatus(DetailData?.bookingCalendarProcessStatus))}
           {renderText("Lý do hủy:", DetailData?.removeReason || 'Không có')}
 
           <Divider />
@@ -257,22 +257,25 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                 textTransform: "none",
               }}
             />
+            {DetailData?.bookingCalendarProcessStatus == BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY &&
             <ButtonDS
-              tittle={"Chỉnh sửa"}
-              type="button"
-              onClick={() => {
-                setOpenForm(true);
-              }}
-              sx={{
-                color: "white",
-                backgroundColor: theme.palette.common.blue700,
-                boxShadow: "none",
-                ":hover": {
-                  backgroundColor: theme.palette.common.blue800,
-                },
-                textTransform: "none",
-              }}
-            />
+            tittle={"Chỉnh sửa"}
+            type="button"
+            onClick={() => {
+              setOpenForm(true);
+            }}
+            sx={{
+              color: "white",
+              backgroundColor: theme.palette.common.blue700,
+              boxShadow: "none",
+              ":hover": {
+                backgroundColor: theme.palette.common.blue800,
+              },
+              textTransform: "none",
+            }}
+          />
+            }
+            
 
             <ButtonDS
               onClick=""
