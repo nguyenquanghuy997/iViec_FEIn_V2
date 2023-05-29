@@ -1,4 +1,3 @@
-import { CandidateState } from "../config";
 import { convertDurationTimeToSeconds, convertStoMs } from "../config";
 import CloseIcon from "@/assets/CloseIcon";
 import { ButtonDS } from "@/components/DesignSystem";
@@ -27,7 +26,7 @@ import { useState } from "react";
 import { RiLinkM } from "react-icons/ri";
 import { BOOKING_CALENDAR_PROCCESS_STATUS, DOMAIN_SERVER_API } from "@/config";
 import {useTheme} from "@mui/material/styles";
-import { BookingCalendarProcessStatus } from "@/utils/enum";
+import { ApplicantCalendarState, BookingCalendarProcessStatus } from "@/utils/enum";
 const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   const { data: DetailData } = useGetDetailCalendarsQuery(
     { BookingCalendarId: item?.id },
@@ -188,7 +187,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                     sx={{ display: "flex", justifyContent: "flex-end" }}
                   >
                     <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                      {CandidateState(item?.applicantInterviewState)}
+                      {ApplicantCalendarState(item?.applicantInterviewState)}
                     </Typography>
                   </ListItemText>
                 </ListItem>
