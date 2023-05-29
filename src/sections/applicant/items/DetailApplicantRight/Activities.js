@@ -29,10 +29,12 @@ export const Activities = ({
         <SwitchDS name={"isActive"} label={"Hiển thị hoạt động"} />
       </FormProvider>
 
+      <View height={16} />
+
       {isActive ? (
         <Box>
           <List
-            sx={{ width: "100%", pt: "16px" }}
+            sx={{ width: "100%", padding: 0 }}
             component="nav"
             aria-labelledby="nested-list-subheader"
           >
@@ -348,18 +350,17 @@ export const Activities = ({
           </List>
         </Box>
       ) : (
-        <div>
-          <div
-            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+        <View contentCenter>
+          <EmptyIcon />
+          <Text
+            centerAlign
+            mt={12}
+            fontWeight={500}
+            color={theme.palette.common.neutral500}
           >
-            <EmptyIcon />
-          </div>
-          <p
-            style={{ display: "flex", width: "100%", justifyContent: "center" }}
-          >
-            Danh sách hoạt động tạm ẩn.
-          </p>
-        </div>
+            {"Danh sách hoạt động tạm ẩn."}
+          </Text>
+        </View>
       )}
     </Grid>
   );

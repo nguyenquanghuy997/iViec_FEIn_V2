@@ -68,8 +68,6 @@ const NotificationBoard = ({
     );
   };
 
-  isReview && console.log(dataApplicant);
-
   return (
     <Container
       sx={{
@@ -87,7 +85,10 @@ const NotificationBoard = ({
         onClick={handleClick}
         sx={{
           padding: "20px 12px",
-          backgroundColor: !open ? "white" : theme.palette.common.bgrMaster,
+          borderRadius: "4px",
+          backgroundColor: !open
+            ? theme.palette.common.white
+            : theme.palette.common.bgrMaster,
           color: theme.palette.common.neutral800,
           fontSize: "0.9rem!important",
           "&:hover": {
