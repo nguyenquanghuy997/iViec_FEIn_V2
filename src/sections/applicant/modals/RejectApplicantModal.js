@@ -1,4 +1,4 @@
-import { useUpdateApplicantRecruitmentToNextStateMutation } from "../ApplicantFormSlice";
+import { useUpdateApplicantRecruitmentToNextStateMutation } from "@/sections/applicant";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
@@ -33,7 +33,7 @@ export const RejectApplicantModal = ({
 }) => {
   // data
   const recruitmentPipelineStateId = stage?.recruitmentPipelineStates?.filter(
-    (i) => i.pipelineStateType == 3
+    (i) => i.pipelineStateType === 3
   )[0]?.id;
 
   // other
@@ -44,7 +44,7 @@ export const RejectApplicantModal = ({
   const theme = useTheme();
   // form
   const Schema = Yup.object().shape({
-    note: (currentAction == 0 || currentAction == 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
+    note: (currentAction === 0 || currentAction === 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
   });
   const methods = useForm({
     resolver: yupResolver(Schema),
@@ -81,7 +81,7 @@ export const RejectApplicantModal = ({
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       onBackdropClick={() => setShow(false)}
     >
       <FormProvider methods={methods}>
@@ -136,7 +136,7 @@ export const RejectApplicantModal = ({
               borderColor={palette.light.common.neutral200}
             >
               {LIST_ACTION.map((item) => {
-                const isActive = item.id == currentAction;
+                const isActive = item.id === currentAction;
                 return (
                   <View
                     flex1

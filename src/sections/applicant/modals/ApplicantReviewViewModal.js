@@ -1,4 +1,4 @@
-import { useGetReviewEventQuery } from "../ApplicantFormSlice";
+import { useGetReviewEventQuery } from "@/sections/applicant";
 import { ButtonDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -77,7 +77,7 @@ export const ApplicantReviewViewModal = ({
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
       onBackdropClick={pressHide}
     >
       <View

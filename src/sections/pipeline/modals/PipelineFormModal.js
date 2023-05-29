@@ -1,7 +1,7 @@
 import {
   useAddPipelineMutation,
   useUpdatePipelineMutation,
-} from "../PipelineFormSlice";
+} from "@/sections/pipeline";
 import { PipelineDraggableItem } from "../items";
 import { PipelineAddModal } from "./PipelineAddModal";
 import {
@@ -84,7 +84,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
-    if (e.pipelineStates == 0) {
+    if (e.pipelineStates === 0) {
       setErrorStage("Chưa thêm bước tuyển dụng");
     } else {
       setIsDisabled(true);
@@ -154,7 +154,6 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
       setIsDisabled(false);
       setListForm([]);
       setErrorStage("");
-      return;
     }
   }, [show]);
 
@@ -165,12 +164,12 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
     setValue("isActivated", !!data.isActivated);
     setListForm(
       data.organizationPipelineStates
-        ?.filter((p) => p.pipelineStateType == 1 || p.pipelineStateType == 2)
+        ?.filter((p) => p.pipelineStateType === 1 || p.pipelineStateType === 2)
         .map(
           (i) =>
-            i.pipelineStateType != 0 && {
+            i.pipelineStateType !== 0 && {
               stageType: {
-                id: i.pipelineStateType == 1 ? 0 : 1,
+                id: i.pipelineStateType === 1 ? 0 : 1,
                 name: PipelineStateType(i.pipelineStateType),
               },
               des: i.description,
@@ -188,7 +187,7 @@ export const PipelineFormModal = ({ data, show, onClose }) => {
       <Modal
         open={show}
         onClose={onClose}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
+        sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       >
         <ViewModel>
           {/* header */}

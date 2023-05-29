@@ -64,7 +64,6 @@ export const EvaluationAddModal = ({
       setValue("name", "");
       setValue("isRequired", "");
       setValue("des", "");
-      return;
     } else {
       setValue("name", editData.name);
       setValue("isRequired", editData.isRequired);
@@ -74,7 +73,7 @@ export const EvaluationAddModal = ({
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       onBackdropClick={pressHide}
     >
       <>

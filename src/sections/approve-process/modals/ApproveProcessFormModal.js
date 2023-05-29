@@ -56,6 +56,7 @@ const ButtonAddInviteStyle = styled(Button)(({theme}) => ({
   "&.button-add-invite": {
     ...ButtonStyle,
     backgroundColor: theme.palette.common.white,
+    border: '1px solid ' + theme.palette.common.blue700,
     width: '100%',
     color: theme.palette.common.blue700,
     ":hover": {
@@ -201,7 +202,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         <Modal
           open={show}
           onClose={pressHide}
-          sx={{display: "flex", justifyContent: "flex-end"}}
+          sx={{display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
         >
           <ViewModel>
             {/* header */}

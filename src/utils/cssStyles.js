@@ -64,6 +64,7 @@ export default function cssStyles(theme) {
 export const ViewModel = styled("div")(({ theme }) => ({
   width: "42vw",
   marginTop: '64px',
+  height: 'calc(100% - 64px)',
   background: theme.palette.background.paper,
   display: "flex",
   flexDirection: "column",

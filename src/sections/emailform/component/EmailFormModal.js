@@ -136,7 +136,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
         <Modal
           open={isOpen}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
         >
           <ViewModel
             sx={{

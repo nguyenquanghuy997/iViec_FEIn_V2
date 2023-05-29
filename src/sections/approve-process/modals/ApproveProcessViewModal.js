@@ -39,7 +39,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
     <Modal
       open={show}
       onClose={pressHide}
-      sx={{display: "flex", justifyContent: "flex-end"}}
+      sx={{display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
     >
       <ViewModel>
         {/* header */}

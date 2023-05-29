@@ -103,9 +103,9 @@ export const AddQuestionGroupModel = ({
   const changeQuestionType = (index, value) => {
     if (watch(`questionGroup.${index}.questionGroupId`)) {
       const number = ListQuestionGroup.find(
-        (p) => p?.id == watch(`questionGroup.${index}.questionGroupId`)
+        (p) => p?.id === watch(`questionGroup.${index}.questionGroupId`)
       );
-      if (value == 1) {
+      if (value === 1) {
         setValue(
           `questionGroup.${index}.quantityOfQuestion`,
           number?.numOfQuestionMultipleChoice
@@ -122,7 +122,6 @@ export const AddQuestionGroupModel = ({
   useEffect(() => {
     if (!show) {
       reset(defaultValuess);
-      return;
     }
   }, [show]);
   return (
@@ -130,7 +129,7 @@ export const AddQuestionGroupModel = ({
       <Modal
         open={show}
         onClose={pressHide}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
+        sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       >
         <ViewModel>
           {/* header */}

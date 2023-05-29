@@ -26,26 +26,14 @@ import {
 } from "@/sections/recruitment";
 import { setValueFieldScan } from "@/sections/recruitment/helper";
 import { ViewModel } from "@/utils/cssStyles";
-import {
-  LIST_CURRENCY_TYPE,
-  LIST_EXPERIENCE_NUMBER,
-  LIST_GENDER,
-  LIST_MARITAL_STATUSES,
-} from "@/utils/formatString";
+import { LIST_CURRENCY_TYPE, LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, } from "@/utils/formatString";
 import { phoneRegExp } from "@/utils/function";
 import { getFileUrl } from "@/utils/helper";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Avatar,
-  CircularProgress,
-  Divider,
-  Grid,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Avatar, CircularProgress, Divider, Grid, InputAdornment, Modal, Typography, useTheme, } from "@mui/material";
 import moment from "moment/moment";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
@@ -84,7 +72,7 @@ const defaultValues = {
   activitiesAndProjects: undefined,
   careerObjective: undefined,
   achievements: undefined,
-  currencyUnit: undefined,
+  currencyUnit: 0,
   expectedWorkingAddress: {
     address: undefined,
   },
@@ -206,7 +194,7 @@ export const RecruitmentApplicantCreate = ({
     setShow(false);
   };
   const {enqueueSnackbar} = useSnackbar();
-  
+  const theme = useTheme();
   const pressSave = handleSubmit(async (body) => {
     let pathFile = "";
     body.jobCategoryIds = body.jobCategoryIds?.map((item) => item?.value);
@@ -356,12 +344,14 @@ export const RecruitmentApplicantCreate = ({
       <Modal
         open={show}
         onClose={pressHide}
-        sx={{display: "flex", justifyContent: "flex-end"}}
+        sx={{
+          display: "flex", justifyContent: "flex-end",
+          ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+        }}
       >
         <ViewModel
           sx={{
             width: "unset",
-            height: "100%",
             justifyContent: "space-between",
           }}
         >
@@ -629,6 +619,14 @@ export const RecruitmentApplicantCreate = ({
                           name={"expectedSalaryFrom"}
                           type={"number"}
                           placeholder="Nhập số tiền"
+                          InputProps={{
+                            endAdornment:
+                              <InputAdornment position='end'>
+                                <Typography variant={"body2"} color={theme.palette.common.neutral600}>
+                                  {LIST_CURRENCY_TYPE.find(i => i.value === watch('currencyUnit')).name}
+                                </Typography>
+                              </InputAdornment>
+                          }}
                         />
                       </Grid>
                       <Grid item xs={6} pl={"12px"}>
@@ -637,6 +635,14 @@ export const RecruitmentApplicantCreate = ({
                           name={"expectedSalaryTo"}
                           type={"number"}
                           placeholder="Nhập số tiền"
+                          InputProps={{
+                            endAdornment:
+                              <InputAdornment position='end'>
+                                <Typography variant={"body2"} color={theme.palette.common.neutral600}>
+                                  {LIST_CURRENCY_TYPE.find(i => i.value === watch('currencyUnit')).name}
+                                </Typography>
+                              </InputAdornment>
+                          }}
                         />
                       </Grid>
                     </Grid>
@@ -750,7 +756,9 @@ export const RecruitmentApplicantCreate = ({
                     <Divider orientation={"vertical"}/>
                     <Grid
                       sx={{
-                        minWidth: "750px",
+                        minWidth: "600px",
+                        width: "600px",
+                        padding: 2,
                         "& .pg-viewer-wrapper": {
                           overflowY: "auto",
                         },

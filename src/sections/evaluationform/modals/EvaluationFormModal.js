@@ -92,7 +92,7 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
-    if (e.reviewFormCriterias == 0) {
+    if (e.reviewFormCriterias === 0) {
       setError("Chưa thêm tiêu chí đánh giá");
     } else {
       setIsDisabled(true);
@@ -101,12 +101,12 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
         body: {
           name: e.name,
           // description: e.description,
-          isActive: e.isActive ? true : false,
-          isDefault: e.isDefault ? true : false,
+          isActive: !!e.isActive,
+          isDefault: !!e.isDefault,
           reviewFormCriterias: e.reviewFormCriterias.map((i) => ({
             name: i.name,
             description: i.des,
-            isRequired: i.isRequired ? true:false,
+            isRequired: !!i.isRequired,
           })),
         },
       };
@@ -159,7 +159,6 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
       reset(defaultValues);
       setIsDisabled(false);
       setError("");
-      return;
     }
   }, [show]);
   useEffect(() => {
@@ -186,7 +185,7 @@ export const EvaluationFormModal = ({ id, show, onClose }) => {
       <Modal
         open={show}
         onClose={onClose}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
+        sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       >
         <ViewModel>
           {/* header */}

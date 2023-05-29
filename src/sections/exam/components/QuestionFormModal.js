@@ -138,7 +138,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
     answers: Yup.mixed().when(["questionType"], {
       is: (questionType) => {
-        return questionType == 0 || questionType == 1
+        return questionType === 0 || questionType === 1
       },
       then: Yup.mixed()
         .test({
@@ -223,7 +223,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       }
 
     } catch (error) {
-      if (error.status == "QGE_04")
+      if (error.status === "QGE_04")
         setShowDuplicateAlert(true)
       // enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
       //   autoHideDuration: 1000,
@@ -430,7 +430,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         <Modal
           open={show}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
         >
           <ViewModel>
             {/* header */}

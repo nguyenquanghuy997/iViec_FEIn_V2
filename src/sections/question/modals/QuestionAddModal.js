@@ -157,7 +157,7 @@ export const QuestionAddModal = ({ show, setShow }) => {
       <FormProvider methods={methods}>
         <Modal
           open={show}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
           onBackdropClick={pressHide}
         >
           <View flexRow bgColor={"#fff"}>

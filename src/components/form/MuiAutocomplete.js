@@ -11,6 +11,7 @@ import axiosInstance from "@/utils/axios";
 import {containsText} from "@/utils/function";
 import {CustomPaper} from "@/components/hook-form/RHFAutocomplete";
 import {useTheme} from "@mui/material/styles";
+import { RiCloseLine } from "react-icons/ri";
 
 const MuiAutocomplete = forwardRef((
     {
@@ -144,6 +145,7 @@ const MuiAutocomplete = forwardRef((
         return value.map((option, index) => <ChipDS
                 {...getTagProps({index})}
                 key={index}
+                deleteIcon={<RiCloseLine size={12} color={theme.palette.common.neutral500}/>}
                 size="small"
                 label={typeof option === 'string' ? option : option?.label}
                 variant="filled"

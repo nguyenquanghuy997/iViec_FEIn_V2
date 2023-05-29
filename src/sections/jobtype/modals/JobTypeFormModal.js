@@ -111,7 +111,6 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
     if (!show) {
       reset(defaultValues);
       setIsDisabled(false);
-      return;
     }
   }, [show]);
 
@@ -129,7 +128,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
       <Modal
         open={show}
         onClose={onClose}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
+        sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       >
         <ViewModel>
           {/* header */}

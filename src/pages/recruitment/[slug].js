@@ -38,7 +38,7 @@ export default function Recruitment() {
   const theme = useTheme();
   const Schema = Yup.object().shape({
     note:
-      pipelineStateResultType == 0 || pipelineStateResultType == 1
+      pipelineStateResultType === 0 || pipelineStateResultType === 1
         ? Yup.string().nullable()
         : Yup.string().required("Chưa nhập ghi chú"),
   });
@@ -143,11 +143,11 @@ export default function Recruitment() {
       destItems.splice(destination.index, 0, removed);
       let applicantId;
       sourceColumn.items.map((item) => {
-        if (item.id == result.draggableId) applicantId = item.applicantId;
+        if (item.id === result.draggableId) applicantId = item.applicantId;
       });
       // call api
 
-      if (destColumn.pipelineStateType == 3) {
+      if (destColumn.pipelineStateType === 3) {
         setPipelineStateResultType(0);
         setApplicantId(applicantId);
         setRecruitmentId(RecruitmentId);
@@ -155,7 +155,7 @@ export default function Recruitment() {
         showModal();
       } else {
         // disable offer
-        if (destColumn.pipelineStateType == 4) {
+        if (destColumn.pipelineStateType === 4) {
           /* empty */
         } else {
           //
@@ -253,7 +253,7 @@ export default function Recruitment() {
         />
       </RecruitmentPreviewItem>
       {/* ứng viên kanban */}
-      {tab == 1 && viewMode == 1 && (
+      {tab === 1 && viewMode === 1 && (
         <div
           style={{
             width: windowWidth,
@@ -310,6 +310,7 @@ export default function Recruitment() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
                   }}
                   onBackdropClick={() => handleCancel()}
                 >

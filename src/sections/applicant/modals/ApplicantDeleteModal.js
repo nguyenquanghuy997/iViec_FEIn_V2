@@ -14,7 +14,7 @@ export const ApplicantDeleteModal = ({
   return (
     <Modal
       open={showDelete}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       onBackdropClick={() => setShowDelete(false)}
     >
       <View contentCenter p={16} width={416} borderRadius={8} bgColor={theme.palette.background.paper}>

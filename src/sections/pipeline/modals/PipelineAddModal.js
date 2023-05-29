@@ -45,11 +45,11 @@ export const PipelineAddModal = ({
       stageType: selectedStatge,
       des: d.des,
     };
-    if (selectedStatge == "") {
+    if (selectedStatge === "") {
       setError(true);
       return;
     }
-    else if (pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length > 4) {
+    else if (pipeLineSelected?.filter(x => x.stageType.id === selectedStatge.id).length > 4) {
       setError(true);
       return;
     }
@@ -84,7 +84,7 @@ export const PipelineAddModal = ({
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       onBackdropClick={pressHide}
     >
       <>
@@ -119,7 +119,7 @@ export const PipelineAddModal = ({
                   placeholder="Chọn loại bước"
                   name={"stageType"}
                 />
-                {error && selectedStatge == "" && (
+                {error && selectedStatge === "" && (
                   <FormHelperText
                     error
                     sx={{ marginLeft: 0 }}
@@ -128,7 +128,7 @@ export const PipelineAddModal = ({
                   </FormHelperText>
                 )}
                 {
-                  error && pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length >= 5 && (
+                  error && pipeLineSelected?.filter(x => x.stageType.id === selectedStatge.id).length >= 5 && (
                     <FormHelperText
                       error
                       sx={{ marginLeft: 0 }}

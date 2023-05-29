@@ -63,15 +63,14 @@ export const UpdateQuestionGroupModel = ({
       setValue("quantity", editData?.quantity);
       setValue("questionTypeId", Number(editData?.questionTypeId));
       setValue("quantityOfQuestion", editData?.quantityOfQuestion);
-      return;
     }
   }, []);
   const changeQuestionType = (value) => {
     if (watch(`questionGroupId`)) {
       const number = ListQuestionGroup.find(
-        (p) => p?.id == watch(`questionGroupId`)
+        (p) => p?.id === watch(`questionGroupId`)
       );
-      if (value == 1) {
+      if (value === 1) {
         setValue(`quantityOfQuestion`, number?.numOfQuestionMultipleChoice);
       } else {
         setValue(`quantityOfQuestion`, number?.numOfQuestionEssay);
@@ -82,7 +81,7 @@ export const UpdateQuestionGroupModel = ({
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
       onBackdropClick={onClose}
     >
       <>
