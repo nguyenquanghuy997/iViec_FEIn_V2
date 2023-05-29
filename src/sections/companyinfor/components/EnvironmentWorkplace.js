@@ -1,19 +1,19 @@
 import HeaderCard from "../HeaderCard";
 import { useUpdateCompanyEndingMutation } from "../companyInforSlice";
 import LoadingScreen from "@/components/LoadingScreen";
+import { drawerPaperStyle } from "@/components/drawer-edit-form/styles";
 import { DOMAIN_SERVER_API } from "@/config";
 import EmptyValue from "@/sections/companyinfor/components/EmptyValue";
 import EditEnvironmentWorkplace from "@/sections/companyinfor/edit/EditEnvironmentWorkplace";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
-import {Box, Drawer, Typography, useTheme} from "@mui/material";
+import { Box, Drawer, Typography, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import {get} from "lodash";
+import { get } from "lodash";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { RiTreasureMapLine } from "react-icons/ri";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
-import {drawerPaperStyle} from "@/components/drawer-edit-form/styles";
 
 export const SliderStyle = styled("div")(() => ({
   "& .swiper-pagination": {
@@ -50,7 +50,6 @@ const EnvironmentWorkplace = ({ data }) => {
   };
 
   const handleChangeChecked = async () => {
-    setLoading(true);
     try {
       await updateVisibleHuman({
         organizationId: data?.id,
@@ -89,7 +88,7 @@ const EnvironmentWorkplace = ({ data }) => {
           handleChange={handleChangeChecked}
           checked={checked}
         />
-        {get(data, 'organizationWorkingEnvironments')?.length > 0 ? (
+        {get(data, "organizationWorkingEnvironments")?.length > 0 ? (
           <Box
             sx={{
               px: 12,
@@ -106,68 +105,73 @@ const EnvironmentWorkplace = ({ data }) => {
                 spaceBetween={50}
                 pagination
               >
-                {get(data, 'organizationWorkingEnvironments')?.map((item, index) => (
-                  <SwiperSlide
-                    key={`slide-${index}`}
-                    style={{ listStyle: "none" }}
-                  >
-                    <Box
-                      sx={{
-                        minHeight: "465px",
-                        backgroundImage: !get(item, "image") ? `url(/assets/placeholder.png)` :`url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
-                          item,
-                          "image"
-                        )})`,
-                        padding: "36px 40px",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "cover",
-                        position: "relative",
-                      }}
+                {get(data, "organizationWorkingEnvironments")?.map(
+                  (item, index) => (
+                    <SwiperSlide
+                      key={`slide-${index}`}
+                      style={{ listStyle: "none" }}
                     >
                       <Box
                         sx={{
-                          maxWidth: "400px",
-                          width: "100%",
-                          padding: 2,
-                          background: "linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)",
-                          color: style.COLOR_WHITE,
-                          borderRadius: "4px 0px 0px 4px",
-                          position: "absolute",
-                          right: 0,
-                          bottom: 16,
+                          minHeight: "465px",
+                          backgroundImage: !get(item, "image")
+                            ? `url(/assets/placeholder.png)`
+                            : `url(${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${get(
+                                item,
+                                "image"
+                              )})`,
+                          padding: "36px 40px",
+                          backgroundRepeat: "no-repeat",
+                          backgroundSize: "cover",
+                          position: "relative",
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            mb: 1,
+                            maxWidth: "400px",
+                            width: "100%",
+                            padding: 2,
+                            background:
+                              "linear-gradient(90deg, rgba(9, 30, 66, 0.8) 0%, rgba(9, 30, 66, 0.4) 100%)",
+                            color: style.COLOR_WHITE,
+                            borderRadius: "4px 0px 0px 4px",
+                            position: "absolute",
+                            right: 0,
+                            bottom: 16,
                           }}
                         >
-                          <RiTreasureMapLine style={20} />
-                          <Typography
+                          <Box
                             sx={{
-                              ml: "10px",
-                              fontSize: style.FONT_BASE,
-                              fontWeight: style.FONT_SEMI_BOLD,
-                              lineHeight: "24px",
+                              display: "flex",
+                              alignItems: "center",
+                              mb: 1,
                             }}
                           >
-                            {get(item, "name")}
+                            <RiTreasureMapLine style={20} />
+                            <Typography
+                              sx={{
+                                ml: "10px",
+                                fontSize: style.FONT_BASE,
+                                fontWeight: style.FONT_SEMI_BOLD,
+                                lineHeight: "24px",
+                              }}
+                            >
+                              {get(item, "name")}
+                            </Typography>
+                          </Box>
+                          <Typography
+                            sx={{
+                              fontSize: style.FONT_SM,
+                              fontWeight: style.FONT_NORMAL,
+                            }}
+                          >
+                            {get(item, "description")}
                           </Typography>
                         </Box>
-                        <Typography
-                          sx={{
-                            fontSize: style.FONT_SM,
-                            fontWeight: style.FONT_NORMAL,
-                          }}
-                        >
-                          {get(item, "description")}
-                        </Typography>
                       </Box>
-                    </Box>
-                  </SwiperSlide>
-                ))}
+                    </SwiperSlide>
+                  )
+                )}
               </Swiper>
             </SliderStyle>
           </Box>
@@ -181,7 +185,7 @@ const EnvironmentWorkplace = ({ data }) => {
           open={open}
           onClose={handleClose}
           PaperProps={{
-            sx: drawerPaperStyle({...theme, width: 800}),
+            sx: drawerPaperStyle({ ...theme, width: 800 }),
           }}
           componentsProps={{
             backdrop: {
