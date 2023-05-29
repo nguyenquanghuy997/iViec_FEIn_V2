@@ -200,7 +200,7 @@ const palette = {
       border: COMMON.common.strokeDividerLine,
       bgGray: COMMON.common.bgrMaster,
       warning: COMMON.common.red600,
-      disabled: COMMON.common.neutral400,
+      disabled: COMMON.common.black,
     },
     background: {
       active: COMMON.common.orange50,
