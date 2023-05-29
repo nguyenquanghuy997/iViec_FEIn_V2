@@ -106,7 +106,7 @@ const CreateExamContent = () => {
   };
 
   const onOutFocusInput = () => {
-    if (!examData.standardPoint) {
+    if (examData.standardPoint == null || examData.standardPoint == '') {
       setShowInputStandardPoint(false);
     }
   };
@@ -216,7 +216,7 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: examData.standardPoint ?? 0,
+      standardPoint: parseInt(examData.standardPoint ?? 0),
       isQuestionMixing: examData.isQuestionMixing,
       examTime: new Date(examData.examTime * 60 * 1000)
         .toISOString()
@@ -283,7 +283,12 @@ const CreateExamContent = () => {
       });
       return;
     }
-
+    if (!examData.standardPoint) {
+      enqueueSnackbar("Bạn cần nhập điểm sàn", {
+        variant: "error",
+      });
+      return;
+    }
     if (examData.standardPoint < 0) {
       enqueueSnackbar("Điểm sàn phải lớn hơn không", {
         variant: "error",
@@ -312,7 +317,7 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: examData.standardPoint ?? 0,
+      standardPoint: parseInt(examData.standardPoint ?? 0),
       isQuestionMixing: examData.isQuestionMixing,
       examTime: new Date(examData.examTime * 60 * 1000)
         .toISOString()
@@ -470,7 +475,7 @@ const CreateExamContent = () => {
                 }}
               >
                 {
-                  (!showInputStandardPoint && (examData.standardPoint == null || examData.standardPoint == '')) && <ButtonIcon
+                  (!showInputStandardPoint && (examData.standardPoint === null || examData.standardPoint === '')) && <ButtonIcon
                     sx={{
                       backgroundColor: "transparent",
                       "&:hover": {
@@ -489,7 +494,7 @@ const CreateExamContent = () => {
                   />
                 }
                 {
-                  (showInputStandardPoint || (examData.standardPoint != null && examData.standardPoint != '')) && <TextField
+                  (showInputStandardPoint || (examData.standardPoint !== null && examData.standardPoint !== '')) && <TextField
                     value={examData.standardPoint}
                     onChange={handleChangeStandardPoint}
                     onBlur={(e) => onOutFocusInput(e)}

@@ -165,7 +165,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         })
         .test({
           message: 'Đáp án không được trùng nhau',
-          test: (val) => !val.some(i => i.content == val[0].content)
+          test: (val) => !val.some((i, index) => i.content == val[0].content && index > 0)
         })
     }),
     questionFilePaths: Yup.mixed()
