@@ -69,6 +69,7 @@ function ApplicantPreviewItem() {
     const resultType = pipelines?.recruitmentPipelineStates?.find(
       (item) => item.id === pipelines.currentApplicantPipelineState
     ).pipelineStateType;
+
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
         <Grid
@@ -88,23 +89,9 @@ function ApplicantPreviewItem() {
             sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
             name={data?.fullName}
             src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
-          ></AvatarDS>
-          {/* <BoxFlex
-                color={
-                  mediumScore.toFixed(2) < 4.9
-                    ? "#E53935"
-                    : mediumScore.toFixed(2) < 6.9
-                    ? "#F77A0C"
-                    : "#388E3C"
-                }
-              >
-                <span style={{ fontSize: "15px", fontWeight: 600 }}>
-                  Trung bình
-                </span>
-                
-              </BoxFlex> */}
+          />
 
-          <Box pl={1}>
+          <Box ml={"15px"}>
             <Typography
               display="flex"
               fontSize="20px"
@@ -114,9 +101,7 @@ function ApplicantPreviewItem() {
               {data?.fullName}
 
               <ButtonIcon
-                sx={{
-                  marginLeft: 0.5,
-                }}
+                sx={{ marginLeft: "4px" }}
                 onClick={() => handleOpenEditForm()}
                 icon={
                   <Iconify
@@ -128,16 +113,18 @@ function ApplicantPreviewItem() {
                 }
               />
             </Typography>
+
             <Stack
               direction="row"
               divider={<Divider orientation="vertical" flexItem />}
-              spacing={2}
+              spacing={"6px"}
               color="#172B4D"
             >
               <Typography fontSize="14px">{data?.phoneNumber}</Typography>
               <Typography fontSize="14px">{data?.email}</Typography>
             </Stack>
           </Box>
+
           {logApplicant?.averagePointReviewPoint && (
             <Box
               ml={1}
@@ -176,31 +163,8 @@ function ApplicantPreviewItem() {
             </Box>
           )}
         </Grid>
+
         <Grid display="flex">
-          {/* <ButtonDS
-            tittle={"Thêm vào tin khác"}
-            type="submit"
-            sx={{
-              color: "#455570",
-              backgroundColor: "#F3F4F6",
-              boxShadow: "none",
-              ":hover": {
-                backgroundColor: "#E7E9ED",
-              },
-              marginRight: "12px",
-              fontSize: "14px",
-              padding: "6px 12px",
-            }}
-            icon={
-              <Iconify
-                icon={"icon-park-outline:share-three"}
-                width={20}
-                height={20}
-                color="#455570"
-                mr={1}
-              />
-            }
-          /> */}
           <ButtonDS
             tittle={"Đặt lịch phỏng vấn"}
             type="submit"
@@ -208,7 +172,7 @@ function ApplicantPreviewItem() {
               ":hover": {
                 backgroundColor: "#1565C0",
               },
-              marginRight: "12px",
+              marginLeft: "12px",
               fontSize: "14px",
               padding: "6px 12px",
             }}
@@ -217,7 +181,7 @@ function ApplicantPreviewItem() {
                 icon={"mdi:calendar-check"}
                 width={20}
                 height={20}
-                color="#fdfdfd"
+                color={"#fdfdfd"}
                 mr={1}
               />
             }
@@ -227,14 +191,12 @@ function ApplicantPreviewItem() {
           <ButtonDS
             tittle={"Đánh giá"}
             type="submit"
-            onClick={() => setIsOpenReview(true)}
             isDisabled={!isReview}
-            mr={2}
             sx={{
               ":hover": {
                 backgroundColor: "#1565C0",
               },
-              marginRight: "12px",
+              marginLeft: "12px",
               fontSize: "14px",
               padding: "6px 12px",
             }}
@@ -247,12 +209,21 @@ function ApplicantPreviewItem() {
                 mr={1}
               />
             }
+            onClick={() => setIsOpenReview(true)}
           />
+
           {resultType === 3 && pipelines.pipelineStateResultType === 0 && (
             <ButtonDS
               tittle={"Gửi offer"}
               type="button"
-              onClick={() => setIsOpenSendOffer(true)}
+              sx={{
+                ":hover": {
+                  backgroundColor: "#1565C0",
+                },
+                marginLeft: "12px",
+                fontSize: "14px",
+                padding: "6px 12px",
+              }}
               icon={
                 <Iconify
                   icon={"ri:pen-nib-fill"}
@@ -261,6 +232,7 @@ function ApplicantPreviewItem() {
                   mr={1}
                 />
               }
+              onClick={() => setIsOpenSendOffer(true)}
             />
           )}
         </Grid>
