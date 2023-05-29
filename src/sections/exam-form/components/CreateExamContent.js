@@ -64,7 +64,6 @@ const CreateExamContent = () => {
 
   var ListQuestionGroup = Data?.filter((p) => p.numOfQuestion > 0);
 
-
   const { data: data } = useGetExaminationByIdQuery(
     {
       Id: examId,
@@ -133,9 +132,22 @@ const CreateExamContent = () => {
     );
   };
 
+  const timeFromMinutes = (mins_num) => {
+    var days = Math.floor(mins_num / (24 * 60))
+    var hours = Math.floor((mins_num - days * 24 * 60) / 60);
+    var minutes = mins_num - hours * 60 - days * 24 * 60;
+
+    if (days < 10) { days = "0" + days; }
+    if (hours < 10) { hours = "0" + hours; }
+    if (minutes < 10) { minutes = "0" + minutes; }
+    return days + "." + hours + ':' + minutes + ':00';
+  }
+
   const minutesFromTime = (times) => {
-    const a = times.split(":");
-    return +a[0] * 60 + +a[1];
+    const a = times.split(/[.:]+/);
+    var storageFuncs = [s => parseInt(s) * 0, m => parseInt(m), h => parseInt(h) * 60, d => parseInt(d) * 60 * 24];
+    var res = a.reverse().reduce((acc, next, index) => acc + storageFuncs[index](next), 0);
+    return res;
   };
 
   const handlePreview = async () => {
@@ -162,6 +174,7 @@ const CreateExamContent = () => {
       setShowPreview(true)
     }
   };
+
   const handleUpdateListQuestion = (datas) => {
     if (examData.type == 0) {
       setExamQuestions([...datas]);
@@ -188,6 +201,12 @@ const CreateExamContent = () => {
   };
 
   const handleSaveDraft = async () => {
+    if (examData.standardPoint === null || examData.standardPoint === '') {
+      enqueueSnackbar("Bạn cần nhập điểm sàn", {
+        variant: "error",
+      });
+      return;
+    }
     if (examData.standardPoint < 0) {
       enqueueSnackbar("Điểm sàn phải lớn hơn không", {
         variant: "error",
@@ -218,9 +237,7 @@ const CreateExamContent = () => {
       totalQuestion: examQuestions.length,
       standardPoint: parseInt(examData.standardPoint ?? 0),
       isQuestionMixing: examData.isQuestionMixing,
-      examTime: new Date(examData.examTime * 60 * 1000)
-        .toISOString()
-        .substr(11, 8),
+      examTime: timeFromMinutes(examData.examTime),
       maximumPoint: examData.maximumPoint,
       examinationQuestions:
         (examData.type == 0 &&
@@ -283,7 +300,7 @@ const CreateExamContent = () => {
       });
       return;
     }
-    if (!examData.standardPoint) {
+    if (examData.standardPoint === null || examData.standardPoint === '') {
       enqueueSnackbar("Bạn cần nhập điểm sàn", {
         variant: "error",
       });
@@ -319,9 +336,7 @@ const CreateExamContent = () => {
       totalQuestion: examQuestions.length,
       standardPoint: parseInt(examData.standardPoint ?? 0),
       isQuestionMixing: examData.isQuestionMixing,
-      examTime: new Date(examData.examTime * 60 * 1000)
-        .toISOString()
-        .substr(11, 8),
+      examTime: timeFromMinutes(examData.examTime),
       maximumPoint: examData.maximumPoint,
       examinationQuestions:
         (examData.type == 0 &&
