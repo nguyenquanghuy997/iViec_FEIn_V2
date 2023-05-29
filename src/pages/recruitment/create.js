@@ -200,8 +200,8 @@ export default function CreateRecruitment() {
 
     const body = {
       ...data,
-      startDate: moment(data?.startDate).toISOString(),
-      endDate: moment(data?.endDate).toISOString(),
+      startDate: moment(data?.startDate).startOf("date").toISOString(),
+      endDate: moment(data?.endDate).endOf("date").toISOString(),
       recruitmentWorkingForms: data?.recruitmentWorkingForms.map((item) =>
         Number(item)
       ),
