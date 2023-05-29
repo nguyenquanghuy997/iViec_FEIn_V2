@@ -2,15 +2,13 @@ import {
   useLazyGetAllFilterApplicantQuery,
   useLazyGetApplicantCurrentStateWithRecruitmentStatesQuery,
 } from "../applicant";
-import { RejectApplicantModal } from "../applicant/modals/RejectApplicantModal";
-import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
-// import { useGetExamApplicantWithResultQuery } from "../exam/ExamSlice";
-import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
-import { FormCalendar } from "../interview/components/FormCalendar";
-import ExaminerModal from "../recruitment/modals/ExaminerModal";
-import { CircleLineIcon, EditIcon, LogoIcon } from "@/assets/ActionIcon";
-import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
+import {RejectApplicantModal} from "../applicant/modals/RejectApplicantModal";
+import {useLazyGetCompanyInfoQuery} from "../companyinfor/companyInforSlice";
+import {useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery} from "../interview";
+import {FormCalendar} from "../interview/components/FormCalendar";
+import {CircleLineIcon, EditIcon, LogoIcon} from "@/assets/ActionIcon";
+import {AvatarDS, ButtonDS} from "@/components/DesignSystem";
+import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import {ApplicantInterviewState} from "@/config";
 import {PATH_DASHBOARD} from "@/routes/paths";
@@ -35,8 +33,9 @@ import moment from "moment";
 import {useRouter} from "next/router";
 import {useSnackbar} from "notistack";
 import PropTypes from "prop-types";
-import { memo, useEffect, useState } from "react";
-import { Draggable } from "react-beautiful-dnd";
+import {memo, useEffect, useState} from "react";
+import {Draggable} from "react-beautiful-dnd";
+import SvgIcon from "@/components/SvgIcon";
 
 function Item(props) {
   const {sx, ...other} = props;
@@ -767,8 +766,23 @@ function TaskCard({item, index, pipelineStateType}) {
                     alignItems: "center",
                   }}
                 >
-                  <Typography fontSize="12px">
-                    {fDate(item.createdTime)}
+                  <Typography
+                    fontSize="12px"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}>
+                    <SvgIcon>
+                      {
+                        `<svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="3" cy="3" r="3" fill="#4CAF50"/>
+                          </svg>
+                          `}
+                    </SvgIcon>
+                    <span style={{marginLeft: '8px'}}>
+                      {fDate(item.createdTime)}
+                    </span>
                   </Typography>
                 </Box>
                 <LightTooltip
@@ -789,12 +803,12 @@ function TaskCard({item, index, pipelineStateType}) {
                         {false && (
                           <>
                             <MenuItem onClick={pressGetFromIVIEC}>
-                              <LogoIcon />
+                              <LogoIcon/>
                               <Typography ml={"12px"} variant={"textSize13600"}>
                                 Lấy từ kho iVIEC
                               </Typography>
                             </MenuItem>
-                            <Divider />
+                            <Divider/>
                           </>
                         )}
                         <MenuItem onClick={pressEdit}>

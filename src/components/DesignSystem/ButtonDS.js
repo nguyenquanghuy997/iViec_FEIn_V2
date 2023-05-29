@@ -29,7 +29,7 @@ function ButtonDS(props) {
         },
       }}
     >
-      <Tooltip title={tooltip}>
+      <Tooltip title={tooltip} arrow={true}>
         <LoadingButton
           {...other}
           variant="contained"

@@ -42,6 +42,8 @@ import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
+import MenuIcon from "@/assets/interview/MenuIcon";
 
 const defaultStyleRecruitmentStatus = {
   borderRadius: "100px",
@@ -686,7 +688,7 @@ function RecruitmentPreviewItem({
           ) : (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
-                {/* <Box>
+                 <Box>
                   <ButtonGroup
                     disableElevation
                     variant="contained"
@@ -763,7 +765,7 @@ function RecruitmentPreviewItem({
                   }
                 >
                   Bộ lọc
-                </ButtonFilterStyle> */}
+                </ButtonFilterStyle>
               </Stack>
               <Stack flexDirection={"row"}>
                 <ButtonGroup
