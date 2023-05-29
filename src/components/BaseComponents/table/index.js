@@ -174,7 +174,7 @@ const DynamicColumnsTable = (props) => {
     setTimeout(() => {
       router.push(
         {
-          query: reset ? {} : { ...router.query, ...values },
+          query: reset ? { ...getQueryDefault() } : { ...router.query, ...values },
         },
         undefined,
         { shallow: false }
@@ -188,6 +188,10 @@ const DynamicColumnsTable = (props) => {
       PageSize: pageSize,
     });
   };
+
+  const getQueryDefault = () => {
+    return Object.fromEntries(Object.entries(router.query).filter(([key]) => !columns.some(col => key == col.dataIndex)));
+  }
 
   return (
     <View>

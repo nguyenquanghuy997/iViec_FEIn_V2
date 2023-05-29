@@ -37,11 +37,12 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import {useTheme} from "@mui/material/styles";
+import MenuIcon from "@/assets/interview/MenuIcon";
 
 const defaultStyleRecruitmentStatus = {
   borderRadius: "100px",
@@ -363,7 +364,7 @@ function RecruitmentPreviewItem({
                         sx={{
                           marginTop: 0,
                           padding: 0,
-                          color:theme.palette.common.neutral800,
+                          color: theme.palette.common.neutral800,
                           fontWeight: 700,
                         }}
                         link={PATH_DASHBOARD.recruitment.root}
@@ -440,7 +441,7 @@ function RecruitmentPreviewItem({
                     aria-label="lab API tabs example"
                     sx={{
                       "& .MuiTab-root": {
-                        color: theme.palette.common.neutral500    ,
+                        color: theme.palette.common.neutral500,
                         // minHeight: "36px",
                         // textTransform: "unset",
                         // padding: "8px 12px",
@@ -495,10 +496,15 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 1 ? theme.palette.common.blue700 : "#fdfdfd",
-                        color: viewModeDefault == 1 ? "#fdfdfd" : theme.palette.common.neutral700,
+                          viewModeDefault === 1
+                            ? theme.palette.common.blue700
+                            : "#fdfdfd",
+                        color:
+                          viewModeDefault === 1
+                            ? "#fdfdfd"
+                            : theme.palette.common.neutral700,
                         borderColor:
-                          viewModeDefault == 1 ? "none" : "#D0D4DB !important",
+                          viewModeDefault === 1 ? "none" : "#D0D4DB !important",
                         borderRadius: "6px 0px 0px 6px",
                         height: "44px",
                         width: "52px",
@@ -519,10 +525,15 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 2 ? theme.palette.common.blue700 : "#fdfdfd",
-                        color: viewModeDefault == 2 ? "#fdfdfd" : theme.palette.common.neutral700,
+                          viewModeDefault === 2
+                            ? theme.palette.common.blue700
+                            : "#fdfdfd",
+                        color:
+                          viewModeDefault === 2
+                            ? "#fdfdfd"
+                            : theme.palette.common.neutral700,
                         borderColor:
-                          viewModeDefault == 2 ? "none" : "#D0D4DB !important",
+                          viewModeDefault === 2 ? "none" : "#D0D4DB !important",
                         borderRadius: "0 6px 6px 0",
                         height: "44px",
                         width: "52px",
@@ -676,7 +687,7 @@ function RecruitmentPreviewItem({
           ) : (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
-                {/* <Box>
+                 <Box>
                   <ButtonGroup
                     disableElevation
                     variant="contained"
@@ -753,7 +764,7 @@ function RecruitmentPreviewItem({
                   }
                 >
                   Bộ lọc
-                </ButtonFilterStyle> */}
+                </ButtonFilterStyle>
               </Stack>
               <Stack flexDirection={"row"}>
                 <ButtonGroup
@@ -894,13 +905,11 @@ function RecruitmentPreviewItem({
         setData={setModelApplication}
       />
 
-      {openPreview && (
-        <RecruitmentPreview
-          data={RecruitmentData}
-          open={openPreview}
-          onClose={() => setOpenPreview(false)}
-        />
-      )}
+      <RecruitmentPreview
+        data={RecruitmentData}
+        open={openPreview}
+        onClose={() => setOpenPreview(false)}
+      />
       {open && (
         <FormCalendar
           open={open}

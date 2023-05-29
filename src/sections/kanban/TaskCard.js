@@ -2,15 +2,13 @@ import {
   useLazyGetAllFilterApplicantQuery,
   useLazyGetApplicantCurrentStateWithRecruitmentStatesQuery,
 } from "../applicant";
-import { RejectApplicantModal } from "../applicant/modals/RejectApplicantModal";
-import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
-// import { useGetExamApplicantWithResultQuery } from "../exam/ExamSlice";
-import { useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
-import { FormCalendar } from "../interview/components/FormCalendar";
-import ExaminerModal from "../recruitment/modals/ExaminerModal";
-import { CircleLineIcon, EditIcon, LogoIcon } from "@/assets/ActionIcon";
-import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
+import {RejectApplicantModal} from "../applicant/modals/RejectApplicantModal";
+import {useLazyGetCompanyInfoQuery} from "../companyinfor/companyInforSlice";
+import {useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery} from "../interview";
+import {FormCalendar} from "../interview/components/FormCalendar";
+import {CircleLineIcon, EditIcon, LogoIcon} from "@/assets/ActionIcon";
+import {AvatarDS, ButtonDS} from "@/components/DesignSystem";
+import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import {ApplicantInterviewState} from "@/config";
 import {PATH_DASHBOARD} from "@/routes/paths";
@@ -35,8 +33,10 @@ import moment from "moment";
 import {useRouter} from "next/router";
 import {useSnackbar} from "notistack";
 import PropTypes from "prop-types";
-import { memo, useEffect, useState } from "react";
-import { Draggable } from "react-beautiful-dnd";
+import {memo, useEffect, useState} from "react";
+import {Draggable} from "react-beautiful-dnd";
+import SvgIcon from "@/components/SvgIcon";
+import ExaminerModal from "@/sections/recruitment/modals/ExaminerModal";
 
 function Item(props) {
   const {sx, ...other} = props;
@@ -174,7 +174,7 @@ function ExaminationItem(props) {
             {"Kết quả :"}
           </Typography>
           <Typography fontSize="14px" fontWeight="600">
-            {item?.processStatus == 4 ? "Đạt" : "Không Đạt"}
+            {item?.processStatus === 4 ? "Đạt" : "Không Đạt"}
           </Typography>
         </Stack>
       </Box>
@@ -272,11 +272,11 @@ function InterviewItem(props) {
             }
           })}
         <Box>
-          {lastInterview?.applicantInterviewState ==
+          {lastInterview?.applicantInterviewState ===
           ApplicantInterviewState.PENDING ||
-          lastInterview?.applicantInterviewState ==
+          lastInterview?.applicantInterviewState ===
           ApplicantInterviewState.CONFIRMED ||
-          lastInterview?.applicantInterviewState ==
+          lastInterview?.applicantInterviewState ===
           ApplicantInterviewState.INTERVIEWING ? (
             <Box
               sx={{
@@ -430,9 +430,9 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType == 0 ? "#FDFDFD" : "#455570",
+                      item.pipelineStateResultType === 0 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 0 ? "#4CAF50" : "#FDFDFD",
+                      item.pipelineStateResultType === 0 ? "#4CAF50" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#4CAF50",
@@ -450,9 +450,9 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType == 1 ? "#FDFDFD" : "#455570",
+                      item.pipelineStateResultType === 1 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 1 ? "#FF9800" : "#FDFDFD",
+                      item.pipelineStateResultType === 1 ? "#FF9800" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#FF9800",
@@ -471,9 +471,9 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType == 2 ? "#FDFDFD" : "#455570",
+                      item.pipelineStateResultType === 2 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 2 ? "#F44336" : "#FDFDFD",
+                      item.pipelineStateResultType === 2 ? "#F44336" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#F44336",
@@ -491,7 +491,7 @@ function ResultItem(props) {
               </ButtonGroup>
             </Box>
 
-            {item.pipelineStateResultType == 2 && (
+            {item.pipelineStateResultType === 2 && (
               <ButtonDS
                 tittle={"Tái Khai Thác"}
                 type="submit"
@@ -554,7 +554,7 @@ function OfferItem(props) {
   return (
     <div>
       <Baseitem item={item}/>
-      {item.offerStateResultType == 0 && (
+      {item.offerStateResultType === 0 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -577,7 +577,7 @@ function OfferItem(props) {
           </Item>
         </Box>
       )}
-      {item.offerStateResultType == 1 && (
+      {item.offerStateResultType === 1 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -600,7 +600,7 @@ function OfferItem(props) {
           </Item>
         </Box>
       )}
-      {item.offerStateResultType == 2 && (
+      {item.offerStateResultType === 2 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -621,7 +621,7 @@ function OfferItem(props) {
           </Item>
         </Box>
       )}
-      {item.offerStateResultType == 3 && (
+      {item.offerStateResultType === 3 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -767,8 +767,23 @@ function TaskCard({item, index, pipelineStateType}) {
                     alignItems: "center",
                   }}
                 >
-                  <Typography fontSize="12px">
-                    {fDate(item.createdTime)}
+                  <Typography
+                    fontSize="12px"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}>
+                    <SvgIcon>
+                      {
+                        `<svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="3" cy="3" r="3" fill="#4CAF50"/>
+                          </svg>
+                          `}
+                    </SvgIcon>
+                    <span style={{marginLeft: '8px'}}>
+                      {fDate(item.createdTime)}
+                    </span>
                   </Typography>
                 </Box>
                 <LightTooltip
@@ -789,12 +804,12 @@ function TaskCard({item, index, pipelineStateType}) {
                         {false && (
                           <>
                             <MenuItem onClick={pressGetFromIVIEC}>
-                              <LogoIcon />
+                              <LogoIcon/>
                               <Typography ml={"12px"} variant={"textSize13600"}>
                                 Lấy từ kho iVIEC
                               </Typography>
                             </MenuItem>
-                            <Divider />
+                            <Divider/>
                           </>
                         )}
                         <MenuItem onClick={pressEdit}>
@@ -836,11 +851,11 @@ function TaskCard({item, index, pipelineStateType}) {
 
               <Box sx={{cursor: "pointer"}}>
                 <Stack sx={{borderRadius: "8px", background: "#FDFDFD"}}>
-                  {pipelineStateType == 0 && <Baseitem item={item}/>}
-                  {pipelineStateType == 1 && <ExaminationItem item={item}/>}
-                  {pipelineStateType == 2 && <InterviewItem item={item}/>}
-                  {pipelineStateType == 3 && <ResultItem item={item}/>}
-                  {pipelineStateType == 4 && <OfferItem item={item}/>}
+                  {pipelineStateType === 0 && <Baseitem item={item}/>}
+                  {pipelineStateType === 1 && <ExaminationItem item={item}/>}
+                  {pipelineStateType === 2 && <InterviewItem item={item}/>}
+                  {pipelineStateType === 3 && <ResultItem item={item}/>}
+                  {pipelineStateType === 4 && <OfferItem item={item}/>}
 
                   <Box
                     display="Grid"

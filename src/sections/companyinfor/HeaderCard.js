@@ -1,10 +1,9 @@
-import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
 import MuiButton from "@/components/BaseComponents/MuiButton";
-import React from "react";
-import useRole from "@/hooks/useRole";
-import { useMemo } from "react";
 import { PERMISSIONS } from "@/config";
-import {useTheme} from "@mui/material/styles";
+import useRole from "@/hooks/useRole";
+import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useMemo } from "react";
 
 const HeaderCard = ({ text, onOpen, checked, handleChange }) => {
   const theme = useTheme();
@@ -25,22 +24,30 @@ const HeaderCard = ({ text, onOpen, checked, handleChange }) => {
       <Typography sx={{ m: "auto 0", fontSize: 16, fontWeight: 600 }}>
         {text}
       </Typography>
-      {
-        canEdit && <Box sx={{ display: 'flex' }}>
+      {canEdit && (
+        <Box sx={{ display: "flex" }}>
           <FormControlLabel
-            control={<Switch
-              color={"success"}
-              checked={checked}
-              onChange={handleChange}
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#388E3C',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#A5D6A7',
-                },
-              }}
-            />}
+            control={
+              <Switch
+                color={"success"}
+                checked={checked}
+                onChange={handleChange}
+                sx={{
+                  "& .MuiSwitch-switchBase": {
+                    color: theme.palette.common.white,
+                  },
+                  "& .MuiSwitch-switchBase.Mui-checked": {
+                    color: "#388E3C",
+                  },
+                  "& .MuiSwitch-switchBase + .MuiSwitch-track": {
+                    backgroundColor: theme.palette.common.neutral200,
+                  },
+                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                    backgroundColor: "#A5D6A7",
+                  },
+                }}
+              />
+            }
             label={checked ? "Hiển thị" : "Không hiển thị"}
           />
           <Box>
@@ -48,11 +55,15 @@ const HeaderCard = ({ text, onOpen, checked, handleChange }) => {
               color={"default"}
               title={"Chỉnh sửa"}
               onClick={onOpen}
-              sx={{ fontWeight: 500, height: '36px' }}
+              sx={{
+                fontWeight: 500,
+                height: "36px",
+                backgroundColor: theme.palette.common.neutral50,
+              }}
             />
           </Box>
         </Box>
-      }
+      )}
     </Box>
   );
 };

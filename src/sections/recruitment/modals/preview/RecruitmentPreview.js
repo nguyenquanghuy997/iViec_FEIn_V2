@@ -10,14 +10,8 @@ import PreviewJobFunction from "@/sections/recruitment/modals/preview/PreviewJob
 import PreviewJobHeader from "@/sections/recruitment/modals/preview/PreviewJobHeader";
 import { JobDescriptionBox } from "@/sections/recruitment/style";
 import { ButtonIcon } from "@/utils/cssStyles";
-import {
-  Box,
-  Drawer,
-  Grid,
-  Typography,
-  styled,
-} from "@mui/material";
-import {useTheme} from "@mui/material/styles";
+import { Box, Drawer, Grid, Typography, styled } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 const links = [
   {
@@ -31,18 +25,19 @@ const links = [
 ];
 
 const Keyframes = styled(Drawer)({
-  "@keyframes pulsate": {
-    from: {
-      top: "100%",
-      opacity: 1,
-      transform: "scale(1)",
-      animationTimingFunction: "ease-out",
-    },
-    to: {
-      top: 0,
-    },
-  },
-  animation: "pulsate 0.5s ease",
+  // "@keyframes pulsate": {
+  //   from: {
+  //     top: "100%",
+  //     left: 0,
+  //     opacity: 1,
+  //     transform: "scale(1)",
+  //     animationTimingFunction: "ease-out",
+  //   },
+  //   to: {
+  //     top: 0,
+  //   },
+  // },
+  // animation: "pulsate 0.5s ease",
 });
 
 const RecruitmentPreview = ({ data, open, onClose }) => {
@@ -62,7 +57,7 @@ const RecruitmentPreview = ({ data, open, onClose }) => {
     <Keyframes
       open={open}
       onClose={onClose}
-      anchor="right"
+      anchor="bottom"
       PaperProps={{
         sx: {
           width: { lg: "100%" },
@@ -85,15 +80,23 @@ const RecruitmentPreview = ({ data, open, onClose }) => {
       {/*   Header   */}
       <Box
         sx={{
+          zIndex: 9999,
+          width: "100%",
+          position: "fixed",
           boxShadow:
             "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+          background: theme.palette.common.white,
         }}
       >
         <Content style={{ paddingTop: "20px", paddingBottom: "20px" }}>
           <BoxFlex>
             <Typography
               variant="body1"
-              sx={{ color: theme.palette.common.neutral800, fontSize: 16, fontWeight: 600 }}
+              sx={{
+                color: theme.palette.common.neutral800,
+                fontSize: 16,
+                fontWeight: 600,
+              }}
             >
               Xem trước tin tuyển dụng
             </Typography>
@@ -118,7 +121,11 @@ const RecruitmentPreview = ({ data, open, onClose }) => {
           </BoxFlex>
         </Content>
       </Box>
-      <img alt="Header" src={"/assets/header_preview.png"} />
+      <img
+        alt="Header"
+        src={"/assets/header_preview.png"}
+        style={{ marginTop: 76 }}
+      />
       {/*  content  */}
       <Grid container sx={{ background: "#EDEDED" }}>
         <Content>

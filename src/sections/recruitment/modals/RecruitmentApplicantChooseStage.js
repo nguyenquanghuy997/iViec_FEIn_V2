@@ -44,6 +44,17 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
       aria-describedby="alert-dialog-description"
       maxWidth={"xs"}
       fullWidth={true}
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            padding: 0,
+            borderRadius: "6px",
+            height: '500px',
+            width: '600px',
+            size: "large"
+          },
+        }
+      }}
     >
       <Grid px={"24px"} py={"12px"} container alignItems={"center"} direction={"row"} justifyContent={"space-between"}>
         <Grid item>

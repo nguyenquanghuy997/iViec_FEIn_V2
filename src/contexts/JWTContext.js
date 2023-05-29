@@ -1,48 +1,45 @@
 import { DOMAIN_SERVER_API, PERMISSIONS } from "@/config";
-import { API_LOGIN, API_USER_INFO } from "@/routes/api";
+import { API_GET_COMPANY_INFOR, API_LOGIN, API_USER_INFO } from "@/routes/api";
 // utils
 import { _postApi } from "@/utils/axios";
 import { setRefreshToken, setRememberMe, setSession } from "@/utils/jwt";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
+import { decodeToken } from "jwt-js";
 import PropTypes from "prop-types";
 import { createContext, useEffect, useReducer } from "react";
-import jwtDecode from 'jwt-decode';
-import { decodeToken } from "jwt-js";
 
 const initialState = {
-  // Open authen gurad
-  isAuthenticated: false,
-  isInitialized: false,
   user: null,
+  company: null,
   permissions: [],
+  isInitialized: false,
+  isAuthenticated: false,
 };
 
 const handlers = {
   INITIALIZE: (state, action) => {
-    const { isAuthenticated, user, permissions } = action.payload;
+    const { ...rest } = action.payload;
     return {
       ...state,
-      isAuthenticated,
+      ...rest,
       isInitialized: true,
-      user,
-      permissions,
     };
   },
   LOGIN: (state, action) => {
-    const { user, permissions } = action.payload;
-
+    const { ...rest } = action.payload;
     return {
       ...state,
+      ...rest,
       isAuthenticated: true,
-      user,
-      permissions,
     };
   },
   LOGOUT: (state) => ({
     ...state,
-    isAuthenticated: false,
     user: null,
+    company: null,
     permissions: [],
+    isAuthenticated: false,
   }),
 };
 
@@ -63,13 +60,18 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  
+
   useEffect(() => {
     const initialize = async () => {
       try {
-        const accessToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : "";
+        const accessToken =
+          typeof window !== "undefined"
+            ? localStorage.getItem("accessToken")
+            : "";
         if (accessToken) {
           const user = await getUserInfoByToken(accessToken);
+          const company = await getCompanyInfoByToken(accessToken);
+
           setSession(accessToken);
 
           let tokenDecode = jwtDecode(accessToken) || {};
@@ -78,7 +80,7 @@ function AuthProvider({ children }) {
             permissions = [permissions];
           }
           // Is admin iviec
-          if (tokenDecode['internal.perform']) {
+          if (tokenDecode["internal.perform"]) {
             permissions.push(PERMISSIONS.IVIEC_ADMIN);
           }
           dispatch({
@@ -86,10 +88,10 @@ function AuthProvider({ children }) {
             payload: {
               isAuthenticated: true,
               user,
+              company,
               permissions,
             },
           });
-
         } else {
           dispatch({
             type: "INITIALIZE",
@@ -123,43 +125,67 @@ function AuthProvider({ children }) {
         Authorization: "Bearer " + token,
       },
     };
-    
+
     try {
       const user = await axios(config);
-      let userResult = {...user.data, organizationId: decodeToken(token).payload.ownerId}
+      let userResult = {
+        ...user.data,
+        organizationId: decodeToken(token).payload.ownerId,
+      };
       return userResult;
     } catch (err) {
       throw err;
     }
-  }
+  };
+
+  const getCompanyInfoByToken = async (token) => {
+    const config = {
+      method: "get",
+      url: DOMAIN_SERVER_API + "/" + API_GET_COMPANY_INFOR,
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+
+    try {
+      const user = await axios(config);
+      let userResult = {
+        ...user.data,
+      };
+      return userResult;
+    } catch (err) {
+      throw err;
+    }
+  };
 
   const login = async (email, password, remember) => {
-
     var data = JSON.stringify({
-      "userName": email,
-      "password": password,
-      "userLoginType":1
+      userName: email,
+      password: password,
+      userLoginType: 1,
     });
-    const response = await _postApi(API_LOGIN, data);
-    const userData = await getUserInfoByToken(response.token);
-    let tokenDecode = jwtDecode(response.token) || {};
+    const { token, refreshToken } = await _postApi(API_LOGIN, data);
+    const user = await getUserInfoByToken(token);
+    const company = await getCompanyInfoByToken(token);
+    let tokenDecode = jwtDecode(token) || {};
     let { role: permissions = [] } = tokenDecode;
     if (!Array.isArray(permissions)) {
       permissions = [permissions];
     }
     // Is admin iviec
-    if (tokenDecode['internal.perform']) {
+    if (tokenDecode["internal.perform"]) {
       permissions.push(PERMISSIONS.IVIEC_ADMIN);
     }
 
     setRememberMe(remember);
-    setSession(response.token);
-    setRefreshToken(response.refreshToken);
+    setSession(token);
+    setRefreshToken(refreshToken);
 
     dispatch({
       type: "LOGIN",
       payload: {
-        user: userData,
+        user,
+        company,
         permissions,
       },
     });

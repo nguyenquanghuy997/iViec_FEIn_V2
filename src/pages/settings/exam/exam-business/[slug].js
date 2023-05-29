@@ -19,7 +19,6 @@ import QuestionTransferModal from "@/sections/exam/components/QuestionTransferMo
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { LIST_OPTIONS_QUESTION_TYPE, LIST_STATUS } from "@/utils/formatString";
 import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 
 
@@ -56,6 +55,12 @@ function Question() {
   const [updateActiveQuestion] = useUpdateActiveQuestionMutation();
   const [removeQuestion] = useRemoveQuestionMutation();
 
+  const LIST_OPTIONS_QUESTION_TYPE = [
+    { id: null, value: null, name: "Tất cả" },
+    { id: 2, value: 2, name: "Tự luận" },
+    { id: 0, value: 0, name: "Trắc nghiệm - một đáp án đúng" },
+    { id: 1, value: 1, name: "Trắc nghiệm - nhiều đáp án đúng" },
+  ]
   // table
   const columns = useMemo(() => {
     return [
@@ -206,7 +211,21 @@ function Question() {
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           placeholder: 'Tất cả',
-          options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+          // options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+          options: [
+            {
+              value: null,
+              label: 'Tất cả'
+            },
+            {
+              value: true,
+              label: 'Đang hoạt động'
+            },
+            {
+              value: false,
+              label: 'Không hoạt động'
+            }
+          ]
         }
       },
     ];
