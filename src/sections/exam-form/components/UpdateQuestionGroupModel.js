@@ -119,7 +119,7 @@ export const UpdateQuestionGroupModel = ({
                   fullWidth
                 />
               </View>
-              <Label required={true}>{"Số câu hỏi đưa vào đề thi"}</Label>
+              <Label required={true}>{"Câu hỏi đưa vào đề thi"}</Label>
               <Grid container mb={3} flexDirection={"row"}>
                 <Grid item xs={6} pr={"12px"}>
                   <RHFSelect
