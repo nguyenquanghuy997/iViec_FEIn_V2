@@ -17,7 +17,7 @@ const InputTextArea = styled(TextArea)`
     border-color: #a2aab7;
     border-inline-end-width: 1.5px;
   }
-  .ant-input:placeholder {
+  .ant-input::placeholder {
     color: #8a94a5;
   }
   .ant-input:focus {
@@ -35,7 +35,7 @@ const InputTextArea = styled(TextArea)`
 `;
 
 export default function TextAreaDS(props) {
-  const { name, placeholder, maxLength, ...other } = props;
+  const { name, placeholder, maxLength, height = 120, ...other } = props;
   const { control } = useFormContext();
   return (
     <Controller
@@ -48,7 +48,7 @@ export default function TextAreaDS(props) {
               showCount
               maxLength={maxLength}
               style={{
-                height: 120,
+                height: height,
                 resize: "none",
               }}
               value={field.value}
@@ -69,4 +69,5 @@ TextAreaDS.prototype = {
   name: PropTypes.string,
   placeholder: PropTypes.any,
   maxLength: PropTypes.any,
+  height: PropTypes.number,
 };
