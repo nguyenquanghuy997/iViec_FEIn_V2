@@ -539,7 +539,11 @@ function ApplicantPreviewItem() {
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV data={data} dataLog={logApplicant} />
+                    <ApplicantPreviewCV
+                      data={data}
+                      dataLog={logApplicant}
+                      pressUpload={handleOpenEditForm}
+                    />
                   </Grid>
                   <Grid item xs={5} md={5}>
                     <ApplicantPreviewLog
