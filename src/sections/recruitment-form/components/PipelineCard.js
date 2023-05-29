@@ -82,7 +82,6 @@ const PipelineCard = ({index, item, isDefault, onOpenFormExamination, examinatio
                             fontWeight: style.FONT_NORMAL,
                             textAlign: 'justify',
                         }}>
-                            {console.log('item', item)}
                         {PipelineStateType(item?.pipelineStateType, item.description, isDefault).subtitle}
                     </Typography>
                 </Stack>
