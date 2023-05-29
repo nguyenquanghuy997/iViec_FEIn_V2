@@ -40,7 +40,7 @@ export default function TableHeader({
   const onSubmit = (value, timeout = 0) => {
     clearTimeout(_timeoutSearch.current);
     _timeoutSearch.current = setTimeout(() => {
-      onSubmitFilter({ SearchKey: value, PageIndex: 1, PageSize: 10 });
+      onSubmitFilter({ SearchKey: value, PageIndex: 1 });
     }, timeout);
   };
 
