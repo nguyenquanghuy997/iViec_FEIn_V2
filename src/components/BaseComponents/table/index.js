@@ -174,7 +174,7 @@ const DynamicColumnsTable = (props) => {
     setTimeout(() => {
       router.push(
         {
-          query: reset ? {} : { ...router.query, ...values },
+          query: reset ? { ...getQueryDefault() } : { ...router.query, ...values },
         },
         undefined,
         { shallow: false }
@@ -188,6 +188,10 @@ const DynamicColumnsTable = (props) => {
       PageSize: pageSize,
     });
   };
+
+  const getQueryDefault = () => {
+    return Object.fromEntries(Object.entries(router.query).filter(([key]) => !columns.some(col => key == col.dataIndex)));
+  }
 
   return (
     <View>
@@ -216,7 +220,7 @@ const DynamicColumnsTable = (props) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <ButtonIcon
                 onClick={showSetting}
-                sx={{ backgroundColor: "unset" }}
+                sx={{ backgroundColor: "unset", padding: '0 8px 0 0' }}
                 icon={
                   <RiSettings3Fill size={16} color={palette.text.primary} />
                 }

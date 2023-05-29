@@ -108,7 +108,7 @@ const QuestionTransferModal = ({ questionGroupId, data, getData, isShowTransferQ
               selectedOption={selectedOption}
               setSelectedOption={setSelectedOption}
               onChange={onChangeQuestionGroup}
-              data={options.filter(x=>x.isActive)}
+              data={options.filter(x => x.isActive && x.id != questionGroupId)}
               placeholder="Chọn nhóm câu hỏi"
               name={"questionGroup"}
             />
