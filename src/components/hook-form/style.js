@@ -124,6 +124,7 @@ const SelectFieldStyle = styled(Select)(({ theme }) => ({
     border: "1px solid #D0D4DB !important",
   },
   "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+    border: '1.5px solid #A2AAB7',
     borderColor: theme.palette.common.neutral200,
   },
   "&.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
