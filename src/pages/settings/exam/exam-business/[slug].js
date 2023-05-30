@@ -361,7 +361,7 @@ function Question() {
           isMulti ? (
             <span>
               Bạn có chắc chắn muốn xóa{" "}
-              <b>{isMulti ? itemSelected.length : ""} câu hỏi này</b>
+              <b>{isMulti ? itemSelected.length : ""} câu hỏi </b> này
             </span>
           ) : (
             <span>
