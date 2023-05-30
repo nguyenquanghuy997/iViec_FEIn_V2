@@ -32,20 +32,20 @@ import { useSnackbar } from "notistack";
 import { forwardRef, useState } from "react";
 import { RiLinkM } from "react-icons/ri";
 
-const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
-  const { data: DetailData } = useGetDetailCalendarsQuery(
-    { BookingCalendarId: item?.id },
-    { skip: !item?.id }
+const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
+  const {data: DetailData} = useGetDetailCalendarsQuery(
+    {BookingCalendarId: item?.id},
+    {skip: !item?.id}
   );
   const theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
   const [deleteCalendar] = useDeleteCalendarMutation();
-  const { enqueueSnackbar } = useSnackbar();
-
+  const {enqueueSnackbar} = useSnackbar();
+  
   const handleClose = async (ids) => {
     const res = [ids];
     try {
-      await deleteCalendar({ ids: res, removeReason: "" }).unwrap();
+      await deleteCalendar({ids: res, removeReason: ""}).unwrap();
       enqueueSnackbar("Hủy lịch thành công!", {
         autoHideDuration: 2000,
       });
@@ -60,7 +60,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   };
   const renderText = (title, content) => {
     return (
-      <ListItem disableGutters sx={{ my: 1 }}>
+      <ListItem disableGutters sx={{my: 1}}>
         <span
           style={{
             fontSize: 14,
@@ -71,7 +71,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
         >
           {title}
         </span>
-
+        
         <span
           style={{
             fontSize: 14,
@@ -84,7 +84,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
       </ListItem>
     );
   };
-
+  
   const time =
     DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarApplicants?.map(
       (item) => item?.interviewTime
@@ -93,16 +93,16 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
     DetailData?.bookingCalendarGroups?.[0]?.bookingCalendarApplicants?.map(
       (item) => item?.interviewDuration
     );
-
+  
   const startTime = convertStoMs(
     convertDurationTimeToSeconds(moment(time?.[0]).format("HH:mm:ss")) +
-      convertDurationTimeToSeconds(duration?.[0])
+    convertDurationTimeToSeconds(duration?.[0])
   );
-  const { user } = useAuth();
+  const {user} = useAuth();
   const getLink = async (id) => {
     return `${window.location.origin}/phong-van.html?DisplayName=${user?.firstName}&&Email=${user?.email}&&Role=1&&RoomName=${id}`;
   };
-
+  
   const copyToClipboard = async (id) => {
     navigator.clipboard.writeText(await getLink(id));
     enqueueSnackbar("Đã sao chép link cuộc họp");
@@ -110,7 +110,12 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
   return (
     <Modal
       open={open}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={onClose}
       ref={ref}
     >
@@ -132,11 +137,11 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               },
             }}
           >
-            <CloseIcon />
+            <CloseIcon/>
           </Button>
         </View>
-        <Divider />
-        <View style={{ overflowY: "auto", maxHeight: "600px", padding: 24 }}>
+        <Divider/>
+        <View style={{overflowY: "auto", maxHeight: "600px", padding: 24}}>
           <h3>{item?.name}</h3>
           {renderText(
             "Hình thức phỏng vấn:",
@@ -170,10 +175,10 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             )
           )}
           {renderText("Lý do hủy:", DetailData?.removeReason || "Không có")}
-
-          <Divider />
-
-          <List sx={{ pt: 2 }}>
+          
+          <Divider/>
+          
+          <List sx={{pt: 2}}>
             <Typography
               sx={{
                 color: theme.palette.common.neutral700,
@@ -183,7 +188,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             >
               Danh sách ứng viên
             </Typography>
-
+            
             {DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants.map(
               (item, index) => (
                 <ListItem
@@ -209,23 +214,23 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                       }}
                     />
                   </ListItemAvatar>
-                  <ListItemText sx={{ width: "30%" }}>
-                    <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                  <ListItemText sx={{width: "30%"}}>
+                    <Typography sx={{fontSize: 13, fontWeight: 600}}>
                       {item?.applicant?.fullName}
                     </Typography>
-                    <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
+                    <Typography sx={{fontSize: 12, fontWeight: 400}}>
                       {item?.applicant?.phoneNumber}
                     </Typography>
                   </ListItemText>
                   <ListItemText>
-                    <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                    <Typography sx={{fontSize: 13, fontWeight: 600}}>
                       {moment(time?.[index]).format("HH:mm")} - {startTime}
                     </Typography>
                   </ListItemText>
                   <ListItemText
-                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                    sx={{display: "flex", justifyContent: "flex-end"}}
                   >
-                    <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                    <Typography sx={{fontSize: 13, fontWeight: 600}}>
                       {ApplicantCalendarState(item?.applicantInterviewState)}
                     </Typography>
                   </ListItemText>
@@ -233,8 +238,8 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               )
             )}
           </List>
-          <Divider />
-          <List sx={{ pt: 2 }}>
+          <Divider/>
+          <List sx={{pt: 2}}>
             <Typography
               sx={{
                 color: theme.palette.common.neutral700,
@@ -255,14 +260,14 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                   <img
                     alt=""
                     src="https://i.pinimg.com/236x/b0/52/90/b0529099591d1f7f70732fa5e4f60e83.jpg"
-                    style={{ width: "60px", height: "60px" }}
+                    style={{width: "60px", height: "60px"}}
                   />
                 </ListItemAvatar>
                 <ListItemText>
-                  <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                  <Typography sx={{fontSize: 13, fontWeight: 600}}>
                     {item?.name}
                   </Typography>
-                  <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
+                  <Typography sx={{fontSize: 12, fontWeight: 400}}>
                     {item?.email}
                   </Typography>
                 </ListItemText>
@@ -270,7 +275,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             ))}
           </List>
         </View>
-        <Divider />
+        <Divider/>
         <View pv={16} ph={24} flexrow="row" jcbetween="true">
           <BoxFlex justifyContent="start">
             <ButtonDS
@@ -286,7 +291,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                 },
                 textTransform: "none",
               }}
-              icon={<RiLinkM />}
+              icon={<RiLinkM/>}
             />
           </BoxFlex>
           <BoxFlex justifyContent="end" gap={2}>
@@ -306,34 +311,34 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
             />
             {DetailData?.bookingCalendarProcessStatus ==
               BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
-              <ButtonDS
-                tittle={"Chỉnh sửa"}
-                type="button"
-                onClick={() => {
-                  setOpenForm(true);
-                }}
-                sx={{
-                  color: "white",
-                  backgroundColor: theme.palette.common.blue700,
-                  boxShadow: "none",
-                  ":hover": {
-                    backgroundColor: theme.palette.common.blue800,
-                  },
-                  textTransform: "none",
-                }}
-              />
-            )}
-
+                <ButtonDS
+                  tittle={"Chỉnh sửa"}
+                  type="button"
+                  onClick={() => {
+                    setOpenForm(true);
+                  }}
+                  sx={{
+                    color: "white",
+                    backgroundColor: theme.palette.common.blue700,
+                    boxShadow: "none",
+                    ":hover": {
+                      backgroundColor: theme.palette.common.blue800,
+                    },
+                    textTransform: "none",
+                  }}
+                />
+              )}
+            
             <ButtonDS
               onClick={() => {
                 window.open(
                   window.location.origin +
-                    "/phong-van.html?DisplayName=" +
-                    user?.firstName +
-                    "&&Email=" +
-                    user?.email +
-                    "&&RoomName=" +
-                    DetailData?.id
+                  "/phong-van.html?DisplayName=" +
+                  user?.firstName +
+                  "&&Email=" +
+                  user?.email +
+                  "&&RoomName=" +
+                  DetailData?.id
                 );
               }}
               tittle="Tham gia phòng họp"
@@ -348,7 +353,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               }}
             />
             {openForm && (
-              <FormCalendar open={openForm} data={item} setOpen={setOpenForm} />
+              <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
             )}
           </BoxFlex>
         </View>

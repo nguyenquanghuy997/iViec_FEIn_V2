@@ -1,14 +1,14 @@
-import {ButtonDS, SwitchStatusDS} from "@/components/DesignSystem";
-import {Text, View} from "@/components/DesignSystem/FlexStyled";
+import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
-import {useGetPreviewApproveProcessQuery} from "@/sections/approve-process/ApproveProcessSlice";
-import {ViewModel} from "@/utils/cssStyles";
-import {CircularProgress, Divider, Grid, Modal, Typography} from "@mui/material";
+import { useGetPreviewApproveProcessQuery } from "@/sections/approve-process/ApproveProcessSlice";
+import { ViewModel } from "@/utils/cssStyles";
+import { CircularProgress, Divider, Grid, Modal, Typography } from "@mui/material";
 import React from "react";
-import {ButtonCancelStyle} from "@/sections/applicant/style";
+import { ButtonCancelStyle } from "@/sections/applicant/style";
 import AvatarDS from "../../../components/DesignSystem/AvatarDS";
-import {LightTooltip} from "@/components/DesignSystem/TooltipHtml";
-import {useTheme} from "@mui/material/styles";
+import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
+import { useTheme } from "@mui/material/styles";
 
 export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}) => {
   const {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id || !show});
@@ -18,15 +18,15 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
   const pressHide = () => {
     setShow(false);
   };
-
+  
   const moveToEdit = () => {
     pressHide();
     handleEdit();
   };
-
+  
   const mapResult = (members) => {
     let children = [];
-
+    
     return members.map(m => {
       if (m.processLevelDetailPersonInCharges && m.processLevelDetailPersonInCharges.length) {
         children = [...children, ...m.processLevelDetailPersonInCharges];
@@ -34,12 +34,12 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
       return m.processLevelDetailPersonInCharges;
     }).concat(children.length ? mapResult(children) : children);
   };
-
+  
   return (
     <Modal
       open={show}
       onClose={pressHide}
-      sx={{display: "flex", justifyContent: "flex-end"}}
+      sx={{display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
     >
       <ViewModel>
         {/* header */}

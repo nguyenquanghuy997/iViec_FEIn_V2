@@ -20,7 +20,7 @@ export const UpdateQuestionGroupModel = ({
   onClose,
   editData,
 }) => {
-  const { data: { items: Data = [] } = {} } = useGetQuestionGroupQuery({
+  const {data: {items: Data = []} = {}} = useGetQuestionGroupQuery({
     IsActive: "true",
   });
   var ListQuestionGroup = Data?.filter((p) => p.numOfQuestion > 0);
@@ -29,26 +29,26 @@ export const UpdateQuestionGroupModel = ({
     questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
     questionTypeId: Yup.string().required("Chưa chọn loại câu hỏi"),
     quantity: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .min(1, "Số câu hỏi phải lớn hơn 0")
-      .max(
-        Yup.ref("quantityOfQuestion"),
-        "Số câu hỏi phải nhỏ hơn số câu hỏi trong nhóm"
-      )
-      .required("Chưa nhập số câu hỏi"),
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .min(1, "Số câu hỏi phải lớn hơn 0")
+    .max(
+      Yup.ref("quantityOfQuestion"),
+      "Số câu hỏi phải nhỏ hơn số câu hỏi trong nhóm"
+    )
+    .required("Chưa nhập số câu hỏi"),
   });
-
+  
   const methodss = useForm({
     resolver: yupResolver(Schema),
   });
-
+  
   const {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methodss;
-
+  
   const pressSave = handleSubmit(async (d) => {
     const data = {
       ...editData,
@@ -56,33 +56,37 @@ export const UpdateQuestionGroupModel = ({
     };
     onSubmit?.(data);
   });
-
+  
   useEffect(() => {
     if (editData?.questionGroupId) {
       setValue("questionGroupId", editData?.questionGroupId);
       setValue("quantity", editData?.quantity);
       setValue("questionTypeId", Number(editData?.questionTypeId));
       setValue("quantityOfQuestion", editData?.quantityOfQuestion);
-      return;
     }
   }, []);
   const changeQuestionType = (value) => {
     if (watch(`questionGroupId`)) {
       const number = ListQuestionGroup.find(
-        (p) => p?.id == watch(`questionGroupId`)
+        (p) => p?.id === watch(`questionGroupId`)
       );
-      if (value == 1) {
+      if (value === 1) {
         setValue(`quantityOfQuestion`, number?.numOfQuestionMultipleChoice);
       } else {
         setValue(`quantityOfQuestion`, number?.numOfQuestionEssay);
       }
     }
   };
-
+  
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={onClose}
     >
       <>
@@ -92,7 +96,7 @@ export const UpdateQuestionGroupModel = ({
               <Text flex fontsize={16} fontweight={"700"}>
                 {"Sửa nhóm câu hỏi"}
               </Text>
-
+              
               <ButtonIcon
                 onClick={onClose}
                 icon={
@@ -105,7 +109,7 @@ export const UpdateQuestionGroupModel = ({
                 }
               />
             </View>
-            <Divider />
+            <Divider/>
             <View p={24}>
               <View mb={28}>
                 <Label required={true}>{"Nhóm câu hỏi"}</Label>
@@ -148,12 +152,12 @@ export const UpdateQuestionGroupModel = ({
                 </Grid>
               </Grid>
             </View>
-            <Divider />
+            <Divider/>
             <View flexrow="true" jcend="true" pv={16} ph={24}>
-              <ButtonCancelStyle sx={{ marginRight: "8px" }} onClick={onClose}>
+              <ButtonCancelStyle sx={{marginRight: "8px"}} onClick={onClose}>
                 Hủy
               </ButtonCancelStyle>
-
+              
               <ButtonDS
                 type="submit"
                 variant="contained"
