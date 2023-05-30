@@ -243,7 +243,7 @@ export const ApplicantItem = (props) => {
         render: (jobCats = []) => {
           return (
             jobCats
-              .map((cat) => cat.name)
+              .map((cat) => cat.jobCategoryName)
               .filter((i) => i)
               .join(", ") || "-"
           );
