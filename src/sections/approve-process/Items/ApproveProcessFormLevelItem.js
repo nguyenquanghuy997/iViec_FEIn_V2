@@ -25,7 +25,7 @@ const ConditionalInput = ({control, index, indexChild}) => {
     name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.id`,
     control
   });
-  const {data: {items: RoleGroups = []} = {}} = useGetRoleGroupListQuery();
+  const {data: {items: RoleGroups = []} = {}} = useGetRoleGroupListQuery({IsActivated: true, PageSize: 999});
   const roleGroupId = useWatch({
     control,
     name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`

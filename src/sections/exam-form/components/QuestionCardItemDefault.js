@@ -225,7 +225,7 @@ function QuestionCardItemDefault({
             <View>
               <Typography sx={questionInfoTitle}>Đáp án</Typography>
               <Box mt={"12px"}>
-                {item.answers?.map((x, index) => (
+                {item.answers.map((x, index) => (
                   <Typography key={index} sx={questionAnswer}>
                     <Text
                       style={{ display: "inline-block", marginRight: "8px" }}
