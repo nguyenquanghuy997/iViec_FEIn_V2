@@ -29,13 +29,13 @@ export const PipelineAddModal = ({
   const methodss = useForm({
     defaultValuess,
   });
-
+  
   const {
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methodss;
-
+  
   const pressHide = () => {
     setShow(false);
   };
@@ -45,29 +45,28 @@ export const PipelineAddModal = ({
       stageType: selectedStatge,
       des: d.des,
     };
-    if (selectedStatge == "") {
+    if (selectedStatge === "") {
+      setError(true);
+      return;
+    } else if (pipeLineSelected?.filter(x => x.stageType.id === selectedStatge.id).length > 4) {
       setError(true);
       return;
     }
-    else if (pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length > 4) {
-      setError(true);
-      return;
-    }
-
+    
     onSubmit?.(data);
     pressHide();
-
+    
   });
-
+  
   // render
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
-
+  
   const LIST_PIPELINE_STAGE = [
     //todo
-     { id: "0", value: "0", name: "Thi tuyển" },
-    { id: "1", value: "1", name: "Phỏng vấn" },
+    {id: "0", value: "0", name: "Thi tuyển"},
+    {id: "1", value: "1", name: "Phỏng vấn"},
   ];
   const [selectedStatge, setSelectedStatge] = useState("");
   const onChangeStage = (e) => {
@@ -84,7 +83,12 @@ export const PipelineAddModal = ({
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={pressHide}
     >
       <>
@@ -94,7 +98,7 @@ export const PipelineAddModal = ({
               <Text flex fontsize={16} fontweight={"700"}>
                 {isEdit ? "Sửa bước tuyển dụng" : "Thêm bước tuyển dụng"}
               </Text>
-
+              
               <ButtonIcon
                 onClick={pressHide}
                 icon={
@@ -107,7 +111,7 @@ export const PipelineAddModal = ({
                 }
               />
             </View>
-            <Divider />
+            <Divider/>
             <View p={24}>
               <View mb={24}>
                 {renderTitle("Loại bước", true)}
@@ -119,19 +123,19 @@ export const PipelineAddModal = ({
                   placeholder="Chọn loại bước"
                   name={"stageType"}
                 />
-                {error && selectedStatge == "" && (
+                {error && selectedStatge === "" && (
                   <FormHelperText
                     error
-                    sx={{ marginLeft: 0 }}
+                    sx={{marginLeft: 0}}
                   >
                     Chưa chọn loại bước tuyển dụng
                   </FormHelperText>
                 )}
                 {
-                  error && pipeLineSelected?.filter(x => x.stageType.id == selectedStatge.id).length >= 5 && (
+                  error && pipeLineSelected?.filter(x => x.stageType.id === selectedStatge.id).length >= 5 && (
                     <FormHelperText
                       error
-                      sx={{ marginLeft: 0 }}
+                      sx={{marginLeft: 0}}
                     >
                       Tối đa có 5 bước {selectedStatge?.name.toLowerCase()}
                     </FormHelperText>
@@ -140,7 +144,7 @@ export const PipelineAddModal = ({
               </View>
               <View mb={24}>
                 {renderTitle("Mô tả")}
-
+                
                 <TextAreaDS
                   maxLength={255}
                   placeholder="Nhập nội dung mô tả"
@@ -148,15 +152,15 @@ export const PipelineAddModal = ({
                 />
               </View>
             </View>
-            <Divider />
+            <Divider/>
             <View flexrow="true" jcend="true" pv={16} ph={24}>
               <ButtonCancelStyle
-                sx={{ marginRight: "8px" }}
+                sx={{marginRight: "8px"}}
                 onClick={pressHide}
               >
                 Hủy
               </ButtonCancelStyle>
-
+              
               <ButtonDS
                 type="submit"
                 variant="contained"

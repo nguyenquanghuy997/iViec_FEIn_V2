@@ -44,7 +44,7 @@ const LIST_ACTION = [
   },
 ];
 
-const Point = ({ value, onChange }) => {
+const Point = ({value, onChange}) => {
   return (
     <Box
       sx={{
@@ -55,7 +55,7 @@ const Point = ({ value, onChange }) => {
     >
       <Rate
         onChange={onChange}
-        character={({ index }) => index + 1}
+        character={({index}) => index + 1}
         count={10}
         value={value}
       />
@@ -74,7 +74,7 @@ export const ApplicantReviewModal = ({
   const [mediumScore, setMediumScore] = useState(0);
   const [currentAction, setCurrentAction] = useState();
   const isReject = currentAction === 2;
-
+  
   const theme = useTheme();
   const Schema = Yup.object().shape({
     ...data?.reviewFormCriterias?.reduce(
@@ -93,29 +93,29 @@ export const ApplicantReviewModal = ({
       ? Yup.string().required("Chưa nhập kết luận")
       : Yup.string(),
   });
-
+  
   const methodss = useForm({
     resolver: yupResolver(Schema),
   });
-
+  
   const {
     setValue,
     setError,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: {isSubmitting, errors},
   } = methodss;
-
+  
   const pressHide = () => {
     setShow(false);
   };
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const [reviewForm] = useAddApplicantReviewMutation();
   const pressSave = handleSubmit(async (d) => {
     if (typeof currentAction !== "number") {
-      setError("result", { message: "Chưa chọn kết luận" });
+      setError("result", {message: "Chưa chọn kết luận"});
       return;
     }
-
+    
     const data = {
       applicantId,
       recruitmentId,
@@ -147,22 +147,27 @@ export const ApplicantReviewModal = ({
       }))
     );
   }, [JSON.stringify(data?.reviewFormCriterias)]);
-
+  
   useEffect(() => {
     const list = Object.keys(points);
     const total = list.reduce((res, item) => (res += points[item]), 0);
     if (list.length !== data?.reviewFormCriterias?.length) return;
     setMediumScore(total / list.length);
   }, [points]);
-
+  
   useEffect(() => {
     setError("result", false);
   }, [currentAction]);
-
+  
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={pressHide}
     >
       <>
@@ -177,7 +182,7 @@ export const ApplicantReviewModal = ({
               <Text flex fontsize={16} fontweight={"700"}>
                 {"Đánh giá ứng viên"}
               </Text>
-
+              
               <ButtonIcon
                 onClick={pressHide}
                 icon={
@@ -190,18 +195,18 @@ export const ApplicantReviewModal = ({
                 }
               />
             </View>
-            <Divider />
+            <Divider/>
             <View
-              style={{ overflowY: "auto", maxHeight: "600px", padding: 24 }}
+              style={{overflowY: "auto", maxHeight: "600px", padding: 24}}
             >
               {data?.reviewFormCriterias?.map((item, index) => {
-                const { isRequired, id, name, description } = item;
-
+                const {isRequired, id, name, description} = item;
+                
                 return (
                   <ReviewForm
                     className="block-review"
                     key={index}
-                    style={{ background: theme.palette.common.bgrMaster }}
+                    style={{background: theme.palette.common.bgrMaster}}
                   >
                     <Label
                       required={isRequired}
@@ -230,7 +235,7 @@ export const ApplicantReviewModal = ({
                       onChange={(val) => {
                         setError(`${id}_point`, false);
                         setValue(`${id}_point`, val);
-                        setPoints({ ...points, [index]: val });
+                        setPoints({...points, [index]: val});
                       }}
                     />
                     <FormHelperText error>
@@ -239,10 +244,10 @@ export const ApplicantReviewModal = ({
                   </ReviewForm>
                 );
               })}
-
+              
               <ReviewForm
                 className="block-review block-review-result"
-                style={{ background: theme.palette.common.bgrMaster }}
+                style={{background: theme.palette.common.bgrMaster}}
               >
                 <Label required={isReject} className="title" title="Kết luận">
                   {"Kết luận"}
@@ -282,7 +287,7 @@ export const ApplicantReviewModal = ({
                       );
                     })}
                   </ul>
-
+                  
                   <TextAreaDS
                     placeholder="Nhập nội dung đánh giá..."
                     name={"result"}
@@ -301,18 +306,18 @@ export const ApplicantReviewModal = ({
                 </div>
               </ReviewForm>
             </View>
-            <Divider />
+            <Divider/>
             <View pv={16} ph={24} flexrow="row" jcbetween="true">
               <BoxFlex
                 color={
                   mediumScore.toFixed(2) < 4.9
                     ? theme.palette.common.red600
                     : mediumScore.toFixed(2) < 6.9
-                    ? theme.palette.common.orange700
-                    : "#388E3C"
+                      ? theme.palette.common.orange700
+                      : "#388E3C"
                 }
               >
-                <span style={{ fontSize: "15px", fontWeight: 600 }}>
+                <span style={{fontSize: "15px", fontWeight: 600}}>
                   Trung bình:
                 </span>
                 <p
@@ -329,12 +334,12 @@ export const ApplicantReviewModal = ({
               </BoxFlex>
               <BoxFlex justifyContent="end">
                 <ButtonCancelStyle
-                  sx={{ marginRight: "8px" }}
+                  sx={{marginRight: "8px"}}
                   onClick={pressHide}
                 >
                   Hủy
                 </ButtonCancelStyle>
-
+                
                 <ButtonDS
                   type="submit"
                   variant="contained"
