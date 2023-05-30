@@ -7,11 +7,11 @@ import { BoxFlex } from "@/sections/emailform/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import axiosInstance from "@/utils/axios";
 import { containsText } from "@/utils/function";
-import { useTheme } from "@mui/material/styles";
-import { RiCloseLine } from "react-icons/ri";
 import { Autocomplete, Checkbox, CircularProgress, MenuItem, } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { isEqual } from "lodash";
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
+import { RiCloseLine } from "react-icons/ri";
 import { TbChevronDown } from "react-icons/tb";
 
 const MuiAutocomplete = forwardRef(
@@ -39,6 +39,7 @@ const MuiAutocomplete = forwardRef(
     ref
   ) => {
     const inputRef = useRef();
+    const theme = useTheme();
     const value = useMemo(() => {
       if (multiple) {
         if (!selectValue) selectValue = [];
@@ -65,6 +66,7 @@ const MuiAutocomplete = forwardRef(
     const sxProps = {
       width: "100%",
       minHeight: height,
+      background: theme.palette.common.white,
       ...sx,
     };
     
@@ -134,7 +136,6 @@ const MuiAutocomplete = forwardRef(
     }, [filters.SearchKey, options, remoteUrl, fetchedOptions]);
     
     const renderInput = (params) => {
-      const theme = useTheme();
       return (
         <MuiTextField
           ref={inputRef}
@@ -159,22 +160,25 @@ const MuiAutocomplete = forwardRef(
     
     const renderTags = (value, getTagProps) => {
       const theme = useTheme();
-      return value.map((option, index) => <ChipDS
+      return value.map((option, index) => (
+        <ChipDS
           {...getTagProps({index})}
           key={index}
-          deleteIcon={<RiCloseLine size={12} color={theme.palette.common.neutral500}/>}
+          deleteIcon={
+            <RiCloseLine size={12} color={theme.palette.common.neutral500}/>
+          }
           size="small"
-          label={typeof option === 'string' ? option : option?.label}
+          label={typeof option === "string" ? option : option?.label}
           variant="filled"
           sx={{
-            borderRadius: '4px',
+            borderRadius: "4px",
             color: style.COLOR_TEXT_BLACK,
             backgroundColor: theme.palette.common.bgrObject,
             fontSize: style.FONT_XS,
             fontWeight: style.FONT_MEDIUM,
           }}
         />
-      )
+      ));
     };
     
     return (
@@ -184,6 +188,7 @@ const MuiAutocomplete = forwardRef(
           open={open}
           value={value}
           onOpen={() => {
+            if (!options.length) return;
             setOpen(true);
           }}
           onClose={(e) => {
