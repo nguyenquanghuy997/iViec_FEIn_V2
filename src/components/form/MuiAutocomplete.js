@@ -12,7 +12,7 @@ import { RiCloseLine } from "react-icons/ri";
 import { Autocomplete, Checkbox, CircularProgress, MenuItem, } from "@mui/material";
 import { isEqual } from "lodash";
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
-import Iconify from "@/components/Iconify";
+import { TbChevronDown } from "react-icons/tb";
 
 const MuiAutocomplete = forwardRef(
   (
@@ -134,6 +134,7 @@ const MuiAutocomplete = forwardRef(
     }, [filters.SearchKey, options, remoteUrl, fetchedOptions]);
     
     const renderInput = (params) => {
+      const theme = useTheme();
       return (
         <MuiTextField
           ref={inputRef}
@@ -148,11 +149,7 @@ const MuiAutocomplete = forwardRef(
                 {isFetching ? (
                   <CircularProgress color="inherit" size={20}/>
                 ) : null}
-                {<Iconify
-                  icon={"ic:round-clear"}
-                  width={16}
-                  height={16}
-                />}
+                {<TbChevronDown color={theme.palette.common.neutral700} size={20}/>}
               </>
             ),
           }}

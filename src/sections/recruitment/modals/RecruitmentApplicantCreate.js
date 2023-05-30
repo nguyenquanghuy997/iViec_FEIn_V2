@@ -353,7 +353,6 @@ export const RecruitmentApplicantCreate = ({
         <ViewModel
           sx={{
             width: "unset",
-            height: "100%",
             justifyContent: "space-between",
           }}
         >
@@ -464,6 +463,7 @@ export const RecruitmentApplicantCreate = ({
                             sx={{width: 120, height: 120, backgroundColor: theme.palette.common.bgrObject}}
                             src={watch("portraitImage")}
                             children={<img
+                              alt=""
                               src={"/assets/icons/userImage.svg"}
                               style={{margin: "0 auto"}}
                             />}

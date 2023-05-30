@@ -17,6 +17,7 @@ const MuiTextField = forwardRef((props, ref) => {
             borderRadius: '6px',
             width: style.WIDTH_FULL,
             px: 1,
+            paddingRight: "16px !important",
             "&.Mui-focused": {
                 backgroundColor: "transparent",
                 boxShadow: "none",
