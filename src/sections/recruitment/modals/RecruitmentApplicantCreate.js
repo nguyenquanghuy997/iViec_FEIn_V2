@@ -353,7 +353,6 @@ export const RecruitmentApplicantCreate = ({
         <ViewModel
           sx={{
             width: "unset",
-            height: "100%",
             justifyContent: "space-between",
           }}
         >
@@ -464,6 +463,7 @@ export const RecruitmentApplicantCreate = ({
                             sx={{width: 120, height: 120, backgroundColor: theme.palette.common.bgrObject}}
                             src={watch("portraitImage")}
                             children={<img
+                              alt=""
                               src={"/assets/icons/userImage.svg"}
                               style={{margin: "0 auto"}}
                             />}
@@ -773,12 +773,15 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        <div style={{width: "100%", height: "100%"}}>
-                          <iframe
-                            src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
-                            style={{width: "100%", height: "100%"}}
-                          ></iframe>
-                        </div>
+                        <>
+                          <div style={{width: "100%", height: "100%"}}>
+                            <iframe
+                              src={getFileUrl(watch("cvFile")) + "#"}
+                              width={"100%"}
+                              height={"100%"}
+                            ></iframe>
+                          </div>
+                        </>
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
                           <CircularProgress/>

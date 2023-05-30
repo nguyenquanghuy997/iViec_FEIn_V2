@@ -117,7 +117,7 @@ export default function DrawerEditForm({
           sx: drawerPaperStyle({ ...theme, width, contentStyles }),
         }}
         ModalProps={{
-          sx: modalStyles,
+          sx: {...modalStyles, ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}},
           keepMounted: keepMounted,
         }}
         {...props}

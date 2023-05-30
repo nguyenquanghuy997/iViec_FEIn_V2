@@ -68,6 +68,8 @@ const NotificationBoard = ({
     );
   };
 
+  isReview && console.log(dataApplicant);
+
   return (
     <Container
       sx={{
@@ -85,10 +87,7 @@ const NotificationBoard = ({
         onClick={handleClick}
         sx={{
           padding: "20px 12px",
-          borderRadius: "4px",
-          backgroundColor: !open
-            ? theme.palette.common.white
-            : theme.palette.common.bgrMaster,
+          backgroundColor: !open ? "white" : theme.palette.common.bgrMaster,
           color: theme.palette.common.neutral800,
           fontSize: "0.9rem!important",
           "&:hover": {
@@ -144,7 +143,7 @@ const NotificationBoard = ({
             </React.Fragment>
           </div>
 
-          {isReview ? (
+          {isReview && (
             <Collapse
               in={open}
               timeout="auto"
@@ -219,24 +218,6 @@ const NotificationBoard = ({
 
               {children}
             </Collapse>
-          ) : (
-            !!children && (
-              <Collapse
-                in={open}
-                timeout="auto"
-                unmountOnExit
-                sx={{
-                  backgroundColor: theme.palette.common.bgrMaster,
-                  pb: 2,
-                  pt: 2,
-                  "& .MuiButtonBase-root:hover": {
-                    backgroundColor: theme.palette.common.bgrMaster,
-                  },
-                }}
-              >
-                {children}
-              </Collapse>
-            )
           )}
 
           {isReview && isOpenReview && (

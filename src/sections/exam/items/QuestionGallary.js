@@ -48,7 +48,9 @@ export const QuestionGallary = () => {
     name = "",
     description,
     isActive,
-  } = currentItem || {};
+  } = (isMulti || !currentItem
+    ? { ...list.find((i) => i.id === listSelected[0]) }
+    : currentItem) || {};
 
   const _name = isMulti ? "" : name;
 
@@ -119,9 +121,7 @@ export const QuestionGallary = () => {
     const { id } = data;
     const isSelected = listSelected.includes(id);
 
-    const pressCheckbox = (e) => {
-      if (e.target.checked)
-        setCurrentItem(data)
+    const pressCheckbox = () => {
       setListSelected((l) =>
         isSelected ? l.filter((i) => i !== id) : [...l, id]
       );
@@ -161,10 +161,7 @@ export const QuestionGallary = () => {
       <QuestionGalleryHeader
         methods={methods}
         handleSubmit={methods.handleSubmit}
-        pressAddQuestionGallery={() => {
-          setCurrentItem(null)
-          setShowForm(true)
-        }}
+        pressAddQuestionGallery={() => setShowForm(true)}
         handlerCreateQuestion={() => setShowFormQuestion(true)}
       />
 
@@ -191,16 +188,7 @@ export const QuestionGallary = () => {
         list={list}
         listSelected={listSelected}
         setListSelected={setListSelected}
-        setShowForm={(show) => {
-          if (show) {
-            setCurrentItem({ ...list.find((i) => i.id === listSelected[0]) })
-          }
-          else {
-            setCurrentItem(null)
-            setListSelected([])
-          }
-          setShowForm(show)
-        }}
+        setShowForm={setShowForm}
         setShowConfirmDelete={setShowConfirmDelete}
         setShowConfirmSwitchActive={setShowConfirmSwitchActive}
       />

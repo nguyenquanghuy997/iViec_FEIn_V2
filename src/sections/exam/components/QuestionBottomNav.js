@@ -78,7 +78,7 @@ export default ({
                     fontSize: 13,
                   }}
                 >
-                  {firstActiveStatus ? "Đang hoạt động" : "Không hoạt động"}
+                  {firstActiveStatus ? "Đang hoạt động" : "Ngừng hoạt động"}
                 </Typography>
               </>
             )}

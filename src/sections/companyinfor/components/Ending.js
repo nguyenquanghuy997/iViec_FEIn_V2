@@ -120,24 +120,26 @@ const Ending = ({ data }) => {
           <EmptyValue text={"Hiện chưa có nội dung Lời kết"} />
         )}
       </Box>
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: drawerPaperStyle({ ...theme, width: 800 }),
-        }}
-        componentsProps={{
-          backdrop: {
-            sx: {
-              background: "rgba(9, 30, 66, 0.25) !important",
-              boxShadow: "none !important",
+      {open && (
+        <Drawer
+          anchor="right"
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
+            sx: drawerPaperStyle({ ...theme, width: 800 }),
+          }}
+          componentsProps={{
+            backdrop: {
+              sx: {
+                background: "rgba(9, 30, 66, 0.25) !important",
+                boxShadow: "none !important",
+              },
             },
-          },
-        }}
-      >
-        <EditorEnding data={data} onClose={handleClose} />
-      </Drawer>
+          }}
+        >
+          <EditorEnding data={data} onClose={handleClose} />
+        </Drawer>
+      )}
     </>
   );
 };

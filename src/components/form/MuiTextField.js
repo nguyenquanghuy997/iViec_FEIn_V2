@@ -16,7 +16,9 @@ const MuiTextField = forwardRef((props, ref) => {
             fontSize: style.FONT_SM,
             borderRadius: '6px',
             width: style.WIDTH_FULL,
+            py: "6px",
             px: 1,
+            paddingRight: "16px !important",
             "&.Mui-focused": {
                 backgroundColor: "transparent",
                 boxShadow: "none",
@@ -28,9 +30,6 @@ const MuiTextField = forwardRef((props, ref) => {
         maxWidth: '100%',
         "& .MuiInputBase-root": {
             minHeight: multiline ? 'auto' : height,
-        },
-        "& .MuiInputBase-root:hover": {
-            border: '1.5px solid #A2AAB7'
         },
         '& .MuiInputBase-multiline': {
             padding: '4px 8px',
@@ -44,7 +43,7 @@ const MuiTextField = forwardRef((props, ref) => {
                 : "translate(14px, 11px) !important",
         },
         "& .MuiInputBase-input": {
-            padding: "8px 8px 8px !important",
+            padding: "0 8px !important",
         },
         "& .MuiFormHelperText-root": {
             marginLeft: "0",
