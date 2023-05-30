@@ -253,7 +253,7 @@ export default function Recruitment() {
         />
       </RecruitmentPreviewItem>
       {/* ứng viên kanban */}
-      {tab === 1 && viewMode === 1 && (
+      {tab === '1' && viewMode === 1 && (
         <div
           style={{
             width: windowWidth,
@@ -310,7 +310,7 @@ export default function Recruitment() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+                    ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" }
                   }}
                   onBackdropClick={() => handleCancel()}
                 >
@@ -456,7 +456,7 @@ export default function Recruitment() {
       )}
 
       {/* ứng viên list */}
-      {tab == 1 && viewMode == 2 && (
+      {tab === '1' && viewMode === 2 && (
         <View>
           <ApplicantItem
             data={Data}
@@ -469,7 +469,7 @@ export default function Recruitment() {
       )}
 
       {/* lịch phỏng vấn */}
-      {tab == 2 && (
+      {tab === '2' && (
         <View
           style={{
             paddingLeft: "256px",
