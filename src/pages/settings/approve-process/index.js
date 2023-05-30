@@ -25,9 +25,9 @@ export default function ApproveProcess() {
     const theme = useTheme();
     useEffect(() => {
         if (Data.length > 0) {
-            setDataInternal(Data.filter(x => x.approvalProcessType === 0));
-            setDataApplication(Data.filter(x => x.approvalProcessType === 1));
-            setDataInvite(Data.filter(x => x.approvalProcessType === 2));
+            setDataInternal(Data.filter(x => x.approvalProcessType === 0).sort((a, b) => Number(b.isAvailable) - Number(a.isAvailable)));
+            setDataApplication(Data.filter(x => x.approvalProcessType === 1).sort((a, b) => Number(b.isAvailable) - Number(a.isAvailable)));
+            setDataInvite(Data.filter(x => x.approvalProcessType === 2).sort((a, b) => Number(b.isAvailable) - Number(a.isAvailable)));
         }
     }, [Data]);
     return (

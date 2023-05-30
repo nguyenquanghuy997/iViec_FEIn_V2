@@ -773,12 +773,15 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        <div style={{width: "100%", height: "100%"}}>
-                          <iframe
-                            src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
-                            style={{width: "100%", height: "100%"}}
-                          ></iframe>
-                        </div>
+                        <>
+                          <div style={{width: "100%", height: "100%"}}>
+                            <iframe
+                              src={getFileUrl(watch("cvFile")) + "#"}
+                              width={"100%"}
+                              height={"100%"}
+                            ></iframe>
+                          </div>
+                        </>
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
                           <CircularProgress/>
