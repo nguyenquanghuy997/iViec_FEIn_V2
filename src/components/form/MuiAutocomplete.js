@@ -1,18 +1,33 @@
-import { CheckboxIconChecked, CheckboxIconDefault, } from "@/assets/CheckboxIcon";
+import {
+  CheckboxIconChecked,
+  CheckboxIconDefault,
+} from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
 import ChipDS from "@/components/DesignSystem/ChipDS";
+import Iconify from "@/components/Iconify";
 import MuiTextField from "@/components/form/MuiTextField";
 import { CustomPaper } from "@/components/hook-form/RHFAutocomplete";
 import { BoxFlex } from "@/sections/emailform/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import axiosInstance from "@/utils/axios";
 import { containsText } from "@/utils/function";
+import {
+  Autocomplete,
+  Checkbox,
+  CircularProgress,
+  MenuItem,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { RiCloseLine } from "react-icons/ri";
-import { Autocomplete, Checkbox, CircularProgress, MenuItem, } from "@mui/material";
 import { isEqual } from "lodash";
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
-import Iconify from "@/components/Iconify";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { RiCloseLine } from "react-icons/ri";
 
 const MuiAutocomplete = forwardRef(
   (
@@ -39,15 +54,16 @@ const MuiAutocomplete = forwardRef(
     ref
   ) => {
     const inputRef = useRef();
+    const theme = useTheme();
     const value = useMemo(() => {
       if (multiple) {
         if (!selectValue) selectValue = [];
         if (!Array.isArray(selectValue)) selectValue = [selectValue];
       }
-      if (typeof selectValue === 'undefined') return null;
+      if (typeof selectValue === "undefined") return null;
       return selectValue;
     }, [selectValue, multiple]);
-    
+
     const [open, setOpen] = useState(false);
     const [fetchedOptions, setFetchedOptions] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
@@ -61,24 +77,25 @@ const MuiAutocomplete = forwardRef(
     const _timeoutFetch = useRef();
     const _selectRef = useRef();
     const _lastPage = useRef(1);
-    
+
     const sxProps = {
       width: "100%",
       minHeight: height,
+      background: theme.palette.common.white,
       ...sx,
     };
-    
+
     useImperativeHandle(ref, () => {
       return {
         ...inputRef.current,
         ..._selectRef.current,
       };
     });
-    
+
     useEffect(() => {
       setFetchedOptions([]);
     }, [remoteUrl]);
-    
+
     const getFetchedOptions = async () => {
       if (
         isFetching ||
@@ -87,11 +104,11 @@ const MuiAutocomplete = forwardRef(
         return;
       }
       setIsFetching(true);
-      
+
       clearTimeout(_timeoutFetch.current);
       _timeoutFetch.current = setTimeout(async () => {
         const {
-          data: {items, totalPage: resTotalPage} = {
+          data: { items, totalPage: resTotalPage } = {
             items: [],
             totalPage: 1,
           },
@@ -102,7 +119,7 @@ const MuiAutocomplete = forwardRef(
             ...filters,
           },
         });
-        
+
         setIsFetching(false);
         setTotalPage(resTotalPage);
         setFetchedOptions(
@@ -111,7 +128,7 @@ const MuiAutocomplete = forwardRef(
         _lastPage.current = filters.PageIndex;
       }, 100);
     };
-    
+
     useEffect(() => {
       if (!remoteUrl) {
         return;
@@ -120,7 +137,7 @@ const MuiAutocomplete = forwardRef(
         getFetchedOptions();
       }
     }, [remoteUrl, open, filters]);
-    
+
     const displayedOptions = useMemo(() => {
       if (remoteUrl) {
         return fetchedOptions.map((item) => ({
@@ -132,7 +149,7 @@ const MuiAutocomplete = forwardRef(
         containsText(option.label, filters.SearchKey)
       );
     }, [filters.SearchKey, options, remoteUrl, fetchedOptions]);
-    
+
     const renderInput = (params) => {
       return (
         <MuiTextField
@@ -146,40 +163,39 @@ const MuiAutocomplete = forwardRef(
             endAdornment: (
               <>
                 {isFetching ? (
-                  <CircularProgress color="inherit" size={20}/>
+                  <CircularProgress color="inherit" size={20} />
                 ) : null}
-                {<Iconify
-                  icon={"ic:round-clear"}
-                  width={16}
-                  height={16}
-                />}
+                {<Iconify icon={"ic:round-clear"} width={16} height={16} />}
               </>
             ),
           }}
         />
       );
     };
-    
+
     const renderTags = (value, getTagProps) => {
       const theme = useTheme();
-      return value.map((option, index) => <ChipDS
-          {...getTagProps({index})}
+      return value.map((option, index) => (
+        <ChipDS
+          {...getTagProps({ index })}
           key={index}
-          deleteIcon={<RiCloseLine size={12} color={theme.palette.common.neutral500}/>}
+          deleteIcon={
+            <RiCloseLine size={12} color={theme.palette.common.neutral500} />
+          }
           size="small"
-          label={typeof option === 'string' ? option : option?.label}
+          label={typeof option === "string" ? option : option?.label}
           variant="filled"
           sx={{
-            borderRadius: '4px',
+            borderRadius: "4px",
             color: style.COLOR_TEXT_BLACK,
             backgroundColor: theme.palette.common.bgrObject,
             fontSize: style.FONT_XS,
             fontWeight: style.FONT_MEDIUM,
           }}
         />
-      )
+      ));
     };
-    
+
     return (
       <>
         <Autocomplete
@@ -187,6 +203,7 @@ const MuiAutocomplete = forwardRef(
           open={open}
           value={value}
           onOpen={() => {
+            if (!options.length) return;
             setOpen(true);
           }}
           onClose={(e) => {
@@ -245,7 +262,7 @@ const MuiAutocomplete = forwardRef(
           }}
           disableCloseOnSelect
           noOptionsText={"Không tìm thấy dữ liệu"}
-          renderOption={(props, option, {selected}) => (
+          renderOption={(props, option, { selected }) => (
             <>
               <MenuItem
                 {...props}
@@ -274,17 +291,17 @@ const MuiAutocomplete = forwardRef(
                 </div>
                 {showCheckbox && (
                   <Checkbox
-                    sx={{p: 0.25}}
-                    icon={<CheckboxIconDefault/>}
-                    checkedIcon={<CheckboxIconChecked/>}
-                    style={{marginRight: 8}}
+                    sx={{ p: 0.25 }}
+                    icon={<CheckboxIconDefault />}
+                    checkedIcon={<CheckboxIconChecked />}
+                    style={{ marginRight: 8 }}
                     checked={selected}
                   />
                 )}
               </MenuItem>
             </>
           )}
-          sx={{...sxProps}}
+          sx={{ ...sxProps }}
           isOptionEqualToValue={(option, value) =>
             value === "" || typeof value === "string"
               ? isEqual(option, value)
