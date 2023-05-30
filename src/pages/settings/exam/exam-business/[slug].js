@@ -195,8 +195,8 @@ function Question() {
         dataIndex: "examApply",
         title: "Đề thi áp dụng",
         width: "160px",
-        render: () => {
-          return "-";
+        render: (_, { numOfExaminationApply }) => {
+          return numOfExaminationApply > 0 ? numOfExaminationApply : "-";
         },
       },
       {

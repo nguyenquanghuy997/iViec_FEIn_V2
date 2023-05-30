@@ -294,7 +294,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                       item={item}
                       checked={isSelected(index)}
                       showIndex={true}
-                      hasRoleEdit={true}
+                      hasRoleEdit={!item?.id}
                       hasRoleDelete={true}
                       onDelete={openDeleteQuestionModal}
                       onEdit={openEditQuestionForm}

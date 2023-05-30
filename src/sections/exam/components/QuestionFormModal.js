@@ -203,6 +203,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   const pressAddAnswer = () => {
     setListAnswer((l) => [...l, defaultAnswer]);
   };
+
   const pressDeleteAnswer = (index) => {
     setListAnswer((l) => l.filter((_, i) => i !== index));
   };
@@ -391,12 +392,12 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   useEffect(() => {
     if (data?.id || data?.questionTitle) {
       setValue("id", data.id);
-      setValue("questionType", data.questionType);
+      setValue("questionType", parseInt(data.questionType));
       setValue("questionTitle", data.questionTitle);
       setValue("questionPoint", data.questionPoint);
       setValue("questionGroupId", data.questionGroupId);
       setValue("isActive", !!data.isActive);
-      setListAnswer(data.answers);
+      setListAnswer(data.questionType == 2 ? [defaultAnswer] : data.answers);
       setListMedia(data.questionFilePaths?.map((i) => ({ uploadedUrl: i })));
       return;
     }
@@ -437,7 +438,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         <Modal
           open={show}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" } }}
         >
           <ViewModel>
             {/* header */}
