@@ -54,6 +54,7 @@ const MuiAutocomplete = forwardRef(
     ref
   ) => {
     const inputRef = useRef();
+    const theme = useTheme();
     const value = useMemo(() => {
       if (multiple) {
         if (!selectValue) selectValue = [];
@@ -80,6 +81,7 @@ const MuiAutocomplete = forwardRef(
     const sxProps = {
       width: "100%",
       minHeight: height,
+      background: theme.palette.common.white,
       ...sx,
     };
 
