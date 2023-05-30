@@ -56,6 +56,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
    */
   const handleCreateEditQuestion = (data) => {
     //create
+    const newList = [...listQuestions]
     if (currentIndexQuestion === -1) {
       // check duplicate
       if (listQuestions.some(x => x.questionTitle === data.questionTitle)) {
@@ -64,7 +65,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         })
         return;
       }
-      listQuestions = [...listQuestions, data];
+      newList.push(data);
     }
     //edit
     else {
@@ -75,10 +76,10 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         })
         return;
       }
-      listQuestions[currentIndexQuestion] = data;
+      newList[currentIndexQuestion] = data;
     }
     enqueueSnackbar('Lưu câu hỏi thành công')
-    updateListQuestion(listQuestions)
+    updateListQuestion(newList)
 
     setShowQuestionForm(false)
     // reset choose index && data
@@ -293,7 +294,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
                       item={item}
                       checked={isSelected(index)}
                       showIndex={true}
-                      hasRoleEdit={!item.id}
+                      hasRoleEdit={true}
                       hasRoleDelete={true}
                       onDelete={openDeleteQuestionModal}
                       onEdit={openEditQuestionForm}
