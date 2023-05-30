@@ -68,7 +68,7 @@ const NotificationBoard = ({
     );
   };
 
-  isReview && console.log(dataApplicant);
+  // isReview && console.log(dataApplicant);
 
   return (
     <Container

@@ -107,7 +107,7 @@ const DynamicColumnsTable = (props) => {
           ...col,
           colFilters: col.filters,
           filters: null,
-          sorter: col.sorter
+          sorter: col.sorter,
         };
       });
   }, [columnsVisible, columns]);
@@ -174,7 +174,9 @@ const DynamicColumnsTable = (props) => {
     setTimeout(() => {
       router.push(
         {
-          query: reset ? { ...getQueryDefault() } : { ...router.query, ...values },
+          query: reset
+            ? { ...getQueryDefault() }
+            : { ...router.query, ...values },
         },
         undefined,
         { shallow: false }
@@ -190,8 +192,12 @@ const DynamicColumnsTable = (props) => {
   };
 
   const getQueryDefault = () => {
-    return Object.fromEntries(Object.entries(router.query).filter(([key]) => !columns.some(col => key == col.dataIndex)));
-  }
+    return Object.fromEntries(
+      Object.entries(router.query).filter(
+        ([key]) => !columns.some((col) => key == col.dataIndex)
+      )
+    );
+  };
 
   return (
     <View>
@@ -220,12 +226,11 @@ const DynamicColumnsTable = (props) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <ButtonIcon
                 onClick={showSetting}
-                sx={{ backgroundColor: "unset", padding: '0 8px 0 0' }}
+                sx={{ backgroundColor: "unset", marginRight: "8px" }}
                 icon={
                   <RiSettings3Fill size={16} color={palette.text.primary} />
                 }
               />
-
               <View>
                 <TextMaxLine
                   line={1}
@@ -250,6 +255,7 @@ const DynamicColumnsTable = (props) => {
                     borderRadius: "100px",
                     textAlign: "center",
                     padding: "2px 8px",
+                    fontWeight: 600
                   }}
                 >
                   {source?.totalRecord || 0}
