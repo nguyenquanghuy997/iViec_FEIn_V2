@@ -22,6 +22,7 @@ import { QuestionFormModal } from "../components/QuestionFormModal";
 import { useSnackbar } from "notistack";
 
 export const QuestionGallary = () => {
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   // state
   const [currentItem, setCurrentItem] = useState(null);
@@ -81,7 +82,7 @@ export const QuestionGallary = () => {
       }
     }
   };
-  const theme = useTheme();
+
   const onCloseConfirmDelete = () => {
     setCurrentItem(null);
     setShowConfirmDelete(false);
