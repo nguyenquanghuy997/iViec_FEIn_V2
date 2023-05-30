@@ -9,11 +9,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {styled} from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import React from "react";
-
-
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -124,6 +121,7 @@ const SelectFieldStyle = styled(Select)(({ theme }) => ({
     border: "1px solid #D0D4DB !important",
   },
   "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+    border: '1.5px solid #A2AAB7',
     borderColor: theme.palette.common.neutral200,
   },
   "&.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
@@ -145,7 +143,7 @@ const SelectFieldStyle = styled(Select)(({ theme }) => ({
   },
   "&.Mui-focused .MuiIconButton-root": { color: "primary.main" },
   "& .Mui-selected": {
-    backgroundColor:  theme.palette.common.black +" !important",
+    backgroundColor: theme.palette.common.black + " !important",
   },
 }));
 
@@ -294,7 +292,7 @@ const InputProps = {
     <InputAdornment position="start">
       <Iconify
         icon={"ri:search-2-line"}
-        color='#5C6A82'
+        color="#5C6A82"
         width={16}
         height={16}
       />
@@ -303,8 +301,8 @@ const InputProps = {
 };
 
 const ChipSelectStyle = {
-  padding: "5px 6px",
-  color: style.COLOR_TEXT_PRIMARY,
+  padding: "5px 4px 5px 0px",
+  color: style.COLOR_TEXT_BLACK,
   fontSize: style.FONT_XS,
   fontWeight: style.FONT_MEDIUM,
   borderRadius: "4px",

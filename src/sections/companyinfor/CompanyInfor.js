@@ -7,7 +7,7 @@ import useModal from "@/sections/companyinfor/hooks/useModal";
 import { BoxInfoStyle } from "@/sections/companyinfor/style";
 import CropImage from "@/sections/companyinfor/upload/CropImage";
 import { OrganizationSize } from "@/utils/enum";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography, useTheme } from "@mui/material";
 import { get } from "lodash";
 import { Fragment, useMemo } from "react";
 import { RiCheckboxBlankCircleFill } from "react-icons/ri";
@@ -75,6 +75,7 @@ const renderItem = (title, content, child) => {
 };
 
 export default function CompanyInfor({ data }) {
+  const theme = useTheme();
   const { canAccess } = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.EDIT_COMPANY), []);
 
@@ -154,8 +155,12 @@ export default function CompanyInfor({ data }) {
                 <MuiButton
                   color={"default"}
                   title={"Chỉnh sửa"}
-                  sx={{ fontWeight: 500 }}
                   onClick={onOpen}
+                  sx={{
+                    fontWeight: 500,
+                    height: "36px",
+                    backgroundColor: theme.palette.common.neutral50,
+                  }}
                 />
               )}
             </Box>
