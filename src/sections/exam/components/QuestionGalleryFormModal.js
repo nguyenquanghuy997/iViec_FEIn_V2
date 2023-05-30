@@ -29,15 +29,15 @@ export const QuestionGalleryFormModal = ({
 }) => {
   const isEdit = !!editData?.name;
   const [isActive, setIsActive] = useState(true);
-
+  
   // form
   const Schema = Yup.object().shape({
     name: Yup.string()
-      .required("Tên nhóm câu hỏi không được bỏ trống")
-      .max(50, "Độ dài không được quá 50 ký tự"),
+    .required("Tên nhóm câu hỏi không được bỏ trống")
+    .max(50, "Độ dài không được quá 50 ký tự"),
     des: Yup.string().max(100, "Độ dài không được quá 100 ký tự"),
   });
-
+  
   const methodss = useForm({
     defaultValuess,
     resolver: yupResolver(Schema),
@@ -46,9 +46,9 @@ export const QuestionGalleryFormModal = ({
   const {
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methodss;
-
+  
   const pressHide = () => {
     setShow(false);
   };
@@ -60,14 +60,13 @@ export const QuestionGalleryFormModal = ({
     onSubmit?.(data);
     pressHide();
   });
-
+  
   useEffect(() => {
     if (!isEdit) {
       setValue("id", "");
       setValue("name", "");
       setValue("des", "");
       setIsActive(true);
-      return;
     } else {
       setValue("id", editData.id);
       setValue("name", editData.name);
@@ -75,11 +74,16 @@ export const QuestionGalleryFormModal = ({
       setIsActive(editData.isActive);
     }
   }, []);
-
+  
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={pressHide}
     >
       <>
@@ -89,7 +93,7 @@ export const QuestionGalleryFormModal = ({
               <Text flex fontsize={16} fontweight={"700"}>
                 {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm nhóm câu hỏi"}
               </Text>
-
+              
               <ButtonIcon
                 onClick={pressHide}
                 icon={
@@ -102,7 +106,7 @@ export const QuestionGalleryFormModal = ({
                 }
               />
             </View>
-            <Divider />
+            <Divider/>
             <View p={24}>
               <View mb={28}>
                 <Label required={true}>{"Tên nhóm câu hỏi"}</Label>
@@ -123,7 +127,7 @@ export const QuestionGalleryFormModal = ({
                   name={"des"}
                 />
               </View>
-
+              
               <View
                 flexrow
                 atcenter
@@ -133,9 +137,9 @@ export const QuestionGalleryFormModal = ({
                 onclick={() => setIsActive(!isActive)}
               >
                 {isActive ? (
-                  <ActionSwitchCheckedIcon />
+                  <ActionSwitchCheckedIcon/>
                 ) : (
-                  <ActionSwitchUnCheckedIcon />
+                  <ActionSwitchUnCheckedIcon/>
                 )}
                 <Text
                   fontSize={12}
@@ -146,15 +150,15 @@ export const QuestionGalleryFormModal = ({
                 </Text>
               </View>
             </View>
-            <Divider />
+            <Divider/>
             <View flexrow="true" jcend="true" pv={16} ph={24}>
               <ButtonCancelStyle
-                sx={{ marginRight: "8px" }}
+                sx={{marginRight: "8px"}}
                 onClick={pressHide}
               >
                 Hủy
               </ButtonCancelStyle>
-
+              
               <ButtonDS
                 type="submit"
                 variant="contained"

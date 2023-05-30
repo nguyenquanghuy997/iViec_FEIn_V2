@@ -496,15 +496,15 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 1
+                          viewModeDefault === 1
                             ? theme.palette.common.blue700
                             : "#fdfdfd",
                         color:
-                          viewModeDefault == 1
+                          viewModeDefault === 1
                             ? "#fdfdfd"
                             : theme.palette.common.neutral700,
                         borderColor:
-                          viewModeDefault == 1 ? "none" : "#D0D4DB !important",
+                          viewModeDefault === 1 ? "none" : "#D0D4DB !important",
                         borderRadius: "6px 0px 0px 6px",
                         height: "44px",
                         width: "52px",
@@ -525,15 +525,15 @@ function RecruitmentPreviewItem({
                       }
                       sx={{
                         background:
-                          viewModeDefault == 2
+                          viewModeDefault === 2
                             ? theme.palette.common.blue700
                             : "#fdfdfd",
                         color:
-                          viewModeDefault == 2
+                          viewModeDefault === 2
                             ? "#fdfdfd"
                             : theme.palette.common.neutral700,
                         borderColor:
-                          viewModeDefault == 2 ? "none" : "#D0D4DB !important",
+                          viewModeDefault === 2 ? "none" : "#D0D4DB !important",
                         borderRadius: "0 6px 6px 0",
                         height: "44px",
                         width: "52px",

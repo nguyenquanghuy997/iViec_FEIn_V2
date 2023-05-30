@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 const Editor = dynamic(() => import("../../companyinfor/edit/editor"), {
   ssr: false,
@@ -30,20 +30,20 @@ const defaultValues = {
   benefit: "",
   isActivated: true,
 };
-export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => {
+export const RecruitmentFormModal = ({data, show, setShow, onRefreshData}) => {
   const isEditMode = !!data?.id;
   const theme = useTheme();
   const [description, setDescription] = useState(null);
   const [requirement, setRequirement] = useState(null);
   const [benefit, setBenefit] = useState(null);
-
+  
   // api
   const [addForm] = useAddRecruitmentMutation();
   const [updateForm] = useUpdateRecruitmentMutation();
-  const [getPreview, { data: { Data: preview = {} } = {} }] =
+  const [getPreview, {data: {Data: preview = {}} = {}}] =
     useGetPreviewRecruitmentMutation();
   const isLoading = isEditMode && !preview.id;
-
+  
   // form
   const Schema = Yup.object().shape({
     name: Yup.string().required("Chưa nhập tên vị trí công việc"),
@@ -56,14 +56,14 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methods;
-
+  
   // action
   const pressHide = () => {
     setShow(false);
   };
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
     const body = {
       id: isEditMode ? data.id : 0,
@@ -117,12 +117,12 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
       }
     }
   });
-
+  
   // render
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
-
+  
   // effect
   useEffect(() => {
     if (!show) {
@@ -132,18 +132,18 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
       setValue("requirement", "");
       setValue("benefit", "");
       setValue("isActivated", true);
-
+      
       setDescription(null);
       setRequirement(null);
       setBenefit(null);
       return;
     }
-
+    
     if (!isEditMode) return;
-
-    getPreview({ id: data.id }).unwrap();
+    
+    getPreview({id: data.id}).unwrap();
   }, [show]);
-
+  
   useEffect(() => {
     if (!preview.id) return;
     setValue("name", preview.name);
@@ -151,7 +151,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
     setValue("requirement", preview.requirement);
     setValue("benefit", preview.benefit);
     setValue("isActivated", !!preview.isActivated);
-
+    
     setDescription(preview.description);
     setRequirement(preview.requirement);
     setBenefit(preview.benefit);
@@ -162,7 +162,7 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
       <Modal
         open={show}
         onClose={pressHide}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
+        sx={{display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
       >
         <ViewModel>
           {/* header */}
@@ -201,28 +201,28 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
               }
             />
           </View>
-          <Divider />
+          <Divider/>
           {/* body */}
           {isLoading ? (
             <View flex="true" contentcenter="true">
-              <CircularProgress />
+              <CircularProgress/>
             </View>
           ) : (
-            <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
+            <View flex="true" p={24} pb={28} style={{overflowY: "scroll"}}>
               {/* code & name */}
-
+              
               <View mb={24}>
                 {renderTitle("Tên vị trí công việc", true)}
-
+                
                 <RHFTextField
                   name={"name"}
                   placeholder="Nhập vị trí công việc"
                 />
               </View>
-
-              <Divider />
+              
+              <Divider/>
               {/* dept */}
-
+              
               {/* des */}
               <View mt={28}>
                 {renderTitle("Mô tả công việc")}
@@ -252,11 +252,11 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
                   }}
                 />
               </View>
-
+              
               {/* require */}
               <View mt={28}>
                 {renderTitle("Yêu cầu công việc")}
-
+                
                 <Editor
                   data={requirement}
                   // onChange={(_, e) => {
@@ -283,11 +283,11 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
                   }}
                 />
               </View>
-
+              
               {/* benefit */}
               <View mt={28}>
                 {renderTitle("Quyền lợi")}
-
+                
                 <Editor
                   data={benefit}
                   // onChange={(_, e) => {
@@ -330,11 +330,11 @@ export const RecruitmentFormModal = ({ data, show, setShow, onRefreshData }) => 
               tittle={isEditMode ? "Sửa" : "Thêm"}
               onClick={pressSave}
             />
-            <View width={8} />
-             <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
-            <View width={8} />
-            <View flex="true" />
-
+            <View width={8}/>
+            <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
+            <View width={8}/>
+            <View flex="true"/>
+            
             {isLoading ? null : (
               <SwitchStatusDS
                 name={"isActivated"}

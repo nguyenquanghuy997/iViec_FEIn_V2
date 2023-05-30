@@ -34,8 +34,13 @@ const BoxItemStyle = styled(Box)(
     },
   })
 );
-
-const PipelineCard = ({ index, item, onOpenFormExamination, examination }) => {
+const PipelineCard = ({
+  index,
+  item,
+  isDefault,
+  onOpenFormExamination,
+  examination,
+}) => {
   const { pipelineStateType } = item;
   const isExam = pipelineStateType === PIPELINE_TYPE.EXAMINATION;
   const isExamEmpty = isExam && isEmpty(examination?.examinationId);
@@ -107,7 +112,13 @@ const PipelineCard = ({ index, item, onOpenFormExamination, examination }) => {
               marginTop: "2px",
             }}
           >
-            {item.description}
+            {
+              PipelineStateType(
+                item?.pipelineStateType,
+                item.description,
+                isDefault
+              ).subtitle
+            }
           </Typography>
         </Stack>
       </Box>

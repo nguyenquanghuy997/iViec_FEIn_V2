@@ -190,7 +190,7 @@ const DynamicColumnsTable = (props) => {
   };
 
   const getQueryDefault = () => {
-    return Object.fromEntries(Object.entries(router.query).filter(([key]) => !columns.some(col => key == col.dataIndex)));
+    return Object.fromEntries(Object.entries(router.query).filter(([key]) => !columns.some(col => Array.isArray(col.filters?.name) ? col.filters?.name.some(f => f == key) : key == col.filters?.name)));
   }
 
   return (

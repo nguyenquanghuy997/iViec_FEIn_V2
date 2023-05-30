@@ -127,42 +127,42 @@ export const LIST_OPTIONS_QUESTION_TYPE = [
   { id: 1, value: 1, name: "Trắc nghiệm - nhiều đáp án đúng" },
 ]
 
-export const PipelineStateType = (item, description = '') => {
+export const PipelineStateType = (item, description = '', isDefault) => {
   switch (item) {
     case 0:
       return {
         title: "Ứng tuyển",
-        subtitle: description,
+        subtitle: isDefault ? "Ứng viên ứng tuyển trên Jobsite hoặc được nhà tuyển dụng thêm vào tin" : description,
         icon: <ApplyJobIcon />
       }
     case 1:
       return {
         title: "Thi tuyển",
-        subtitle: description,
+        subtitle: isDefault ? "Ứng viên tham gia thi tuyển theo đề thi nhà tuyển dụng đã thiết lập" : description,
         icon: <AssessmentIcon />
       }
     case 2:
       return {
         title: "Phỏng vấn",
-        subtitle: description,
+        subtitle: isDefault ? "Ứng viên tham gia phỏng vấn theo lịch nhà tuyển dụng đã thiết lập" : description,
         icon: <InterviewIcon />
       }
     case 3:
       return {
         title: "Kết quả",
-        subtitle: description,
+        subtitle: isDefault ? "Ứng viên nhận thông báo kết quả từ nhà tuyển dụng" : description,
         icon: <ResultIcon />
       }
     case 4:
       return {
         title: "Mời nhận việc",
-        subtitle: description,
+        subtitle: isDefault ? "Ứng viên nhận thông báo mời nhận việc từ nhà tuyển dụng" : description,
         icon: <OfferIcon />
       }
     default:
       return {
         title: "Ứng tuyển",
-        subtitle: description,
+        subtitle: isDefault ? "Ứng viên ứng tuyển trên Jobsite hoặc nhà tuyển dụng thêm vào tin" : description,
         icon: <ApplyJobIcon />
       }
   }

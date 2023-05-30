@@ -176,7 +176,7 @@ function ExaminationItem(props) {
             {"Kết quả :"}
           </Typography>
           <Typography fontSize="14px" fontWeight="600">
-            {item?.processStatus == 4 ? "Đạt" : "Không Đạt"}
+            {item?.processStatus === 4 ? "Đạt" : "Không Đạt"}
           </Typography>
         </Stack>
       </Box>
@@ -271,11 +271,11 @@ function InterviewItem(props) {
             }
           })}
         <Box>
-          {lastInterview?.applicantInterviewState ==
+          {lastInterview?.applicantInterviewState ===
             ApplicantInterviewState.PENDING ||
-          lastInterview?.applicantInterviewState ==
+          lastInterview?.applicantInterviewState ===
             ApplicantInterviewState.CONFIRMED ||
-          lastInterview?.applicantInterviewState ==
+          lastInterview?.applicantInterviewState ===
             ApplicantInterviewState.INTERVIEWING ? (
             <Box
               sx={{
@@ -429,9 +429,13 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType == 0 ? "#FDFDFD" : "#455570",
+                      item.pipelineStateResultType === 0
+                        ? "#FDFDFD"
+                        : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 0 ? "#4CAF50" : "#FDFDFD",
+                      item.pipelineStateResultType === 0
+                        ? "#4CAF50"
+                        : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#4CAF50",
@@ -449,9 +453,13 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType == 1 ? "#FDFDFD" : "#455570",
+                      item.pipelineStateResultType === 1
+                        ? "#FDFDFD"
+                        : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 1 ? "#FF9800" : "#FDFDFD",
+                      item.pipelineStateResultType === 1
+                        ? "#FF9800"
+                        : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#FF9800",
@@ -470,9 +478,13 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType == 2 ? "#FDFDFD" : "#455570",
+                      item.pipelineStateResultType === 2
+                        ? "#FDFDFD"
+                        : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType == 2 ? "#F44336" : "#FDFDFD",
+                      item.pipelineStateResultType === 2
+                        ? "#F44336"
+                        : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#F44336",
@@ -490,7 +502,7 @@ function ResultItem(props) {
               </ButtonGroup>
             </Box>
 
-            {item.pipelineStateResultType == 2 && (
+            {item.pipelineStateResultType === 2 && (
               <ButtonDS
                 tittle={"Tái Khai Thác"}
                 type="submit"
@@ -553,7 +565,7 @@ function OfferItem(props) {
   return (
     <div>
       <Baseitem item={item} />
-      {item.offerStateResultType == 0 && (
+      {item.offerStateResultType === 0 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -576,7 +588,7 @@ function OfferItem(props) {
           </Item>
         </Box>
       )}
-      {item.offerStateResultType == 1 && (
+      {item.offerStateResultType === 1 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -599,7 +611,7 @@ function OfferItem(props) {
           </Item>
         </Box>
       )}
-      {item.offerStateResultType == 2 && (
+      {item.offerStateResultType === 2 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -620,7 +632,7 @@ function OfferItem(props) {
           </Item>
         </Box>
       )}
-      {item.offerStateResultType == 3 && (
+      {item.offerStateResultType === 3 && (
         <Box sx={{ display: "flex", pt: 1, borderRadius: "4px" }}>
           <Item sx={{ flexShrink: 1 }}>
             <Iconify
@@ -850,11 +862,11 @@ function TaskCard({ item, index, pipelineStateType }) {
 
               <Box sx={{ cursor: "pointer" }}>
                 <Stack sx={{ borderRadius: "8px", background: "#FDFDFD" }}>
-                  {pipelineStateType == 0 && <Baseitem item={item} />}
-                  {pipelineStateType == 1 && <ExaminationItem item={item} />}
-                  {pipelineStateType == 2 && <InterviewItem item={item} />}
-                  {pipelineStateType == 3 && <ResultItem item={item} />}
-                  {pipelineStateType == 4 && <OfferItem item={item} />}
+                  {pipelineStateType === 0 && <Baseitem item={item} />}
+                  {pipelineStateType === 1 && <ExaminationItem item={item} />}
+                  {pipelineStateType === 2 && <InterviewItem item={item} />}
+                  {pipelineStateType === 3 && <ResultItem item={item} />}
+                  {pipelineStateType === 4 && <OfferItem item={item} />}
 
                   <Box
                     display="Grid"

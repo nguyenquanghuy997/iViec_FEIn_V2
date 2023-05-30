@@ -224,3 +224,22 @@ export const BookingCalendarProcessStatus = (item) => {
       return "Đã hủy lịch";
   }
 };
+
+export const ApplicantCalendarState = (item) => {
+  switch (item) {
+    case 0: //"Pending"
+      return <span style={{color: "#455570"}}>Chờ xác nhận phỏng vấn</span>;
+    case 1: //"Confirmed":
+      return <span style={{color: "#388E3C"}}>Đã xác nhận phỏng vấn</span>;
+    case 2: //"Suspended":
+      return <span style={{color: "#F77A0C"}}>Hoãn lịch phỏng vấn</span>;
+    case 3: //"Refuse":
+      return <span style={{color: "#E53935"}}>Từ chối phỏng vấn</span>;
+    case 4: //"Interviewing":
+      return <span style={{color: "#388E3C"}}>Đang phỏng vấn</span>;
+    case 5: //"NotParted":
+      return <span style={{color: "#E53935"}}>Không tham gia phỏng vấn</span>;
+    case 6: //"Completed":
+      return <span style={{color: "#388E3C"}}>Kết thúc phỏng vấn</span>;
+  }
+};
