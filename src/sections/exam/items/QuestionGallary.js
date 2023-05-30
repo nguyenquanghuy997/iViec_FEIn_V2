@@ -19,8 +19,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@mui/material/styles";
 import { QuestionFormModal } from "../components/QuestionFormModal";
+import { useSnackbar } from "notistack";
 
 export const QuestionGallary = () => {
+  const { enqueueSnackbar } = useSnackbar();
   // state
   const [currentItem, setCurrentItem] = useState(null);
   const [listSelected, setListSelected] = useState([]);
@@ -69,8 +71,15 @@ export const QuestionGallary = () => {
       ...e,
       description: e.des,
     };
-    await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body));
-    onHandleFinish();
+    try {
+      await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body)).unwrap();
+      onHandleFinish();
+    }
+    catch (e) {
+      if (e.status == 'QGE_05') {
+        enqueueSnackbar('Nhóm đề thi đã tồn tại', { variant: 'error' });
+      }
+    }
   };
   const theme = useTheme();
   const onCloseConfirmDelete = () => {
