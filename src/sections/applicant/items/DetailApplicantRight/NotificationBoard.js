@@ -144,7 +144,7 @@ const NotificationBoard = ({
             </React.Fragment>
           </div>
 
-          {isReview && (
+          {isReview ? (
             <Collapse
               in={open}
               timeout="auto"
@@ -219,6 +219,24 @@ const NotificationBoard = ({
 
               {children}
             </Collapse>
+          ) : (
+            !!children && (
+              <Collapse
+                in={open}
+                timeout="auto"
+                unmountOnExit
+                sx={{
+                  backgroundColor: theme.palette.common.bgrMaster,
+                  pb: 2,
+                  pt: 2,
+                  "& .MuiButtonBase-root:hover": {
+                    backgroundColor: theme.palette.common.bgrMaster,
+                  },
+                }}
+              >
+                {children}
+              </Collapse>
+            )
           )}
 
           {isReview && isOpenReview && (
