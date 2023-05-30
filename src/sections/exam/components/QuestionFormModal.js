@@ -212,6 +212,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       if (isNotSave) {
         const data = {
           ...e,
+          questionType: +e.questionType,
           answers: e.answers?.length > 0 && !isEssay ? e.answers : null,
           questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name
         }

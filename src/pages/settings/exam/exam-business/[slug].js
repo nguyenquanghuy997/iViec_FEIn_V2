@@ -129,8 +129,8 @@ function Question() {
         dataIndex: "updateDate",
         title: "Ngày chỉnh sửa",
         width: "180px",
-        render: (_, { updatedTime }) => {
-          return updatedTime ? moment(updatedTime).format("DD/MM/YYYY") : "-";
+        render: (_, { updatedTime, updatedUser }) => {
+          return updatedUser?.id ? moment(updatedTime).format("DD/MM/YYYY") : "-";
         },
       },
       {
@@ -139,20 +139,22 @@ function Question() {
         width: "220px",
         render: (_, { updatedUser }) => {
           return (
-            <View flexRow atCenter>
-              <AvatarDS
-                sx={{
-                  height: "20px",
-                  width: "20px",
-                  fontSize: "10px",
-                  borderRadius: "20px",
-                }}
-                src={updatedUser?.avatar}
-                name={updatedUser?.name}
-              />
+            updatedUser?.id ?
+              <View flexRow atCenter>
+                <AvatarDS
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                    fontSize: "10px",
+                    borderRadius: "20px",
+                  }}
+                  src={updatedUser?.avatar}
+                  name={updatedUser?.name}
+                />
 
-              {updatedUser?.email}
-            </View>
+                {updatedUser?.email}
+              </View>
+              : '-'
           );
         },
         filters: {
@@ -211,6 +213,7 @@ function Question() {
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           placeholder: 'Tất cả',
+          name: "isActive",
           // options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
           options: [
             {
@@ -218,11 +221,11 @@ function Question() {
               label: 'Tất cả'
             },
             {
-              value: true,
+              value: 'true',
               label: 'Đang hoạt động'
             },
             {
-              value: false,
+              value: 'false',
               label: 'Không hoạt động'
             }
           ]
@@ -358,7 +361,7 @@ function Question() {
           isMulti ? (
             <span>
               Bạn có chắc chắn muốn xóa{" "}
-              <b>{isMulti ? itemSelected.length : ""} câu hỏi này</b>
+              <b>{isMulti ? itemSelected.length : ""} câu hỏi </b> này
             </span>
           ) : (
             <span>

@@ -280,10 +280,15 @@ const CreateExamContent = () => {
       }
       enqueueSnackbar("Lưu đề thi thành công");
       router.push("/settings/exam/exam-business");
-    } catch {
-      enqueueSnackbar("Lưu đề thi thất bại", {
-        variant: "error",
-      });
+    } catch (e) {
+      if (e.status == 'EXE_06')
+        enqueueSnackbar("Đề thi đã tồn tại", {
+          variant: "error",
+        });
+      else
+        enqueueSnackbar("Lưu đề thi thất bại", {
+          variant: "error",
+        });
     }
   };
 
@@ -378,10 +383,15 @@ const CreateExamContent = () => {
       }
       enqueueSnackbar("Lưu đề thi thành công");
       router.push("/settings/exam/exam-business");
-    } catch {
-      enqueueSnackbar("Lưu đề thi thất bại", {
-        variant: "error",
-      });
+    } catch (e) {
+      if (e.status == 'EXE_06')
+        enqueueSnackbar("Đề thi đã tồn tại", {
+          variant: "error",
+        });
+      else
+        enqueueSnackbar("Lưu đề thi thất bại", {
+          variant: "error",
+        });
     }
   };
 
