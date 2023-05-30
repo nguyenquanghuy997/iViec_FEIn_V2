@@ -50,7 +50,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
 
   const { data: { items: ListPipeline = [] } = {}, isLoading } =
     useGetAllPipelineByOrganizationQuery({ OrganizationId: organizationId });
-  const { data: { organizationPipelineStates: ListStepPipeline = [] } = {} } =
+  const { data:  ListStepPipeline  = {} } =
     useGetAllStepOfPipelineQuery(
       { Id: organizationPipelineId },
       { skip: !organizationPipelineId }
@@ -74,8 +74,8 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
   }, [recruitment]);
 
   useEffect(() => {
-    if (!isEmpty(ListStepPipeline)) {
-      const listStepPipelineSize = ListStepPipeline?.filter(
+    if (!isEmpty(ListStepPipeline?.organizationPipelineStates)) {
+      const listStepPipelineSize = ListStepPipeline?.organizationPipelineStates?.filter(
         (item) => item.pipelineStateType === PIPELINE_TYPE.EXAMINATION
       )?.length;
       setHasExamination({
@@ -175,7 +175,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
                 onChange={(e) => {
                   setValue("organizationPipelineId", e);
                   setPipelineStateDatas(
-                    ListStepPipeline?.map((pipeline) => ({
+                    ListStepPipeline?.organizationPipelineStates?.map((pipeline) => ({
                       organizationPipelineId: pipeline.id,
                       pipelineStateType: pipeline.pipelineStateType,
                       examinationId: null,
@@ -208,7 +208,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
                 />
               </Box>
               <Box sx={{ mt: 1 }}>
-                {ListStepPipeline?.map((item, index) => {
+                {ListStepPipeline?.organizationPipelineStates?.map((item, index) => {
                   const examination = pipelineStateDatas?.find(
                     (pipeline) =>
                       pipeline?.organizationPipelineStateId === item?.id
@@ -219,6 +219,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
                       key={index}
                       index={index}
                       item={item}
+                      isDefault={ListStepPipeline?.isDefault}
                       examination={
                         isEmpty(recruitment)
                           ? {
