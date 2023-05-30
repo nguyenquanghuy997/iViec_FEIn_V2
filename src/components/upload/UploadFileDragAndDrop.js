@@ -48,7 +48,7 @@ export default function UploadFileDragAndDrop({
       accept={accept}
       showUploadList={showUploadList}
       height={height}
-      style={{ background: "white" }}
+      style={{ background: "white", border: "1px dashed " + theme.palette.common.neutral600 }}
     >
       <Grid>
         <Typography variant={"textSize14500"} color={theme.palette.common.blue700}>

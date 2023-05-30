@@ -19,7 +19,7 @@ import { ButtonCancelStyle } from "@/sections/applicant/style";
 import { MinusIcon } from "@/assets/ActionIcon";
 import { ApproveProcessFormLevelItem } from "@/sections/approve-process/Items/ApproveProcessFormLevelItem";
 import { styled } from "@mui/styles";
-import { formatDataGet, formatDataPush } from "@/sections/approve-process/config";
+import { formatDataGet, formatDataPush, getNumberUser } from "@/sections/approve-process/config";
 import ApproveProcessDialog from "@/sections/approve-process/ApproveProcessDialog";
 import { useTheme } from "@mui/material/styles";
 import { RiTimerFlashLine } from "react-icons/ri";
@@ -56,6 +56,7 @@ const ButtonAddInviteStyle = styled(Button)(({theme}) => ({
   "&.button-add-invite": {
     ...ButtonStyle,
     backgroundColor: theme.palette.common.white,
+    border: '1px solid ' + theme.palette.common.blue700,
     width: '100%',
     color: theme.palette.common.blue700,
     ":hover": {
@@ -201,7 +202,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
         <Modal
           open={show}
           onClose={pressHide}
-          sx={{display: "flex", justifyContent: "flex-end"}}
+          sx={{display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
         >
           <ViewModel>
             {/* header */}
@@ -220,7 +221,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
               <ButtonDS
                 type="submit"
                 sx={{
-                  backgroundColor:theme.palette.background.paper,
+                  backgroundColor: theme.palette.background.paper,
                   boxShadow: "none",
                   ":hover": {
                     backgroundColor: "#EFF3F7",
@@ -260,6 +261,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                   {renderTitle("Mô tả")}
                   <TextAreaDS
                     maxLength={255}
+                    height={90}
                     placeholder="Nhập nội dung mô tả..."
                     name={"description"}
                   />
@@ -288,7 +290,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                     style={{
                       marginBottom: 24,
                       borderRadius: 6,
-                      border: '0.5px solid ' + theme.palette.common.neutral400,
+                      border: '1.5px solid ' + theme.palette.common.neutral200,
                     }}
                     key={item.id}>
                     <Grid container direction="row"
@@ -307,9 +309,9 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                         </Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        {/*<Typography variant="textSize13500">*/}
-                        {/*  Đã chọn: ...*/}
-                        {/*</Typography>*/}
+                        <Typography variant="textSize13500">
+                          Đã chọn: {getNumberUser(watch(`approvalProcessLevels.${index}.approvalProcessLevelDetails`))}
+                        </Typography>
                       </Grid>
                       <Grid item xs={3}>
                         {watch("isApprovalAuto") &&
@@ -319,7 +321,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                             type={"number"}
                             startIcon={<RiTimerFlashLine size={20}/>}
                             endIcon={"Giờ"}
-                            sx={{backgroundColor: theme.palette.background.whiteBg}}
+                            sx={{backgroundColor: theme.palette.common.white}}
                           />
                         }
                       </Grid>
@@ -372,7 +374,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                 />
                 <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
               </View>
-              {!isLoading && !isEditMode  ? (
+              {!isLoading && !isEditMode ? (
                 <SwitchStatusDS
                   name={"isAvailable"}
                   label={methods.watch("isAvailable") ? "Đang áp dụng" : "Không áp dụng"}

@@ -41,22 +41,22 @@ const defaultValues = {
   isActive: undefined,
 };
 
-const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
+const EmailFormModal = ({isOpen, type, data, title, onClose}) => {
   // props
   const isEditMode = !!data?.id;
   const isLoading = isEditMode && !data?.id;
-
+  
   // other
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
-
+  const {enqueueSnackbar} = useSnackbar();
+  
   // api
   const [addForm] = useAddEmailTemplateMutation();
   const [updateForm] = useUpdateEmailTemplateMutation();
-
+  
   // state
   const [isOpenPreview, setIsOpenPreview] = useState(false);
-
+  
   // form
   const Schema = Yup.object().shape({
     id: Yup.string(),
@@ -70,27 +70,27 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
     isDefaultSignature: Yup.boolean(),
     isActive: Yup.boolean(),
   });
-
+  
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-
+  
   const {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: {isSubmitting, errors},
   } = methods;
-
+  
   // effect
   useEffect(() => {
     setValue("templateOrganizationType", type);
   }, [type]);
-
+  
   useEffect(() => {
     if (!data?.id) return;
-
+    
     setValue("id", data.id);
     setValue("name", data.name);
     setValue("content", data.content);
@@ -99,44 +99,48 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
     setValue("isDefaultSignature", data.isDefaultSignature);
     setValue("isActive", data.isActive);
   }, [data]);
-
+  
   // handle
   const handleOpenPreviewEmail = () => {
     setIsOpenPreview(true);
   };
-
+  
   const handleClosePreviewEmail = () => {
     setIsOpenPreview(false);
   };
-
+  
   const handleSetSignatureLogo = (e) => {
     setValue("signatureLogo", e.fileTemplates[0].path);
   };
-
+  
   const pressSave = handleSubmit(async (body) => {
     await (isEditMode ? updateForm : addForm)(body)
-      .unwrap()
-      .then(() => {
-        enqueueSnackbar("Thực hiện thành công!", {
-          autoHideDuration: 2000,
-        });
-        onClose();
-      })
-      .catch(() => {
-        enqueueSnackbar("Thực hiện thất bại!", {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
+    .unwrap()
+    .then(() => {
+      enqueueSnackbar("Thực hiện thành công!", {
+        autoHideDuration: 2000,
       });
+      onClose();
+    })
+    .catch(() => {
+      enqueueSnackbar("Thực hiện thất bại!", {
+        autoHideDuration: 1000,
+        variant: "error",
+      });
+    });
   });
-
+  
   return (
     <>
       <FormProvider {...methods}>
         <Modal
           open={isOpen}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+          }}
         >
           <ViewModel
             sx={{
@@ -179,7 +183,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
                   }
                 />
               </View>
-              <Divider />
+              <Divider/>
             </View>
             <View
               style={{
@@ -190,12 +194,12 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
             >
               {isLoading ? (
                 <View flex="true" contentcenter="true">
-                  <CircularProgress />
+                  <CircularProgress/>
                 </View>
               ) : (
                 <Grid
                   container
-                  sx={{ width: "800px", overflowY: "auto" }}
+                  sx={{width: "800px", overflowY: "auto"}}
                   height={"100%"}
                   flexWrap={"nowrap"}
                   flexDirection={"column"}
@@ -217,7 +221,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
                         showPreview
                         showUploadFile={true}
                         onOpenPreview={handleOpenPreviewEmail}
-                        sx={{ width: "752px", minHeight: "370px" }}
+                        sx={{width: "752px", minHeight: "370px"}}
                       />
                     </Grid>
                     <Grid mb={3}>
@@ -227,7 +231,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
                         justifyContent={"space-between"}
                         alignItems={"center"}
                       >
-                        <LabelStyle sx={{ mb: "unset" }} required={true}>
+                        <LabelStyle sx={{mb: "unset"}} required={true}>
                           Chữ ký email
                         </LabelStyle>
                         <RHFCheckbox
@@ -243,7 +247,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
                           />
                           <Typography
                             variant={"textSize13"}
-                            sx={{ mt: 1 }}
+                            sx={{mt: 1}}
                             color={theme.palette.text.secondary}
                           >
                             Logo công ty
@@ -251,7 +255,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
                           {errors.signatureLogo && (
                             <FormHelperText
                               error
-                              sx={{ textTransform: "capitalize" }}
+                              sx={{textTransform: "capitalize"}}
                             >
                               {errors.signatureLogo.message}
                             </FormHelperText>
@@ -261,7 +265,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
                           <RHFEmailEditor
                             name="signatureContent"
                             placeholder="Nhập chữ ký email..."
-                            sx={{ minHeight: "230px" }}
+                            sx={{minHeight: "230px"}}
                           />
                         </Box>
                       </Box>
@@ -283,7 +287,7 @@ const EmailFormModal = ({ isOpen, type, data, title, onClose }) => {
                   loading={isSubmitting}
                   variant="contained"
                   tittle={"Lưu"}
-                  sx={{ mr: 1 }}
+                  sx={{mr: 1}}
                   onClick={pressSave}
                 />
                 <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>

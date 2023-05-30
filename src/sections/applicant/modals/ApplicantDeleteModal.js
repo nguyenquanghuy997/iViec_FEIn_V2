@@ -1,7 +1,7 @@
 import { ImgConfirm } from "../others";
 import { Text, View } from "@/components/FlexStyled";
 import { Modal } from "@mui/material";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 
 export const ApplicantDeleteModal = ({
@@ -10,20 +10,25 @@ export const ApplicantDeleteModal = ({
   data,
   pressDelete,
 }) => {
-  const  theme = useTheme();
+  const theme = useTheme();
   return (
     <Modal
       open={showDelete}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={() => setShowDelete(false)}
     >
       <View contentCenter p={16} width={416} borderRadius={8} bgColor={theme.palette.background.paper}>
-        <ImgConfirm />
-
+        <ImgConfirm/>
+        
         <Text centerAlign mt={24} mb={12} fontSize={20} fontWeight={"700"}>
           {"Xác nhận xóa mẫu đánh giá"}
         </Text>
-
+        
         <Text
           centerAlign
           mb={16}
@@ -33,7 +38,7 @@ export const ApplicantDeleteModal = ({
         >
           {`Bạn có muốn xóa ${data.ApplicantName} không?`}
         </Text>
-
+        
         <View
           contentCenter
           width={"100%"}
@@ -47,7 +52,7 @@ export const ApplicantDeleteModal = ({
             {"Xác nhận"}
           </Text>
         </View>
-
+        
         <View
           contentCenter
           width={"100%"}

@@ -11,7 +11,8 @@ import { useTheme } from "@mui/material/styles";
 import { RiCloseLine } from "react-icons/ri";
 import { Autocomplete, Checkbox, CircularProgress, MenuItem, } from "@mui/material";
 import { isEqual } from "lodash";
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
+import Iconify from "@/components/Iconify";
 
 const MuiAutocomplete = forwardRef(
   (
@@ -147,7 +148,11 @@ const MuiAutocomplete = forwardRef(
                 {isFetching ? (
                   <CircularProgress color="inherit" size={20}/>
                 ) : null}
-                {params.InputProps.endAdornment}
+                {<Iconify
+                  icon={"ic:round-clear"}
+                  width={16}
+                  height={16}
+                />}
               </>
             ),
           }}
