@@ -196,7 +196,7 @@ export const AddQuestionGroupModel = ({
                         fullWidth
                       />
                     </View>
-                    <Label required={true}>{"Số câu hỏi đưa vào đề thi"}</Label>
+                    <Label required={true}>{"Câu hỏi đưa vào đề thi"}</Label>
                     <Grid container mb={3} flexDirection={"row"}>
                       <Grid item xs={6} pr={"12px"}>
                         <RHFSelect
@@ -279,7 +279,7 @@ export const AddQuestionGroupModel = ({
                 type="submit"
                 loading={isSubmitting}
                 variant="contained"
-                tittle={"Thêm tiêu chí đánh giá"}
+                tittle={"Thêm nhóm câu hỏi khác"}
                 onClick={() => {
                   append({
                     questionGroupId: "",

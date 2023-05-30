@@ -36,7 +36,7 @@ const BoxItemStyle = styled(Box)(({theme, borderColor = theme.palette.common.neu
     }
 }));
 
-const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
+const PipelineCard = ({index, item, isDefault, onOpenFormExamination, examination}) => {
     const classes = useStyles();
 
     const {pipelineStateType} = item;
@@ -82,7 +82,7 @@ const PipelineCard = ({index, item, onOpenFormExamination, examination}) => {
                             fontWeight: style.FONT_NORMAL,
                             textAlign: 'justify',
                         }}>
-                        {PipelineStateType(item?.pipelineStateType, item.description).subtitle}
+                        {PipelineStateType(item?.pipelineStateType, item.description, isDefault).subtitle}
                     </Typography>
                 </Stack>
             </Box>

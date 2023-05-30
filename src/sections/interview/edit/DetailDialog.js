@@ -1,8 +1,4 @@
-import {
-  CandidateState,
-  convertDurationTimeToSeconds,
-  convertStoMs,
-} from "../config";
+import { convertDurationTimeToSeconds, convertStoMs } from "../config";
 import CloseIcon from "@/assets/CloseIcon";
 import { ButtonDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
@@ -15,7 +11,10 @@ import {
   useGetDetailCalendarsQuery,
 } from "@/sections/interview/InterviewSlice";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
-import { BookingCalendarProcessStatus } from "@/utils/enum";
+import {
+  ApplicantCalendarState,
+  BookingCalendarProcessStatus,
+} from "@/utils/enum";
 import { INTERVIEW_PROCESS_STATUS } from "@/utils/formatString";
 import {
   Button,
@@ -100,7 +99,14 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
       convertDurationTimeToSeconds(duration?.[0])
   );
   const { user } = useAuth();
+  const getLink = async (id) => {
+    return `${window.location.origin}/phong-van.html?DisplayName=${user?.firstName}&&Email=${user?.email}&&Role=1&&RoomName=${id}`;
+  };
 
+  const copyToClipboard = async (id) => {
+    navigator.clipboard.writeText(await getLink(id));
+    enqueueSnackbar("Đã sao chép link cuộc họp");
+  };
   return (
     <Modal
       open={open}
@@ -220,7 +226,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                     sx={{ display: "flex", justifyContent: "flex-end" }}
                   >
                     <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-                      {CandidateState(item?.applicantInterviewState)}
+                      {ApplicantCalendarState(item?.applicantInterviewState)}
                     </Typography>
                   </ListItemText>
                 </ListItem>
@@ -268,9 +274,9 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
         <View pv={16} ph={24} flexrow="row" jcbetween="true">
           <BoxFlex justifyContent="start">
             <ButtonDS
-              tittle={" Copy link"}
+              tittle={" Chia sẻ link"}
               type="button"
-              // onClick={() => setIsOpenSendOffer(true)}
+              onClick={() => copyToClipboard(item?.id)}
               sx={{
                 color: theme.palette.common.neutral700,
                 backgroundColor: theme.palette.common.neutral50,
