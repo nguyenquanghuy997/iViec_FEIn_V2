@@ -169,7 +169,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                                   </Grid>
                                 }
                               >
-                                <Grid item xs={3} wrap="nowrap" container
+                                <Grid item xs={3} mb={"10px"} wrap="nowrap" container
                                       direction="row"
                                       alignItems={"center"}>
                                   <AvatarDS
@@ -215,8 +215,9 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
             <ButtonCancelStyle onClick={pressHide}>Đóng</ButtonCancelStyle>
           </View>
           <SwitchStatusDS
+            checked={preview?.isAvailable}
             name={"isAvailable"}
-            label={"Đang áp dụng"}
+            label={preview?.isAvailable ? "Đang áp dụng" : "Không áp dụng"}
           />
         </View>
       </ViewModel>

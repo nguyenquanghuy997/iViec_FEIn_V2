@@ -243,7 +243,6 @@ export const FormCalendar = ({
         <ViewModel
           sx={{
             width: "unset",
-            height: "100%",
             justifyContent: "space-between",
           }}
         >
