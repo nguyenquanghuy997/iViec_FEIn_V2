@@ -819,7 +819,7 @@ export const RecruitmentApplicantCreate = ({
                         cv[0].type === "application/pdf" ? (
                           <div style={{ width: "100%", height: "100%" }}>
                             <IframeStyled
-                              src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
+                              src={getFileUrl(watch("cvFile"))}
                             ></IframeStyled>
                           </div>
                         ) : (
