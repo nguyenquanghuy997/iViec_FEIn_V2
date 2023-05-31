@@ -52,13 +52,13 @@ export const QuestionGalleryFormModal = ({
   const pressHide = () => {
     setShow(false);
   };
+
   const pressSave = handleSubmit(async (d) => {
     const data = {
       ...d,
       isActive,
     };
     onSubmit?.(data);
-    pressHide();
   });
 
   useEffect(() => {

@@ -74,11 +74,12 @@ export const QuestionGallary = () => {
     };
     try {
       await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body)).unwrap();
+      setShowForm(false)
       onHandleFinish();
     }
     catch (e) {
       if (e.status == 'QGE_05') {
-        enqueueSnackbar('Nhóm đề thi đã tồn tại', { variant: 'error' });
+        enqueueSnackbar('Nhóm câu hỏi đã tồn tại. Vui lòng nhập lại tên khác !', { variant: 'error'});
       }
     }
   };
