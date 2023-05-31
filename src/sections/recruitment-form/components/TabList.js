@@ -64,7 +64,7 @@ const RecruitmentTabList = ({ onChange, isValid, ...props }) => {
         borderBottom: "1px solid #E7E9ED",
         zIndex: 1000,
         position: "fixed",
-        top: "156px",
+        top: "154px",
         filter:
           "drop-shadow(0px 3px 5px rgba(9, 30, 66, 0.2)) drop-shadow(0px 0px 1px rgba(9, 30, 66, 0.3))",
       }}
