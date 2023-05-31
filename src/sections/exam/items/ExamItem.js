@@ -17,9 +17,18 @@ import { ExamType, Status } from "@/utils/enum";
 import { LIST_EXAM_TYPE, LIST_STATUS } from "@/utils/formatString";
 import { fDate } from "@/utils/formatTime";
 import { Box, Button, ButtonGroup } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
+
+const ViewExam = styled('div')(() => ({
+  margin: "-32px",
+  '& .inside': {
+    ".ant-table-content": {
+      height: 'calc(100vh - 380px)',
+    },
+  },
+}));
 
 export const ExamItem = ({ hideTable, headerProps }) => {
   const router = useRouter();
@@ -70,7 +79,7 @@ export const ExamItem = ({ hideTable, headerProps }) => {
             sx={{
               width: 360,
               fontWeight: 500,
-              fontSize: 14,
+              fontSize: 13,
               cursor: "pointer",
             }}
             onClick={() => {
@@ -407,11 +416,7 @@ export const ExamItem = ({ hideTable, headerProps }) => {
   };
 
   return (
-    <View
-      style={{
-        margin: "-32px",
-      }}
-    >
+    <ViewExam>
       <View>
         <DynamicColumnsTable
           columns={columns}
@@ -467,6 +472,6 @@ export const ExamItem = ({ hideTable, headerProps }) => {
           onSubmit={handleSubmitCreate}
         />
       </View>
-    </View>
+    </ViewExam>
   );
 };

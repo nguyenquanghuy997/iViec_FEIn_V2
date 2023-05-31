@@ -39,7 +39,7 @@ export const AddQuestionGroupModel = ({
     questionGroup: Yup.array().of(
       Yup.object().shape({
         questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
-        questionTypeId: Yup.string().required("Chưa chọn loại câu hỏi"),
+        questionTypeId: Yup.string().required("Chưa chọn kiểu câu hỏi"),
         quantity: Yup.number()
           .transform((value) => (isNaN(value) ? undefined : value))
           .min(1, "Số câu hỏi phải lớn hơn 0")
@@ -205,7 +205,7 @@ export const AddQuestionGroupModel = ({
                             label: p?.name,
                           }))}
                           name={`questionGroup.${index}.questionTypeId`}
-                          placeholder="Chọn loại câu hỏi"
+                          placeholder="Chọn kiểu câu hỏi"
                           fullWidth
                           onChange={(e) => changeQuestionType(index, e)}
                         />

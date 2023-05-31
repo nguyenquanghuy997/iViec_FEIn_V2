@@ -134,7 +134,7 @@ export const RecruitmentItem = () => {
             sx={{
               width: 360,
               fontWeight: 500,
-              fontSize: 14,
+              fontSize: 13,
               ...(canView && { cursor: "pointer" }),
             }}
             onClick={(e) => {

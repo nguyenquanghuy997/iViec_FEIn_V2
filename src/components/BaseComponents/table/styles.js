@@ -1,5 +1,6 @@
 import {styled } from '@mui/material/styles';
 import { pxToRem } from '@/utils/getFontValue';
+import { STYLE_CONSTANT } from '@/theme/palette';
 
 export const HeaderStyle = styled('div')(({theme}) => ({
   background: theme.palette.background.default,
@@ -14,6 +15,14 @@ export const HeaderStyle = styled('div')(({theme}) => ({
       height: '44px',
       borderRadius: '6px',
       background: theme.palette.common.bgrMaster,
+      fontSize: '14px',
+      paddingLeft: 12,
+      '.MuiInputBase-input':{
+        paddingLeft:'0'
+      },
+      '&:hover': {
+        background: STYLE_CONSTANT.COLOR_DIVIDER
+      },
       'fieldset': {
         border: 'none',
       },
@@ -58,7 +67,7 @@ export const TableStyle = styled('div')(({theme}) => ({
     borderRadius: "8px",
   },
   ".ant-table-content": {
-    minHeight: 'calc(100vh - 380px)',
+    minHeight: 'calc(100vh - 320px)',
     borderRadius: "8px",
   },
   ".ant-table-thead >tr>th": {
