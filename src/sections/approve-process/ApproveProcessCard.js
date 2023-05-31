@@ -1,4 +1,3 @@
-import InForIcon from "../../assets/InforIcon";
 import { FormProvider } from "@/components/hook-form";
 import { ConnectCardStyle } from "@/sections/connect/style";
 import { Box, Card, Divider, FormControlLabel, Grid, Tooltip, Typography } from "@mui/material";
@@ -217,11 +216,11 @@ const ApproveProcessCard = ({type, approveProcesses, color, title}) => {
       >
         {title}
       </Typography>
-      <Tooltip title="Delete">
-        <IconButton>
-          <InForIcon/>
-        </IconButton>
-      </Tooltip>
+      {/*<Tooltip title="Delete">*/}
+      {/*  <IconButton>*/}
+      {/*    <InForIcon/>*/}
+      {/*  </IconButton>*/}
+      {/*</Tooltip>*/}
     </Grid>
     <ConnectCardStyle>
       <FormProvider methods={methods}>
