@@ -9,6 +9,7 @@ import { ButtonIcon, ViewModel } from "@/utils/cssStyles";
 import { LIST_QUESTION_TYPE } from "@/utils/formatString";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Divider, Grid, InputAdornment, Modal, Tooltip } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -29,11 +30,10 @@ export const AddQuestionGroupModel = ({
   setShow,
   editData,
   onSubmit,
-  ListQuestionGroup
+  ListQuestionGroup,
 }) => {
   const isEdit = !!editData?.name;
 
-  
   // form
   const Schema = Yup.object().shape({
     questionGroup: Yup.array().of(
@@ -70,6 +70,26 @@ export const AddQuestionGroupModel = ({
   const pressHide = () => {
     setShow(false);
   };
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const checkData = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      for (let j = i; j < data.length; j++) {
+        const elem = data[j];
+        if (
+          item.questionGroupId === elem.questionGroupId &&
+          Number(item.questionTypeId) === Number(elem.questionTypeId)
+        ) {
+          return item;
+        }
+      }
+    }
+
+    return null;
+  };
+
   const pressSave = handleSubmit(async (d) => {
     const data = d.questionGroup.map((x) => {
       return {
@@ -79,9 +99,14 @@ export const AddQuestionGroupModel = ({
         ),
       };
     });
-    // const data = {
-    //   ...d,
-    // };
+    const err = checkData(data);
+    if (err) {
+      enqueueSnackbar(`Nhóm câu hỏi ${err.questionGroup?.name} bị trùng`, {
+        variant: "error",
+      });
+      return;
+    }
+
     onSubmit?.(data);
   });
 
@@ -130,7 +155,11 @@ export const AddQuestionGroupModel = ({
       <Modal
         open={show}
         onClose={pressHide}
-        sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
+        }}
       >
         <ViewModel>
           {/* header */}
