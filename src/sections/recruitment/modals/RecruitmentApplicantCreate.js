@@ -1,3 +1,4 @@
+import { IframeStyled } from "../style";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -815,12 +816,25 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        <div style={{ width: "100%", height: "100%" }}>
-                          <iframe
+                        cv[0].type === "application/pdf" ? (
+                          <div style={{ width: "100%", height: "100%" }}>
+                            <IframeStyled
+                              src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
+                            ></IframeStyled>
+                          </div>
+                        ) : (
+                          <img
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              display: "block",
+                              overflowClipMargin: "content-box",
+                              overflow: "clip",
+                            }}
                             src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
-                            style={{ width: "100%", height: "100%" }}
-                          ></iframe>
-                        </div>
+                            alt=""
+                          />
+                        )
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
                           <CircularProgress />

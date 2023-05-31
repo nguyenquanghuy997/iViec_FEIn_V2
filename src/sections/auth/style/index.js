@@ -70,6 +70,30 @@ const BoxInnerStyle = {
     position: "relative",
 };
 
+// box policy style
+const BoxPolicyWrapperStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '36px 0px 0px',
+    gap: '40px',
+    backgroundColor: '#F2F4F5',
+    overflowY: 'scroll',
+    minHeight: '1920px'
+}
+
+const BoxPolicyInnerStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    padding: '60px',
+    gap: '24px',
+    backgroundColor: '#FDFDFD',
+    boxShadow: '0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+    borderRadius: '6px',
+    maxWidth: '1020px'
+}
+
 // card label
 const CardLabelStyle = {
     textAlign: "center",
@@ -93,4 +117,6 @@ export {
     BoxInnerStyle,
     CardLabelStyle,
     CardSubInfoLabelStyle,
+    BoxPolicyWrapperStyle,
+    BoxPolicyInnerStyle
 };

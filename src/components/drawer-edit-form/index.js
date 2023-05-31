@@ -85,8 +85,8 @@ export default function DrawerEditForm({
   };
 
   const handleOnSubmit = (data) => {
+    if (onClose) onClose();
     onSubmit(data, () => {
-      if (onClose) onClose();
       if (resetOnClose) {
         reset(defaultValues);
       }
