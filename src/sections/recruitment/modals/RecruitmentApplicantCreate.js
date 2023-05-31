@@ -36,6 +36,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { IframeStyled } from "../style";
 
 const defaultValues = {
   id: undefined,
@@ -772,12 +773,14 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        <div style={{width: "100%", height: "100%"}}>
-                          <iframe
-                            src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
-                            style={{width: "100%", height: "100%"}}
-                          ></iframe>
-                        </div>
+                        cv[0].type === "application/pdf" 
+                        ? 
+                        (
+                          <div style={{width: "100%", height: "100%"}}>
+                            <IframeStyled src={getFileUrl(watch("cvFile")) + "#toolbar=0"}></IframeStyled>
+                          </div>
+                        ) 
+                      : <img style={{width: '100%', height: '100%', display: 'block', overflowClipMargin: 'content-box', overflow: 'clip'}} src={getFileUrl(watch("cvFile")) + "#toolbar=0"} alt="" />
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
                           <CircularProgress/>
