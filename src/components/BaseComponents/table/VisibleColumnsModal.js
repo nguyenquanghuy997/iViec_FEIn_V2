@@ -18,6 +18,7 @@ import {useSnackbar} from 'notistack';
 import Iconify from "@/components/Iconify";
 import {getErrorMessage} from '@/utils/helper';
 import {useTheme} from "@mui/material/styles";
+import {CheckboxIconChecked, CheckboxIconDefault} from "@/assets/CheckboxIcon";
 
 export default function ColumnsModal({
                                        open,
@@ -130,6 +131,8 @@ export default function ColumnsModal({
                     onChange={(e) => onChangeCheck(e)}
                     name={p.dataIndex?.toString()}
                     disabled={!!p.fixed}
+                    icon={<CheckboxIconDefault />}
+                    checkedIcon={<CheckboxIconChecked />}
                   />
                 }
               />

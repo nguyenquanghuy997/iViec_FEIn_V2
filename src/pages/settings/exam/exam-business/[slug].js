@@ -1,8 +1,8 @@
 import Content from "@/components/BaseComponents/Content";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
-import { AvatarDS } from "@/components/DesignSystem";
-import { View } from "@/components/FlexStyled";
-import { PERMISSION_PAGES, TBL_FILTER_TYPE } from "@/config";
+import {AvatarDS} from "@/components/DesignSystem";
+import {View} from "@/components/FlexStyled";
+import {PERMISSION_PAGES, TBL_FILTER_TYPE} from "@/config";
 import SettingLayout from "@/layouts/setting";
 import ActiveModal from "@/sections/emailform/component/ActiveModal";
 import ConfirmModal from "@/sections/emailform/component/ConfirmModal";
@@ -14,12 +14,12 @@ import {
   useUpdateQuestionColumnsMutation,
 } from "@/sections/exam/ExamSlice";
 import QuestionBottomNav from "@/sections/exam/components/QuestionBottomNav";
-import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
+import {QuestionFormModal} from "@/sections/exam/components/QuestionFormModal";
 import QuestionTransferModal from "@/sections/exam/components/QuestionTransferModal";
 import moment from "moment";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
-import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import {useRouter} from "next/router";
+import {useEffect, useMemo, useState} from "react";
+import {API_GET_ORGANIZATION_USERS} from "@/routes/api";
 
 
 Question.getLayout = function getLayout(pageProps, page) {
@@ -32,8 +32,8 @@ Question.getLayout = function getLayout(pageProps, page) {
 
 function Question() {
   const router = useRouter();
-  const { query = { group: "", PageIndex: 1, PageSize: 10 } } = router;
-  const { group, PageSize, PageIndex, slug: QuestionGroupId } = query;
+  const {query = {group: "", PageIndex: 1, PageSize: 10}} = router;
+  const {group, PageSize, PageIndex, slug: QuestionGroupId} = query;
   const pageTitle = `Nhóm câu hỏi ${group}`.trim();
 
   //   state
@@ -45,21 +45,21 @@ function Question() {
   const [showTransferQuestionGroup, setShowTransferQuestionGroup] =
     useState(false);
 
-  const { isActive, questionTitle = "" } = itemSelected[0] || {};
+  const {isActive, questionTitle = ""} = itemSelected[0] || {};
   const isMulti = itemSelected.length > 1;
   const ids = itemSelected.map((i) => i.id);
   const _name = isMulti ? "" : questionTitle;
 
   //   api
-  const [getQuestions, { data: Data, isLoading }] = useLazyGetQuestionsQuery();
+  const [getQuestions, {data: Data, isLoading}] = useLazyGetQuestionsQuery();
   const [updateActiveQuestion] = useUpdateActiveQuestionMutation();
   const [removeQuestion] = useRemoveQuestionMutation();
 
   const LIST_OPTIONS_QUESTION_TYPE = [
-    { id: null, value: null, name: "Tất cả" },
-    { id: 2, value: 2, name: "Tự luận" },
-    { id: 0, value: 0, name: "Trắc nghiệm - một đáp án đúng" },
-    { id: 1, value: 1, name: "Trắc nghiệm - nhiều đáp án đúng" },
+    {id: null, value: null, name: "Tất cả"},
+    {id: 2, value: 2, name: "Tự luận"},
+    {id: 0, value: 0, name: "Trắc nghiệm - một đáp án đúng"},
+    {id: 1, value: 1, name: "Trắc nghiệm - nhiều đáp án đúng"},
   ]
   // table
   const columns = useMemo(() => {
@@ -78,7 +78,7 @@ function Question() {
         title: "Câu hỏi",
         width: "240px",
         fixed: "left",
-        render: (_, { questionTitle }) => {
+        render: (_, {questionTitle}) => {
           return questionTitle;
         },
       },
@@ -86,7 +86,8 @@ function Question() {
         dataIndex: "createDate",
         title: "Ngày tạo",
         width: "180px",
-        render: (_, { createdTime }) => {
+        sorter: (a, b) => moment(a.createdTime).unix() - moment(b.createdTime).unix(),
+        render: (_, {createdTime}) => {
           return moment(createdTime).format("DD/MM/YYYY");
         },
         filters: {
@@ -99,7 +100,7 @@ function Question() {
         dataIndex: "creator",
         title: "Người tạo",
         width: "220px",
-        render: (_, { createdUser }) => {
+        render: (_, {createdUser}) => {
           return (
             <View flexRow atCenter>
               <AvatarDS
@@ -129,7 +130,7 @@ function Question() {
         dataIndex: "updateDate",
         title: "Ngày chỉnh sửa",
         width: "180px",
-        render: (_, { updatedTime, updatedUser }) => {
+        render: (_, {updatedTime, updatedUser}) => {
           return updatedUser?.id ? moment(updatedTime).format("DD/MM/YYYY") : "-";
         },
       },
@@ -137,7 +138,7 @@ function Question() {
         dataIndex: "creatorUpdate",
         title: "Người chỉnh sửa",
         width: "220px",
-        render: (_, { updatedUser }) => {
+        render: (_, {updatedUser}) => {
           return (
             updatedUser?.id ?
               <View flexRow atCenter>
@@ -169,7 +170,7 @@ function Question() {
         dataIndex: "questionType",
         title: "Kiểu câu hỏi",
         width: "214px",
-        render: (_, { questionType }) => {
+        render: (_, {questionType}) => {
           return questionType === 2
             ? "Tự luận"
             : questionType === 1
@@ -179,7 +180,7 @@ function Question() {
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           name: 'type',
-          options: LIST_OPTIONS_QUESTION_TYPE.map(item => ({ value: item.id, label: item.name })),
+          options: LIST_OPTIONS_QUESTION_TYPE.map(item => ({value: item.id, label: item.name})),
           placeholder: "Tất cả"
         },
       },
@@ -187,7 +188,7 @@ function Question() {
         dataIndex: "description",
         title: "Điểm",
         width: "160px",
-        render: (_, { questionPoint }) => {
+        render: (_, {questionPoint}) => {
           return questionPoint;
         },
       },
@@ -195,7 +196,7 @@ function Question() {
         dataIndex: "examApply",
         title: "Đề thi áp dụng",
         width: "160px",
-        render: (_, { numOfExaminationApply }) => {
+        render: (_, {numOfExaminationApply}) => {
           return numOfExaminationApply > 0 ? numOfExaminationApply : "-";
         },
       },
@@ -205,7 +206,7 @@ function Question() {
         width: "180px",
         render: (_, record) => {
           return (
-            <span style={{ color: record.isActive ? "#388E3C" : "#D32F2F" }}>
+            <span style={{color: record.isActive ? "#388E3C" : "#D32F2F"}}>
               {record.isActive ? "Đang hoạt động" : "Không hoạt động"}
             </span>
           );
@@ -255,14 +256,23 @@ function Question() {
     onCloseActiveModal();
     onCloseConfirmDelete();
     onCloseTransfer();
-    getQuestions({ ...query, QuestionGroupId, slug: undefined });
+    getQuestions({...query, QuestionGroupId, slug: undefined});
   };
+
 
   const handleDelete = async () => {
     await removeQuestion({
       questionIds: ids,
     });
     getData();
+    router.push(
+      {
+        query: {...router.query, PageIndex: PageIndex - 1 === 0 ? 1 : PageIndex - 1, PageSize: 10},
+      },
+      undefined,
+      {shallow: false}
+    );
+    // window.location.href = "?PageIndex=1&PageSize=10";
   };
 
   const handleActive = async () => {
@@ -375,7 +385,7 @@ function Question() {
       />
 
       <ActiveModal
-        item={{ isActive }}
+        item={{isActive}}
         isOpenActive={showConfirmSwitchActive}
         title={
           isActive
