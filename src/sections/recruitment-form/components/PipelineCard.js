@@ -125,7 +125,7 @@ const PipelineCard = ({
 
       {isExam && (
         <MuiButton
-          title="Chọn đề thi"
+          title={isExamEmpty ? "Chọn đề thi" : "Chỉnh sửa đề thi"}
           onClick={() => handleOpenFormExamination(item)}
           sx={{
             fontSize: style.FONT_SM,

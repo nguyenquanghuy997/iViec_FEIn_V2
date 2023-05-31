@@ -74,6 +74,7 @@ export const ExamItem = ({ hideTable, headerProps }) => {
         dataIndex: "name",
         title: "Đề thi",
         width: "150px",
+        sorter: (a, b) => a.name.length - b.name.length,
         render: (item, record) => (
           <TextMaxLine
             sx={{

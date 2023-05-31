@@ -9,6 +9,15 @@ const RootStyle = styled(Box)(({theme}) => ({
     overflow: 'hidden',
     position: 'relative',
     borderRadius: theme.spacing(0.5),
+    '& .tox-editor-header': {
+      boxShadow: "none !important",
+      borderBottom: `1px solid ${theme.palette.common.neutral100} !important`,
+    },
+    '& .tox-tbtn': {
+      borderRight: `1px solid ${theme.palette.common.neutral100} !important`,
+      margin: "0px !important",
+      padding: "20px !important"
+    },
     '& .tox-statusbar__path-item': {
       display: 'none !important'
     }

@@ -6,7 +6,7 @@ import {
   useUpdateListRecruitmentColumnsMutation,
 } from "../RecruitmentSlice";
 import OrganizationSettingModal from "../modals/OrganizationSettingModal";
-import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
+import { EditIcon, CopyIcon, DeleteIcon, ForwardLightIcon, ExpandPreviewIcon, SquareDarkIcon } from "@/assets/icons-datatable";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
@@ -27,18 +27,13 @@ import {
   API_GET_PROVINCE,
 } from "@/routes/api";
 import { PATH_DASHBOARD } from "@/routes/paths";
+// import { ExcelIcon } from "@/sections/offer-form/component/editor/Icon";
 import {
   AlertIcon,
   UnCheckedSwitchIcon,
 } from "@/sections/organization/component/Icon";
 import { handleExportExcel } from "@/sections/recruitment/helper/excel";
 import RecruitmentPreview from "@/sections/recruitment/modals/preview/RecruitmentPreview";
-import {
-  CopyIcon,
-  ExpandPreviewIcon,
-  ForwardLightIcon,
-  SquareDarkIcon,
-} from "@/sections/recruitment/others/Icon";
 import { useGetOrganizationQuery } from "@/sections/report/reportSlice";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import {
@@ -162,7 +157,16 @@ export const RecruitmentItem = () => {
         dataIndex: "jobPosition",
         title: "Vị trí công việc",
         width: "214px",
-        render: (item) => item?.name,
+        render: (item) => 
+        <TextMaxLine 
+          sx={{
+            width: 360,
+            fontWeight: 500,
+            fontSize: 13,
+          }}
+        >
+          {item?.name}
+        </TextMaxLine>,
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           placeholder: "Chọn 1 hoặc nhiều vị trí công việc",
@@ -770,6 +774,7 @@ export const RecruitmentItem = () => {
             title: (
               <Typography
                 sx={{
+                  fontFamily: 'Inter',
                   fontWeight: style.FONT_MEDIUM,
                   fontSize: style.FONT_SM,
                   marginRight: 2,
@@ -785,7 +790,7 @@ export const RecruitmentItem = () => {
             onClick: () =>
               router.push(PATH_DASHBOARD.recruitment.view(itemSelected[0]?.id)),
             startIcon: <ForwardLightIcon />,
-            sx: { padding: "6px 11px" },
+            sx: { padding: "6px 11px", fontFamily: 'Inter', fontWeight: 600, minWidth: '101px' },
           },
           canView && {
             key: "preview",
@@ -793,7 +798,7 @@ export const RecruitmentItem = () => {
             onClick: () => handleOpenModalState({ openPreview: true }),
             color: "default",
             startIcon: <ExpandPreviewIcon />,
-            sx: { padding: "6px 11px" },
+            sx: { padding: "6px 11px", fontFamily: 'Inter', fontWeight: 500, minWidth: '178px' },
           },
           canEdit && {
             key: "close",
@@ -802,7 +807,7 @@ export const RecruitmentItem = () => {
             color: "default",
             startIcon: <SquareDarkIcon />,
             sx: {
-              padding: "6px 11px",
+              padding: "6px 11px", fontFamily: 'Inter', fontWeight: 500, minWidth: '105px'
             },
           },
           canEdit && {

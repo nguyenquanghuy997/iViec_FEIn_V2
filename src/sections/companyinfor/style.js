@@ -24,6 +24,7 @@ const BoxInfoStyle = styled(Box)(({theme}) => ({
         left: 0,
         transform: 'translateY(-50%)',
         cursor: 'pointer',
+        borderRadius: '50%'
       },
       "& .avatar-image.avatar-placeholder": {
         display: 'flex',

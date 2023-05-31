@@ -1,3 +1,4 @@
+import { IframeStyled } from "../style";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
@@ -26,11 +27,25 @@ import {
 } from "@/sections/recruitment";
 import { setValueFieldScan } from "@/sections/recruitment/helper";
 import { ViewModel } from "@/utils/cssStyles";
-import { LIST_CURRENCY_TYPE, LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, } from "@/utils/formatString";
+import {
+  LIST_CURRENCY_TYPE,
+  LIST_EXPERIENCE_NUMBER,
+  LIST_GENDER,
+  LIST_MARITAL_STATUSES,
+} from "@/utils/formatString";
 import { phoneRegExp } from "@/utils/function";
 import { getFileUrl } from "@/utils/helper";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Avatar, CircularProgress, Divider, Grid, InputAdornment, Modal, Typography, useTheme, } from "@mui/material";
+import {
+  Avatar,
+  CircularProgress,
+  Divider,
+  Grid,
+  InputAdornment,
+  Modal,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import moment from "moment/moment";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -95,20 +110,20 @@ export const RecruitmentApplicantCreate = ({
   const [uploadFile] = useUploadFileApplicantMutation();
   const [uploadFileApplicantRecruitment] =
     useUploadFileApplicantRecruitmentMutation();
-  const {data: {items: listJobSources = []} = {}} =
+  const { data: { items: listJobSources = [] } = {} } =
     useGetAllJobSourcesQuery();
-  const {data: {items: listCategory = []} = {}} =
+  const { data: { items: listCategory = [] } = {} } =
     useGetJobCategoriesQuery();
-  let {data: preview = {}} = useGetApplicantByIdQuery(
-    {applicantId: data?.id},
-    {skip: !data?.id}
+  let { data: preview = {} } = useGetApplicantByIdQuery(
+    { applicantId: data?.id },
+    { skip: !data?.id }
   );
-  let {data: extendData = null} = useGetApplicantRecruitmentQuery(
+  let { data: extendData = null } = useGetApplicantRecruitmentQuery(
     {
       applicantId: data?.id,
       recruitmentId: data?.recruitmentId,
     },
-    {skip: !(data?.id && data?.recruitmentId)}
+    { skip: !(data?.id && data?.recruitmentId) }
   );
   const isLoading = isEditMode && !preview?.id && !extendData?.id;
   const [isUpload, setIsUpload] = useState(false);
@@ -123,33 +138,33 @@ export const RecruitmentApplicantCreate = ({
     jobCategoryIds: Yup.array().required("Chưa chọn ngành nghề"),
     jobSourceId: Yup.string().required("Chưa chọn nguồn"),
     fullName: Yup.string()
-    .max(50, "Họ tên không quá 50 ký tự")
-    .required("Chưa nhập họ tên"),
+      .max(50, "Họ tên không quá 50 ký tự")
+      .required("Chưa nhập họ tên"),
     portraitImage: Yup.string(),
     email: Yup.string().email("Email cần nhập đúng định dạng"),
     phoneNumber: Yup.string()
-    .required("Chưa nhập số điện thoại")
-    .matches(phoneRegExp, "Số điện thoại không đúng định dạng"),
+      .required("Chưa nhập số điện thoại")
+      .matches(phoneRegExp, "Số điện thoại không đúng định dạng"),
     weight: Yup.number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .nullable(),
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable(),
     height: Yup.number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .nullable(),
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable(),
     cvFile: Yup.string().nullable(),
     cvFileName: Yup.string().nullable(),
     yearOfExperience: Yup.number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .nullable(),
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable(),
     experience: Yup.string(),
     identityNumber: Yup.string(),
     education: Yup.string(),
     sex: Yup.number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .nullable(),
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable(),
     maritalStatus: Yup.number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .nullable(),
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable(),
     homeTower: Yup.object().shape({
       address: Yup.string(),
     }),
@@ -162,24 +177,25 @@ export const RecruitmentApplicantCreate = ({
     activitiesAndProjects: Yup.string(),
     careerObjective: Yup.string(),
     achievements: Yup.string(),
-    currencyUnit: Yup.number().transform((value) => (isNaN(value) ? undefined : value))
-    .nullable(),
+    currencyUnit: Yup.number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable(),
     expectedWorkingAddress: Yup.object().shape({
       address: Yup.string(),
     }),
   });
-  
+
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  
+
   const {
     reset,
     watch,
     setValue,
     handleSubmit,
-    formState: {isSubmitting},
+    formState: { isSubmitting },
   } = methods;
   const pressHide = () => {
     reset();
@@ -194,8 +210,8 @@ export const RecruitmentApplicantCreate = ({
     }));
     setShow(false);
   };
-  const {enqueueSnackbar} = useSnackbar();
-  
+  const { enqueueSnackbar } = useSnackbar();
+
   const pressSave = handleSubmit(async (body) => {
     let pathFile = "";
     body.jobCategoryIds = body.jobCategoryIds?.map((item) => item?.value);
@@ -207,55 +223,55 @@ export const RecruitmentApplicantCreate = ({
         file.append("ApplicantRecruitmentId", extendData.id);
         pathFile = await uploadFileApplicantRecruitment(file).unwrap();
       }
-      await updateForm({...body, cvFile: pathFile})
-      .unwrap()
-      .then(() => {
-        enqueueSnackbar("Thực hiện thành công!", {
-          autoHideDuration: 2000,
+      await updateForm({ ...body, cvFile: pathFile })
+        .unwrap()
+        .then(() => {
+          enqueueSnackbar("Thực hiện thành công!", {
+            autoHideDuration: 2000,
+          });
+          dispatch(
+            ApplicantFormSlice.util.invalidateTags([
+              { type: "GetListApplicantPipeline" },
+              { type: "GetListsApplicants" },
+            ])
+          );
+          pressHide();
+        })
+        .catch(() => {
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 1000,
+            variant: "error",
+          });
         });
-        dispatch(
-          ApplicantFormSlice.util.invalidateTags([
-            {type: "GetListApplicantPipeline"},
-            {type: "GetListsApplicants"},
-          ])
-        );
-        pressHide();
-      })
-      .catch(() => {
-        enqueueSnackbar("Thực hiện thất bại!", {
-          autoHideDuration: 1000,
-          variant: "error",
-        });
-      });
     } else {
       if (cv && cv.length > 0) {
         const file = new FormData();
         file.append("File", cv[0].originFileObj);
         pathFile = await uploadFile(file).unwrap();
       }
-      await addForm({...body, cvFile: pathFile})
-      .unwrap()
-      .then(() => {
-        enqueueSnackbar("Thực hiện thành công!", {
-          autoHideDuration: 2000,
+      await addForm({ ...body, cvFile: pathFile })
+        .unwrap()
+        .then(() => {
+          enqueueSnackbar("Thực hiện thành công!", {
+            autoHideDuration: 2000,
+          });
+          dispatch(
+            ApplicantFormSlice.util.invalidateTags([
+              { type: "APPLICANT", id: "LIST_FILTER" },
+              { type: "APPLICANT", id: "LIST_APPLICANT_PIPELINE" },
+            ])
+          );
+          pressHide();
+        })
+        .catch(() => {
+          enqueueSnackbar("Thực hiện thất bại!", {
+            autoHideDuration: 2000,
+            variant: "error",
+          });
         });
-        dispatch(
-          ApplicantFormSlice.util.invalidateTags([
-            {type: "APPLICANT", id: "LIST_FILTER"},
-            {type: "APPLICANT", id: "LIST_APPLICANT_PIPELINE"},
-          ])
-        );
-        pressHide();
-      })
-      .catch(() => {
-        enqueueSnackbar("Thực hiện thất bại!", {
-          autoHideDuration: 2000,
-          variant: "error",
-        });
-      });
     }
   });
-  
+
   // effect
   useEffect(() => {
     if (!show) return;
@@ -265,7 +281,7 @@ export const RecruitmentApplicantCreate = ({
     setValue("recruitmentPipelineStateId", data.stage);
     setValue("pipelineStateResultType", data.stageResult);
   }, [show]);
-  
+
   useEffect(() => {
     if (!preview?.id) return;
     setValue("fullName", preview.fullName ?? undefined);
@@ -315,19 +331,19 @@ export const RecruitmentApplicantCreate = ({
       preview.expectedWorkingAddress?.address ?? undefined
     );
   }, [preview, data]);
-  
+
   useEffect(() => {
     if (!extendData?.id) return;
     setValue("cvFile", extendData?.applicantCvPath);
     setValue("cvFileName", extendData?.applicantCvPath);
   }, [extendData]);
-  
+
   useEffect(() => {
     if (avatar && avatar.length > 0) {
       setValue("portraitImage", getFileUrl(avatar[0].response));
     }
   }, [avatar]);
-  
+
   useEffect(() => {
     if (cv && cv.length > 0) {
       setIsEdit(false);
@@ -339,21 +355,21 @@ export const RecruitmentApplicantCreate = ({
       }
     }
   }, [cv]);
-  
+
   return (
     <FormProvider {...methods}>
       <Modal
         open={show}
         onClose={pressHide}
         sx={{
-          display: "flex", justifyContent: "flex-end",
-          ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+          display: "flex",
+          justifyContent: "flex-end",
+          ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
         }}
       >
         <ViewModel
           sx={{
             width: "unset",
-            height: "100%",
             justifyContent: "space-between",
           }}
         >
@@ -392,7 +408,7 @@ export const RecruitmentApplicantCreate = ({
                 }
               />
             </View>
-            <Divider/>
+            <Divider />
           </View>
           {/* body */}
           <View
@@ -404,7 +420,7 @@ export const RecruitmentApplicantCreate = ({
           >
             {isLoading ? (
               <View flex="true" contentcenter="true">
-                <CircularProgress/>
+                <CircularProgress />
               </View>
             ) : (
               <Grid
@@ -416,7 +432,7 @@ export const RecruitmentApplicantCreate = ({
               >
                 <Grid
                   container
-                  sx={{width: "600px", overflowY: "auto"}}
+                  sx={{ width: "600px", overflowY: "auto" }}
                   height={"100%"}
                   flexWrap={"nowrap"}
                   flexDirection={"column"}
@@ -429,7 +445,12 @@ export const RecruitmentApplicantCreate = ({
                         name={"recruitmentTitle"}
                         disabled
                         placeholder="Nhập tên tin tuyển dụng"
-                        sx={{"& .Mui-disabled": {border: "unset", backgroundColor: theme.palette.common.bgrObject}}}
+                        sx={{
+                          "& .Mui-disabled": {
+                            border: "unset",
+                            backgroundColor: theme.palette.common.bgrObject,
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid mb={3}>
@@ -455,18 +476,24 @@ export const RecruitmentApplicantCreate = ({
                           {"Ảnh đại diện"}
                         </Typography>
                         <Typography variant={"textSize14500"} color={"#5C6A82"}>
-                          (142x142px)
+                          (142x142pxx)
                         </Typography>
                       </Grid>
                       <Grid container alignItems={"center"}>
                         <Grid item mr={3}>
                           <Avatar
-                            sx={{width: 120, height: 120, backgroundColor: theme.palette.common.bgrObject}}
+                            sx={{
+                              width: 120,
+                              height: 120,
+                              backgroundColor: theme.palette.common.bgrObject,
+                            }}
                             src={watch("portraitImage")}
-                            children={<img
-                              src={"/assets/icons/userImage.svg"}
-                              style={{margin: "0 auto"}}
-                            />}
+                            children={
+                              <img
+                                src={"/assets/icons/userImage.svg"}
+                                style={{ margin: "0 auto" }}
+                              />
+                            }
                           />
                         </Grid>
                         <UploadAvatarApplicant
@@ -627,12 +654,20 @@ export const RecruitmentApplicantCreate = ({
                           type={"number"}
                           placeholder="Nhập số tiền"
                           InputProps={{
-                            endAdornment:
-                              <InputAdornment position='end'>
-                                <Typography variant={"body2"} color={theme.palette.common.neutral600}>
-                                  {LIST_CURRENCY_TYPE.find(i => i.value === watch('currencyUnit')).name}
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <Typography
+                                  variant={"body2"}
+                                  color={theme.palette.common.neutral600}
+                                >
+                                  {
+                                    LIST_CURRENCY_TYPE.find(
+                                      (i) => i.value === watch("currencyUnit")
+                                    )?.name
+                                  }
                                 </Typography>
                               </InputAdornment>
+                            ),
                           }}
                         />
                       </Grid>
@@ -643,12 +678,20 @@ export const RecruitmentApplicantCreate = ({
                           type={"number"}
                           placeholder="Nhập số tiền"
                           InputProps={{
-                            endAdornment:
-                              <InputAdornment position='end'>
-                                <Typography variant={"body2"} color={theme.palette.common.neutral600}>
-                                  {LIST_CURRENCY_TYPE.find(i => i.value === watch('currencyUnit')).name}
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <Typography
+                                  variant={"body2"}
+                                  color={theme.palette.common.neutral600}
+                                >
+                                  {
+                                    LIST_CURRENCY_TYPE.find(
+                                      (i) => i.value === watch("currencyUnit")
+                                    )?.name
+                                  }
                                 </Typography>
                               </InputAdornment>
+                            ),
                           }}
                         />
                       </Grid>
@@ -760,7 +803,7 @@ export const RecruitmentApplicantCreate = ({
                 </Grid>
                 {(isUpload || watch("cvFile")) && (
                   <>
-                    <Divider orientation={"vertical"}/>
+                    <Divider orientation={"vertical"} />
                     <Grid
                       sx={{
                         minWidth: "600px",
@@ -773,15 +816,28 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        <div style={{width: "100%", height: "100%"}}>
-                          <iframe
+                        cv[0].type === "application/pdf" ? (
+                          <div style={{ width: "100%", height: "100%" }}>
+                            <IframeStyled
+                              src={getFileUrl(watch("cvFile"))}
+                            ></IframeStyled>
+                          </div>
+                        ) : (
+                          <img
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              display: "block",
+                              overflowClipMargin: "content-box",
+                              overflow: "clip",
+                            }}
                             src={getFileUrl(watch("cvFile")) + "#toolbar=0"}
-                            style={{width: "100%", height: "100%"}}
-                          ></iframe>
-                        </div>
+                            alt=""
+                          />
+                        )
                       ) : (
                         <View flex="true" contentcenter="true" height={"100%"}>
-                          <CircularProgress/>
+                          <CircularProgress />
                         </View>
                       )}
                     </Grid>

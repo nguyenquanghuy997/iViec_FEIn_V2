@@ -1,42 +1,51 @@
 input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px white inset;
-    -webkit-text-fill-color: #333;
+  -webkit-box-shadow: 0 0 0 30px white inset;
+  -webkit-text-fill-color: #333;
 }
 
 input:-webkit-autofill:hover {
-    -webkit-box-shadow: 0 0 0 30px white inset;
+  -webkit-box-shadow: 0 0 0 30px white inset;
 }
 
 input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 30px white inset;
+  -webkit-box-shadow: 0 0 0 30px white inset;
 }
 
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px white inset;
+  -webkit-box-shadow: 0 0 0 30px white inset;
 }
 
 .SnackbarContainer-root {
-    z-index: 3001!important;
+  z-index: 3001 !important;
 }
 
-/**::-webkit-scrollbar-thumb {*/
-/*    background: #B9BFC9;*/
-/*    margin-right: 3px;*/
-/*    border-radius: 30px;*/
-/*}*/
-
-/**::-webkit-scrollbar {*/
-/*    width: 6px;*/
-/*    height: 6px;*/
-/*}*/
 .top {
-    top: 156px;
+  top: 154px;
 }
 
 .down {
-    top: -156px !important;
+  top: 154px !important;
 }
 
 .up {
-    top: 156px;
+  top: 154px;
+}
+
+*::-webkit-scrollbar {
+  height: 14px !important;
+}
+
+/* Track */
+*::-webkit-scrollbar-track {
+  background: #eff3f7 !important;
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+  background: #a2aab7 !important;
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background: #a2aab7 !important;
 }

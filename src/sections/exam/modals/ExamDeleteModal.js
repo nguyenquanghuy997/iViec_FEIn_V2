@@ -1,5 +1,5 @@
-import { useDeleteExamMutation } from "@/sections/exam/ExamSlice";
-import { ButtonDS } from "@/components/DesignSystem";
+import {useDeleteExamMutation} from "@/sections/exam/ExamSlice";
+import {ButtonDS} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
 import {
   ButtonCancel,
@@ -7,25 +7,35 @@ import {
   DialogModelStyle,
   TitleModelStyle,
 } from "@/utils/cssStyles";
-import { DialogActions, DialogContent, Divider } from "@mui/material";
-import { useSnackbar } from "notistack";
+import {DialogActions, DialogContent, Divider} from "@mui/material";
+import {useSnackbar} from "notistack";
 import React from "react";
-import { View } from "@/components/DesignSystem/FlexStyled";
+import {View} from "@/components/DesignSystem/FlexStyled";
 import {useTheme} from "@mui/material/styles";
+import {useRouter} from "next/router";
 
 const ExamDeleteModal = ({
-  showConfirmMultiple,
-  setShowConfirmMultiple,
-  examIds,
-  onClose,
-}) => {
-  const { enqueueSnackbar } = useSnackbar();
+                           showConfirmMultiple,
+                           setShowConfirmMultiple,
+                           examIds,
+                           onClose,
+                         }) => {
+  const {enqueueSnackbar} = useSnackbar();
   const [deleteExam] = useDeleteExamMutation();
   const theme = useTheme();
+  const router = useRouter();
   const handleChangeStatus = async () => {
     try {
-      await deleteExam({ "ids": examIds }).unwrap();
+      await deleteExam({"ids": examIds}).unwrap();
       enqueueSnackbar("Thực hiện thành công !");
+      router.push(
+        {
+          query: {PageIndex: 1, PageSize: 10},
+        },
+        undefined,
+        {shallow: false}
+      );
+      // window.location.href = "settings/exam/exam-business?PageIndex=1&PageSize=10";
       onClose();
     } catch (err) {
       enqueueSnackbar("Thực hiện thất bại !", {
@@ -86,20 +96,20 @@ const ExamDeleteModal = ({
           height={60}
           color={theme.palette.common.red600}
         />
-        <TitleModelStyle className="title" style={{ color: theme.palette.common.red600 }}>
+        <TitleModelStyle className="title" style={{color: theme.palette.common.red600}}>
           Xác nhận xóa đề thi
         </TitleModelStyle>
         <DialogContentTextModelStyle
           id="alert-dialog-description"
           className="subtite"
-          style={{ fontWeight: 400 }}
+          style={{fontWeight: 400}}
         >
           Bạn có chắc chắn muốn xóa đề thi?
         </DialogContentTextModelStyle>
-        <Divider />
+        <Divider/>
       </DialogContent>
-      <DialogActions sx={{ borderTop: "1px solid #E7E9ED", padding: '16px 24px !important' }}>
-        <ButtonCancel tittle="Hủy" onClick={onClose} />
+      <DialogActions sx={{borderTop: "1px solid #E7E9ED", padding: '16px 24px !important'}}>
+        <ButtonCancel tittle="Hủy" onClick={onClose}/>
 
         <ButtonDS
           tittle="Xóa"

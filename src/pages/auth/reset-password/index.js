@@ -15,6 +15,7 @@ import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
 import { Box, IconButton, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import palette from "@/theme/palette";
 
 ResetPassword.getLayout = function getLayout(data, page) {
   return (
@@ -37,11 +38,11 @@ export default function ResetPassword() {
     <GuestGuard>
       <Page title="Quên mật khẩu">
         <LogoHeader />
-        <Box sx={{ ...BoxWrapperStyle }}>
+        <Box sx={{ ...BoxWrapperStyle, backgroundColor: palette.light.common.bgrMaster, paddingBlock: "36px", marginBlock: 0, height: "calc(100vh - 101px)", alignItems: "start" }}>
           {statusResetPass ? (
             <ResetPasswordSuccess />
           ) : (
-            <Box sx={{ ...BoxInnerStyle, minHeight: "700px" }}>
+            <Box sx={{ ...BoxInnerStyle, marginBottom: 0, height: "100%" }}>
               {/* Back button */}
               <Stack sx={{ position: "absolute", top: 8, left: 8 }}>
                 <IconButton

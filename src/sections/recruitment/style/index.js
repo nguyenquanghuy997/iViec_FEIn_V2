@@ -3,7 +3,6 @@ import {STYLE_CONSTANT as style} from "@/theme/palette";
 import {Box} from "@mui/material";
 import {pxToRem} from "@/utils/getFontValue";
 
-
 const JobDetailHeader = styled(Box)(({theme}) => ({
     "&.job-detail-header": {
         width: '100%',
@@ -181,6 +180,14 @@ const CompanyIntro = styled(Box)(() => ({
     }
 }));
 
+const IframeStyled = styled('iframe')(() => ({
+    width: '100%',
+    height: '100%',
+    "img": {
+        width: '100%'
+    }
+}));
+
 export {
     JobDetailHeader,
     JobLogo,
@@ -191,4 +198,5 @@ export {
     JobSummary,
     JobCompanyIntro,
     CompanyIntro,
+    IframeStyled
 }

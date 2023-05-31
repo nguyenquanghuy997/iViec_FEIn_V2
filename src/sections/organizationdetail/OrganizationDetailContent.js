@@ -1,4 +1,4 @@
-import { AddIcon, DeleteIcon, EditIcon } from "@/assets/ActionIcon";
+import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
 import EmptyIcon from "@/assets/EmptyIcon";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
@@ -7,6 +7,7 @@ import TableHeader from "@/components/BaseComponents/table/TableHeader";
 import { Text, View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import LoadingScreen from "@/components/LoadingScreen";
+import SvgIcon from "@/components/SvgIcon";
 import Switch from "@/components/form/Switch";
 import { TBL_FILTER_TYPE } from "@/config";
 import { modalSlice } from "@/redux/common/modalSlice";
@@ -395,6 +396,9 @@ const OrganizationDetailContent = () => {
           columns={columns}
           onSubmitFilter={onSubmitFilter}
           isInside={true}
+          inputProps={{
+            placeholder: "Tìm kiếm họ tên, email, số điện thoại",
+          }}
           actions={
             <>
               <Stack flexDirection="row" alignItems="center">
@@ -402,10 +406,16 @@ const OrganizationDetailContent = () => {
                   title={"Danh sách mời"}
                   color={"default"}
                   onClick={handleOpenListInvite}
-                  startIcon={<Iconify icon="mdi:folder-upload-outline" />}
+                  startIcon={
+                    <SvgIcon>
+                      {
+                        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_8888_127478)"> <path d="M13.333 2L14.6663 4.66667V13.3333C14.6663 13.5101 14.5961 13.6797 14.4711 13.8047C14.3461 13.9298 14.1765 14 13.9997 14H1.99967C1.82286 14 1.65329 13.9298 1.52827 13.8047C1.40325 13.6797 1.33301 13.5101 1.33301 13.3333V4.66933L2.66634 2H13.333ZM13.333 6H2.66634V12.6667H13.333V6ZM7.99967 6.66667L10.6663 9.33333H8.66634V12H7.33301V9.33333H5.33301L7.99967 6.66667ZM12.509 3.33333H3.49034L2.82434 4.66667H13.1757L12.509 3.33333Z" fill="#455570"/> </g> <defs> <clipPath id="clip0_8888_127478"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
+                      }
+                    </SvgIcon>
+                  }
                   sx={{
                     fontWeight: 550,
-                    marginRight: 1,
+                    marginRight: "16px",
                     height: 36,
                     "&:hover": { boxShadow: "none" },
                   }}
@@ -414,7 +424,13 @@ const OrganizationDetailContent = () => {
                   title={"Mời người dùng"}
                   color={"primary"}
                   onClick={handleOpenInviteForm}
-                  startIcon={<AddIcon />}
+                  startIcon={
+                    <SvgIcon>
+                      {
+                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_8888_127485)"> <path d="M9.16699 9.16666V4.16666H10.8337V9.16666H15.8337V10.8333H10.8337V15.8333H9.16699V10.8333H4.16699V9.16666H9.16699Z" fill="#FDFDFD"/> </g> <defs> <clipPath id="clip0_8888_127485"> <rect width="20" height="20" fill="white"/> </clipPath> </defs> </svg>'
+                      }
+                    </SvgIcon>
+                  }
                   sx={{ fontWeight: 550, height: 36 }}
                 />
               </Stack>

@@ -58,6 +58,7 @@ const RolegroupForm = ({ role, selectedItem, ...methods }) => {
           <Label>Mô tả</Label>
           <TextAreaDS
             maxLength={255}
+            height={90}
             placeholder="Nhập nội dung mô tả..."
             name="description"
           />

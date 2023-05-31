@@ -17,6 +17,9 @@ const MuiTextField = forwardRef((props, ref) => {
             borderRadius: '6px',
             width: style.WIDTH_FULL,
             px: 1,
+            py: "6px",
+            paddingRight: "16px !important",
+            backgroundColor: theme.palette.background.paper,
             "&.Mui-focused": {
                 backgroundColor: "transparent",
                 boxShadow: "none",
@@ -44,7 +47,7 @@ const MuiTextField = forwardRef((props, ref) => {
                 : "translate(14px, 11px) !important",
         },
         "& .MuiInputBase-input": {
-            padding: "8px 8px 8px !important",
+            padding: "0 8px !important",
         },
         "& .MuiFormHelperText-root": {
             marginLeft: "0",
