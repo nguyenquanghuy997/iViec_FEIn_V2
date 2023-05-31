@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, {Fragment, useState} from 'react';
 import {
   Dialog,
   DialogActions,
@@ -21,7 +21,7 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
     setShow(false);
   }
   const [valueChecked, setValueChecked] = useState(undefined);
-  
+
   const handleChange = (event) => {
     setValueChecked(event.target.value);
   };
@@ -35,14 +35,14 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
     }
     onClose();
   };
-  
+
   return (
     <Dialog
       open={show}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      maxWidth={"xs"}
+      maxWidth={"lg"}
       fullWidth={true}
       sx={{
         "& .MuiDialog-container": {
@@ -51,8 +51,15 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
             borderRadius: "6px",
             height: '500px',
             width: '600px',
-            size: "large"
+            size: "large",
+            top: '100px',
           },
+        },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        },
+        ".MuiDialog-container": {
+          alignItems: 'start'
         }
       }}
     >
@@ -93,7 +100,7 @@ export const RecruitmentApplicantChooseStage = ({data, setStage, show, setShow})
         >
           {data?.filter(item => item.pipelineStateType !== 4).map(item => (
             item.pipelineStateType === 3 ? <Fragment key={item.id}>
-                <FormControlLabel value={item.id+ ",0"}
+                <FormControlLabel value={item.id + ",0"}
                                   sx={{'& .MuiFormControlLabel-label': {fontSize: "14px", fontWeight: 500}}}
                                   control={<Radio/>}
                                   label={PipelineStateType(item.pipelineStateType, 0)}/>

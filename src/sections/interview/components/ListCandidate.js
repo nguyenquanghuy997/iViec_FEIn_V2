@@ -7,7 +7,7 @@ import { useTheme } from "@mui/material/styles";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ option, detailCandidate, applicantId, error }) => {
+const ListCandidate = ({ option, detailCandidate, error }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
   const { data: { items: dataApplicant = [] } = {} } =
@@ -47,7 +47,9 @@ const ListCandidate = ({ option, detailCandidate, applicantId, error }) => {
         }))}
         name={"applicantIdArray"}
         fullWidth
-        disabled={applicantId || !watch("recruitmentPipelineStateId")}
+        // disabled={
+        //   applicantId || !watch("recruitmentPipelineStateId")
+        // }
         error={error}
         multiple
         isRequired
