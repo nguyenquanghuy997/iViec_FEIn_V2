@@ -66,6 +66,7 @@ const columns = [
     title: "Trạng thái",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT,
+      name: "IsActivated",
       placeholder: "Tất cả",
       options: LIST_STATUS.map((item) => ({
         value: item.value,
@@ -294,15 +295,31 @@ const OrganizationDetailContent = () => {
     if (reset && _isEmpty(router.query)) {
       return;
     }
+
     setTimeout(() => {
       router.push(
         {
-          query: reset ? {} : { ...router.query, ...values },
+          query: reset
+            ? { ...getQueryDefault() }
+            : { ...router.query, ...values },
         },
         undefined,
         { shallow: false }
       );
     }, timeout);
+  };
+
+  const getQueryDefault = () => {
+    return Object.fromEntries(
+      Object.entries(router.query).filter(
+        ([key]) =>
+          !columns.some((col) =>
+            Array.isArray(col.colFilters?.name)
+              ? col.colFilters?.name.some((f) => f == key)
+              : key == col.colFilters?.name
+          )
+      )
+    );
   };
 
   if (loadingUser) return <LoadingScreen />;

@@ -61,10 +61,11 @@ export const TableStyle = styled('div')(({theme}) => ({
   background: theme.palette.common.white,
   boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
   borderRadius: "4px",
-
+  fontFamily: 'Inter !important',
   ".ant-table": {
     minHeight: "500px",
     borderRadius: "8px",
+    fontFamily: 'Inter !important',
   },
   ".ant-table-content": {
     minHeight: 'calc(100vh - 320px)',
@@ -86,7 +87,10 @@ export const TableStyle = styled('div')(({theme}) => ({
     fontWeight: 400,
     wordBreak: 'break-all',
     fontSize: '13px',
-    lineHeight: '20px'
+    lineHeight: '20px',
+  },
+  ".ant-table-empty .ant-table-tbody >tr >td":{
+    borderBottom:'unset',
   },
   ".ant-pagination": {
     padding: "0 16px",

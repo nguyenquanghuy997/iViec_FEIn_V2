@@ -25,7 +25,7 @@ const ViewExam = styled('div')(() => ({
   margin: "-32px",
   '& .inside': {
     ".ant-table-content": {
-      height: 'calc(100vh - 380px)',
+      minHeight: 'calc(100vh - 380px)',
     },
   },
 }));
