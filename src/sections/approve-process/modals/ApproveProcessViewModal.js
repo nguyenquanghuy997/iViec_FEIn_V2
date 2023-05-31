@@ -9,6 +9,7 @@ import { ButtonCancelStyle } from "@/sections/applicant/style";
 import AvatarDS from "../../../components/DesignSystem/AvatarDS";
 import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import { useTheme } from "@mui/material/styles";
+import { getNumberUserDetail } from "@/sections/approve-process/config";
 
 export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}) => {
   const {data: preview = {}} = useGetPreviewApproveProcessQuery({Id: data?.id}, {skip: !data?.id || !show});
@@ -23,18 +24,6 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
     pressHide();
     handleEdit();
   };
-  
-  const mapResult = (members) => {
-    let children = [];
-    
-    return members.map(m => {
-      if (m.processLevelDetailPersonInCharges && m.processLevelDetailPersonInCharges.length) {
-        children = [...children, ...m.processLevelDetailPersonInCharges];
-      }
-      return m.processLevelDetailPersonInCharges;
-    }).concat(children.length ? mapResult(children) : children);
-  };
-  
   return (
     <Modal
       open={show}
@@ -117,7 +106,7 @@ export const ApproveProcessViewModal = ({title, data, show, setShow, handleEdit}
                     <Grid item>
                       <Typography variant={"textSize13500"} color={theme.palette.common.neutral700}>
                         Đã
-                        chọn {mapResult(item?.approvalProcessLevelDetails).filter(x => x !== undefined).length}
+                        chọn {getNumberUserDetail(item?.approvalProcessLevelDetails)}
                       </Typography>
                     </Grid>
                     <Grid mb={"10px"} mt={"10px"} container direction="row" justifyContent="flex-start"
