@@ -76,7 +76,7 @@ export const AddQuestionGroupModel = ({
   const checkData = (data) => {
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
-      for (let j = i; j < data.length; j++) {
+      for (let j = i + 1; j < data.length; j++) {
         const elem = data[j];
         if (
           item.questionGroupId === elem.questionGroupId &&
@@ -99,11 +99,15 @@ export const AddQuestionGroupModel = ({
         ),
       };
     });
+
     const err = checkData(data);
     if (err) {
-      enqueueSnackbar(`Nhóm câu hỏi ${err.questionGroup?.name} bị trùng`, {
-        variant: "error",
-      });
+      enqueueSnackbar(
+        `${err.questionGroup?.name} bị trùng loại câu hỏi, vui lòng chọn loại câu hỏi khác!`,
+        {
+          variant: "error",
+        }
+      );
       return;
     }
 
