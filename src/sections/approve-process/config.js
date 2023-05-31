@@ -60,7 +60,7 @@ export function formatDataGet(approveProcesses) {
 
 export function getNumberUser(approvalProcessLevelDetails) {
     let number = 0;
-    if(!approvalProcessLevelDetails && approvalProcessLevelDetails.length === 0) return 0
+    if(!approvalProcessLevelDetails || approvalProcessLevelDetails?.length === 0) return 0
     approvalProcessLevelDetails.forEach(item => {
         if (item.processLevelDetailType !== 0) {
             if (item.personInChargeIds.length > 0 && item.personInChargeIds)
