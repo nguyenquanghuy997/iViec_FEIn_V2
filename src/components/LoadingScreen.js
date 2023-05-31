@@ -35,7 +35,7 @@ export default function LoadingScreen() {
           repeat: Infinity,
         }}
       >
-        <Logo disabledLink sx={{ width: 200, height: 50, marginTop: 1 }} />
+        <Logo disabledLink sx={{ width: 100, height: 50, marginTop: 1 }} />
       </m.div>
 
       <Box
