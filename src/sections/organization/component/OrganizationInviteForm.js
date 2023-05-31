@@ -562,12 +562,30 @@ const OrganizationInviteForm = ({
           onClose={handleCloseConfirmDelete}
           open={openConfirmDelete}
           onSubmit={handleDeleteConfirm}
+          btnCancelProps={{
+            title: "Hủy",
+            sx: {
+              fontWeight: 600,
+            },
+          }}
           btnConfirmProps={{
             title: "Xóa",
             color: "error",
+            sx: {
+              fontWeight: 600,
+            },
           }}
-          btnCancelProps={{
-            title: "Hủy",
+          dialogProps={{
+            wrapperSx: {
+              "& .MuiDialog-container": {
+                paddingTop: "100px",
+                alignItems: "flex-start",
+                "& .MuiPaper-root": {
+                  borderRadius: "6px",
+                  width: "100%",
+                },
+              },
+            },
           }}
         />
       )}
