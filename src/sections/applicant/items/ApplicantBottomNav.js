@@ -1,11 +1,22 @@
+import { useDeleteApplicantsMutation } from "../ApplicantFormSlice";
 import { handleExportExcel } from "../helper/excel";
 import ApplicantTransferPipelineModal from "../modals/ApplicantTransferPipelineModal";
 import ApplicantTransferRecruitmentModal from "../modals/ApplicantTransferRecruitmentModal";
+import { RejectApplicantModal } from "../modals/RejectApplicantModal";
+import { DeleteIcon } from "@/assets/ActionIcon";
+import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import Content from "@/components/BaseComponents/Content";
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
+import { PERMISSIONS } from "@/config";
+import useRole from "@/hooks/useRole";
+import { modalSlice } from "@/redux/common/modalSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import { PATH_DASHBOARD } from "@/routes/paths";
+import { AlertIcon } from "@/sections/organization/component/Icon";
 import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
-import { ButtonIcon } from "@/utils/cssStyles";
+import { STYLE_CONSTANT as style } from "@/theme/palette";
+import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
 import {
   Address,
   MaritalStatus,
@@ -14,23 +25,18 @@ import {
   YearOfExperience,
 } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
-import { Box, Divider, Drawer, IconButton, Stack, Tooltip, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { RejectApplicantModal } from "../modals/RejectApplicantModal";
-import useRole from "@/hooks/useRole";
-import { useMemo } from "react";
-import { PERMISSIONS } from "@/config";
-import { PATH_DASHBOARD } from "@/routes/paths";
+import {
+  Box,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
-import { DeleteIcon } from "@/assets/ActionIcon";
-import { modalSlice } from "@/redux/common/modalSlice";
-import { useDispatch, useSelector } from "@/redux/store";
-import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
-import { AlertIcon } from "@/sections/organization/component/Icon";
-import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { useSnackbar } from "notistack";
-import { useDeleteApplicantsMutation } from "../ApplicantFormSlice";
-import {useTheme} from "@mui/material/styles";
+import React, { useEffect, useState } from "react";
+import { useMemo } from "react";
+
 const ApplicantBottomNav = ({
   selectedList,
   open,
@@ -159,13 +165,13 @@ const ApplicantBottomNav = ({
   const [actionShow, setActionShow] = useState(false);
 
   return (
-    <Drawer
+    <BottomNavStyle
       anchor={"bottom"}
       open={open}
       variant="persistent"
       onClose={onClose}
     >
-      <Content sx={{ padding: "20px 24px" }}>
+      <Content className="block-bottom">
         <Box
           sx={{
             width: "100%",
@@ -189,111 +195,109 @@ const ApplicantBottomNav = ({
                       icon={"ci:transfer"}
                       width={20}
                       height={20}
-                      color= {theme.palette.common.white}
+                      color={theme.palette.common.white}
                       mr={1}
                     />
                   }
                 />
-                {
-                  canEdit && <Tooltip title='Xem'>
-                    <IconButton
-                      sx={{
-                        marginRight: "16px",
-                      }}
-                      onClick={() => router.push({
-                        pathname: PATH_DASHBOARD.applicant.view(itemSelected[0]?.applicantId), query: {
-                          correlationId: itemSelected[0]?.correlationId,
-                          organizationId: itemSelected[0]?.organizationId,
-                          recruitmentId: itemSelected[0]?.recruitmentId,
-                          applicantId: itemSelected[0]?.applicantId,
-                        }
-                      }, undefined, { shallow: true })}
-                    ><Iconify
+                {canEdit && (
+                  <ButtonIcon
+                    onClick={() =>
+                      router.push(
+                        {
+                          pathname: PATH_DASHBOARD.applicant.view(
+                            itemSelected[0]?.applicantId
+                          ),
+                          query: {
+                            correlationId: itemSelected[0]?.correlationId,
+                            organizationId: itemSelected[0]?.organizationId,
+                            recruitmentId: itemSelected[0]?.recruitmentId,
+                            applicantId: itemSelected[0]?.applicantId,
+                          },
+                        },
+                        undefined,
+                        { shallow: true }
+                      )
+                    }
+                    tooltip="Xem"
+                    icon={
+                      <Iconify
                         icon={"ri:eye-2-line"}
                         width={20}
                         height={20}
                         color={theme.palette.common.neutral600}
-                      /></IconButton>
-                  </Tooltip>
+                      />
+                    }
+                    sx={{
+                      marginRight: "16px",
+                    }}
+                  />
+                )}
 
-                }
-
-
-                {
-                  canEdit &&
-                  <Tooltip title='Chỉnh sửa'>
-                    <IconButton
-                      sx={{
-                        marginRight: "16px",
-                      }}
-                      onClick={() => handleOpenEditForm()}
-                    >
+                {canEdit && (
+                  <ButtonIcon
+                    onClick={() => handleOpenEditForm()}
+                    tooltip="Chỉnh sửa"
+                    icon={
                       <Iconify
                         icon={"ri:edit-2-fill"}
                         width={20}
                         height={20}
                         color={theme.palette.common.borderObject}
                       />
-                    </IconButton>
-                  </Tooltip>
+                    }
+                    sx={{
+                      marginRight: "16px",
+                    }}
+                  />
+                )}
 
-                }
-
-                {
-                  canEdit &&
-                  <Tooltip title='Thêm vào tin tuyển dụng'>
-                    <IconButton
-                      sx={{
-                        marginRight: "16px",
-                      }}
-                      onClick={() => handleShowConfirmMultiple("tranferRe")}
-                    >
+                {canEdit && (
+                  <ButtonIcon
+                    onClick={() => handleShowConfirmMultiple("tranferRe")}
+                    tooltip="Thêm vào tin tuyển dụng"
+                    icon={
                       <Iconify
                         icon={"ri:share-forward-2-fill"}
                         width={20}
                         height={20}
                         color={theme.palette.common.borderObject}
                       />
-                    </IconButton>
-                  </Tooltip>
-                }
-
+                    }
+                    sx={{
+                      marginRight: "16px",
+                    }}
+                  />
+                )}
               </>
             )}
-            {
-              canEdit && canView &&
-              <Tooltip title='Excel'>
-                <IconButton
-                  sx={{
-                    marginRight: "16px",
-                  }}
-                  onClick={() => exportExcel(itemSelected)}
-                >
+            {canEdit && canView && (
+              <ButtonIcon
+                onClick={() => exportExcel(itemSelected)}
+                tooltip="Excel"
+                icon={
                   <Iconify
                     icon={"vscode-icons:file-type-excel"}
                     width={20}
                     height={20}
                   />
-                </IconButton>
-              </Tooltip>
+                }
+                sx={{
+                  marginRight: "16px",
+                }}
+              />
+            )}
 
-            }
-
-            {
-              canEdit &&
-              <Tooltip title='Xóa'>
-                <IconButton
-                  sx={{
-                    marginRight: "16px",
-                  }}
-                  onClick={() => handleOpenModalState({ openDelete: true })}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-
-            }
-
+            {canEdit && (
+              <ButtonIcon
+                onClick={() => handleOpenModalState({ openDelete: true })}
+                tooltip="Xóa"
+                icon={<DeleteIcon />}
+                sx={{
+                  marginRight: "16px",
+                }}
+              />
+            )}
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
@@ -302,7 +306,11 @@ const ApplicantBottomNav = ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
+              sx={{
+                mx: 2,
+                width: "2px",
+                backgroundColor: theme.palette.common.neutral100,
+              }}
             />
             <ButtonIcon
               sx={{
@@ -314,7 +322,7 @@ const ApplicantBottomNav = ({
                   icon={"ic:baseline-close"}
                   width={20}
                   height={20}
-                  color= {theme.palette.common.borderObject}
+                  color={theme.palette.common.borderObject}
                 />
               }
             />
@@ -376,9 +384,7 @@ const ApplicantBottomNav = ({
           }
           subtitle={
             selectedList.length > 1 ? (
-              <>
-                Bạn có chắc chắn muốn xóa {selectedList.length} ứng viên?
-              </>
+              <>Bạn có chắc chắn muốn xóa {selectedList.length} ứng viên?</>
             ) : (
               <>
                 Bạn có chắc chắn muốn xóa ứng viên
@@ -423,7 +429,7 @@ const ApplicantBottomNav = ({
           handleShowConfirmMultiple={() => handleShowConfirmMultiple("reject")}
         />
       )} */}
-    </Drawer>
+    </BottomNavStyle>
   );
 };
 

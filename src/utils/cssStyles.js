@@ -4,6 +4,7 @@ import {
   Box,
   Dialog,
   DialogContentText,
+  Drawer,
   Switch,
   Typography,
 } from "@mui/material";
@@ -63,12 +64,13 @@ export default function cssStyles(theme) {
 
 export const ViewModel = styled("div")(({ theme }) => ({
   width: "42vw",
-  marginTop: '64px',
-  height: 'calc(100% - 64px)',
+  marginTop: "64px",
+  height: "calc(100% - 64px)",
   background: theme.palette.background.paper,
   display: "flex",
   flexDirection: "column",
-  boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'
+  boxShadow:
+    "-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
 }));
 
 export const ButtonIcon = styled(ButtonDS)(({ theme }) => ({
@@ -401,8 +403,7 @@ export const ExamContainer = styled(Box)(({ theme: { palette } }) => ({
     },
     ".q-answers-box": {
       padding: "20px",
-      paddingBottom:"8px",
-      
+      paddingBottom: "8px",
     },
     ".questions": {
       display: "flex",
@@ -434,5 +435,14 @@ export const ExamContainer = styled(Box)(({ theme: { palette } }) => ({
         },
       },
     },
+  },
+}));
+export const BottomNavStyle = styled(Drawer)(() => ({
+  "& .MuiPaper-root": {
+    boxShadow:
+      "0px -1px 8px rgba(9, 30, 66, 0.15), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+  },
+  "& .block-bottom": {
+    padding: "20px 24px !important",
   },
 }));

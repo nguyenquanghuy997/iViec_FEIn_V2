@@ -10,13 +10,14 @@ import {
   AlertIcon,
 } from "@/sections/organization/component/Icon";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
+import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
 import {
   Box,
   Divider,
-  Drawer,
   IconButton,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import * as PropTypes from "prop-types";
 import React, { useMemo, useState } from "react";
@@ -34,6 +35,7 @@ function EmailFormBottomNav(props) {
     setIsOpenActive,
     status, // true if all item select is active = true,
   } = props;
+  const theme = useTheme();
   const [openDelete, setOpenDelete] = useState(false);
   const handleDeleteSubmit = () => {
     let ids = selectedList.map((item) => item.id);
@@ -56,13 +58,13 @@ function EmailFormBottomNav(props) {
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_EMAIL), []);
 
   return (
-    <Drawer
+    <BottomNavStyle
       anchor={"bottom"}
       open={open}
       variant="persistent"
       onClose={onClose}
     >
-      <Content>
+      <Content className="block-bottom">
         <Box
           sx={{
             width: "100%",
@@ -79,7 +81,12 @@ function EmailFormBottomNav(props) {
                     {canEdit && (
                       <IconButton
                         size="small"
-                        sx={{ color: "#1976D2", mx: 0.5 }}
+                        sx={{
+                          background: "unset !important",
+                          padding: 0,
+                          color: "#1976D2",
+                          mx: 0.5,
+                        }}
                         onClick={() => handleShowActiveModal(selectedList[0])}
                       >
                         <ActionSwitchCheckedIcon />
@@ -97,7 +104,12 @@ function EmailFormBottomNav(props) {
                     {canEdit && (
                       <IconButton
                         size="small"
-                        sx={{ color: "#1976D2", mx: 0.5 }}
+                        sx={{
+                          background: "unset !important",
+                          padding: 0,
+                          color: "#1976D2",
+                          mx: 0.5,
+                        }}
                         onClick={() => handleShowActiveModal(selectedList[0])}
                       >
                         <ActionSwitchUnCheckedIcon />
@@ -114,31 +126,31 @@ function EmailFormBottomNav(props) {
               </>
             )}
             {selectedList.length === 1 && canEdit && (
-              <Box sx={{ ml: 2 }}>
-                <IconButton
+              <Box sx={{ ml: 2,  display: "flex" }}>
+                <ButtonIcon
+                  tooltip="Sửa"
+                  icon={<EditIcon />}
                   size="small"
-                  sx={{ color: "#8A94A5", mx: 1 }}
+                  sx={{ color: theme.palette.common.borderObject, mx: 1 }}
                   onClick={() => handleOpenForm(selectedList[0])}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
+                ></ButtonIcon>
+                <ButtonIcon
+                  tooltip="Xóa"
+                  icon={<DeleteIcon />}
                   size="small"
-                  sx={{ color: "#1976D2", mx: 1 }}
+                  sx={{ color: theme.palette.common.borderObject, mx: 1 }}
                   onClick={() => setOpenDelete(true)}
-                >
-                  <DeleteIcon />
-                </IconButton>
+                ></ButtonIcon>
               </Box>
             )}
             {selectedList.length > 1 && canEdit && (
-              <IconButton
+              <ButtonIcon
+                tooltip="Xóa"
+                icon={<DeleteIcon />}
                 size="small"
-                sx={{ color: "#1976D2", mx: 2 }}
+                sx={{ color: theme.palette.common.borderObject, mx: 2 }}
                 onClick={() => setOpenDelete(true)}
-              >
-                <DeleteIcon />
-              </IconButton>
+              ></ButtonIcon>
             )}
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -150,9 +162,21 @@ function EmailFormBottomNav(props) {
               flexItem
               sx={{ mx: 2, width: "2px", backgroundColor: "#E7E9ED" }}
             />
-            <IconButton size="medium" onClick={onClose}>
-              <Iconify icon="ic:baseline-close" />
-            </IconButton>
+
+            <ButtonIcon
+              sx={{
+                textTransform: "none",
+              }}
+              onClick={onClose}
+              icon={
+                <Iconify
+                  icon={"ic:baseline-close"}
+                  width={20}
+                  height={20}
+                  color={theme.palette.common.borderObject}
+                />
+              }
+            />
           </Box>
         </Box>
       </Content>
@@ -204,7 +228,7 @@ function EmailFormBottomNav(props) {
           }}
         />
       )}
-    </Drawer>
+    </BottomNavStyle>
   );
 }
 

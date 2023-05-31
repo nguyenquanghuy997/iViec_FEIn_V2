@@ -27,7 +27,7 @@ export const UpdateQuestionGroupModel = ({
   // form
   const Schema = Yup.object().shape({
     questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
-    questionTypeId: Yup.string().required("Chưa chọn loại câu hỏi"),
+    questionTypeId: Yup.string().required("Chưa chọn kiểu câu hỏi"),
     quantity: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .min(1, "Số câu hỏi phải lớn hơn 0")
@@ -132,7 +132,7 @@ export const UpdateQuestionGroupModel = ({
                       label: p?.name,
                     }))}
                     name={`questionTypeId`}
-                    placeholder="Chọn loại câu hỏi"
+                    placeholder="Chọn kiểu câu hỏi"
                     fullWidth
                     onChange={(e) => changeQuestionType(e)}
                   />

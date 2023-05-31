@@ -10,9 +10,9 @@ import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
-import { ButtonIcon } from "@/utils/cssStyles";
+import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
 import { checkSameValue } from "@/utils/formatString";
-import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useMemo } from "react";
 import {useTheme} from "@mui/material/styles";
@@ -60,13 +60,13 @@ const JobTypeBottomNav = ({
     return true;
   }
   return (
-    <Drawer
+    <BottomNavStyle
       anchor={"bottom"}
       open={open}
       variant="persistent"
       onClose={onClose}
     >
-      <Content sx={{ padding: "20px 24px" }}>
+      <Content className="block-bottom">
         <Box
           sx={{
             width: "100%",
@@ -85,6 +85,7 @@ const JobTypeBottomNav = ({
                         onClick={() => handleShowConfirmMultiple("status")}
                         sx={{
                           backgroundColor: "unset !important",
+                          padding: 0
                         }}
                         icon={<ActionSwitchCheckedIcon />}
                       />
@@ -124,6 +125,7 @@ const JobTypeBottomNav = ({
                 sx={{
                   marginLeft: "16px",
                 }}
+                tooltip="Sửa"
                 onClick={() => handleShowConfirmMultiple("edit")}
                 icon={
                   <Iconify
@@ -140,6 +142,7 @@ const JobTypeBottomNav = ({
                 sx={{
                   marginLeft: "16px",
                 }}
+                tooltip="Xóa"
                 onClick={() => handleShowConfirmMultiple("delete")}
                 icon={
                   <Iconify
@@ -204,7 +207,7 @@ const JobTypeBottomNav = ({
           isActivated={jobType?.isActivated}
         />
       )}
-    </Drawer>
+    </BottomNavStyle>
   );
 };
 

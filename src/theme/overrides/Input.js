@@ -24,7 +24,7 @@ export default function Input(theme) {
         input: {
           '&::placeholder': {
             opacity: 1,
-            color: theme.palette.text.search,
+            color: theme.palette.text.secondary,
           },
           '&.MuiInputBase-input': {
             padding: '8px 14px',
