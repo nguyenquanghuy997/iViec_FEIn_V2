@@ -76,7 +76,6 @@ export const NotificationFormModal = ({data, show, onClose}) => {
     if (!show) {
       reset(defaultValues);
       setIsDisabled(false);
-      return;
     }
   }, [show]);
   
@@ -120,7 +119,7 @@ export const NotificationFormModal = ({data, show, onClose}) => {
       <Modal
         open={show}
         onClose={onClose}
-        sx={{display: "flex", justifyContent: "flex-end"}}
+        sx={{display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
       >
         <ViewModel>
           {/* header */}
@@ -202,7 +201,7 @@ export const NotificationFormModal = ({data, show, onClose}) => {
                               color={theme.palette.common.neutral800}>{watch("title")}</Typography>
                   <Typography variant={"textSize12"} color={theme.palette.common.neutral700}>04/02/2023</Typography>
                   <Typography variant={"body2"} color={theme.palette.common.neutral700}>
-                    <div dangerouslySetInnerHTML={{__html: renderDataDemo(watch("content"))}} />
+                    <div dangerouslySetInnerHTML={{__html: renderDataDemo(watch("content"))}}/>
                   </Typography>
                 </Box>
               </PreviewNotification>
@@ -250,7 +249,7 @@ export const NotificationFormModal = ({data, show, onClose}) => {
           </View>
         </ViewModel>
       </Modal>
-      <NotificationResetModal open={openReset} setOpen={setOpenReset} onSuccess={resetData} />
+      <NotificationResetModal open={openReset} setOpen={setOpenReset} onSuccess={resetData}/>
     </FormProvider>
   );
 };

@@ -32,6 +32,7 @@ import {
 } from "../ExamSlice";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import { OrangeAlertIcon } from "@/sections/recruitment-form/icon/HeaderIcon";
+import MuiInputNumber from "@/components/form/MuiInputNumber";
 
 const LIST_QUESTION_TYPE = [
   {
@@ -53,7 +54,7 @@ const LIST_QUESTION_TYPE = [
 
 const defaultValues = {
   id: null,
-  questionType: 0,
+  questionType: null,
   questionPoint: 1,
   questionState: 0,
   questionGroupId: null,
@@ -124,7 +125,8 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
   // form
   const schema = Yup.object().shape({
-    questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi"),
+    questionType: Yup.string().required("Chưa chọn kiểu câu hỏi").nullable(),
+    questionGroupId: Yup.string().required("Chưa chọn nhóm câu hỏi").nullable(),
     questionTitle: Yup.string().required("Chưa nhập câu hỏi")
       .max(500, 'Ký tự quá dài')
       .when("questionType", {
@@ -138,7 +140,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
     answers: Yup.mixed().when(["questionType"], {
       is: (questionType) => {
-        return questionType == 0 || questionType == 1
+        return questionType === 0 || questionType === 1
       },
       then: Yup.mixed()
         .test({
@@ -160,6 +162,10 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         .test({
           message: "Vui lòng chọn ít nhất một đáp án đúng",
           test: (val) => !val.length || val.some((i) => i.isCorrect),
+        })
+        .test({
+          message: 'Đáp án không được trùng nhau',
+          test: (val) => !val.some((i, index) => i.content == val[0].content && index > 0)
         })
     }),
     questionFilePaths: Yup.mixed()
@@ -197,6 +203,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   const pressAddAnswer = () => {
     setListAnswer((l) => [...l, defaultAnswer]);
   };
+
   const pressDeleteAnswer = (index) => {
     setListAnswer((l) => l.filter((_, i) => i !== index));
   };
@@ -206,6 +213,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       if (isNotSave) {
         const data = {
           ...e,
+          questionType: +e.questionType,
           answers: e.answers?.length > 0 && !isEssay ? e.answers : null,
           questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name
         }
@@ -223,7 +231,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       }
 
     } catch (error) {
-      if (error.status == "QGE_04")
+      if (error.status === "QGE_04")
         setShowDuplicateAlert(true)
       // enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
       //   autoHideDuration: 1000,
@@ -359,7 +367,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
           }}
         />
 
-        {index === listAnswer.length - 1
+        {index === listAnswer.length - 1 && listAnswer.length < 6
           ? renderButton(
             `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.16602 9.16699V4.16699H10.8327V9.16699H15.8327V10.8337H10.8327V15.8337H9.16602V10.8337H4.16602V9.16699H9.16602Z" fill="#388E3C"/></svg>`,
             pressAddAnswer
@@ -384,16 +392,16 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   useEffect(() => {
     if (data?.id || data?.questionTitle) {
       setValue("id", data.id);
-      setValue("questionType", data.questionType);
+      setValue("questionType", parseInt(data.questionType));
       setValue("questionTitle", data.questionTitle);
       setValue("questionPoint", data.questionPoint);
       setValue("questionGroupId", data.questionGroupId);
       setValue("isActive", !!data.isActive);
-      setListAnswer(data.answers);
+      setListAnswer(data.questionType == 2 ? [defaultAnswer] : data.answers);
       setListMedia(data.questionFilePaths?.map((i) => ({ uploadedUrl: i })));
       return;
     }
-    if (!show) {
+    if (show) {
       reset({ ...defaultValues, questionGroupId: router.query.slug });
       setListAnswer([defaultAnswer]);
       setListMedia([])
@@ -408,7 +416,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   }, [isEssay]);
 
   useEffect(() => {
-    if (isMultipleChoice) return;
+    if (!isMultipleChoice) return;
     setListAnswer((l) => l?.map((i) => ({ ...i, isCorrect: false })));
   }, [isMultipleChoice]);
 
@@ -430,7 +438,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         <Modal
           open={show}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" } }}
         >
           <ViewModel>
             {/* header */}
@@ -516,7 +524,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
               <View mv={24} width={'50%'}>
                 {renderTitle("Điểm câu hỏi", true)}
 
-                <RHFTextField
+                <MuiInputNumber
                   name={"questionPoint"}
                   disabled={!isEssay}
                   placeholder={"Nhập điểm câu hỏi"}

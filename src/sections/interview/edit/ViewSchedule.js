@@ -88,7 +88,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             </Box>
           </Tooltip>
         );
-      case 8: // interview refuse
+      case 3: // interview refuse
         return (
           <Tooltip title="Đã hủy">
             <Box
@@ -112,7 +112,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             </Box>
           </Tooltip>
         );
-      case 9: // interviewing
+      case 1: // interviewing
         return (
           <Tooltip title="Đang diễn ra">
             <Box
@@ -136,9 +136,9 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             </Box>
           </Tooltip>
         );
-      case 10: // interview finish
+      case 2: // interview finish
         return (
-          <Tooltip title="Đã k">
+          <Tooltip title="Đã kết thúc">
             <Box
               sx={{
                 borderRadius: "100%",

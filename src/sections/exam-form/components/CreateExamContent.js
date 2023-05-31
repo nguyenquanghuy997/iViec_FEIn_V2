@@ -64,7 +64,6 @@ const CreateExamContent = () => {
 
   var ListQuestionGroup = Data?.filter((p) => p.numOfQuestion > 0);
 
-
   const { data: data } = useGetExaminationByIdQuery(
     {
       Id: examId,
@@ -106,7 +105,7 @@ const CreateExamContent = () => {
   };
 
   const onOutFocusInput = () => {
-    if (!examData.standardPoint) {
+    if (examData.standardPoint == null || examData.standardPoint == '') {
       setShowInputStandardPoint(false);
     }
   };
@@ -133,9 +132,22 @@ const CreateExamContent = () => {
     );
   };
 
+  const timeFromMinutes = (mins_num) => {
+    var days = Math.floor(mins_num / (24 * 60))
+    var hours = Math.floor((mins_num - days * 24 * 60) / 60);
+    var minutes = mins_num - hours * 60 - days * 24 * 60;
+
+    if (days < 10) { days = "0" + days; }
+    if (hours < 10) { hours = "0" + hours; }
+    if (minutes < 10) { minutes = "0" + minutes; }
+    return days + "." + hours + ':' + minutes + ':00';
+  }
+
   const minutesFromTime = (times) => {
-    var a = times.split(":");
-    return +a[0] * 60 + +a[1];
+    const a = times.split(/[.:]+/);
+    var storageFuncs = [s => parseInt(s) * 0, m => parseInt(m), h => parseInt(h) * 60, d => parseInt(d) * 60 * 24];
+    var res = a.reverse().reduce((acc, next, index) => acc + storageFuncs[index](next), 0);
+    return res;
   };
 
   const handlePreview = async () => {
@@ -157,11 +169,12 @@ const CreateExamContent = () => {
       });
       setExamQuestionPreview(questions.flat(1));
       setShowPreview(true)
-    } else{
+    } else {
       setExamQuestionPreview(examQuestions.flat(1));
       setShowPreview(true)
     }
   };
+
   const handleUpdateListQuestion = (datas) => {
     if (examData.type == 0) {
       setExamQuestions([...datas]);
@@ -188,6 +201,12 @@ const CreateExamContent = () => {
   };
 
   const handleSaveDraft = async () => {
+    if (examData.standardPoint === null || examData.standardPoint === '') {
+      enqueueSnackbar("Bạn cần nhập điểm sàn", {
+        variant: "error",
+      });
+      return;
+    }
     if (examData.standardPoint < 0) {
       enqueueSnackbar("Điểm sàn phải lớn hơn không", {
         variant: "error",
@@ -196,14 +215,14 @@ const CreateExamContent = () => {
     }
 
     if (examData.type == 0 && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
     }
 
     if (examData.type == 1 && !!examData.maximumPoint && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
@@ -216,11 +235,9 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: examData.standardPoint ?? 1,
+      standardPoint: parseInt(examData.standardPoint ?? 0),
       isQuestionMixing: examData.isQuestionMixing,
-      examTime: new Date(examData.examTime * 60 * 1000)
-        .toISOString()
-        .substr(11, 8),
+      examTime: timeFromMinutes(examData.examTime),
       maximumPoint: examData.maximumPoint,
       examinationQuestions:
         (examData.type == 0 &&
@@ -229,15 +246,15 @@ const CreateExamContent = () => {
               questionId: x.id,
               questionCreation: !x.id
                 ? {
-                    questionTitle: x.questionTitle,
-                    answers: x.answers,
-                    questionPoint: x.questionPoint,
-                    questionType: x.questionType,
-                    questionState: x.questionState,
-                    questionGroupId: x.questionGroupId,
-                    isActive: x.isActive,
-                    questionFilePaths: x.questionFilePaths,
-                  }
+                  questionTitle: x.questionTitle,
+                  answers: x.answers,
+                  questionPoint: x.questionPoint,
+                  questionType: x.questionType,
+                  questionState: x.questionState,
+                  questionGroupId: x.questionGroupId,
+                  isActive: x.isActive,
+                  questionFilePaths: x.questionFilePaths,
+                }
                 : null,
             };
           })) ||
@@ -263,10 +280,15 @@ const CreateExamContent = () => {
       }
       enqueueSnackbar("Lưu đề thi thành công");
       router.push("/settings/exam/exam-business");
-    } catch {
-      enqueueSnackbar("Lưu đề thi thất bại", {
-        variant: "error",
-      });
+    } catch (e) {
+      if (e.status == 'EXE_06')
+        enqueueSnackbar("Đề thi đã tồn tại", {
+          variant: "error",
+        });
+      else
+        enqueueSnackbar("Lưu đề thi thất bại", {
+          variant: "error",
+        });
     }
   };
 
@@ -283,7 +305,12 @@ const CreateExamContent = () => {
       });
       return;
     }
-
+    if (examData.standardPoint === null || examData.standardPoint === '') {
+      enqueueSnackbar("Bạn cần nhập điểm sàn", {
+        variant: "error",
+      });
+      return;
+    }
     if (examData.standardPoint < 0) {
       enqueueSnackbar("Điểm sàn phải lớn hơn không", {
         variant: "error",
@@ -292,14 +319,14 @@ const CreateExamContent = () => {
     }
 
     if (examData.type == 0 && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
     }
 
     if (examData.type == 1 && !!examData.maximumPoint && examData.standardPoint > examData.maximumPoint) {
-      enqueueSnackbar("Điểm sàn phải nhỏ hơn điểm tối đa", {
+      enqueueSnackbar("Điểm sàn không được lớn hơn điểm tối đa", {
         variant: "error",
       });
       return;
@@ -312,11 +339,9 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: examData.standardPoint,
+      standardPoint: parseInt(examData.standardPoint ?? 0),
       isQuestionMixing: examData.isQuestionMixing,
-      examTime: new Date(examData.examTime * 60 * 1000)
-        .toISOString()
-        .substr(11, 8),
+      examTime: timeFromMinutes(examData.examTime),
       maximumPoint: examData.maximumPoint,
       examinationQuestions:
         (examData.type == 0 &&
@@ -325,15 +350,15 @@ const CreateExamContent = () => {
               questionId: x.id,
               questionCreation: !x.id
                 ? {
-                    questionTitle: x.questionTitle,
-                    answers: x.answers,
-                    questionPoint: x.questionPoint,
-                    questionType: x.questionType,
-                    questionState: x.questionState,
-                    questionGroupId: x.questionGroupId,
-                    isActive: x.isActive,
-                    questionFilePaths: x.questionFilePaths,
-                  }
+                  questionTitle: x.questionTitle,
+                  answers: x.answers,
+                  questionPoint: x.questionPoint,
+                  questionType: x.questionType,
+                  questionState: x.questionState,
+                  questionGroupId: x.questionGroupId,
+                  isActive: x.isActive,
+                  questionFilePaths: x.questionFilePaths,
+                }
                 : null,
             };
           })) ||
@@ -358,10 +383,15 @@ const CreateExamContent = () => {
       }
       enqueueSnackbar("Lưu đề thi thành công");
       router.push("/settings/exam/exam-business");
-    } catch {
-      enqueueSnackbar("Lưu đề thi thất bại", {
-        variant: "error",
-      });
+    } catch (e) {
+      if (e.status == 'EXE_06')
+        enqueueSnackbar("Đề thi đã tồn tại", {
+          variant: "error",
+        });
+      else
+        enqueueSnackbar("Lưu đề thi thất bại", {
+          variant: "error",
+        });
     }
   };
 
@@ -370,7 +400,7 @@ const CreateExamContent = () => {
   };
 
   useEffect(() => {
-    if (data ) {
+    if (data) {
       setExamData({ ...data, examTime: minutesFromTime(data.examTime) });
       if (data.type == 0) {
         setExamQuestions(data.questions ?? []);
@@ -470,7 +500,7 @@ const CreateExamContent = () => {
                 }}
               >
                 {
-                  (!showInputStandardPoint && (examData.standardPoint == null || examData.standardPoint == '')) && <ButtonIcon
+                  (!showInputStandardPoint && (examData.standardPoint === null || examData.standardPoint === '')) && <ButtonIcon
                     sx={{
                       backgroundColor: "transparent",
                       "&:hover": {
@@ -489,7 +519,7 @@ const CreateExamContent = () => {
                   />
                 }
                 {
-                  (showInputStandardPoint || (examData.standardPoint != null && examData.standardPoint != '')) && <TextField
+                  (showInputStandardPoint || (examData.standardPoint !== null && examData.standardPoint !== '')) && <TextField
                     value={examData.standardPoint}
                     onChange={handleChangeStandardPoint}
                     onBlur={(e) => onOutFocusInput(e)}
@@ -629,7 +659,7 @@ const CreateExamContent = () => {
       {showPreview && (
         <ExamPreview
           open={showPreview}
-          onClose={()=>setShowPreview(false)}
+          onClose={() => setShowPreview(false)}
           data={{
             examData: examData,
             questions: examQuestionPreview,

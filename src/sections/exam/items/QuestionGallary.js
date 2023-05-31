@@ -19,8 +19,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@mui/material/styles";
 import { QuestionFormModal } from "../components/QuestionFormModal";
+import { useSnackbar } from "notistack";
 
 export const QuestionGallary = () => {
+  const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
   // state
   const [currentItem, setCurrentItem] = useState(null);
   const [listSelected, setListSelected] = useState([]);
@@ -45,9 +48,7 @@ export const QuestionGallary = () => {
     name = "",
     description,
     isActive,
-  } = (isMulti || !currentItem
-    ? { ...list.find((i) => i.id === listSelected[0]) }
-    : currentItem) || {};
+  } = currentItem || {};
 
   const _name = isMulti ? "" : name;
 
@@ -69,10 +70,17 @@ export const QuestionGallary = () => {
       ...e,
       description: e.des,
     };
-    await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body));
-    onHandleFinish();
+    try {
+      await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body)).unwrap();
+      onHandleFinish();
+    }
+    catch (e) {
+      if (e.status == 'QGE_05') {
+        enqueueSnackbar('Nhóm đề thi đã tồn tại', { variant: 'error' });
+      }
+    }
   };
-  const theme = useTheme();
+
   const onCloseConfirmDelete = () => {
     setCurrentItem(null);
     setShowConfirmDelete(false);
@@ -111,7 +119,9 @@ export const QuestionGallary = () => {
     const { id } = data;
     const isSelected = listSelected.includes(id);
 
-    const pressCheckbox = () => {
+    const pressCheckbox = (e) => {
+      if (e.target.checked)
+        setCurrentItem(data)
       setListSelected((l) =>
         isSelected ? l.filter((i) => i !== id) : [...l, id]
       );
@@ -151,7 +161,10 @@ export const QuestionGallary = () => {
       <QuestionGalleryHeader
         methods={methods}
         handleSubmit={methods.handleSubmit}
-        pressAddQuestionGallery={() => setShowForm(true)}
+        pressAddQuestionGallery={() => {
+          setCurrentItem(null)
+          setShowForm(true)
+        }}
         handlerCreateQuestion={() => setShowFormQuestion(true)}
       />
 
@@ -178,7 +191,16 @@ export const QuestionGallary = () => {
         list={list}
         listSelected={listSelected}
         setListSelected={setListSelected}
-        setShowForm={setShowForm}
+        setShowForm={(show) => {
+          if (show) {
+            setCurrentItem({ ...list.find((i) => i.id === listSelected[0]) })
+          }
+          else {
+            setCurrentItem(null)
+            setListSelected([])
+          }
+          setShowForm(show)
+        }}
         setShowConfirmDelete={setShowConfirmDelete}
         setShowConfirmSwitchActive={setShowConfirmSwitchActive}
       />

@@ -24,6 +24,7 @@ import {
   PipelineStateType,
   Sex,
   YearOfExperience,
+  formatPhoneNumber,
 } from "@/utils/enum";
 import { fCurrency } from "@/utils/formatNumber";
 import {
@@ -92,7 +93,7 @@ export const ApplicantItem = (props) => {
             sx={{
               width: 360,
               fontWeight: 500,
-              fontSize: 14,
+              fontSize: 13,
               cursor: "pointer",
             }}
             onClick={() =>
@@ -120,6 +121,7 @@ export const ApplicantItem = (props) => {
         title: "Số điện thoại",
         fixed: "left",
         width: "120px",
+        render: (item)=>formatPhoneNumber(item),
       },
       {
         dataIndex: "dateOfBirth",
@@ -243,7 +245,7 @@ export const ApplicantItem = (props) => {
         render: (jobCats = []) => {
           return (
             jobCats
-              .map((cat) => cat.name)
+              .map((cat) => cat.jobCategoryName)
               .filter((i) => i)
               .join(", ") || "-"
           );

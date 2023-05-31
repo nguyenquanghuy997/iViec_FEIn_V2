@@ -32,7 +32,11 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
   const schema = Yup.object().shape({
     name: Yup.string().required('Chưa nhập tên đề thi'),
     description: Yup.string().max(100, 'Tên đề thi không được quá 100 ký tự'),
-    examTime: Yup.number().typeError('Chưa nhập thời gian thi').required('Chưa nhập thời gian thi').min(1, 'Thời gian thi phải lớn hơn 0')
+    examTime: Yup.number()
+      .typeError('Chưa nhập thời gian thi')
+      .required('Chưa nhập thời gian thi')
+      .min(1, 'Thời gian thi phải lớn hơn 0')
+      .max(10080, 'Thời gian làm bài không quá 10.080 phút')
   });
 
   const methods = useForm({

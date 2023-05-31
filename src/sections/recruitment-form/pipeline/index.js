@@ -1,3 +1,4 @@
+import { Text, View } from "@/components/FlexStyled";
 import { RHFCheckbox, RHFSelect } from "@/components/hook-form";
 import { LabelStyle } from "@/components/hook-form/style";
 import { PIPELINE_TYPE } from "@/config";
@@ -50,11 +51,15 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
 
   const { data: { items: ListPipeline = [] } = {}, isLoading } =
     useGetAllPipelineByOrganizationQuery({ OrganizationId: organizationId });
-  const { data: { organizationPipelineStates: ListStepPipeline = [] } = {} } =
+  const { data:  ListStepPipeline  = {} } =
     useGetAllStepOfPipelineQuery(
       { Id: organizationPipelineId },
       { skip: !organizationPipelineId }
     );
+
+  const organizationPipelineDes = ListPipeline?.find(
+    (i) => i.id === organizationPipelineId
+  )?.description;
 
   useEffect(() => {
     if (!isEmpty(recruitment)) {
@@ -74,8 +79,8 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
   }, [recruitment]);
 
   useEffect(() => {
-    if (!isEmpty(ListStepPipeline)) {
-      const listStepPipelineSize = ListStepPipeline?.filter(
+    if (!isEmpty(ListStepPipeline?.organizationPipelineStates)) {
+      const listStepPipelineSize = ListStepPipeline?.organizationPipelineStates?.filter(
         (item) => item.pipelineStateType === PIPELINE_TYPE.EXAMINATION
       )?.length;
       setHasExamination({
@@ -150,6 +155,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
         >
           <BoxInnerStyle
             sx={{
+              height: "100%",
               borderBottomRightRadius: "6px",
               borderBottomLeftRadius: "6px",
             }}
@@ -175,7 +181,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
                 onChange={(e) => {
                   setValue("organizationPipelineId", e);
                   setPipelineStateDatas(
-                    ListStepPipeline?.map((pipeline) => ({
+                    ListStepPipeline?.organizationPipelineStates?.map((pipeline) => ({
                       organizationPipelineId: pipeline.id,
                       pipelineStateType: pipeline.pipelineStateType,
                       examinationId: null,
@@ -185,7 +191,17 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
                   );
                 }}
               />
-              <Divider sx={{ my: 1.5 }} />
+
+              {!!organizationPipelineDes && (
+                <View flexRow mt={16}>
+                  <Text>{"Mô tả:"}</Text>
+
+                  <Text ml={24}>{organizationPipelineDes}</Text>
+                </View>
+              )}
+
+              <Divider sx={{ my: "24px" }} />
+
               <Box
                 sx={{
                   display: "flex",
@@ -205,10 +221,11 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
                 <RHFCheckbox
                   name="isAutomaticStepChange"
                   label="Tự động chuyển bước"
+                  style={{ marginRight: 0 }}
                 />
               </Box>
               <Box sx={{ mt: 1 }}>
-                {ListStepPipeline?.map((item, index) => {
+                {ListStepPipeline?.organizationPipelineStates?.map((item, index) => {
                   const examination = pipelineStateDatas?.find(
                     (pipeline) =>
                       pipeline?.organizationPipelineStateId === item?.id
@@ -219,6 +236,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
                       key={index}
                       index={index}
                       item={item}
+                      isDefault={ListStepPipeline?.isDefault}
                       examination={
                         isEmpty(recruitment)
                           ? {
@@ -244,29 +262,24 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
               </Box>
             </Box>
           </BoxInnerStyle>
-          <TextNote
-            title="Lưu ý:"
-            texts={[
-              "Vui lòng chọn quy trình tuyển dụng đã được tạo sẵn trong phần thiết lập. Ứng viên sẽ được trải qua các bước trong quy trình đã chọn.",
-              "Nếu chưa có quy trình tuyển dụng phù hợp, Hãy liên hệ Quản trị viên doanh nghiệp của bạn để thêm quy trình mới.",
-            ]}
-          >
-            {/*<Button*/}
-            {/*    variant="outlined"*/}
-            {/*    sx={{minWidth: '200px', marginLeft: 'auto', fontSize: style.FONT_SM, mb: 4}}*/}
-            {/*    onClick={() => router.push(PATH_DASHBOARD.pipeline.root)}*/}
-            {/*>*/}
-            {/*    Thiết lập quy trình tuyển dụng*/}
-            {/*</Button>*/}
+
+          <View>
+            <TextNote
+              title="Lưu ý:"
+              texts={[
+                "Vui lòng chọn quy trình tuyển dụng đã được tạo sẵn trong phần thiết lập. Ứng viên sẽ được trải qua các bước trong quy trình đã chọn.",
+                "Nếu chưa có quy trình tuyển dụng phù hợp, Hãy liên hệ Quản trị viên doanh nghiệp của bạn để thêm quy trình mới.",
+              ]}
+            />
+
             <TextNote
               title="Tự động chuyển bước sẽ thực hiện như sau:"
               texts={[
                 "- Ứng viên được chuyển sang bước tiếp theo ngay sau khi ứng tuyển, khi có kết quả thi Đạt, Phỏng vấn Đạt",
                 "- Ứng viên được chuyển sang bước Kết quả - Loại ngay sau khi thi trượt, phỏng vấn trượt",
               ]}
-              sx={{ mx: 0 }}
             />
-          </TextNote>
+          </View>
         </Box>
       </BoxWrapperStyle>
       {isOpen && (

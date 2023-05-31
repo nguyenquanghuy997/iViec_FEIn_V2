@@ -1,20 +1,18 @@
+import { ApplicantCV } from "./ApplicantCV";
 import { ApplicantInfo } from "./ApplicationInfo";
-import {ApplicantCV} from './ApplicantCV'
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Grid, Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import Tab from "@mui/material/Tab";
-import React, { useState } from "react";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 
-export const ApplicantPreviewCV = ({data, dataLog}) => {
+export const ApplicantPreviewCV = ({ data, dataLog, pressUpload }) => {
   const [value, setValue] = useState("1");
   const theme = useTheme();
   const handleChange = (event, newValue) => {
-
     setValue(newValue);
-
   };
   return (
     <Grid item sx={{ padding: "24px 24px 0 24px" }}>
@@ -25,9 +23,9 @@ export const ApplicantPreviewCV = ({data, dataLog}) => {
               onChange={handleChange}
               aria-label="lab API tabs example"
               sx={{
-                "& .MuiTab-root":{
-                  minHeight: '36px',
-                  textTransform: 'unset',
+                "& .MuiTab-root": {
+                  minHeight: "36px",
+                  textTransform: "unset",
                   padding: "8px 12px",
                 },
                 "& .Mui-selected": {
@@ -47,15 +45,17 @@ export const ApplicantPreviewCV = ({data, dataLog}) => {
                   "&:not(:last-of-type)": {
                     marginRight: "16px",
                   },
-                  '& button':{
-                    fontSize:'14px'
-                  }
+                  "& button": {
+                    fontSize: "14px",
+                  },
                 }}
               />
               <Tab label="Thông tin ứng viên" value="2" />
             </TabList>
           </Box>
-          <TabPanel value="1"><ApplicantCV dataLog={dataLog}/></TabPanel>
+          <TabPanel value="1">
+            <ApplicantCV dataLog={dataLog} pressUpload={pressUpload} />
+          </TabPanel>
           <TabPanel value="2">
             <ApplicantInfo data={data} />
           </TabPanel>

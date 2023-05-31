@@ -56,11 +56,11 @@ export const sidebarConfig = [
             title: "Kho đề thi doanh nghiệp",
             path: "/settings/exam/exam-business",
           },
-          {
-            title: "Kho đề thi iVIEC",
-            path: "/settings/exam/iviecexam",
-            // icon: ICONS.notification,
-          },
+          // {
+          //   title: "Kho đề thi iVIEC",
+          //   path: "/settings/exam/iviecexam",
+          //   // icon: ICONS.notification,
+          // },
         ],
       },
     ],

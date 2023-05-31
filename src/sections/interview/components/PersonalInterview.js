@@ -107,6 +107,9 @@ const PersonalInterview = ({
           placeholder="Chọn tin tuyển dụng"
           disabled={!!(option || item?.recruitmentId || optionsFromCruit)}
           onChange={changeRecruitment}
+          style={{
+
+          }}
         />
       </Grid>
 

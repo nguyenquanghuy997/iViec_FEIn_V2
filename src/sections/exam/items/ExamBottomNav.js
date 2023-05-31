@@ -15,7 +15,7 @@ import { useMemo } from "react";
 import ExamActiveModal from "@/sections/exam/modals/ExamActiveModal";
 import ExamDeleteModal from "@/sections/exam/modals/ExamDeleteModal";
 import { useRouter } from "next/router";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 const ExamBottumonNav = ({
   selectedList,
@@ -63,7 +63,7 @@ const ExamBottumonNav = ({
   }
 
   const handleEdit = () => {
-      router.push(`/settings/exam/exam-business/update/${itemSelected[0].id}`)
+    router.push(`/settings/exam/exam-business/update/${itemSelected[0].id}`)
   }
 
   return (
@@ -118,7 +118,7 @@ const ExamBottumonNav = ({
 
                     <Typography
                       variant="body2"
-                      sx={{color: theme.palette.common.borderObject, fontSize: 13}}
+                      sx={{ color: theme.palette.common.borderObject, fontSize: 13 }}
                     >
                       Không hoạt động
                     </Typography>
@@ -127,20 +127,25 @@ const ExamBottumonNav = ({
               </>
             )}
             {/*{itemSelected.length === 1 && itemSelected[0]?.recruitmentCount == 0 && canEdit && (*/}
-            <ButtonIcon
-              sx={{
-                marginLeft: "16px",
-              }}
-              onClick={() => handleEdit()}
-              icon={
-                <Iconify
-                  icon={"ri:edit-2-fill"}
-                  width={20}
-                  height={20}
-                  color={theme.palette.common.borderObject}
-                />
-              }
-            />
+            {
+              itemSelected.length == 1 &&
+              <ButtonIcon
+                sx={{
+                  marginLeft: "16px",
+                }}
+                onClick={() => handleEdit()}
+                tooltip='Sửa'
+                icon={
+                  <Iconify
+                    icon={"ri:edit-2-fill"}
+                    width={20}
+                    height={20}
+                    color={theme.palette.common.borderObject}
+                  />
+                }
+              />
+            }
+
             {/*)}*/}
             {checkSameApply(itemApply) && canEdit && (
               <ButtonIcon
@@ -148,6 +153,7 @@ const ExamBottumonNav = ({
                   marginLeft: "16px",
                 }}
                 onClick={() => handleShowConfirmMultiple("delete")}
+                tooltip='Xóa'
                 icon={
                   <Iconify
                     icon={"material-symbols:delete-outline-rounded"}
@@ -166,7 +172,7 @@ const ExamBottumonNav = ({
             <Divider
               orientation="vertical"
               flexItem
-              sx={{mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100}}
+              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
             />
             <ButtonIcon
               sx={{

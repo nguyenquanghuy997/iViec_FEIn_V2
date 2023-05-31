@@ -5,6 +5,7 @@ import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
+import { ButtonIcon } from "@/utils/cssStyles";
 import {
   Box,
   Divider,
@@ -13,7 +14,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 export default ({
   list,
@@ -26,7 +27,7 @@ export default ({
   const firstActiveStatus = list.find(
     (i) => i.id === listSelected[0]
   )?.isActive;
-const theme = useTheme();
+  const theme = useTheme();
   const showSwitchActive = !list.some(
     (i) => listSelected.includes(i.id) && i.isActive !== firstActiveStatus
   );
@@ -55,17 +56,17 @@ const theme = useTheme();
           <Stack flexDirection="row" alignItems="center">
             {showSwitchActive && (
               <>
-                <IconButton
+                <ButtonIcon
                   size="small"
                   sx={{ color: theme.palette.common.blue700, mx: 0.5 }}
                   onClick={() => setShowConfirmSwitchActive(true)}
-                >
-                  {firstActiveStatus ? (
+                  icon={firstActiveStatus ? (
                     <ActionSwitchCheckedIcon />
                   ) : (
                     <ActionSwitchUnCheckedIcon />
                   )}
-                </IconButton>
+                >
+                </ButtonIcon>
                 <Typography
                   variant="body2"
                   sx={{
@@ -77,23 +78,25 @@ const theme = useTheme();
                 </Typography>
               </>
             )}
-            <Box sx={{ ml: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', ml: 2 }}>
               {showEdit && (
-                <IconButton
+                <ButtonIcon
+                  tooltip='Sửa'
+                  icon={<EditIcon />}
                   size="small"
                   sx={{ color: theme.palette.common.neutral500, mx: 1 }}
                   onClick={() => setShowForm(true)}
                 >
-                  <EditIcon />
-                </IconButton>
+                </ButtonIcon>
               )}
-              <IconButton
+              <ButtonIcon
+                tooltip='Xóa'
+                icon={<DeleteIcon />}
                 size="small"
                 sx={{ color: theme.palette.common.blue700, mx: 1 }}
                 onClick={() => setShowConfirmDelete(true)}
               >
-                <DeleteIcon />
-              </IconButton>
+              </ButtonIcon>
             </Box>
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>

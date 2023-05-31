@@ -19,7 +19,6 @@ import QuestionTransferModal from "@/sections/exam/components/QuestionTransferMo
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { LIST_OPTIONS_QUESTION_TYPE, LIST_STATUS } from "@/utils/formatString";
 import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 
 
@@ -56,6 +55,12 @@ function Question() {
   const [updateActiveQuestion] = useUpdateActiveQuestionMutation();
   const [removeQuestion] = useRemoveQuestionMutation();
 
+  const LIST_OPTIONS_QUESTION_TYPE = [
+    { id: null, value: null, name: "Tất cả" },
+    { id: 2, value: 2, name: "Tự luận" },
+    { id: 0, value: 0, name: "Trắc nghiệm - một đáp án đúng" },
+    { id: 1, value: 1, name: "Trắc nghiệm - nhiều đáp án đúng" },
+  ]
   // table
   const columns = useMemo(() => {
     return [
@@ -124,8 +129,8 @@ function Question() {
         dataIndex: "updateDate",
         title: "Ngày chỉnh sửa",
         width: "180px",
-        render: (_, { updatedTime }) => {
-          return updatedTime ? moment(updatedTime).format("DD/MM/YYYY") : "-";
+        render: (_, { updatedTime, updatedUser }) => {
+          return updatedUser?.id ? moment(updatedTime).format("DD/MM/YYYY") : "-";
         },
       },
       {
@@ -134,20 +139,22 @@ function Question() {
         width: "220px",
         render: (_, { updatedUser }) => {
           return (
-            <View flexRow atCenter>
-              <AvatarDS
-                sx={{
-                  height: "20px",
-                  width: "20px",
-                  fontSize: "10px",
-                  borderRadius: "20px",
-                }}
-                src={updatedUser?.avatar}
-                name={updatedUser?.name}
-              />
+            updatedUser?.id ?
+              <View flexRow atCenter>
+                <AvatarDS
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                    fontSize: "10px",
+                    borderRadius: "20px",
+                  }}
+                  src={updatedUser?.avatar}
+                  name={updatedUser?.name}
+                />
 
-              {updatedUser?.email}
-            </View>
+                {updatedUser?.email}
+              </View>
+              : '-'
           );
         },
         filters: {
@@ -188,8 +195,8 @@ function Question() {
         dataIndex: "examApply",
         title: "Đề thi áp dụng",
         width: "160px",
-        render: () => {
-          return "-";
+        render: (_, { numOfExaminationApply }) => {
+          return numOfExaminationApply > 0 ? numOfExaminationApply : "-";
         },
       },
       {
@@ -199,14 +206,29 @@ function Question() {
         render: (_, record) => {
           return (
             <span style={{ color: record.isActive ? "#388E3C" : "#D32F2F" }}>
-              {record.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
+              {record.isActive ? "Đang hoạt động" : "Không hoạt động"}
             </span>
           );
         },
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
           placeholder: 'Tất cả',
-          options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+          name: "isActive",
+          // options: LIST_STATUS.map(item => ({ value: item.value, label: item.name }),)
+          options: [
+            {
+              value: null,
+              label: 'Tất cả'
+            },
+            {
+              value: 'true',
+              label: 'Đang hoạt động'
+            },
+            {
+              value: 'false',
+              label: 'Không hoạt động'
+            }
+          ]
         }
       },
     ];
@@ -290,9 +312,9 @@ function Question() {
           useUpdateColumnsFunc={useUpdateQuestionColumnsMutation}
           createText={"Thêm câu hỏi"}
           onClickCreate={() => {
-            setShowForm(true);
             setItemSelected([]);
             setSelectedRowKeys([]);
+            setShowForm(true);
           }}
         />
 
@@ -318,17 +340,19 @@ function Question() {
         />
       </Content>
 
-      <QuestionFormModal
-        data={itemSelected[0]}
-        show={showForm}
-        isNotSave={false}
-        onClose={() => {
-          setShowForm(false);
-          setItemSelected([]);
-          setSelectedRowKeys([]);
-        }}
-        getData={getData}
-      />
+      {
+        showForm && <QuestionFormModal
+          data={itemSelected[0]}
+          show={showForm}
+          isNotSave={false}
+          onClose={() => {
+            setShowForm(false);
+            setItemSelected([]);
+            setSelectedRowKeys([]);
+          }}
+          getData={getData}
+        />
+      }
 
       <ConfirmModal
         confirmDelete={showConfirmDelete}
@@ -337,7 +361,7 @@ function Question() {
           isMulti ? (
             <span>
               Bạn có chắc chắn muốn xóa{" "}
-              <b>{isMulti ? itemSelected.length : ""} câu hỏi này</b>
+              <b>{isMulti ? itemSelected.length : ""} câu hỏi </b> này
             </span>
           ) : (
             <span>
@@ -361,12 +385,12 @@ function Question() {
         subtitle={
           isActive ? (
             <span>
-              Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi{" "}
+              Bạn có chắc chắn muốn tắt hoạt động cho câu hỏi{" "}
               <b>{_name.trim()}</b>
             </span>
           ) : (
             <span>
-              Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi{" "}
+              Bạn có chắc chắn muốn bật hoạt động cho câu hỏi{" "}
               <b>{_name.trim()}</b>
             </span>
           )

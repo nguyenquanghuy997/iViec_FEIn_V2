@@ -1,7 +1,4 @@
-import {
-  CheckboxIconChecked,
-  CheckboxIconDefault,
-} from "@/assets/CheckboxIcon";
+import { CheckboxIconChecked, CheckboxIconDefault, } from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
 import ChipDS from "@/components/DesignSystem/ChipDS";
 import MuiTextField from "@/components/form/MuiTextField";
@@ -10,22 +7,12 @@ import { BoxFlex } from "@/sections/emailform/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import axiosInstance from "@/utils/axios";
 import { containsText } from "@/utils/function";
-import {
-  Autocomplete,
-  Checkbox,
-  CircularProgress,
-  MenuItem,
-} from "@mui/material";
+import { Autocomplete, Checkbox, CircularProgress, MenuItem, } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { isEqual } from "lodash";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
+import { RiCloseLine } from "react-icons/ri";
+import { TbChevronDown } from "react-icons/tb";
 
 const MuiAutocomplete = forwardRef(
   (
@@ -52,6 +39,7 @@ const MuiAutocomplete = forwardRef(
     ref
   ) => {
     const inputRef = useRef();
+    const theme = useTheme();
     const value = useMemo(() => {
       if (multiple) {
         if (!selectValue) selectValue = [];
@@ -78,6 +66,7 @@ const MuiAutocomplete = forwardRef(
     const sxProps = {
       width: "100%",
       minHeight: height,
+      background: theme.palette.common.white,
       ...sx,
     };
 
@@ -161,7 +150,7 @@ const MuiAutocomplete = forwardRef(
                 {isFetching ? (
                   <CircularProgress color="inherit" size={20} />
                 ) : null}
-                {params.InputProps.endAdornment}
+                {<TbChevronDown color={theme.palette.common.neutral700} size={20}/>}
               </>
             ),
           }}
@@ -175,6 +164,9 @@ const MuiAutocomplete = forwardRef(
         <ChipDS
           {...getTagProps({ index })}
           key={index}
+          deleteIcon={
+            <RiCloseLine size={12} color={theme.palette.common.neutral500} />
+          }
           size="small"
           label={typeof option === "string" ? option : option?.label}
           variant="filled"
@@ -185,20 +177,6 @@ const MuiAutocomplete = forwardRef(
             fontSize: style.FONT_XS,
             fontWeight: style.FONT_MEDIUM,
           }}
-          deleteIcon={
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6.00012 5.29312L8.47512 2.81812L9.18212 3.52512L6.70711 6.00012L9.18212 8.47512L8.47512 9.18212L6.00012 6.70711L3.52512 9.18212L2.81812 8.47512L5.29312 6.00012L2.81812 3.52512L3.52512 2.81812L6.00012 5.29312Z"
-                fill="#8A94A5"
-              />
-            </svg>
-          }
         />
       ));
     };
@@ -210,6 +188,7 @@ const MuiAutocomplete = forwardRef(
           open={open}
           value={value}
           onOpen={() => {
+            if (!options.length) return;
             setOpen(true);
           }}
           onClose={(e) => {

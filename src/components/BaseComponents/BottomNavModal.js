@@ -25,7 +25,7 @@ const ActionItem = ({ title, icon, onClick, sx, component, ...other }) => {
   }
   if (icon) {
     return (
-      <Tooltip title={title}>
+      <Tooltip title={title} arrow>
         <IconButton
           disableRipple
           onClick={onClick}
