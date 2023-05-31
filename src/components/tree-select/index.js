@@ -30,7 +30,7 @@ const toNestedOrgs = (orgs = [], parentId = null) => {
 };
 
 const TreeSelect = ({ value: valueProps, onChange, ...props }) => {
-  const { SHOW_PARENT } = AntTreeSelect;
+  const { SHOW_ALL } = AntTreeSelect;
   const { palette } = useTheme();
 
   const value = useMemo(() => {
@@ -50,7 +50,8 @@ const TreeSelect = ({ value: valueProps, onChange, ...props }) => {
     <TreeSelectStyle
       treeData={organizations}
       treeCheckable={true}
-      showCheckedStrategy={SHOW_PARENT}
+      treeCheckStrictly={true}
+      showCheckedStrategy={SHOW_ALL}
       value={value}
       onChange={onChange}
       style={{ width: "100%" }}
