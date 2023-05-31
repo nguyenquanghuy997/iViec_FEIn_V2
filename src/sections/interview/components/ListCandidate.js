@@ -7,7 +7,7 @@ import { useTheme } from "@mui/material/styles";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-const ListCandidate = ({ option, detailCandidate, applicantId, error }) => {
+const ListCandidate = ({ option, detailCandidate, error }) => {
   const { watch, setValue } = useFormContext();
   const { palette } = useTheme();
   const { data: { items: dataApplicant = [] } = {} } =
