@@ -7,7 +7,7 @@ import {
 } from "@/sections/exam/ExamSlice"
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import { Box, Button, ButtonGroup } from "@mui/material";
+import { Box, Button, ButtonGroup, Tooltip } from "@mui/material";
 import Iconify from "@/components/Iconify";
 import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
 import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
@@ -60,13 +60,17 @@ export const ExamItem = ({
         dataIndex: "name",
         title: "Đề thi",
         width: "250px",
+        fixed: 'left',
         render: (item, record) => (
-          <TextElipsis sx={{ width: 250, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
-            onClick={() => {
-              router.push(`/settings/exam/exam-business/update/${record.id}`)
-            }}>
-            {item}
-          </TextElipsis>
+          <Tooltip title={item} arrow>
+            <TextElipsis sx={{ width: 250, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
+              onClick={() => {
+                router.push(`/settings/exam/exam-business/update/${record.id}`)
+              }}>
+              {item}
+            </TextElipsis>
+          </Tooltip>
+
         ),
       },
       {
@@ -188,7 +192,7 @@ export const ExamItem = ({
       {
         title: "Điểm tối đa",
         dataIndex: "maximumPoint",
-        width: "120px",
+        width: "200px",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_POINT,
           name: ["maximumPointForm", "maximumPointTo"],

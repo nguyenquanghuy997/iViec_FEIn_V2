@@ -94,7 +94,7 @@ export const QuestionGalleryFormModal = ({
           <View hidden width={668} borderradius={6} bgcolor={theme.palette.common.white} boxshadow={'0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'}>
             <View flexrow="true" atcenter="true" pv={16} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
-                {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm nhóm câu hỏi"}
+                {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm mới nhóm câu hỏi"}
               </Text>
 
               <ButtonIcon

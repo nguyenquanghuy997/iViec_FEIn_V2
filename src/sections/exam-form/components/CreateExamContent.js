@@ -180,25 +180,8 @@ const CreateExamContent = () => {
   const handleUpdateListQuestion = (datas) => {
     if (examData.type == 0) {
       setExamQuestions([...datas]);
-      setExamData({
-        ...examData,
-        maximumPoint:
-          examQuestions.reduce(function (a, b) {
-            return a + b.questionPoint;
-          }, 0) || 1,
-      });
     } else {
       setExamQuestionGroups([...datas]);
-      const ESSAY_QUESTION = 2;
-      if (datas.some((x) => x.questionTypeId == ESSAY_QUESTION)) {
-        setExamData({ ...examData, maximumPoint: null });
-      } else
-        setExamData({
-          ...examData,
-          maximumPoint: datas.reduce(function (a, b) {
-            return a + b.quantity;
-          }, 0),
-        });
     }
   };
 
@@ -440,6 +423,30 @@ const CreateExamContent = () => {
     }
   }, [data]);
 
+
+  useEffect(() => {
+    if (examData.type == 0) {
+      setExamData({
+        ...examData,
+        maximumPoint:
+          examQuestions.reduce(function (a, b) {
+            return a + b.questionPoint;
+          }, 0) || 1,
+      });
+    } else {
+      const ESSAY_QUESTION = 2;
+      if (examQuestionGroups.some((x) => x.questionTypeId == ESSAY_QUESTION)) {
+        setExamData({ ...examData, maximumPoint: null });
+      } else
+        setExamData({
+          ...examData,
+          maximumPoint: examQuestionGroups.reduce(function (a, b) {
+            return a + b.quantity;
+          }, 0),
+        });
+    }
+  }, [examQuestions, examQuestionGroups])
+
   return (
     <>
       <CreateExamHeader
@@ -601,7 +608,7 @@ const CreateExamContent = () => {
                       marginTop: 4,
                     }}
                   >
-                    {examData.type == 1 && (examData.maximumPoint == 0 || !examData.maximumPoint) ? "Không xác định" : examData.maximumPoint}
+                    {(examData.type == 1 && (examData.maximumPoint == 0 || !examData.maximumPoint)) ? "Không xác định" : examData.maximumPoint}
                   </span>
                 </Box>
               </Tooltip>
