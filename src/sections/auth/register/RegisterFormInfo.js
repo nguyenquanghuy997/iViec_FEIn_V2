@@ -41,7 +41,7 @@ function RegisterForm() {
     };
 
     const RegisterSchema = Yup.object().shape({
-        userName: Yup.string().email("Email không đúng định dạng").matches(CHECK_EMAIL, 'Email không đúng định dạng').required("Email không được bỏ trống"),
+        userName: Yup.string().required("Email không được bỏ trống").email("Email không đúng định dạng").matches(CHECK_EMAIL, 'Email không đúng định dạng'),
         password: Yup.string().min(6, "Mật khẩu cần tối thiểu 6 ký tự").required("Mật khẩu không được bỏ trống"),
         rePassword: Yup.string().oneOf([Yup.ref("password"), null], "Mật khẩu xác nhận không đúng").required("Mật khẩu xác nhận không được bỏ trống"),
         organizationName: Yup.string()

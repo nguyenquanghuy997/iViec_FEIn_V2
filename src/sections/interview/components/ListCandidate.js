@@ -48,9 +48,9 @@ const ListCandidate = ({ option, detailCandidate, applicantId, error }) => {
         }))}
         name={'applicantIdArray'}
         fullWidth
-        disabled={
-          applicantId || !watch("recruitmentPipelineStateId")
-        }
+        // disabled={
+        //   applicantId || !watch("recruitmentPipelineStateId")
+        // }
         error={error}
         multiple
         isRequired
