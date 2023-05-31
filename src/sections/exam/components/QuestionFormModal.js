@@ -140,7 +140,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
     answers: Yup.mixed().when(["questionType"], {
       is: (questionType) => {
-        return questionType === 0 || questionType === 1
+        return questionType === '0'|| questionType === '1'
       },
       then: Yup.mixed()
         .test({

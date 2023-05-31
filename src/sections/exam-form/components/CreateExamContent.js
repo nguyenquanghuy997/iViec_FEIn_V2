@@ -90,8 +90,9 @@ const CreateExamContent = () => {
     standardPoint: null,
   };
 
-  const [examData, setExamData] = useState(queryDataDefault);
+  const [examData, setExamData] = useState(data ?? queryDataDefault);
   const [examQuestions, setExamQuestions] = useState([]);
+  const [examRandomHasEssayQuestion, setExamRandomHasEssayQuestion] = useState(false);
   const [examQuestionGroups, setExamQuestionGroups] = useState([]);
   const [examQuestionPreview, setExamQuestionPreview] = useState();
   const [showForm, setShowForm] = useState(false);
@@ -113,7 +114,7 @@ const CreateExamContent = () => {
   };
 
   const handleSubmitForm = (data) => {
-    setExamData({ ...data });
+    setExamData({ ...data, examTime: timeFromMinutes(data.examTime) });
     setShowForm(false);
     setShowChooseType(true);
   };
@@ -139,10 +140,14 @@ const CreateExamContent = () => {
     var hours = Math.floor((mins_num - days * 24 * 60) / 60);
     var minutes = mins_num - hours * 60 - days * 24 * 60;
 
-    if (days < 10) { days = "0" + days; }
+    if (days < 10 && days > 0) { days = "0" + days; }
     if (hours < 10) { hours = "0" + hours; }
     if (minutes < 10) { minutes = "0" + minutes; }
-    return days + "." + hours + ':' + minutes + ':00';
+
+    let res = hours + ':' + minutes + ':00'
+    if (days === '0')
+      return days + "." + res;
+    return res;
   }
 
   const minutesFromTime = (times) => {
@@ -213,7 +218,6 @@ const CreateExamContent = () => {
       });
       return;
     }
-
     const body = {
       id: examData.id,
       name: examData.name,
@@ -221,7 +225,7 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: parseInt(examData.standardPoint == null || examData.standardPoint == '' ? -1 : examData.standardPoint),
+      standardPoint: parseInt(examRandomHasEssayQuestion ? -1 : examData.standardPoint),
       isQuestionMixing: examData.isQuestionMixing,
       examTime: timeFromMinutes(examData.examTime),
       maximumPoint: examData.maximumPoint,
@@ -291,13 +295,14 @@ const CreateExamContent = () => {
       });
       return;
     }
-    if (examData.standardPoint === null || examData.standardPoint === '') {
+    if ((!examRandomHasEssayQuestion && (examData.standardPoint === null || examData.standardPoint === ''))) {
       enqueueSnackbar("Bạn cần nhập điểm sàn", {
         variant: "error",
       });
       return;
     }
-    if (examData.standardPoint < 0) {
+
+    if (!examRandomHasEssayQuestion && examData.standardPoint < 0) {
       enqueueSnackbar("Điểm sàn phải lớn hơn không", {
         variant: "error",
       });
@@ -317,7 +322,6 @@ const CreateExamContent = () => {
       });
       return;
     }
-
     const body = {
       id: examData.id,
       name: examData.name,
@@ -325,9 +329,9 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: parseInt(examData.standardPoint ?? 0),
+      standardPoint: parseInt(examRandomHasEssayQuestion ? -1 : examData.standardPoint),
       isQuestionMixing: examData.isQuestionMixing,
-      examTime: timeFromMinutes(examData.examTime),
+      examTime: (examData.examTime),
       maximumPoint: examData.maximumPoint,
       examinationQuestions:
         (examData.type == 0 &&
@@ -392,7 +396,6 @@ const CreateExamContent = () => {
     if (data) {
       setExamData({
         ...data,
-        examTime: minutesFromTime(data.examTime),
         standardPoint: data.standardPoint == -1 ? '' : data.standardPoint
       });
       if (data.type == 0) {
@@ -426,24 +429,31 @@ const CreateExamContent = () => {
 
   useEffect(() => {
     if (examData.type == 0) {
+      setExamRandomHasEssayQuestion(false)
       setExamData({
         ...examData,
         maximumPoint:
           examQuestions.reduce(function (a, b) {
             return a + b.questionPoint;
-          }, 0) || 1,
+          }, 0) || 0,
       });
     } else {
       const ESSAY_QUESTION = 2;
       if (examQuestionGroups.some((x) => x.questionTypeId == ESSAY_QUESTION)) {
         setExamData({ ...examData, maximumPoint: null });
-      } else
+        setExamRandomHasEssayQuestion(true)
+
+      } else {
+        setExamRandomHasEssayQuestion(false)
         setExamData({
           ...examData,
+          standardPoint: examData.standardPoint == -1 ? null : examData.standardPoint,
           maximumPoint: examQuestionGroups.reduce(function (a, b) {
             return a + b.quantity;
           }, 0),
         });
+      }
+
     }
   }, [examQuestions, examQuestionGroups])
 
@@ -489,7 +499,7 @@ const CreateExamContent = () => {
             style={{ alignItems: "stretch" }}
           >
             {
-              (examData.type == 0 || (examData.type == 1 && examData.maximumPoint)) ?
+              (!examRandomHasEssayQuestion) ?
                 <View
                   allcenter={"true"}
                   style={{
@@ -608,7 +618,7 @@ const CreateExamContent = () => {
                       marginTop: 4,
                     }}
                   >
-                    {(examData.type == 1 && (examData.maximumPoint == 0 || !examData.maximumPoint)) ? "Không xác định" : examData.maximumPoint}
+                    {(examRandomHasEssayQuestion) ? "Không xác định" : examData.maximumPoint}
                   </span>
                 </Box>
               </Tooltip>
@@ -642,7 +652,7 @@ const CreateExamContent = () => {
           <View flexrow={"true"} atcenter={"true"} mt={24}>
             {renderExamSettingInfo(
               "mdi:clock-time-three-outline",
-              `${examData.examTime} phút`
+              `${minutesFromTime(examData.examTime)}:00 phút`
             )}
             {renderExamSettingInfo(
               `ri:shuffle-fill`,
@@ -697,7 +707,7 @@ const CreateExamContent = () => {
         show={showForm}
         onClose={() => setShowForm(false)}
         onSubmit={handleSubmitForm}
-        data={examData}
+        data={{ ...examData, examTime: minutesFromTime(examData.examTime) }}
       />
       <ExamChooseTypeModal
         data={examData}
