@@ -374,7 +374,7 @@ export const ApproveProcessFormModal = ({type, title, data, setData, show, setSh
                 />
                 <ButtonCancelStyle onClick={pressHide}>Hủy</ButtonCancelStyle>
               </View>
-              {!isLoading && !isEditMode ? (
+              {!isLoading ? (
                 <SwitchStatusDS
                   name={"isAvailable"}
                   label={methods.watch("isAvailable") ? "Đang áp dụng" : "Không áp dụng"}

@@ -7,6 +7,7 @@ export default function SwitchStatusDS({
   label,
   disabled,
   colorLabel,
+  checked = false,
   sx
 }) {
   const {control} = useFormContext();
@@ -16,12 +17,12 @@ export default function SwitchStatusDS({
       control={control}
       render={({field}) => (
         <div style={{display: "flex", alignItems: "center"}}>
-          <SwitchItem {...field} checked={field.value} disabled={disabled} sx={sx}/>
+          <SwitchItem {...field} checked={field.value || checked} disabled={disabled} sx={sx}/>
           <label
             style={{
               fontWeight: 400,
               fontSize: 14,
-              color: colorLabel ? colorLabel : field.value === true ? STYLE_CONSTANT.COLOR_SUCCESS : STYLE_CONSTANT.COLOR_TEXT_PRIMARY,
+              color: colorLabel ? colorLabel : field.value === true || checked ? STYLE_CONSTANT.COLOR_SUCCESS : STYLE_CONSTANT.COLOR_TEXT_PRIMARY,
             }}
           >
             {label}

@@ -158,6 +158,7 @@ const COMMON = {
     green400: "#66BB6A",
     green500: "#4CAF50",
     green600: "#43A047",
+    green700: "#388E3C",
 
     red50: "#FFEBEE",
     red100: "#FFCDD2",
@@ -205,8 +206,8 @@ const palette = {
     background: {
       active: COMMON.common.orange50,
       MasterBg: COMMON.common.bgrMaster,
-      paper: '#fff',
-      greyDetail: '#F4F6F8',
+      paper: "#fff",
+      greyDetail: "#F4F6F8",
       disabled: COMMON.common.bgrUnActive,
       bgrObject: "#EFF3F6",
     },
@@ -235,8 +236,8 @@ const palette = {
     background: {
       active: COMMON.common.orange50,
       MasterBg: COMMON.common.bgrMaster,
-      paper: '#fff',
-      greyDetail: '#F4F6F8',
+      paper: "#fff",
+      greyDetail: "#F4F6F8",
       disabled: COMMON.common.bgrUnActive,
     },
     action: {

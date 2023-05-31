@@ -1,33 +1,18 @@
-import {
-  CheckboxIconChecked,
-  CheckboxIconDefault,
-} from "@/assets/CheckboxIcon";
+import { CheckboxIconChecked, CheckboxIconDefault, } from "@/assets/CheckboxIcon";
 import { AvatarDS } from "@/components/DesignSystem";
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import Iconify from "@/components/Iconify";
 import MuiTextField from "@/components/form/MuiTextField";
 import { CustomPaper } from "@/components/hook-form/RHFAutocomplete";
 import { BoxFlex } from "@/sections/emailform/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import axiosInstance from "@/utils/axios";
 import { containsText } from "@/utils/function";
-import {
-  Autocomplete,
-  Checkbox,
-  CircularProgress,
-  MenuItem,
-} from "@mui/material";
+import { Autocomplete, Checkbox, CircularProgress, MenuItem, } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { isEqual } from "lodash";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
 import { RiCloseLine } from "react-icons/ri";
+import { TbChevronDown } from "react-icons/tb";
 
 const MuiAutocomplete = forwardRef(
   (
@@ -165,7 +150,7 @@ const MuiAutocomplete = forwardRef(
                 {isFetching ? (
                   <CircularProgress color="inherit" size={20} />
                 ) : null}
-                {<Iconify icon={"ic:round-clear"} width={16} height={16} />}
+                {<TbChevronDown color={theme.palette.common.neutral700} size={20}/>}
               </>
             ),
           }}

@@ -79,14 +79,14 @@ export const ApplicantItem = (props) => {
         render: (item, record, index, page, paginationSize) => (
           <>{(page - 1) * paginationSize + index + 1}</>
         ),
-        width: "60px",
+        width: "62px",
         fixed: "left",
       },
       {
         dataIndex: "fullName",
         title: "Họ và tên",
         fixed: "left",
-        width: "220px",
+        width: "204px",
         // render: (fullName) => <span style={{ fontWeight: 500 }}>{fullName}</span>,
         render: (item, record) => (
           <TextMaxLine
@@ -127,7 +127,7 @@ export const ApplicantItem = (props) => {
         dataIndex: "dateOfBirth",
         title: "Ngày sinh",
         render: (date) => (date ? fDate(date) : ""),
-        width: "120px",
+        width: "180px",
       },
       {
         dataIndex: "email",
@@ -137,7 +137,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "recruitmentName",
         title: "Tin tuyển dụng",
-        width: "300px",
+        width: "284px",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "recruitmentIds",
@@ -149,7 +149,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "recruitmentPipelineState",
         title: "Bước tuyển dụng",
-        width: "200px",
+        width: "180px",
         render: (item, record) =>
           getStatusPipelineStateType(item, record?.pipelineStateResultType),
         filters: {
@@ -165,7 +165,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "createdTime",
         title: "Ngày ứng tuyển",
-        width: "200px",
+        width: "180px",
         render: (date) => fDate(date),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
@@ -188,7 +188,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "jobSourceName",
         title: "Nguồn",
-        width: "200px",
+        width: "140px",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "jobSourceIds",
@@ -211,7 +211,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "creatorName",
         title: "Cán bộ tạo ứng viên",
-        width: "200px",
+        width: "220px",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "creatorIds",
@@ -223,7 +223,7 @@ export const ApplicantItem = (props) => {
         title: "Học vấn",
         dataIndex: "academicLevel",
         key: "name",
-        width: "120px",
+        width: "300px",
         render: (item) => <Tag>{item?.description}</Tag>,
         filters: {
           type: TBL_FILTER_TYPE.TEXT,
@@ -233,7 +233,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "experience",
         title: "Kinh nghiệm làm việc",
-        width: "200px",
+        width: "300px",
         filters: {
           type: TBL_FILTER_TYPE.TEXT,
         },
@@ -241,7 +241,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "jobCategories",
         title: "Ngành nghề",
-        width: "200px",
+        width: "340px",
         render: (jobCats = []) => {
           return (
             jobCats
@@ -281,7 +281,7 @@ export const ApplicantItem = (props) => {
             })}
           </>
         ),
-        width: "200px",
+        width: "324px",
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
           name: "applicantSkillIds",
@@ -292,13 +292,13 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "identityNumber",
         title: "CCCD/CMND",
-        width: "200px",
+        width: "160px",
       },
       {
         dataIndex: "sex",
         title: "Giới tính",
         render: (item) => Sex(item),
-        width: "80px",
+        width: "160px",
         filters: {
           type: TBL_FILTER_TYPE.RADIO,
           name: "sexs",
@@ -308,7 +308,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "maritalStatus",
         title: "TTHN",
-        width: "120px",
+        width: "180px",
         render: (item) => MaritalStatus(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
@@ -323,7 +323,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "height",
         title: "Chiều cao",
-        width: "120px",
+        width: "140px",
         align: "center",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_NUMBER,
@@ -334,7 +334,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "weight",
         title: "Cân nặng",
-        width: "120px",
+        width: "140px",
         name: "weight",
         label: "Cân nặng",
         type: "number",
@@ -348,7 +348,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "expectedWorkingAddress",
         title: "Nơi làm việc mong muốn",
-        width: "220px",
+        width: "214px",
         render: (item) => Address(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
@@ -377,7 +377,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "livingAddress",
         title: "Nơi ở hiện tại",
-        width: "220px",
+        width: "214px",
         render: (item) => Address(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_ADDRESS,
@@ -387,7 +387,7 @@ export const ApplicantItem = (props) => {
       {
         dataIndex: "homeTower",
         title: "Quê quán",
-        width: "220px",
+        width: "214px",
         render: (item) => Address(item),
         filters: {
           type: TBL_FILTER_TYPE.SELECT_ADDRESS,

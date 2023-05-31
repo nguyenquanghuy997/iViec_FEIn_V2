@@ -19,7 +19,7 @@ const initialState = {
 
 const handlers = {
   INITIALIZE: (state, action) => {
-    const { ...rest } = action.payload;
+    const {...rest} = action.payload;
     return {
       ...state,
       ...rest,
@@ -27,7 +27,7 @@ const handlers = {
     };
   },
   LOGIN: (state, action) => {
-    const { ...rest } = action.payload;
+    const {...rest} = action.payload;
     return {
       ...state,
       ...rest,
@@ -58,9 +58,9 @@ AuthProvider.propTypes = {
   children: PropTypes.node,
 };
 
-function AuthProvider({ children }) {
+function AuthProvider({children}) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -70,12 +70,16 @@ function AuthProvider({ children }) {
             : "";
         if (accessToken) {
           const user = await getUserInfoByToken(accessToken);
-          const company = await getCompanyInfoByToken(accessToken);
-
-          setSession(accessToken);
-
           let tokenDecode = jwtDecode(accessToken) || {};
-          let { role: permissions = [] } = tokenDecode;
+          
+          let company = {};
+          if (!tokenDecode["internal.perform"]) {
+            company = await getCompanyInfoByToken(accessToken);
+          }
+          
+          setSession(accessToken);
+          
+          let {role: permissions = []} = tokenDecode;
           if (!Array.isArray(permissions)) {
             permissions = [permissions];
           }
@@ -113,10 +117,10 @@ function AuthProvider({ children }) {
         });
       }
     };
-
+    
     initialize();
   }, []);
-
+  
   const getUserInfoByToken = async (token) => {
     const config = {
       method: "get",
@@ -125,19 +129,18 @@ function AuthProvider({ children }) {
         Authorization: "Bearer " + token,
       },
     };
-
+    
     try {
       const user = await axios(config);
-      let userResult = {
+      return {
         ...user.data,
         organizationId: decodeToken(token).payload.ownerId,
       };
-      return userResult;
     } catch (err) {
       throw err;
     }
   };
-
+  
   const getCompanyInfoByToken = async (token) => {
     const config = {
       method: "get",
@@ -146,29 +149,33 @@ function AuthProvider({ children }) {
         Authorization: "Bearer " + token,
       },
     };
-
+    
     try {
       const user = await axios(config);
-      let userResult = {
+      return {
         ...user.data,
       };
-      return userResult;
     } catch (err) {
       throw err;
     }
   };
-
+  
   const login = async (email, password, remember) => {
     var data = JSON.stringify({
       userName: email,
       password: password,
       userLoginType: 1,
     });
-    const { token, refreshToken } = await _postApi(API_LOGIN, data);
+    const {token, refreshToken} = await _postApi(API_LOGIN, data);
     const user = await getUserInfoByToken(token);
-    const company = await getCompanyInfoByToken(token);
     let tokenDecode = jwtDecode(token) || {};
-    let { role: permissions = [] } = tokenDecode;
+    
+    let company = {};
+    if (!tokenDecode["internal.perform"]) {
+      company = await getCompanyInfoByToken(token);
+    }
+    
+    let {role: permissions = []} = tokenDecode;
     if (!Array.isArray(permissions)) {
       permissions = [permissions];
     }
@@ -176,11 +183,11 @@ function AuthProvider({ children }) {
     if (tokenDecode["internal.perform"]) {
       permissions.push(PERMISSIONS.IVIEC_ADMIN);
     }
-
+    
     setRememberMe(remember);
     setSession(token);
     setRefreshToken(refreshToken);
-
+    
     dispatch({
       type: "LOGIN",
       payload: {
@@ -190,19 +197,19 @@ function AuthProvider({ children }) {
       },
     });
   };
-
+  
   const logout = async () => {
     setRememberMe(null);
     setRefreshToken(null);
     setSession(null);
-
-    dispatch({ type: "LOGOUT" });
+    
+    dispatch({type: "LOGOUT"});
   };
-
+  
   const register = async () => {
     // TODO
   };
-
+  
   return (
     <AuthContext.Provider
       value={{

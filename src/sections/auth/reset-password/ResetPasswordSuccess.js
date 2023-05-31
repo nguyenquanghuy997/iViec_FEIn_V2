@@ -24,7 +24,7 @@ const ResetPasswordSuccess = () => {
     router.push(url);
   };
   return (
-    <Box sx={{ ...BoxInnerStyle }}>
+    <Box sx={{ ...BoxInnerStyle, marginBottom: 0 }}>
       <Stack justifyContent="center" alignItems="center">
         {/* Image */}
         <CardInfoIcon>
@@ -33,7 +33,7 @@ const ResetPasswordSuccess = () => {
         {/* Content */}
         <CardInfoBody>
           <CardInfoLabel label="Đăng ký khôi phục mật khẩu thành công" />
-          <CardSubInfoLabel sx={{ mt: 1.5 }}>
+          <CardSubInfoLabel sx={{ mt: 1.5, paddingInline: "24px" }}>
             Vui lòng truy cập email{" "}
             {router.query.username ? (
               <NextLink href={PATH_AUTH.register}>
@@ -52,10 +52,7 @@ const ResetPasswordSuccess = () => {
             ) : (
               " bạn vừa đăng ký "
             )}{" "}
-            để thiết lập lại mật khẩu.
-          </CardSubInfoLabel>
-          <CardSubInfoLabel sx={{ mt: 1.5 }}>
-            Cảm ơn bạn đã đồng hành cùng iVIEC Bussiness!
+            để thiết lập lại mật khẩu. Cảm ơn bạn đã đồng hành cùng iVIEC Bussiness!
           </CardSubInfoLabel>
           <Stack sx={{ mt: 4.5, width: STYLE_CONSTANT.WIDTH_FULL }}>
             <LoadingButton

@@ -27,6 +27,7 @@ const approveProcessFormSlice = apiWithTag.injectEndpoints({
         url: `${API_GET_APPROVE_PROCESS}?${qs.stringify(data)}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 1,
     }),
     deleteApproveProcess: builder.mutation({
       query: (id) => ({

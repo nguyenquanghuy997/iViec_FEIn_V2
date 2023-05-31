@@ -10,7 +10,7 @@ import { BoxInnerStyle, BoxWrapperStyle } from "@/sections/auth/style";
 import { Box, Stack, Typography, Link } from "@mui/material";
 import NextLink from "next/link";
 import {useTheme} from "@mui/material/styles";
-
+import palette from "@/theme/palette";
 
 export default function Login() {
   const theme = useTheme();
@@ -18,8 +18,8 @@ export default function Login() {
     <GuestGuard>
       <Page title="Đăng nhập">
         <LogoHeader />
-        <Box sx={{ ...BoxWrapperStyle }}>
-          <Box sx={{ ...BoxInnerStyle, minHeight: "784px" }}>
+        <Box sx={{ ...BoxWrapperStyle, backgroundColor: palette.light.common.bgrMaster, paddingBlock: "36px", marginBlock: 0, height: "calc(100vh - 101px)", alignItems: "start" }}>
+          <Box sx={{ ...BoxInnerStyle, marginBottom: 0, height: "100%" }}>
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Typography
                 variant="h4"
