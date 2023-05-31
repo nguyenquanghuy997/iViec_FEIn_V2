@@ -19,16 +19,6 @@ input:-webkit-autofill:active {
     z-index: 3001!important;
 }
 
-/**::-webkit-scrollbar-thumb {*/
-/*    background: #B9BFC9;*/
-/*    margin-right: 3px;*/
-/*    border-radius: 30px;*/
-/*}*/
-
-/**::-webkit-scrollbar {*/
-/*    width: 6px;*/
-/*    height: 6px;*/
-/*}*/
 .top {
     top: 156px;
 }
@@ -39,4 +29,23 @@ input:-webkit-autofill:active {
 
 .up {
     top: 156px;
+}
+
+*::-webkit-scrollbar {
+    height: 14px !important;    
+}
+  
+/* Track */
+*::-webkit-scrollbar-track {
+    background: #EFF3F7 !important;
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+    background: #A2AAB7 !important;
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+    background: #A2AAB7 !important;
 }

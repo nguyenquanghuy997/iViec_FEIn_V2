@@ -1,5 +1,6 @@
 export const STYLE_CONSTANT = {
   // font size
+  FONT_3XL: 28,
   FONT_2XL: 24,
   FONT_XL: 20,
   FONT_LG: 18,
@@ -34,4 +35,5 @@ export const STYLE_CONSTANT = {
   COLOR_BG_GRAY: "#F2F4F5",
   COLOR_DIVIDER: "#E7E9ED",
   COLOR_BACKGROUND: "#FDFDFD",
+  
 };
