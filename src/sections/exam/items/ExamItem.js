@@ -61,6 +61,7 @@ export const ExamItem = ({
         title: "Đề thi",
         width: "250px",
         fixed: 'left',
+        sorter: (a, b) => a.name.length - b.name.length,
         render: (item, record) => (
           <Tooltip title={item} arrow>
             <TextElipsis sx={{ width: 250, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}

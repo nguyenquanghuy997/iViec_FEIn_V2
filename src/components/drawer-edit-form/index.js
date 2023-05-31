@@ -42,21 +42,21 @@ export default function DrawerEditForm({
   ...props
 }) {
   const theme = useTheme();
-
+  
   const validateSchema = Yup.object().shape(validateFields);
   const methods = useForm({
     resolver: yupResolver(validateSchema),
     defaultValues: useMemo(() => defaultValues, [defaultValues]),
   });
   const {
-    formState: { isSubmitting, errors },
+    formState: {isSubmitting, errors},
     handleSubmit,
     reset,
     watch,
   } = methods;
-
+  
   const isActive = watch(statusField);
-
+  
   const childrenWithProps = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {
@@ -65,12 +65,12 @@ export default function DrawerEditForm({
     }
     return child;
   });
-
+  
   const toggleDrawer = (isOpen, event) => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
+    
     if (!isOpen) {
       if (onClose) {
         onClose();
@@ -80,7 +80,7 @@ export default function DrawerEditForm({
       }
     }
   }
-
+  
   const handleOnSubmit = (data) => {
     onSubmit(data, () => {
       if (onClose) onClose();
@@ -89,14 +89,14 @@ export default function DrawerEditForm({
       }
     });
   }
-
+  
   const handleCancel = (e) => {
     if (onCancel) {
       return onCancel();
     }
     toggleDrawer(false, e, true)
   }
-
+  
   return (
     <ClickAwayListener
       onClickAway={(e) => {
@@ -114,7 +114,7 @@ export default function DrawerEditForm({
         open={open}
         onClose={(e) => toggleDrawer(false, e)}
         PaperProps={{
-          sx: drawerPaperStyle({ ...theme, width, contentStyles }),
+          sx: drawerPaperStyle({...theme, width, contentStyles}),
         }}
         ModalProps={{
           sx: {...modalStyles, ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}},
@@ -127,20 +127,20 @@ export default function DrawerEditForm({
             <Typography fontSize={pxToRem(16)} fontWeight={600}>
               {title}
             </Typography>
-
+            
             <IconButton onClick={e => toggleDrawer(false, e)}>
-              <RiCloseLine size={20} />
+              <RiCloseLine size={20}/>
             </IconButton>
           </Box>
-
+          
           {!!errors.afterSubmit && (
             <Alert severity="error">{errors.afterSubmit?.message}</Alert>
           )}
-
+          
           <div className="edit-container">
             {childrenWithProps}
           </div>
-
+          
           <Box display="flex" className="edit-footer">
             <Box flex={1}>
               <Button
@@ -149,12 +149,12 @@ export default function DrawerEditForm({
                 color="primary"
                 loading={isSubmitting}
                 height={36}
-                sx={{ mr: 1 }}
+                sx={{mr: 1}}
                 disabled={initing}
               >
                 {okText}
               </Button>
-
+              
               <Button
                 variant="text"
                 color="basic"
@@ -164,7 +164,7 @@ export default function DrawerEditForm({
                 {cancelText}
               </Button>
             </Box>
-
+            
             <SwitchStatusDS
               name={statusField}
               label={isActive ? activeText : inActiveText}

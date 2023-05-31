@@ -10,7 +10,7 @@ import { containsText } from "@/utils/function";
 import { Autocomplete, Checkbox, CircularProgress, MenuItem, } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { isEqual } from "lodash";
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { TbChevronDown } from "react-icons/tb";
 

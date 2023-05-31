@@ -72,7 +72,7 @@ export const RoleContainer = () => {
       render: (item, record, index, page, paginationSize) => (
         <>{(page - 1) * paginationSize + index + 1}</>
       ),
-      width: "8%",
+      width: "60px",
       fixed: "left",
     },
     {
