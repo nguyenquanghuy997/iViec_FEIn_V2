@@ -199,6 +199,9 @@ export const ExamItem = ({
         dataIndex: "standardPoint",
         title: "Điểm sàn",
         width: "200px",
+        render: (standardPoint) => (
+          (standardPoint >= 0) ? standardPoint : '-'
+        ),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_POINT,
           name: ["standardPointFrom", "standardPointTo"],

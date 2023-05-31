@@ -83,11 +83,13 @@ const CreateExamContent = () => {
       type: 0,
     },
   } = router;
+
   const queryDataDefault = {
     ...query,
     isQuestionMixing: query.isQuestionMixing == "true",
     standardPoint: null,
   };
+
   const [examData, setExamData] = useState(queryDataDefault);
   const [examQuestions, setExamQuestions] = useState([]);
   const [examQuestionGroups, setExamQuestionGroups] = useState([]);
@@ -201,12 +203,13 @@ const CreateExamContent = () => {
   };
 
   const handleSaveDraft = async () => {
-    if (examData.standardPoint === null || examData.standardPoint === '') {
-      enqueueSnackbar("Bạn cần nhập điểm sàn", {
-        variant: "error",
-      });
-      return;
-    }
+    // if (examData.standardPoint === null || examData.standardPoint === '') {
+    //   enqueueSnackbar("Bạn cần nhập điểm sàn", {
+    //     variant: "error",
+    //   });
+    //   return;
+    // }
+
     if (examData.standardPoint < 0) {
       enqueueSnackbar("Điểm sàn phải lớn hơn không", {
         variant: "error",
@@ -235,7 +238,7 @@ const CreateExamContent = () => {
       showType: examData.showType,
       type: examData.type,
       totalQuestion: examQuestions.length,
-      standardPoint: parseInt(examData.standardPoint ?? 0),
+      standardPoint: parseInt(examData.standardPoint == null || examData.standardPoint == '' ? -1 : examData.standardPoint),
       isQuestionMixing: examData.isQuestionMixing,
       examTime: timeFromMinutes(examData.examTime),
       maximumPoint: examData.maximumPoint,
@@ -399,9 +402,16 @@ const CreateExamContent = () => {
     router.push("/settings/exam/exam-business");
   };
 
+  /**
+   * convert data from api to state
+   */
   useEffect(() => {
     if (data) {
-      setExamData({ ...data, examTime: minutesFromTime(data.examTime) });
+      setExamData({
+        ...data,
+        examTime: minutesFromTime(data.examTime),
+        standardPoint: data.standardPoint == -1 ? '' : data.standardPoint
+      });
       if (data.type == 0) {
         setExamQuestions(data.questions ?? []);
       }
@@ -429,6 +439,7 @@ const CreateExamContent = () => {
       }
     }
   }, [data]);
+
   return (
     <>
       <CreateExamHeader
@@ -470,83 +481,89 @@ const CreateExamContent = () => {
             allcenter={"true"}
             style={{ alignItems: "stretch" }}
           >
-            <View
-              allcenter={"true"}
-              style={{
-                margin: "0 24px 0 8px",
-                padding: "6px 8px",
-                border: (examData.standardPoint > examData.maximumPoint && examData.maximumPoint) ? "1px solid #E53935" : "1px solid #455570",
-                borderRadius: "4px",
-              }}
-            >
-              <Typography
-                sx={{
-                  minWidth: "70px",
-                  textAlign: "center",
-                  fontSize: "13px",
-                  lineHeight: "20px",
-                  color: "#455570",
-                  fontWeight: 500,
-                }}
-              >
-                Điểm sàn
-              </Typography>
-
-              <Box
-                style={{
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  lineHeight: "24px",
-                }}
-              >
-                {
-                  (!showInputStandardPoint && (examData.standardPoint === null || examData.standardPoint === '')) && <ButtonIcon
+            {
+              (examData.type == 0 || (examData.type == 1 && examData.maximumPoint)) ?
+                <View
+                  allcenter={"true"}
+                  style={{
+                    margin: "0 24px 0 8px",
+                    padding: "6px 8px",
+                    border: (examData.standardPoint > examData.maximumPoint && examData.maximumPoint) ? "1px solid #E53935" : "1px solid #455570",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <Typography
                     sx={{
-                      backgroundColor: "transparent",
-                      "&:hover": {
-                        backgroundColor: "unset",
-                      },
+                      minWidth: "70px",
+                      textAlign: "center",
+                      fontSize: "13px",
+                      lineHeight: "20px",
+                      color: "#455570",
+                      fontWeight: 500,
                     }}
-                    onClick={() => setShowInputStandardPoint(true)}
-                    icon={
-                      <Iconify
-                        icon={"ri:edit-2-fill"}
-                        width={14}
-                        height={14}
-                        color="#5C6A82"
+                  >
+                    Điểm sàn
+                  </Typography>
+
+                  <Box
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: 600,
+                      lineHeight: "24px",
+                    }}
+                  >
+                    {
+                      (!showInputStandardPoint && (examData.standardPoint === null || examData.standardPoint === '')) && <ButtonIcon
+                        sx={{
+                          backgroundColor: "transparent",
+                          "&:hover": {
+                            backgroundColor: "unset",
+                          },
+                        }}
+                        onClick={() => setShowInputStandardPoint(true)}
+                        icon={
+                          <Iconify
+                            icon={"ri:edit-2-fill"}
+                            width={14}
+                            height={14}
+                            color="#5C6A82"
+                          />
+                        }
                       />
                     }
-                  />
-                }
-                {
-                  (showInputStandardPoint || (examData.standardPoint !== null && examData.standardPoint !== '')) && <TextField
-                    value={examData.standardPoint}
-                    onChange={handleChangeStandardPoint}
-                    onBlur={(e) => onOutFocusInput(e)}
-                    name="numberformat"
-                    id="formatted-numberformat-input"
-                    InputProps={{
-                      disableUnderline: true,
-                      inputComponent: NumericFormatCustom,
-                    }}
-                    variant="standard"
-                    sx={{
-                      width: "70px",
-                      "& .MuiInputBase-input": {
-                        fontSize: "11px !important",
-                        height: "18px !important",
-                        fontWeight: 600,
-                        textAlign: "center !important",
-                        padding: "0 !important",
-                        marginTop: "4px !important",
-                      },
-                    }}
-                  />
-                }
-              </Box>
-            </View>
+                    {
+                      (showInputStandardPoint || (examData.standardPoint !== null && examData.standardPoint !== '')) && <TextField
+                        value={examData.standardPoint}
+                        onChange={handleChangeStandardPoint}
+                        onBlur={(e) => onOutFocusInput(e)}
+                        name="numberformat"
+                        id="formatted-numberformat-input"
+                        InputProps={{
+                          disableUnderline: true,
+                          inputComponent: NumericFormatCustom,
+                        }}
+                        variant="standard"
+                        sx={{
+                          width: "70px",
+                          "& .MuiInputBase-input": {
+                            fontSize: "11px !important",
+                            height: "18px !important",
+                            fontWeight: 600,
+                            textAlign: "center !important",
+                            padding: "0 !important",
+                            marginTop: "4px !important",
+                          },
+                        }}
+                      />
+                    }
+                  </Box>
+                </View>
+                : <></>
+            }
+
             <View style={{ flexDirection: "row" }}>
               <Tooltip
+                arrow
                 title={
                   examData.type == 1 && !examData.maximumPoint
                     ? "Không thể xác định điểm tối đa do trong đề có ít nhất 1 câu hỏi câu hỏi tự luận ngẫu nhiên"
@@ -584,7 +601,7 @@ const CreateExamContent = () => {
                       marginTop: 4,
                     }}
                   >
-                    {examData.maximumPoint ?? "Không xác định"}
+                    {examData.type == 1 && (examData.maximumPoint == 0 || !examData.maximumPoint) ? "Không xác định" : examData.maximumPoint}
                   </span>
                 </Box>
               </Tooltip>
@@ -656,6 +673,7 @@ const CreateExamContent = () => {
           )}
         </View>
       </View>
+
       {showPreview && (
         <ExamPreview
           open={showPreview}
