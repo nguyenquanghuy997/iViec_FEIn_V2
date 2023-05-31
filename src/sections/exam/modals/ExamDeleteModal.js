@@ -12,6 +12,7 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { View } from "@/components/DesignSystem/FlexStyled";
 import {useTheme} from "@mui/material/styles";
+import {useRouter} from "next/router";
 
 const ExamDeleteModal = ({
   showConfirmMultiple,
@@ -22,10 +23,19 @@ const ExamDeleteModal = ({
   const { enqueueSnackbar } = useSnackbar();
   const [deleteExam] = useDeleteExamMutation();
   const theme = useTheme();
+  const router = useRouter();
   const handleChangeStatus = async () => {
     try {
       await deleteExam({ "ids": examIds }).unwrap();
       enqueueSnackbar("Thực hiện thành công !");
+      router.push(
+        {
+          query: {PageIndex: 1, PageSize: 10},
+        },
+        undefined,
+        { shallow: false }
+      );
+      // window.location.href = "settings/exam/exam-business?PageIndex=1&PageSize=10";
       onClose();
     } catch (err) {
       enqueueSnackbar("Thực hiện thất bại !", {
