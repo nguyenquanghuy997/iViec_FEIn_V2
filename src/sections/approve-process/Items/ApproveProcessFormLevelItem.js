@@ -34,7 +34,7 @@ const ConditionalInput = ({control, index, indexChild}) => {
     control,
     name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.processLevelDetailType`
   });
-  console.log(processLevelDetailType)
+  
   const {data: {items: RoleGroups = []} = {}} = useGetRoleGroupListQuery({IsActivated: true, PageSize: 999});
   const {data: {items: Applications = []} = {}} = useGetApplicationByRoleGroupQuery({RoleGroupId: roleGroupId}, {skip: !roleGroupId});
   const {data: {items: ApplicationOrganization = []} = {}} = useGetAllApplicantUserOrganizationByIdQuery({OrganizationId: auth.user.organizationId}, {skip: !processLevelDetailType});
