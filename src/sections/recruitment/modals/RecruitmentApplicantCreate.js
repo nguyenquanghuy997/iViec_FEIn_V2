@@ -353,7 +353,6 @@ export const RecruitmentApplicantCreate = ({
         <ViewModel
           sx={{
             width: "unset",
-            height: "100%",
             justifyContent: "space-between",
           }}
         >
