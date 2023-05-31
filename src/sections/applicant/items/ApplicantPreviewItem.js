@@ -419,6 +419,7 @@ function ApplicantPreviewItem() {
         <NavGoBack
           name={"Trở về danh sách ứng viên"}
           onClick={router.back}
+          sx={{padding: "28px 0px", marginTop: 0}}
         ></NavGoBack>
         <Grid>
           <Grid item xs={12} md={5}>
@@ -428,6 +429,7 @@ function ApplicantPreviewItem() {
                 filter:
                   "drop-shadow(0px 3px 5px rgba(9, 30, 66, 0.2)) drop-shadow(0px 0px 1px rgba(9, 30, 66, 0.3))",
                 height: "fit-content",
+                boxShadow: "none",
                 "& .MuiCardContent-root": {
                   padding: 0,
                   paddingBottom: "0 !important",

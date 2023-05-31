@@ -16,7 +16,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useTheme} from "@mui/material/styles";
+import {useTheme, styled} from "@mui/material/styles";
 
 
 const defaultValues = {
@@ -26,6 +26,11 @@ const defaultValues = {
   benefit: "",
   isActivated: true,
 };
+
+const ViewModelStyled = styled(ViewModel)(() => ({
+  boxShadow: "-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+}));
+
 export const JobTypeFormModal = ({ data, show, onClose }) => {
   const isEditMode = !!data?.id;
 
@@ -130,8 +135,12 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
         open={show}
         onClose={onClose}
         sx={{ display: "flex", justifyContent: "flex-end" }}
+        slotProps={{
+          backdrop: {style: {backgroundColor: 'rgba(9, 30, 66, 0.25)'}},
+          root: {style: {paddingTop: "64px"}},
+        }}
       >
-        <ViewModel>
+        <ViewModelStyled>
           {/* header */}
           <View
             flexrow="true"
@@ -235,7 +244,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
                 label={isActivated ? "Đang hoạt động" : "Không hoạt động"}
               />
           </View>
-        </ViewModel>
+        </ViewModelStyled>
       </Modal>
     </FormProvider>
   );
