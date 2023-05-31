@@ -40,7 +40,7 @@ import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
-const BoxItemFileStyle = styled(Box)(({ theme }) => ({
+const BoxItemFileStyle = styled(Box)(({theme}) => ({
   "&.file-upload-item": {
     marginRight: theme.spacing(2),
     marginBottom: 8,
@@ -71,11 +71,11 @@ export const renderFileUploadItem = (
 ) => {
   if (!file) return;
   let fileType = file.name.slice(file.name.lastIndexOf("."));
-
+  
   return (
     <BoxItemFileStyle className="file-upload-item" key={index}>
       {showIconByFileType(fileType)}
-      <Stack sx={{ mx: 1 }}>
+      <Stack sx={{mx: 1}}>
         <Typography
           sx={{
             color: palette.light.common.neutral700,
@@ -102,27 +102,27 @@ export const renderFileUploadItem = (
       {!displayButtonDelete && (
         <IconButton
           size="small"
-          sx={{ color: palette.light.blue700, mx: 0.5 }}
+          sx={{color: palette.light.blue700, mx: 0.5}}
           onClick={() => {
             removeFileUpload(index);
           }}
         >
-          <DeleteIcon />
+          <DeleteIcon/>
         </IconButton>
       )}
     </BoxItemFileStyle>
   );
 };
-const OfferFormModal = ({ isOpen, onClose, item, title }) => {
+const OfferFormModal = ({isOpen, onClose, item, title}) => {
   const auth = useAuth();
   const isEditMode = !!item?.id;
-  const { data: preview = {} } = useGetPreviewOfferTemplateQuery(
-    { Id: item?.id },
-    { skip: !item?.id }
+  const {data: preview = {}} = useGetPreviewOfferTemplateQuery(
+    {Id: item?.id},
+    {skip: !item?.id}
   );
-  const { data: dataDefault } = useGetDefaultOfferTemplateQuery(
-    { OrganizationId: auth.user.organizationId },
-    { skip: item?.id }
+  const {data: dataDefault} = useGetDefaultOfferTemplateQuery(
+    {OrganizationId: auth.user.organizationId},
+    {skip: item?.id}
   );
   const theme = useTheme();
   const [addForm] = useAddOfferTemplateMutation();
@@ -131,16 +131,16 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
   const isLoading = isEditMode && !preview?.id;
   const [isOpenPreview, setIsOpenPreview] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const handleFileChange = (e) => {
     setFileList((prev) => [...prev, ...e.target.files]);
   };
-
+  
   const removeFileUpload = (index) => {
     const newFileList = [...fileList].filter((item, idx) => idx !== index);
     setFileList(newFileList);
   };
-
+  
   const Schema = Yup.object().shape({
     id: Yup.string(),
     name: Yup.string().required("Tên mẫu mời nhận việc không được bỏ trống"),
@@ -154,19 +154,19 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
     isActive: Yup.boolean(),
     templateAttachFiles: Yup.array().of(Yup.string()),
   });
-
+  
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-
+  
   const {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: {isSubmitting, errors},
   } = methods;
-
+  
   useEffect(() => {
     if (!item?.id) return;
     setValue("id", preview.id);
@@ -179,25 +179,25 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
     setValue("isActive", preview.isActive);
     setFileList(preview.templateAttachFiles);
   }, [isEditMode, item, preview]);
-
+  
   useEffect(() => {
     if (!dataDefault) return;
     setValue("signatureLogo", dataDefault.signatureLogo);
     setValue("signatureContent", dataDefault.signatureContent);
   }, [dataDefault]);
-
+  
   const handleOpenPreviewEmail = () => {
     setIsOpenPreview(true);
   };
-
+  
   const handleClosePreviewEmail = () => {
     setIsOpenPreview(false);
   };
-
+  
   const handleSetSignatureLogo = (e) => {
     setValue("signatureLogo", e.fileTemplates[0].path);
   };
-
+  
   const pressSave = handleSubmit(async (body) => {
     if (fileList.length > 0) {
       const file = new FormData();
@@ -212,44 +212,48 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
     }
     if (isEditMode) {
       await updateForm(body)
-        .unwrap()
-        .then(() => {
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
-          });
-          onClose();
-        })
-        .catch(() => {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
+      .unwrap()
+      .then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
         });
+        onClose();
+      })
+      .catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      });
     } else {
       await addForm(body)
-        .unwrap()
-        .then(() => {
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
-          });
-          onClose();
-        })
-        .catch(() => {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 1000,
-            variant: "error",
-          });
+      .unwrap()
+      .then(() => {
+        enqueueSnackbar("Thực hiện thành công!", {
+          autoHideDuration: 2000,
         });
+        onClose();
+      })
+      .catch(() => {
+        enqueueSnackbar("Thực hiện thất bại!", {
+          autoHideDuration: 1000,
+          variant: "error",
+        });
+      });
     }
   });
-
+  
   return (
     <>
       <FormProvider {...methods}>
         <Modal
           open={isOpen}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+          }}
         >
           <ViewModel
             sx={{
@@ -292,7 +296,7 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
                   }
                 />
               </View>
-              <Divider />
+              <Divider/>
             </View>
             <View
               style={{
@@ -303,12 +307,12 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
             >
               {isLoading ? (
                 <View flex="true" contentcenter="true">
-                  <CircularProgress />
+                  <CircularProgress/>
                 </View>
               ) : (
                 <Grid
                   container
-                  sx={{ width: "800px", overflowY: "auto" }}
+                  sx={{width: "800px", overflowY: "auto"}}
                   height={"100%"}
                   flexWrap={"nowrap"}
                   flexDirection={"column"}
@@ -332,7 +336,7 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
                     </Grid>
                     <Grid mb={3}>
                       <LabelStyle required={true}>Nội dung email</LabelStyle>
-                      <Box display={"flex"} sx={{ overflowX: "auto" }}>
+                      <Box display={"flex"} sx={{overflowX: "auto"}}>
                         {!isEmpty(fileList) &&
                           fileList.map((file, index) =>
                             renderFileUploadItem(file, index, removeFileUpload)
@@ -345,7 +349,7 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
                         showUploadFile={true}
                         handleFileChange={handleFileChange}
                         onOpenPreview={handleOpenPreviewEmail}
-                        sx={{ width: "752px", minHeight: "370px" }}
+                        sx={{width: "752px", minHeight: "370px"}}
                       />
                     </Grid>
                     <Grid mb={3}>
@@ -355,7 +359,7 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
                         justifyContent={"space-between"}
                         alignItems={"center"}
                       >
-                        <LabelStyle sx={{ mb: "unset" }} required={true}>
+                        <LabelStyle sx={{mb: "unset"}} required={true}>
                           Chữ ký email
                         </LabelStyle>
                         <RHFCheckbox
@@ -371,7 +375,7 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
                           />
                           <Typography
                             variant={"textSize13"}
-                            sx={{ mt: 1 }}
+                            sx={{mt: 1}}
                             color={theme.palette.text.secondary}
                           >
                             Logo công ty
@@ -379,7 +383,7 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
                           {errors.signatureLogo && (
                             <FormHelperText
                               error
-                              sx={{ textTransform: "capitalize" }}
+                              sx={{textTransform: "capitalize"}}
                             >
                               {errors.signatureLogo.message}
                             </FormHelperText>
@@ -389,7 +393,7 @@ const OfferFormModal = ({ isOpen, onClose, item, title }) => {
                           <RHFEmailEditor
                             name="signatureContent"
                             placeholder="Nhập nội dung email..."
-                            sx={{ minHeight: "230px" }}
+                            sx={{minHeight: "230px"}}
                           />
                         </Box>
                       </Box>

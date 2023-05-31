@@ -1,8 +1,9 @@
 export const drawerPaperStyle = ({ palette, width = 800, contentStyles = {} }) => ({
-  height: '100vh',
+  height: 'calc(100vh - 64px)',
   width: width + 'px',
   maxWidth: '95%',
-  boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)',
+  marginTop: '64px',
+  boxShadow: '-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3) !important',
   overflow: 'hidden',
   '.edit-header': {
     padding: '15px 24px',

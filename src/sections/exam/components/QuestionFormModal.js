@@ -140,7 +140,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
     answers: Yup.mixed().when(["questionType"], {
       is: (questionType) => {
-        return questionType == 0 || questionType == 1
+        return questionType === 0 || questionType === 1
       },
       then: Yup.mixed()
         .test({
@@ -203,6 +203,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   const pressAddAnswer = () => {
     setListAnswer((l) => [...l, defaultAnswer]);
   };
+
   const pressDeleteAnswer = (index) => {
     setListAnswer((l) => l.filter((_, i) => i !== index));
   };
@@ -212,6 +213,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       if (isNotSave) {
         const data = {
           ...e,
+          questionType: +e.questionType,
           answers: e.answers?.length > 0 && !isEssay ? e.answers : null,
           questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name
         }
@@ -229,7 +231,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       }
 
     } catch (error) {
-      if (error.status == "QGE_04")
+      if (error.status === "QGE_04")
         setShowDuplicateAlert(true)
       // enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
       //   autoHideDuration: 1000,
@@ -390,12 +392,12 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   useEffect(() => {
     if (data?.id || data?.questionTitle) {
       setValue("id", data.id);
-      setValue("questionType", data.questionType);
+      setValue("questionType", parseInt(data.questionType));
       setValue("questionTitle", data.questionTitle);
       setValue("questionPoint", data.questionPoint);
       setValue("questionGroupId", data.questionGroupId);
       setValue("isActive", !!data.isActive);
-      setListAnswer(data.answers);
+      setListAnswer(data.questionType == 2 ? [defaultAnswer] : data.answers);
       setListMedia(data.questionFilePaths?.map((i) => ({ uploadedUrl: i })));
       return;
     }
@@ -436,7 +438,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         <Modal
           open={show}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" } }}
         >
           <ViewModel>
             {/* header */}

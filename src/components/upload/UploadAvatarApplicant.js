@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {DOMAIN_SERVER_API} from "@/config";
 import {API_UPLOAD_FILE_APPLICANTS} from "@/routes/api";
 import {UploadLineIcon} from "@/assets/ActionIcon";
-import {Button} from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -17,7 +17,7 @@ export default function UploadAvatarApplicant({type, fileList = [], setFileList,
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const token = "Bearer " + localStorage.getItem("accessToken");
-
+  const theme = useTheme();
   // const [fileList, setFileList] = useState([
   //   {
   //     uid: '-1',
@@ -50,7 +50,7 @@ export default function UploadAvatarApplicant({type, fileList = [], setFileList,
 
   const uploadButton = (
     <div>
-      <Button sx={{border: "1px dashed #1976D2", padding: "8px 12px", textTransform: "inherit"}}
+      <Button sx={{border: "1px dashed " + theme.palette.common.blue700, color: theme.palette.common.blue700, fontWeight: 600, padding: "5px 12px", textTransform: "inherit"}}
               startIcon={<UploadLineIcon/>}>Tải ảnh
         lên</Button>
     </div>

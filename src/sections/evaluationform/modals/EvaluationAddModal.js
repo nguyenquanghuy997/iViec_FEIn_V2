@@ -13,10 +13,10 @@ import { Divider, Modal } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 const defaultValuess = {
-  name:"",
+  name: "",
   des: ""
 };
 
@@ -28,23 +28,23 @@ export const EvaluationAddModal = ({
 }) => {
   const isEdit = !!editData?.name;
   // form
-    // form
-    const Schema = Yup.object().shape({
-      name: Yup.string().required("Chưa nhập tên tiêu chí").max(50, 'Độ dài không được quá 50 ký tự'),
-      des: Yup.string().max(255, 'Độ dài không được quá 255 ký tự'),
-    });
+  // form
+  const Schema = Yup.object().shape({
+    name: Yup.string().required("Chưa nhập tên tiêu chí").max(50, 'Độ dài không được quá 50 ký tự'),
+    des: Yup.string().max(255, 'Độ dài không được quá 255 ký tự'),
+  });
   const theme = useTheme();
   const methodss = useForm({
     defaultValuess,
     resolver: yupResolver(Schema),
   });
-
+  
   const {
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methodss;
-
+  
   const pressHide = () => {
     setShow(false);
   };
@@ -54,17 +54,16 @@ export const EvaluationAddModal = ({
       isRequired: d.isRequired,
       des: d.des,
     };
-      onSubmit?.(data);
-      pressHide();
+    onSubmit?.(data);
+    pressHide();
     
   });
-
+  
   useEffect(() => {
     if (!isEdit) {
       setValue("name", "");
       setValue("isRequired", "");
       setValue("des", "");
-      return;
     } else {
       setValue("name", editData.name);
       setValue("isRequired", editData.isRequired);
@@ -74,7 +73,12 @@ export const EvaluationAddModal = ({
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={pressHide}
     >
       <>
@@ -84,7 +88,7 @@ export const EvaluationAddModal = ({
               <Text flex fontsize={16} fontweight={"700"}>
                 {isEdit ? "Sửa tiêu chí đánh giá" : "Thêm tiêu chí đánh giá"}
               </Text>
-
+              
               <ButtonIcon
                 onClick={pressHide}
                 icon={
@@ -97,23 +101,23 @@ export const EvaluationAddModal = ({
                 }
               />
             </View>
-            <Divider />
+            <Divider/>
             <View p={24}>
-            <View mb={12}>
-              <Label required={true}>{"Tên tiêu chí"}</Label>
-              <RHFTextField
-                name={"name"}
-                placeholder="Nhập tên tiêu chí"
-                maxLength={50}
-              />
-            </View>
-            <View mb={8}>
-              <RHFCheckbox
-                style={{ marginLeft: "-8px" }}
-                name="isRequired"
-                label="Bắt buộc đánh giá"
-              />
-            </View>
+              <View mb={12}>
+                <Label required={true}>{"Tên tiêu chí"}</Label>
+                <RHFTextField
+                  name={"name"}
+                  placeholder="Nhập tên tiêu chí"
+                  maxLength={50}
+                />
+              </View>
+              <View mb={8}>
+                <RHFCheckbox
+                  style={{marginLeft: "-8px"}}
+                  name="isRequired"
+                  label="Bắt buộc đánh giá"
+                />
+              </View>
               <View mb={24}>
                 <Label>{"Mô tả tiêu chí"}</Label>
                 <TextAreaDS
@@ -124,15 +128,15 @@ export const EvaluationAddModal = ({
                 />
               </View>
             </View>
-            <Divider />
+            <Divider/>
             <View flexrow="true" jcend="true" pv={16} ph={24}>
               <ButtonCancelStyle
-                sx={{ marginRight: "8px" }}
+                sx={{marginRight: "8px"}}
                 onClick={pressHide}
               >
                 Hủy
               </ButtonCancelStyle>
-
+              
               <ButtonDS
                 type="submit"
                 variant="contained"

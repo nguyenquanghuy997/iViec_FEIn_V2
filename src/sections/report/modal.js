@@ -1,11 +1,16 @@
 import SvgIcon from "@/components/SvgIcon";
 import { Container, Modal } from "@mui/material";
 
-export const ReportModal = ({ big, modalProps, title, subTitle, children }) => {
+export const ReportModal = ({big, modalProps, title, subTitle, children}) => {
   return (
     <Modal
       {...modalProps}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
     >
       <Container
         style={{
@@ -24,7 +29,7 @@ export const ReportModal = ({ big, modalProps, title, subTitle, children }) => {
             marginBottom: 32,
           }}
         >
-          <div style={{ flex: 1 }}>
+          <div style={{flex: 1}}>
             <span
               style={{
                 display: "block",
@@ -44,9 +49,9 @@ export const ReportModal = ({ big, modalProps, title, subTitle, children }) => {
               {subTitle}
             </span>
           </div>
-
+          
           <div
-            style={{ cursor: "pointer" }}
+            style={{cursor: "pointer"}}
             onClick={modalProps.onBackdropClick}
           >
             <SvgIcon>
@@ -54,7 +59,7 @@ export const ReportModal = ({ big, modalProps, title, subTitle, children }) => {
             </SvgIcon>
           </div>
         </div>
-
+        
         <div
           style={{
             paddingTop: 5,
@@ -64,7 +69,7 @@ export const ReportModal = ({ big, modalProps, title, subTitle, children }) => {
         >
           {children}
         </div>
-
+        
         <div
           style={{
             marginTop: 18,

@@ -5,8 +5,8 @@ import { LoadingButton } from "@mui/lab";
 import { Modal } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import {useUpdateApplicantFormMutation} from "@/sections/applicant";
-import {useTheme} from "@mui/material/styles";
+import { useUpdateApplicantFormMutation } from "@/sections/applicant";
+import { useTheme } from "@mui/material/styles";
 
 export const ApplicantPreviewModal = ({
   show,
@@ -19,24 +19,24 @@ export const ApplicantPreviewModal = ({
   const [updateForm] = useUpdateApplicantFormMutation();
   const theme = useTheme();
   const form = useForm({
-    defaultValues: { isActive: !!data.Status },
+    defaultValues: {isActive: !!data.Status},
   });
   const isActive = form.watch("isActive");
-
+  
   const pressHide = () => {
     setShow(false);
   };
-
+  
   const pressDelete = () => {
     pressHide();
     onDelete?.();
   };
-
+  
   const pressEdit = () => {
     pressHide();
     onEdit?.();
   };
-
+  
   const handleEdit = form.handleSubmit(async (e) => {
     const body = {
       ...data,
@@ -46,14 +46,14 @@ export const ApplicantPreviewModal = ({
     await updateForm(body).unwrap();
     onRefreshData();
   });
-
+  
   const renderItem = (item, index) => {
     return (
       <View p={16} mt={index ? 12 : 24} borderRadius={6} bgColor={"#F8F8F9"}>
         <Text fontSize={17} fontWeight={"600"}>
           {item.CriteriaName}
         </Text>
-
+        
         {!!item.CriteriaNote && (
           <Text mt={8} fontSize={15}>
             {item.CriteriaNote}
@@ -62,19 +62,24 @@ export const ApplicantPreviewModal = ({
       </View>
     );
   };
-
+  
   useEffect(() => {
     form.setValue("isActive", !!data.Status);
   }, [data.Status]);
-
+  
   useEffect(() => {
     if (isActive !== !!data.Status) handleEdit();
   }, [isActive, data.Status]);
-
+  
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={pressHide}
     >
       <View
@@ -89,7 +94,7 @@ export const ApplicantPreviewModal = ({
           <Text flex1 fontSize={22} fontWeight={"700"}>
             {`Mẫu đánh giá ${data.ApplicantName}`}
           </Text>
-
+          
           <View ml={8} onPress={pressHide}>
             <SvgIcon>
               {
@@ -98,11 +103,11 @@ export const ApplicantPreviewModal = ({
             </SvgIcon>
           </View>
         </View>
-
-        <View flex1 style={{ overflow: "scroll" }}>
+        
+        <View flex1 style={{overflow: "scroll"}}>
           {data.Criterias?.map?.(renderItem)}
         </View>
-
+        
         <View
           flexRow
           jcEnd
@@ -114,10 +119,10 @@ export const ApplicantPreviewModal = ({
           boxShadow={"inset 0px 1px 0px #EBECF4"}
         >
           <FormProvider methods={form}>
-            <RHFSwitch name={"isActive"} label={"Đang hoạt động"} />
+            <RHFSwitch name={"isActive"} label={"Đang hoạt động"}/>
           </FormProvider>
-          <View flex1 />
-
+          <View flex1/>
+          
           <LoadingButton
             size="large"
             variant="text"
@@ -126,8 +131,8 @@ export const ApplicantPreviewModal = ({
           >
             {"Xóa"}
           </LoadingButton>
-          <View width={8} />
-
+          <View width={8}/>
+          
           <LoadingButton size="large" variant="contained" onClick={pressEdit}>
             {"Chỉnh sửa"}
           </LoadingButton>

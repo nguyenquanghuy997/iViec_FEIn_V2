@@ -33,7 +33,7 @@ const ViewModelStyled = styled(ViewModel)(() => ({
 
 export const JobTypeFormModal = ({ data, show, onClose }) => {
   const isEditMode = !!data?.id;
-
+  
   // api
   const [addForm] = useAddJobTypeMutation();
   const [updateForm] = useUpdateJobTypeMutation();
@@ -50,15 +50,15 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methods;
-  const  theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
+  const {enqueueSnackbar} = useSnackbar();
   const pressSave = handleSubmit(async (e) => {
     setIsDisabled(true);
     const param = {
       id: isEditMode ? data.id : 0,
-      body:{
+      body: {
         name: e.name,
         description: e.description,
         requirement: e.requirement,
@@ -110,16 +110,15 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
       }
     }
   });
-
+  
   // effect
   useEffect(() => {
     if (!show) {
       reset(defaultValues);
       setIsDisabled(false);
-      return;
     }
   }, [show]);
-
+  
   useEffect(() => {
     if (!isEditMode) return;
     setValue("name", data?.name);
@@ -177,48 +176,48 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
               }
             />
           </View>
-          <Divider />
+          <Divider/>
           {/* body */}
-
-            <View flex="true" p={24} pb={28} style={{ overflowY: "scroll" }}>
-              {/* code & name */}
-
-              <View mb={24}>
-                <Label required>Tên vị trí công việc</Label>
-                <RHFTextField
-                  name={"name"}
-                  placeholder="Nhập tên vị trí công việc"
-                  maxLength={150}
-                />
-              </View>
-
-              <Divider />
-              {/* dept */}
-
-              {/* des */}
-              <View mt={28}>
-                <Label>Mô tả công việc</Label>
-                <RHFTinyEditor
-                  name="description"
-                  placeholder="Nhập mô tả công việc..."
-                />
-              </View>
-
-              {/* require */}
-              <View mt={28}>
-                <Label>Yêu cầu công việc</Label>
-                <RHFTinyEditor
-                  name="requirement"
-                  placeholder="Nhập yêu cầu công việc..."
-                />
-              </View>
-
-              {/* benefit */}
-              <View mt={28}>
-                <Label>Quyền lợi</Label>
-                <RHFTinyEditor name="benefit" placeholder="Nhập quyền lợi..." />
-              </View>
+          
+          <View flex="true" p={24} pb={28} style={{overflowY: "scroll"}}>
+            {/* code & name */}
+            
+            <View mb={24}>
+              <Label required>Tên vị trí công việc</Label>
+              <RHFTextField
+                name={"name"}
+                placeholder="Nhập tên vị trí công việc"
+                maxLength={150}
+              />
             </View>
+            
+            <Divider/>
+            {/* dept */}
+            
+            {/* des */}
+            <View mt={28}>
+              <Label>Mô tả công việc</Label>
+              <RHFTinyEditor
+                name="description"
+                placeholder="Nhập mô tả công việc..."
+              />
+            </View>
+            
+            {/* require */}
+            <View mt={28}>
+              <Label>Yêu cầu công việc</Label>
+              <RHFTinyEditor
+                name="requirement"
+                placeholder="Nhập yêu cầu công việc..."
+              />
+            </View>
+            
+            {/* benefit */}
+            <View mt={28}>
+              <Label>Quyền lợi</Label>
+              <RHFTinyEditor name="benefit" placeholder="Nhập quyền lợi..."/>
+            </View>
+          </View>
           {/* footer */}
           <View
             flexrow="true"
@@ -234,15 +233,15 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
               onClick={pressSave}
               isDisabled={isDisabled}
             />
-            <View width={8} />
+            <View width={8}/>
             <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
-            <View width={8} />
-            <View flex="true" />
-
-              <SwitchStatusDS
-                name={"isActivated"}
-                label={isActivated ? "Đang hoạt động" : "Không hoạt động"}
-              />
+            <View width={8}/>
+            <View flex="true"/>
+            
+            <SwitchStatusDS
+              name={"isActivated"}
+              label={isActivated ? "Đang hoạt động" : "Không hoạt động"}
+            />
           </View>
         </ViewModelStyled>
       </Modal>

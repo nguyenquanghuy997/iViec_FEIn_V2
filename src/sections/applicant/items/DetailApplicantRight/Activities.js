@@ -29,10 +29,12 @@ export const Activities = ({
         <SwitchDS name={"isActive"} label={"Hiển thị hoạt động"} />
       </FormProvider>
 
+      <View height={16} />
+
       {isActive ? (
         <Box>
           <List
-            sx={{ width: "100%", pt: "16px" }}
+            sx={{ width: "100%", padding: 0 }}
             component="nav"
             aria-labelledby="nested-list-subheader"
           >
@@ -180,7 +182,33 @@ export const Activities = ({
                           avatarName={p?.updaterName}
                           isShow={false}
                           data={p}
-                        />
+                        >
+                          <View
+                            flexRow
+                            contentCenter
+                            pv={5}
+                            mt={16}
+                            borderWidth={1}
+                            borderRadius={6}
+                            borderColor={theme.palette.common.blue700}
+                            onPress={onReExploiting}
+                          >
+                            <SvgIcon>
+                              {
+                                '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1.5C13.1423 1.5 16.5 4.85775 16.5 9C16.5 13.1423 13.1423 16.5 9 16.5C4.85775 16.5 1.5 13.1423 1.5 9H3C3 12.3135 5.6865 15 9 15C12.3135 15 15 12.3135 15 9C15 5.6865 12.3135 3 9 3C6.9375 3 5.118 4.04025 4.03875 5.625H6V7.125H1.5V2.625H3V4.5C4.368 2.6775 6.54675 1.5 9 1.5Z" fill="#1976D2"/></svg>'
+                              }
+                            </SvgIcon>
+
+                            <Text
+                              ml={8}
+                              fontSize={12}
+                              fontWeight={"600"}
+                              color={theme.palette.common.blue700}
+                            >
+                              {"Tái khai thác"}
+                            </Text>
+                          </View>
+                        </NotificationBoard>
                       ) : p.updaterId ? (
                         <NotificationBoard
                           icon={iconLogPipe(
@@ -348,18 +376,17 @@ export const Activities = ({
           </List>
         </Box>
       ) : (
-        <div>
-          <div
-            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+        <View contentCenter>
+          <EmptyIcon />
+          <Text
+            centerAlign
+            mt={12}
+            fontWeight={500}
+            color={theme.palette.common.neutral500}
           >
-            <EmptyIcon />
-          </div>
-          <p
-            style={{ display: "flex", width: "100%", justifyContent: "center" }}
-          >
-            Danh sách hoạt động tạm ẩn.
-          </p>
-        </div>
+            {"Danh sách hoạt động tạm ẩn."}
+          </Text>
+        </View>
       )}
     </Grid>
   );

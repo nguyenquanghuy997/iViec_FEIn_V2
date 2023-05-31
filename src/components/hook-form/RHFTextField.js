@@ -28,7 +28,7 @@ function RHFTextField({ name, beforeChange, maxLength, ...other }) {
             />
             {error && (
               <FormHelperText
-                sx={{ color: "#FF4842", fontSize: 12, fontWeight: 400, mt: 1 }}
+                sx={{ color: "#E53935", fontSize: 12, fontWeight: 400, mt: 1 }}
               >
                 {error?.message}
               </FormHelperText>

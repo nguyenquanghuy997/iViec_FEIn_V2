@@ -1,4 +1,4 @@
-import { useUpdateApplicantRecruitmentToNextStateMutation } from "../ApplicantFormSlice";
+import { useUpdateApplicantRecruitmentToNextStateMutation } from "@/sections/applicant";
 import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
@@ -10,15 +10,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import palette from "@/theme/palette";
-import {useTheme} from "@mui/material/styles";
-
+import { useTheme } from "@mui/material/styles";
 
 
 const LIST_ACTION = [
-
-  { id: 0, name: "Đạt", color: palette.light.common.green500},
-  { id: 1, name: "Cân nhắc", color: palette.light.common.orange500},
-  { id: 2, name: "Loại", color: palette.light.common.red500},
+  
+  {id: 0, name: "Đạt", color: palette.light.common.green500},
+  {id: 1, name: "Cân nhắc", color: palette.light.common.orange500},
+  {id: 2, name: "Loại", color: palette.light.common.red500},
 ];
 
 export const RejectApplicantModal = ({
@@ -33,30 +32,30 @@ export const RejectApplicantModal = ({
 }) => {
   // data
   const recruitmentPipelineStateId = stage?.recruitmentPipelineStates?.filter(
-    (i) => i.pipelineStateType == 3
+    (i) => i.pipelineStateType === 3
   )[0]?.id;
-
+  
   // other
-  const { enqueueSnackbar } = useSnackbar();
-
+  const {enqueueSnackbar} = useSnackbar();
+  
   // state
   const [currentAction, setCurrentAction] = useState(actionType);
   const theme = useTheme();
   // form
   const Schema = Yup.object().shape({
-    note: (currentAction == 0 || currentAction == 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
+    note: (currentAction === 0 || currentAction === 1) ? Yup.string().nullable() : Yup.string().required("Chưa nhập ghi chú"),
   });
   const methods = useForm({
     resolver: yupResolver(Schema),
   });
   const {
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methods;
-
+  
   // api
   const [addForm] = useUpdateApplicantRecruitmentToNextStateMutation();
-
+  
   // handle
   const pressSave = handleSubmit(async (e) => {
     try {
@@ -77,11 +76,16 @@ export const RejectApplicantModal = ({
       });
     }
   });
-
+  
   return (
     <Modal
       open={show}
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+      }}
       onBackdropClick={() => setShow(false)}
     >
       <FormProvider methods={methods}>
@@ -95,7 +99,7 @@ export const RejectApplicantModal = ({
                 }
               </SvgIcon>
             </View>
-
+            
             {/* icon */}
             <View asCenter mt={25}>
               <SvgIcon>
@@ -104,29 +108,29 @@ export const RejectApplicantModal = ({
                 }
               </SvgIcon>
             </View>
-
+            
             {/* title */}
             <Typography
               mt={"12px"}
               fontSize={16}
               fontWeight={"600"}
-              color= {theme.palette.common.neutral700}
+              color={theme.palette.common.neutral700}
               textAlign={"center"}
             >
               {"Chuyển ứng viên sang bước kết quả"}
             </Typography>
-
+            
             {/* des */}
             <Typography
               mt={"8px"}
               fontSize={14}
-              color= {theme.palette.common.neutral700}
+              color={theme.palette.common.neutral700}
               textAlign={"center"}
             >
               {`Lưu ý: Bạn chỉ có thể gửi Offer khi ứng viên ở trạng thái `}
               <strong>{`Kết quả - Đạt`}</strong>
             </Typography>
-
+            
             <View
               hidden
               flexRow
@@ -136,7 +140,7 @@ export const RejectApplicantModal = ({
               borderColor={palette.light.common.neutral200}
             >
               {LIST_ACTION.map((item) => {
-                const isActive = item.id == currentAction;
+                const isActive = item.id === currentAction;
                 return (
                   <View
                     flex1
@@ -157,7 +161,7 @@ export const RejectApplicantModal = ({
                 );
               })}
             </View>
-
+            
             <Typography fontWeight={"600"} color={palette.light.common.borderObject} mt="24px" mb="8px">
               {"Ghi chú"}
             </Typography>
@@ -167,13 +171,13 @@ export const RejectApplicantModal = ({
               name="note"
             />
           </View>
-
+          
           <Grid
             container
             padding="16px 24px"
             borderTop="1px solid #E7E9ED"
             justifyContent="end"
-            background= {palette.light.background.paper}
+            background={palette.light.background.paper}
           >
             <ButtonDS
               tittle={"Hủy"}
@@ -191,7 +195,7 @@ export const RejectApplicantModal = ({
               }}
               onClick={() => setShow(false)}
             />
-
+            
             <ButtonDS
               tittle={"Chuyển"}
               type="submit"
