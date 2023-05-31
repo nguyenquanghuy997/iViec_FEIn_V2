@@ -1,3 +1,5 @@
+import { View } from "../FlexStyled";
+import SvgIcon from "../SvgIcon";
 import {
   CheckboxIconChecked,
   CheckboxIconDefault,
@@ -443,6 +445,26 @@ const MuiSelect = forwardRef(
         value={value}
         placeholder={placeholder}
         input={<OutlinedInput />}
+        IconComponent={(p) => (
+          <View
+            absolute
+            contentCenter
+            t={"calc(50% - .5em)"}
+            r={12}
+            size={"1em"}
+            style={{
+              transform: `rotate(${
+                String(p.className).includes("iconOpen") ? "180deg" : "0deg"
+              })`,
+            }}
+          >
+            <SvgIcon>
+              {
+                '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_8887_114461)"> <path d="M9.99999 10.9766L14.125 6.85156L15.3033 8.0299L9.99999 13.3332L4.69666 8.0299L5.87499 6.85156L9.99999 10.9766Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_8887_114461"> <rect width="20" height="20" fill="white"/> </clipPath> </defs> </svg>'
+              }
+            </SvgIcon>
+          </View>
+        )}
         displayEmpty={true}
         renderValue={(selected) => {
           return (
