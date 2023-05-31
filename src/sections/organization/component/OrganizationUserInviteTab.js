@@ -98,14 +98,17 @@ const OrganizationUserInviteTab = ({
 
   if (loadingUser)
     return (
-      <Box textAlign="center" my={1}>
+      <Box textAlign="center" my={1} sx={{ width: "100%", height: "600px" }}>
         <CircularProgress size={18} />
       </Box>
     );
 
   return (
     <>
-      <Box className="box-content-wrapper" sx={{ width: "100%" }}>
+      <Box
+        className="box-content-wrapper"
+        sx={{ width: "100%", height: "600px" }}
+      >
         <Box sx={{ width: "100%", padding: 2, mb: 2 }}>
           {ListUserInvite.map((item, index) => {
             return (

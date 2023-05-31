@@ -314,7 +314,7 @@ const OrganizationInviteForm = ({
           >
             <Box
               className="box-content-wrapper"
-              sx={{ width: "100%", maxHeight: "600px" }}
+              sx={{ width: "100%", height: "600px" }}
             >
               {invitesResult?.map((item, index) => {
                 const userItem = dataSubmitRef.current?.find(
@@ -353,7 +353,7 @@ const OrganizationInviteForm = ({
             >
               <Box
                 className="box-content-wrapper"
-                sx={{ width: "100%", maxHeight: "600px" }}
+                sx={{ width: "100%", height: "600px" }}
               >
                 {fields.map((item, index) => {
                   return (
