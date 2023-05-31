@@ -40,6 +40,18 @@ const ExamDeleteModal = ({
       onClose={() => setShowConfirmMultiple(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      sx={{
+        "& .MuiPaper-root": {
+          top: "100px !important",
+          margin: '0 !important'
+        },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        },
+        ".MuiDialog-container": {
+          alignItems: 'start'
+        }
+      }}
     >
       <View
         flexrow="true"

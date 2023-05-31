@@ -13,7 +13,9 @@ import {
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useUpdateStatusExamMutation } from "../ExamSlice";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
+import { View } from "@/components/DesignSystem/FlexStyled";
+import Iconify from "@/components/Iconify";
 
 
 
@@ -49,59 +51,102 @@ const ExamActiveModal = ({
       onClose={() => setShowConfirmMultiple(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      sx={{
+        "& .MuiPaper-root": {
+          top: "100px !important",
+          margin: '0 !important'
+        },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        },
+        ".MuiDialog-container": {
+          alignItems: 'start'
+        }
+      }}
     >
-        <DialogContent
+      <View
+        flexrow="true"
+        atcenter="center"
+        jcend={'true'}
+        pv={12}
+        ph={24}
+        bgcolor={"#FFF"}
+      >
+        <ButtonDS
+          type="button"
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
+            backgroundColor: "#fff",
+            boxShadow: "none",
+            ":hover": {
+              backgroundColor: "#EFF3F7",
+            },
+            textTransform: "none",
+            padding: "12px",
+            minWidth: "unset",
           }}
-        >
-          {isActivated != 1 && (
-            <>
-              <img
-                src={`/assets/icons/candidate/status-active.png`}
-                style={{ margin: "0 auto" }}
-              />
-              <TitleModelStyle className="title" style={{ color: theme.palette.common.blue700 }}>
-                Bật trạng thái hoạt động cho đề thi
-              </TitleModelStyle>
-              <DialogContentTextModelStyle
-                id="alert-dialog-description"
-                className="subtite"
-                style={{ fontWeight: 400 }}
-              >
-                Bạn có chắc chắn muốn bật hoạt động cho đề thi?
-              </DialogContentTextModelStyle>
-              <Divider />
-            </>
-          )}
-          {isActivated == 1 && (
-            <>
-              <img
-                src={`/assets/icons/candidate/status-inactive.png`}
-                style={{ margin: "0 auto" }}
-              />
-              <TitleModelStyle className="title" style={{ color: theme.palette.common.neutral700 }}>
-                Tắt trạng thái hoạt động cho đề thi
-              </TitleModelStyle>
-              <DialogContentTextModelStyle
-                id="alert-dialog-description"
-                className="subtite"
-                style={{ fontWeight: 400 }}
-              >
-                Bạn có chắc chắn muốn tắt hoạt động cho đề thi?
-              </DialogContentTextModelStyle>
-              <Divider />
-            </>
-          )}
-        </DialogContent>
-        <DialogActions sx={{ borderTop: "1px solid #E7E9ED" }}>
-          <ButtonCancel tittle="Hủy" onClick={onClose} />
+          onClick={onClose}
+          icon={
+            <Iconify
+              icon={"mi:close"}
+              width={20}
+              height={20}
+              color="#5C6A82"
+            />
+          }
+        />
+      </View>
+      <DialogContent
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        {isActivated != 1 && (
+          <>
+            <img
+              src={`/assets/icons/candidate/status-active.png`}
+              style={{ margin: "0 auto" }}
+            />
+            <TitleModelStyle className="title" style={{ color: theme.palette.common.blue700 }}>
+              Bật trạng thái hoạt động cho đề thi
+            </TitleModelStyle>
+            <DialogContentTextModelStyle
+              id="alert-dialog-description"
+              className="subtite"
+              style={{ fontWeight: 400 }}
+            >
+              Bạn có chắc chắn muốn bật hoạt động cho đề thi?
+            </DialogContentTextModelStyle>
+            <Divider />
+          </>
+        )}
+        {isActivated == 1 && (
+          <>
+            <img
+              src={`/assets/icons/candidate/status-inactive.png`}
+              style={{ margin: "0 auto" }}
+            />
+            <TitleModelStyle className="title" style={{ color: theme.palette.common.neutral700 }}>
+              Tắt trạng thái hoạt động cho đề thi
+            </TitleModelStyle>
+            <DialogContentTextModelStyle
+              id="alert-dialog-description"
+              className="subtite"
+              style={{ fontWeight: 400 }}
+            >
+              Bạn có chắc chắn muốn tắt hoạt động cho đề thi?
+            </DialogContentTextModelStyle>
+            <Divider />
+          </>
+        )}
+      </DialogContent>
+      <DialogActions sx={{ padding: '16px 24px !important', borderTop: "1px solid #E7E9ED" }}>
+        <ButtonCancel tittle="Hủy" onClick={onClose} />
 
-          <ButtonDS tittle={isActivated != 1 ? "Bật" : "Tắt"} onClick={handleChangeStatus} />
-        </DialogActions>
+        <ButtonDS tittle={isActivated != 1 ? "Bật" : "Tắt"} onClick={handleChangeStatus} />
+      </DialogActions>
     </DialogModelStyle>
   );
 };

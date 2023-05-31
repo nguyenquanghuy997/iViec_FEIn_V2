@@ -1,4 +1,4 @@
-import { ButtonDS } from "@/components/DesignSystem";
+import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
@@ -29,15 +29,15 @@ export const QuestionGalleryFormModal = ({
 }) => {
   const isEdit = !!editData?.name;
   const [isActive, setIsActive] = useState(true);
-  
+
   // form
   const Schema = Yup.object().shape({
     name: Yup.string()
-    .required("Tên nhóm câu hỏi không được bỏ trống")
-    .max(50, "Độ dài không được quá 50 ký tự"),
+      .required("Tên nhóm câu hỏi không được bỏ trống")
+      .max(50, "Độ dài không được quá 50 ký tự"),
     des: Yup.string().max(100, "Độ dài không được quá 100 ký tự"),
   });
-  
+
   const methodss = useForm({
     defaultValuess,
     resolver: yupResolver(Schema),
@@ -46,9 +46,9 @@ export const QuestionGalleryFormModal = ({
   const {
     setValue,
     handleSubmit,
-    formState: {isSubmitting},
+    formState: { isSubmitting },
   } = methodss;
-  
+
   const pressHide = () => {
     setShow(false);
   };
@@ -60,7 +60,7 @@ export const QuestionGalleryFormModal = ({
     onSubmit?.(data);
     pressHide();
   });
-  
+
   useEffect(() => {
     if (!isEdit) {
       setValue("id", "");
@@ -74,26 +74,29 @@ export const QuestionGalleryFormModal = ({
       setIsActive(editData.isActive);
     }
   }, []);
-  
+
   return (
     <Modal
       open={show}
       sx={{
         display: "flex",
-        alignItems: "center",
+        alignItems: "start",
         justifyContent: "center",
-        ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}
+        top: 100,
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        }
       }}
       onBackdropClick={pressHide}
     >
       <>
         <FormProvider methods={methodss}>
-          <View hidden width={668} borderradius={8} bgcolor={theme.palette.common.white}>
+          <View hidden width={668} borderradius={6} bgcolor={theme.palette.common.white} boxshadow={'0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'}>
             <View flexrow="true" atcenter="true" pv={16} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
                 {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm nhóm câu hỏi"}
               </Text>
-              
+
               <ButtonIcon
                 onClick={pressHide}
                 icon={
@@ -106,7 +109,7 @@ export const QuestionGalleryFormModal = ({
                 }
               />
             </View>
-            <Divider/>
+            <Divider />
             <View p={24}>
               <View mb={28}>
                 <Label required={true}>{"Tên nhóm câu hỏi"}</Label>
@@ -118,7 +121,7 @@ export const QuestionGalleryFormModal = ({
               </View>
               <View mb={28}>
                 <Label>{"Mô tả"}</Label>
-                <RHFTextField
+                <TextAreaDS
                   initialValue=""
                   multiline
                   rows={4}
@@ -127,7 +130,7 @@ export const QuestionGalleryFormModal = ({
                   name={"des"}
                 />
               </View>
-              
+
               <View
                 flexrow
                 atcenter
@@ -137,9 +140,9 @@ export const QuestionGalleryFormModal = ({
                 onclick={() => setIsActive(!isActive)}
               >
                 {isActive ? (
-                  <ActionSwitchCheckedIcon/>
+                  <ActionSwitchCheckedIcon />
                 ) : (
-                  <ActionSwitchUnCheckedIcon/>
+                  <ActionSwitchUnCheckedIcon />
                 )}
                 <Text
                   fontSize={12}
@@ -150,15 +153,15 @@ export const QuestionGalleryFormModal = ({
                 </Text>
               </View>
             </View>
-            <Divider/>
+            <Divider />
             <View flexrow="true" jcend="true" pv={16} ph={24}>
               <ButtonCancelStyle
-                sx={{marginRight: "8px"}}
+                sx={{ marginRight: "8px" }}
                 onClick={pressHide}
               >
                 Hủy
               </ButtonCancelStyle>
-              
+
               <ButtonDS
                 type="submit"
                 variant="contained"

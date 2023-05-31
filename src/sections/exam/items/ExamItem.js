@@ -7,7 +7,6 @@ import {
 } from "@/sections/exam/ExamSlice"
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import TextMaxLine from "@/components/TextMaxLine";
 import { Box, Button, ButtonGroup } from "@mui/material";
 import Iconify from "@/components/Iconify";
 import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
@@ -20,6 +19,7 @@ import { LIST_EXAM_TYPE, LIST_STATUS } from "@/utils/formatString";
 import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 import { ExamType, Status } from "@/utils/enum";
 import { fDate } from "@/utils/formatTime";
+import { TextElipsis } from "@/utils/cssStyles";
 
 export const ExamItem = ({
   hideTable,
@@ -59,14 +59,14 @@ export const ExamItem = ({
       {
         dataIndex: "name",
         title: "Đề thi",
-        width: "150px",
+        width: "250px",
         render: (item, record) => (
-          <TextMaxLine sx={{ width: 360, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
+          <TextElipsis sx={{ width: 250, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
             onClick={() => {
               router.push(`/settings/exam/exam-business/update/${record.id}`)
             }}>
             {item}
-          </TextMaxLine>
+          </TextElipsis>
         ),
       },
       {

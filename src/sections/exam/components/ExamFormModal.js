@@ -89,8 +89,15 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
       aria-describedby="alert-dialog-description"
       sx={{
         "& .MuiPaper-root": {
-          top: "0 !important",
+          top: "100px !important",
+          margin: '0 !important'
         },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        },
+        ".MuiDialog-container": {
+          alignItems: 'start'
+        }
       }}
     >
       <FormProvider methods={methods}>

@@ -1,8 +1,8 @@
-import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
+import { ButtonDS, SwitchStatusDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import SvgIcon from "@/components/SvgIcon";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
+import { FormProvider } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
@@ -507,8 +507,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
               <View mt={24}>
                 {renderTitle("Câu hỏi", true)}
 
-                <RHFTextField
-                  multiline
+                <TextAreaDS
                   isRequired
                   rows={4}
                   name={"questionTitle"}
