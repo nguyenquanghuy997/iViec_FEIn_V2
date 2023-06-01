@@ -228,7 +228,7 @@ const CreateExamContent = () => {
       standardPoint: parseInt(examRandomHasEssayQuestion ? -1 : examData.standardPoint),
       isQuestionMixing: examData.isQuestionMixing,
       examTime: timeFromMinutes(examData.examTime),
-      maximumPoint: examData.maximumPoint,
+      maximumPoint: examData.maximumPoint ??0,
       examinationQuestions:
         (examData.type == 0 &&
           examQuestions.map((x) => {
@@ -332,7 +332,7 @@ const CreateExamContent = () => {
       standardPoint: parseInt(examRandomHasEssayQuestion ? -1 : examData.standardPoint),
       isQuestionMixing: examData.isQuestionMixing,
       examTime: (examData.examTime),
-      maximumPoint: examData.maximumPoint,
+      maximumPoint: examData.maximumPoint ?? 0,
       examinationQuestions:
         (examData.type == 0 &&
           examQuestions.map((x) => {

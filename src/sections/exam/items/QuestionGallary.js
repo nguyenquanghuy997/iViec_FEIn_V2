@@ -1,3 +1,4 @@
+import { QuestionFormModal } from "../components/QuestionFormModal";
 import EmptyIcon from "@/assets/EmptyIcon";
 import { Text, View } from "@/components/FlexStyled";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -15,11 +16,10 @@ import { QuestionGalleryFormModal } from "@/sections/exam/components/QuestionGal
 import QuestionGalleryHeader from "@/sections/exam/components/QuestionGalleryHeader";
 import QuestionGalleryItem from "@/sections/exam/components/QuestionGalleryItem";
 import { CircularProgress } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useTheme } from "@mui/material/styles";
-import { QuestionFormModal } from "../components/QuestionFormModal";
-import { useSnackbar } from "notistack";
 
 export const QuestionGallary = () => {
   const theme = useTheme();
@@ -73,13 +73,18 @@ export const QuestionGallary = () => {
       description: e.des,
     };
     try {
-      await (e.id ? updateQuestionGroup(body) : createQuestionGroup(body)).unwrap();
-      setShowForm(false)
+      await (e.id
+        ? updateQuestionGroup(body)
+        : createQuestionGroup(body)
+      ).unwrap();
+      setShowForm(false);
       onHandleFinish();
-    }
-    catch (e) {
-      if (e.status == 'QGE_05') {
-        enqueueSnackbar('Nhóm câu hỏi đã tồn tại. Vui lòng nhập lại tên khác !', { variant: 'error'});
+    } catch (e) {
+      if (e.status == "QGE_05") {
+        enqueueSnackbar(
+          "Nhóm câu hỏi đã tồn tại. Vui lòng nhập lại tên khác !",
+          { variant: "error" }
+        );
       }
     }
   };
@@ -103,18 +108,28 @@ export const QuestionGallary = () => {
 
   // handle
   const handleDelete = async () => {
-    await removeQuestionGroup({
-      ids: isMulti ? listSelected : [currentItem.id],
-    });
-    onHandleFinish();
+    try {
+      await removeQuestionGroup({
+        ids: isMulti ? listSelected : [currentItem.id],
+      });
+      enqueueSnackbar("Xóa nhóm thành công!");
+      onHandleFinish();
+    } catch (err) {
+      enqueueSnackbar("Xóa nhóm thất bại!", { variant: "error" });
+    }
   };
 
   const handleActive = async () => {
-    await updateActiveQuestionGroup({
-      ids: isMulti ? listSelected : [currentItem.id],
-      isActive: !isActive,
-    });
-    onHandleFinish();
+    try {
+      await updateActiveQuestionGroup({
+        ids: isMulti ? listSelected : [currentItem.id],
+        isActive: !isActive,
+      });
+      enqueueSnackbar("Thay đổi trạng thái thành công!");
+      onHandleFinish();
+    } catch (err) {
+      enqueueSnackbar("Thay đổi trạng thái thất bại!", { variant: "error" });
+    }
   };
 
   // render
@@ -151,7 +166,6 @@ export const QuestionGallary = () => {
     setCurrentItem(null);
   }, [showFrom]);
 
-
   return (
     <View>
       {/* title */}
@@ -176,7 +190,11 @@ export const QuestionGallary = () => {
             ) : (
               <>
                 <EmptyIcon />
-                <Text mt={12} fontWeight={"500"} color={theme.palette.common.neutral400}>
+                <Text
+                  mt={12}
+                  fontWeight={"500"}
+                  color={theme.palette.common.neutral400}
+                >
                   {"Hiện chưa có nhóm câu hỏi nào."}
                 </Text>
               </>
@@ -197,9 +215,21 @@ export const QuestionGallary = () => {
       <ConfirmModal
         confirmDelete={showConfirmDelete}
         title="Xác nhận xóa nhóm câu hỏi"
-        subtitle={listSelected.length > 1
-          ? <span>Bạn có chắc chắn muốn xóa <b>{listSelected.length > 1 ? listSelected.length : ''} nhóm câu hỏi này</b></span>
-          : <span>Bạn có chắc chắn muốn xóa nhóm câu hỏi {listSelected.length == 1 ? <b>{name.trim()}</b> : ''} này</span>
+        subtitle={
+          listSelected.length > 1 ? (
+            <span>
+              Bạn có chắc chắn muốn xóa{" "}
+              <b>
+                {listSelected.length > 1 ? listSelected.length : ""} nhóm câu
+                hỏi này
+              </b>
+            </span>
+          ) : (
+            <span>
+              Bạn có chắc chắn muốn xóa nhóm câu hỏi{" "}
+              {listSelected.length == 1 ? <b>{name.trim()}</b> : ""} này
+            </span>
+          )
         }
         onSubmit={handleDelete}
         onCloseConfirmDelete={onCloseConfirmDelete}
@@ -214,9 +244,17 @@ export const QuestionGallary = () => {
             : "Bật trạng thái hoạt động cho nhóm câu hỏi"
         }
         subtitle={
-          isActive
-            ? <span>Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi <b>{_name.trim()}</b></span>
-            : <span>Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi <b>{_name.trim()}</b></span>
+          isActive ? (
+            <span>
+              Bạn có chắc chắn muốn tắt hoạt động cho nhóm câu hỏi{" "}
+              <b>{_name.trim()}</b>
+            </span>
+          ) : (
+            <span>
+              Bạn có chắc chắn muốn bật hoạt động cho nhóm câu hỏi{" "}
+              <b>{_name.trim()}</b>
+            </span>
+          )
         }
         onSubmit={handleActive}
         onCloseActiveModal={onCloseActiveModal}
@@ -237,4 +275,4 @@ export const QuestionGallary = () => {
       />
     </View>
   );
-}
+};

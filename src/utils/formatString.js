@@ -116,7 +116,7 @@ export const LIST_RECRUITMENT_PROCESS_STATUS = [
 ]
 export const LIST_EXAM_TYPE = [
   { id: 2, value: 2, name: "Tất cả" },
-  { id: true, value: 1, name: "Đề thi câu hỏi trắc nghiệm" },
+  { id: true, value: 1, name: "Đề thi câu hỏi ngẫu nhiên" },
   { id: false, value: 0, name: "Đề thi câu hỏi cố định" },
 ]
 

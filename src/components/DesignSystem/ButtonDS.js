@@ -1,9 +1,9 @@
 import { View } from "../FlexStyled";
 import { LoadingButton } from "@mui/lab";
-import { Tooltip } from "@mui/material";
+import { Stack, Tooltip } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import { memo } from 'react'
-import {useTheme} from "@mui/material/styles";
+import { memo } from "react";
 
 function ButtonDS(props) {
   const theme = useTheme();
@@ -30,30 +30,32 @@ function ButtonDS(props) {
       }}
     >
       <Tooltip title={tooltip} arrow={true}>
-        <LoadingButton
-          {...other}
-          variant="contained"
-          loading={isSubmitting}
-          type={type}
-          size={size}
-          onClick={onClick}
-          disabled={isDisabled}
-          sx={{
-            borderRadius: "6px",
-            backgroundColor: "#1976D2",
-            fontWeight: 600,
-            boxShadow: "unset",
-            textTransform: "none",
-            "&:disabled": {
-              backgroundColor: "#D0D4DB",
-              color: "#8A94A5",
-            },
-            ...sx,
-          }}
-        >
-          {icon}
-          {tittle}
-        </LoadingButton>
+        <Stack width={'100%'}>
+          <LoadingButton
+            {...other}
+            variant="contained"
+            loading={isSubmitting}
+            type={type}
+            size={size}
+            onClick={onClick}
+            disabled={isDisabled}
+            sx={{
+              borderRadius: "6px",
+              backgroundColor: "#1976D2",
+              fontWeight: 600,
+              boxShadow: "unset",
+              textTransform: "none",
+              "&:disabled": {
+                backgroundColor: "#D0D4DB",
+                color: "#8A94A5",
+              },
+              ...sx,
+            }}
+          >
+            {icon}
+            {tittle}
+          </LoadingButton>
+        </Stack>
       </Tooltip>
     </View>
   );
