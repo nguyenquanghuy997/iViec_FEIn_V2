@@ -37,7 +37,7 @@ const InterviewCouncil = () => {
           name: i.name,
         }))}
         name="councilIds"
-        disabled={watch("recruitmentId") ? false : true}
+        // disabled={watch("recruitmentId") ? false : true}
         fullWidth
         multiple
         isRequired

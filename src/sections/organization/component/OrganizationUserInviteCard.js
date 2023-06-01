@@ -70,6 +70,8 @@ const OrganizationUserInviteCard = (
             color: theme.palette.common.blue700,
             fontSize: 12,
             fontWeight: 600,
+            fontFamily: 'Inter',
+            lineHeight: '18px',
             pr: 0,
             pt: 0,
             "&:hover": {
