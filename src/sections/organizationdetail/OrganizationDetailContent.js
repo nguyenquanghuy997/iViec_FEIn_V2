@@ -12,7 +12,7 @@ import Switch from "@/components/form/Switch";
 import { TBL_FILTER_TYPE } from "@/config";
 import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
-import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import { API_GET_LIST_ROLE_GROUP, API_GET_ORGANIZATION_USERS } from "@/routes/api";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import {
   AlertIcon,
@@ -37,7 +37,6 @@ import OrganizationCard from "@/sections/organizationdetail/component/Organizati
 import OrganizationDetailUserForm from "@/sections/organizationdetail/component/OrganizationDetailUserForm";
 import { OrganizationNameStyle } from "@/sections/organizationdetail/style";
 import { STYLE_CONSTANT as style } from "@/theme/palette";
-import { LIST_STATUS } from "@/utils/formatString";
 import {
   Box,
   CircularProgress,
@@ -58,21 +57,22 @@ const columns = [
     title: "Ngày tham gia",
     colFilters: {
       type: TBL_FILTER_TYPE.RANGE_DATE,
-      name: ["StartTime", "EndTime"],
+      name: ["TimeJoinForm", "TimeJoinTo"],
       placeholder: "Chọn ngày",
     },
   },
   {
-    dataIndex: "IsActivated",
+    dataIndex: "IsActive",
     title: "Trạng thái",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT,
-      name: "IsActivated",
+      name: "IsActive",
       placeholder: "Tất cả",
-      options: LIST_STATUS.map((item) => ({
-        value: item.value,
-        label: item.name,
-      })),
+      options: [
+        { value: null, label: "Tất cả" },
+        { value: 1, label: "Đang hoạt động" },
+        { value: 0, label: "Không hoạt động" },
+      ]
     },
   },
   {
@@ -80,10 +80,20 @@ const columns = [
     title: "Người tạo",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "CreatorIds",
+      name: "ReferenceUserId",
       placeholder: "Chọn 1 hoặc nhiều người",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true,
+    },
+  },
+  {
+    dataIndex: "RoleGroupId",
+    title: "Vai trò",
+    colFilters: {
+      type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+      name: "RoleGroupId",
+      placeholder: "Chọn 1 hoặc nhiều vai trò",
+      remoteUrl: API_GET_LIST_ROLE_GROUP,
     },
   },
 ];
@@ -105,6 +115,7 @@ const OrganizationDetailContent = () => {
     useGetAllApplicantUserOrganizationByIdQuery(
       {
         OrganizationId: query?.id,
+        ...router.query
       },
       { skip: !query?.id }
     );

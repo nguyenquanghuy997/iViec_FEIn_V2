@@ -139,7 +139,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
     answers: Yup.mixed().when(["questionType"], {
       is: (questionType) => {
-        return questionType === '0'|| questionType === '1'
+        return questionType === '0' || questionType === '1'
       },
       then: Yup.mixed()
         .test({
@@ -219,15 +219,19 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       }
       else {
         const body = {
+          ...data,
           ...e,
+          questionType: +e.questionType,
+          questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name,
           answers: e.answers.length > 0 && !isEssay ? e.answers : null
         };
         await (e.id ? updateForm(body) : addForm(body)).unwrap();
+        if (handleNoSave)
+          handleNoSave(body)
         onClose();
-        enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
         getData();
       }
-
+      enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
     } catch (error) {
       if (error.status === "QGE_04")
         setShowDuplicateAlert(true)
@@ -411,7 +415,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
   useEffect(() => {
     if (!isMultipleChoice) return;
-    setListAnswer((l) => l?.map((i) => ({ ...i, isCorrect: false })));
+    setListAnswer((l) => l?.map((i) => ({ ...i, isCorrect: i.isCorrect })));
   }, [isMultipleChoice]);
 
   useEffect(() => {
@@ -432,7 +436,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         <Modal
           open={show}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" } }}
         >
           <ViewModel>
             {/* header */}
