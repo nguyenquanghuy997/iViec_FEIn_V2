@@ -47,7 +47,7 @@ export default function SideBar({ navConfig, isCollapse = false, ...other }) {
   }, [navConfig]);
 
   return (
-    <Box {...other}>
+    <Box {...other} sx={{position: 'fixed'}}>
       {navConfigBaseRole.map((group, groupIndex) => (
         <List
           key={`${group.subheader}-${groupIndex}`}

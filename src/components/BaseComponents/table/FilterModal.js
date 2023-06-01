@@ -44,6 +44,7 @@ export default function FilterModal({
       activeText="Tự động"
       inActiveText="Tự động"
       contentStyles={{ padding: '14px' }}
+      hasBackdropBackground={false}
       modalStyles={{
         '.MuiModal-backdrop': {
           background: 'transparent',
