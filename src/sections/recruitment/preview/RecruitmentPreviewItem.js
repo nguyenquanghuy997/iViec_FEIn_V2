@@ -1,10 +1,4 @@
-import {
-  DownloadLineIcon,
-  ImportLinkIcon,
-  TeamLineIcon,
-} from "@/assets/ActionIcon";
 import { NavGoBack } from "@/components/DesignSystem";
-import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
 import HeadingBar from "@/components/heading-bar/HeadingBar";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
@@ -26,16 +20,11 @@ import {
   Box,
   Button,
   ButtonGroup,
-  ClickAwayListener,
   Container,
-  Divider,
   InputAdornment,
-  MenuItem,
-  MenuList,
   Stack,
   Tab,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
@@ -172,7 +161,7 @@ function RecruitmentPreviewItem({
   const smDown = useResponsive("down", "sm");
   const { themeStretch } = useSettings();
 
-  const [openGroup, setOpenGroup] = useState(false);
+  // const [openGroup, setOpenGroup] = useState(false);
   const [modelApplication, setModelApplication] = useState({
     id: undefined,
     stage: undefined,
@@ -180,12 +169,12 @@ function RecruitmentPreviewItem({
     recruitmentId: recruitmentId,
     recruitmentTitle: undefined,
   });
-  const handleCloseGroup = () => {
-    setOpenGroup(false);
-  };
-  const handleOpenGroup = () => {
-    setOpenGroup(true);
-  };
+  // const handleCloseGroup = () => {
+  //   setOpenGroup(false);
+  // };
+  // const handleOpenGroup = () => {
+  //   setOpenGroup(true);
+  // };
 
   useEffect(() => {
     setModelApplication({
@@ -615,7 +604,7 @@ function RecruitmentPreviewItem({
                       />
                       Thêm ứng viên
                     </Button>
-                    <LightTooltip
+                    {/* <LightTooltip
                       placement="bottom-start"
                       onClose={handleCloseGroup}
                       disableFocusListener
@@ -670,7 +659,7 @@ function RecruitmentPreviewItem({
                           color="#fff"
                         />
                       </Button>
-                    </LightTooltip>
+                    </LightTooltip> */}
                   </ButtonGroup>
                   <RecruitmentApplicantChooseStage
                     data={

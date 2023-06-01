@@ -214,7 +214,7 @@ function InterviewItem(props) {
     const res = await getCompanyInfo().unwrap();
     return `${window.location.origin}/phong-van.html?DisplayName=${res?.name}&&Email=${res?.organizationInformation?.email}&&Role=1&&RoomName=${id}`;
   };
-
+  
   const copyToClipboard = async (id) => {
     navigator.clipboard.writeText(await getLink(id));
     enqueueSnackbar("Đã sao chép link cuộc họp");
@@ -323,7 +323,7 @@ function InterviewItem(props) {
                   width={20}
                   height={20}
                   color="#FDFDFD"
-                  onClick={() => openMeeting(item?.id)}
+                  onClick={() => openMeeting(lastInterview?.bookingCalendarId)}
                 />
               </Box>
 
@@ -357,7 +357,7 @@ function InterviewItem(props) {
                   width={20}
                   height={20}
                   color="#5C6A82"
-                  onClick={() => copyToClipboard(item?.id)}
+                  onClick={() => copyToClipboard(lastInterview?.bookingCalendarId)}
                 />
               </Box>
             </Box>
@@ -525,7 +525,7 @@ function ResultItem(props) {
                 }}
               />
             )}
-            {item.pipelineStateResultType == 0 && (
+            {/* {item.pipelineStateResultType == 0 && (
               <ButtonDS
                 onClick={() => { setIsOpenSendOffer(true) }}
                 tittle={"Gửi thư mời nhận việc"}
@@ -546,7 +546,7 @@ function ResultItem(props) {
                   textTransform: "none",
                 }}
               />
-            )}
+            )} */}
           </Box>
           {isOpenSendOffer && (
             <ApplicantSendOfferModal

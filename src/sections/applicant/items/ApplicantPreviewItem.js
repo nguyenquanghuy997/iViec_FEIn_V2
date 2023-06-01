@@ -24,7 +24,6 @@ import {
   useGetCheckReviewQuery,
   useGetRecruitmentsByApplicantQuery,
 } from "@/sections/applicant";
-import ApplicantSendOfferModal from "@/sections/applicant/modals/ApplicantSendOfferModal";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 import { ButtonIcon } from "@/utils/cssStyles";
@@ -71,17 +70,19 @@ function ApplicantPreviewItem() {
       },
       { skip: !dataApplicant?.correlationId && !dataApplicant?.organizationId }
     );
-  const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
+  // const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
   const [isReExploiting, setIsReExploiting] = useState(false);
   const [open, setOpen] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
 
-  const HeaderApplicant = ({ pipelines }) => {
-    const resultType = pipelines?.recruitmentPipelineStates?.find(
-      (item) => item.id === pipelines.currentApplicantPipelineState
-    ).pipelineStateType;
+  const HeaderApplicant = (
+    // { pipelines }
+    ) => {
+    // const resultType = pipelines?.recruitmentPipelineStates?.find(
+    //   (item) => item.id === pipelines.currentApplicantPipelineState
+    // ).pipelineStateType;
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
         <Grid
@@ -259,7 +260,7 @@ function ApplicantPreviewItem() {
               />
             }
           />
-          {resultType === 3 && pipelines.pipelineStateResultType === 0 && (
+          {/* {resultType === 3 && pipelines.pipelineStateResultType === 0 && (
             <ButtonDS
               tittle={"Gửi offer"}
               type="button"
@@ -273,7 +274,7 @@ function ApplicantPreviewItem() {
                 />
               }
             />
-          )}
+          )} */}
         </Grid>
       </Grid>
     );
@@ -617,7 +618,7 @@ function ApplicantPreviewItem() {
             </Card>
           </Grid>
         </Grid>
-        {isOpenSendOffer && (
+        {/* {isOpenSendOffer && (
           <ApplicantSendOfferModal
             isOpen={isOpenSendOffer}
             onClose={() => setIsOpenSendOffer(false)}
@@ -628,7 +629,7 @@ function ApplicantPreviewItem() {
               applicantEmail: data.email,
             }}
           />
-        )}
+        )} */}
         {isOpenReview && (
           <ApplicantReviewModal
             show={isOpenReview}
