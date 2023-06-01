@@ -151,7 +151,7 @@ const CreateExamContent = () => {
   }
 
   const minutesFromTime = (times) => {
-    const a = times.split(/[.:]+/);
+    const a = times?.split(/[.:]+/)??[];
     var storageFuncs = [s => parseInt(s) * 0, m => parseInt(m), h => parseInt(h) * 60, d => parseInt(d) * 60 * 24];
     var res = a.reverse().reduce((acc, next, index) => acc + storageFuncs[index](next), 0);
     return res;
