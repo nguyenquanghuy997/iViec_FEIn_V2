@@ -1,5 +1,5 @@
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
-import EmptyIcon from "@/assets/EmptyIcon";
+import FolderIcon from "@/assets/FolderIcon";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
@@ -12,7 +12,10 @@ import Switch from "@/components/form/Switch";
 import { TBL_FILTER_TYPE } from "@/config";
 import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
-import { API_GET_LIST_ROLE_GROUP, API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import {
+  API_GET_LIST_ROLE_GROUP,
+  API_GET_ORGANIZATION_USERS,
+} from "@/routes/api";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import {
   AlertIcon,
@@ -72,7 +75,7 @@ const columns = [
         { value: null, label: "Tất cả" },
         { value: 1, label: "Đang hoạt động" },
         { value: 0, label: "Không hoạt động" },
-      ]
+      ],
     },
   },
   {
@@ -115,7 +118,7 @@ const OrganizationDetailContent = () => {
     useGetAllApplicantUserOrganizationByIdQuery(
       {
         OrganizationId: query?.id,
-        ...router.query
+        ...router.query,
       },
       { skip: !query?.id }
     );
@@ -455,10 +458,25 @@ const OrganizationDetailContent = () => {
               <CircularProgress />
             ) : (
               <>
-                <EmptyIcon />
-                <Text mt={12} fontWeight={"500"} color={"#A2AAB7"}>
-                  {"Hiện chưa có người dùng nào."}
+                <FolderIcon />
+
+                <Text mv={12} fontWeight={"500"} color={"#A2AAB7"}>
+                  {"Hiện chưa có người dùng nào thuộc đơn vị này"}
                 </Text>
+
+                <MuiButton
+                  title={"Mời người dùng"}
+                  color={"primary"}
+                  onClick={handleOpenInviteForm}
+                  startIcon={
+                    <SvgIcon>
+                      {
+                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_8888_127485)"> <path d="M9.16699 9.16666V4.16666H10.8337V9.16666H15.8337V10.8333H10.8337V15.8333H9.16699V10.8333H4.16699V9.16666H9.16699Z" fill="#FDFDFD"/> </g> <defs> <clipPath id="clip0_8888_127485"> <rect width="20" height="20" fill="white"/> </clipPath> </defs> </svg>'
+                      }
+                    </SvgIcon>
+                  }
+                  sx={{ fontWeight: 550, height: 36 }}
+                />
               </>
             )}
           </View>
