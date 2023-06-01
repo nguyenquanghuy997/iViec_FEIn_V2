@@ -11,9 +11,9 @@ import {
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
 import { useGetPipelineByIdQuery } from "@/sections/pipeline";
-import { ButtonIcon } from "@/utils/cssStyles";
+import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
 import { checkSameValue } from "@/utils/formatString";
-import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useMemo, useState } from "react";
 
@@ -73,13 +73,13 @@ const PipelineBottomNav = ({
   const enableDelete = checkSameApply(itemApply) && canEdit;
 
   return (
-    <Drawer
+    <BottomNavStyle
       anchor={"bottom"}
       open={open}
       variant="persistent"
       onClose={onClose}
     >
-      <Content sx={{ padding: "20px 24px" }}>
+      <Content className="block-bottom">
         <Box
           sx={{
             width: "100%",
@@ -99,6 +99,7 @@ const PipelineBottomNav = ({
                           onClick={() => handleShowConfirmMultiple("status")}
                           sx={{
                             backgroundColor: "unset !important",
+                            padding: 0
                           }}
                           icon={<ActionSwitchCheckedIcon />}
                         />
@@ -136,6 +137,7 @@ const PipelineBottomNav = ({
                     sx={{
                       marginLeft: "16px",
                     }}
+                    tooltip="Xem"
                     onClick={() => handleShowConfirmMultiple("view")}
                     icon={
                       <Iconify
@@ -152,6 +154,7 @@ const PipelineBottomNav = ({
                     sx={{
                       marginLeft: "16px",
                     }}
+                    tooltip="Sửa"
                     onClick={() => handleShowConfirmMultiple("edit")}
                     icon={
                       <Iconify
@@ -168,6 +171,7 @@ const PipelineBottomNav = ({
                     sx={{
                       marginLeft: "16px",
                     }}
+                    tooltip="Xóa"
                     onClick={() => handleShowConfirmMultiple("delete")}
                     icon={
                       <Iconify
@@ -254,7 +258,7 @@ const PipelineBottomNav = ({
           isActivated={pipeline?.isActivated}
         />
       )}
-    </Drawer>
+    </BottomNavStyle>
   );
 };
 

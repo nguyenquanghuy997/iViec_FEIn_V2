@@ -14,6 +14,7 @@ import {
   Box,
   Checkbox,
   Divider,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import moment from "moment";
@@ -66,7 +67,7 @@ function QuestionCardItemDefault({
   const { user } = useAuth();
   const [expanded, setExpanded] = useState(false);
 
-  const renderText = (title, value) => {
+  const renderText = (title, value, hasTooltip) => {
     return (
       <div
         style={{
@@ -79,16 +80,19 @@ function QuestionCardItemDefault({
       >
         <span style={{ width: "100px", marginRight: "12px" }}>{title}</span>
 
-        <span
-          style={{
-            maxWidth: "180px",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {value}
-        </span>
+        <Tooltip title={hasTooltip ? value : ''} arrow>
+          <span
+            style={{
+              maxWidth: "180px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {value}
+          </span>
+        </Tooltip>
+
       </div>
     );
   };
@@ -225,7 +229,7 @@ function QuestionCardItemDefault({
             <View>
               <Typography sx={questionInfoTitle}>Đáp án</Typography>
               <Box mt={"12px"}>
-                {item.answers?.map((x, index) => (
+                {item.answers.map((x, index) => (
                   <Typography key={index} sx={questionAnswer}>
                     <Text
                       style={{ display: "inline-block", marginRight: "8px" }}
@@ -255,8 +259,8 @@ function QuestionCardItemDefault({
           >
             <Typography sx={questionInfoTitle}>Thông tin câu hỏi</Typography>
             <View mt={'12px'}>
-              {renderText('Nhóm câu hỏi:', item?.questionGroupName)}
-              {renderText('Kiểu câu hỏi:', LIST_QUESTION_TYPE.find(x => x.value == item.questionType).name)}
+              {renderText('Nhóm câu hỏi:', item?.questionGroupName, true)}
+              {renderText('Kiểu câu hỏi:', LIST_QUESTION_TYPE.find(x => x.value == item.questionType).name, true)}
               {renderText('Ngày tạo:', item.creationTime ?? moment(new Date).format('DD/MM/YYYY HH:mm'))}
               {renderText('Người tạo:', <>
                 <AvatarDS

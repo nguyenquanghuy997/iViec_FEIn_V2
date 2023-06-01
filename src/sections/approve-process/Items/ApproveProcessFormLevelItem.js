@@ -16,6 +16,7 @@ import useAuth from "@/hooks/useAuth";
 
 const ConditionalInput = ({control, index, indexChild}) => {
   const {setValue} = useFormContext();
+  const auth = useAuth();
   
   const value = useWatch({
     name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.processLevelDetailType`,
@@ -25,14 +26,18 @@ const ConditionalInput = ({control, index, indexChild}) => {
     name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.id`,
     control
   });
-  const {data: {items: RoleGroups = []} = {}} = useGetRoleGroupListQuery({IsActivated: true, PageSize: 999});
   const roleGroupId = useWatch({
     control,
     name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.roleGroupId`
   });
-  const auth = useAuth();
+  const processLevelDetailType = useWatch({
+    control,
+    name: `approvalProcessLevels.${index}.approvalProcessLevelDetails.${indexChild}.processLevelDetailType`
+  });
+  
+  const {data: {items: RoleGroups = []} = {}} = useGetRoleGroupListQuery({IsActivated: true, PageSize: 999});
   const {data: {items: Applications = []} = {}} = useGetApplicationByRoleGroupQuery({RoleGroupId: roleGroupId}, {skip: !roleGroupId});
-  const {data: {items: ApplicationOrganization = []} = {}} = useGetAllApplicantUserOrganizationByIdQuery({OrganizationId: auth.user.organizationId});
+  const {data: {items: ApplicationOrganization = []} = {}} = useGetAllApplicantUserOrganizationByIdQuery({OrganizationId: auth.user.organizationId}, {skip: !processLevelDetailType});
   
   useEffect(() => {
     if (Applications.length > 0 && !id) {

@@ -1,16 +1,5 @@
 import { DOMAIN_SERVER_API } from "@/config";
 
-export const formatPhoneNumber = (phoneNumberString) => {
-  const phone = phoneNumberString.replace(/\D/g, "");
-  const match = phone.match(/^(\d{1,4})(\d{0,3})(\d{0,3})/);
-  if (match) {
-    return `${match[1]}${match[2] ? " " : ""}${match[2]}${match[3] ? " " : ""}${
-      match[3]
-    }${match[4] ? " " : ""}`;
-  }
-  return null;
-};
-
 //PipelineStateType
 export const PipelineStateType = (item, result) => {
   switch (item) {
@@ -227,11 +216,11 @@ export const BookingCalendarProcessStatus = (item) => {
   switch (item) {
     case 0:
       return "Đã lên lịch";
-    case 1:
+    case 1: 
       return "Đang phỏng vấn";
     case 2:
       return "Kết thúc phỏng vấn";
-    case 3:
+    case 3: 
       return "Đã hủy lịch";
   }
 };
@@ -239,18 +228,18 @@ export const BookingCalendarProcessStatus = (item) => {
 export const ApplicantCalendarState = (item) => {
   switch (item) {
     case 0: //"Pending"
-      return <span style={{ color: "#455570" }}>Chờ xác nhận phỏng vấn</span>;
+      return <span style={{color: "#455570"}}>Chờ xác nhận phỏng vấn</span>;
     case 1: //"Confirmed":
-      return <span style={{ color: "#388E3C" }}>Đã xác nhận phỏng vấn</span>;
+      return <span style={{color: "#388E3C"}}>Đã xác nhận phỏng vấn</span>;
     case 2: //"Suspended":
-      return <span style={{ color: "#F77A0C" }}>Hoãn lịch phỏng vấn</span>;
+      return <span style={{color: "#F77A0C"}}>Hoãn lịch phỏng vấn</span>;
     case 3: //"Refuse":
-      return <span style={{ color: "#E53935" }}>Từ chối phỏng vấn</span>;
+      return <span style={{color: "#E53935"}}>Từ chối phỏng vấn</span>;
     case 4: //"Interviewing":
-      return <span style={{ color: "#388E3C" }}>Đang phỏng vấn</span>;
+      return <span style={{color: "#388E3C"}}>Đang phỏng vấn</span>;
     case 5: //"NotParted":
-      return <span style={{ color: "#E53935" }}>Không tham gia phỏng vấn</span>;
+      return <span style={{color: "#E53935"}}>Không tham gia phỏng vấn</span>;
     case 6: //"Completed":
-      return <span style={{ color: "#388E3C" }}>Kết thúc phỏng vấn</span>;
+      return <span style={{color: "#388E3C"}}>Kết thúc phỏng vấn</span>;
   }
 };

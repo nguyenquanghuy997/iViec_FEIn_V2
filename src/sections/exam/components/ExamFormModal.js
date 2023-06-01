@@ -1,4 +1,4 @@
-import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
+import { ButtonDS, SwitchStatusDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from '@/components/Iconify'
 import MuiInputNumber from "@/components/form/MuiInputNumber";
@@ -36,7 +36,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
       .typeError('Chưa nhập thời gian thi')
       .required('Chưa nhập thời gian thi')
       .min(1, 'Thời gian thi phải lớn hơn 0')
-      .max(10080, 'Thời gian làm bài không quá 10.080 phút')
+      .max(10000, 'Thời gian thi quá dài')
   });
 
   const methods = useForm({
@@ -55,13 +55,28 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
   }
 
   const pressSave = handleSubmit(async (e) => {
-    const body = { ...e, showType: showType };
+    const body = { ...e, showType: showType, examTime : timeFromMinutes(e.examTime) };
     onSubmit(body)
   });
 
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
+
+  const timeFromMinutes = (mins_num) => {
+    var days = Math.floor(mins_num / (24 * 60))
+    var hours = Math.floor((mins_num - days * 24 * 60) / 60);
+    var minutes = mins_num - hours * 60 - days * 24 * 60;
+
+    if (days < 10 && days > 0) { days = "0" + days; }
+    if (hours < 10) { hours = "0" + hours; }
+    if (minutes < 10) { minutes = "0" + minutes; }
+
+    let res = hours + ':' + minutes + ':00'
+    if (days === '0')
+      return days + "." + res;
+    return res;
+  }
 
   const showTypeOptions = [
     {
@@ -89,8 +104,15 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
       aria-describedby="alert-dialog-description"
       sx={{
         "& .MuiPaper-root": {
-          top: "0 !important",
+          top: "100px !important",
+          margin: '0 !important'
         },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        },
+        ".MuiDialog-container": {
+          alignItems: 'start'
+        }
       }}
     >
       <FormProvider methods={methods}>
@@ -144,7 +166,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
 
           <View mt={28}>
             {renderTitle("Mô tả")}
-            <RHFTextField
+            <TextAreaDS
               multiline
               rows={4}
               name={"description"}

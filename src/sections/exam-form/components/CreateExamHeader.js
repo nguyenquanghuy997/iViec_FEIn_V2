@@ -4,7 +4,7 @@ import { useTheme } from "@mui/material/styles";
 
 const CreateExamHeader = ({
   isCreate,
-  handleSaveDraft,
+  // handleSaveDraft,
   handlePreview,
   handleSave,
   handleCancel,
@@ -20,7 +20,7 @@ const CreateExamHeader = ({
           justifyContent: "space-between",
           flex: 1,
           background: theme.palette.common.white,
-          border: " 1px solid " + theme.palette.common.neutral100,
+          border: "1px solid " + theme.palette.common.neutral100,
           borderRadius: "4px",
           padding: "16px 24px",
         }}
@@ -84,7 +84,7 @@ const CreateExamHeader = ({
             }}
           />
 
-          <MuiButton
+          {/* <MuiButton
             title="Lưu nháp"
             color="default"
             // disabled={!name || isDisabled}
@@ -101,7 +101,7 @@ const CreateExamHeader = ({
                 backgroundColor: theme.palette.common.neutral200,
               },
             }}
-          />
+          /> */}
 
           <MuiButton
             onClick={handleSave}

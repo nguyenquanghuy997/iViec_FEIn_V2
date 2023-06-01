@@ -2,14 +2,8 @@ import CloseIcon from "@/assets/CloseIcon";
 import Content from "@/components/BaseComponents/Content";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import { BoxFlex } from "@/sections/emailform/style";
-import {
-  Box,
-  Divider,
-  Drawer,
-  IconButton,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
+import { Box, Divider, IconButton, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 
 const ActionItem = ({ title, icon, onClick, sx, component, ...other }) => {
@@ -25,16 +19,12 @@ const ActionItem = ({ title, icon, onClick, sx, component, ...other }) => {
   }
   if (icon) {
     return (
-      <Tooltip title={title} arrow>
-        <IconButton
-          disableRipple
-          onClick={onClick}
-          sx={{ ...sxProps }}
-          {...other}
-        >
-          {icon}
-        </IconButton>
-      </Tooltip>
+      <ButtonIcon
+        onClick={onClick}
+        tooltip={title}
+        icon={icon}
+        sx={{ ...sxProps }}
+      />
     );
   }
   return (
@@ -51,14 +41,14 @@ const ActionItem = ({ title, icon, onClick, sx, component, ...other }) => {
 
 const BottomNavModal = ({ data, open, onClose, actions, ...props }) => {
   return (
-    <Drawer
+    <BottomNavStyle
       anchor={"bottom"}
       open={open}
       variant="persistent"
       onClose={onClose}
       {...props}
     >
-      <Content sx={{ "&.MuiBox-root": { py: "20px" } }}>
+      <Content  className="block-bottom" sx={{ "&.MuiBox-root": { py: "20px" } }}>
         <BoxFlex>
           <BoxFlex justifyContent="flex-start">
             {actions.map((action, index) => {
@@ -96,7 +86,7 @@ const BottomNavModal = ({ data, open, onClose, actions, ...props }) => {
           </BoxFlex>
         </BoxFlex>
       </Content>
-    </Drawer>
+    </BottomNavStyle>
   );
 };
 

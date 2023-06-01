@@ -1,5 +1,12 @@
-// import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
-import { EditIcon, XcelIcon, CopyIcon, DeleteIcon, ForwardLightIcon, ExpandPreviewIcon, SquareDarkIcon } from "@/assets/icons-datatable";
+import {
+  useCloseRecruitmentMutation,
+  useDeleteRecruitmentMutation,
+  useGetListRecruitmentColumnsQuery,
+  useGetRecruitmentsQuery,
+  useUpdateListRecruitmentColumnsMutation,
+} from "../RecruitmentSlice";
+import OrganizationSettingModal from "../modals/OrganizationSettingModal";
+import { EditIcon, CopyIcon, DeleteIcon, ForwardLightIcon, ExpandPreviewIcon, SquareDarkIcon } from "@/assets/icons-datatable";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
 import ConfirmModal from "@/components/BaseComponents/ConfirmModal";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
@@ -49,14 +56,6 @@ import { get } from "lodash";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
-import {
-  useCloseRecruitmentMutation,
-  useDeleteRecruitmentMutation,
-  useGetListRecruitmentColumnsQuery,
-  useGetRecruitmentsQuery,
-  useUpdateListRecruitmentColumnsMutation,
-} from "../RecruitmentSlice";
-import OrganizationSettingModal from "../modals/OrganizationSettingModal";
 
 export const RecruitmentItem = () => {
   const router = useRouter();
@@ -305,7 +304,11 @@ export const RecruitmentItem = () => {
                   }}
                   name={record?.ownerName}
                 ></AvatarDS>
-                <span fontSize="14px" fontWeight="600" color={theme.palette.common.neutral800}>
+                <span
+                  fontSize="14px"
+                  fontWeight="600"
+                  color={theme.palette.common.neutral800}
+                >
                   {record?.ownerEmail}
                 </span>
               </div>
@@ -432,11 +435,11 @@ export const RecruitmentItem = () => {
           <>
             {record?.minSalary !== 0
               ? `${fCurrency(record?.minSalary)} - ${fCurrency(
-                record?.maxSalary
-              )} ${Currency(record?.currencyUnit)}`
+                  record?.maxSalary
+                )} ${Currency(record?.currencyUnit)}`
               : record.salaryDisplayType === 0
-                ? "Không lương"
-                : "Thỏa thuận"}
+              ? "Không lương"
+              : "Thỏa thuận"}
           </>
         ),
         filters: {
@@ -756,10 +759,10 @@ export const RecruitmentItem = () => {
         />
       )}
       <RecruitmentPreview
-          data={itemSelected[0]}
-          open={openPreview}
-          onClose={handleCloseModal}
-        />
+        data={itemSelected[0]}
+        open={openPreview}
+        onClose={handleCloseModal}
+      />
       <BottomNavModal
         data={itemSelected}
         onClose={toggleDrawer(false)}
@@ -787,7 +790,17 @@ export const RecruitmentItem = () => {
             onClick: () =>
               router.push(PATH_DASHBOARD.recruitment.view(itemSelected[0]?.id)),
             startIcon: <ForwardLightIcon />,
-            sx: { padding: "8px 12px", fontFamily: 'Inter', fontWeight: 600, minWidth: '101px' },
+            sx: { 
+              padding: "8px 12px", 
+              fontFamily: 'Inter', 
+              fontWeight: 600, 
+              minWidth: '101px', 
+              gap: '8px',
+              '& .MuiButton-startIcon': {
+                marginRight: '0px !important',
+                marginLeft: '0px !important'
+              }
+            },
           },
           canView && {
             key: "preview",
@@ -795,7 +808,20 @@ export const RecruitmentItem = () => {
             onClick: () => handleOpenModalState({ openPreview: true }),
             color: "default",
             startIcon: <ExpandPreviewIcon />,
-            sx: { padding: "8px 12px", fontFamily: 'Inter', fontWeight: 500, minWidth: '178px' },
+            sx: { 
+              padding: "8px 12px", 
+              fontFamily: 'Inter', 
+              fontWeight: 500, 
+              minWidth: '178px',
+              gap: '8px',
+              '& .MuiButton-startIcon': {
+                marginRight: '0px !important',
+                marginLeft: '0px !important'
+              },
+              '&:hover': {
+                backgroundColor: "#F3F4F6"
+              }
+            },
           },
           canEdit && {
             key: "close",
@@ -804,7 +830,18 @@ export const RecruitmentItem = () => {
             color: "default",
             startIcon: <SquareDarkIcon />,
             sx: {
-              padding: "8px 12px", fontFamily: 'Inter', fontWeight: 500, minWidth: '105px'
+              padding: "8px 12px", 
+              fontFamily: 'Inter', 
+              fontWeight: 500, 
+              minWidth: '105px',
+              gap: '8px',
+              '& .MuiButton-startIcon': {
+                marginRight: '0px !important',
+                marginLeft: '0px !important'
+              },
+              '&:hover': {
+                backgroundColor: "#F3F4F6"
+              }
             },
           },
           canEdit && {
@@ -821,7 +858,13 @@ export const RecruitmentItem = () => {
             key: "excel",
             onClick: () => handleExportExcel(itemSelected),
             color: "basic",
-            icon: <XcelIcon />,
+            icon: (
+              <Iconify
+                icon={"vscode-icons:file-type-excel"}
+                width={20}
+                height={20}
+              />
+            ),
             title: "Export Excel",
           },
           canEdit && {

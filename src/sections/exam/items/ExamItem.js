@@ -1,11 +1,5 @@
-import ExamChooseTypeModal from "../components/ExamChooseTypeModal";
-import ExamFormModal from "../components/ExamFormModal";
 import DynamicColumnsTable from "@/components/BaseComponents/table";
 import { View } from "@/components/FlexStyled";
-import Iconify from "@/components/Iconify";
-import TextMaxLine from "@/components/TextMaxLine";
-import { TBL_FILTER_TYPE } from "@/config";
-import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
 import {
   useGetAllExaminationQuery,
   useGetListColumnExamsQuery,
@@ -16,29 +10,36 @@ import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
 import { ExamType, Status } from "@/utils/enum";
 import { LIST_EXAM_TYPE, LIST_STATUS } from "@/utils/formatString";
 import { fDate } from "@/utils/formatTime";
-import { Box, Button, ButtonGroup } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Button, ButtonGroup, Tooltip } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
+import Iconify from "@/components/Iconify";
+import ExamFormModal from "../components/ExamFormModal";
+import ExamChooseTypeModal from "../components/ExamChooseTypeModal";
+import { TBL_FILTER_TYPE } from "@/config";
+import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import { TextElipsis } from "@/utils/cssStyles";
+
+const ViewExam = styled('div')(() => ({
+  margin: "-32px",
+  '& .inside': {
+    ".ant-table-content": {
+      minHeight: 'calc(100vh - 380px)',
+    },
+  },
+}));
 
 export const ExamItem = ({ hideTable, headerProps }) => {
   const router = useRouter();
   const theme = useTheme();
-  const listArrayOtherIdsFilter = [
-    "yearsOfExperience",
-    "sexs",
-    "maritalStatuses",
-    "recruitmentPipelineStates",
-  ];
+  const listArrayOtherIdsFilter = ["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
   const [showFormQuestion, setShowFormQuestion] = useState(false);
   const { query = { PageIndex: 1, PageSize: 10 }, isReady } = router;
   let reqData = {};
   for (let f in query) {
     let val = query[f];
-    if (
-      (f.includes("Ids") || listArrayOtherIdsFilter.includes(f)) &&
-      !Array.isArray(val)
-    ) {
+    if ((f.includes('Ids') || listArrayOtherIdsFilter.includes(f)) && !Array.isArray(val)) {
       val = [val];
     }
     reqData[f] = val;
@@ -55,63 +56,56 @@ export const ExamItem = ({ hideTable, headerProps }) => {
         title: "STT",
         key: "index",
         align: "center",
-        fixed: "left",
+        fixed: 'left',
         render: (item, record, index, page, paginationSize) => (
           <>{(page - 1) * paginationSize + index + 1}</>
         ),
-        width: "60px",
+        width: "60px"
       },
       {
         dataIndex: "name",
         title: "Đề thi",
-        width: "150px",
+        width: "250px",
+        fixed: 'left',
         sorter: (a, b) => a.name.length - b.name.length,
         render: (item, record) => (
-          <TextMaxLine
-            sx={{
-              width: 360,
-              fontWeight: 500,
-              fontSize: 14,
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              router.push(`/settings/exam/exam-business/update/${record.id}`);
-            }}
-          >
-            {item}
-          </TextMaxLine>
+          <Tooltip title={item} arrow>
+            <TextElipsis sx={{ width: 250, fontWeight: 500, fontSize: 14, cursor: 'pointer' }}
+              onClick={() => {
+                router.push(`/settings/exam/exam-business/update/${record.id}`)
+              }}>
+              {item}
+            </TextElipsis>
+          </Tooltip>
         ),
       },
       {
         dataIndex: "description",
         title: "Mô tả",
-        width: "200px",
+        width: "200px"
       },
       {
         dataIndex: "type",
         title: "Kiểu đề thi",
         width: "220px",
-        render: (item) => ExamType(item),
+        render: (item) => (
+          ExamType(item)),
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
-          name: "type",
-          options: LIST_EXAM_TYPE.map((item) => ({
-            value: item.value,
-            label: item.name,
-          })),
-          placeholder: "Tất cả",
+          name: 'type',
+          options: LIST_EXAM_TYPE.map(item => ({ value: item.value, label: item.name })),
+          placeholder: "Tất cả"
         },
       },
       {
         dataIndex: "createdTime",
         title: "Ngày tạo",
         width: "214px",
-        render: (date, record) =>
-          record?.createdTime ? fDate(record?.createdTime) : "",
+        render: (date, record) => record?.createdTime ? fDate(record?.createdTime) : '',
         filters: {
           type: TBL_FILTER_TYPE.RANGE_DATE,
-          name: ["createdTimeFrom", "createdTimeTo"],
-          placeholder: "Chọn ngày",
+          name: ['createdTimeFrom', 'createdTimeTo'],
+          placeholder: 'Chọn ngày',
         },
       },
       {
@@ -145,9 +139,8 @@ export const ExamItem = ({ hideTable, headerProps }) => {
       {
         dataIndex: "lastUpdatedTime",
         title: "Ngày chỉnh sửa",
-        render: (date, record) =>
-          record?.createdTime ? fDate(record?.createdTime) : "",
-        width: "200px",
+        render: (date, record) => record?.createdTime ? fDate(record?.createdTime) : '',
+        width: "200px"
       },
       {
         dataIndex: "updaterId",
@@ -164,11 +157,7 @@ export const ExamItem = ({ hideTable, headerProps }) => {
             {/*  }}*/}
             {/*  name={record.updaterEmail}*/}
             {/*></AvatarDS>*/}
-            <span
-              fontSize="14px"
-              fontWeight="600"
-              color={theme.palette.common.neutral800}
-            >
+            <span fontSize="14px" fontWeight="600" color={theme.palette.common.neutral800}>
               {record.updaterEmail}
             </span>
           </div>
@@ -192,24 +181,24 @@ export const ExamItem = ({ hideTable, headerProps }) => {
         width: "200px",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_QUESTION,
-          name: ["totalQuestionFrom", "totalQuestionTo"],
-          placeholder: "Nhập số câu hỏi",
+          name: ['totalQuestionFrom', 'totalQuestionTo'],
+          placeholder: 'Nhập số câu hỏi',
         },
       },
       {
         dataIndex: "numOfMultipleChoiceQuestion",
         title: "Trắc nghiệm",
-        width: "220px",
+        width: "220px"
       },
       {
         dataIndex: "numOfEssayQuestion",
         title: "Tự luận",
-        width: "200px",
+        width: "200px"
       },
       {
         title: "Điểm tối đa",
         dataIndex: "maximumPoint",
-        width: "120px",
+        width: "200px",
         filters: {
           type: TBL_FILTER_TYPE.RANGE_POINT,
           name: ["maximumPointForm", "maximumPointTo"],
@@ -220,6 +209,9 @@ export const ExamItem = ({ hideTable, headerProps }) => {
         dataIndex: "standardPoint",
         title: "Điểm sàn",
         width: "200px",
+        render: (standardPoint) => (
+          (standardPoint >= 0) ? standardPoint : '-'
+        ),
         filters: {
           type: TBL_FILTER_TYPE.RANGE_POINT,
           name: ["standardPointFrom", "standardPointTo"],
@@ -231,32 +223,25 @@ export const ExamItem = ({ hideTable, headerProps }) => {
         title: "Trạng thái",
         width: "200px",
         render: (item) => (
-          <span
-            style={{
-              color: item ? "#388E3C" : theme.palette.common.neutral700,
-            }}
-          >
+          <span style={{ color: item ? "#388E3C" : theme.palette.common.neutral700 }}>
             {Status(item)}
           </span>
         ),
         filters: {
           type: TBL_FILTER_TYPE.SELECT,
-          name: "isActive",
-          options: LIST_STATUS.map((item) => ({
-            value: item.id,
-            label: item.name,
-          })),
-          placeholder: "Tất cả",
+          name: 'isActive',
+          options: LIST_STATUS.map(item => ({ value: item.id, label: item.name })),
+          placeholder: "Tất cả"
         },
-      },
+      }
     ];
   }, [query.PageIndex, query.PageSize]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [itemSelected, setItemSelected] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [showChooseType, setShowChooseType] = useState(false);
-  const [dataForm, setDataForm] = useState({});
+  const [showForm, setShowForm] = useState(false)
+  const [showChooseType, setShowChooseType] = useState(false)
+  const [dataForm, setDataForm] = useState({})
   const [, setIsOpenBottomNav] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -277,73 +262,72 @@ export const ExamItem = ({ hideTable, headerProps }) => {
   // };
 
   const handleSubmitForm = (data) => {
-    setDataForm(data);
+    setDataForm(data)
     setShowForm(false);
     setShowChooseType(true);
-  };
+  }
 
   const handleSubmitCreate = (data) => {
     router.push({
-      pathname: "/settings/exam/exam-business/create",
-      query: data,
+      pathname: '/settings/exam/exam-business/create',
+      query: data
     });
-  };
+  }
 
   const onCloseExamForm = () => {
     setShowForm(false);
-  };
+  }
 
   const onCloseExamChooseTypeForm = () => {
     setShowChooseType(false);
-  };
+  }
 
   const renderButton = () => {
-    return (
-      <Box flexDirection="row" alignItems="center">
-        {/*<ButtonAddStyle*/}
-        {/*    className="button-add"*/}
-        {/*    startIcon={<Iconify icon="material-symbols:add" />}*/}
-        {/*    // onClick={pressAddQuestionGallery}*/}
-        {/*>*/}
-        {/*    Thêm nhóm câu hỏi*/}
-        {/*</ButtonAddStyle>*/}
+    return <Box flexDirection="row" alignItems="center">
+      {/*<ButtonAddStyle*/}
+      {/*    className="button-add"*/}
+      {/*    startIcon={<Iconify icon="material-symbols:add" />}*/}
+      {/*    // onClick={pressAddQuestionGallery}*/}
+      {/*>*/}
+      {/*    Thêm nhóm câu hỏi*/}
+      {/*</ButtonAddStyle>*/}
 
-        <ButtonGroup
-          variant="contained"
-          aria-label="split button"
-          sx={{
-            marginLeft: "8px",
-            boxShadow: "unset",
-            "& .MuiButtonGroup-grouped:not(:last-of-type)": {
-              borderColor: "white",
-            },
-            "& .MuiButtonGroup-grouped:hover": {
-              opacity: 0.8,
-            },
+      <ButtonGroup
+        variant="contained"
+        aria-label="split button"
+        sx={{
+          marginLeft: '8px',
+          boxShadow: "unset",
+          "& .MuiButtonGroup-grouped:not(:last-of-type)": {
+            borderColor: "white",
+          },
+          "& .MuiButtonGroup-grouped:hover": {
+            opacity: 0.8,
+          },
+        }}
+      >
+        <Button
+          style={{
+            background: theme.palette.common.blue700,
+            padding: "6px 12px",
+            fontWeight: 600,
+            fontSize: ' .875rem',
+            // borderRadius: '6px 0px 0px 6px',
+            borderRadius: '6px',
+            textTransform: 'none'
           }}
+          onClick={() => setShowFormQuestion(true)}
         >
-          <Button
-            style={{
-              background: theme.palette.common.blue700,
-              padding: "6px 12px",
-              fontWeight: 600,
-              fontSize: " .875rem",
-              // borderRadius: '6px 0px 0px 6px',
-              borderRadius: "6px",
-              textTransform: "none",
-            }}
-            onClick={() => setShowFormQuestion(true)}
-          >
-            <Iconify
-              icon={"material-symbols:add"}
-              width={20}
-              height={20}
-              color={theme.palette.background.paper}
-              mr={1}
-            />
-            Thêm câu hỏi
-          </Button>
-          {/* <LightTooltip
+          <Iconify
+            icon={"material-symbols:add"}
+            width={20}
+            height={20}
+            color={theme.palette.background.paper}
+            mr={1}
+          />
+          Thêm câu hỏi
+        </Button>
+        {/* <LightTooltip
           placement="bottom-end"
           onClose={handleCloseGroup}
           disableFocusListener
@@ -402,17 +386,12 @@ export const ExamItem = ({ hideTable, headerProps }) => {
             />
           </Button>
         </LightTooltip> */}
-        </ButtonGroup>
-      </Box>
-    );
-  };
+      </ButtonGroup>
+    </Box>
+  }
 
   return (
-    <View
-      style={{
-        margin: "-32px",
-      }}
-    >
+    <ViewExam>
       <View>
         <DynamicColumnsTable
           columns={columns}
@@ -428,17 +407,20 @@ export const ExamItem = ({ hideTable, headerProps }) => {
           useUpdateColumnsFunc={useUpdateListColumnExamsMutation}
           // searchInside={false}
           hideTable={hideTable}
-          searchTextHint="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
+          searchTextHint='Tìm kiếm theo họ tên, email, SĐT ứng viên...'
           createText={"Thêm đề thi"}
           onClickCreate={() => {
             setShowForm(true);
             setItemSelected([]);
             setSelectedRowKeys([]);
           }}
-          headerProps={{
-            ...headerProps,
-            actions: renderButton(),
-          }}
+          headerProps={
+
+            {
+              ...headerProps,
+              actions: renderButton()
+            }
+          }
         />
         <QuestionFormModal
           data={itemSelected[0]}
@@ -456,18 +438,10 @@ export const ExamItem = ({ hideTable, headerProps }) => {
           setItemSelected={setItemSelected}
         />
 
-        <ExamFormModal
-          show={showForm}
-          onClose={onCloseExamForm}
-          onSubmit={handleSubmitForm}
-        />
-        <ExamChooseTypeModal
-          data={dataForm}
-          show={showChooseType}
-          onClose={onCloseExamChooseTypeForm}
-          onSubmit={handleSubmitCreate}
-        />
+        <ExamFormModal show={showForm} onClose={onCloseExamForm} onSubmit={handleSubmitForm} />
+        <ExamChooseTypeModal data={dataForm} show={showChooseType} onClose={onCloseExamChooseTypeForm}
+          onSubmit={handleSubmitCreate} />
       </View>
-    </View>
+    </ViewExam>
   );
 };

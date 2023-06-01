@@ -1,5 +1,6 @@
 import {styled } from '@mui/material/styles';
 import { pxToRem } from '@/utils/getFontValue';
+import { STYLE_CONSTANT } from '@/theme/palette';
 
 export const HeaderStyle = styled('div')(({theme}) => ({
   background: theme.palette.background.default,
@@ -14,6 +15,14 @@ export const HeaderStyle = styled('div')(({theme}) => ({
       height: '44px',
       borderRadius: '6px',
       background: theme.palette.common.bgrMaster,
+      fontSize: '14px',
+      paddingLeft: 12,
+      '.MuiInputBase-input':{
+        paddingLeft:'0'
+      },
+      '&:hover': {
+        background: STYLE_CONSTANT.COLOR_DIVIDER
+      },
       'fieldset': {
         border: 'none',
       },
@@ -52,13 +61,14 @@ export const TableStyle = styled('div')(({theme}) => ({
   background: theme.palette.common.white,
   boxShadow: "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
   borderRadius: "4px",
-
+  fontFamily: 'Inter !important',
   ".ant-table": {
     minHeight: "500px",
     borderRadius: "8px",
+    fontFamily: 'Inter !important',
   },
   ".ant-table-content": {
-    minHeight: 'calc(100vh - 380px)',
+    minHeight: 'calc(100vh - 320px)',
     borderRadius: "8px",
   },
   ".ant-table-thead >tr>th": {
@@ -68,35 +78,19 @@ export const TableStyle = styled('div')(({theme}) => ({
     borderBottom: "2px solid " + theme.palette.common.strokeDividerLine,
     wordBreak: "break-all",
   },
-  ".ant-table-thead >tr>th.ant-table-selection-column": {
-    width: "56px",
-  },
   ".ant-table-tbody >tr >td": {
     padding: "13px 8px",
     color: theme.palette.common.neutral800,
     fontWeight: 400,
     wordBreak: 'break-all',
     fontSize: '13px',
-    lineHeight: '20px'
+    lineHeight: '20px',
+  },
+  ".ant-table-empty .ant-table-tbody >tr >td":{
+    borderBottom:'unset',
   },
   ".ant-pagination": {
     padding: "0 16px",
-  },
-  ".ant-checkbox-inner": {
-    width: '18px',
-  height: '18px',
-  border: '2.5px solid #8A94A5'
-  },
-  '.ant-checkbox-indeterminate .ant-checkbox-inner, .ant-checkbox-checked .ant-checkbox-inner':{
-    borderColor: '#1677ff !important'
-  },
-  '.ant-checkbox-indeterminate .ant-checkbox-inner':{
-    backgroundColor: '#1677ff'
-  },
-  '.ant-checkbox-indeterminate .ant-checkbox-inner:after':{
-    width: '8px',
-    height: '2px',
-    backgroundColor: '#fff'
   },
   ".ant-pagination .ant-pagination-total-text": {
     position: "absolute",

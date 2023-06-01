@@ -7,9 +7,9 @@ import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
-import { ButtonIcon } from "@/utils/cssStyles";
+import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
 import { checkSameValue } from "@/utils/formatString";
-import { Box, Divider, Drawer, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useMemo } from "react";
 import ExamActiveModal from "@/sections/exam/modals/ExamActiveModal";
@@ -67,13 +67,13 @@ const ExamBottumonNav = ({
   }
 
   return (
-    <Drawer
+    <BottomNavStyle
       anchor={"bottom"}
       open={open}
       variant="persistent"
       onClose={onClose}
     >
-      <Content sx={{ padding: "20px 24px" }}>
+      <Content className="block-bottom">
         <Box
           sx={{
             width: "100%",
@@ -92,6 +92,7 @@ const ExamBottumonNav = ({
                         onClick={() => handleShowConfirmMultiple("status")}
                         sx={{
                           backgroundColor: "unset !important",
+                          padding: 0
                         }}
                         icon={<ActionSwitchCheckedIcon />}
                       />
@@ -209,7 +210,7 @@ const ExamBottumonNav = ({
           isActivated={exam?.isActivated}
         />
       )}
-    </Drawer>
+    </BottomNavStyle>
   );
 };
 
