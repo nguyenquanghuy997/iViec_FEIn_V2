@@ -114,7 +114,7 @@ const CreateExamContent = () => {
   };
 
   const handleSubmitForm = (data) => {
-    setExamData({ ...data, examTime: timeFromMinutes(data.examTime) });
+    setExamData({ ...data });
     setShowForm(false);
     setShowChooseType(true);
   };
@@ -151,7 +151,7 @@ const CreateExamContent = () => {
   }
 
   const minutesFromTime = (times) => {
-    const a = times?.split(/[.:]+/)??[];
+    const a = times?.split(/[.:]+/) ?? [];
     var storageFuncs = [s => parseInt(s) * 0, m => parseInt(m), h => parseInt(h) * 60, d => parseInt(d) * 60 * 24];
     var res = a.reverse().reduce((acc, next, index) => acc + storageFuncs[index](next), 0);
     return res;
@@ -228,7 +228,7 @@ const CreateExamContent = () => {
       standardPoint: parseInt(examRandomHasEssayQuestion ? -1 : examData.standardPoint),
       isQuestionMixing: examData.isQuestionMixing,
       examTime: timeFromMinutes(examData.examTime),
-      maximumPoint: examData.maximumPoint ??0,
+      maximumPoint: examData.maximumPoint ?? 0,
       examinationQuestions:
         (examData.type == 0 &&
           examQuestions.map((x) => {
@@ -331,7 +331,7 @@ const CreateExamContent = () => {
       totalQuestion: examQuestions.length,
       standardPoint: parseInt(examRandomHasEssayQuestion ? -1 : examData.standardPoint),
       isQuestionMixing: examData.isQuestionMixing,
-      examTime: (examData.examTime),
+      examTime: timeFromMinutes(examData.examTime),
       maximumPoint: examData.maximumPoint ?? 0,
       examinationQuestions:
         (examData.type == 0 &&
@@ -396,7 +396,8 @@ const CreateExamContent = () => {
     if (data) {
       setExamData({
         ...data,
-        standardPoint: data.standardPoint == -1 ? '' : data.standardPoint
+        standardPoint: data.standardPoint == -1 ? '' : data.standardPoint,
+        examTime: minutesFromTime(data.examTime)
       });
       if (data.type == 0) {
         setExamQuestions(data.questions ?? []);
@@ -652,7 +653,7 @@ const CreateExamContent = () => {
           <View flexrow={"true"} atcenter={"true"} mt={24}>
             {renderExamSettingInfo(
               "mdi:clock-time-three-outline",
-              `${minutesFromTime(examData.examTime)}:00 phút`
+              `${examData.examTime}:00 phút`
             )}
             {renderExamSettingInfo(
               `ri:shuffle-fill`,
@@ -707,7 +708,7 @@ const CreateExamContent = () => {
         show={showForm}
         onClose={() => setShowForm(false)}
         onSubmit={handleSubmitForm}
-        data={{ ...examData, examTime: minutesFromTime(examData.examTime) }}
+        data={{ ...examData }}
       />
       <ExamChooseTypeModal
         data={examData}

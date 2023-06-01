@@ -149,7 +149,10 @@ export const QuestionGallary = () => {
         isSelected={isSelected}
         pressCheckbox={pressCheckbox}
         setCurrentItem={setCurrentItem}
-        setShowForm={setShowForm}
+        setShowForm={()=>{
+          setCurrentItem(data)
+          setShowForm(true)
+        }}
         setShowConfirmDelete={setShowConfirmDelete}
         setShowConfirmSwitchActive={setShowConfirmSwitchActive}
       />
@@ -215,21 +218,9 @@ export const QuestionGallary = () => {
       <ConfirmModal
         confirmDelete={showConfirmDelete}
         title="Xác nhận xóa nhóm câu hỏi"
-        subtitle={
-          listSelected.length > 1 ? (
-            <span>
-              Bạn có chắc chắn muốn xóa{" "}
-              <b>
-                {listSelected.length > 1 ? listSelected.length : ""} nhóm câu
-                hỏi này
-              </b>
-            </span>
-          ) : (
-            <span>
-              Bạn có chắc chắn muốn xóa nhóm câu hỏi{" "}
-              {listSelected.length == 1 ? <b>{name.trim()}</b> : ""} này
-            </span>
-          )
+        subtitle={listSelected.length > 1
+          ? <span>Bạn có chắc chắn muốn xóa <b>{listSelected.length > 1 ? listSelected.length : ''} nhóm câu hỏi </b>này</span>
+          : <span>Bạn có chắc chắn muốn xóa nhóm câu hỏi {listSelected.length == 1 ? <b>{name.trim()}</b> : ''}</span>
         }
         onSubmit={handleDelete}
         onCloseConfirmDelete={onCloseConfirmDelete}

@@ -8,7 +8,7 @@ import {
 } from "@/sections/interview/InterviewSlice";
 import { useGetRecruitmentsQuery } from "@/sections/recruitment/RecruitmentSlice";
 import { PipelineStateType } from "@/utils/enum";
-import { Grid, Typography } from "@mui/material";
+import {Grid, Typography} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -107,9 +107,6 @@ const PersonalInterview = ({
           placeholder="Chọn tin tuyển dụng"
           disabled={!!(option || item?.recruitmentId || optionsFromCruit)}
           onChange={changeRecruitment}
-          style={{
-
-          }}
         />
       </Grid>
 

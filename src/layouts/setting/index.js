@@ -22,6 +22,7 @@ const RootStyle = styled("div")(({ theme }) => ({
 const BoxWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   margin: "0 auto",
+  position: 'relative',
   [theme.breakpoints.up("lg")]: {
     paddingTop: theme.spacing(4.5),
     width: DASHBOARD_CONTENT_WIDTH,
