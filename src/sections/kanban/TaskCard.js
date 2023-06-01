@@ -62,7 +62,7 @@ function Baseitem(props) {
       alignItems="center"
       sx={{
         margin: "0 12px",
-        marginBottom: "16px",
+        marginBottom: "12px",
         "& .MuiBadge-dot": {
           width: "6px",
           minWidth: "6px",
@@ -73,16 +73,18 @@ function Baseitem(props) {
       }}
     >
       <AvatarDS
-        sx={{height: "32px", width: "32px", borderRadius: "14px"}}
+        sx={{height: "32px", width: "32px", borderRadius: "9px"}}
         src={item?.portraitImage && srcImage(item?.portraitImage)}
       />
 
       <Box pl={1}>
         <Typography
           fontSize="12px"
+          lineHeight={'20px'}
           display="flex"
           fontWeight="600"
           alignItems="center"
+          mb={'4px'}
           onClick={() =>
             router.push(
               {
@@ -102,7 +104,7 @@ function Baseitem(props) {
           {item?.fullName}
         </Typography>
         <Stack direction="row" spacing={2} color="#172B4D">
-          <Typography fontSize="12px">{item.phoneNumber}</Typography>
+          <Typography fontSize="12px" lineHeight={'18px'}>{item.phoneNumber}</Typography>
         </Stack>
       </Box>
     </Grid>
@@ -408,14 +410,14 @@ function ResultItem(props) {
   return (
     <div>
       <Baseitem item={item}/>
-      <Box style={{margin: "12px 0px 0px 0px", borderRadius: "4px"}}>
+      <Box style={{margin: "12px 0px 0px 0px", borderRadius: "6px"}}>
         <Divider style={{margin: "0px"}}/>
         <Box style={{padding: "12px 12px "}}>
           <Box>
             <Box
               sx={{
                 bgcolor: "background.paper",
-                borderRadius: 1,
+                borderRadius: '6px',
               }}
             >
               <ButtonGroup
@@ -426,6 +428,7 @@ function ResultItem(props) {
                   type="submit"
                   sx={{
                     border: "none",
+                    borderRadius: '6px 0px 0px 6px',
                     color:
                       item.pipelineStateResultType === 0 ? "#FDFDFD" : "#455570",
                     backgroundColor:
@@ -467,6 +470,7 @@ function ResultItem(props) {
                   type="submit"
                   sx={{
                     border: "none",
+                    borderRadius: '0px 6px 6px 0px',
                     color:
                       item.pipelineStateResultType === 2 ? "#FDFDFD" : "#455570",
                     backgroundColor:
@@ -509,7 +513,7 @@ function ResultItem(props) {
                 }}
               />
             )}
-            {/* {item.pipelineStateResultType == 0 && (
+            {item.pipelineStateResultType == 0 && (
               <ButtonDS
                 onClick={() => { setIsOpenSendOffer(true) }}
                 tittle={"Gửi thư mời nhận việc"}
@@ -530,7 +534,7 @@ function ResultItem(props) {
                   textTransform: "none",
                 }}
               />
-            )} */}
+            )}
           </Box>
           {isOpenSendOffer && (
             <ApplicantSendOfferModal
