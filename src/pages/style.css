@@ -30,22 +30,3 @@ input:-webkit-autofill:active {
 .up {
   top: 154px;
 }
-
-*::-webkit-scrollbar {
-  height: 14px !important;
-}
-
-/* Track */
-*::-webkit-scrollbar-track {
-  background: #eff3f7 !important;
-}
-
-/* Handle */
-*::-webkit-scrollbar-thumb {
-  background: #a2aab7 !important;
-}
-
-/* Handle on hover */
-*::-webkit-scrollbar-thumb:hover {
-  background: #a2aab7 !important;
-}

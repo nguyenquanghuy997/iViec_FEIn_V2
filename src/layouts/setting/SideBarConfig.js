@@ -27,11 +27,11 @@ export const sidebarConfig = [
         path: "/settings/pipeline",
         permissions: [PERS.VIEW_RECRUIT_PROCESS],
       },
-      {
-        title: "Quy trình phê duyệt",
-        path: "/settings/approve-process",
-        permissions: [PERS.VIEW_APPR_PROCESS],
-      },
+      // {
+      //   title: "Quy trình phê duyệt",
+      //   path: "/settings/approve-process",
+      //   permissions: [PERS.VIEW_APPR_PROCESS],
+      // },
       {
         title: "Vị trí công việc",
         path: "/settings/job-type",
@@ -42,27 +42,27 @@ export const sidebarConfig = [
       //   path: "/settings/evaluation-form",
       //   permissions: [PERS.VIEW_EVA_TPL],
       // },
-      {
-        title: "Kết nối",
-        path: "/settings/connect",
-        permissions: [PERS.VIEW_CONNECT],
-      },
-      {
-        title: "Quản lý đề thi",
-        path: "/settings/exam",
-        permissions: [PERS.VIEW_EXAM],
-        children: [
-          {
-            title: "Kho đề thi doanh nghiệp",
-            path: "/settings/exam/exam-business",
-          },
-          // {
-          //   title: "Kho đề thi iVIEC",
-          //   path: "/settings/exam/iviecexam",
-          //   // icon: ICONS.notification,
-          // },
-        ],
-      },
+      // {
+      //   title: "Kết nối",
+      //   path: "/settings/connect",
+      //   permissions: [PERS.VIEW_CONNECT],
+      // },
+      // {
+      //   title: "Quản lý đề thi",
+      //   path: "/settings/exam",
+      //   permissions: [PERS.VIEW_EXAM],
+      //   children: [
+      //     {
+      //       title: "Kho đề thi doanh nghiệp",
+      //       path: "/settings/exam/exam-business",
+      //     },
+      //     // {
+      //     //   title: "Kho đề thi iVIEC",
+      //     //   path: "/settings/exam/iviecexam",
+      //     //   // icon: ICONS.notification,
+      //     // },
+      //   ],
+      // },
     ],
   },
   {
@@ -73,48 +73,48 @@ export const sidebarConfig = [
         path: "/settings/evaluation-form",
         permissions: [PERS.VIEW_EVA_TPL],
       },
-      {
-        title: "Mẫu thư mời nhận việc",
-        path: "/settings/offer-form",
-        permissions: [PERS.VIEW_OFFER_TPL],
-      },
-      {
-        title: "Mẫu email tự động",
-        path: "/settings/email-form",
-        permissions: [PERS.VIEW_EMAIL],
-        children: [
-          {
-            title: "Email thông báo tài khoản",
-            path: "/settings/email-form/account",
-          },
-          {
-            title: "Email lịch thi tuyển",
-            path: "/settings/email-form/schedule-exam",
-          },
-          {
-            title: "Email lịch phỏng vấn trực tuyến",
-            path: "/settings/email-form/schedule-online",
-          },
-          {
-            title: "Email lịch phỏng vấn trực tiếp",
-            path: "/settings/email-form/schedule-live",
-          },
-          {
-            title: "Email thông báo Kết quả - Đạt",
-            path: "/settings/email-form/approve",
-          },
-          {
-            title: "Email thông báo Kết quả - Loại",
-            path: "/settings/email-form/reject",
-          },
-        ],
-      },
-      {
-        title: "Thông báo tự động",
-        path: "/settings/notification",
-        // Todo edit permission
-        permissions: [PERS.VIEW_JOB_POS],
-      },
+      // {
+      //   title: "Mẫu thư mời nhận việc",
+      //   path: "/settings/offer-form",
+      //   permissions: [PERS.VIEW_OFFER_TPL],
+      // },
+      // {
+      //   title: "Mẫu email tự động",
+      //   path: "/settings/email-form",
+      //   permissions: [PERS.VIEW_EMAIL],
+      //   children: [
+      //     {
+      //       title: "Email thông báo tài khoản",
+      //       path: "/settings/email-form/account",
+      //     },
+      //     {
+      //       title: "Email lịch thi tuyển",
+      //       path: "/settings/email-form/schedule-exam",
+      //     },
+      //     {
+      //       title: "Email lịch phỏng vấn trực tuyến",
+      //       path: "/settings/email-form/schedule-online",
+      //     },
+      //     {
+      //       title: "Email lịch phỏng vấn trực tiếp",
+      //       path: "/settings/email-form/schedule-live",
+      //     },
+      //     {
+      //       title: "Email thông báo Kết quả - Đạt",
+      //       path: "/settings/email-form/approve",
+      //     },
+      //     {
+      //       title: "Email thông báo Kết quả - Loại",
+      //       path: "/settings/email-form/reject",
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Thông báo tự động",
+      //   path: "/settings/notification",
+      //   // Todo edit permission
+      //   permissions: [PERS.VIEW_JOB_POS],
+      // },
     ],
   },
   {

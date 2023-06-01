@@ -125,6 +125,7 @@ export const RoleContainer = () => {
       ),
       width: "160px",
       filters: {
+        name: 'isActivated',
         type: TBL_FILTER_TYPE.SELECT,
         placeholder: "Tất cả",
         options: LIST_STATUS.map((item) => ({

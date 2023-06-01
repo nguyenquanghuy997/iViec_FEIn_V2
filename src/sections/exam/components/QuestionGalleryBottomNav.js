@@ -6,14 +6,8 @@ import {
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
 import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import {useTheme} from "@mui/material/styles";
+import { Box, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 export default ({
   list,
@@ -26,7 +20,7 @@ export default ({
   const firstActiveStatus = list.find(
     (i) => i.id === listSelected[0]
   )?.isActive;
-const theme = useTheme();
+  const theme = useTheme();
   const showSwitchActive = !list.some(
     (i) => listSelected.includes(i.id) && i.isActive !== firstActiveStatus
   );
@@ -35,6 +29,9 @@ const theme = useTheme();
   const onClose = () => {
     setListSelected([]);
   };
+  const itemApply = !list.some(
+    (i) => listSelected.includes(i.id) && i.numOfQuestion > 0
+  );
 
   return (
     <BottomNavStyle
@@ -57,7 +54,12 @@ const theme = useTheme();
               <>
                 <IconButton
                   size="small"
-                  sx={{backgroundColor: "unset !important", color: theme.palette.common.blue700, mx: 0.5, padding: 0 }}
+                  sx={{
+                    backgroundColor: "unset !important",
+                    color: theme.palette.common.blue700,
+                    mx: 0.5,
+                    padding: 0,
+                  }}
                   onClick={() => setShowConfirmSwitchActive(true)}
                 >
                   {firstActiveStatus ? (
@@ -69,7 +71,9 @@ const theme = useTheme();
                 <Typography
                   variant="body2"
                   sx={{
-                    color: firstActiveStatus ? "#388E3C" : theme.palette.common.borderObject,
+                    color: firstActiveStatus
+                      ? "#388E3C"
+                      : theme.palette.common.borderObject,
                     fontSize: 13,
                   }}
                 >
@@ -87,13 +91,15 @@ const theme = useTheme();
                   <EditIcon />
                 </IconButton>
               )}
-              <IconButton
-                size="small"
-                sx={{ color: theme.palette.common.blue700, mx: 1 }}
-                onClick={() => setShowConfirmDelete(true)}
-              >
-                <DeleteIcon />
-              </IconButton>
+              {itemApply && (
+                <IconButton
+                  size="small"
+                  sx={{ color: theme.palette.common.blue700, mx: 1 }}
+                  onClick={() => setShowConfirmDelete(true)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              )}
             </Box>
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -103,7 +109,11 @@ const theme = useTheme();
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
+              sx={{
+                mx: 2,
+                width: "2px",
+                backgroundColor: theme.palette.common.neutral100,
+              }}
             />
             <ButtonIcon
               sx={{
