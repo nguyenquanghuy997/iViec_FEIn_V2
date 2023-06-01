@@ -1,22 +1,23 @@
-import { EditIcon } from "@/assets/ActionIcon";
-import { ButtonDS } from "@/components/DesignSystem";
+import {EditIcon} from "@/assets/ActionIcon";
+import {ButtonDS} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import { BOOKING_CALENDAR_PROCCESS_STATUS, PERMISSIONS } from "@/config";
+import {BOOKING_CALENDAR_PROCCESS_STATUS, PERMISSIONS} from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
-import { fTime } from "@/utils/formatTime";
-import { Box, CardContent, Divider, Tooltip, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { useMemo } from "react";
-import { RiCalendarCheckFill } from "react-icons/ri";
+import {fTime} from "@/utils/formatTime";
+import {Box, CardContent, Divider, Tooltip, Typography} from "@mui/material";
+import {useTheme} from "@mui/material/styles";
+import React, {useMemo} from "react";
+import {RiCalendarCheckFill} from "react-icons/ri";
+import {ButtonIcon} from "@/utils/cssStyles";
 
-const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
+const ViewSchedule = ({data, isLastItem, handleClick, handleClickDialog}) => {
   // const { data: Detaildata } = useGetDetailCalendarsQuery({
   //   BookingCalendarId: id,
   // });
-  const { user } = useAuth();
+  const {user} = useAuth();
   const theme = useTheme();
-  const { canAccess } = useRole();
+  const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
   const renderSwitch = (param) => {
     switch (param) {
@@ -35,7 +36,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
                 mr: 2,
               }}
             >
-              <RiCalendarCheckFill color={"#388E3C"} />
+              <RiCalendarCheckFill color={"#388E3C"}/>
             </Box>
           </Tooltip>
         );
@@ -174,7 +175,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
               mr: 2,
             }}
           >
-            <RiCalendarCheckFill color={"#388E3C"} />
+            <RiCalendarCheckFill color={"#388E3C"}/>
           </Box>
         );
     }
@@ -211,18 +212,18 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             {renderSwitch(data?.bookingCalendarProcessStatus)}
           </Box>
 
-          <Box sx={{ width: "20%" }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 600 }} color="#172B4D">
+          <Box sx={{width: "20%"}}>
+            <Typography sx={{fontSize: 13, fontWeight: 600}} color="#172B4D">
               {data?.name}
             </Typography>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+            <Typography sx={{fontSize: 13, fontWeight: 500}}>
               {data?.startTime ? fTime(data?.startTime) : ""} -
               {data?.endTime ? fTime(data?.endTime) : ""}
             </Typography>
           </Box>
-          <Divider orientation="vertical" variant="middle" flexItem />
-          <Box sx={{ width: "15%", px: 3 }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+          <Divider orientation="vertical" variant="middle" flexItem/>
+          <Box sx={{width: "15%", px: 3}}>
+            <Typography sx={{fontSize: 13, fontWeight: 500}}>
               Số người phỏng vấn
             </Typography>
             <Typography
@@ -234,32 +235,32 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
               {data?.numOfApplicant}
             </Typography>
           </Box>
-          <Divider orientation="vertical" variant="middle" flexItem />
-          <Box sx={{ width: "15%", px: 3 }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+          <Divider orientation="vertical" variant="middle" flexItem/>
+          <Box sx={{width: "15%", px: 3}}>
+            <Typography sx={{fontSize: 13, fontWeight: 500}}>
               Loại phỏng vấn
             </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+            <Typography sx={{fontSize: 12, fontWeight: 600}}>
               {data?.interviewGroupType == 0 ? " Cá nhân" : "Nhóm"}
             </Typography>
           </Box>
-          <Divider orientation="vertical" variant="middle" flexItem />
-          <Box sx={{ width: "15%", px: 3 }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+          <Divider orientation="vertical" variant="middle" flexItem/>
+          <Box sx={{width: "15%", px: 3}}>
+            <Typography sx={{fontSize: 13, fontWeight: 500}}>
               Hình thức
             </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+            <Typography sx={{fontSize: 12, fontWeight: 600}}>
               {data?.interviewType == 0 ? " Online" : "Trực tiếp"}
             </Typography>
           </Box>
           {data?.interviewType == 1 && (
             <>
-              <Divider orientation="vertical" variant="middle" flexItem />
-              <Box sx={{ width: "30%", px: 3 }}>
-                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+              <Divider orientation="vertical" variant="middle" flexItem/>
+              <Box sx={{width: "30%", px: 3}}>
+                <Typography sx={{fontSize: 13, fontWeight: 500}}>
                   Địa chỉ
                 </Typography>
-                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                <Typography sx={{fontSize: 12, fontWeight: 600}}>
                   {data?.offlineInterviewAddress}
                 </Typography>
               </Box>
@@ -277,12 +278,18 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
         >
           {canEdit &&
             data?.bookingCalendarProcessStatus ==
-              BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
+            BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
               <div
-                style={{ cursor: "pointer" }}
+                style={{cursor: "pointer"}}
                 onClick={() => handleClick(data)}
               >
-                <EditIcon width={12} height={12} />
+                <ButtonIcon
+                  tooltip="Sửa"
+                  icon={<EditIcon width={12} height={12}/>}
+                  size="small"
+                  sx={{color: theme.palette.common.borderObject, mx: 1}}
+                  onClick={() => handleClick(data)}
+                ></ButtonIcon>
               </div>
             )}
           {
@@ -293,12 +300,12 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
                 onClick={() => {
                   window.open(
                     window.location.origin +
-                      "/phong-van.html?DisplayName=" +
-                      user?.firstName +
-                      "&&Email=" +
-                      user?.email +
-                      "&&RoomName=" +
-                      data?.id
+                    "/phong-van.html?DisplayName=" +
+                    user?.firstName +
+                    "&&Email=" +
+                    user?.email +
+                    "&&RoomName=" +
+                    data?.id
                   );
                 }}
                 target="_blank"
