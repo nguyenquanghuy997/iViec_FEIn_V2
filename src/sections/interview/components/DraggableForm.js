@@ -167,6 +167,7 @@ function DraggableForm({ model, index, removeItem }) {
                         sx={{
                           fontSize: "13px",
                           fontWeight: "600",
+                          marginBottom: "4px"
                         }}
                       >
                         {model.name}
@@ -215,7 +216,6 @@ function DraggableForm({ model, index, removeItem }) {
                       <Collapse in={open}>
                         <Box sx={{ mb: 2 }}>
                           <Label required={true}> Giờ phỏng vấn</Label>
-
                           <MuiTimePicker
                             name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`}
                             style={{

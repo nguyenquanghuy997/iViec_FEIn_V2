@@ -8,6 +8,7 @@ import vi from "date-fns/locale/vi";
 import { forwardRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import {useTheme} from "@mui/material/styles";
+import { IconCalender } from "@/assets/icons";
 
 const renderDayVi = (day) => {
   switch (day) {
@@ -65,6 +66,7 @@ const MuiDatePicker = forwardRef((props, ref) => {
               dayOfWeekFormatter={(day) => {
                 return renderDayVi(day);
               }}
+              components={{OpenPickerIcon: IconCalender}}
               renderInput={(params) => (
                 <MuiTextField
                   sx={{ background: theme.palette.common.white, }}

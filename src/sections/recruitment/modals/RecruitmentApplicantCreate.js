@@ -376,11 +376,11 @@ export const RecruitmentApplicantCreate = ({
           {/* header */}
           <View>
             <View
-              flexrow="true"
-              atcenter="center"
+              flexrow
+              atcenter
               pv={12}
               ph={24}
-              bgcolor={"#FDFDFD"}
+              bgcolor={theme.palette.common.white}
             >
               <Text flex="true" fontsize={16} fontweight={"600"}>
                 {isEditMode ? `Chỉnh sửa ứng viên` : `Thêm mới ứng viên`}
@@ -816,7 +816,7 @@ export const RecruitmentApplicantCreate = ({
                     >
                       {isEdit ||
                       (watch("cvFile") && cv[0].status === "done") ? (
-                        cv[0].type === "application/pdf" ? (
+                        cv?.[0].type === "application/pdf" ? (
                           <div style={{ width: "100%", height: "100%" }}>
                             <IframeStyled
                               src={getFileUrl(watch("cvFile"))}
