@@ -25,8 +25,27 @@ import { AddIcon } from '@/assets/ActionIcon';
 import LoadingScreen from "@/components/LoadingScreen";
 import useRole from '@/hooks/useRole';
 import {useTheme} from "@mui/material/styles";
+import { useRouter } from 'next/router';
+
+const UserIcon = () => {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_8061_22556)">
+        <path d="M9 8.25C9.99456 8.25 10.9484 8.64509 11.6517 9.34835C12.3549 10.0516 12.75 11.0054 12.75 12V16.5H5.25V12C5.25 11.0054 5.64509 10.0516 6.34835 9.34835C7.05161 8.64509 8.00544 8.25 9 8.25ZM3.966 10.5045C3.84664 10.9071 3.77614 11.3226 3.756 11.742L3.75 12V16.5H1.5V13.125C1.49985 12.4782 1.73852 11.8541 2.17023 11.3724C2.60193 10.8907 3.19627 10.5854 3.83925 10.515L3.96675 10.5045H3.966ZM14.034 10.5045C14.7014 10.5452 15.3282 10.839 15.7864 11.3259C16.2447 11.8129 16.4999 12.4563 16.5 13.125V16.5H14.25V12C14.25 11.4803 14.175 10.9785 14.034 10.5045ZM4.125 6C4.62228 6 5.09919 6.19754 5.45083 6.54917C5.80246 6.90081 6 7.37772 6 7.875C6 8.37228 5.80246 8.84919 5.45083 9.20083C5.09919 9.55246 4.62228 9.75 4.125 9.75C3.62772 9.75 3.15081 9.55246 2.79917 9.20083C2.44754 8.84919 2.25 8.37228 2.25 7.875C2.25 7.37772 2.44754 6.90081 2.79917 6.54917C3.15081 6.19754 3.62772 6 4.125 6ZM13.875 6C14.3723 6 14.8492 6.19754 15.2008 6.54917C15.5525 6.90081 15.75 7.37772 15.75 7.875C15.75 8.37228 15.5525 8.84919 15.2008 9.20083C14.8492 9.55246 14.3723 9.75 13.875 9.75C13.3777 9.75 12.9008 9.55246 12.5492 9.20083C12.1975 8.84919 12 8.37228 12 7.875C12 7.37772 12.1975 6.90081 12.5492 6.54917C12.9008 6.19754 13.3777 6 13.875 6ZM9 1.5C9.79565 1.5 10.5587 1.81607 11.1213 2.37868C11.6839 2.94129 12 3.70435 12 4.5C12 5.29565 11.6839 6.05871 11.1213 6.62132C10.5587 7.18393 9.79565 7.5 9 7.5C8.20435 7.5 7.44129 7.18393 6.87868 6.62132C6.31607 6.05871 6 5.29565 6 4.5C6 3.70435 6.31607 2.94129 6.87868 2.37868C7.44129 1.81607 8.20435 1.5 9 1.5Z" fill="#1976D2"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_8061_22556">
+          <rect width="18" height="18" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
 
 const OrganizationContent = () => {
+  // init use next router
+  const router = useRouter();
+
   // role
   const { canAccess } = useRole();
   const canViewUser = useMemo(() => canAccess(PERMISSIONS.VIEW_USER), []);
@@ -53,6 +72,14 @@ const OrganizationContent = () => {
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0)    // 1 active 0 inactive
   const [valueTabInviteForm, setValueTabInviteForm] = useState(0);
+
+  const handleRedirectViewAllMember = (id) => {
+    return router.push({ pathname: `${router.pathname}/${id}` }, undefined, { shallow: true })
+  }
+
+  const getOrganizationAdmin = () => {
+    return ListOrganization?.find(item => item.parentOrganizationId === null)?.id;
+  }
 
   const handleOpenListInvite = () => {
     setValueTabInviteForm(1)
@@ -174,7 +201,7 @@ const OrganizationContent = () => {
             {
               ListUserAdmin?.map(user => {
                 return (
-                    <Stack flexDirection="row" sx={{mt: 2, mr: 2}} key={user?.id}>
+                    <Stack flexDirection="row" sx={{mt: 2, mr: 2, mb: 2}} key={user?.id}>
                       <Box sx={{position: 'relative'}}>
                         <Avatar variant="rounded" sx={{width: 40, height: 40}}/>
                         <span style={{position: 'absolute', top: -12, right: -6}}>
@@ -194,6 +221,15 @@ const OrganizationContent = () => {
                 )
               })
             }
+          </Box>
+          <Box>
+            <MuiButton 
+              title={"Xem danh sách toàn bộ nhân viên"}
+              color={"default"}
+              onClick={() => handleRedirectViewAllMember(getOrganizationAdmin())}
+              startIcon={<UserIcon />}
+              sx={{ fontWeight: 550, marginRight: 1, padding: '0px 6px', backgroundColor: 'transparent' }}
+            />
           </Box>
         </Box>
         <Box>

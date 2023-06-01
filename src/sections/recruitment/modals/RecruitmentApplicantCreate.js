@@ -826,7 +826,6 @@ export const RecruitmentApplicantCreate = ({
                           <img
                             style={{
                               width: "100%",
-                              height: "100%",
                               display: "block",
                               overflowClipMargin: "content-box",
                               overflow: "clip",

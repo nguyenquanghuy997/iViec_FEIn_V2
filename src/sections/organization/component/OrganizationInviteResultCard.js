@@ -84,7 +84,7 @@ const OrganizationInviteResultCard = ({item}) => {
                   fontStyle: 'italic',
                   marginTop: 0.5
                 }}
-            >{status ? '' : 'Trong danh sách đơn vị đã tồn tại người dùng này'}</Typography>
+            >{status ? '' : `Email này đã tồn tại trong đơn vị ${organizations.map(org => org?.name + " ")}`}</Typography>
           </Box>
         </Box>
       </>
