@@ -34,6 +34,7 @@ export default function DrawerEditForm({
   cancelText = "Hủy",
   contentStyles = {},
   modalStyles = {},
+  hasBackdropBackground = true,
   resetOnClose = true,
   keepMounted = false,
   _btnOpen,
@@ -126,8 +127,8 @@ export default function DrawerEditForm({
         }}
         ModalProps={{
           sx: {
+            ".MuiModal-backdrop": { background: hasBackdropBackground ? "rgba(9, 30, 66, 0.25)" : 'none' },
             ...modalStyles,
-            ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
           },
           keepMounted: keepMounted,
         }}

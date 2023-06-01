@@ -155,7 +155,7 @@ export const FilterItemStyle = styled('div')(({ theme: { palette } }) => ({
     transform: 'none',
     position: 'static',
     display: 'block',
-    marginBottom: 16,
+    marginBottom: 20,
     '&.Mui-focused': {
       color: palette.text.sub,
     },
