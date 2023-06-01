@@ -10,7 +10,7 @@ export default function NavGoBack(props) {
   const Wrapper = link ? NextLink : "div";
 
   return (
-    <Wrapper href={link} passHref {...props}>
+    <Wrapper href={link} {...props}>
       <Link
         sx={{
           lineHeight: 2,

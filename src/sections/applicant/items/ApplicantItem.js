@@ -100,8 +100,6 @@ export const ApplicantItem = (props) => {
                 {
                   pathname: PATH_DASHBOARD.applicant.view(record?.applicantId),
                   query: {
-                    correlationId: record?.correlationId,
-                    organizationId: record?.organizationId,
                     recruitmentId: record?.recruitmentId,
                     applicantId: record?.applicantId,
                   },

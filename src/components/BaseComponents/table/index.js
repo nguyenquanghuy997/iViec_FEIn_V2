@@ -249,6 +249,7 @@ const DynamicColumnsTable = (props) => {
                     borderRadius: "100px",
                     textAlign: "center",
                     padding: "2px 8px",
+                    fontWeight: 600
                   }}
                 >
                   {source?.totalRecord || 0}
