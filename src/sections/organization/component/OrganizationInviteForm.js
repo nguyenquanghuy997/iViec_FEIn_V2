@@ -5,6 +5,7 @@ import ConfirmModal, {
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
+import SvgIcon from "@/components/SvgIcon";
 import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook-form";
 import RHFTreeSelect from "@/components/hook-form/RHFTreeSelect";
 import { LabelStyle } from "@/components/hook-form/style";
@@ -234,32 +235,33 @@ const OrganizationInviteForm = ({
       scroll={"paper"}
     >
       <MuiDialogTitle onClose={onClose}>
-        {isShowResult && (
-          <ButtonIcon
+        <View flex1 flexRow atCenter>
+          {isShowResult && (
+            <ButtonIcon
+              sx={{
+                textTransform: "none",
+              }}
+              onClick={() => setIsShowResult(false)}
+              icon={
+                <SvgIcon>
+                  {
+                    '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_51686)"> <path d="M6.52398 9.16664H16.6673V10.8333H6.52398L10.994 15.3033L9.81565 16.4816L3.33398 9.99998L9.81565 3.51831L10.994 4.69664L6.52398 9.16664Z" fill="#172B4D"/> </g> <defs> <clipPath id="clip0_9022_51686"> <rect width="20" height="20" fill="white"/> </clipPath> </defs> </svg>'
+                  }
+                </SvgIcon>
+              }
+            />
+          )}
+          <Typography
+            variant="body1"
             sx={{
-              textTransform: "none",
+              fontSize: "16px",
+              fontWeight: 600,
+              color: theme.palette.common.neutral700,
             }}
-            onClick={() => setIsShowResult(false)}
-            icon={
-              <Iconify
-                icon={"ic:baseline-close"}
-                width={20}
-                height={20}
-                color={theme.palette.common.borderObject}
-              />
-            }
-          />
-        )}
-        <Typography
-          variant="body1"
-          sx={{
-            fontSize: "16px",
-            fontWeight: 600,
-            color: theme.palette.common.neutral700,
-          }}
-        >
-          {isShowResult ? "Kết quả" : "Mời người dùng"}
-        </Typography>
+          >
+            {isShowResult ? "Kết quả" : "Mời người dùng"}
+          </Typography>
+        </View>
       </MuiDialogTitle>
       <Divider />
       <Box sx={{ px: 3, pt: 3, pb: 0 }}>
@@ -321,7 +323,7 @@ const OrganizationInviteForm = ({
           >
             <Box
               className="box-content-wrapper"
-              sx={{ width: "100%", height: "600px" }}
+              sx={{ width: "100%", height: "685px" }}
             >
               {invitesResult?.map((item, index) => {
                 const userItem = dataSubmitRef.current?.find(
@@ -502,7 +504,7 @@ const OrganizationInviteForm = ({
             </DialogContent>
             <DialogActions
               sx={{
-                minHeight: "68px",
+                height: "85px",
                 borderTop: "1px solid #E7E9ED",
                 "& .btn-actions": {
                   height: "36px",
