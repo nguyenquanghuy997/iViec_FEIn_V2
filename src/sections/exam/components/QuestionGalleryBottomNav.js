@@ -5,10 +5,10 @@ import {
   ActionSwitchCheckedIcon,
   ActionSwitchUnCheckedIcon,
 } from "@/sections/organization/component/Icon";
+import { BottomNavStyle, ButtonIcon } from "@/utils/cssStyles";
 import {
   Box,
   Divider,
-  Drawer,
   IconButton,
   Stack,
   Typography,
@@ -37,13 +37,13 @@ const theme = useTheme();
   };
 
   return (
-    <Drawer
+    <BottomNavStyle
       anchor={"bottom"}
       open={listSelected.length > 0}
       variant="persistent"
       onClose={onClose}
     >
-      <Content>
+      <Content className="block-bottom">
         <Box
           sx={{
             width: "100%",
@@ -57,7 +57,7 @@ const theme = useTheme();
               <>
                 <IconButton
                   size="small"
-                  sx={{ color: theme.palette.common.blue700, mx: 0.5 }}
+                  sx={{backgroundColor: "unset !important", color: theme.palette.common.blue700, mx: 0.5, padding: 0 }}
                   onClick={() => setShowConfirmSwitchActive(true)}
                 >
                   {firstActiveStatus ? (
@@ -97,18 +97,31 @@ const theme = useTheme();
             </Box>
           </Stack>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography>Đã chọn: {listSelected.length}</Typography>
+            <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+              Đã chọn: {listSelected.length}
+            </Typography>
             <Divider
               orientation="vertical"
               flexItem
               sx={{ mx: 2, width: "2px", backgroundColor: theme.palette.common.neutral100 }}
             />
-            <IconButton size="medium" onClick={onClose}>
-              <Iconify icon="ic:baseline-close" />
-            </IconButton>
+            <ButtonIcon
+              sx={{
+                textTransform: "none",
+              }}
+              onClick={onClose}
+              icon={
+                <Iconify
+                  icon={"ic:baseline-close"}
+                  width={20}
+                  height={20}
+                  color={theme.palette.common.borderObject}
+                />
+              }
+            />
           </Box>
         </Box>
       </Content>
-    </Drawer>
+    </BottomNavStyle>
   );
 };

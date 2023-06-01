@@ -287,7 +287,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             )}
           {
             // interviewing status
-            data?.bookingCalendarProcessStatus == 9 && (
+            data?.bookingCalendarProcessStatus == 1 && (
               <ButtonDS
                 tittle="Tham gia"
                 onClick={() => {

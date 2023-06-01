@@ -320,10 +320,30 @@ export default function CreateRecruitment() {
           }
           data={getValues()}
           onSubmit={() => router.push(PATH_DASHBOARD.recruitment.root)}
-          btnCancelProps={{ title: "Hủy" }}
+          btnCancelProps={{
+            title: "Hủy",
+            sx: {
+              fontWeight: 600,
+            },
+          }}
           btnConfirmProps={{
             title: "Trở lại",
             color: "dark",
+            sx: {
+              fontWeight: 600,
+            },
+          }}
+          dialogProps={{
+            wrapperSx: {
+              "& .MuiDialog-container": {
+                paddingTop: "100px",
+                alignItems: "flex-start",
+                "& .MuiPaper-root": {
+                  borderRadius: "6px",
+                  width: "100%",
+                },
+              },
+            },
           }}
         />
       )}

@@ -142,23 +142,23 @@ export const RecruitmentProcessStatus = (item) => {
 export const DivProcessStatus = (item) => {
   switch (item) {
     case 0: //"Draft"
-      return <span style={{ color: "#455570" }}>Bản nháp</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#455570" }}>Bản nháp</span>;
     case 1: //"WaitingOrganizationApproval":
-      return <span style={{ color: "#F77A0C" }}>Chờ nội bộ phê duyệt</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#F77A0C" }}>Chờ nội bộ phê duyệt</span>;
     case 2: //"OrganizationReject":
-      return <span style={{ color: "#E53935" }}>Nội bộ từ chối</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#E53935" }}>Nội bộ từ chối</span>;
     case 3: //"WaitingMedusaApproval":
-      return <span style={{ color: "#F77A0C" }}>Chờ iVIEC phê duyệt</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#F77A0C" }}>Chờ iVIEC phê duyệt</span>;
     case 4: //"MedusaReject":
-      return <span style={{ color: "#E53935" }}>iVIEC từ chối</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#E53935" }}>iVIEC từ chối</span>;
     case 5: //"Recruiting":
-      return <span style={{ color: "#388E3C" }}>Đang tuyển dụng</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#388E3C" }}>Đang tuyển dụng</span>;
     case 6: //"Calendared":
-      return <span style={{ color: "#388E3C" }}>Đã lên lịch</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#388E3C" }}>Đã lên lịch</span>;
     case 7: //"Expired":
-      return <span style={{ color: "#455570" }}>Hết hạn</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#455570" }}>Hết hạn</span>;
     case 8: //"Closed":
-      return <span style={{ color: "#455570" }}>Đóng</span>;
+      return <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 500, color: "#455570" }}>Đóng</span>;
   }
 };
 //RecruitmentWorkingForm

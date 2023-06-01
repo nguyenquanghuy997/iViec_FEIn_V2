@@ -17,6 +17,12 @@ const InputTextArea = styled(TextArea)(({theme}) => ({
     borderInlineEndWidth: "1.5px",
     boxShadow: "unset"
   },
+  ":hover": {
+    borderColor: theme.palette.common.neutral400,
+  },
+  "::placeholder": {
+    color: theme.palette.common.neutral400,
+  },
   ".::-webkit-scrollbar": {
     width: "4px",
   },

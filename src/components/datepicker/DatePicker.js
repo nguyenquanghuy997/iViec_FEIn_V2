@@ -5,6 +5,7 @@ import { DatePicker as XDatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import TextInput from '@/components/form/MuiTextField';
 import { useTheme } from "@mui/material/styles";
+import { IconCalender } from "@/assets/icons";
 
 const DatePicker = forwardRef(({
   iconPosition = 'start',
@@ -35,6 +36,7 @@ const DatePicker = forwardRef(({
             paddingTop: '10px',
           }
         }}
+        components={{OpenPickerIcon: IconCalender}}
         renderInput={(params) => {
           let { value } = props;
           if (!value) {

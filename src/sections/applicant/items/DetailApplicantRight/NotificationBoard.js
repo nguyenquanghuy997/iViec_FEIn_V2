@@ -35,6 +35,7 @@ const NotificationBoard = ({
   const [isOpenReviewView, setIsOpenReviewView] = useState(false);
 
   const handleClick = () => {
+    if (!isReview && !children) return;
     setOpen(!open);
   };
 

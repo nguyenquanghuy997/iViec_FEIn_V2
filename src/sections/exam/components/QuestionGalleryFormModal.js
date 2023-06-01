@@ -11,10 +11,10 @@ import {
 import { ButtonIcon } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Divider, Modal } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { useTheme } from "@mui/material/styles";
 
 const defaultValuess = {
   name: "",
@@ -135,7 +135,7 @@ export const QuestionGalleryFormModal = ({
                 flexrow
                 atcenter
                 style={{
-                  marginLeft: -8
+                  marginLeft: -8,
                 }}
                 onclick={() => setIsActive(!isActive)}
               >
@@ -147,7 +147,9 @@ export const QuestionGalleryFormModal = ({
                 <Text
                   fontSize={12}
                   fontWeight={"500"}
-                  color={isActive ? "#388E3C" : theme.palette.common.borderObject}
+                  color={
+                    isActive ? "#388E3C" : theme.palette.common.borderObject
+                  }
                 >
                   {isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
                 </Text>

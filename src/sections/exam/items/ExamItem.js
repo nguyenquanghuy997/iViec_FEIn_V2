@@ -4,27 +4,33 @@ import {
   useGetAllExaminationQuery,
   useGetListColumnExamsQuery,
   useUpdateListColumnExamsMutation,
-} from "@/sections/exam/ExamSlice"
+} from "@/sections/exam/ExamSlice";
+import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
+import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
+import { ExamType, Status } from "@/utils/enum";
+import { LIST_EXAM_TYPE, LIST_STATUS } from "@/utils/formatString";
+import { fDate } from "@/utils/formatTime";
+import { Box, Button, ButtonGroup, Tooltip } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import { Box, Button, ButtonGroup, Tooltip } from "@mui/material";
 import Iconify from "@/components/Iconify";
-import ExamBottomNav from "@/sections/exam/items/ExamBottomNav";
-import { QuestionFormModal } from "@/sections/exam/components/QuestionFormModal";
 import ExamFormModal from "../components/ExamFormModal";
 import ExamChooseTypeModal from "../components/ExamChooseTypeModal";
-import { useTheme } from "@mui/material/styles";
 import { TBL_FILTER_TYPE } from "@/config";
-import { LIST_EXAM_TYPE, LIST_STATUS } from "@/utils/formatString";
 import { API_GET_ORGANIZATION_USERS } from "@/routes/api";
-import { ExamType, Status } from "@/utils/enum";
-import { fDate } from "@/utils/formatTime";
 import { TextElipsis } from "@/utils/cssStyles";
 
-export const ExamItem = ({
-  hideTable,
-  headerProps,
-}) => {
+const ViewExam = styled('div')(() => ({
+  margin: "-32px",
+  '& .inside': {
+    ".ant-table-content": {
+      minHeight: 'calc(100vh - 380px)',
+    },
+  },
+}));
+
+export const ExamItem = ({ hideTable, headerProps }) => {
   const router = useRouter();
   const theme = useTheme();
   const listArrayOtherIdsFilter = ["yearsOfExperience", "sexs", "maritalStatuses", "recruitmentPipelineStates"]
@@ -71,7 +77,6 @@ export const ExamItem = ({
               {item}
             </TextElipsis>
           </Tooltip>
-
         ),
       },
       {
@@ -386,7 +391,7 @@ export const ExamItem = ({
   }
 
   return (
-    <View style={{ margin: '-32px' }}>
+    <ViewExam>
       <View>
         <DynamicColumnsTable
           columns={columns}
@@ -437,6 +442,6 @@ export const ExamItem = ({
         <ExamChooseTypeModal data={dataForm} show={showChooseType} onClose={onCloseExamChooseTypeForm}
           onSubmit={handleSubmitCreate} />
       </View>
-    </View>
+    </ViewExam>
   );
 };

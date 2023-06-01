@@ -10,8 +10,7 @@ import { Table } from "antd";
 import { isEmpty as _isEmpty, isEmpty } from "lodash";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import { RiSettings3Fill } from "react-icons/ri";
-
+import { SettingIcon } from "@/assets/icons-datatable";
 const DynamicColumnsTable = (props) => {
   const {
     columns = [],
@@ -222,7 +221,7 @@ const DynamicColumnsTable = (props) => {
                 onClick={showSetting}
                 sx={{ backgroundColor: "unset", padding: '0 8px 0 0' }}
                 icon={
-                  <RiSettings3Fill size={16} color={palette.text.primary} />
+                  <SettingIcon />
                 }
               />
 
