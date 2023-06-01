@@ -525,7 +525,7 @@ function ResultItem(props) {
                 }}
               />
             )}
-            {item.pipelineStateResultType == 0 && (
+            {/* {item.pipelineStateResultType == 0 && (
               <ButtonDS
                 onClick={() => { setIsOpenSendOffer(true) }}
                 tittle={"Gửi thư mời nhận việc"}
@@ -546,7 +546,7 @@ function ResultItem(props) {
                   textTransform: "none",
                 }}
               />
-            )}
+            )} */}
           </Box>
           {isOpenSendOffer && (
             <ApplicantSendOfferModal
