@@ -91,7 +91,8 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
   }
 
   useEffect(async () => {
-    setIsLoading((await getQuestions({ QuestionGroupId: questionGallary.id, searchKey, type, createdTimeFrom, createdTimeTo, creatorIds })).isLoading)
+    if (show)
+      setIsLoading((await getQuestions({ QuestionGroupId: questionGallary.id, searchKey, type, createdTimeFrom, createdTimeTo, creatorIds })).isLoading)
   }, [searchKey, type, createdTimeFrom, createdTimeTo, creatorIds]);
 
   useEffect(() => {
@@ -114,6 +115,9 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
           top: "0 !important",
           borderRadius: "6px !important",
         },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        }
       }}
     >
       <Box
@@ -172,7 +176,8 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
                     backgroundColor: '#F2F4F5',
                     borderRadius: '6px',
                     '.MuiInput-root': {
-                      border: 'none'
+                      border: 'none',
+                      backgroundColor: '#F2F4F5',
                     }
                   }}
                   InputProps={{
@@ -224,7 +229,6 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
                     placeholder="Chọn người tạo"
                     fullWidth
                     showAvatar
-                    allowClear
                   />
                 </Box>
               </FormProvider>
