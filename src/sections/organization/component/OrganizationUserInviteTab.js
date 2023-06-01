@@ -235,7 +235,6 @@ const OrganizationUserInviteTab = ({
           }}
         />
       )}
-      {selected.length > 0 && (
         <BottomNavModal
           data={selected}
           onClose={handleCloseBottomNav}
@@ -263,7 +262,6 @@ const OrganizationUserInviteTab = ({
             },
           ]}
         />
-      )}
     </>
   );
 };
