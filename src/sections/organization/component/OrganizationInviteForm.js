@@ -19,6 +19,7 @@ import {
   useResendEmailMutation,
 } from "@/sections/organization/override/OverrideOrganizationSlice";
 import { useGetRoleGroupListQuery } from "@/sections/rolegroup";
+import { ButtonIcon } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
@@ -26,7 +27,6 @@ import {
   DialogActions,
   DialogContent,
   Divider,
-  IconButton,
   Tab,
   Tabs,
   Typography,
@@ -234,14 +234,20 @@ const OrganizationInviteForm = ({
     >
       <MuiDialogTitle onClose={onClose}>
         {isShowResult && (
-          <IconButton
-            edge="start"
-            size={"small"}
-            sx={{ mr: 2 }}
+          <ButtonIcon
+            sx={{
+              textTransform: "none",
+            }}
             onClick={() => setIsShowResult(false)}
-          >
-            <Iconify icon="material-symbols:arrow-back" />
-          </IconButton>
+            icon={
+              <Iconify
+                icon={"ic:baseline-close"}
+                width={20}
+                height={20}
+                color={theme.palette.common.borderObject}
+              />
+            }
+          />
         )}
         <Typography
           variant="body1"
