@@ -189,13 +189,16 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
           justifyContent: "space-between",
           borderRadius: isLastItem ? "" : "6px 6px 6px 6px !important",
           borderBottom: isLastItem ? "" : "1px solid #E7E9ED",
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: theme.palette.common.neutral100,
+          },
         }}
       >
         <CardContent
           sx={{
             display: "flex",
             width: "100%",
-            backgroundColor: "background.paper",
             color: "text.secondary",
             padding: "16px",
             borderRadius: isLastItem ? "" : "6px",
