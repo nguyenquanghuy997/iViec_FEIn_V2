@@ -71,7 +71,7 @@ export default function AccountPopover() {
             color: theme.palette.common.neutral100,
           }}
         >
-          {user && `${user?.lastName || ""} ${user?.firstName}`}
+          {user && `${user?.lastName || ""} ${user?.firstName || ""}`}
         </TypographyStyle>
         <TypographyStyle
           variant="body2"
