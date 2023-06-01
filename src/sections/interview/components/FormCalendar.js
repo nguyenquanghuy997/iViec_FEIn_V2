@@ -1,6 +1,7 @@
 import { ButtonDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
+import { drawerPaperStyle } from "@/components/drawer-edit-form/styles";
 import { FormProvider } from "@/components/hook-form";
 import { dispatch } from "@/redux/store";
 import {
@@ -21,7 +22,7 @@ import {
 import { ViewModel } from "@/utils/cssStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { CircularProgress, Divider, Grid, Modal } from "@mui/material";
+import { CircularProgress, Divider, Drawer, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import moment from "moment";
 import { useSnackbar } from "notistack";
@@ -254,13 +255,22 @@ export const FormCalendar = ({
 
   return (
     <FormProvider methods={methods}>
-      <Modal
+      <Drawer
+        anchor="right"
         open={open}
         onClose={onClose}
         sx={{
           display: "flex",
           justifyContent: "flex-end",
           ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
+        }}
+        PaperProps={{
+          sx: {
+            ...drawerPaperStyle({ ...theme, width: 1400 }),
+            height: "calc(100vh)",
+            marginTop: 0,
+            background: "transparent",
+          },
         }}
       >
         <ViewModel sx={{ width: "unset" }}>
@@ -409,7 +419,7 @@ export const FormCalendar = ({
             </View>
           </View>
         </ViewModel>
-      </Modal>
+      </Drawer>
     </FormProvider>
   );
 };

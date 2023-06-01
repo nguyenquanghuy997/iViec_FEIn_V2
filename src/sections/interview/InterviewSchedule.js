@@ -119,7 +119,7 @@ export default function InterviewSchedule({ Data }) {
       {openForm && (
         <FormCalendar open={openForm} data={itemSelect} setOpen={setOpenForm} />
       )}
-      {canEdit && openDialog && (
+      {canEdit && (
         <DetailDialog
           title="Chi tiết lịch phỏng vấn"
           open={openDialog}
