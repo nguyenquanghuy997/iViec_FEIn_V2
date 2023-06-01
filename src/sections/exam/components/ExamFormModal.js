@@ -55,28 +55,13 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
   }
 
   const pressSave = handleSubmit(async (e) => {
-    const body = { ...e, showType: showType, examTime : timeFromMinutes(e.examTime) };
+    const body = { ...e, showType: showType };
     onSubmit(body)
   });
 
   const renderTitle = (title, required) => {
     return <Label required={required}>{title}</Label>;
   };
-
-  const timeFromMinutes = (mins_num) => {
-    var days = Math.floor(mins_num / (24 * 60))
-    var hours = Math.floor((mins_num - days * 24 * 60) / 60);
-    var minutes = mins_num - hours * 60 - days * 24 * 60;
-
-    if (days < 10 && days > 0) { days = "0" + days; }
-    if (hours < 10) { hours = "0" + hours; }
-    if (minutes < 10) { minutes = "0" + minutes; }
-
-    let res = hours + ':' + minutes + ':00'
-    if (days === '0')
-      return days + "." + res;
-    return res;
-  }
 
   const showTypeOptions = [
     {
