@@ -3,6 +3,7 @@ import ConfirmModal, {
   MuiDialogTitle,
 } from "@/components/BaseComponents/ConfirmModal";
 import MuiButton from "@/components/BaseComponents/MuiButton";
+import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook-form";
 import RHFTreeSelect from "@/components/hook-form/RHFTreeSelect";
@@ -362,6 +363,7 @@ const OrganizationInviteForm = ({
                 sx={{ width: "100%", height: "600px" }}
               >
                 {fields.map((item, index) => {
+                  const disableDelete = fields.length < 2;
                   return (
                     <Box
                       key={item.id}
@@ -376,23 +378,21 @@ const OrganizationInviteForm = ({
                         borderRadius: 0.5,
                       }}
                     >
-                      <Box className="box-content-inner">
+                      <View flex1>
                         <Box
                           sx={{
                             display: "flex",
                             justifyContent: "space-between",
                             mb: 2,
-                            flex: 1,
                           }}
                         >
-                          <Box>
+                          <View flex1>
                             <RHFTextField
                               name={`invite.${index}.email`}
                               isRequired
                               title="Email"
                               placeholder="Nhập email người được mời"
                               sx={{
-                                minWidth: "248px",
                                 backgroundColor: theme.palette.common.bgrMaster,
                                 "& .MuiFormHelperText-root.Mui-error": {
                                   backgroundColor:
@@ -402,15 +402,14 @@ const OrganizationInviteForm = ({
                                 },
                               }}
                             />
-                          </Box>
-                          <Box padding={"0 16px"}>
+                          </View>
+                          <View flex1 ml={16}>
                             <RHFTextField
                               name={`invite.${index}.fullName`}
                               isRequired
                               title="Họ và tên"
                               placeholder="Họ và tên người được mời"
                               sx={{
-                                minWidth: "248px",
                                 backgroundColor: theme.palette.common.white,
                                 "& .MuiFormHelperText-root.Mui-error": {
                                   backgroundColor:
@@ -420,8 +419,8 @@ const OrganizationInviteForm = ({
                                 },
                               }}
                             />
-                          </Box>
-                          <Box>
+                          </View>
+                          <View flex1 ml={16}>
                             <LabelStyle required>Vai trò</LabelStyle>
                             <RHFSelect
                               options={ListRoleGroup?.filter(
@@ -435,7 +434,6 @@ const OrganizationInviteForm = ({
                               name={`invite.${index}.roleGroupId`}
                               placeholder="Chọn 1 vai trò"
                               sx={{
-                                minWidth: "248px",
                                 backgroundColor: theme.palette.common.white,
                                 "& .MuiFormHelperText-root.Mui-error": {
                                   backgroundColor:
@@ -445,7 +443,7 @@ const OrganizationInviteForm = ({
                                 },
                               }}
                             />
-                          </Box>
+                          </View>
                         </Box>
                         <RHFTreeSelect
                           options={ListOrganization.map((item) => ({
@@ -469,18 +467,21 @@ const OrganizationInviteForm = ({
                             },
                           }}
                         />
-                      </Box>
-                      <span
-                        style={{
-                          marginLeft: 16,
-                          display: "block",
-                          padding: 8,
-                          cursor: "pointer",
-                        }}
-                        onClick={() => remove(index)}
+                      </View>
+                      <View
+                        contentCenter
+                        ml={16}
+                        size={44}
+                        onPress={() => (disableDelete ? {} : remove(index))}
                       >
-                        <DeleteIcon />
-                      </span>
+                        <DeleteIcon
+                          fill={
+                            disableDelete
+                              ? theme.palette.common.neutral400
+                              : theme.palette.common.red600
+                          }
+                        />
+                      </View>
                     </Box>
                   );
                 })}
