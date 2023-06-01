@@ -169,6 +169,9 @@ function QuestionGallaryInternalModal({ show, listQuestions, onClose, handleAddQ
           borderRadius: "6px !important",
           minHeight: 'calc(100% - 64px)'
         },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        }
       }}
     >
       {/* header */}
@@ -247,7 +250,7 @@ function QuestionGallaryInternalModal({ show, listQuestions, onClose, handleAddQ
 
         <View flex1='true'>
           {list.length ? (
-            list.map(renderItem)
+            list?.filter(x => x.numOfQuestion > 0).map(renderItem)
           ) : (
             <View allcenter={'true'} pt={64}>
               {isLoading ? (

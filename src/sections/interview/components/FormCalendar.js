@@ -80,7 +80,7 @@ export const FormCalendar = ({
       "Chưa nhập tên tiêu đề tin tuyển dụng"
     ),
     recruitmentPipelineStateId: Yup.string().required(
-      "Chưa nhập hình thức phỏng vấn"
+      "Chưa chọn bước phỏng vấn"
     ),
     interviewType: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))

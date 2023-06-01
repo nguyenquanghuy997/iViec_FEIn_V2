@@ -790,7 +790,17 @@ export const RecruitmentItem = () => {
             onClick: () =>
               router.push(PATH_DASHBOARD.recruitment.view(itemSelected[0]?.id)),
             startIcon: <ForwardLightIcon />,
-            sx: { padding: "6px 11px", fontFamily: 'Inter', fontWeight: 600, minWidth: '101px' },
+            sx: { 
+              padding: "8px 12px", 
+              fontFamily: 'Inter', 
+              fontWeight: 600, 
+              minWidth: '101px', 
+              gap: '8px',
+              '& .MuiButton-startIcon': {
+                marginRight: '0px !important',
+                marginLeft: '0px !important'
+              }
+            },
           },
           canView && {
             key: "preview",
@@ -798,7 +808,20 @@ export const RecruitmentItem = () => {
             onClick: () => handleOpenModalState({ openPreview: true }),
             color: "default",
             startIcon: <ExpandPreviewIcon />,
-            sx: { padding: "6px 11px", fontFamily: 'Inter', fontWeight: 500, minWidth: '178px' },
+            sx: { 
+              padding: "8px 12px", 
+              fontFamily: 'Inter', 
+              fontWeight: 500, 
+              minWidth: '178px',
+              gap: '8px',
+              '& .MuiButton-startIcon': {
+                marginRight: '0px !important',
+                marginLeft: '0px !important'
+              },
+              '&:hover': {
+                backgroundColor: "#F3F4F6"
+              }
+            },
           },
           canEdit && {
             key: "close",
@@ -807,7 +830,18 @@ export const RecruitmentItem = () => {
             color: "default",
             startIcon: <SquareDarkIcon />,
             sx: {
-              padding: "6px 11px", fontFamily: 'Inter', fontWeight: 500, minWidth: '105px'
+              padding: "8px 12px", 
+              fontFamily: 'Inter', 
+              fontWeight: 500, 
+              minWidth: '105px',
+              gap: '8px',
+              '& .MuiButton-startIcon': {
+                marginRight: '0px !important',
+                marginLeft: '0px !important'
+              },
+              '&:hover': {
+                backgroundColor: "#F3F4F6"
+              }
             },
           },
           canEdit && {

@@ -209,8 +209,6 @@ const ApplicantBottomNav = ({
                             itemSelected[0]?.applicantId
                           ),
                           query: {
-                            correlationId: itemSelected[0]?.correlationId,
-                            organizationId: itemSelected[0]?.organizationId,
                             recruitmentId: itemSelected[0]?.recruitmentId,
                             applicantId: itemSelected[0]?.applicantId,
                           },

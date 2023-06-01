@@ -90,6 +90,9 @@ export const NumericFormatCustom = React.forwardRef(
       <NumericFormat
         {...other}
         getInputRef={ref}
+        onKeyDown={(e) => {
+          if (e.key === '.') e.preventDefault()
+        }}
         onValueChange={(values) => {
           onChange({
             target: {

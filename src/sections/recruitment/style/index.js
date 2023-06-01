@@ -180,14 +180,6 @@ const CompanyIntro = styled(Box)(() => ({
     }
 }));
 
-const IframeStyled = styled('iframe')(() => ({
-    width: '100%',
-    height: '100%',
-    "img": {
-        width: '100%'
-    }
-}));
-
 export {
     JobDetailHeader,
     JobLogo,
@@ -198,5 +190,4 @@ export {
     JobSummary,
     JobCompanyIntro,
     CompanyIntro,
-    IframeStyled
 }

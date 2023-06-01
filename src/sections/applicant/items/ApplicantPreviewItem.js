@@ -16,6 +16,7 @@ import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import {
+  useGetAllFilterApplicantQuery,
   useGetApplicantByIdQuery,
   useGetApplicantCurrentStateWithRecruitmentStatesQuery,
   useGetApplicantRecruitmentQuery,
@@ -47,17 +48,29 @@ function ApplicantPreviewItem() {
   const ApplicantId = router.query.applicantId
     ? router.query.applicantId
     : router.query.slug;
-  const ApplicantCorrelationId = router.query.correlationId;
-  const OrganizationId = router.query.organizationId;
   const RecruitmentId = router.query.recruitmentId;
   const requestEdit = router.query.mode === "edit";
 
-  const { data: { items: options = [] } = {}, isFetching } =
-    useGetRecruitmentsByApplicantQuery({
-      ApplicantCorrelationId: ApplicantCorrelationId,
-      OrganizationId,
-    });
+  const { data: getApplicant = [] } = useGetAllFilterApplicantQuery();
+  const dataApplicant = getApplicant?.items?.find(
+    (i) => i.applicantId === ApplicantId
+  );
 
+  const { data: data = [] } = useGetApplicantByIdQuery(
+    {
+      applicantId: ApplicantId,
+    },
+    { skip: !ApplicantId }
+  );
+
+  const { data: { items: options = [] } = {}, isFetching } =
+    useGetRecruitmentsByApplicantQuery(
+      {
+        ApplicantCorrelationId: dataApplicant?.correlationId,
+        OrganizationId: dataApplicant?.organizationId,
+      },
+      { skip: !dataApplicant?.correlationId && !dataApplicant?.organizationId }
+    );
   const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
   const [isReExploiting, setIsReExploiting] = useState(false);
@@ -105,18 +118,15 @@ function ApplicantPreviewItem() {
               </BoxFlex> */}
 
           <Box pl={1}>
-            <Typography
-              display="flex"
-              fontSize="20px"
-              fontWeight="600"
-              alignItems="center"
-            >
-              {data?.fullName}
-
+            <Stack display="flex" direction="row" alignItems="center">
+              <Typography fontSize="20px" fontWeight="600">
+                {data?.fullName}
+              </Typography>
               <ButtonIcon
                 sx={{
                   marginLeft: 0.5,
                 }}
+                tooltip="Sửa"
                 onClick={() => handleOpenEditForm()}
                 icon={
                   <Iconify
@@ -127,7 +137,8 @@ function ApplicantPreviewItem() {
                   />
                 }
               />
-            </Typography>
+            </Stack>
+
             <Stack
               direction="row"
               divider={<Divider orientation="vertical" flexItem />}
@@ -316,15 +327,7 @@ function ApplicantPreviewItem() {
     },
     { skip: !ApplicantId || !RecruitmentId }
   );
-
-  const { data: data = [] } = useGetApplicantByIdQuery(
-    {
-      applicantId: ApplicantId,
-    },
-    { skip: !ApplicantId }
-  );
-
-  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
+  const { data: isReview } = useGetCheckReviewQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
@@ -334,13 +337,13 @@ function ApplicantPreviewItem() {
     }
   );
 
-  const { data: isReview } = useGetCheckReviewQuery(
+  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
     {
       RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
       ApplicantId: ApplicantId,
     },
     {
-      skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
+      skip: !isReview,
     }
   );
 
@@ -419,7 +422,7 @@ function ApplicantPreviewItem() {
         <NavGoBack
           name={"Trở về danh sách ứng viên"}
           onClick={router.back}
-          sx={{padding: "28px 0px", marginTop: 0}}
+          sx={{ padding: "28px 0px", marginTop: 0 }}
         ></NavGoBack>
         <Grid>
           <Grid item xs={12} md={5}>

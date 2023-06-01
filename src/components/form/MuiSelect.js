@@ -1,18 +1,18 @@
-import { View } from "../FlexStyled";
+import {View} from "../FlexStyled";
 import SvgIcon from "../SvgIcon";
 import {
   CheckboxIconChecked,
   CheckboxIconDefault,
 } from "@/assets/CheckboxIcon";
 import CloseIcon from "@/assets/CloseIcon";
-import { SearchIcon } from "@/assets/SearchIcon";
-import { AvatarDS } from "@/components/DesignSystem";
+import {SearchIcon} from "@/assets/SearchIcon";
+import {AvatarDS} from "@/components/DesignSystem";
 import ChipDS from "@/components/DesignSystem/ChipDS";
-import { ChipSelectStyle } from "@/components/hook-form/style";
-import { STYLE_CONSTANT as style } from "@/theme/palette";
+import {ChipSelectStyle} from "@/components/hook-form/style";
+import {STYLE_CONSTANT as style} from "@/theme/palette";
 import axiosInstance from "@/utils/axios";
-import { containsText } from "@/utils/function";
-import { pxToRem } from "@/utils/getFontValue";
+import {containsText} from "@/utils/function";
+import {pxToRem} from "@/utils/getFontValue";
 import {
   Box,
   Checkbox,
@@ -26,7 +26,7 @@ import {
   TextField,
   useTheme,
 } from "@mui/material";
-import { isEmpty, pick } from "lodash";
+import {isEmpty, pick} from "lodash";
 import PropTypes from "prop-types";
 import qs from "query-string";
 import {
@@ -37,7 +37,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { RiCheckLine } from "react-icons/ri";
+import {RiCheckLine} from "react-icons/ri";
 
 const MuiSelect = forwardRef(
   (
@@ -133,19 +133,19 @@ const MuiSelect = forwardRef(
       }
 
       let aryValue = Array.isArray(value) ? value : [value];
-      let reqData = { [remoteIdsField]: aryValue, PageSize: aryValue.length };
+      let reqData = {[remoteIdsField]: aryValue, PageSize: aryValue.length};
       let reqMethod = method.toLowerCase();
       let symConcat = remoteUrl.includes("?") ? "&" : "?";
 
       const fetchInitData = async () => {
         clearTimeout(_timeoutFetchInit.current);
         _timeoutFetchInit.current = setTimeout(async () => {
-          const { data: { items } = { items: [] } } = await axiosInstance({
+          const {data: {items} = {items: []}} = await axiosInstance({
             url:
               remoteUrl +
               (reqMethod === "get" ? symConcat + qs.stringify(reqData) : ""),
             method: method,
-            ...(reqMethod !== "get" ? { data: reqData } : {}),
+            ...(reqMethod !== "get" ? {data: reqData} : {}),
           });
           setSelectedOptions(
             items.map((it) => pick(it, ["id", "name", "title", "email"]))
@@ -178,7 +178,7 @@ const MuiSelect = forwardRef(
       clearTimeout(_timeoutFetch.current);
       _timeoutFetch.current = setTimeout(async () => {
         const {
-          data: { items, totalPage: resTotalPage } = {
+          data: {items, totalPage: resTotalPage} = {
             items: [],
             totalPage: 1,
           },
@@ -186,8 +186,8 @@ const MuiSelect = forwardRef(
           url: remoteUrl,
           method: method,
           ...(method.toLowerCase() === "get"
-            ? { params: filters }
-            : { data: filters }),
+            ? {params: filters}
+            : {data: filters}),
         });
 
         setIsFetching(false);
@@ -264,17 +264,17 @@ const MuiSelect = forwardRef(
           .find((opt) => opt.id === val);
         return !isEmpty(optionItem)
           ? {
-              value: optionItem.id,
-              label:
-                optionItem.label ||
-                optionItem.email ||
-                optionItem.name ||
-                optionItem.lastName,
-            }
-          : { value: val, label: val };
+            value: optionItem.id,
+            label:
+              optionItem.label ||
+              optionItem.email ||
+              optionItem.name ||
+              optionItem.lastName,
+          }
+          : {value: val, label: val};
       }
       optionItem = options.find((opt) => opt.value === val);
-      return optionItem || { value: val, label: val };
+      return optionItem || {value: val, label: val};
     };
 
     const getLabel = (val) => {
@@ -361,9 +361,13 @@ const MuiSelect = forwardRef(
         color: theme.palette.text.sub,
       },
       ".MuiSelect-select .selected-value": {
-        display: "inline-flex",
         flexWrap: "wrap",
         padding: "0px 6px",
+        display: "inline-block",
+        maxWidth: "100%",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       },
       ".MuiSelect-select": {
         padding: "8px",
@@ -444,7 +448,7 @@ const MuiSelect = forwardRef(
         multiple={multiple}
         value={value}
         placeholder={placeholder}
-        input={<OutlinedInput />}
+        input={<OutlinedInput/>}
         IconComponent={(p) => (
           <View
             absolute
@@ -470,7 +474,7 @@ const MuiSelect = forwardRef(
           return (
             <Box display="flex" alignItems="center" flexWrap="wrap">
               {startIcon && (
-                <div className="select-icon" style={{ marginRight: 8 }}>
+                <div className="select-icon" style={{marginRight: 8}}>
                   {startIcon}
                 </div>
               )}
@@ -489,10 +493,10 @@ const MuiSelect = forwardRef(
             <InputAdornment position={"end"}>
               <IconButton
                 size={"small"}
-                sx={{ visibility: value ? "visible" : "hidden" }}
+                sx={{visibility: value ? "visible" : "hidden"}}
                 onClick={() => onClearValue(name, "")}
               >
-                <CloseIcon />
+                <CloseIcon/>
               </IconButton>
             </InputAdornment>
           )
@@ -533,7 +537,7 @@ const MuiSelect = forwardRef(
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <SearchIcon/>
                 </InputAdornment>
               ),
             }}
@@ -582,16 +586,16 @@ const MuiSelect = forwardRef(
                   name={option.label}
                 />
               )}
-              <ListItemText primary={option.label} sx={{ mr: "8px" }} />
+              <ListItemText primary={option.label} sx={{mr: "8px"}}/>
               {multiple ? (
                 <Checkbox
                   checked={value.includes(option.value)}
-                  icon={<CheckboxIconDefault />}
-                  checkedIcon={<CheckboxIconChecked />}
+                  icon={<CheckboxIconDefault/>}
+                  checkedIcon={<CheckboxIconChecked/>}
                 />
               ) : (
                 value === option.value && (
-                  <RiCheckLine color={theme.palette.common.blue700} size={20} />
+                  <RiCheckLine color={theme.palette.common.blue700} size={20}/>
                 )
               )}
             </MenuItem>
@@ -599,7 +603,7 @@ const MuiSelect = forwardRef(
 
           {isFetching && (
             <Box textAlign="center" my={1}>
-              <CircularProgress size={18} />
+              <CircularProgress size={18}/>
             </Box>
           )}
         </div>

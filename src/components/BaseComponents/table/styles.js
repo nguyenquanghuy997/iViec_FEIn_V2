@@ -78,6 +78,9 @@ export const TableStyle = styled('div')(({theme}) => ({
     borderBottom: "2px solid " + theme.palette.common.strokeDividerLine,
     wordBreak: "break-all",
   },
+  ".ant-table-thead >tr>th.ant-table-selection-column": {
+    width: "56px",
+  },
   ".ant-table-tbody >tr >td": {
     padding: "13px 8px",
     color: theme.palette.common.neutral800,
@@ -91,6 +94,22 @@ export const TableStyle = styled('div')(({theme}) => ({
   },
   ".ant-pagination": {
     padding: "0 16px",
+  },
+  ".ant-checkbox-inner": {
+    width: '18px',
+  height: '18px',
+  border: '2.5px solid #8A94A5'
+  },
+  '.ant-checkbox-indeterminate .ant-checkbox-inner, .ant-checkbox-checked .ant-checkbox-inner':{
+    borderColor: '#1677ff !important'
+  },
+  '.ant-checkbox-indeterminate .ant-checkbox-inner':{
+    backgroundColor: '#1677ff'
+  },
+  '.ant-checkbox-indeterminate .ant-checkbox-inner:after':{
+    width: '8px',
+    height: '2px',
+    backgroundColor: '#fff'
   },
   ".ant-pagination .ant-pagination-total-text": {
     position: "absolute",
@@ -155,7 +174,7 @@ export const FilterItemStyle = styled('div')(({ theme: { palette } }) => ({
     transform: 'none',
     position: 'static',
     display: 'block',
-    marginBottom: 16,
+    marginBottom: 20,
     '&.Mui-focused': {
       color: palette.text.sub,
     },

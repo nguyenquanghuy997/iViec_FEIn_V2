@@ -307,7 +307,7 @@ export const API_GET_BOOKING_CALENDER_BY_RECRUITMENT_ID =
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID =
   "/examination/Examination/GetExamination";
-export const API_GET_COLUMN_EXAMS = "/aggregator/ExamVisible/GetExamsVisible";
+export const API_GET_COLUMN_EXAMS = "/aggregator/ExamVisible/GetExamVisible";
 export const API_UPDATE_COLUMN_EXAMS =
   "/aggregator/ExamVisible/UpdateExamVisible";
 export const API_UPDATE_STATUS_EXAM =

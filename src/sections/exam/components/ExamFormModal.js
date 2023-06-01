@@ -1,4 +1,4 @@
-import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
+import { ButtonDS, SwitchStatusDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from '@/components/Iconify'
 import MuiInputNumber from "@/components/form/MuiInputNumber";
@@ -151,7 +151,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
 
           <View mt={28}>
             {renderTitle("Mô tả")}
-            <RHFTextField
+            <TextAreaDS
               multiline
               rows={4}
               name={"description"}
