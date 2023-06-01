@@ -65,7 +65,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
         })
         return;
       }
-      newList.push(data);
+      newList.unshift(data);
     }
     //edit
     else {
@@ -78,9 +78,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
       }
       newList[currentIndexQuestion] = data;
     }
-    enqueueSnackbar('Lưu câu hỏi thành công')
     updateListQuestion(newList)
-
     setShowQuestionForm(false)
     // reset choose index && data
     resetSelectItem()
