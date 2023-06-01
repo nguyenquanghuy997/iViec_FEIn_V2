@@ -207,7 +207,7 @@ export const ExamType = (item) => {
     case 0:
       return "Đề thi câu hỏi cố định";
     case 1:
-      return "Đề thi câu hỏi trắc nghiệm";
+      return "Đề thi câu hỏi ngẫu nhiên";
   }
 };
 

@@ -122,9 +122,9 @@ export const ApplicantReviewModal = ({
       applicantReviewResultType: currentAction,
       comment: d.result,
       applicantReviewCriterias: d?.applicantReviewCriterias?.map((i) => ({
-        ...i,
         point: d[`${i.id}_point`],
-        content: d[`${i.id}_content`],
+        description: d[`${i.id}_content`],
+        reviewFormCriteriaId: i.id,
       })),
     };
     try {
@@ -211,7 +211,7 @@ export const ApplicantReviewModal = ({
                     <Label
                       required={isRequired}
                       className="title"
-                      title="Tính cách"
+                      title={name}
                     >
                       {name}
                     </Label>

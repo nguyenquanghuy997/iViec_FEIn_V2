@@ -1,6 +1,6 @@
 import { View } from "../FlexStyled";
 import { LoadingButton } from "@mui/lab";
-import { Tooltip } from "@mui/material";
+import { Stack, Tooltip } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import { memo } from "react";
@@ -30,7 +30,7 @@ function ButtonDS(props) {
       }}
     >
       <Tooltip title={tooltip} arrow={true}>
-        <div>
+        <Stack width={'100%'}>
           <LoadingButton
             {...other}
             variant="contained"
@@ -55,7 +55,7 @@ function ButtonDS(props) {
             {icon}
             {tittle}
           </LoadingButton>
-        </div>
+        </Stack>
       </Tooltip>
     </View>
   );

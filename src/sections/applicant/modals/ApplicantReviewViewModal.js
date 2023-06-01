@@ -107,7 +107,7 @@ export const ApplicantReviewViewModal = ({
         <Divider />
         <View style={{ overflowY: "auto", height: "600px", padding: 24 }}>
           {data?.applicantReviewCriterias?.map((item, index) => {
-            const { name, description, content, point } = item;
+            const { reviewFormCriteriaName, description, point } = item;
 
             return (
               <ReviewForm
@@ -116,14 +116,11 @@ export const ApplicantReviewViewModal = ({
                 style={{ background: theme.palette.common.bgrMaster }}
               >
                 <Label className="title" title="Tính cách">
-                  {name}
-                </Label>
-                <p className="subTitleForm" title="">
+                  {reviewFormCriteriaName}
+                </Label>               
+                <Typography fontSize={13} mb={2} color={theme.palette.common.neutral700}>
                   {description}
-                </p>
-                <Text size={13} color={theme.palette.common.neutral700}>
-                  {content}
-                </Text>
+                </Typography>
                 <Point value={point} onChange={undefined} />
               </ReviewForm>
             );
