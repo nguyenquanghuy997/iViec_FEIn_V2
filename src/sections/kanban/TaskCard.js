@@ -86,9 +86,7 @@ function Baseitem(props) {
           onClick={() =>
             router.push(
               {
-                pathname: PATH_DASHBOARD.applicant.view(
-                  props.item?.applicantId
-                ),
+                pathname: PATH_DASHBOARD.applicant.view(props.item?.applicantId),
                 query: {
                   correlationId: props.item?.correlationId,
                   organizationId: props.item?.organizationId,
@@ -429,13 +427,9 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType === 0
-                        ? "#FDFDFD"
-                        : "#455570",
+                      item.pipelineStateResultType === 0 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType === 0
-                        ? "#4CAF50"
-                        : "#FDFDFD",
+                      item.pipelineStateResultType === 0 ? "#4CAF50" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#4CAF50",
@@ -453,13 +447,9 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType === 1
-                        ? "#FDFDFD"
-                        : "#455570",
+                      item.pipelineStateResultType === 1 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType === 1
-                        ? "#FF9800"
-                        : "#FDFDFD",
+                      item.pipelineStateResultType === 1 ? "#FF9800" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#FF9800",
@@ -478,13 +468,9 @@ function ResultItem(props) {
                   sx={{
                     border: "none",
                     color:
-                      item.pipelineStateResultType === 2
-                        ? "#FDFDFD"
-                        : "#455570",
+                      item.pipelineStateResultType === 2 ? "#FDFDFD" : "#455570",
                     backgroundColor:
-                      item.pipelineStateResultType === 2
-                        ? "#F44336"
-                        : "#FDFDFD",
+                      item.pipelineStateResultType === 2 ? "#F44336" : "#FDFDFD",
                     boxShadow: "none",
                     ":hover": {
                       backgroundColor: "#F44336",
@@ -784,10 +770,10 @@ function TaskCard({item, index, pipelineStateType}) {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                    }}
-                  >
+                    }}>
                     <SvgIcon>
-                      {`<svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      {
+                        `<svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <circle cx="3" cy="3" r="3" fill="#4CAF50"/>
                           </svg>
                           `}

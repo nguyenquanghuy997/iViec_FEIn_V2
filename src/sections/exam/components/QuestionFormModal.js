@@ -1,8 +1,8 @@
-import { ButtonDS, SwitchStatusDS } from "@/components/DesignSystem";
+import { ButtonDS, SwitchStatusDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import SvgIcon from "@/components/SvgIcon";
-import { FormProvider, RHFTextField } from "@/components/hook-form";
+import { FormProvider } from "@/components/hook-form";
 import RHFDropdown from "@/components/hook-form/RHFDropdown";
 import { Label } from "@/components/hook-form/style";
 import { ButtonCancelStyle } from "@/sections/applicant/style";
@@ -140,7 +140,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
       .max(100, 'Điểm câu hỏi phải nhỏ hơn 100'),
     answers: Yup.mixed().when(["questionType"], {
       is: (questionType) => {
-        return questionType === 0 || questionType === 1
+        return questionType === '0'|| questionType === '1'
       },
       then: Yup.mixed()
         .test({
@@ -203,7 +203,6 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   const pressAddAnswer = () => {
     setListAnswer((l) => [...l, defaultAnswer]);
   };
-
   const pressDeleteAnswer = (index) => {
     setListAnswer((l) => l.filter((_, i) => i !== index));
   };
@@ -392,12 +391,12 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
   useEffect(() => {
     if (data?.id || data?.questionTitle) {
       setValue("id", data.id);
-      setValue("questionType", parseInt(data.questionType));
+      setValue("questionType", data.questionType);
       setValue("questionTitle", data.questionTitle);
       setValue("questionPoint", data.questionPoint);
       setValue("questionGroupId", data.questionGroupId);
       setValue("isActive", !!data.isActive);
-      setListAnswer(data.questionType == 2 ? [defaultAnswer] : data.answers);
+      setListAnswer(data.answers);
       setListMedia(data.questionFilePaths?.map((i) => ({ uploadedUrl: i })));
       return;
     }
@@ -438,7 +437,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
         <Modal
           open={show}
           onClose={onClose}
-          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" } }}
+          sx={{ display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"} }}
         >
           <ViewModel>
             {/* header */}
@@ -508,8 +507,7 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
               <View mt={24}>
                 {renderTitle("Câu hỏi", true)}
 
-                <RHFTextField
-                  multiline
+                <TextAreaDS
                   isRequired
                   rows={4}
                   name={"questionTitle"}

@@ -1,4 +1,4 @@
-import { ButtonDS } from "@/components/DesignSystem";
+import { ButtonDS, TextAreaDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { FormProvider, RHFTextField } from "@/components/hook-form";
@@ -52,13 +52,13 @@ export const QuestionGalleryFormModal = ({
   const pressHide = () => {
     setShow(false);
   };
+
   const pressSave = handleSubmit(async (d) => {
     const data = {
       ...d,
       isActive,
     };
     onSubmit?.(data);
-    pressHide();
   });
 
   useEffect(() => {
@@ -80,23 +80,21 @@ export const QuestionGalleryFormModal = ({
       open={show}
       sx={{
         display: "flex",
-        paddingTop: "100px",
+        alignItems: "start",
         justifyContent: "center",
-        ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
+        top: 100,
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        }
       }}
       onBackdropClick={pressHide}
     >
       <>
         <FormProvider methods={methodss}>
-          <View
-            hidden
-            width={668}
-            borderradius={8}
-            bgcolor={theme.palette.common.white}
-          >
+          <View hidden width={668} borderradius={6} bgcolor={theme.palette.common.white} boxshadow={'0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)'}>
             <View flexrow="true" atcenter="true" pv={16} ph={24}>
               <Text flex fontsize={16} fontweight={"700"}>
-                {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm nhóm câu hỏi"}
+                {isEdit ? "Chỉnh sửa nhóm câu hỏi" : "Thêm mới nhóm câu hỏi"}
               </Text>
 
               <ButtonIcon
@@ -123,7 +121,7 @@ export const QuestionGalleryFormModal = ({
               </View>
               <View mb={28}>
                 <Label>{"Mô tả"}</Label>
-                <RHFTextField
+                <TextAreaDS
                   initialValue=""
                   multiline
                   rows={4}

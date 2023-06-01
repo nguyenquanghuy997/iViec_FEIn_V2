@@ -36,7 +36,7 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
       .typeError('Chưa nhập thời gian thi')
       .required('Chưa nhập thời gian thi')
       .min(1, 'Thời gian thi phải lớn hơn 0')
-      .max(10080, 'Thời gian làm bài không quá 10.080 phút')
+      .max(10000, 'Thời gian thi quá dài')
   });
 
   const methods = useForm({
@@ -89,8 +89,15 @@ function ExamFormModal({ show, onClose, onSubmit, data }) {
       aria-describedby="alert-dialog-description"
       sx={{
         "& .MuiPaper-root": {
-          top: "0 !important",
+          top: "100px !important",
+          margin: '0 !important'
         },
+        ".MuiModal-backdrop": {
+          background: "rgba(9, 30, 66, 0.25)"
+        },
+        ".MuiDialog-container": {
+          alignItems: 'start'
+        }
       }}
     >
       <FormProvider methods={methods}>

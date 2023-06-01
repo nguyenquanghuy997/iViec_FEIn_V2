@@ -3,7 +3,6 @@ import {
   ImportLinkIcon,
   TeamLineIcon,
 } from "@/assets/ActionIcon";
-import MenuIcon from "@/assets/interview/MenuIcon";
 import { NavGoBack } from "@/components/DesignSystem";
 import { LightTooltip } from "@/components/DesignSystem/TooltipHtml";
 import Iconify from "@/components/Iconify";
@@ -43,6 +42,7 @@ import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import MenuIcon from "@/assets/interview/MenuIcon";
 
 const defaultStyleRecruitmentStatus = {
   borderRadius: "100px",
@@ -687,7 +687,7 @@ function RecruitmentPreviewItem({
           ) : (
             <BoxFlex>
               <Stack flexDirection="row" alignItems="center">
-                <Box>
+                 <Box>
                   <ButtonGroup
                     disableElevation
                     variant="contained"
