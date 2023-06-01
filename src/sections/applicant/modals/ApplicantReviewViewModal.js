@@ -137,19 +137,19 @@ export const ApplicantReviewViewModal = ({
             </Label>
             <View flexrow mv={16}>
               <Iconify
-                icon={action.icon}
+                icon={action?.icon}
                 width={20}
                 height={20}
-                color={action.color}
+                color={action?.color}
                 mr={1}
               />
               <Typography
                 fontSize={14}
                 fontWeight={"600"}
-                color={action.color}
+                color={action?.color}
                 textAlign={"center"}
               >
-                {action.name}
+                {action?.name}
               </Typography>
             </View>
             <Text size={13} color={theme.palette.common.neutral700}>

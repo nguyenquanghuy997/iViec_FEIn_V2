@@ -27,30 +27,17 @@ import {
 } from "@/sections/recruitment";
 import { setValueFieldScan } from "@/sections/recruitment/helper";
 import { ViewModel } from "@/utils/cssStyles";
-import {
-  LIST_CURRENCY_TYPE,
-  LIST_EXPERIENCE_NUMBER,
-  LIST_GENDER,
-  LIST_MARITAL_STATUSES,
-} from "@/utils/formatString";
+import { LIST_CURRENCY_TYPE, LIST_EXPERIENCE_NUMBER, LIST_GENDER, LIST_MARITAL_STATUSES, } from "@/utils/formatString";
 import { phoneRegExp } from "@/utils/function";
 import { getFileUrl } from "@/utils/helper";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Avatar,
-  CircularProgress,
-  Divider,
-  Grid,
-  InputAdornment,
-  Modal,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Avatar, CircularProgress, Divider, Grid, InputAdornment, Modal, Typography, useTheme, } from "@mui/material";
 import moment from "moment/moment";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import MuiInputNumber from "@/components/form/MuiInputNumber";
 
 const defaultValues = {
   id: undefined,
@@ -325,7 +312,7 @@ export const RecruitmentApplicantCreate = ({
     );
     setValue("careerObjective", preview.careerObjective ?? undefined);
     setValue("achievements", preview.achievements ?? undefined);
-    setValue("currencyUnit", preview.currencyUnit ?? undefined);
+    setValue("currencyUnit", preview.currencyUnit ?? null);
     setValue(
       "expectedWorkingAddress.address",
       preview.expectedWorkingAddress?.address ?? undefined
@@ -648,11 +635,11 @@ export const RecruitmentApplicantCreate = ({
                     </Grid>
                     <Grid mb={3} container flexDirection={"row"}>
                       <Grid item xs={6} pr={"12px"}>
-                        <RHFTextField
-                          title={"Mức lương mong muốn tối thiểu"}
-                          name={"expectedSalaryFrom"}
-                          type={"number"}
+                        <MuiInputNumber
+                          name="expectedSalaryFrom"
+                          title="Mức lương mong muốn tối thiểu"
                           placeholder="Nhập số tiền"
+                          fullWidth
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position="end">
@@ -672,11 +659,11 @@ export const RecruitmentApplicantCreate = ({
                         />
                       </Grid>
                       <Grid item xs={6} pl={"12px"}>
-                        <RHFTextField
-                          title={"Mức lương mong muốn tối đa"}
-                          name={"expectedSalaryTo"}
-                          type={"number"}
+                        <MuiInputNumber
+                          name="expectedSalaryTo"
+                          title="Mức lương mong muốn tối đa"
                           placeholder="Nhập số tiền"
+                          fullWidth
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position="end">

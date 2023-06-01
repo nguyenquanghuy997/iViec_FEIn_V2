@@ -112,6 +112,7 @@ function DraggableForm({ model, index, removeItem }) {
       setOpen(false);
     }
   };
+  
   return (
     <Draggable key={model.id} draggableId={model.id} index={index}>
       {(provided) => (
