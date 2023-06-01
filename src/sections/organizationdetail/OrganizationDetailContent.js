@@ -159,6 +159,10 @@ const OrganizationDetailContent = () => {
 
   const handleCloseModal = () => dispatch(modalSlice.actions.closeModal());
 
+  const handleOpenForm = () => {
+    setIsOpen(true);
+  };
+
   const handleCloseForm = () => {
     setIsOpen(false);
   };
@@ -368,6 +372,18 @@ const OrganizationDetailContent = () => {
             </Typography>
           )}
         </OrganizationNameStyle>
+
+        <IconButton
+          size="small"
+          sx={{ color: "#172B4D", ml: "9px" }}
+          onClick={handleOpenForm}
+        >
+          <SvgIcon>
+            {
+              '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_152921)"> <path d="M6.93225 14.25H15.75V15.75H2.25V12.5678L9.675 5.14275L12.8565 8.32575L6.9315 14.25H6.93225ZM10.7347 4.083L12.3263 2.4915C12.4669 2.3509 12.6576 2.27191 12.8565 2.27191C13.0554 2.27191 13.2461 2.3509 13.3868 2.4915L15.5085 4.61325C15.6491 4.7539 15.7281 4.94463 15.7281 5.1435C15.7281 5.34237 15.6491 5.53311 15.5085 5.67375L13.917 7.2645L10.7355 4.083H10.7347Z" fill="#8A94A5"/> </g> <defs> <clipPath id="clip0_9022_152921"> <rect width="18" height="18" fill="white"/> </clipPath> </defs> </svg>'
+            }
+          </SvgIcon>
+        </IconButton>
       </Box>
       {/* End Name */}
       {/* Sub info */}
@@ -482,6 +498,10 @@ const OrganizationDetailContent = () => {
           </View>
         ) : (
           <>
+            <Text mt={16} fontSize={13} fontWeight={500}>
+              {`${ListUser.length} kết quả phù hợp`}
+            </Text>
+
             {ListUser.map((column, index) => {
               return (
                 <OrganizationCard
