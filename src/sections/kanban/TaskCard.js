@@ -88,8 +88,6 @@ function Baseitem(props) {
               {
                 pathname: PATH_DASHBOARD.applicant.view(props.item?.applicantId),
                 query: {
-                  correlationId: props.item?.correlationId,
-                  organizationId: props.item?.organizationId,
                   recruitmentId: props.item?.recruitmentId,
                   applicantId: props.item?.applicantId,
                 },
@@ -684,8 +682,6 @@ function TaskCard({item, index, pipelineStateType}) {
       {
         pathname: PATH_DASHBOARD.applicant.view(data.applicantId),
         query: {
-          correlationId: data.correlationId,
-          organizationId: data.organizationId,
           recruitmentId: data.recruitmentId,
           applicantId: data.applicantId,
           mode: "edit",

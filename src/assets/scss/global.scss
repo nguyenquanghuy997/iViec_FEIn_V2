@@ -14,10 +14,10 @@
     border-radius: 10px;
   }
 
-  *::-webkit-scrollbar-thumb:hover {
+  *:hover::-webkit-scrollbar-thumb {
     background: #A2AAB7;
   }
-  *::-webkit-scrollbar-track:hover {
-    background:#EFF3F6 ;
+  *:hover::-webkit-scrollbar-track {
+    background: #EFF3F6;
   }
 }
