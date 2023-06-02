@@ -265,6 +265,27 @@ export default function CreateRecruitment() {
     }
   };
 
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    let previousScrollPosition = 0;
+    let currentScrollPosition = 0;
+
+    window.addEventListener("scroll", function () {
+      // Get the new Value
+      currentScrollPosition = window.pageYOffset;
+
+      //Subtract the two and conclude
+      if (previousScrollPosition - currentScrollPosition < 0) {
+        setVisible(false);
+      } else if (previousScrollPosition - currentScrollPosition > 0) {
+        setVisible(true);
+      }
+
+      // Update the previous value
+      previousScrollPosition = currentScrollPosition;
+    });
+  }, []);
+
   return (
     <Page title="Đăng tin tuyển dụng">
       <View mt={194}>
@@ -278,14 +299,16 @@ export default function CreateRecruitment() {
                 onSubmit={onSubmit}
                 setShowAlert={setShowAlert}
               />
-              <TabList
-                onChange={handleChangeTab}
-                className={hState}
-                isValid={isValid}
-              />
+              {visible && (
+                <TabList
+                  onChange={handleChangeTab}
+                  className={hState}
+                  isValid={isValid}
+                />
+              )}
             </Grid>
-            <Grid style={{overflowY:'scroll', height:'calc(100vh - 260px)' }}>
-              <Content style={{paddingLeft: 30}}>
+            <Grid>
+              <Content style={{ paddingLeft: 30 }}>
                 <Grid item md={12} className="profile-content">
                   <TabPanel value="1">
                     <Information />

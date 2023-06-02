@@ -132,7 +132,7 @@ const Header = ({
           </Box>
           <MuiButton
             title="Gửi phê duyệt"
-            color="default"
+            color="primary"
             type={!errors ? "submit" : "button"}
             onClick={() =>
               onOpenConfirm({ openSaveApprove: errors ? true : false })
