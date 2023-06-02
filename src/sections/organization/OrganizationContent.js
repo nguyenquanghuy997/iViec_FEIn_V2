@@ -23,7 +23,7 @@ import {
   useGetAllAdminByOrganizationIdQuery,
   useGetListOrganizationWithChildQuery,
 } from "@/sections/organization/override/OverrideOrganizationSlice";
-import { convertFlatDataToTree, convertViToEn } from "@/utils/function";
+import { convertFlatDataToTree, convertViToEn, getIDsExpandFilter } from "@/utils/function";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from 'next/router';
 import { RiSearch2Line } from "react-icons/ri";
@@ -85,7 +85,7 @@ const OrganizationContent = () => {
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0); // 1 active 0 inactive
   const [valueTabInviteForm, setValueTabInviteForm] = useState(0);
-  
+  const [expand, setExpand] = useState([]);
   const handleRedirectViewAllMember = (id) => {
     return router.push({pathname: `${router.pathname}/${id}`}, undefined, {
       shallow: true,
@@ -174,10 +174,20 @@ const OrganizationContent = () => {
     const {value} = event.target;
     setSelected([]);
     setValueSearch(value);
+    setDataExpand();
   };
   
-  if (isLoading) return <LoadingScreen/>;
+  const setDataExpand = () => {
+    setTimeout(() => {
+      let dataExpand = []
+      treeData.forEach(node => {
+        dataExpand.push(...getIDsExpandFilter(node));
+      })
+      setExpand(dataExpand)
+    }, 300);
+  }
   
+  if (isLoading) return <LoadingScreen/>;
   return (
     <Box
       sx={{
@@ -342,6 +352,7 @@ const OrganizationContent = () => {
           <OrganizationTree
             data={convertFlatDataToTree(ListOrganization)}
             treeData={treeData}
+            expandValue={expand}
             dataRoot={_.pick(convertFlatDataToTree(ListOrganization)[0], [
               "id",
               "name",

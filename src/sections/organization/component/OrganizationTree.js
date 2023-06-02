@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CheckboxIconChecked, CheckboxIconDefault, CheckboxIconIndeterminate, } from "@/assets/CheckboxIcon";
 import { ButtonTreeStyle, CheckboxStyle, TreeItemStyle, TreeViewStyle } from "@/sections/organization/style";
 import Iconify from "@/components/Iconify";
@@ -12,7 +12,7 @@ import { PERMISSIONS } from "@/config";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import {useTheme} from "@mui/material/styles";
 
-export default function OrganizationTree({ selected, setSelected, treeData, dataRoot, data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType }) {
+export default function OrganizationTree({ selected, setSelected, treeData, expandValue, dataRoot, data, onOpenForm, onGetParentNode, onOpenPreview, setShowDelete, setActionType }) {
 
     const selectedSet = React.useMemo(() => new Set(selected), [selected]);
     const theme = useTheme();
@@ -214,13 +214,16 @@ export default function OrganizationTree({ selected, setSelected, treeData, data
             </div>
         );
     };
-
     const [expanded, setExpanded] = React.useState([]);
     const handleToggle = (event, nodeIds) => {
         if (event.target.closest('.tree-item-label-text')) {
             setExpanded(nodeIds);
         }
     };
+    
+    useEffect(() => {
+        setExpanded(expandValue);
+    }, [expandValue])
 
     // const searchInputRef = useRef(null);
     // const [valueSearch, setValueSearch] = useState('');
