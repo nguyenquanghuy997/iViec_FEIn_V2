@@ -2,15 +2,15 @@ import TaskCard from "./TaskCard";
 import Iconify from "@/components/Iconify";
 import { PipelineStateType } from "@/utils/enum";
 import { Box, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import React, { memo, useRef } from "react";
+import { memo, useRef } from "react";
 import { Droppable } from "react-beautiful-dnd";
-import {useTheme} from "@mui/material/styles";
 
 const Column = ({ droppableId, column }) => {
   // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
   const windowHeight = useRef(window.innerHeight - 120);
-  const  theme = useTheme();
+  const theme = useTheme();
   return (
     <Stack spacing={2} sx={{ p: 1, py: 0 }}>
       <div
@@ -35,14 +35,7 @@ const Column = ({ droppableId, column }) => {
               "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
           }}
         >
-          <Iconify
-            icon={"fluent:arrow-sort-16-regular"}
-            width={13}
-            height={13}
-            fontWeight={600}
-            color={theme.palette.common.neutral700}
-            mt={0.5}
-          />
+          <div />
 
           <Box
             sx={{
@@ -79,13 +72,8 @@ const Column = ({ droppableId, column }) => {
               {column.items.length}
             </Typography>
           </Box>
-          <Iconify
-            icon={"material-symbols:filter-list-rounded"}
-            width={13}
-            height={13}
-            color={theme.palette.common.neutral700}
-            mt={0.5}
-          />
+
+          <div />
         </Box>
         <Box style={{ borderRadius: "8px" }}>
           <Droppable droppableId={droppableId} key={droppableId}>

@@ -7,7 +7,6 @@ import {
   API_GET_APPLICANT_SKILLS,
   API_GET_JOB_CATEGORIES,
   API_GET_LIST_JOB_SOURCE,
-  API_GET_LIST_RECRUITMENT,
   API_GET_ORGANIZATION_USERS,
   API_GET_ORGANIZATION_WITH_CHILD,
   API_GET_PROVINCE,
@@ -130,18 +129,18 @@ export const ApplicantItem = (props) => {
         title: "Email",
         width: "214px",
       },
-      {
-        dataIndex: "recruitmentName",
-        title: "Tin tuyển dụng",
-        width: "284px",
-        filters: {
-          type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-          name: "recruitmentIds",
-          remoteUrl: API_GET_LIST_RECRUITMENT,
-          remoteMethod: "POST",
-          placeholder: "Chọn một hoặc nhiều tin tuyển dụng",
-        },
-      },
+      // {
+      //   dataIndex: "recruitmentName",
+      //   title: "Tin tuyển dụng",
+      //   width: "284px",
+      //   filters: {
+      //     type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+      //     name: "recruitmentIds",
+      //     remoteUrl: API_GET_LIST_RECRUITMENT,
+      //     remoteMethod: "POST",
+      //     placeholder: "Chọn một hoặc nhiều tin tuyển dụng",
+      //   },
+      // },
       {
         dataIndex: "recruitmentPipelineState",
         title: "Bước tuyển dụng",

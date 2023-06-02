@@ -8,6 +8,7 @@ import palette from "@/theme/palette";
 import { ButtonIcon, ReviewForm } from "@/utils/cssStyles";
 import { Box, Divider, Modal, Typography, useTheme } from "@mui/material";
 import { Rate } from "antd";
+import useAuth from "@/hooks/useAuth";
 
 const LIST_ACTION = [
   {
@@ -51,6 +52,7 @@ const Point = ({ value, onChange }) => {
 };
 
 export const ApplicantReviewViewModal = ({
+  creatorId,
   show,
   setShow,
   applicantId,
@@ -58,6 +60,8 @@ export const ApplicantReviewViewModal = ({
   recruitmentId,
   pressReview,
 }) => {
+  const { user } = useAuth();
+
   const { data } = useGetReviewEventQuery({
     applicantId,
     aggregateId,
@@ -182,12 +186,16 @@ export const ApplicantReviewViewModal = ({
               {mediumScore.toFixed(2)}
             </p>
           </BoxFlex>
-          <ButtonDS
+          {
+            user.id === creatorId &&
+            <ButtonDS
             type="submit"
             variant="contained"
             tittle={"Đánh giá lại"}
             onClick={pressReview}
           />
+          }
+          
         </View>
 
         <View mt={8} mb={16} ph={24} style={{ width: undefined }}>

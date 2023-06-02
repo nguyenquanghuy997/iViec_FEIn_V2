@@ -80,6 +80,7 @@ const renderOptions = (options) => {
 
 function RHFSelectMultiple({ name, ...props }) {
   const [filterOptions, setFilterOptions] = useState([]);
+  const { watch } = useFormContext();
   const [searchText, setSearchText] = useState("");
   const { control } = useFormContext();
   const theme = useTheme();
@@ -198,7 +199,7 @@ function RHFSelectMultiple({ name, ...props }) {
                   fontWeight={500}
                   color={theme.palette.common.neutral500}
                 >
-                  Không có dữ liệu
+                  {watch("recruitmentPipelineStateId") ? "Không có dữ liệu" : "Vui lòng chọn bước phỏng vấn trước" }
                 </Typography>
               </>
             )}

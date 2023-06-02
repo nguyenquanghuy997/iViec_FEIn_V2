@@ -722,7 +722,7 @@ function RecruitmentPreviewItem({
                 <FormProvider methods={methods}>
                   <RHFTextField
                     name="searchKey"
-                    placeholder="Tìm kiếm theo họ tên, email, SĐT ứng viên..."
+                    placeholder="Tìm kiếm lịch phỏng vấn..."
                     sx={{ minWidth: "510px" }}
                     InputProps={{
                       style: {
