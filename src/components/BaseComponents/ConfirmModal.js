@@ -1,3 +1,4 @@
+import { View } from "../FlexStyled";
 import Iconify from "../Iconify";
 import MuiButton from "@/components/BaseComponents/MuiButton";
 import { ButtonIcon } from "@/utils/cssStyles";
@@ -14,7 +15,6 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/styles";
 import { isEmpty } from "lodash";
-import React from "react";
 
 export const DialogContentTextStyle = styled(DialogContentText)(
   ({ theme }) => ({
@@ -48,12 +48,12 @@ export const MuiDialogTitle = ({ children, onClose, ...other }) => {
         m: 0,
         px: 3,
         py: 2,
-        borderBottom: "1px solid #E7E9ED",
+        // borderBottom: "1px solid #E7E9ED",
         minHeight: "68px",
       }}
       {...other}
     >
-      {children}
+      <View flex1>{children}</View>
       {onClose ? (
         <ButtonIcon
           sx={{

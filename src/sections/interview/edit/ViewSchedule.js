@@ -1,9 +1,10 @@
 import { EditIcon } from "@/assets/ActionIcon";
 import { ButtonDS } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import { BOOKING_CALENDAR_PROCCESS_STATUS, PERMISSIONS } from "@/config";
+import { PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
+import { ButtonIcon } from "@/utils/cssStyles";
 import { fTime } from "@/utils/formatTime";
 import { Box, CardContent, Divider, Tooltip, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -189,13 +190,16 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
           justifyContent: "space-between",
           borderRadius: isLastItem ? "" : "6px 6px 6px 6px !important",
           borderBottom: isLastItem ? "" : "1px solid #E7E9ED",
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: theme.palette.common.neutral100,
+          },
         }}
       >
         <CardContent
           sx={{
             display: "flex",
             width: "100%",
-            backgroundColor: "background.paper",
             color: "text.secondary",
             padding: "16px",
             borderRadius: isLastItem ? "" : "6px",
@@ -275,19 +279,23 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             padding: "16px",
           }}
         >
-          {canEdit &&
-            data?.bookingCalendarProcessStatus ==
-              BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
-              <div
-                style={{ cursor: "pointer" }}
+          {canEdit && data?.bookingCalendarProcessStatus < 2 && (
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => handleClick(data)}
+            >
+              <ButtonIcon
+                tooltip="Sửa"
+                icon={<EditIcon width={12} height={12} />}
+                size="small"
+                sx={{ color: theme.palette.common.borderObject, mx: 1 }}
                 onClick={() => handleClick(data)}
-              >
-                <EditIcon width={12} height={12} />
-              </div>
-            )}
+              ></ButtonIcon>
+            </div>
+          )}
           {
             // interviewing status
-            data?.bookingCalendarProcessStatus == 1 && (
+            data?.bookingCalendarProcessStatus < 2 && (
               <ButtonDS
                 tittle="Tham gia"
                 onClick={() => {

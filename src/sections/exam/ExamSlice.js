@@ -51,6 +51,7 @@ const examinationSlice = apiWithTag.injectEndpoints({
         params,
       }),
       providesTags: [{ type: "EXAMINATION", id: "GetById" }],
+      keepUnusedDataFor: 0,
     }),
     getQuestionGroup: builder.query({
       query: (params = {}) => ({

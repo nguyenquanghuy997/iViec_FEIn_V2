@@ -208,37 +208,29 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
   const pressSave = handleSubmit(async (e) => {
     try {
-      if (isNotSave) {
-        const data = {
-          ...e,
-          questionType: +e.questionType,
-          answers: e.answers?.length > 0 && !isEssay ? e.answers : null,
-          questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name
-        }
-        handleNoSave(data)
+      const body = {
+        ...data,
+        ...e,
+        questionType: +e.questionType,
+        answers: e.answers?.length > 0 && !isEssay ? e.answers : null,
+        questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name
       }
-      else {
-        const body = {
-          ...data,
-          ...e,
-          questionType: +e.questionType,
-          questionGroupName: items?.find(x => x.id === e.questionGroupId)?.name,
-          answers: e.answers.length > 0 && !isEssay ? e.answers : null
-        };
+      // call api 
+      if (!isNotSave) {
         await (e.id ? updateForm(body) : addForm(body)).unwrap();
-        if (handleNoSave)
-          handleNoSave(body)
+        if (getData)
+          getData();
         onClose();
-        getData();
+        enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
       }
-      enqueueSnackbar(isEditMode ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
+      // không call api
+
+      if (handleNoSave) {
+        handleNoSave(body)
+      }
     } catch (error) {
       if (error.status === "QGE_04")
         setShowDuplicateAlert(true)
-      // enqueueSnackbar("Câu hỏi đã tồn tại trong nhóm câu hỏi", {
-      //   autoHideDuration: 1000,
-      //   variant: "error",
-      // });
     }
   });
 
@@ -357,13 +349,13 @@ export const QuestionFormModal = ({ data, show, onClose, getData, isNotSave = fa
 
         <Text fontweight={"500"} pr={'12px'}>{`${String.fromCharCode(65 + index)})`}</Text>
         <RHFTextField
-               value={content}
-               name="question"
-              placeholder={"Nhập nội dung..."}
-              onChange={(e) => changeAnswer(index, "content", e.target.value)}
-              fullWidth
-              maxLength={255}
-            />
+          value={content}
+          name="question"
+          placeholder={"Nhập nội dung..."}
+          onChange={(e) => changeAnswer(index, "content", e.target.value)}
+          fullWidth
+          maxLength={255}
+        />
 
         {index === listAnswer.length - 1 && listAnswer.length < 6
           ? renderButton(

@@ -356,6 +356,15 @@ export const SliderStyle = styled("div")(({ theme }) => ({
       fontWeight: 600,
     },
   },
+  "& .swiper-center": {
+    "& > .swiper-wrapper":{
+      justifyContent: 'center'
+    },
+    "& .swiper-slide":{
+      width: '100px !important',
+      marginLeft: '16px'
+    }
+  }
 }));
 
 export const ExamContainer = styled(Box)(({ theme: { palette } }) => ({

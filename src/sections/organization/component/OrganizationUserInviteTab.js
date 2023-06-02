@@ -107,7 +107,7 @@ const OrganizationUserInviteTab = ({
     <>
       <Box
         className="box-content-wrapper"
-        sx={{ width: "100%", height: "600px" }}
+        sx={{ width: "100%", height: "733px" }}
       >
         <Box sx={{ width: "100%", padding: 2, mb: 2 }}>
           {ListUserInvite.map((item, index) => {
@@ -235,7 +235,6 @@ const OrganizationUserInviteTab = ({
           }}
         />
       )}
-      {selected.length > 0 && (
         <BottomNavModal
           data={selected}
           onClose={handleCloseBottomNav}
@@ -263,7 +262,6 @@ const OrganizationUserInviteTab = ({
             },
           ]}
         />
-      )}
     </>
   );
 };
