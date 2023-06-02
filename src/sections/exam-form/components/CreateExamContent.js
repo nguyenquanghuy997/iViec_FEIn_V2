@@ -427,7 +427,6 @@ const CreateExamContent = () => {
     }
   }, [data]);
 
-
   useEffect(() => {
     if (examData.type == 0) {
       setExamRandomHasEssayQuestion(false)
@@ -678,6 +677,7 @@ const CreateExamContent = () => {
           <Divider sx={{ margin: "24px 0" }} />
           {examData.type == 0 ? (
             <ListQuestionDefault
+              examId={examData.id}
               listQuestions={examQuestions}
               updateListQuestion={handleUpdateListQuestion}
             />

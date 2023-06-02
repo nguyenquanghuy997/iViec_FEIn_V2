@@ -70,7 +70,7 @@ function QuestionGallaryDetailModal({ show, onClose, questionGallary, listQuesti
       setQuestionSelected(questionSelected.filter(x => x.id != data.id))
     }
     else {
-      setQuestionSelected([...questionSelected, { ...data, questionGroupName: questionGallary?.name }]);
+      setQuestionSelected([...questionSelected, { ...data, questionGroupName: questionGallary?.name, isFromQuestionGalleryInternal: true }]);
     }
   }
 
