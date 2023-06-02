@@ -1,9 +1,19 @@
+import { View } from "../FlexStyled";
 import Iconify from "../Iconify";
-import {FormControl, IconButton, InputAdornment, ListSubheader, MenuItem, Select, TextField,} from "@mui/material";
-import {useTheme} from "@mui/material/styles";
-import {makeStyles} from "@mui/styles";
-import React, {useMemo, useState} from "react";
+import SvgIcon from "../SvgIcon";
 import palette from "@/theme/palette";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  ListSubheader,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import { useMemo, useState } from "react";
 
 const containsText = (text, searchText) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
@@ -52,7 +62,7 @@ export default function SelectAutoCompleteDS(props) {
     data,
     allowClear,
     onChange,
-    placeholder
+    placeholder,
   } = props;
   const classes = usePlaceholderStyles();
   const Placeholder = ({ children }) => {
@@ -67,7 +77,7 @@ export default function SelectAutoCompleteDS(props) {
     [searchText, data]
   );
   return (
-    <FormControl sx={{width: { width },}}>
+    <FormControl sx={{ width: { width } }}>
       <Select
         MenuProps={{ autoFocus: false, classes: { paper: classes.paper } }}
         labelId="search-select-label"
@@ -81,16 +91,16 @@ export default function SelectAutoCompleteDS(props) {
             : () => <Placeholder>{placeholder}</Placeholder>
         }
         sx={{
-          "&.MuiOutlinedInput-root":{
-            fontSize:'14px',
-            minHeight:'44px',
-            color: theme.palette.common.neutral800
+          "&.MuiOutlinedInput-root": {
+            fontSize: "14px",
+            minHeight: "44px",
+            color: theme.palette.common.neutral800,
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             border: "1px solid #D0D4DB !important",
           },
-          "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":{
-            borderColor: theme.palette.common.neutral200
+          "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: theme.palette.common.neutral200,
           },
           "& .MuiSelect-iconOutlined": {
             display: selectedOption && allowClear === true ? "none" : "",
@@ -100,11 +110,31 @@ export default function SelectAutoCompleteDS(props) {
           },
           "&.Mui-focused .MuiIconButton-root": { color: "primary.main" },
           "& .Mui-selected": {
-            backgroundColor: theme.palette.common.black +  "!important",
+            backgroundColor: theme.palette.common.black + "!important",
           },
           ...sx,
         }}
         onClose={() => setSearchText("")}
+        IconComponent={(p) => (
+          <View
+            absolute
+            contentCenter
+            t={"calc(50% - .5em)"}
+            r={12}
+            size={"1em"}
+            style={{
+              transform: `rotate(${
+                String(p.className).includes("iconOpen") ? "180deg" : "0deg"
+              })`,
+            }}
+          >
+            <SvgIcon>
+              {
+                '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M7.99999 8.78132L11.3 5.48132L12.2427 6.42399L7.99999 10.6667L3.75732 6.42399L4.69999 5.48132L7.99999 8.78132Z" fill="#455570"/> </svg>'
+              }
+            </SvgIcon>
+          </View>
+        )}
         endAdornment={
           allowClear === true ? (
             <IconButton
@@ -123,46 +153,47 @@ export default function SelectAutoCompleteDS(props) {
           )
         }
       >
-         <ListSubheader style={{padding: 0}}>
-        <TextField
-          size="small"
-          autoFocus
-          placeholder="Tìm kiếm..."
-          fullWidth
-          sx={{
-            boxShadow: "inset 0px -1px 0px " + theme.palette.common.neutral100,
-            "& .MuiInputBase-input": {
-              color: theme.palette.common.borderObject,
-              padding: "10px 0",
-              fontFamily: "Inter",
-              fontWeight: "500",
-              fontSize: "15px",
-              lineHeight: "20px",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "none",
-              padding: 0,
-            },
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify
-                  icon={"ri:search-2-line"}
-                  width={16}
-                  height={16}
-                  color={theme.palette.common.neutral600}
-                />
-              </InputAdornment>
-            ),
-          }}
-          onChange={(e) => setSearchText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key !== "Escape") {
-              e.stopPropagation();
-            }
-          }}          
-        />
+        <ListSubheader style={{ padding: 0 }}>
+          <TextField
+            size="small"
+            autoFocus
+            placeholder="Tìm kiếm..."
+            fullWidth
+            sx={{
+              boxShadow:
+                "inset 0px -1px 0px " + theme.palette.common.neutral100,
+              "& .MuiInputBase-input": {
+                color: theme.palette.common.borderObject,
+                padding: "10px 0",
+                fontFamily: "Inter",
+                fontWeight: "500",
+                fontSize: "15px",
+                lineHeight: "20px",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "none",
+                padding: 0,
+              },
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify
+                    icon={"ri:search-2-line"}
+                    width={16}
+                    height={16}
+                    color={theme.palette.common.neutral600}
+                  />
+                </InputAdornment>
+              ),
+            }}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key !== "Escape") {
+                e.stopPropagation();
+              }
+            }}
+          />
         </ListSubheader>
         {displayedOptions.map((option, i) => (
           <MenuItem
