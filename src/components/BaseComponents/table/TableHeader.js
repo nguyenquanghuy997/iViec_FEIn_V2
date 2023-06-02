@@ -135,7 +135,7 @@ export default function TableHeader({
                 onClick={onClickCreate}
                 variant="contained"
                 color="primary"
-                height={44}
+                height={buttonHeight}
               >
                 {createText}
               </Button>
