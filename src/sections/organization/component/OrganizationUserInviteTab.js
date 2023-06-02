@@ -259,6 +259,7 @@ const OrganizationUserInviteTab = ({
               key: "delete",
               icon: <DeleteIcon />,
               onClick: () => handleOpenModalState({ openDeleteInvite: true }),
+              title: "Xóa"
             },
           ]}
         />
