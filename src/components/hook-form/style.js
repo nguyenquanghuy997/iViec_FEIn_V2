@@ -116,6 +116,7 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
   },
   "& .Mui-disabled": {
     backgroundColor: theme.palette.background.disabled,
+    border: 'unset'
   },
 }));
 

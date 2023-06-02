@@ -1,4 +1,6 @@
 import EmptyIcon from "../../../../assets/EmptyIcon";
+import { ApplicantReviewModal } from "../../modals/ApplicantReviewModal";
+import { ApplicantReviewViewModal } from "../../modals/ApplicantReviewViewModal";
 import NotificationBoard from "./NotificationBoard";
 import { iconLogPipe } from "./config";
 import { SwitchDS } from "@/components/DesignSystem";
@@ -8,6 +10,7 @@ import { FormProvider } from "@/components/hook-form";
 import { PipelineStateType, srcImage } from "@/utils/enum";
 import { Box, Grid, useTheme } from "@mui/material";
 import List from "@mui/material/List";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export const Activities = ({
@@ -22,6 +25,11 @@ export const Activities = ({
   });
   const theme = useTheme();
   const isActive = methods.watch("isActive");
+
+  const [isOpenReviewView, setIsOpenReviewView] = useState(false);
+
+  const [isOpenReview, setIsOpenReview] = useState(false);
+  const [itemLog, setItemLog] = useState();
 
   return (
     <Grid item sx={{ padding: "12px 0 0 0" }}>
@@ -189,7 +197,10 @@ export const Activities = ({
                             borderWidth={1}
                             borderRadius={6}
                             borderColor={theme.palette.common.blue700}
-                            onPress={onReExploiting}
+                            onPress={(e)=>{
+                              e.stopPropagation();
+                              onReExploiting()
+                            }}
                           >
                             <SvgIcon>
                               {
@@ -292,86 +303,117 @@ export const Activities = ({
                         />
                       ))}
                     {p.eventType.includes("CreateApplicantReviewEvent") && (
-                      <NotificationBoard
-                        isShow
-                        isReview
-                        recruitmentId={recruitmentId}
-                        dataApplicant={dataApplicant}
-                        reviewFormCriterias={reviewFormCriterias}
-                        icon={iconLogPipe(
-                          "review",
-                          p.recruitmentPipelineStateType
-                        )}
-                        title={
-                          <div>
-                            <p>
-                              <span style={{ fontWeight: 600 }}>
-                                {p?.creatorName}
-                              </span>
-                              {" đã đánh giá ứng viên "}
-                              <span style={{ fontWeight: 600 }}>
-                                {dataApplicant?.fullName}
-                              </span>
-                              {" với kết quả "}
-                              <span
-                                style={{
-                                  fontWeight: 600,
-                                  color:
-                                    p?.recruitmentPipelineStateType == 2 &&
-                                    (p?.applicantReviewResultType == 0
-                                      ? "#388E3C"
-                                      : p?.applicantReviewResultType == 1
-                                      ? theme.palette.common.orange700
-                                      : theme.palette.common.red600),
+                      <>
+                        <NotificationBoard
+                          isShow
+                          isReview
+                          recruitmentId={recruitmentId}
+                          dataApplicant={dataApplicant}
+                          reviewFormCriterias={reviewFormCriterias}
+                          setItemLog={setItemLog}
+                          icon={iconLogPipe(
+                            "review",
+                            p.recruitmentPipelineStateType
+                          )}
+                          setIsOpenReviewView={setIsOpenReviewView}
+                          title={
+                            <div>
+                              <p>
+                                <span style={{ fontWeight: 600 }}>
+                                  {p?.creatorName}
+                                </span>
+                                {" đã đánh giá ứng viên "}
+                                <span style={{ fontWeight: 600 }}>
+                                  {dataApplicant?.fullName}
+                                </span>
+                                {" với kết quả "}
+                                <span
+                                  style={{
+                                    fontWeight: 600,
+                                    color:
+                                      p?.recruitmentPipelineStateType == 2 &&
+                                      (p?.applicantReviewResultType == 0
+                                        ? "#388E3C"
+                                        : p?.applicantReviewResultType == 1
+                                        ? theme.palette.common.orange700
+                                        : theme.palette.common.red600),
+                                  }}
+                                >
+                                  {PipelineStateType(
+                                    p?.recruitmentPipelineStateType,
+                                    p?.applicantReviewResultType
+                                  )}
+                                </span>
+                              </p>
+                            </div>
+                          }
+                          action="add"
+                          avatarName={p?.creatorName}
+                          data={p}
+                        >
+                          {p?.applicantReviewResultType == 2 && (
+                            <>
+                              <View
+                                flexRow
+                                contentCenter
+                                pv={5}
+                                mt={16}
+                                borderWidth={1}
+                                borderRadius={6}
+                                borderColor={theme.palette.common.blue700}
+                                onPress={(e)=>{
+                                  e.stopPropagation();
+                                  onReExploiting()
                                 }}
                               >
-                                {PipelineStateType(
-                                  p?.recruitmentPipelineStateType,
-                                  p?.applicantReviewResultType
-                                )}
-                              </span>
-                            </p>
-                          </div>
-                        }
-                        action="add"
-                        avatarName={p?.creatorName}
-                        data={p}
-                      >
-                        {p?.applicantReviewResultType == 2 && (
-                          <>
-                            <View
-                              flexRow
-                              contentCenter
-                              pv={5}
-                              mt={16}
-                              borderWidth={1}
-                              borderRadius={6}
-                              borderColor={theme.palette.common.blue700}
-                              onPress={onReExploiting}
-                            >
-                              <SvgIcon>
-                                {
-                                  '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1.5C13.1423 1.5 16.5 4.85775 16.5 9C16.5 13.1423 13.1423 16.5 9 16.5C4.85775 16.5 1.5 13.1423 1.5 9H3C3 12.3135 5.6865 15 9 15C12.3135 15 15 12.3135 15 9C15 5.6865 12.3135 3 9 3C6.9375 3 5.118 4.04025 4.03875 5.625H6V7.125H1.5V2.625H3V4.5C4.368 2.6775 6.54675 1.5 9 1.5Z" fill="#1976D2"/></svg>'
-                                }
-                              </SvgIcon>
+                                <SvgIcon>
+                                  {
+                                    '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1.5C13.1423 1.5 16.5 4.85775 16.5 9C16.5 13.1423 13.1423 16.5 9 16.5C4.85775 16.5 1.5 13.1423 1.5 9H3C3 12.3135 5.6865 15 9 15C12.3135 15 15 12.3135 15 9C15 5.6865 12.3135 3 9 3C6.9375 3 5.118 4.04025 4.03875 5.625H6V7.125H1.5V2.625H3V4.5C4.368 2.6775 6.54675 1.5 9 1.5Z" fill="#1976D2"/></svg>'
+                                  }
+                                </SvgIcon>
 
-                              <Text
-                                ml={8}
-                                fontSize={12}
-                                fontWeight={"600"}
-                                color={theme.palette.common.blue700}
-                              >
-                                {"Tái khai thác"}
-                              </Text>
-                            </View>
-                          </>
-                        )}
-                      </NotificationBoard>
+                                <Text
+                                  ml={8}
+                                  fontSize={12}
+                                  fontWeight={"600"}
+                                  color={theme.palette.common.blue700}
+                                >
+                                  {"Tái khai thác"}
+                                </Text>
+                              </View>
+                            </>
+                          )}
+                        </NotificationBoard>
+                      </>
                     )}
                   </div>
                 );
               })}
           </List>
+          {isOpenReviewView && (
+            <ApplicantReviewViewModal
+              creatorId={itemLog?.creatorId}
+              show={isOpenReviewView}
+              aggregateId={itemLog?.aggregateId}
+              applicantId={dataApplicant?.id}
+              recruitmentId={recruitmentId}
+              setShow={setIsOpenReviewView}
+              pressReview={() => {
+                setIsOpenReview(true);
+                setIsOpenReviewView(false);
+              }}
+            />
+          )}
+
+          {isOpenReview && (
+            <ApplicantReviewModal
+              show={isOpenReview}
+              data={reviewFormCriterias}
+              applicantId={dataApplicant?.id}
+              recruitmentId={recruitmentId}
+              setShow={setIsOpenReview}
+            />
+          )}
         </Box>
       ) : (
         <div>
