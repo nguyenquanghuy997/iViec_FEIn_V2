@@ -98,12 +98,17 @@ function SelectCouncils({ name, ...props }) {
                   marginBottom: 0,
                   display: "flex",
                   justifyContent: "space-between",
+
                 }}
               >
                 <div
                   style={{
                     display: "flex",
+
                     justifyContent: "center",
+
+
+
                   }}
                 >
                   <img
@@ -119,13 +124,13 @@ function SelectCouncils({ name, ...props }) {
                   <div>
                     <Typography
                       component="div"
-                      sx={{ fontSize: "13px", fontWeight: "600" }}
+                      sx={{ fontSize: "13px", fontWeight: "600", }}
                     >
                       {item?.name}
                     </Typography>
                     <Typography
                       color={theme.palette.common.neutral700}
-                      sx={{ fontSize: "12px", fontWeight: "400" }}
+                      sx={{ fontSize: "12px", fontWeight: "400", }}
                     >
                       {item?.mail}
                     </Typography>
@@ -163,6 +168,7 @@ function SelectCouncils({ name, ...props }) {
           {title && <LabelStyle required={isRequired}>{title}</LabelStyle>}
           <SelectFieldStyle
             sx={{
+
               mb: 2,
               height: "36px",
               borderRadius: "8px",
@@ -182,6 +188,7 @@ function SelectCouncils({ name, ...props }) {
                 return (
                   <Button
                     sx={{
+
                       width: "100%",
                       textTransform: "none",
                       color: theme.palette.common.blue700,
