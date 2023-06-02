@@ -90,7 +90,6 @@ export function SideBarItemRoot({
       )}
     </>
   )
-
   if (children) {
     return (
       <ListItem
@@ -98,6 +97,7 @@ export function SideBarItemRoot({
         activeRoot={active}
         disabled={disabled}
         roles={roles}
+        hasChildren={!!onOpen}
       >
         {renderContent}
       </ListItem>
@@ -117,7 +117,7 @@ export function SideBarItemRoot({
     </ListItem>
   ) : (
     <NextLink href={path} passHref>
-      <ListItem activeRoot={active} disabled={disabled} roles={roles}>
+      <ListItem activeRoot={active} disabled={disabled} roles={roles} >
         {renderContent}
       </ListItem>
     </NextLink>
@@ -145,7 +145,7 @@ export function SideBarItemSub({ item, open = false, active = false, onOpen }) {
 
   const renderContent = (
     <>
-      <DotIcon active={active} />
+      {/* <DotIcon active={active} /> */}
       <ListItemText
         disableTypography
         primary={translate(title)}
