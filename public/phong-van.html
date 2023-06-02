@@ -35,7 +35,6 @@
         RoomName : decodeURIComponent(queryObj.get('RoomName')),
         Role : 1,
     }
-    console.log('interview', interview);
     // Defining our token parts
     var header = {
         "alg": "HS256",
@@ -85,8 +84,6 @@
                 window.location.href = '/interview';
             }
         });
-
-        console.log(result);
     };
     openMeeting();
 

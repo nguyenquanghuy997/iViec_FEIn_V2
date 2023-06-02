@@ -353,7 +353,7 @@ const OrganizationDetailContent = () => {
   return (
     <Box>
       {/* Name */}
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center",}}>
         <NextLink href={PATH_DASHBOARD.organization.root} passHref>
           <Link>
             <IconButton size="small" sx={{ color: "#172B4D", mr: 1 }}>

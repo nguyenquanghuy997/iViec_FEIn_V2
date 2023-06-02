@@ -362,6 +362,7 @@ export const FormCalendar = ({
                         p={3}
                         sx={{
                           minWidth: "400px",
+                          overflow: "auto"
                         }}
                       >
                         <ListCandidate
@@ -402,8 +403,10 @@ export const FormCalendar = ({
                 onClick={pressSave}
                 sx={{
                   backgroundColor: theme.palette.common.blue700,
-                  p: 1,
+                  p: "8px 12px",
                   fontSize: 14,
+                  fontWeight: 600,
+                  minWidth: "unset"
                 }}
               >
                 {"Lưu"}

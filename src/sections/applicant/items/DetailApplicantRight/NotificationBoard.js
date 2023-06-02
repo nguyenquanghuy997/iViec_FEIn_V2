@@ -63,7 +63,7 @@ const NotificationBoard = ({
       </div>
     );
   };
-
+  
   return (
     <Container
       sx={{

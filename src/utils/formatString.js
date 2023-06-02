@@ -37,6 +37,12 @@ export const LIST_STATUS = [
   { id: 'true', value: 1, name: "Đang hoạt động" },
   { id: 'false', value: 2, name: "Không hoạt động" },
 ]
+export const LIST_BOOKING_CALENDAR_PROCESS = [
+  { id: 0, value: 0, name: "Đã lên lịch" },
+  { id: 1, value: 1, name: "Đang phỏng vấn" },
+  { id: 2, value: 2, name: "Kết thúc phỏng vấn" },
+  { id: 3, value: 3, name: "Đã hủy lịch" },
+]
 export const LIST_MARITAL_STATUSES = [
   { value: 0, name: "Độc thân", label: "Độc thân" },
   { value: 1, name: "Kết hôn", label: "Kết hôn" },
