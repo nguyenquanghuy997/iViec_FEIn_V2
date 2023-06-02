@@ -7,11 +7,27 @@ import { SwitchDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
 import { FormProvider } from "@/components/hook-form";
+import useAuth from "@/hooks/useAuth";
 import { PipelineStateType, srcImage } from "@/utils/enum";
 import { Box, Grid, useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import { useState } from "react";
+import moment from "moment";
 import { useForm } from "react-hook-form";
+
+const calcDuration = (value) => {
+  if (typeof value !== "string" || value.length < 8) return 0;
+
+  const [d, HH_mm_ss] = `${value.length < 9 ? "0." : ""}${value}`.split(".");
+  const time = moment(HH_mm_ss, "HH:mm:ss");
+
+  return (
+    Number(d) * 86400000 +
+    time.hour() * 3600000 +
+    time.minute() * 60000 +
+    time.second() * 1000
+  );
+};
 
 export const Activities = ({
   dataLog,
@@ -24,12 +40,37 @@ export const Activities = ({
     defaultValues: { isActive: !false },
   });
   const theme = useTheme();
+  const { company } = useAuth();
   const isActive = methods.watch("isActive");
 
   const [isOpenReviewView, setIsOpenReviewView] = useState(false);
 
   const [isOpenReview, setIsOpenReview] = useState(false);
   const [itemLog, setItemLog] = useState();
+  const renderInfo = (title, reason) => {
+    return (
+      <View flexRow atCenter mt={16}>
+        <Text
+          disableTranslate
+          width={64}
+          fontSize={13}
+          color={theme.palette.common.neutral600}
+        >
+          {`${title}:`}
+        </Text>
+
+        <Text
+          disableTranslate
+          ml={8}
+          fontSize={13}
+          fontWeight={500}
+          color={theme.palette.common.neutral800}
+        >
+          {reason}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <Grid item sx={{ padding: "12px 0 0 0" }}>
@@ -48,6 +89,7 @@ export const Activities = ({
               dataLog?.events.map((p, index) => {
                 const isSeftApply =
                   dataApplicant?.applicationUserId === p?.creatorId;
+
                 return (
                   <div key={index}>
                     {p.eventType.includes("AddApplicantToRecruitmentEvent") && (
@@ -385,6 +427,72 @@ export const Activities = ({
                           )}
                         </NotificationBoard>
                       </>
+                    )}
+                    {p.eventType.includes(
+                      "CreateApplicantRecruitmentBookingCalendarEvent"
+                    ) && (
+                      <NotificationBoard
+                        isShow
+                        data={p}
+                        icon={iconLogPipe("", 2)}
+                        avatarName={p?.creatorName}
+                        title={
+                          <p>
+                            <span style={{ fontWeight: 600 }}>
+                              {p?.creatorName}
+                            </span>
+                            {" đã đặt lịch "}
+                            <span style={{ fontWeight: 600 }}>
+                              {`phỏng vấn ${
+                                p?.interviewType === 0 ? "Online" : "Trực tiếp"
+                              }`}
+                            </span>
+                            {" cho ứng viên "}
+                            <span style={{ fontWeight: 600 }}>
+                              {dataApplicant?.fullName}
+                            </span>
+                          </p>
+                        }
+                      >
+                        {renderInfo("Tiêu đề", p?.name)}
+                        {renderInfo(
+                          "Hình thức",
+                          p?.interviewType === 0 ? "Online" : "Trực tiếp"
+                        )}
+                        {renderInfo(
+                          "Thời gian",
+                          moment(p.interviewTime).format("HH:mm") +
+                            " - " +
+                            moment(p.interviewTime)
+                              .add(calcDuration(p.interviewDuration))
+                              .format("HH:mm DD/MM/YYYY")
+                        )}
+                        {renderInfo("Lưu ý", p.note)}
+                        {renderInfo("Hội đồng", p.councilNames?.join(", "))}
+
+                        {p.bookingCalendarId && (
+                          <View
+                            contentCenter
+                            mt={16}
+                            pv={6}
+                            borderRadius={6}
+                            bgColor={theme.palette.common.green600}
+                            onPress={() => {
+                              window.open(
+                                `${window.location.origin}/phong-van.html?DisplayName=${company?.name}&&Email=${company?.organizationInformation?.email}&&Role=1&&RoomName=${p.bookingCalendarId}`
+                              );
+                            }}
+                          >
+                            <Text
+                              fontSize={12}
+                              fontWeight={600}
+                              color={theme.palette.common.white}
+                            >
+                              {"Tham gia phòng họp"}
+                            </Text>
+                          </View>
+                        )}
+                      </NotificationBoard>
                     )}
                   </div>
                 );
