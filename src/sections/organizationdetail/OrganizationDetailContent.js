@@ -427,7 +427,7 @@ const OrganizationDetailContent = () => {
           onSubmitFilter={onSubmitFilter}
           isInside={true}
           inputProps={{
-            placeholder: "Tìm kiếm họ tên, email, số điện thoại",
+            placeholder: "Tìm kiếm họ tên, email",
           }}
           actions={
             <>
