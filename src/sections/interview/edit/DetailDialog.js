@@ -14,7 +14,6 @@ import {
   ApplicantCalendarState,
   BookingCalendarProcessStatus,
 } from "@/utils/enum";
-import { INTERVIEW_PROCESS_STATUS } from "@/utils/formatString";
 import {
   Divider,
   IconButton,
@@ -162,13 +161,6 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants
                 .length
             )}
-            {renderText(
-              "Trạng thái:",
-              INTERVIEW_PROCESS_STATUS.find(
-                (x) => x.id == DetailData?.bookingCalendarProcessStatus
-              )?.name
-            )}
-            {renderText("Lý do hủy:", DetailData?.removeReason || "Không có")}
             {renderText(
               "Trạng thái:",
               BookingCalendarProcessStatus(

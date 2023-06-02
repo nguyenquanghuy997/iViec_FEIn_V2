@@ -85,7 +85,7 @@ export const FormCalendar = ({
     ),
     interviewType: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
-    .required("Nhập hình thức phỏng vấn"),
+    .required("Chưa chọn hình thức phỏng vấn"),
     offlineInterviewAddress: Yup.string()
     .nullable()
     .when("interviewType", {

@@ -37,7 +37,7 @@ export default function InterviewSchedule({ Data }) {
 
   const getDateFormat = (date) => {
     return `${
-      moment(date).day() == 7
+      moment(date).day() == 0
         ? "Chủ nhật"
         : "Thứ " + (parseInt(moment(date).day()) + 1)
     }, Ngày ${moment(date).format("DD/MM/yyyy")}`;
