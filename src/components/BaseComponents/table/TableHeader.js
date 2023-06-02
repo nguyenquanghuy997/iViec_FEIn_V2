@@ -1,7 +1,6 @@
 import Content from "../Content";
 import FilterModal from "./FilterModal";
 import { HeaderStyle } from "./styles";
-import { AddIcon } from "@/assets/ActionIcon";
 import { Button } from "@/components/DesignSystem";
 import SvgIcon from "@/components/SvgIcon";
 import {
@@ -126,11 +125,17 @@ export default function TableHeader({
           {createText && (
             <Box mr={1}>
               <Button
-                startIcon={<AddIcon />}
+                startIcon={
+                  <SvgIcon>
+                    {
+                      '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M9.16675 9.16675V4.16675H10.8334V9.16675H15.8334V10.8334H10.8334V15.8334H9.16675V10.8334H4.16675V9.16675H9.16675Z" fill="#FDFDFD"/> </svg>'
+                    }
+                  </SvgIcon>
+                }
                 onClick={onClickCreate}
                 variant="contained"
                 color="primary"
-                height={buttonHeight}
+                height={44}
               >
                 {createText}
               </Button>
