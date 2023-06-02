@@ -199,10 +199,10 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
         <CardContent
           sx={{
             display: "flex",
-            width: "100%",
             color: "text.secondary",
             padding: "16px",
             borderRadius: isLastItem ? "" : "6px",
+            width: "calc(100% - 165px)"
           }}
           onClick={() => handleClickDialog(data)}
         >
@@ -215,7 +215,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             {renderSwitch(data?.bookingCalendarProcessStatus)}
           </Box>
 
-          <Box sx={{ width: "20%" }}>
+          <Box sx={{ width: "30%" }}>
             <Typography sx={{ fontSize: 13, fontWeight: 600 }} color="#172B4D">
               {data?.name}
             </Typography>
@@ -225,7 +225,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             </Typography>
           </Box>
           <Divider orientation="vertical" variant="middle" flexItem />
-          <Box sx={{ width: "15%", px: 3 }}>
+          <Box sx={{ width: "20%", px: 3 }}>
             <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
               Số người phỏng vấn
             </Typography>
