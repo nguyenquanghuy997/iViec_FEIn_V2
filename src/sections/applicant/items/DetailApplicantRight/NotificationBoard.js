@@ -68,7 +68,7 @@ const NotificationBoard = ({
       </div>
     );
   };
-
+  
   return (
     <Container
       sx={{
@@ -247,7 +247,6 @@ const NotificationBoard = ({
 
           {isReview && isOpenReviewView && (
             <ApplicantReviewViewModal
-              creatorId={data?.creatorId}
               show={isOpenReviewView}
               aggregateId={data?.aggregateId}
               applicantId={dataApplicant?.id}

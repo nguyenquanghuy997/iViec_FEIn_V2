@@ -11,9 +11,9 @@ import {
 } from "@/routes/api";
 import { useGetCalendarQuery } from "@/sections/interview/InterviewSlice";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
-import { LIST_STATUS } from "@/utils/formatString";
+import { LIST_BOOKING_CALENDAR_PROCESS } from "@/utils/formatString";
 import { Box } from "@mui/material";
-import { isEmpty as _isEmpty } from "lodash";
+import { isEmpty, isEmpty as _isEmpty } from "lodash";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 
@@ -26,7 +26,6 @@ const columns = [
       name: "organizationIds",
       placeholder: "Chọn 1 hoặc nhiều đơn vị",
       remoteUrl: API_GET_ORGANIZATION_WITH_CHILD,
-      showAvatar: true,
     },
   },
   {
@@ -45,7 +44,7 @@ const columns = [
     title: "Cán bộ tuyển dụng",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "organizationIds",
+      name: "councilIds",
       placeholder: "Chọn 1 hoặc nhiều cán bộ",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true,
@@ -83,13 +82,13 @@ const columns = [
     },
   },
   {
-    dataIndex: "isActive",
+    dataIndex: "BookingCalendarProcessStatuses",
     title: "Trạng thái",
     colFilters: {
-      type: TBL_FILTER_TYPE.SELECT,
-      name: "isActive",
+      type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
+      name: "BookingCalendarProcessStatuses",
       placeholder: "Tất cả",
-      options: LIST_STATUS.map((item) => ({
+      options: LIST_BOOKING_CALENDAR_PROCESS.map((item) => ({
         value: item.value,
         label: item.name,
       })),
@@ -98,13 +97,14 @@ const columns = [
 ];
 
 export const InterviewTimeline = () => {
-  const { canAccess } = useRole();
+  const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
   const router = useRouter();
-  const { query, isReady } = router;
-  const { data: Data } = useGetCalendarQuery(query, { skip: !isReady });
+  const {query, isReady} = router;
+  const {data: Data} = useGetCalendarQuery(query, {skip: !isReady});
   const [open, setOpen] = useState(false);
-
+  const {PageIndex = 1, PageSize = 10} = router.query;
+  
   const onSubmitFilter = (values = {}, reset = false, timeout = 1) => {
     if (reset && _isEmpty(router.query)) {
       return;
@@ -114,18 +114,66 @@ export const InterviewTimeline = () => {
         {
           query: reset
             ? {}
-            : { ...router.query, ...values, PageIndex: 1, PageSize: 9999 },
+            : {...router.query, ...values, PageIndex: 1, PageSize: 9999},
         },
         undefined,
-        { shallow: false }
+        {shallow: false}
       );
     }, timeout);
   };
+  
+  const columnsDisplay = useMemo(() => {
+    return columns
+    .map((col) => {
+      let renderFunc = col.render;
+      if (renderFunc) {
+        col.render = (text, record, index) => {
+          return (
+            <p
+              style={{
+                maxWidth: col.width,
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {renderFunc(
+                text,
+                record,
+                index,
+                parseInt(PageIndex),
+                parseInt(PageSize)
+              )}
+            </p>
+          );
+        };
+      } else {
+        col.render = (text) => (
+          <p
+            style={{
+              maxWidth: col.width,
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {text}
+          </p>
+        );
+      }
+
+      return {
+        ...col,
+        sorter: col.sorter
+      };
+    });
+  }, [columns]);
+  
   return (
     <View>
       <Box>
         <TableHeader
-          columns={columns}
+          columns={!isEmpty(columnsDisplay) ? columnsDisplay : columns}
           onSubmitFilter={onSubmitFilter}
           onClickCreate={() => setOpen(true)}
           createText={canEdit && "Đặt lịch phỏng vấn"}
@@ -135,11 +183,11 @@ export const InterviewTimeline = () => {
           }}
         />
       </Box>
-
+      
       <Content>
         <View>
-          {open && <FormCalendar open={open} setOpen={setOpen} />}
-          <InterviewSchedule Data={Data} />
+          {open && <FormCalendar open={open} setOpen={setOpen}/>}
+          <InterviewSchedule Data={Data}/>
         </View>
       </Content>
     </View>

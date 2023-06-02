@@ -21,7 +21,7 @@ const InterviewCouncil = () => {
   }, [coOwners]);
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3 , width:"400px"}}>
       <Label mb={3}>
         <Typography variant={"subtitle2"} color={palette.text.primary}>
           Hội đồng phỏng vấn
