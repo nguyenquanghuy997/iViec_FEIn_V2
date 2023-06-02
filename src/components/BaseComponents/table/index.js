@@ -5,7 +5,7 @@ import { TableStyle } from "./styles";
 import { View } from "@/components/FlexStyled";
 import TextMaxLine from "@/components/TextMaxLine";
 import { ButtonIcon } from "@/utils/cssStyles";
-import { useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import { Table } from "antd";
 import { isEmpty as _isEmpty, isEmpty } from "lodash";
 import { useRouter } from "next/router";
@@ -210,6 +210,7 @@ const DynamicColumnsTable = (props) => {
         <Content style={{ paddingBottom: itemSelected?.length > 0 ? 100 : 24 }}>
           <View
             style={{
+              width: '100%',
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
@@ -217,44 +218,67 @@ const DynamicColumnsTable = (props) => {
             mb={16}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <ButtonIcon
-                onClick={showSetting}
-                sx={{ backgroundColor: "unset", padding: '0 8px 0 0' }}
-                icon={
-                  <SettingIcon />
-                }
-              />
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <ButtonIcon
+                  onClick={showSetting}
+                  sx={{ backgroundColor: "unset", padding: '0 8px 0 0' }}
+                  icon={
+                    <SettingIcon />
+                  }
+                />
 
-              <View>
-                <TextMaxLine
-                  line={1}
-                  sx={{
-                    fontSize: 14,
-                    color: palette.text.primary,
-                    fontWeight: 600,
-                  }}
-                >
-                  {settingName}
-                </TextMaxLine>
+                <View>
+                  <TextMaxLine
+                    line={1}
+                    sx={{
+                      fontSize: 14,
+                      color: palette.text.primary,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {settingName}
+                  </TextMaxLine>
+                </View>
+
+                <View ml={8}>
+                  <TextMaxLine
+                    line={1}
+                    sx={{
+                      fontSize: 10,
+                      color: palette.text.primary,
+                      background: palette.common.bgrMaster,
+                      border: "1px solid #172B4D",
+                      borderRadius: "100px",
+                      textAlign: "center",
+                      padding: "2px 8px",
+                      fontWeight: 600
+                    }}
+                  >
+                    {source?.totalRecord || 0}
+                  </TextMaxLine>
+                </View>
               </View>
 
-              <View ml={8}>
-                <TextMaxLine
-                  line={1}
-                  sx={{
-                    fontSize: 10,
-                    color: palette.text.primary,
-                    background: palette.common.bgrMaster,
-                    border: "1px solid #172B4D",
-                    borderRadius: "100px",
-                    textAlign: "center",
-                    padding: "2px 8px",
-                    fontWeight: 600
-                  }}
-                >
-                  {source?.totalRecord || 0}
-                </TextMaxLine>
-              </View>
+
+            </View>
+
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  lineHeight: '18px',
+                  color: palette.text.primary,
+                  background: palette.common.bgrMaster,
+                  textAlign: "center",
+                  fontWeight: 600,
+                  marginRight: '14px'
+                }}
+              >
+                {`Ngày tạo mới nhất`}
+              </Typography>
+              <svg width="6" height="4" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 3.5L0 0.5H6L3 3.5Z" fill="#172B4D" />
+              </svg>
             </View>
           </View>
 
