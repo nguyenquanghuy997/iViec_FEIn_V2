@@ -12,7 +12,10 @@ import Switch from "@/components/form/Switch";
 import { TBL_FILTER_TYPE } from "@/config";
 import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
-import { API_GET_LIST_ROLE_GROUP, API_GET_ORGANIZATION_USERS } from "@/routes/api";
+import {
+  API_GET_LIST_ROLE_GROUP,
+  API_GET_ORGANIZATION_USERS,
+} from "@/routes/api";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import {
   AlertIcon,
@@ -72,7 +75,7 @@ const columns = [
         { value: null, label: "Tất cả" },
         { value: 1, label: "Đang hoạt động" },
         { value: 0, label: "Không hoạt động" },
-      ]
+      ],
     },
   },
   {
@@ -102,6 +105,7 @@ const OrganizationDetailContent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
   const { query = { PageIndex: 1 }, isReady } = router;
 
   const { data: organization = {} } = useGetOrganizationByIdQuery(
@@ -115,7 +119,13 @@ const OrganizationDetailContent = () => {
     useGetAllApplicantUserOrganizationByIdQuery(
       {
         OrganizationId: query?.id,
-        ...router.query
+        isActivated:
+          query.isActivated === "2"
+            ? false
+            : query.isActivated === "1"
+            ? true
+            : null,
+        ...router.query,
       },
       { skip: !query?.id }
     );

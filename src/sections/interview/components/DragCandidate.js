@@ -27,6 +27,7 @@ function DragCandidate({data}) {
         return item["id"];
     }));
   };
+  {console.log('data', data)}
   return (
     <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>

@@ -180,7 +180,7 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
             >
               Danh sách ứng viên
             </Typography>
-            
+            {console.log('DetailData', DetailData)}
             {DetailData?.bookingCalendarGroups[0]?.bookingCalendarApplicants.map(
               (item, index) => (
                 <ListItem

@@ -229,9 +229,12 @@ function InterviewItem(props) {
       <Baseitem item={item} />
       <Box style={{ margin: "12px 0px 0px 0px", borderRadius: "4px" }}>
         {/* Lịch sử cuộc pv */}
+        {console.log('lastInterview?.applicantInterviewState', lastInterview?.applicantInterviewState)}
         {interview &&
           interview?.map((item, index) => {
-            if (index < interview?.length - 1) {
+            if (index < interview?.length && (interview[index].applicantInterviewState !==
+              ApplicantInterviewState.PENDING &&
+              ApplicantInterviewState.CONFIRMED && ApplicantInterviewState.INTERVIEWING)) {
               return (
                 <Box
                   key={index}
@@ -272,10 +275,8 @@ function InterviewItem(props) {
           })}
         <Box>
           {lastInterview?.applicantInterviewState ===
-            ApplicantInterviewState.PENDING ||
-          lastInterview?.applicantInterviewState ===
-            ApplicantInterviewState.CONFIRMED ||
-          lastInterview?.applicantInterviewState ===
+            ApplicantInterviewState.PENDING && 
+            ApplicantInterviewState.CONFIRMED &&
             ApplicantInterviewState.INTERVIEWING ? (
             <Box
               sx={{

@@ -3,13 +3,12 @@ import Iconify from "@/components/Iconify";
 import { PipelineStateType } from "@/utils/enum";
 import { Box, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { memo, useRef } from "react";
+import React, { memo } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import {useTheme} from "@mui/material/styles";
 
-const Column = ({ droppableId, column }) => {
+const Column = ({ droppableId, column, windowHeight }) => {
   // const { kanbanColumn: { lgHeight = 0, xsHeight = 0 } = {} } = useKanban()
-  const windowHeight = useRef(window.innerHeight - 120);
   const  theme = useTheme();
   return (
     <Stack spacing={2} sx={{ p: 1, py: 0 }}>
@@ -98,9 +97,8 @@ const Column = ({ droppableId, column }) => {
                     // background: "rgba(9, 30, 66, 0.1)",
                     padding: 8,
                     borderRadius: "8px",
-                    minHeight: windowHeight.current,
-                    maxHeight: windowHeight.current,
-                    overflow: "auto",
+                    height: `calc(100vh - ${windowHeight}px - 110px)`,
+                    overflowX: "auto",
                   }}
                 >
                   {column?.items?.map((item, index) => {

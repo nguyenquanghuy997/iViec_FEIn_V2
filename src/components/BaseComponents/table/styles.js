@@ -68,7 +68,7 @@ export const TableStyle = styled('div')(({theme}) => ({
     fontFamily: 'Inter !important',
   },
   ".ant-table-content": {
-    minHeight: 'calc(100vh - 320px)',
+    minHeight: 'calc(100vh - 305px)',
     borderRadius: "8px",
   },
   ".ant-table-thead >tr>th": {
