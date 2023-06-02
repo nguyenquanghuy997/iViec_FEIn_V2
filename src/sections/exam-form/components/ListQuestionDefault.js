@@ -57,8 +57,8 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
   const handleCreateEditQuestion = (data) => {
     //create
     const newList = [...listQuestions]
+    // tạo mới câu hỏi
     if (currentIndexQuestion === -1) {
-      // check duplicate
       if (listQuestions.some(x => x.questionTitle === data.questionTitle)) {
         enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
           variant: 'error'
@@ -67,17 +67,22 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
       }
       newList.unshift(data);
     }
-    //edit
+    //chỉnh sửa câu hỏi trong đề thi
     else {
-      // check duplicate
+      // chỉnh sửa câu hỏi được thêm thủ công hoặc câu hỏi cũ
       if (listQuestions.some((x, index) => x.questionTitle == data.questionTitle && index != currentIndexQuestion)) {
         enqueueSnackbar("Câu hỏi đã tồn tại trong đề thi", {
           variant: 'error'
         })
         return;
       }
-      newList[currentIndexQuestion] = data;
+      // chỉnh sửa câu hỏi lấy từ kho nội bộ
+      if (data.isFromQuestionGalleryInternal) {
+        newList[currentIndexQuestion] = { ...data, id: null, isFromQuestionGalleryInternal: false };
+      } else
+        newList[currentIndexQuestion] = data;
     }
+    enqueueSnackbar(data.id ? 'Chỉnh sửa câu hỏi thành công' : 'Thêm mới câu hỏi thành công')
     updateListQuestion(newList)
     setShowQuestionForm(false)
     // reset choose index && data
@@ -310,7 +315,7 @@ function ListQuestionDefault({ listQuestions, updateListQuestion }) {
           data={currentQuestion}
           show={showQuestionForm}
           onClose={handleCloseForm}
-          isNotSave={true}
+          isNotSave={!currentQuestion?.id || currentQuestion.isFromQuestionGalleryInternal}
           handleNoSave={handleCreateEditQuestion} />
       }
 
