@@ -337,19 +337,22 @@ function InterviewItem(props) {
                   padding: "10px",
                 }}
               >
-                <Box>
+                <Box sx={{
+                  display: 'inline-flex',
+                }}>
                   <Typography
                     sx={{
                       display: 'inline-block',
                       fontSize: "12px",
                       color: "#5C6A82",
                       fontWeight: "500",
-                      lineClamp: 1,
-                      boxOrient: "vertical",
                       textOverflow: "ellipsis",
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      width: '217px',
                     }}
                   >
-                    {`${window.location.origin}/phong-van.html234234234234234234234324234`}
+                    {`${window.location.origin}/phong-van.html`}
                   </Typography>
                 </Box>
                 <Iconify
