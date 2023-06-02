@@ -64,16 +64,16 @@ export const FormCalendar = ({
   item,
   currentApplicantPipelineState,
 }) => {
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const isEditMode = !!data?.id;
-  const { data: DetailData = {} } = useGetDetailCalendarsQuery(
-    { BookingCalendarId: data?.id },
-    { skip: !data?.id }
+  const {data: DetailData = {}} = useGetDetailCalendarsQuery(
+    {BookingCalendarId: data?.id},
+    {skip: !data?.id}
   );
   const isLoading = isEditMode && !DetailData?.id;
   const [addCalendar] = useAddCalendarMutation();
   const [updateCalendar] = useUpdateCalendarMutation();
-
+  
   const Schema = Yup.object().shape({
     id: Yup.string().nullable(),
     name: Yup.string().required("Chưa nhập tên buổi phỏng vấn"),
@@ -81,25 +81,25 @@ export const FormCalendar = ({
       "Chưa nhập tên tiêu đề tin tuyển dụng"
     ),
     recruitmentPipelineStateId: Yup.string().required(
-      "Chưa nhập hình thức phỏng vấn"
+      "Chưa chọn bước phỏng vấn"
     ),
     interviewType: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .required("Nhập hình thức phỏng vấn"),
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required("Nhập hình thức phỏng vấn"),
     offlineInterviewAddress: Yup.string()
-      .nullable()
-      .when("interviewType", {
-        is: (interviewType) => interviewType === 1,
-        then: Yup.string().required("Chưa nhập địa điểm phỏng vấn"),
-      }),
+    .nullable()
+    .when("interviewType", {
+      is: (interviewType) => interviewType === 1,
+      then: Yup.string().required("Chưa nhập địa điểm phỏng vấn"),
+    }),
     note: Yup.string().nullable(),
     councilIds: Yup.array().required(),
     reviewFormId: Yup.string().required("Chưa nhập mẫu đánh giá"),
     isSendMailCouncil: Yup.bool(),
     isSendMailApplicant: Yup.bool(),
     applicantIdArray: Yup.array()
-      .of(Yup.string().min(1))
-      .required("Chọn ứng viên phỏng vấn"),
+    .of(Yup.string().min(1))
+    .required("Chọn ứng viên phỏng vấn"),
     bookingCalendarGroups: Yup.array().of(
       Yup.object().shape({
         name: Yup.string().nullable(),
@@ -111,19 +111,19 @@ export const FormCalendar = ({
             applicantId: Yup.string(),
             date: Yup.string().nullable().required("Chưa chọn ngày phỏng vấn"),
             interviewTime: Yup.string()
-              .nullable()
-              .required("Chưa chọn giờ phỏng vấn"),
+            .nullable()
+            .required("Chưa chọn giờ phỏng vấn"),
             interviewDuration: Yup.number()
-              .transform((value) => (isNaN(value) ? undefined : value))
-              .min(1, "Thời lượng phải lớn hơn 0")
-              .max(120, "Thời lượng không quá 120 phút")
-              .required("Chưa chọn thời lượng phỏng vấn"),
+            .transform((value) => (isNaN(value) ? undefined : value))
+            .min(1, "Thời lượng phải lớn hơn 0")
+            .max(120, "Thời lượng không quá 120 phút")
+            .required("Chưa chọn thời lượng phỏng vấn"),
           })
         ),
       })
     ),
   });
-
+  
   const methods = useForm({
     mode: "onChange",
     defaultValues,
@@ -134,9 +134,9 @@ export const FormCalendar = ({
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: {isSubmitting, errors},
   } = methods;
-
+  
   useEffect(() => {
     if (!DetailData?.id) return;
     setValue("id", DetailData.id);
@@ -162,7 +162,7 @@ export const FormCalendar = ({
       "bookingCalendarGroups",
       convertDataGet(DetailData.bookingCalendarGroups) ?? undefined
     );
-
+    
     let arrayApplicant = [];
     DetailData.bookingCalendarGroups.forEach((item) => {
       item?.bookingCalendarApplicants.forEach((itemData) => {
@@ -170,14 +170,14 @@ export const FormCalendar = ({
       });
     });
     setValue("applicantIdArray", arrayApplicant);
-
+    
     let arrayCouncil = [];
     DetailData.bookingCalendarCouncils.forEach((item) => {
       arrayCouncil.push(item.id);
     });
     setValue("councilIds", arrayCouncil);
   }, [DetailData]);
-
+  
   const pressSave = handleSubmit(async (d) => {
     const body = {
       id: d.id,
@@ -212,32 +212,11 @@ export const FormCalendar = ({
     };
     if (isEditMode) {
       return await updateCalendar(body)
-        .unwrap()
-        .then(() => {
-          enqueueSnackbar("Thực hiện thành công!", {
-            autoHideDuration: 2000,
-          });
-          onClose();
-        })
-        .catch(() => {
-          enqueueSnackbar("Thực hiện thất bại!", {
-            autoHideDuration: 2000,
-            variant: "error",
-          });
-        });
-    }
-
-    await addCalendar(body)
       .unwrap()
       .then(() => {
         enqueueSnackbar("Thực hiện thành công!", {
           autoHideDuration: 2000,
         });
-        dispatch(
-          calendarServiceApi.util.invalidateTags([
-            { type: "BookCalendar", id: "List" },
-          ])
-        );
         onClose();
       })
       .catch(() => {
@@ -246,13 +225,34 @@ export const FormCalendar = ({
           variant: "error",
         });
       });
+    }
+    
+    await addCalendar(body)
+    .unwrap()
+    .then(() => {
+      enqueueSnackbar("Thực hiện thành công!", {
+        autoHideDuration: 2000,
+      });
+      dispatch(
+        calendarServiceApi.util.invalidateTags([
+          {type: "BookCalendar", id: "List"},
+        ])
+      );
+      onClose();
+    })
+    .catch(() => {
+      enqueueSnackbar("Thực hiện thất bại!", {
+        autoHideDuration: 2000,
+        variant: "error",
+      });
+    });
   });
-
+  
   const onClose = () => {
     reset();
     setOpen(false);
   };
-
+  
   return (
     <FormProvider methods={methods}>
       <Drawer
@@ -262,7 +262,7 @@ export const FormCalendar = ({
         sx={{
           display: "flex",
           justifyContent: "flex-end",
-          ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
+          ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"},
         }}
         PaperProps={{
           sx: {
@@ -273,118 +273,119 @@ export const FormCalendar = ({
           },
         }}
       >
-        <ViewModel sx={{ width: "unset" }}>
-          {/* content */}
-          <View flex>
-            {isLoading ? (
-              <View flex contentcenter style={{ minWidth: "600px" }}>
-                <CircularProgress />
-              </View>
-            ) : (
-              <>
-                {/* header */}
-                <View
-                  flexrow
-                  atcenter
-                  pv={12}
-                  ph={24}
-                  bgcolor={theme.palette.common.white}
-                >
-                  <Text flex="true" fontsize={16} fontweight={"600"}>
-                    {isEditMode
-                      ? "Chỉnh sửa lịch phỏng vấn"
-                      : "Đặt lịch phỏng vấn"}
-                  </Text>
-                  <ButtonDS
-                    type="submit"
-                    sx={{
-                      backgroundColor: theme.palette.background.paper,
-                      boxShadow: "none",
-                      ":hover": {
-                        backgroundColor: "#EFF3F7",
-                      },
-                      textTransform: "none",
-                      padding: "12px",
-                      minWidth: "unset",
-                    }}
-                    onClick={onClose}
-                    icon={
-                      <Iconify
-                        icon={"mi:close"}
-                        width={20}
-                        height={20}
-                        color={theme.palette.common.borderObject}
-                      />
-                    }
+        <ViewModel sx={{width: "unset", justifyContent: "space-between",}}>
+          {/* header */}
+          <View style={{height: "calc(100% - 64px)"}}>
+            <View
+              flexrow
+              atcenter
+              pv={12}
+              ph={24}
+              bgcolor={theme.palette.common.white}
+            >
+              <Text flex="true" fontsize={16} fontweight={"600"}>
+                {isEditMode
+                  ? "Chỉnh sửa lịch phỏng vấn"
+                  : "Đặt lịch phỏng vấn"}
+              </Text>
+              <ButtonDS
+                type="submit"
+                sx={{
+                  backgroundColor: theme.palette.background.paper,
+                  boxShadow: "none",
+                  ":hover": {
+                    backgroundColor: "#EFF3F7",
+                  },
+                  textTransform: "none",
+                  padding: "12px",
+                  minWidth: "unset",
+                }}
+                onClick={onClose}
+                icon={
+                  <Iconify
+                    icon={"mi:close"}
+                    width={20}
+                    height={20}
+                    color={theme.palette.common.borderObject}
                   />
+                }
+              />
+            </View>
+            <Divider/>
+            {/* content */}
+            <View style={{
+              minWidth: "600px",
+              overflow: "hidden",
+            }}>
+              {isLoading ? (
+                <View flex contentcenter>
+                  <CircularProgress/>
                 </View>
-                <Divider />
-
-                {/* body */}
-                <View
-                  flex
-                  style={{
-                    minWidth: "600px",
-                    maxWidth: "1400px",
-                    overflow: "hidden",
-                  }}
-                >
-                  <Grid
-                    container
-                    flexDirection={"row"}
-                    height={"100%"}
-                    flexWrap={"nowrap"}
-                    overflow={"hidden"}
+              ) : (
+                <>
+                  {/* body */}
+                  <View
+                    flex
+                    style={{
+                      maxWidth: "1400px",
+                      overflow: "hidden",
+                    }}
                   >
                     <Grid
                       container
-                      sx={{ width: "600px", overflowY: "auto" }}
-                      p={3}
+                      flexDirection={"row"}
                       height={"100%"}
                       flexWrap={"nowrap"}
-                      flexDirection={"column"}
+                      overflow={"hidden"}
                     >
-                      <PersonalInterview
-                        detailCandidate={item}
-                        item={DetailData}
-                        option={options}
-                        optionsFromCruit={optionsFromCruit}
-                        currentApplicantPipelineState={
-                          currentApplicantPipelineState
-                        }
-                      />
+                      <Grid
+                        container
+                        sx={{width: "600px", overflowY: "auto"}}
+                        p={3}
+                        height={"100%"}
+                        flexWrap={"nowrap"}
+                        flexDirection={"column"}
+                      >
+                        <PersonalInterview
+                          detailCandidate={item}
+                          item={DetailData}
+                          option={options}
+                          optionsFromCruit={optionsFromCruit}
+                          currentApplicantPipelineState={
+                            currentApplicantPipelineState
+                          }
+                        />
+                      </Grid>
+                      <Divider orientation="vertical"/>
+                      
+                      <Grid
+                        p={3}
+                        sx={{
+                          minWidth: "400px",
+                        }}
+                      >
+                        <ListCandidate
+                          detailCandidate={item}
+                          option={options}
+                          applicantId={options?.applicantId}
+                          error={errors}
+                        />
+                      </Grid>
+                      <Divider orientation="vertical"/>
+                      <Grid
+                        sx={{
+                          minWidth: "400px",
+                          overflowY: "auto",
+                        }}
+                      >
+                        <InterviewCouncil/>
+                      </Grid>
                     </Grid>
-                    <Divider orientation="vertical" />
-
-                    <Grid
-                      p={3}
-                      sx={{
-                        minWidth: "400px",
-                      }}
-                    >
-                      <ListCandidate
-                        detailCandidate={item}
-                        option={options}
-                        applicantId={options?.applicantId}
-                        error={errors}
-                      />
-                    </Grid>
-                    <Divider orientation="vertical" />
-
-                    <Grid
-                      sx={{
-                        minWidth: "400px",
-                        overflowY: "auto",
-                      }}
-                    >
-                      <InterviewCouncil />
-                    </Grid>
-                  </Grid>
-                </View>
-              </>
-            )}
+                  </View>
+                </>
+              )}
+            </View>
           </View>
-
           {/* footer */}
           <View
             flexrow
@@ -407,11 +408,11 @@ export const FormCalendar = ({
               >
                 {"Lưu"}
               </LoadingButton>
-              <div style={{ width: 8 }} />
-
+              <div style={{width: 8}}/>
+              
               <LoadingButton
                 variant="text"
-                sx={{ color: theme.palette.common.neutral700 }}
+                sx={{color: theme.palette.common.neutral700}}
                 onClick={onClose}
               >
                 {"Hủy"}

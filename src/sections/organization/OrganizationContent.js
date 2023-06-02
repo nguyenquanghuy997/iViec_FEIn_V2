@@ -177,8 +177,6 @@ const OrganizationContent = () => {
 
   if (isLoading) return <LoadingScreen />;
 
-  console.log(parentNode);
-
   return (
     <Box
       sx={{

@@ -116,6 +116,7 @@ const ImageCropper = (
                 }}
                 onZoomChange={setZoom}
                 {...props}
+                cropShape='round'
             />
           </div>
           <div className="controls" style={{width: "100%"}}>

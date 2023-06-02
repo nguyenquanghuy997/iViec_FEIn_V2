@@ -24,14 +24,18 @@ const DialogStyle = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(3)
   },
   "& .MuiDialog-container": {
+    alignItems:'start',
     "& .MuiPaper-root": {
-      padding: theme.spacing(0, 2),
+      // padding: theme.spacing(0, 2),
       borderRadius: '6px',
       width: "100%",
       maxWidth: '600px !important',
-      top: -200
+      top: 'calc(100px - 32px)'
     },
   },
+  "& .MuiModal-backdrop": {
+    background: "rgba(9, 30, 66, 0.25)"
+  }
 }))
 
 const TitleAlertStyle = styled(Typography)(({ theme }) => ({
@@ -126,7 +130,7 @@ const ConfirmModal = ({ confirmDelete, onCloseConfirmDelete, onSubmit, item, tit
           }
         />
       </View>
-      <DialogContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mb: '36px' }}>
+      <DialogContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mb: '12px' }}>
         <AlertIcon />
         <TitleAlertStyle className="title-delete">
           {title}

@@ -49,6 +49,9 @@ const MuiTextField = forwardRef((props, ref) => {
         "& .MuiFormHelperText-root": {
             marginLeft: "0",
         },
+        "& .MuiInputBase-root:hover": {
+            border: '1.5px solid #A2AAB7'
+        },
         ...sx };
     const InputProps = {
         startAdornment: (

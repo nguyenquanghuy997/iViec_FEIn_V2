@@ -16,7 +16,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import {useTheme, styled} from "@mui/material/styles";
+import { useTheme, styled } from "@mui/material/styles";
 
 
 const defaultValues = {
@@ -31,7 +31,7 @@ const ViewModelStyled = styled(ViewModel)(() => ({
   boxShadow: "-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
 }));
 
-export const JobTypeFormModal = ({ data, show, onClose }) => {
+export const JobTypeFormModal = ({data, show, onClose}) => {
   const isEditMode = !!data?.id;
   
   // api
@@ -133,11 +133,7 @@ export const JobTypeFormModal = ({ data, show, onClose }) => {
       <Modal
         open={show}
         onClose={onClose}
-        sx={{ display: "flex", justifyContent: "flex-end" }}
-        slotProps={{
-          backdrop: {style: {backgroundColor: 'rgba(9, 30, 66, 0.25)'}},
-          root: {style: {paddingTop: "64px"}},
-        }}
+        sx={{display: "flex", justifyContent: "flex-end", ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"}}}
       >
         <ViewModelStyled>
           {/* header */}

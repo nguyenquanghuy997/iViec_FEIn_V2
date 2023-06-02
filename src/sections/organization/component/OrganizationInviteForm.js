@@ -289,8 +289,10 @@ const OrganizationInviteForm = ({
             label="Mời người dùng"
             {...a11yProps(0)}
             sx={{
+              fontWeight: 600,
               "&:not(:last-of-type)": {
                 marginRight: "16px",
+                marginLeft:"15px",
               },
               "& button": {
                 fontSize: "14px",
@@ -490,7 +492,7 @@ const OrganizationInviteForm = ({
                 <MuiButton
                   variant="outlined"
                   title={"Thêm lời mời"}
-                  sx={{ mt: 3, fontWeight: 600 }}
+                  sx={{ mt: 3, fontWeight: 600,  fontFamily:'Inter' }}
                   startIcon={
                     <Iconify
                       icon={"material-symbols:add"}
@@ -517,6 +519,8 @@ const OrganizationInviteForm = ({
                 onClick={onClose}
                 className={"btn-actions btn-confirm"}
                 sx={{
+                  fontWeight:600,
+                  fontSize:'14px',
                   "&:hover": {
                     boxShadow: "none",
                     backgroundColor: "transparent",
@@ -528,6 +532,11 @@ const OrganizationInviteForm = ({
                 className={"btn-actions btn-confirm"}
                 disabled={!isValid || fields.length === 0}
                 type={"submit"}
+                sx={{
+                  fontWeight:600,
+                  fontSize:'14px',
+                  color: theme.palette.common.white,
+                }}
               />
             </DialogActions>
           </FormProvider>

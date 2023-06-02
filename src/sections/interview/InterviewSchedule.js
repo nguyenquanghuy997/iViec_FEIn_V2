@@ -30,8 +30,8 @@ export default function InterviewSchedule({ Data }) {
   };
 
   const getTotalResult = () => {
-    return Object.entries(Data?.result ?? {}).reduce((a, b) => {
-      return a + b.length;
+    return Object.keys(Data?.result ?? {}).reduce((a, b) => {
+      return a + Data?.result[b]?.length;
     }, 0);
   };
 

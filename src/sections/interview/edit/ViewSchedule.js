@@ -4,6 +4,7 @@ import Iconify from "@/components/Iconify";
 import { PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
+import { ButtonIcon } from "@/utils/cssStyles";
 import { fTime } from "@/utils/formatTime";
 import { Box, CardContent, Divider, Tooltip, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -283,7 +284,13 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
               style={{ cursor: "pointer" }}
               onClick={() => handleClick(data)}
             >
-              <EditIcon width={12} height={12} />
+              <ButtonIcon
+                tooltip="Sửa"
+                icon={<EditIcon width={12} height={12} />}
+                size="small"
+                sx={{ color: theme.palette.common.borderObject, mx: 1 }}
+                onClick={() => handleClick(data)}
+              ></ButtonIcon>
             </div>
           )}
           {
