@@ -1,5 +1,6 @@
 import { EditIcon } from "@/assets/ActionIcon";
 import { ButtonDS } from "@/components/DesignSystem";
+import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
 import { PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
@@ -215,66 +216,82 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             {renderSwitch(data?.bookingCalendarProcessStatus)}
           </Box>
 
-          <Box sx={{ width: "20%" }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 600 }} color="#172B4D">
-              {data?.name}
-            </Typography>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-              {data?.startTime ? fTime(data?.startTime) : ""} -
-              {data?.endTime ? fTime(data?.endTime) : ""}
-            </Typography>
-          </Box>
-          <Divider orientation="vertical" variant="middle" flexItem />
-          <Box sx={{ width: "15%", px: 3 }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-              Số người phỏng vấn
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: 12,
-                fontWeight: 600,
-              }}
-            >
-              {data?.numOfApplicant}
-            </Typography>
-          </Box>
-          <Divider orientation="vertical" variant="middle" flexItem />
-          <Box sx={{ width: "15%", px: 3 }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-              Loại phỏng vấn
-            </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-              {data?.interviewGroupType == 0 ? " Cá nhân" : "Nhóm"}
-            </Typography>
-          </Box>
-          <Divider orientation="vertical" variant="middle" flexItem />
-          <Box sx={{ width: "15%", px: 3 }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-              Hình thức
-            </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-              {data?.interviewType == 0 ? " Online" : "Trực tiếp"}
-            </Typography>
-          </Box>
-          {data?.interviewType == 1 && (
-            <>
-              <Divider orientation="vertical" variant="middle" flexItem />
-              <Box sx={{ width: "30%", px: 3 }}>
-                <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
-                  Địa chỉ
-                </Typography>
-                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                  {data?.offlineInterviewAddress}
-                </Typography>
-              </Box>
-            </>
-          )}
+          <View flex1 flexRow>
+            <Box sx={{ width: "30%", pr: 3 }}>
+              <Typography
+                sx={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                color="#172B4D"
+              >
+                {data?.name}
+              </Typography>
+              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                {data?.startTime ? fTime(data?.startTime) : ""} -
+                {data?.endTime ? fTime(data?.endTime) : ""}
+              </Typography>
+            </Box>
+            <Divider orientation="vertical" variant="middle" flexItem />
+
+            <Box sx={{ width: "15%", px: 3 }}>
+              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                Số ứng viên
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                }}
+              >
+                {data?.numOfApplicant}
+              </Typography>
+            </Box>
+            <Divider orientation="vertical" variant="middle" flexItem />
+
+            <Box sx={{ width: "15%", px: 3 }}>
+              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                Loại phỏng vấn
+              </Typography>
+              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                {data?.interviewGroupType == 0 ? " Cá nhân" : "Nhóm"}
+              </Typography>
+            </Box>
+            <Divider orientation="vertical" variant="middle" flexItem />
+
+            <Box sx={{ width: "15%", px: 3 }}>
+              <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                Hình thức
+              </Typography>
+              <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                {data?.interviewType == 0 ? " Online" : "Trực tiếp"}
+              </Typography>
+            </Box>
+
+            {data?.interviewType == 1 && (
+              <>
+                <Divider orientation="vertical" variant="middle" flexItem />
+                <Box sx={{ width: "25%", px: 3 }}>
+                  <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                    Địa chỉ
+                  </Typography>
+                  <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                    {data?.offlineInterviewAddress}
+                  </Typography>
+                </Box>
+              </>
+            )}
+          </View>
         </CardContent>
+
         <Box
           sx={{
             display: "flex",
             gap: 2,
-            width: "fit-content",
+            width: "15%",
             alignItems: "center",
             padding: "16px",
           }}
