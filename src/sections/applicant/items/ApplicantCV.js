@@ -76,10 +76,16 @@ export const ApplicantCV = ({ dataLog, pressUpload }) => {
                   </View>
                 </View>
                 <div style={{ height: "1040px" }}>
-                  <iframe
-                    src={getFileUrl(watch("cvFile")) + "#toolbar=0&view=FitH"}
-                    style={{ width: "100%", height: "100%", border: "none" }}
-                  />
+                  {
+                    <iframe
+                      src={
+                        watch("cvFile").includes(".xlsx")
+                          ? ""
+                          : getFileUrl(watch("cvFile")) + "#toolbar=0&view=FitH"
+                      }
+                      style={{ width: "100%", height: "100%", border: "none" }}
+                    />
+                  }
                 </div>
               </>
             ) : (

@@ -355,6 +355,7 @@ function RecruitmentPreviewItem({
                           padding: 0,
                           color: theme.palette.common.neutral800,
                           fontWeight: 700,
+                          fontSize: 20
                         }}
                         link={PATH_DASHBOARD.recruitment.root}
                         name={RecruitmentData?.name}
