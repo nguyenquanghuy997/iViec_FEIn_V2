@@ -230,7 +230,9 @@ function InterviewItem(props) {
         {/* Lịch sử cuộc pv */}
         {interview &&
           interview?.map((item, index) => {
-            if (index < interview?.length - 1) {
+            if (index < interview?.length && (interview[index].applicantInterviewState !==
+              ApplicantInterviewState.PENDING &&
+              ApplicantInterviewState.CONFIRMED && ApplicantInterviewState.INTERVIEWING)) {
               return (
                 <Box
                   key={index}
@@ -271,11 +273,9 @@ function InterviewItem(props) {
           })}
         <Box>
           {lastInterview?.applicantInterviewState ===
-          ApplicantInterviewState.PENDING ||
-          lastInterview?.applicantInterviewState ===
-          ApplicantInterviewState.CONFIRMED ||
-          lastInterview?.applicantInterviewState ===
-          ApplicantInterviewState.INTERVIEWING ? (
+            ApplicantInterviewState.PENDING && 
+            ApplicantInterviewState.CONFIRMED &&
+            ApplicantInterviewState.INTERVIEWING ? (
             <Box
               sx={{
                 background: "#4CAF50",
