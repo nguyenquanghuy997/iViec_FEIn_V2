@@ -67,6 +67,7 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
             examinationId: item?.examinationId,
             examinationName: item?.examinationName,
             pipelineStateType: item?.pipelineStateType,
+            organizationPipelineStateId: item?.organizationPipelineStateId,
           })
         )
       );

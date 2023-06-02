@@ -105,6 +105,7 @@ const OrganizationDetailContent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
   const { query = { PageIndex: 1 }, isReady } = router;
 
   const { data: organization = {} } = useGetOrganizationByIdQuery(
@@ -118,6 +119,12 @@ const OrganizationDetailContent = () => {
     useGetAllApplicantUserOrganizationByIdQuery(
       {
         OrganizationId: query?.id,
+        isActivated:
+          query.isActivated === "2"
+            ? false
+            : query.isActivated === "1"
+            ? true
+            : null,
         ...router.query,
       },
       { skip: !query?.id }

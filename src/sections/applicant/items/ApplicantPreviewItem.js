@@ -11,7 +11,7 @@ import {
   SelectAutoCompleteDS,
 } from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import { HEADER } from "@/config";
+import { HEADER, PIPELINE_TYPE } from "@/config";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
@@ -77,33 +77,33 @@ function ApplicantPreviewItem() {
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
 
-  const HeaderApplicant = (
+  const HeaderApplicant = () =>
     // { pipelines }
-    ) => {
-    // const resultType = pipelines?.recruitmentPipelineStates?.find(
-    //   (item) => item.id === pipelines.currentApplicantPipelineState
-    // ).pipelineStateType;
-    return (
-      <Grid display="flex" alignItems="center" justifyContent="space-between">
-        <Grid
-          display="flex"
-          alignItems="center"
-          sx={{
-            "& .MuiBadge-dot": {
-              width: "6px",
-              minWidth: "6px",
-              height: "6px",
-              top: 3,
-              right: 3,
-            },
-          }}
-        >
-          <AvatarDS
-            sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
-            name={data?.fullName}
-            src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
-          ></AvatarDS>
-          {/* <BoxFlex
+    {
+      // const resultType = pipelines?.recruitmentPipelineStates?.find(
+      //   (item) => item.id === pipelines.currentApplicantPipelineState
+      // ).pipelineStateType;
+      return (
+        <Grid display="flex" alignItems="center" justifyContent="space-between">
+          <Grid
+            display="flex"
+            alignItems="center"
+            sx={{
+              "& .MuiBadge-dot": {
+                width: "6px",
+                minWidth: "6px",
+                height: "6px",
+                top: 3,
+                right: 3,
+              },
+            }}
+          >
+            <AvatarDS
+              sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
+              name={data?.fullName}
+              src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
+            ></AvatarDS>
+            {/* <BoxFlex
                 color={
                   mediumScore.toFixed(2) < 4.9
                     ? "#E53935"
@@ -118,78 +118,78 @@ function ApplicantPreviewItem() {
                 
               </BoxFlex> */}
 
-          <Box pl={1}>
-            <Stack display="flex" direction="row" alignItems="center">
-              <Typography fontSize="20px" fontWeight="600">
-                {data?.fullName}
-              </Typography>
-              <ButtonIcon
-                sx={{
-                  marginLeft: 0.5,
-                }}
-                tooltip="Sửa"
-                onClick={() => handleOpenEditForm()}
-                icon={
-                  <Iconify
-                    icon={"ri:edit-2-fill"}
-                    width={20}
-                    height={20}
-                    color="#8A94A5"
-                  />
-                }
-              />
-            </Stack>
+            <Box pl={1}>
+              <Stack display="flex" direction="row" alignItems="center">
+                <Typography fontSize="20px" fontWeight="600">
+                  {data?.fullName}
+                </Typography>
+                <ButtonIcon
+                  sx={{
+                    marginLeft: 0.5,
+                  }}
+                  tooltip="Sửa"
+                  onClick={() => handleOpenEditForm()}
+                  icon={
+                    <Iconify
+                      icon={"ri:edit-2-fill"}
+                      width={20}
+                      height={20}
+                      color="#8A94A5"
+                    />
+                  }
+                />
+              </Stack>
 
-            <Stack
-              direction="row"
-              divider={<Divider orientation="vertical" flexItem />}
-              spacing={2}
-              color="#172B4D"
-            >
-              <Typography fontSize="14px">{data?.phoneNumber}</Typography>
-              <Typography fontSize="14px">{data?.email}</Typography>
-            </Stack>
-          </Box>
-          {logApplicant?.averagePointReviewPoint && (
-            <Box
-              ml={1}
-              color={
-                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
-                  ? "#E53935"
-                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                  ? "#F77A0C"
-                  : "#388E3C"
-              }
-              border={"1px solid #388E3C"}
-              padding="6px 8px"
-              borderRadius="4px"
-              textAlign={"center"}
-              borderColor={
-                logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
-                  ? "#E53935"
-                  : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                  ? "#F77A0C"
-                  : "#388E3C"
-              }
-            >
-              <Typography fontSize="12px" fontWeight="600">
-                {"Trung bình"}
-              </Typography>
-              <p
-                style={{
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  paddingTop: "2px",
-                }}
-                name="mediumScore"
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem />}
+                spacing={2}
+                color="#172B4D"
               >
-                {logApplicant?.averagePointReviewPoint?.toFixed(2)}
-              </p>
+                <Typography fontSize="14px">{data?.phoneNumber}</Typography>
+                <Typography fontSize="14px">{data?.email}</Typography>
+              </Stack>
             </Box>
-          )}
-        </Grid>
-        <Grid display="flex">
-          {/* <ButtonDS
+            {logApplicant?.averagePointReviewPoint && (
+              <Box
+                ml={1}
+                color={
+                  logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                    ? "#E53935"
+                    : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                    ? "#F77A0C"
+                    : "#388E3C"
+                }
+                border={"1px solid #388E3C"}
+                padding="6px 8px"
+                borderRadius="4px"
+                textAlign={"center"}
+                borderColor={
+                  logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
+                    ? "#E53935"
+                    : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
+                    ? "#F77A0C"
+                    : "#388E3C"
+                }
+              >
+                <Typography fontSize="12px" fontWeight="600">
+                  {"Trung bình"}
+                </Typography>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    paddingTop: "2px",
+                  }}
+                  name="mediumScore"
+                >
+                  {logApplicant?.averagePointReviewPoint?.toFixed(2)}
+                </p>
+              </Box>
+            )}
+          </Grid>
+          <Grid display="flex">
+            {/* <ButtonDS
             tittle={"Thêm vào tin khác"}
             type="submit"
             sx={{
@@ -213,54 +213,65 @@ function ApplicantPreviewItem() {
               />
             }
           /> */}
-          <ButtonDS
-            tittle={"Đặt lịch phỏng vấn"}
-            type="submit"
-            sx={{
-              ":hover": {
-                backgroundColor: "#1565C0",
-              },
-              marginRight: "12px",
-              fontSize: "14px",
-              padding: "6px 12px",
-            }}
-            icon={
-              <Iconify
-                icon={"mdi:calendar-check"}
-                width={20}
-                height={20}
-                color="#fdfdfd"
-                mr={1}
-              />
-            }
-            onClick={() => setOpen(true)}
-          />
+            <ButtonDS
+              tittle={"Đặt lịch phỏng vấn"}
+              type="submit"
+              sx={{
+                ":hover": {
+                  backgroundColor: "#1565C0",
+                },
+                marginRight: "12px",
+                fontSize: "14px",
+                padding: "6px 12px",
+              }}
+              isDisabled={
+                logApplicant.recruitmentPipelineStateType ===
+                PIPELINE_TYPE.INTERVIEW
+                  ? false
+                  : true
+              }
+              icon={
+                <Iconify
+                  icon={"mdi:calendar-check"}
+                  width={20}
+                  height={20}
+                  color={
+                    logApplicant.recruitmentPipelineStateType ===
+                    PIPELINE_TYPE.INTERVIEW
+                      ? "#fdfdfd"
+                      : "fff"
+                  }
+                  mr={1}
+                />
+              }
+              onClick={() => setOpen(true)}
+            />
 
-          <ButtonDS
-            tittle={"Đánh giá"}
-            type="submit"
-            onClick={() => setIsOpenReview(true)}
-            isDisabled={!isReview}
-            mr={2}
-            sx={{
-              ":hover": {
-                backgroundColor: "#1565C0",
-              },
-              marginRight: "12px",
-              fontSize: "14px",
-              padding: "6px 12px",
-            }}
-            icon={
-              <Iconify
-                icon={"ph:user-focus-fill"}
-                width={20}
-                height={20}
-                color={isReview ? "fff" : "#8A94A5"}
-                mr={1}
-              />
-            }
-          />
-          {/* {resultType === 3 && pipelines.pipelineStateResultType === 0 && (
+            <ButtonDS
+              tittle={"Đánh giá"}
+              type="submit"
+              onClick={() => setIsOpenReview(true)}
+              isDisabled={!isReview}
+              mr={2}
+              sx={{
+                ":hover": {
+                  backgroundColor: "#1565C0",
+                },
+                marginRight: "12px",
+                fontSize: "14px",
+                padding: "6px 12px",
+              }}
+              icon={
+                <Iconify
+                  icon={"ph:user-focus-fill"}
+                  width={20}
+                  height={20}
+                  color={isReview ? "fff" : "#8A94A5"}
+                  mr={1}
+                />
+              }
+            />
+            {/* {resultType === 3 && pipelines.pipelineStateResultType === 0 && (
             <ButtonDS
               tittle={"Gửi offer"}
               type="button"
@@ -275,10 +286,10 @@ function ApplicantPreviewItem() {
               }
             />
           )} */}
+          </Grid>
         </Grid>
-      </Grid>
-    );
-  };
+      );
+    };
   const HeadingFixed = styled("div")(() => ({
     top: HEADER.DASHBOARD_DESKTOP_HEIGHT,
     width: "100%",
