@@ -49,7 +49,7 @@ export const Activities = ({
   const [itemLog, setItemLog] = useState();
   const renderInfo = (title, reason) => {
     return (
-      <View flexRow atCenter mt={16}>
+      <View flexRow mt={16}>
         <View mr={8} width={64}>
           <Text
             disableTranslate
