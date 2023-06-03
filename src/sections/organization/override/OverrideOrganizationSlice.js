@@ -220,6 +220,7 @@ export const {
   useGetOrganizationPreviewQuery,
   useUpdateOrganizationMutation,
   useGetAllApplicantUserOrganizationByIdQuery,
+  useLazyGetAllApplicantUserOrganizationByIdQuery,
   useGetAllAdminByOrganizationIdQuery,
   useDeleteMultipleOrganizationMutation,
   useSetActiveOrganizationMutation,
