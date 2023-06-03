@@ -18,6 +18,7 @@ import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { fDate } from "@/utils/formatTime";
 import {
   Box,
+  CardContent,
   Checkbox,
   Divider,
   IconButton,
@@ -27,6 +28,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
+import Collapse from "@mui/material/Collapse";
 
 const OrganizationCard = ({
   isCheckbox,
@@ -205,8 +207,8 @@ const OrganizationCard = ({
               )}
         </BoxFlex>
       </BoxFlex>
-      {showAll && (
-        <>
+      <Collapse in={showAll} timeout={600} unmountOnExit>
+        <CardContent>
           <Box
             sx={{
               display: "flex",
@@ -305,14 +307,14 @@ const OrganizationCard = ({
                   mr: 1,
                 }}
               >
-                Ngày tham gia: {fDate(item?.registrationTime)}
+                Được mời bởi: {item?.referenceUser?.Email} ngày {fDate(item?.registrationTime)}
               </Typography>
               <Box
                 sx={{
                   padding: "5px 8px",
                   backgroundColor: theme.palette.common.bgrObject,
                   borderRadius: "100px",
-                  display: !showAll ? "none" : "block",
+                  display: "block",
                   cursor: "pointer",
                 }}
                 onClick={toggleShow}
@@ -337,7 +339,7 @@ const OrganizationCard = ({
               </Box>
             </Box>
             <BoxFlex>
-              {showAll && selected?.length > 1 ? null : (
+              {selected?.length > 1 ? null : (
                 <>
                   <Switch
                     checked={item.isActive}
@@ -375,8 +377,8 @@ const OrganizationCard = ({
               )}
             </BoxFlex>
           </Box>
-        </>
-      )}
+        </CardContent>
+      </Collapse>
     </CardUserStyle>
   );
 };
