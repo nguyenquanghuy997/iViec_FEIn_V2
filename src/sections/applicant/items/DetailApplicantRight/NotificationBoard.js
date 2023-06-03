@@ -1,6 +1,5 @@
 import ExpanLess from "../../../../../public/assets/icons/candidate/ExpanLess";
 import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
-import { ApplicantReviewModal } from "../../modals/ApplicantReviewModal";
 import { AvatarDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/FlexStyled";
 import { PipelineStateType } from "@/utils/enum";
@@ -22,18 +21,14 @@ const NotificationBoard = ({
   title,
   isShow,
   data,
-  dataApplicant,
   children,
   isReview,
-  recruitmentId,
-  reviewFormCriterias,
   expanded,
   setIsOpenReviewView,
   setItemLog,
 }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [isOpenReview, setIsOpenReview] = useState(false);
 
   const handleClick = () => {
     if (!isReview && !children) return;
@@ -241,16 +236,6 @@ const NotificationBoard = ({
           ) : null}
 
           {expanded}
-
-          {isReview && isOpenReview && (
-            <ApplicantReviewModal
-              show={isOpenReview}
-              data={reviewFormCriterias}
-              applicantId={dataApplicant?.id}
-              recruitmentId={recruitmentId}
-              setShow={setIsOpenReview}
-            />
-          )}
         </div>
         <div style={{ margin: "auto" }}>
           {isShow && (open ? <ExpanMore /> : <ExpanLess />)}
