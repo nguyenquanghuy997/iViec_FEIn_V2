@@ -122,6 +122,7 @@ const OrganizationCard = ({
                 cursor: "pointer",
                 display: showAll ? "none" : "block",
               }}
+              onClick={toggleShow}
             >
               <Typography
                 sx={{
