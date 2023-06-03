@@ -85,6 +85,7 @@ const columns = [
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
       name: "ReferenceUserId",
+      remoteIdsField: "ReferenceUserIds",
       placeholder: "Chọn 1 hoặc nhiều người",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true,
