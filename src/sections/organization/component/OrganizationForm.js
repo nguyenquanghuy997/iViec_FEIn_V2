@@ -1,35 +1,24 @@
-import { Text, View } from "@/components/DesignSystem/FlexStyled";
-import { RHFSelect, RHFTextField } from "@/components/hook-form";
-import { Label, TextFieldStyle, } from "@/components/hook-form/style";
-import { useGetDistrictByProvinceIdQuery, useGetProvinceQuery, } from "@/sections/companyinfor/companyInforSlice";
+import {Text, View} from "@/components/DesignSystem/FlexStyled";
+import {RHFSelect, RHFTextField} from "@/components/hook-form";
+import {Label, TextFieldStyle,} from "@/components/hook-form/style";
+import {useGetDistrictByProvinceIdQuery, useGetProvinceQuery,} from "@/sections/companyinfor/companyInforSlice";
 import {
   useCreateChildOrganizationMutation,
   useGetOrganizationByIdQuery,
   useUpdateOrganizationMutation,
 } from "@/sections/organization/override/OverrideOrganizationSlice";
-import { convertViToEn } from "@/utils/function";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, CircularProgress, Divider, Grid, Modal, Stack, useTheme } from "@mui/material";
-import { isEmpty, pick } from "lodash";
-import { useSnackbar } from "notistack";
-import React, { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import {convertViToEn} from "@/utils/function";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {CircularProgress, Divider, Grid, Modal, useTheme} from "@mui/material";
+import {isEmpty, pick} from "lodash";
+import {useSnackbar} from "notistack";
+import React, {useEffect} from "react";
+import {FormProvider, useForm} from "react-hook-form";
 import * as Yup from "yup";
-import { ViewModel } from "@/utils/cssStyles";
-import { ButtonDS } from "@/components/DesignSystem";
+import {ViewModel} from "@/utils/cssStyles";
+import {ButtonDS} from "@/components/DesignSystem";
 import Iconify from "@/components/Iconify";
-import { ButtonCancelStyle } from "@/sections/applicant/style";
-
-const InputStyle = {
-  minHeight: 44,
-  maxWidth: 552,
-  marginBottom: 24,
-};
-
-const SelectStyle = {
-  minHeight: 44,
-  maxWidth: 264,
-};
+import {ButtonCancelStyle} from "@/sections/applicant/style";
 
 const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
   const theme = useTheme();
@@ -100,8 +89,8 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
     }
   }, [organization, actionType]);
   
-  const onSubmit = async (data) => {
-    const body = {...data};
+  const pressSave = handleSubmit(async (e) => {
+    const body = {...e};
     if (actionType === 0) {
       try {
         body.parentOrganizationId = parentNode?.id ? parentNode.id : null;
@@ -158,10 +147,10 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
         throw err;
       }
     }
-  };
+  });
   
   return (
-    <FormProvider {...methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider {...methods}>
       <Modal
         open={isOpen}
         onClose={onClose}
@@ -235,81 +224,75 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                   flexDirection={"column"}
                 >
                   {!isEmpty(parentNode) && (
-                    <View>
+                    <Grid mb={3}>
                       <Label required={true}>Trực thuộc</Label>
                       <TextFieldStyle
                         name="parentOrganizationId"
                         placeholder="Nhập tên đơn vị Trực thuộc"
-                        style={{...InputStyle, backgroundColor: theme.palette.common.bgrObject}}
+                        style={{backgroundColor: theme.palette.common.bgrObject}}
                         value={actionType === 0 ? parentNode?.name : organization?.parentOrganizationName}
                         disabled
                         variant="standard"
                         InputProps={{disableUnderline: true}}
                       />
-                    </View>
+                    </Grid>
                   )}
-                  <View>
+                  <Grid mb={3}>
                     <Label required={true}>Tên đơn vị</Label>
                     <RHFTextField
                       name="name"
                       placeholder="Nhập tên đơn vị"
-                      style={{...InputStyle}}
                     />
-                  </View>
-                  <View>
+                  </Grid>
+                  <Grid mb={3}>
                     <Label required={true}>Mã đơn vị</Label>
                     <RHFTextField
                       name="code"
                       placeholder="Nhập mã đơn vị"
-                      style={{...InputStyle}}
                     />
-                  </View>
-                  <View>
+                  </Grid>
+                  <Grid mb={3}>
                     <Label>Email đơn vị</Label>
                     <RHFTextField
                       name="email"
                       placeholder="Nhập email đơn vị"
                       beforeChange={() => convertViToEn(watch("email"), false)}
-                      style={{...InputStyle}}
                     />
-                  </View>
-                  <View>
+                  </Grid>
+                  <Grid mb={3}>
                     <Label>Số điện thoại đơn vị</Label>
                     <RHFTextField
                       name="phoneNumber"
                       placeholder="Nhập SĐT đơn vị"
-                      style={{...InputStyle}}
                     />
-                  </View>
+                  </Grid>
                   <Divider sx={{mb: 3}}/>
-                  <Stack direction="row" justifyContent="space-between">
-                    <Box sx={{mb: 3, width: "100%",}}>
+                  <Grid container flexDirection={"row"} mb={3}>
+                    <Grid item xs={6} pr={"12px"}>
                       <Label>Tỉnh/Thành phố</Label>
                       <RHFSelect
                         options={ProvinceList?.map((i) => ({value: i.id, label: i.name,}))}
                         name="provinceId"
                         placeholder="Chọn Tỉnh/Thành phố"
-                        style={{...SelectStyle}}
                       />
-                    </Box>
-                    <Box sx={{mb: 3, width: "100%"}}>
+                    </Grid>
+                    <Grid item xs={6} pr={"12px"}>
                       <Label>Quận/Huyện</Label>
                       <RHFSelect
                         options={DistrictList?.map((i) => ({value: i.id, label: i.name,}))}
                         name="districtId"
                         disabled={!watchProvinceId}
                         placeholder="Chọn Quận/Huyện"
-                        style={{...SelectStyle}}
                       />
-                    </Box>
-                  </Stack>
-                  <View>
+                    </Grid>
+                  </Grid>
+                  <Grid mb={3}>
                     <Label>Địa chỉ chi tiết</Label>
                     <RHFTextField
                       name="address"
                       placeholder="Số nhà, Tên đường, Xã/Phường ...."
-                      style={{...InputStyle}}/>
-                  </View>
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             )}
@@ -327,7 +310,7 @@ const OrganizationForm = ({isOpen, onClose, parentNode, actionType}) => {
                 loading={isSubmitting}
                 variant="contained"
                 tittle={actionType == 0 ? "Thêm" : "Sửa"}
-                onSubmit={() => handleSubmit(onSubmit)}
+                onClick={pressSave}
               />
               <ButtonCancelStyle onClick={onClose}>Hủy</ButtonCancelStyle>
             </View>
