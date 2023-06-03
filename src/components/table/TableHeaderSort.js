@@ -1,6 +1,6 @@
 import { IconActiveSort, IconSort } from "@/assets/icons";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const HeaderTitle = styled("span")(() => ({
   display: "flex",
@@ -61,11 +61,37 @@ export default function TableHeaderSort({
   const openSort = () => {
     setIsSort(true);
   };
+
+  const closeSort = () => {
+    setIsSort(false);
+  };
+
   const handleSort = (sortValue) => {
     sortList[sortKey] = sortValue;
     setSortList({ ...sortList });
     setIsSort(false);
   };
+
+  const useOutsideClick = (callback) => {
+    const ref = useRef();
+
+    useEffect(() => {
+      const handleClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          callback();
+        }
+      };
+
+      document.addEventListener("click", handleClick, true);
+
+      return () => {
+        document.removeEventListener("click", handleClick, true);
+      };
+    }, [ref]);
+
+    return ref;
+  };
+  const ref = useOutsideClick(closeSort);
 
   if (!sortValueList || sortValueList.length === 0) return;
 
@@ -73,7 +99,7 @@ export default function TableHeaderSort({
     <HeaderTitle>
       <IconSort onClick={openSort} />
       {isSort && (
-        <div className="sorts">
+        <div className="sorts" ref={ref}>
           {sortValueList.map((sortItem) => (
             <div
               className="__sort_item"

@@ -141,13 +141,13 @@ export const RecruitmentItem = () => {
             onClick={(e) => {
               if (
                 !canView ||
-                record.processStatus === RECRUITMENT_STATUS.DRAFT
-                // record.processStatus ==
-                //   RECRUITMENT_STATUS.WAITING_ORGANIZATION_APPROVAL ||
+                record.processStatus === RECRUITMENT_STATUS.DRAFT ||
+                record.processStatus ==
+                RECRUITMENT_STATUS.WAITING_ORGANIZATION_APPROVAL ||
                 // record.processStatus ==
                 //   RECRUITMENT_STATUS.ORGANIZATION_REJECT ||
-                // record.processStatus ==
-                //   RECRUITMENT_STATUS.WAITING_IVIEC_APPROVAL ||
+                record.processStatus ==
+                RECRUITMENT_STATUS.WAITING_IVIEC_APPROVAL
                 // record.processStatus == RECRUITMENT_STATUS.IVIEC_REJECT
               ) {
                 return;
@@ -444,11 +444,11 @@ export const RecruitmentItem = () => {
           <>
             {record?.minSalary !== 0
               ? `${fCurrency(record?.minSalary)} - ${fCurrency(
-                  record?.maxSalary
-                )} ${Currency(record?.currencyUnit)}`
+                record?.maxSalary
+              )} ${Currency(record?.currencyUnit)}`
               : record.salaryDisplayType === 0
-              ? "Không lương"
-              : "Thỏa thuận"}
+                ? "Không lương"
+                : "Thỏa thuận"}
           </>
         ),
         filters: {
@@ -793,7 +793,12 @@ export const RecruitmentItem = () => {
               </Typography>
             ),
           },
-          canView && {
+          canView &&
+          (
+            itemSelected[0]?.processStatus !== RECRUITMENT_STATUS.DRAFT &&
+            itemSelected[0]?.processStatus !== RECRUITMENT_STATUS.WAITING_ORGANIZATION_APPROVAL &&
+            itemSelected[0]?.processStatus !== RECRUITMENT_STATUS.WAITING_IVIEC_APPROVAL
+          ) && {
             key: "detail",
             title: "Chi tiết",
             onClick: () =>

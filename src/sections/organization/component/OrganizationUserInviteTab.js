@@ -109,7 +109,7 @@ const OrganizationUserInviteTab = ({
         className="box-content-wrapper"
         sx={{ width: "100%", height: "685px" }}
       >
-        <Box sx={{ width: "100%", padding: 0, mb: 2 }}>
+        <Box sx={{ width: "100%", padding: 0, paddingBottom: 2 }}>
           {ListUserInvite.map((item, index) => {
             return (
               <OrganizationUserInviteCard
@@ -235,34 +235,34 @@ const OrganizationUserInviteTab = ({
           }}
         />
       )}
-        <BottomNavModal
-          data={selected}
-          onClose={handleCloseBottomNav}
-          open={selected.length > 0}
-          className={"bottom-nav"}
-          sx={{
-            "& .MuiPaper-root": {
-              width: "100%",
-              maxWidth: "100% !important",
-              borderRadius: "0px !important",
-            },
-          }}
-          actions={[
-            {
-              key: "resend",
-              title: "Gửi yêu cầu active tài khoản",
-              onClick: () => handleOpenModalState({ openResend: true }),
-              startIcon: <GuardIcon />,
-              sx: { padding: "8px 12px" },
-            },
-            {
-              key: "delete",
-              icon: <DeleteIcon />,
-              onClick: () => handleOpenModalState({ openDeleteInvite: true }),
-              title: "Xóa"
-            },
-          ]}
-        />
+      <BottomNavModal
+        data={selected}
+        onClose={handleCloseBottomNav}
+        open={selected.length > 0}
+        className={"bottom-nav"}
+        sx={{
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "100% !important",
+            borderRadius: "0px !important",
+          },
+        }}
+        actions={[
+          {
+            key: "resend",
+            title: "Gửi lại yêu cầu active tài khoản",
+            onClick: () => handleOpenModalState({ openResend: true }),
+            startIcon: <GuardIcon />,
+            sx: { padding: "8px 12px" },
+          },
+          {
+            key: "delete",
+            icon: <DeleteIcon />,
+            onClick: () => handleOpenModalState({ openDeleteInvite: true }),
+            title: "Xóa",
+          },
+        ]}
+      />
     </>
   );
 };

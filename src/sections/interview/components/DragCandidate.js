@@ -33,7 +33,7 @@ function DragCandidate({data}) {
         <Droppable sx={{height: "100%"}} droppableId="characters">
           {(provided) => (
             <ul
-              style={{overflowY: "auto", height: "calc(100% - 105px)"}}
+              style={{overflowY: "auto"}}
               className="characters"
               {...provided.droppableProps}
               ref={provided.innerRef}

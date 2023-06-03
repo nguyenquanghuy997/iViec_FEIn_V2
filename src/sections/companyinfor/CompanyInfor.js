@@ -196,7 +196,7 @@ export default function CompanyInfor({ data }) {
             {renderItem(
               "Giới thiệu công ty",
               get(data, "organizationInformation.description"),
-              <EmptyValue text={"Hiện chưa nội dung giới thiệu công ty"} />
+              <EmptyValue text={"Hiện chưa có nội dung giới thiệu công ty"} />
             )}
           </Box>
         </Box>

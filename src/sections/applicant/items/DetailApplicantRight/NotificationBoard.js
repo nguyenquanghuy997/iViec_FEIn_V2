@@ -12,7 +12,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import { Container } from "@mui/system";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const NotificationBoard = ({
   icon,
@@ -111,32 +111,36 @@ const NotificationBoard = ({
           ></AvatarDS>
         </ListItemAvatar>
 
-        <div style={{ paddingRight: "14px" }}>
-          <div>{title}</div>
-          <div>
-            <React.Fragment>
-              <Typography
-                sx={{
-                  display: "block",
-                  fontSize: "12px",
-                  marginTop: "4px",
-                }}
-                component="span"
-                variant="body2"
-                color={theme.palette.common.borderObject}
-              >
-                {fTimeDate(data?.occurredAt)}
-              </Typography>
-              {data?.recruitmentPipelineStateType === 3 &&
-                (data.pipelineStateResultType === 2
-                  ? renderText(
-                      "Lý do loại:",
-                      data?.note,
-                      data.pipelineStateResultType
-                    )
-                  : renderText("Ghi chú:", data?.note))}
-            </React.Fragment>
-          </div>
+        <div
+          style={{
+            width: "100%",
+            maxWidth: isReview || children ? "395px" : undefined,
+          }}
+        >
+          {title}
+
+          <>
+            <Typography
+              sx={{
+                display: "block",
+                fontSize: "12px",
+                marginTop: "4px",
+              }}
+              component="span"
+              variant="body2"
+              color={theme.palette.common.borderObject}
+            >
+              {fTimeDate(data?.occurredAt)}
+            </Typography>
+            {data?.recruitmentPipelineStateType === 3 &&
+              (data.pipelineStateResultType === 2
+                ? renderText(
+                    "Lý do loại:",
+                    data?.note,
+                    data.pipelineStateResultType
+                  )
+                : renderText("Ghi chú:", data?.note))}
+          </>
 
           {isReview ? (
             <Collapse
@@ -237,9 +241,12 @@ const NotificationBoard = ({
 
           {expanded}
         </div>
-        <div style={{ margin: "auto" }}>
-          {isShow && (open ? <ExpanMore /> : <ExpanLess />)}
-        </div>
+
+        {isShow && (
+          <div style={{ margin: "auto 0", marginLeft: 14 }}>
+            {open ? <ExpanMore /> : <ExpanLess />}
+          </div>
+        )}
       </ListItemButton>
     </Container>
   );
