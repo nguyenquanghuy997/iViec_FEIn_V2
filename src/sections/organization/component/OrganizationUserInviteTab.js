@@ -107,9 +107,9 @@ const OrganizationUserInviteTab = ({
     <>
       <Box
         className="box-content-wrapper"
-        sx={{ width: "100%", height: "733px" }}
+        sx={{ width: "100%", height: "685px" }}
       >
-        <Box sx={{ width: "100%", padding: 2, mb: 2 }}>
+        <Box sx={{ width: "100%", padding: 0, mb: 2 }}>
           {ListUserInvite.map((item, index) => {
             return (
               <OrganizationUserInviteCard
