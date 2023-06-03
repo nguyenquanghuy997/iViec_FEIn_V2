@@ -111,7 +111,7 @@ const NotificationBoard = ({
           ></AvatarDS>
         </ListItemAvatar>
 
-        <div style={{ paddingRight: "14px" }}>
+        <div style={{ maxWidth: "370px", paddingRight: "14px" }}>
           <div>{title}</div>
           <div>
             <React.Fragment>
