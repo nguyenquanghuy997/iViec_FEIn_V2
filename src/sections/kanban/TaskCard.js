@@ -266,9 +266,9 @@ function InterviewItem(props) {
                       </Typography>
                     </Box>
                     <Iconify
-                      icon={"material-symbols:play-circle-rounded"}
-                      width={16}
-                      height={16}
+                      icon={"mdi:calendar"}
+                      width={20}
+                      height={20}
                       color="#455570"
                     />
                   </Box>
