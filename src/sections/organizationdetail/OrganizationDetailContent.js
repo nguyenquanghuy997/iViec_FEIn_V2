@@ -505,7 +505,7 @@ const OrganizationDetailContent = () => {
           </View>
         ) : (
           <>
-            <Text mt={16} fontSize={13} fontWeight={500}>
+            <Text mb={16} mt={16} fontSize={13} fontWeight={500}>
               {`${ListUser.length} kết quả phù hợp`}
             </Text>
 
