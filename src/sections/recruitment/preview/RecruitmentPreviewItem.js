@@ -41,7 +41,6 @@ const defaultStyleRecruitmentStatus = {
   fontWeight: 600,
 };
 
-
 function RecruitmentPreviewItem({
   viewModeDefault,
   onChangeViewMode,
@@ -257,8 +256,8 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: theme.palette.common.white,
-              border: "1px solid " + theme.palette.common.white,
+              color: theme.palette.common.green700,
+              border: "1px solid " + theme.palette.common.green700,
             }}
           >
             Đang tuyển dụng
@@ -269,8 +268,8 @@ function RecruitmentPreviewItem({
           <span
             style={{
               ...defaultStyleRecruitmentStatus,
-              color: theme.palette.common.white,
-              border: "1px solid" + theme.palette.common.white,
+              color: theme.palette.common.green700,
+              border: "1px solid " + theme.palette.common.green700,
             }}
           >
             Đã lên lịch
@@ -412,9 +411,11 @@ function RecruitmentPreviewItem({
                       variant="contained"
                       tittle="Xem tin tuyển dụng"
                       sx={{
+                        background: theme.palette.common.white,
                         border: "1px solid #455570",
                         fontSize: "12px",
                         fontWeight: 600,
+                        padding: "6px 10px",
                       }}
                       onClick={() => {
                         if (!canView) {
@@ -481,7 +482,7 @@ function RecruitmentPreviewItem({
                       disableElevation
                       variant="contained"
                       aria-label="Disabled elevation buttons"
-                      sx={{ mr: 1, boxShadow: "none" }}
+                      sx={{ mr: "8px", boxShadow: "none" }}
                     >
                       <Button
                         variant={"outlined"}
@@ -514,6 +515,7 @@ function RecruitmentPreviewItem({
                         }}
                         onClick={() => onChangeViewMode(1)}
                       />
+
                       <Button
                         variant={"outlined"}
                         startIcon={

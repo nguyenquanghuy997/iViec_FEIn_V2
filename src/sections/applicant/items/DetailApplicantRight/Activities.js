@@ -11,8 +11,8 @@ import useAuth from "@/hooks/useAuth";
 import { PipelineStateType, srcImage } from "@/utils/enum";
 import { Box, Grid, useTheme } from "@mui/material";
 import List from "@mui/material/List";
-import { useState } from "react";
 import moment from "moment";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const calcDuration = (value) => {
@@ -67,6 +67,36 @@ export const Activities = ({
           color={theme.palette.common.neutral800}
         >
           {reason}
+        </Text>
+      </View>
+    );
+  };
+
+  const renderButtonReExploiting = () => {
+    return (
+      <View
+        flexRow
+        contentCenter
+        pv={5}
+        mt={16}
+        borderWidth={1}
+        borderRadius={6}
+        borderColor={theme.palette.common.blue700}
+        onPress={onReExploiting}
+      >
+        <SvgIcon>
+          {
+            '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1.5C13.1423 1.5 16.5 4.85775 16.5 9C16.5 13.1423 13.1423 16.5 9 16.5C4.85775 16.5 1.5 13.1423 1.5 9H3C3 12.3135 5.6865 15 9 15C12.3135 15 15 12.3135 15 9C15 5.6865 12.3135 3 9 3C6.9375 3 5.118 4.04025 4.03875 5.625H6V7.125H1.5V2.625H3V4.5C4.368 2.6775 6.54675 1.5 9 1.5Z" fill="#1976D2"/></svg>'
+          }
+        </SvgIcon>
+
+        <Text
+          ml={8}
+          fontSize={12}
+          fontWeight={"600"}
+          color={theme.palette.common.blue700}
+        >
+          {"Tái khai thác"}
         </Text>
       </View>
     );
@@ -230,36 +260,8 @@ export const Activities = ({
                           avatarName={p?.updaterName}
                           isShow={false}
                           data={p}
-                        >
-                          <View
-                            flexRow
-                            contentCenter
-                            pv={5}
-                            mt={16}
-                            borderWidth={1}
-                            borderRadius={6}
-                            borderColor={theme.palette.common.blue700}
-                            onPress={(e)=>{
-                              e.stopPropagation();
-                              onReExploiting()
-                            }}
-                          >
-                            <SvgIcon>
-                              {
-                                '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1.5C13.1423 1.5 16.5 4.85775 16.5 9C16.5 13.1423 13.1423 16.5 9 16.5C4.85775 16.5 1.5 13.1423 1.5 9H3C3 12.3135 5.6865 15 9 15C12.3135 15 15 12.3135 15 9C15 5.6865 12.3135 3 9 3C6.9375 3 5.118 4.04025 4.03875 5.625H6V7.125H1.5V2.625H3V4.5C4.368 2.6775 6.54675 1.5 9 1.5Z" fill="#1976D2"/></svg>'
-                              }
-                            </SvgIcon>
-
-                            <Text
-                              ml={8}
-                              fontSize={12}
-                              fontWeight={"600"}
-                              color={theme.palette.common.blue700}
-                            >
-                              {"Tái khai thác"}
-                            </Text>
-                          </View>
-                        </NotificationBoard>
+                          expanded={renderButtonReExploiting()}
+                        />
                       ) : p.updaterId ? (
                         <NotificationBoard
                           icon={iconLogPipe(
@@ -345,88 +347,57 @@ export const Activities = ({
                         />
                       ))}
                     {p.eventType.includes("CreateApplicantReviewEvent") && (
-                      <>
-                        <NotificationBoard
-                          isShow
-                          isReview
-                          recruitmentId={recruitmentId}
-                          dataApplicant={dataApplicant}
-                          reviewFormCriterias={reviewFormCriterias}
-                          setItemLog={setItemLog}
-                          icon={iconLogPipe(
-                            "review",
-                            p.recruitmentPipelineStateType
-                          )}
-                          setIsOpenReviewView={setIsOpenReviewView}
-                          title={
-                            <div>
-                              <p>
-                                <span style={{ fontWeight: 600 }}>
-                                  {p?.creatorName}
-                                </span>
-                                {" đã đánh giá ứng viên "}
-                                <span style={{ fontWeight: 600 }}>
-                                  {dataApplicant?.fullName}
-                                </span>
-                                {" với kết quả "}
-                                <span
-                                  style={{
-                                    fontWeight: 600,
-                                    color:
-                                      p?.recruitmentPipelineStateType == 2 &&
-                                      (p?.applicantReviewResultType == 0
-                                        ? "#388E3C"
-                                        : p?.applicantReviewResultType == 1
-                                        ? theme.palette.common.orange700
-                                        : theme.palette.common.red600),
-                                  }}
-                                >
-                                  {PipelineStateType(
-                                    p?.recruitmentPipelineStateType,
-                                    p?.applicantReviewResultType
-                                  )}
-                                </span>
-                              </p>
-                            </div>
-                          }
-                          action="add"
-                          avatarName={p?.creatorName}
-                          data={p}
-                        >
-                          {p?.applicantReviewResultType == 2 && (
-                            <>
-                              <View
-                                flexRow
-                                contentCenter
-                                pv={5}
-                                mt={16}
-                                borderWidth={1}
-                                borderRadius={6}
-                                borderColor={theme.palette.common.blue700}
-                                onPress={(e)=>{
-                                  e.stopPropagation();
-                                  onReExploiting()
+                      <NotificationBoard
+                        isShow
+                        isReview
+                        recruitmentId={recruitmentId}
+                        dataApplicant={dataApplicant}
+                        reviewFormCriterias={reviewFormCriterias}
+                        setItemLog={setItemLog}
+                        icon={iconLogPipe(
+                          "review",
+                          p.recruitmentPipelineStateType
+                        )}
+                        setIsOpenReviewView={setIsOpenReviewView}
+                        title={
+                          <div>
+                            <p>
+                              <span style={{ fontWeight: 600 }}>
+                                {p?.creatorName}
+                              </span>
+                              {" đã đánh giá ứng viên "}
+                              <span style={{ fontWeight: 600 }}>
+                                {dataApplicant?.fullName}
+                              </span>
+                              {" với kết quả "}
+                              <span
+                                style={{
+                                  fontWeight: 600,
+                                  color:
+                                    p?.recruitmentPipelineStateType == 2 &&
+                                    (p?.applicantReviewResultType == 0
+                                      ? "#388E3C"
+                                      : p?.applicantReviewResultType == 1
+                                      ? theme.palette.common.orange700
+                                      : theme.palette.common.red600),
                                 }}
                               >
-                                <SvgIcon>
-                                  {
-                                    '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1.5C13.1423 1.5 16.5 4.85775 16.5 9C16.5 13.1423 13.1423 16.5 9 16.5C4.85775 16.5 1.5 13.1423 1.5 9H3C3 12.3135 5.6865 15 9 15C12.3135 15 15 12.3135 15 9C15 5.6865 12.3135 3 9 3C6.9375 3 5.118 4.04025 4.03875 5.625H6V7.125H1.5V2.625H3V4.5C4.368 2.6775 6.54675 1.5 9 1.5Z" fill="#1976D2"/></svg>'
-                                  }
-                                </SvgIcon>
-
-                                <Text
-                                  ml={8}
-                                  fontSize={12}
-                                  fontWeight={"600"}
-                                  color={theme.palette.common.blue700}
-                                >
-                                  {"Tái khai thác"}
-                                </Text>
-                              </View>
-                            </>
-                          )}
-                        </NotificationBoard>
-                      </>
+                                {PipelineStateType(
+                                  p?.recruitmentPipelineStateType,
+                                  p?.applicantReviewResultType
+                                )}
+                              </span>
+                            </p>
+                          </div>
+                        }
+                        action="add"
+                        avatarName={p?.creatorName}
+                        data={p}
+                        expanded={
+                          p?.applicantReviewResultType == 2 &&
+                          renderButtonReExploiting()
+                        }
+                      />
                     )}
                     {p.eventType.includes(
                       "CreateApplicantRecruitmentBookingCalendarEvent"

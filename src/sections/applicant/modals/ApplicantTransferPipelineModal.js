@@ -26,7 +26,6 @@ import { useForm } from "react-hook-form";
 const ApplicantTransferPipelineModal = ({
   isReExploiting,
   showConfirmMultiple,
-  setShowConfirmMultiple,
   itemSelected,
   onClose,
   setActionId,
@@ -45,11 +44,10 @@ const ApplicantTransferPipelineModal = ({
   const handleTranfer = handleSubmit(async () => {
     var resultId = items.filter((p) => p.pipelineStateType === 3)[0]?.id;
     if (valueChecked == 0 || valueChecked == 1 || valueChecked == 2) {
+      onClose();
       setActionId(resultId);
       setActionType(valueChecked);
       setActionShow(true);
-
-      setShowConfirmMultiple(false);
     } else {
       let recruitmentPipelineStateId = valueChecked;
       let resultType = null;
@@ -95,7 +93,7 @@ const ApplicantTransferPipelineModal = ({
   return (
     <DialogModelStyle
       open={showConfirmMultiple}
-      onClose={() => setShowConfirmMultiple(false)}
+      onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       sx={{
@@ -150,7 +148,7 @@ const ApplicantTransferPipelineModal = ({
 
           <div>
             <ButtonIcon
-              onClick={() => setShowConfirmMultiple(false)}
+              onClick={onClose}
               icon={
                 <Iconify
                   width={20}

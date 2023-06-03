@@ -23,6 +23,7 @@ const NotificationBoard = ({
   data,
   children,
   isReview,
+  expanded,
   setIsOpenReviewView,
   setItemLog,
 }) => {
@@ -63,7 +64,7 @@ const NotificationBoard = ({
       </div>
     );
   };
-  
+
   return (
     <Container
       sx={{
@@ -233,6 +234,8 @@ const NotificationBoard = ({
               {children}
             </Collapse>
           ) : null}
+
+          {expanded}
         </div>
         <div style={{ margin: "auto" }}>
           {isShow && (open ? <ExpanMore /> : <ExpanLess />)}

@@ -112,7 +112,7 @@ export default function TableHeader({
                     }}
                     height={buttonHeight}
                     sx={{
-                      ml: "16px",
+                      ml: "8px",
                     }}
                   >
                     Bộ lọc

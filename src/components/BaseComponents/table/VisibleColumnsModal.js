@@ -132,7 +132,7 @@ export default function ColumnsModal({
                     name={p.dataIndex?.toString()}
                     disabled={!!p.fixed}
                     icon={<CheckboxIconDefault />}
-                    checkedIcon={!!p.fixed ? <CheckboxIconCheckedDisable /> : <CheckboxIconChecked />}
+                    checkedIcon={p.fixed ? <CheckboxIconCheckedDisable /> : <CheckboxIconChecked />}
                   />
                 }
               />

@@ -10,8 +10,10 @@ import {
   NavGoBack,
   SelectAutoCompleteDS,
 } from "@/components/DesignSystem";
+import { View } from "@/components/FlexStyled";
 import Iconify from "@/components/Iconify";
-import { HEADER } from "@/config";
+import SvgIcon from "@/components/SvgIcon";
+import { HEADER, PIPELINE_TYPE } from "@/config";
 import useResponsive from "@/hooks/useResponsive";
 import useSettings from "@/hooks/useSettings";
 import { PATH_DASHBOARD } from "@/routes/paths";
@@ -24,7 +26,6 @@ import {
   useGetCheckReviewQuery,
   useGetRecruitmentsByApplicantQuery,
 } from "@/sections/applicant";
-import { useGetApplicantByPipeLineQuery } from "@/sections/interview";
 import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 import { RecruitmentApplicantCreate } from "@/sections/recruitment/modals/RecruitmentApplicantCreate";
 import { ButtonIcon } from "@/utils/cssStyles";
@@ -34,16 +35,17 @@ import {
   Card,
   CardContent,
   Container,
-  Divider,
   Grid,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { styled } from "@mui/styles";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 function ApplicantPreviewItem() {
+  const theme = useTheme();
   const router = useRouter();
   const ApplicantId = router.query.applicantId
     ? router.query.applicantId
@@ -58,10 +60,10 @@ function ApplicantPreviewItem() {
     {
       applicantId: ApplicantId,
     },
-    {skip: !ApplicantId}
+    { skip: !ApplicantId }
   );
-  
-  const {data: {items: options = []} = {}, isFetching} =
+
+  const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery(
       {
         ApplicantCorrelationId: dataApplicant[0]?.correlationId,
@@ -78,154 +80,8 @@ function ApplicantPreviewItem() {
   const [open, setOpen] = useState(false);
   const [showModelCreate, setShowModelCreate] = useState(false);
   const [modelApplication, setModelApplication] = useState(undefined);
-  const HeadingFixed = styled("div")(() => ({
-    top: HEADER.DASHBOARD_DESKTOP_HEIGHT,
-    width: "100%",
-    boxShadow:
-      "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
-    backgroundColor: "#FDFDFD",
-    padding: "8px 24px",
-    position: "fixed",
-    zIndex: 1,
-    display: `${sticky ? "" : "none"}`,
-  }));
-  
-  const [sticky, setSticky] = useState(false);
-  
-  const trackScroll = () => {
-    if (typeof window === "undefined") {
-      return;
-    } else {
-      setSticky(window.scrollY >= 120);
-    }
-  };
-  
-  useEffect(() => {
-    document.addEventListener("scroll", trackScroll);
-    
-    return () => {
-      document.removeEventListener("scroll", trackScroll);
-    };
-  }, []);
-  const smDown = useResponsive("down", "sm");
-  const {themeStretch} = useSettings();
-  
-  const {data: pipelines = [], isSuccess} =
-    useGetApplicantCurrentStateWithRecruitmentStatesQuery(
-      {
-        ApplicantId: ApplicantId,
-        RecruitmentId: RecruitmentId,
-      },
-      {skip: !ApplicantId || !RecruitmentId}
-    );
-  
-  const {data: logApplicant = []} = useGetApplicantRecruitmentQuery(
-    {
-      ApplicantId: ApplicantId,
-      RecruitmentId: RecruitmentId,
-      IsWithdrawHistory: true,
-    },
-    {skip: !ApplicantId || !RecruitmentId}
-  );
-  
-  const {data: {items: applicantAvailable = []} = {}} =
-    useGetApplicantByPipeLineQuery(
-      {RecruitmentPipelineStateId: logApplicant?.recruitmentPipelineStateId},
-      {skip: !logApplicant?.recruitmentPipelineStateId}
-    );
-  
-  const {data: isReview} = useGetCheckReviewQuery(
-    {
-      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-      ApplicantId: ApplicantId,
-    },
-    {
-      skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
-    }
-  );
-  
-  const {data: reviewFormCriterias} = useGetApplicantReviewFormQuery(
-    {
-      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
-      ApplicantId: ApplicantId,
-    },
-    {
-      skip: !isReview,
-    }
-  );
-  
-  const [actionId, setActionId] = useState("");
-  const [actionType, setActionType] = useState();
-  const [actionShow, setActionShow] = useState(false);
-  const [selectedOption, setSelectedOption] = useState();
-  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
-  const [ownerName, setOwnerName] = useState();
-  
-  const isInterview =
-    logApplicant?.recruitmentPipelineStateType === 2
-    && applicantAvailable.filter(e => e.id === ApplicantId).length > 0 ? true : false;
-  
-  const onCloseModel = () => {
-    setActionShow(false);
-    setIsReExploiting(false);
-    setShowConfirmMultiple(false);
-  };
-  
-  useEffect(() => {
-    if (!selectedOption || !requestEdit) return;
-    handleOpenEditForm();
-  }, [selectedOption, requestEdit]);
-  
-  useEffect(() => {
-    if (!isFetching) {
-      const recruitment = options.filter((p) => p.id === RecruitmentId);
-      setSelectedOption(recruitment[0]);
-      setOwnerName(recruitment[0]?.ownerName?.trim());
-    }
-  }, [isFetching]);
-  
-  const handleOpenEditForm = () => {
-    setModelApplication({
-      ...modelApplication,
-      id: ApplicantId,
-      recruitmentId: RecruitmentId,
-      recruitmentTitle: selectedOption?.name,
-    });
-    setShowModelCreate(true);
-  };
-  
-  const onChangeRecruitment = (e) => {
-    setSelectedOption(e.target.value);
-    setOwnerName(e.target.value.ownerName?.trim());
-    
-    return router.push(
-      {
-        pathname: PATH_DASHBOARD.applicant.view(ApplicantId),
-        query: {
-          ...router.query,
-          applicantId: e.target.value?.applicantId,
-          recruitmentId: e.target.value?.id,
-          organizationId: e.target.value?.organizationId,
-          ownerId: e.target.value?.ownerId,
-          ownerName: e.target.value?.ownerName,
-        },
-      },
-      undefined,
-      {shallow: false}
-    );
-  };
-  
-  const onReExploiting = () => {
-    setIsReExploiting(true);
-    setShowConfirmMultiple(true);
-  };
-  
-  const HeaderApplicant = (
-    // { pipelines }
-  ) => {
-    // const resultType = pipelines?.recruitmentPipelineStates?.find(
-    //   (item) => item.id === pipelines.currentApplicantPipelineState
-    // ).pipelineStateType;
+
+  const HeaderApplicant = () => {
     return (
       <Grid display="flex" alignItems="center" justifyContent="space-between">
         <Grid
@@ -242,56 +98,45 @@ function ApplicantPreviewItem() {
           }}
         >
           <AvatarDS
-            sx={{height: "60px", width: "60px", borderRadius: "14px"}}
+            sx={{ height: "60px", width: "60px", borderRadius: "14px" }}
             name={data?.fullName}
             src={data?.portraitImage ? srcImage(data?.portraitImage) : ""}
-          ></AvatarDS>
-          {/* <BoxFlex
-                color={
-                  mediumScore.toFixed(2) < 4.9
-                    ? "#E53935"
-                    : mediumScore.toFixed(2) < 6.9
-                    ? "#F77A0C"
-                    : "#388E3C"
-                }
-              >
-                <span style={{ fontSize: "15px", fontWeight: 600 }}>
-                  Trung bình
-                </span>
-                
-              </BoxFlex> */}
-          
+          />
+
           <Box pl={1}>
             <Stack display="flex" direction="row" alignItems="center">
               <Typography fontSize="20px" fontWeight="600">
                 {data?.fullName}
               </Typography>
+
               <ButtonIcon
-                sx={{
-                  marginLeft: 0.5,
-                }}
                 tooltip="Sửa"
-                onClick={() => handleOpenEditForm()}
+                sx={{ marginLeft: "2px" }}
                 icon={
-                  <Iconify
-                    icon={"ri:edit-2-fill"}
-                    width={20}
-                    height={20}
-                    color="#8A94A5"
-                  />
+                  <SvgIcon>
+                    {
+                      '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9241_24012)"> <path d="M6.93225 14.2499H15.75V15.7499H2.25V12.5677L9.675 5.14269L12.8565 8.32569L6.9315 14.2499H6.93225ZM10.7347 4.08294L12.3263 2.49144C12.4669 2.35084 12.6576 2.27185 12.8565 2.27185C13.0554 2.27185 13.2461 2.35084 13.3868 2.49144L15.5085 4.61319C15.6491 4.75384 15.7281 4.94457 15.7281 5.14344C15.7281 5.34231 15.6491 5.53304 15.5085 5.67369L13.917 7.26444L10.7355 4.08294H10.7347Z" fill="#8A94A5"/> </g> <defs> <clipPath id="clip0_9241_24012"> <rect width="18" height="18" fill="white"/> </clipPath> </defs> </svg>'
+                    }
+                  </SvgIcon>
                 }
+                onClick={handleOpenEditForm}
               />
             </Stack>
-            
-            <Stack
-              direction="row"
-              divider={<Divider orientation="vertical" flexItem/>}
-              spacing={2}
-              color="#172B4D"
-            >
+
+            <View flexRow atCenter mt={4}>
               <Typography fontSize="14px">{data?.phoneNumber}</Typography>
+
+              {data?.phoneNumber && data?.email && (
+                <View
+                  mh={6}
+                  width={1}
+                  height={12}
+                  bgColor={theme.palette.common.neutral400}
+                />
+              )}
+
               <Typography fontSize="14px">{data?.email}</Typography>
-            </Stack>
+            </View>
           </Box>
           {logApplicant?.averagePointReviewPoint && (
             <Box
@@ -300,8 +145,8 @@ function ApplicantPreviewItem() {
                 logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
                   ? "#E53935"
                   : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                    ? "#F77A0C"
-                    : "#388E3C"
+                  ? "#F77A0C"
+                  : "#388E3C"
               }
               border={"1px solid #388E3C"}
               padding="6px 8px"
@@ -311,8 +156,8 @@ function ApplicantPreviewItem() {
                 logApplicant?.averagePointReviewPoint?.toFixed(2) < 4.9
                   ? "#E53935"
                   : logApplicant?.averagePointReviewPoint?.toFixed(2) < 6.9
-                    ? "#F77A0C"
-                    : "#388E3C"
+                  ? "#F77A0C"
+                  : "#388E3C"
               }
             >
               <Typography fontSize="12px" fontWeight="600">
@@ -332,34 +177,9 @@ function ApplicantPreviewItem() {
           )}
         </Grid>
         <Grid display="flex">
-          {/* <ButtonDS
-            tittle={"Thêm vào tin khác"}
-            type="submit"
-            sx={{
-              color: "#455570",
-              backgroundColor: "#F3F4F6",
-              boxShadow: "none",
-              ":hover": {
-                backgroundColor: "#E7E9ED",
-              },
-              marginRight: "12px",
-              fontSize: "14px",
-              padding: "6px 12px",
-            }}
-            icon={
-              <Iconify
-                icon={"icon-park-outline:share-three"}
-                width={20}
-                height={20}
-                color="#455570"
-                mr={1}
-              />
-            }
-          /> */}
           <ButtonDS
             tittle={"Đặt lịch phỏng vấn"}
             type="submit"
-            isDisabled={!isInterview}
             sx={{
               ":hover": {
                 backgroundColor: "#1565C0",
@@ -368,18 +188,29 @@ function ApplicantPreviewItem() {
               fontSize: "14px",
               padding: "6px 12px",
             }}
+            isDisabled={
+              logApplicant.recruitmentPipelineStateType ===
+              PIPELINE_TYPE.INTERVIEW
+                ? false
+                : true
+            }
             icon={
               <Iconify
                 icon={"mdi:calendar-check"}
                 width={20}
                 height={20}
-                color="#fdfdfd"
+                color={
+                  logApplicant.recruitmentPipelineStateType ===
+                  PIPELINE_TYPE.INTERVIEW
+                    ? "#fdfdfd"
+                    : "fff"
+                }
                 mr={1}
               />
             }
             onClick={() => setOpen(true)}
           />
-          
+
           <ButtonDS
             tittle={"Đánh giá"}
             type="submit"
@@ -404,39 +235,155 @@ function ApplicantPreviewItem() {
               />
             }
           />
-          {/* {resultType === 3 && pipelines.pipelineStateResultType === 0 && (
-            <ButtonDS
-              tittle={"Gửi offer"}
-              type="button"
-              onClick={() => setIsOpenSendOffer(true)}
-              icon={
-                <Iconify
-                  icon={"ri:pen-nib-fill"}
-                  width={20}
-                  height={20}
-                  mr={1}
-                />
-              }
-            />
-          )} */}
         </Grid>
       </Grid>
     );
   };
-  
+  const HeadingFixed = styled("div")(() => ({
+    top: HEADER.DASHBOARD_DESKTOP_HEIGHT,
+    width: "100%",
+    boxShadow:
+      "0px 3px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
+    backgroundColor: "#FDFDFD",
+    padding: "8px 24px",
+    position: "fixed",
+    zIndex: 1,
+    display: `${sticky ? "" : "none"}`,
+  }));
+
+  const [sticky, setSticky] = useState(false);
+
+  const trackScroll = () => {
+    if (typeof window === "undefined") {
+      return;
+    } else {
+      setSticky(window.scrollY >= 120);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("scroll", trackScroll);
+
+    return () => {
+      document.removeEventListener("scroll", trackScroll);
+    };
+  }, []);
+  const smDown = useResponsive("down", "sm");
+  const { themeStretch } = useSettings();
+
+  const { data: pipelines = [], isSuccess } =
+    useGetApplicantCurrentStateWithRecruitmentStatesQuery(
+      {
+        ApplicantId: ApplicantId,
+        RecruitmentId: RecruitmentId,
+      },
+      { skip: !ApplicantId || !RecruitmentId }
+    );
+
+  const { data: logApplicant = [] } = useGetApplicantRecruitmentQuery(
+    {
+      ApplicantId: ApplicantId,
+      RecruitmentId: RecruitmentId,
+      IsWithdrawHistory: true,
+    },
+    { skip: !ApplicantId || !RecruitmentId }
+  );
+  const { data: isReview } = useGetCheckReviewQuery(
+    {
+      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      ApplicantId: ApplicantId,
+    },
+    {
+      skip: !pipelines?.currentApplicantPipelineState || !ApplicantId,
+    }
+  );
+
+  const { data: reviewFormCriterias } = useGetApplicantReviewFormQuery(
+    {
+      RecruitmentPipelineStateId: pipelines?.currentApplicantPipelineState,
+      ApplicantId: ApplicantId,
+    },
+    {
+      skip: !isReview,
+    }
+  );
+
+  const [actionId, setActionId] = useState("");
+  const [actionType, setActionType] = useState();
+  const [actionShow, setActionShow] = useState(false);
+  const [selectedOption, setSelectedOption] = useState();
+  const [showConfirmMultiple, setShowConfirmMultiple] = useState(false);
+
+  const [ownerName, setOwnerName] = useState();
+
+  const onCloseModel = () => {
+    setActionShow(false);
+    setIsReExploiting(false);
+    setShowConfirmMultiple(false);
+  };
+
+  useEffect(() => {
+    if (!selectedOption || !requestEdit) return;
+    handleOpenEditForm();
+  }, [selectedOption, requestEdit]);
+
+  useEffect(() => {
+    if (!isFetching) {
+      const recruitment = options.filter((p) => p.id === RecruitmentId);
+      setSelectedOption(recruitment[0]);
+      setOwnerName(recruitment[0]?.ownerName?.trim());
+    }
+  }, [isFetching]);
+
+  const handleOpenEditForm = () => {
+    setModelApplication({
+      ...modelApplication,
+      id: ApplicantId,
+      recruitmentId: RecruitmentId,
+      recruitmentTitle: selectedOption?.name,
+    });
+    setShowModelCreate(true);
+  };
+
+  const onChangeRecruitment = (e) => {
+    setSelectedOption(e.target.value);
+    setOwnerName(e.target.value.ownerName?.trim());
+
+    return router.push(
+      {
+        pathname: PATH_DASHBOARD.applicant.view(ApplicantId),
+        query: {
+          ...router.query,
+          applicantId: e.target.value?.applicantId,
+          recruitmentId: e.target.value?.id,
+          organizationId: e.target.value?.organizationId,
+          ownerId: e.target.value?.ownerId,
+          ownerName: e.target.value?.ownerName,
+        },
+      },
+      undefined,
+      { shallow: false }
+    );
+  };
+
+  const onReExploiting = () => {
+    setIsReExploiting(true);
+    setShowConfirmMultiple(true);
+  };
+
   return (
     <div>
       <HeadingFixed>
-        <HeaderApplicant pipelines={pipelines}/>
+        <HeaderApplicant pipelines={pipelines} />
       </HeadingFixed>
       <Container
         maxWidth={themeStretch ? false : "xl"}
-        sx={{...(smDown && {padding: 0})}}
+        sx={{ ...(smDown && { padding: 0 }) }}
       >
         <NavGoBack
           name={"Trở về danh sách ứng viên"}
           onClick={router.back}
-          sx={{padding: "28px 0px", marginTop: 0}}
+          sx={{ padding: "28px 0px", marginTop: 0 }}
         ></NavGoBack>
         <Grid>
           <Grid item xs={12} md={5}>
@@ -461,35 +408,28 @@ function ApplicantPreviewItem() {
                   padding="32px 24px"
                   borderBottom="1px solid #D0D4DB"
                 >
-                  <HeaderApplicant pipelines={pipelines}/>
+                  <HeaderApplicant pipelines={pipelines} />
                   <Grid marginTop={"32px"}>
                     <Grid>
                       {options ? (
                         <SelectAutoCompleteDS
-                          width="35%"
-                          selectedOption={selectedOption}
-                          setSelectedOption={setSelectedOption}
-                          onChange={onChangeRecruitment}
+                          width={"380px"}
                           data={options}
-                          placeholder="Chọn tin tuyển dụng"
+                          selectedOption={selectedOption}
+                          placeholder={"Chọn tin tuyển dụng"}
+                          onChange={onChangeRecruitment}
+                          setSelectedOption={setSelectedOption}
                           sx={{
+                            height: "36px",
+                            borderRadius: "6px",
                             fontSize: "14px",
-                            background: "#F3F4F6",
+                            background: theme.palette.common.neutral50,
+                            color: theme.palette.common.neutral700,
                             fontWeight: 500,
-                            "&.MuiOutlinedInput-root": {
-                              minHeight: "36px",
-                            },
+                            "&.MuiOutlinedInput-root": {},
                             "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#F3F4F6",
-                              borderRadius: "6px",
+                              borderColor: `${theme.palette.common.neutral50} !important`,
                             },
-                            "&:hover, &.Mui-focused": {
-                              background: "#E7E9ED",
-                            },
-                            "&:hover .MuiOutlinedInput-notchedOutline, , &.Mui-focused .MuiOutlinedInput-notchedOutline":
-                              {
-                                borderColor: "#E7E9ED",
-                              },
                           }}
                         />
                       ) : null}
@@ -502,12 +442,12 @@ function ApplicantPreviewItem() {
                       minHeight="76px"
                     >
                       <Grid item md={10} container>
-                        <Grid sx={{width: "80%"}}>
+                        <Grid sx={{ width: "80%" }}>
                           {isSuccess ? (
-                            <PipelineApplicant steps={pipelines}/>
+                            <PipelineApplicant steps={pipelines} />
                           ) : null}
                         </Grid>
-                        <Grid sx={{display: "flex"}}>
+                        <Grid sx={{ display: "flex" }}>
                           <ButtonDS
                             tittle={"Chuyển bước"}
                             type="submit"
@@ -531,41 +471,18 @@ function ApplicantPreviewItem() {
                               />
                             }
                           />
-                          {/* <ButtonDS
-                            type="submit"
-                            sx={{
-                              padding: "8px",
-                              minWidth: "unset",
-                              backgroundColor: "#fff",
-                              boxShadow: "none",
-                              ":hover": {
-                                backgroundColor: "#EFF3F7",
-                              },
-                              textTransform: "none",
-                              marginLeft: "12px",
-                            }}
-                            onClick={() => setRejectApplicant(true)}
-                            icon={
-                              <Iconify
-                                icon={"ic:outline-remove-circle"}
-                                width={20}
-                                height={20}
-                                color="#D32F2F"
-                              />
-                            }
-                          /> */}
                         </Grid>
                       </Grid>
                       <Grid color="#455570" fontSize="13px">
                         <div>{"Phụ trách"}</div>
-                        <Grid sx={{display: "flex", marginTop: "8px"}}>
+                        <Grid sx={{ display: "flex", marginTop: "8px" }}>
                           {isSuccess ? (
                             <AvatarDS
                               sx={{
                                 height: "20px",
                                 width: "20px",
                                 borderRadius: "100px",
-                                fontSize: "12px",
+                                fontSize: "8px",
                               }}
                               name={ownerName}
                             ></AvatarDS>
@@ -586,7 +503,7 @@ function ApplicantPreviewItem() {
                 </Grid>
                 <Grid container>
                   <Grid item xs={12} md={7} borderRight="1px solid #D0D4DB">
-                    <ApplicantPreviewCV data={data} dataLog={logApplicant}/>
+                    <ApplicantPreviewCV data={data} dataLog={logApplicant} />
                   </Grid>
                   <Grid item xs={5} md={5}>
                     <ApplicantPreviewLog
@@ -599,6 +516,7 @@ function ApplicantPreviewItem() {
                   </Grid>
                 </Grid>
               </CardContent>
+
               {showConfirmMultiple && (
                 <ApplicantTransferPipelineModal
                   isReExploiting={isReExploiting}
@@ -609,13 +527,14 @@ function ApplicantPreviewItem() {
                     applicantId: ApplicantId,
                     recruitmentId: RecruitmentId,
                     recruitmentPipelineStateId:
-                    pipelines?.currentApplicantPipelineState,
+                      pipelines?.currentApplicantPipelineState,
                   }}
                   setActionId={setActionId}
                   setActionType={setActionType}
                   setActionShow={setActionShow}
                 />
               )}
+
               {actionShow && (
                 <RejectApplicantModal
                   applicantId={ApplicantId}
@@ -631,18 +550,7 @@ function ApplicantPreviewItem() {
             </Card>
           </Grid>
         </Grid>
-        {/* {isOpenSendOffer && (
-          <ApplicantSendOfferModal
-            isOpen={isOpenSendOffer}
-            onClose={() => setIsOpenSendOffer(false)}
-            title="Gửi thư mời nhận việc"
-            item={{
-              recruitmentId: RecruitmentId,
-              applicantId: ApplicantId,
-              applicantEmail: data.email,
-            }}
-          />
-        )} */}
+
         {isOpenReview && (
           <ApplicantReviewModal
             show={isOpenReview}
@@ -652,7 +560,7 @@ function ApplicantPreviewItem() {
             data={reviewFormCriterias}
           />
         )}
-        
+
         {open && (
           <FormCalendar
             open={open}
@@ -664,6 +572,7 @@ function ApplicantPreviewItem() {
             }
           />
         )}
+
         <RecruitmentApplicantCreate
           show={showModelCreate}
           setShow={setShowModelCreate}
