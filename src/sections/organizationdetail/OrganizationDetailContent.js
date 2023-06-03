@@ -73,8 +73,8 @@ const columns = [
       placeholder: "Tất cả",
       options: [
         { value: null, label: "Tất cả" },
-        { value: true, label: "Đang hoạt động" },
-        { value: false, label: "Không hoạt động" },
+        { value: "true", label: "Đang hoạt động" },
+        { value: "false", label: "Không hoạt động" },
       ],
     },
   },
