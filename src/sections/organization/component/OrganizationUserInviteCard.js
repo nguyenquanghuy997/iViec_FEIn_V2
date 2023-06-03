@@ -26,11 +26,11 @@ const OrganizationUserInviteCard = (
   }) => {
   const theme = useTheme();
   const [showAll, setShowAll] = useState(false);
-  
+
   const toggleShow = () => {
     setShowAll(!showAll);
   }
-  
+
   return (
     <CardUserStyle className="card-user-item">
       <BoxFlex alignItems={"flex-start"}>
@@ -39,11 +39,11 @@ const OrganizationUserInviteCard = (
             value={item}
             checked={checked}
             onChange={onChangeSelected}
-            icon={<CheckboxIconDefault/>}
-            checkedIcon={<CheckboxIconChecked/>}
+            icon={<CheckboxIconDefault />}
+            checkedIcon={<CheckboxIconChecked />}
           />
           <AvatarDS
-            sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
+            sx={{ height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px" }}
             name={`${item?.fullName ? item?.fullName : ''}`}
           />
           <Stack>
@@ -65,7 +65,7 @@ const OrganizationUserInviteCard = (
           title={"Gửi lại yêu cầu active tài khoản"}
           color={"basic"}
           onClick={onOpenConfirmResend}
-          startIcon={<ReloadIcon/>}
+          startIcon={<ReloadIcon />}
           sx={{
             color: theme.palette.common.blue700,
             fontSize: 12,
@@ -81,14 +81,18 @@ const OrganizationUserInviteCard = (
           }}
         />
       </BoxFlex>
-      {
-        showAll && <Divider style={{marginBottom: '16px'}}/>
-      }
+
+      <Divider style={{
+        opacity: showAll ? '1' : '0',
+        marginBottom: showAll ? '16px' : '0',
+        transition: 'all .6s ease'
+      }} />
+
       <BoxFlex>
         <BoxFlex>
           {
             item?.roleGroupName &&
-            <Typography sx={{fontSize: 13, fontWeight: 600, color: theme.palette.common.neutral800, mr: 1}}>
+            <Typography sx={{ fontSize: 13, fontWeight: 600, color: theme.palette.common.neutral800, mr: 1 }}>
               {item?.roleGroupName}
             </Typography>
           }
@@ -132,24 +136,25 @@ const OrganizationUserInviteCard = (
                   alignItems: 'center'
                 }}>
                   Thuộc {item?.organizations?.length} đơn vị
-                  <Iconify icon={"material-symbols:arrow-drop-down"} height={16} width={16} sx={{ml: 1}}/>
+                  <Iconify icon={"material-symbols:arrow-drop-down"} height={16} width={16} sx={{ ml: 1 }} />
                 </Typography>}
               </Box>
-            
+
           }
         </BoxFlex>
         {
-          !showAll && <BoxFlex>
-            <IconButton size='small' sx={{color: theme.palette.common.borderObject, ml: 2}} onClick={onOpenConfirmForm}>
-              <DeleteIcon width={13} height={13} fill={"#5C6A82"}/>
+          !showAll &&
+          <BoxFlex>
+            <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenConfirmForm}>
+              <DeleteIcon width={13} height={13} fill={"#5C6A82"} />
             </IconButton>
           </BoxFlex>
         }
-      
       </BoxFlex>
+
       <Collapse in={showAll} timeout={600} unmountOnExit>
-        <CardContent>
-          <Box sx={{display: 'flex', alignItems: 'center', flexWrap: 'wrap', my: 1.5}}>
+        <CardContent style={{ padding: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', my: 1.5 }}>
             {
               item?.organizations?.map(organization => (
                 <Box
@@ -162,7 +167,7 @@ const OrganizationUserInviteCard = (
                     border: '1px solid #A2AAB7',
                     borderRadius: '6px',
                     display: 'flex', alignItems: 'center',
-                    mr: 1.5, mb: 1.5
+                    mr: 2, mb: 1.5
                   }}
                 >
                   <Box sx={{
@@ -173,16 +178,16 @@ const OrganizationUserInviteCard = (
                     justifyContent: 'center'
                   }}>
                     {
-                      
+
                       organization?.avatar ?
                         <AvatarDS
                           src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${organization?.avatar}`}
-                          sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
+                          sx={{ height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px" }}
                           name={`${organization?.name ? organization?.name : ''}`}
                         />
                         :
                         <AvatarDS
-                          sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
+                          sx={{ height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px" }}
                           name={`${organization?.name ? organization?.name : ''}`}
                         />
                     }
@@ -203,9 +208,9 @@ const OrganizationUserInviteCard = (
               ))
             }
           </Box>
-          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
-              <Typography sx={{fontSize: 12, fontWeight: 400, color: theme.palette.common.borderObject, mr: 1}}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.borderObject, mr: 1 }}>
                 Ngày tham gia: {fDate(item?.createdTime)}
               </Typography>
               <Box
@@ -226,14 +231,14 @@ const OrganizationUserInviteCard = (
                   alignItems: 'center'
                 }}>
                   Thu gọn
-                  <Iconify icon={"material-symbols:arrow-drop-up"} height={16} width={16} sx={{ml: 1}}/>
+                  <Iconify icon={"material-symbols:arrow-drop-up"} height={16} width={16} sx={{ ml: 1 }} />
                 </Typography>
               </Box>
             </Box>
             <BoxFlex>
-              <IconButton size='small' sx={{color: theme.palette.common.borderObject, ml: 2}}
-                          onClick={onOpenConfirmForm}>
-                <DeleteIcon width={13} height={13} fill={"#5C6A82"}/>
+              <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }}
+                onClick={onOpenConfirmForm}>
+                <DeleteIcon width={13} height={13} fill={"#5C6A82"} />
               </IconButton>
             </BoxFlex>
           </Box>
