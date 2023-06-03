@@ -149,7 +149,9 @@ const RecruitmentPipeline = forwardRef(({ recruitment }, ref) => {
         <Box
           className="box-item"
           sx={{
-            width: style.WIDTH_FULL,
+            // width: style.WIDTH_FULL,
+            // To do fix scrollbar
+            minHeight: "999px",
             backgroundColor: "transparent",
             display: "flex",
           }}
