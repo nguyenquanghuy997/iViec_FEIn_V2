@@ -3,6 +3,7 @@ import {
   API_DELETE_INVITE_USER,
   API_DELETE_MULTIPLE_ORGANIZATION,
   API_DELETE_ORGANIZATION,
+  API_DELETE_SINGLE_USER_ORGANIZATION,
   API_DELETE_USER_ORGANIZATION,
   API_GET_ALL_ADMIN_ORGANIZATION,
   API_GET_LIST_USER_INVITE,
@@ -188,6 +189,15 @@ export const organizationServiceApi = createApi({
       },
       invalidatesTags: [{type: 'ORGANIZATION', id: 'ORGANIZATION_USER'}]
     }),
+    deleteSingleUser: build.mutation({
+      query: (data) =>  {
+        return {
+          url: `${API_DELETE_SINGLE_USER_ORGANIZATION}?userId=${data}`,
+          method: 'DELETE',
+        }
+      },
+      invalidatesTags: [{type: 'ORGANIZATION', id: 'ORGANIZATION_USER'}]
+    }),
     // active user
     activeUsers: build.mutation({
       query: (data) =>  {
@@ -220,5 +230,6 @@ export const {
   useDeleteInviteUserMutation,
   useUpdateRoleUserMutation,
   useDeleteUserMutation,
+  useDeleteSingleUserMutation,
   useActiveUsersMutation,
 } = organizationServiceApi;

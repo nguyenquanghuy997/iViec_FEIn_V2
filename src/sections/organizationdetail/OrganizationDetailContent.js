@@ -26,6 +26,7 @@ import OrganizationForm from "@/sections/organization/component/OrganizationForm
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
 import {
   useActiveUsersMutation,
+  useDeleteSingleUserMutation,
   useDeleteUserMutation,
   useGetAllApplicantUserOrganizationByIdQuery,
   useGetListOrganizationWithChildQuery,
@@ -123,8 +124,8 @@ const OrganizationDetailContent = () => {
           query.isActivated === "2"
             ? false
             : query.isActivated === "1"
-            ? true
-            : null,
+              ? true
+              : null,
         ...router.query,
       },
       { skip: !query?.id }
@@ -134,6 +135,7 @@ const OrganizationDetailContent = () => {
     useGetListOrganizationWithChildQuery();
 
   const [deleteUserMulti] = useDeleteUserMutation();
+  const [deleteSingleUser] = useDeleteSingleUserMutation();
   const [activeUserMulti] = useActiveUsersMutation();
 
   const [selected, setSelected] = useState([]);
@@ -241,13 +243,13 @@ const OrganizationDetailContent = () => {
       }
     } else {
       try {
-        await deleteUserMulti({ userIds: [item?.id] }).unwrap();
+        await deleteSingleUser(item?.id).unwrap();
         handleCloseModal();
         enqueueSnackbar("Xóa người dùng thành công!", {
           autoHideDuration: 1000,
         });
       } catch (e) {
-        if (e.status == "AUE_10") {
+        if (e.status == "AUE_010") {
           enqueueSnackbar(
             "Không thể xóa do người dùng này đang có ít nhất 1 nhiệm vụ trong hệ thống!",
             {
@@ -353,7 +355,7 @@ const OrganizationDetailContent = () => {
   return (
     <Box>
       {/* Name */}
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", }}>
         <NextLink href={PATH_DASHBOARD.organization.root} passHref>
           <Link>
             <IconButton size="small" sx={{ color: "#172B4D", mr: 1 }}>
@@ -680,7 +682,7 @@ const OrganizationDetailContent = () => {
               icon: <EditIcon />,
               onClick: () => handleOpenFormUser(selected[0]),
             },
-            {
+            selected.length == 1 && {
               key: "delete",
               icon: <DeleteIcon />,
               onClick: () => handleOpenModalState({ openDelete: true }),
