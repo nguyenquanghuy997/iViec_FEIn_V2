@@ -73,8 +73,8 @@ const columns = [
       placeholder: "Tất cả",
       options: [
         { value: null, label: "Tất cả" },
-        { value: 1, label: "Đang hoạt động" },
-        { value: 0, label: "Không hoạt động" },
+        { value: true, label: "Đang hoạt động" },
+        { value: false, label: "Không hoạt động" },
       ],
     },
   },
@@ -353,7 +353,7 @@ const OrganizationDetailContent = () => {
   return (
     <Box>
       {/* Name */}
-      <Box sx={{ display: "flex", alignItems: "center",}}>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         <NextLink href={PATH_DASHBOARD.organization.root} passHref>
           <Link>
             <IconButton size="small" sx={{ color: "#172B4D", mr: 1 }}>
