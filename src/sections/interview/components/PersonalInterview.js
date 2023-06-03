@@ -21,7 +21,7 @@ const PersonalInterview = ({
 }) => {
   const { resetField, watch, setValue } = useFormContext();
   const { data: { items: dataRecruitment = [] } = {} } =
-    useGetRecruitmentsQuery({ processStatuses: [5, 7] });
+    useGetRecruitmentsQuery({ processStatuses: [5, 7, 1, 3] });
   const { palette } = useTheme();
     const { data: { items: ListStep = [] } = {} } = useGetRecruitmentPipelineStatesByRecruitmentsQuery(
       { RecruitmentId: watch("recruitmentId") },
