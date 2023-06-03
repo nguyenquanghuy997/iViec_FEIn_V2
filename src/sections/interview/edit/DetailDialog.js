@@ -1,15 +1,15 @@
-import { convertDurationTimeToSeconds, convertStoMs } from "../config";
-import { ButtonDS } from "@/components/DesignSystem";
-import { Text, View } from "@/components/DesignSystem/FlexStyled";
+import {convertDurationTimeToSeconds, convertStoMs} from "../config";
+import {ButtonDS} from "@/components/DesignSystem";
+import {Text, View} from "@/components/DesignSystem/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
-import { BOOKING_CALENDAR_PROCCESS_STATUS, DOMAIN_SERVER_API } from "@/config";
+import {BOOKING_CALENDAR_PROCCESS_STATUS, DOMAIN_SERVER_API} from "@/config";
 import useAuth from "@/hooks/useAuth";
-import { BoxFlex } from "@/sections/emailform/style";
+import {BoxFlex} from "@/sections/emailform/style";
 import {
   useDeleteCalendarMutation,
   useGetDetailCalendarsQuery,
 } from "@/sections/interview/InterviewSlice";
-import { FormCalendar } from "@/sections/interview/components/FormCalendar";
+import {FormCalendar} from "@/sections/interview/components/FormCalendar";
 import {
   ApplicantCalendarState,
   BookingCalendarProcessStatus,
@@ -24,25 +24,25 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import moment from "moment";
-import { useSnackbar } from "notistack";
-import { forwardRef, useState } from "react";
+import {useSnackbar} from "notistack";
+import {forwardRef, useState} from "react";
 
-const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
-  const { data: DetailData } = useGetDetailCalendarsQuery(
-    { BookingCalendarId: item?.id },
-    { skip: !item?.id }
+const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
+  const {data: DetailData} = useGetDetailCalendarsQuery(
+    {BookingCalendarId: item?.id},
+    {skip: !item?.id}
   );
   const theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
   const [deleteCalendar] = useDeleteCalendarMutation();
-  const { enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
 
   const handleClose = async (ids) => {
     const res = [ids];
     try {
-      await deleteCalendar({ ids: res, removeReason: "" }).unwrap();
+      await deleteCalendar({ids: res, removeReason: ""}).unwrap();
       enqueueSnackbar("Hủy lịch thành công!", {
         autoHideDuration: 2000,
       });
@@ -60,10 +60,17 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
       <View flexrow mt={20}>
         <span
           style={{
-            width: "160px",
+            width: "140px",
+            height: '24px',
             fontSize: 13,
             fontWeight: 500,
-            color: theme.palette.common.neutral700,
+            // color: theme.palette.common.neutral700,
+            color: '#5C6A82',
+            fontFamily: 'Inter',
+            fontStyle: 'normal',
+            lineHeight: '20px',
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           {title}
@@ -72,8 +79,16 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
         <span
           style={{
             fontSize: 13,
-            fontWeight: 600,
-            color: theme.palette.common.neutral700,
+            fontWeight: 500,
+            // color: theme.palette.common.neutral700,
+            color: '#172B4D',
+            width: '608px',
+            height: '24px',
+            fontFamily: 'Inter',
+            fontStyle: 'normal',
+            lineHeight: '20px',
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           {content}
@@ -93,9 +108,9 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
 
   const startTime = convertStoMs(
     convertDurationTimeToSeconds(moment(time?.[0]).format("HH:mm:ss")) +
-      convertDurationTimeToSeconds(duration?.[0])
+    convertDurationTimeToSeconds(duration?.[0])
   );
-  const { user } = useAuth();
+  const {user} = useAuth();
   const getLink = async (id) => {
     return `${window.location.origin}/phong-van.html?DisplayName=${user?.firstName}&&Email=${user?.email}&&Role=1&&RoomName=${id}`;
   };
@@ -112,7 +127,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
+          ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"},
         }}
         onBackdropClick={onClose}
         ref={ref}
@@ -120,12 +135,13 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
         <View
           hidden
           width={800}
-          borderradius={8}
+          height={820}
+          borderradius={0}
           bgcolor={theme.palette.common.white}
         >
           {/* header */}
           <View flexrow="true" atcenter="true" pv={14} pl={24} pr={16}>
-            <Text flex fontsize={16} fontweight={"700"}>
+            <Text flex fontsize={16} fontweight={"600"}>
               {title}
             </Text>
             <IconButton onClick={onClose}>
@@ -136,9 +152,13 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               </SvgIcon>
             </IconButton>
           </View>
-          <Divider />
+          <Divider/>
 
-          <View style={{ overflowY: "auto", height: "684px", padding: 24 }}>
+          <View style={{
+            overflowY: "auto",
+            height: "684px",
+            padding: 24
+          }}>
             <Text fontsize={16} fontweight={600}>
               {item?.name}
             </Text>
@@ -168,9 +188,9 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               )
             )}
             {renderText("Lý do hủy:", DetailData?.removeReason || "Không có")}
-            <Divider style={{ marginTop: "18px" }} />
+            <Divider style={{marginTop: "18px"}}/>
 
-            <List sx={{ pt: "16px", pb: "16px" }}>
+            <List sx={{pt: "16px", pb: "16px"}}>
               <Typography
                 sx={{
                   color: theme.palette.common.neutral700,
@@ -193,7 +213,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                     }}
                     key={index}
                   >
-                    <ListItemAvatar style={{ width: "40px", height: "40px" }}>
+                    <ListItemAvatar style={{width: "40px", height: "40px"}}>
                       <img
                         alt=""
                         src={
@@ -204,26 +224,27 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                           width: "40px",
                           height: "40px",
                           borderRadius: "11px",
+                          backgroundColor: '#FFFFFF',
                         }}
                       />
                     </ListItemAvatar>
-                    <ListItemText sx={{ width: "30%" }}>
-                      <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                    <ListItemText sx={{width: "30%"}}>
+                      <Typography sx={{fontSize: 13, fontWeight: 600}}>
                         {item?.applicant?.fullName}
                       </Typography>
-                      <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
+                      <Typography sx={{fontSize: 12, fontWeight: 400}}>
                         {item?.applicant?.phoneNumber}
                       </Typography>
                     </ListItemText>
                     <ListItemText>
-                      <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                      <Typography sx={{fontSize: 13, fontWeight: 600}}>
                         {moment(time?.[index]).format("HH:mm")} - {startTime}
                       </Typography>
                     </ListItemText>
                     <ListItemText
-                      sx={{ display: "flex", justifyContent: "flex-end" }}
+                      sx={{display: "flex", justifyContent: "flex-end"}}
                     >
-                      <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                      <Typography sx={{fontSize: 13, fontWeight: 600}}>
                         {ApplicantCalendarState(item?.applicantInterviewState)}
                       </Typography>
                     </ListItemText>
@@ -231,9 +252,9 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                 )
               )}
             </List>
-            <Divider />
+            <Divider/>
 
-            <List sx={{ pt: "16px" }}>
+            <List sx={{pt: "16px"}}>
               <Typography
                 sx={{
                   color: theme.palette.common.neutral700,
@@ -253,18 +274,18 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
                         : theme.palette.common.bgrMaster,
                   }}
                 >
-                  <ListItemAvatar style={{ width: "40px", height: "40px" }}>
+                  <ListItemAvatar style={{width: "40px", height: "40px"}}>
                     <img
                       alt=""
                       src="https://i.pinimg.com/236x/b0/52/90/b0529099591d1f7f70732fa5e4f60e83.jpg"
-                      style={{ width: "40px", height: "40px" }}
+                      style={{width: "40px", height: "40px"}}
                     />
                   </ListItemAvatar>
                   <ListItemText>
-                    <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                    <Typography sx={{fontSize: 13, fontWeight: 600}}>
                       {item?.name}
                     </Typography>
-                    <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
+                    <Typography sx={{fontSize: 12, fontWeight: 400}}>
                       {item?.email}
                     </Typography>
                   </ListItemText>
@@ -272,7 +293,7 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               ))}
             </List>
           </View>
-          <Divider />
+          <Divider/>
 
           <View pv={16} ph={24} flexrow="row" jcbetween="true">
             <BoxFlex justifyContent="start">
@@ -320,36 +341,36 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
               />
               {DetailData?.bookingCalendarProcessStatus ==
                 BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
-                <ButtonDS
-                  tittle={"Chỉnh sửa"}
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    setOpenForm(true);
-                  }}
-                  sx={{
-                    color: "white",
-                    fontWeight: 600,
-                    backgroundColor: theme.palette.common.blue700,
-                    boxShadow: "none",
-                    ":hover": {
-                      backgroundColor: theme.palette.common.blue800,
-                    },
-                    textTransform: "none",
-                  }}
-                />
-              )}
+                  <ButtonDS
+                    tittle={"Chỉnh sửa"}
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      setOpenForm(true);
+                    }}
+                    sx={{
+                      color: "white",
+                      fontWeight: 600,
+                      backgroundColor: theme.palette.common.blue700,
+                      boxShadow: "none",
+                      ":hover": {
+                        backgroundColor: theme.palette.common.blue800,
+                      },
+                      textTransform: "none",
+                    }}
+                  />
+                )}
 
               <ButtonDS
                 onClick={() => {
                   window.open(
                     window.location.origin +
-                      "/phong-van.html?DisplayName=" +
-                      user?.firstName +
-                      "&&Email=" +
-                      user?.email +
-                      "&&RoomName=" +
-                      DetailData?.id
+                    "/phong-van.html?DisplayName=" +
+                    user?.firstName +
+                    "&&Email=" +
+                    user?.email +
+                    "&&RoomName=" +
+                    DetailData?.id
                   );
                 }}
                 tittle="Tham gia phòng họp"
@@ -369,8 +390,9 @@ const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
         </View>
       </Modal>
 
-      <FormCalendar open={openForm} data={item} setOpen={setOpenForm} />
+      <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
     </>
-  );
+  )
+    ;
 });
 export default DetailDialog;
