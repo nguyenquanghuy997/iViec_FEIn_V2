@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Checkbox, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Box, CardContent, Checkbox, Collapse, Divider, IconButton, Stack, Typography } from "@mui/material";
 import { BoxFlex } from "@/sections/emailform/style";
 import { AvatarDS } from "@/components/DesignSystem";
 import {
@@ -14,7 +14,7 @@ import { DOMAIN_SERVER_API } from "@/config";
 import Iconify from "@/components/Iconify";
 import { fDate } from "@/utils/formatTime";
 import { CheckboxIconChecked, CheckboxIconDefault } from "@/assets/CheckboxIcon";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 const OrganizationUserInviteCard = (
   {
@@ -26,11 +26,11 @@ const OrganizationUserInviteCard = (
   }) => {
   const theme = useTheme();
   const [showAll, setShowAll] = useState(false);
-
+  
   const toggleShow = () => {
     setShowAll(!showAll);
   }
-
+  
   return (
     <CardUserStyle className="card-user-item">
       <BoxFlex alignItems={"flex-start"}>
@@ -39,11 +39,11 @@ const OrganizationUserInviteCard = (
             value={item}
             checked={checked}
             onChange={onChangeSelected}
-            icon={<CheckboxIconDefault />}
-            checkedIcon={<CheckboxIconChecked />}
+            icon={<CheckboxIconDefault/>}
+            checkedIcon={<CheckboxIconChecked/>}
           />
           <AvatarDS
-            sx={{ height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px" }}
+            sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
             name={`${item?.fullName ? item?.fullName : ''}`}
           />
           <Stack>
@@ -65,7 +65,7 @@ const OrganizationUserInviteCard = (
           title={"Gửi lại yêu cầu active tài khoản"}
           color={"basic"}
           onClick={onOpenConfirmResend}
-          startIcon={<ReloadIcon />}
+          startIcon={<ReloadIcon/>}
           sx={{
             color: theme.palette.common.blue700,
             fontSize: 12,
@@ -82,20 +82,26 @@ const OrganizationUserInviteCard = (
         />
       </BoxFlex>
       {
-        showAll && <Divider style={{ marginBottom: '16px' }} />
+        showAll && <Divider style={{marginBottom: '16px'}}/>
       }
       <BoxFlex>
         <BoxFlex>
           {
             item?.roleGroupName &&
-            <Typography sx={{ fontSize: 13, fontWeight: 600, color: theme.palette.common.neutral800, mr: 1 }}>
+            <Typography sx={{fontSize: 13, fontWeight: 600, color: theme.palette.common.neutral800, mr: 1}}>
               {item?.roleGroupName}
             </Typography>
           }
           {
             item?.organizations?.length == 1 ?
               <Box
-                sx={{ padding: '5px 8px', backgroundColor: theme.palette.common.bgrObject, borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
+                sx={{
+                  padding: '5px 8px',
+                  backgroundColor: theme.palette.common.bgrObject,
+                  borderRadius: '100px',
+                  cursor: 'pointer',
+                  display: showAll ? 'none' : 'block'
+                }}
               >
                 <Typography sx={{
                   fontSize: 12,
@@ -109,7 +115,13 @@ const OrganizationUserInviteCard = (
               </Box>
               :
               <Box
-                sx={{ padding: '5px 8px', backgroundColor: theme.palette.common.bgrObject, borderRadius: '100px', cursor: 'pointer', display: showAll ? 'none' : 'block' }}
+                sx={{
+                  padding: '5px 8px',
+                  backgroundColor: theme.palette.common.bgrObject,
+                  borderRadius: '100px',
+                  cursor: 'pointer',
+                  display: showAll ? 'none' : 'block'
+                }}
                 onClick={toggleShow}
               >
                 {!showAll && <Typography sx={{
@@ -120,94 +132,113 @@ const OrganizationUserInviteCard = (
                   alignItems: 'center'
                 }}>
                   Thuộc {item?.organizations?.length} đơn vị
-                  <Iconify icon={"material-symbols:arrow-drop-down"} height={16} width={16} sx={{ ml: 1 }} />
+                  <Iconify icon={"material-symbols:arrow-drop-down"} height={16} width={16} sx={{ml: 1}}/>
                 </Typography>}
               </Box>
-
+            
           }
         </BoxFlex>
         {
           !showAll && <BoxFlex>
-            <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenConfirmForm}>
-              <DeleteIcon width={13} height={13} fill={"#5C6A82"} />
+            <IconButton size='small' sx={{color: theme.palette.common.borderObject, ml: 2}} onClick={onOpenConfirmForm}>
+              <DeleteIcon width={13} height={13} fill={"#5C6A82"}/>
             </IconButton>
           </BoxFlex>
         }
-
+      
       </BoxFlex>
-      {
-        showAll && (
-          <>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', my: 1.5 }}>
-              {
-                item?.organizations?.map(organization => (
-                  <Box
-                    key={organization?.id}
-                    sx={{
-                      padding: '12px 16px',
-                      backgroundColor: theme.palette.common.white,
-                      minHeight: '70px',
-                      minWidth: '230px',
-                      border: '1px solid #A2AAB7',
-                      borderRadius: '6px',
-                      display: 'flex', alignItems: 'center',
-                      mr: 1.5, mb: 1.5
-                    }}
-                  >
-                    <Box sx={{ width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {
-
-                        organization?.avatar ?
-                          <AvatarDS
-                            src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${organization?.avatar}`}
-                            sx={{ height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px" }}
-                            name={`${organization?.name ? organization?.name : ''}`}
-                          />
-                          :
-                          <AvatarDS
-                            sx={{ height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px" }}
-                            name={`${organization?.name ? organization?.name : ''}`}
-                          />
-                      }
-                    </Box>
-                    <Stack>
-                      <Typography sx={{ fontSize: 13, fontWeight: 500, color: theme.palette.common.neutral800 }}>{organization?.name}</Typography>
-                      <Typography sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.neutral700}}>{organization?.code || 'ABCDEF'}</Typography>
-                    </Stack>
-                  </Box>
-                ))
-              }
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: 12, fontWeight: 400, color: theme.palette.common.borderObject, mr: 1 }}>
-                  Ngày tham gia: {fDate(item?.createdTime)}
-                </Typography>
+      <Collapse in={showAll} timeout={600} unmountOnExit>
+        <CardContent>
+          <Box sx={{display: 'flex', alignItems: 'center', flexWrap: 'wrap', my: 1.5}}>
+            {
+              item?.organizations?.map(organization => (
                 <Box
+                  key={organization?.id}
                   sx={{
-                    padding: '5px 8px',
-                    backgroundColor: theme.palette.common.bgrObject,
-                    borderRadius: '100px',
-                    display: !showAll ? 'none' : 'block',
-                    cursor: 'pointer',
+                    padding: '12px 16px',
+                    backgroundColor: theme.palette.common.white,
+                    minHeight: '70px',
+                    minWidth: '230px',
+                    border: '1px solid #A2AAB7',
+                    borderRadius: '6px',
+                    display: 'flex', alignItems: 'center',
+                    mr: 1.5, mb: 1.5
                   }}
-                  onClick={toggleShow}
                 >
-                  <Typography sx={{ fontSize: 12, fontWeight: 500, color: theme.palette.common.neutral800, display: 'flex', alignItems: 'center' }}>
-                    Thu gọn
-                    <Iconify icon={"material-symbols:arrow-drop-up"} height={16} width={16} sx={{ ml: 1 }} />
-                  </Typography>
+                  <Box sx={{
+                    width: '48px',
+                    height: '48px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {
+                      
+                      organization?.avatar ?
+                        <AvatarDS
+                          src={`${DOMAIN_SERVER_API}/Image/GetImage?imagePath=${organization?.avatar}`}
+                          sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
+                          name={`${organization?.name ? organization?.name : ''}`}
+                        />
+                        :
+                        <AvatarDS
+                          sx={{height: "40px", width: "40px", borderRadius: "10px", fontSize: "10px"}}
+                          name={`${organization?.name ? organization?.name : ''}`}
+                        />
+                    }
+                  </Box>
+                  <Stack>
+                    <Typography sx={{
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: theme.palette.common.neutral800
+                    }}>{organization?.name}</Typography>
+                    <Typography sx={{
+                      fontSize: 12,
+                      fontWeight: 400,
+                      color: theme.palette.common.neutral700
+                    }}>{organization?.code || 'ABCDEF'}</Typography>
+                  </Stack>
                 </Box>
+              ))
+            }
+          </Box>
+          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <Typography sx={{fontSize: 12, fontWeight: 400, color: theme.palette.common.borderObject, mr: 1}}>
+                Ngày tham gia: {fDate(item?.createdTime)}
+              </Typography>
+              <Box
+                sx={{
+                  padding: '5px 8px',
+                  backgroundColor: theme.palette.common.bgrObject,
+                  borderRadius: '100px',
+                  display: 'block',
+                  cursor: 'pointer',
+                }}
+                onClick={toggleShow}
+              >
+                <Typography sx={{
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: theme.palette.common.neutral800,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                  Thu gọn
+                  <Iconify icon={"material-symbols:arrow-drop-up"} height={16} width={16} sx={{ml: 1}}/>
+                </Typography>
               </Box>
-              <BoxFlex>
-                <IconButton size='small' sx={{ color: theme.palette.common.borderObject, ml: 2 }} onClick={onOpenConfirmForm}>
-                  <DeleteIcon width={13} height={13} fill={"#5C6A82"} />
-                </IconButton>
-              </BoxFlex>
             </Box>
-          </>
-        )
-      }
+            <BoxFlex>
+              <IconButton size='small' sx={{color: theme.palette.common.borderObject, ml: 2}}
+                          onClick={onOpenConfirmForm}>
+                <DeleteIcon width={13} height={13} fill={"#5C6A82"}/>
+              </IconButton>
+            </BoxFlex>
+          </Box>
+        </CardContent>
+      </Collapse>
     </CardUserStyle>
   )
 }

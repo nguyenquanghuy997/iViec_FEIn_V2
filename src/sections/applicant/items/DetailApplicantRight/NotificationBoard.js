@@ -1,7 +1,6 @@
 import ExpanLess from "../../../../../public/assets/icons/candidate/ExpanLess";
 import ExpanMore from "../../../../../public/assets/icons/candidate/ExpanMore";
 import { ApplicantReviewModal } from "../../modals/ApplicantReviewModal";
-import { ApplicantReviewViewModal } from "../../modals/ApplicantReviewViewModal";
 import { AvatarDS } from "@/components/DesignSystem";
 import { Text, View } from "@/components/FlexStyled";
 import { PipelineStateType } from "@/utils/enum";
@@ -29,11 +28,12 @@ const NotificationBoard = ({
   recruitmentId,
   reviewFormCriterias,
   expanded,
+  setIsOpenReviewView,
+  setItemLog,
 }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);
-  const [isOpenReviewView, setIsOpenReviewView] = useState(false);
 
   const handleClick = () => {
     if (!isReview && !children) return;
@@ -204,7 +204,11 @@ const NotificationBoard = ({
                 borderWidth={1}
                 borderRadius={6}
                 borderColor={theme.palette.common.blue700}
-                onPress={() => setIsOpenReviewView(true)}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  setIsOpenReviewView(true);
+                  setItemLog(data);
+                }}
               >
                 <Text
                   ml={8}
@@ -245,21 +249,6 @@ const NotificationBoard = ({
               applicantId={dataApplicant?.id}
               recruitmentId={recruitmentId}
               setShow={setIsOpenReview}
-            />
-          )}
-
-          {isReview && isOpenReviewView && (
-            <ApplicantReviewViewModal
-              creatorId={data?.creatorId}
-              show={isOpenReviewView}
-              aggregateId={data?.aggregateId}
-              applicantId={dataApplicant?.id}
-              recruitmentId={recruitmentId}
-              setShow={setIsOpenReviewView}
-              pressReview={() => {
-                setIsOpenReview(true);
-                setIsOpenReviewView(false);
-              }}
             />
           )}
         </div>

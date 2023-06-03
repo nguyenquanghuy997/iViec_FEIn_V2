@@ -1,4 +1,6 @@
 import EmptyIcon from "../../../../assets/EmptyIcon";
+import { ApplicantReviewModal } from "../../modals/ApplicantReviewModal";
+import { ApplicantReviewViewModal } from "../../modals/ApplicantReviewViewModal";
 import NotificationBoard from "./NotificationBoard";
 import { iconLogPipe } from "./config";
 import { SwitchDS } from "@/components/DesignSystem";
@@ -10,6 +12,7 @@ import { PipelineStateType, srcImage } from "@/utils/enum";
 import { Box, Grid, useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import moment from "moment";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const calcDuration = (value) => {
@@ -40,6 +43,10 @@ export const Activities = ({
   const { company } = useAuth();
   const isActive = methods.watch("isActive");
 
+  const [isOpenReviewView, setIsOpenReviewView] = useState(false);
+
+  const [isOpenReview, setIsOpenReview] = useState(false);
+  const [itemLog, setItemLog] = useState();
   const renderInfo = (title, reason) => {
     return (
       <View flexRow atCenter mt={16}>
@@ -346,10 +353,12 @@ export const Activities = ({
                         recruitmentId={recruitmentId}
                         dataApplicant={dataApplicant}
                         reviewFormCriterias={reviewFormCriterias}
+                        setItemLog={setItemLog}
                         icon={iconLogPipe(
                           "review",
                           p.recruitmentPipelineStateType
                         )}
+                        setIsOpenReviewView={setIsOpenReviewView}
                         title={
                           <div>
                             <p>
@@ -460,6 +469,30 @@ export const Activities = ({
                 );
               })}
           </List>
+          {isOpenReviewView && (
+            <ApplicantReviewViewModal
+              creatorId={itemLog?.creatorId}
+              show={isOpenReviewView}
+              aggregateId={itemLog?.aggregateId}
+              applicantId={dataApplicant?.id}
+              recruitmentId={recruitmentId}
+              setShow={setIsOpenReviewView}
+              pressReview={() => {
+                setIsOpenReview(true);
+                setIsOpenReviewView(false);
+              }}
+            />
+          )}
+
+          {isOpenReview && (
+            <ApplicantReviewModal
+              show={isOpenReview}
+              data={reviewFormCriterias}
+              applicantId={dataApplicant?.id}
+              recruitmentId={recruitmentId}
+              setShow={setIsOpenReview}
+            />
+          )}
         </Box>
       ) : (
         <div>

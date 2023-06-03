@@ -229,11 +229,11 @@ export const RECRUITMENT_CREATE_TYPE = {
 }
 
 export const ApplicantInterviewState = {
-  PENDING: 0, // chờ xác nhận pv
+  PENDING: 0, // chờ xác nhận pv // k dc pv
   CONFIRMED: 1, // xác nhận pv
   SUSPENDED: 2,// hoãn pv
   REFUSE: 3, // từ chối
-  INTERVIEWING: 4, // đang pv
+  INTERVIEWING: 4, // đang pv   // k dc pv
   NOTPERTED: 5,// k tham gia pv
   COMPLETED: 6, // hoàn thành pv
 }

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {ExcelIcon, PdfIcon, WordIcon} from "@/sections/offer-form/component/editor/Icon";
+import { ExcelIcon, PdfIcon, WordIcon } from "@/sections/offer-form/component/editor/Icon";
 import React from "react";
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -12,13 +12,13 @@ const convertViToEn = (str, removeSpecial = true) => {
   if (!str) {
     return str;
   }
-  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a");
-  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e");
-  str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i");
-  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o");
-  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u");
-  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y");
-  str = str.replace(/đ/g,"d");
+  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+  str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+  str = str.replace(/đ/g, "d");
   str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
   str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
   str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
@@ -30,11 +30,11 @@ const convertViToEn = (str, removeSpecial = true) => {
   str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); //       huyền, sắc, ngã, hỏi, nặng
   str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // ˆ    Â, Ê, Ă, Ơ, Ư
   // Bỏ các khoảng trắng liền nhau
-  str = str.replace(/ + /g," ");
+  str = str.replace(/ + /g, " ");
   str = str.trim();
   // Bỏ dấu câu, kí tự đặc biệt
   if (removeSpecial) {
-    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
   }
   return str;
 }
@@ -48,7 +48,7 @@ export const removeEmpty = (obj, key) => {
 const convertFlatDataToTree = (flatData, parentKey = 'parentOrganizationId') => {
   const hashTable = Object.create(null);
   flatData?.forEach((aData) => {
-    hashTable[aData.id] = { ...aData, children: [] };
+    hashTable[aData.id] = {...aData, children: []};
   });
   const dataTree = [];
   flatData?.forEach((aData) => {
@@ -61,6 +61,20 @@ const convertFlatDataToTree = (flatData, parentKey = 'parentOrganizationId') => 
   return removeEmpty(dataTree, 'children') || [];
 };
 
+let store = [];
+const getIDsExpandFilter = (node) => {
+  let children = node.children;
+  if (!children || children.length === 0) {
+    return store;
+  }
+  store.push(node.id);
+  if (children) {
+    children.map((child) => store.push(child.id));
+  }
+  node.children.map((child) => getIDsExpandFilter(child));
+  return store;
+};
+
 function stringToColor(string) {
   let hash = 0;
   let i;
@@ -68,9 +82,9 @@ function stringToColor(string) {
   for (i = 0; i < string.length; i += 1) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
-
+  
   let color = '#';
-
+  
   for (i = 0; i < 3; i += 1) {
     const value = (hash >> (i * 8)) & 0xff;
     color += `00${value.toString(16)}`.slice(-2);
@@ -86,12 +100,12 @@ function stringAvatar(name) {
       width: 24,
       height: 24
     },
-    children: <span style={{ fontSize: 10 }}>{name.split(' ')[0][0]}{name.split(' ')[1][0]}</span>,
+    children: <span style={{fontSize: 10}}>{name.split(' ')[0][0]}{name.split(' ')[1][0]}</span>,
   };
 }
 
 function getExtension(filename) {
-  if(!filename) return "";
+  if (!filename) return "";
   return filename.split(".").pop();
 }
 
@@ -147,6 +161,7 @@ const cleanObject = (obj) => {
 export {
   getExtension,
   phoneRegExp,
+  getIDsExpandFilter,
   containsText,
   convertViToEn,
   convertFlatDataToTree,

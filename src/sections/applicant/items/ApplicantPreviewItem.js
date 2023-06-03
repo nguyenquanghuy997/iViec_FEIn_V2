@@ -53,10 +53,8 @@ function ApplicantPreviewItem() {
   const RecruitmentId = router.query.recruitmentId;
   const requestEdit = router.query.mode === "edit";
 
-  const { data: getApplicant = [] } = useGetAllFilterApplicantQuery();
-  const dataApplicant = getApplicant?.items?.find(
-    (i) => i.applicantId === ApplicantId
-  );
+  const { data: { items: dataApplicant = [] } = {} } =
+    useGetAllFilterApplicantQuery({ recruitmentIds: [RecruitmentId] });
 
   const { data: data = [] } = useGetApplicantByIdQuery(
     {
@@ -68,10 +66,13 @@ function ApplicantPreviewItem() {
   const { data: { items: options = [] } = {}, isFetching } =
     useGetRecruitmentsByApplicantQuery(
       {
-        ApplicantCorrelationId: dataApplicant?.correlationId,
-        OrganizationId: dataApplicant?.organizationId,
+        ApplicantCorrelationId: dataApplicant[0]?.correlationId,
+        OrganizationId: dataApplicant[0]?.organizationId,
       },
-      { skip: !dataApplicant?.correlationId && !dataApplicant?.organizationId }
+      {
+        skip:
+          !dataApplicant[0]?.correlationId && !dataApplicant[0]?.organizationId,
+      }
     );
   // const [isOpenSendOffer, setIsOpenSendOffer] = useState(false);
   const [isOpenReview, setIsOpenReview] = useState(false);

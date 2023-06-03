@@ -10,22 +10,23 @@ import OrganizationActiveModal from "@/sections/organization/component/Organizat
 import OrganizationBottomNav from "@/sections/organization/component/OrganizationBottomNav";
 import OrganizationConfirmModal from "@/sections/organization/component/OrganizationConfirmModal";
 import OrganizationConfirmMultipleModal from "@/sections/organization/component/OrganizationConfirmMultipleModal";
+import React, { useMemo, useState } from 'react';
+import { Avatar, Box, InputAdornment, Stack, Typography } from "@mui/material";
+import _ from 'lodash';
+import OrganizationTree from "@/sections/organization/component/OrganizationTree";
 import OrganizationEmptyChildren from "@/sections/organization/component/OrganizationEmptyChildren";
 import OrganizationForm from "@/sections/organization/component/OrganizationForm";
 import OrganizationInviteForm from "@/sections/organization/component/OrganizationInviteForm";
 import OrganizationPreview from "@/sections/organization/component/OrganizationPreview";
-import OrganizationTree from "@/sections/organization/component/OrganizationTree";
 import { filterBy } from "@/sections/organization/helper/DFSSearchTree";
 import {
   useGetAllAdminByOrganizationIdQuery,
   useGetListOrganizationWithChildQuery,
 } from "@/sections/organization/override/OverrideOrganizationSlice";
-import { convertFlatDataToTree, convertViToEn } from "@/utils/function";
-import { Avatar, Box, InputAdornment, Stack, Typography } from "@mui/material";
+import { convertFlatDataToTree, convertViToEn, getIDsExpandFilter } from "@/utils/function";
 import { useTheme } from "@mui/material/styles";
-import _ from "lodash";
-import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+import { useRouter } from 'next/router';
+import { RiSearch2Line } from "react-icons/ri";
 
 const UserIcon = () => {
   return (
@@ -44,7 +45,7 @@ const UserIcon = () => {
       </g>
       <defs>
         <clipPath id="clip0_8061_22556">
-          <rect width="18" height="18" fill="white" />
+          <rect width="18" height="18" fill="white"/>
         </clipPath>
       </defs>
     </svg>
@@ -54,9 +55,9 @@ const UserIcon = () => {
 const OrganizationContent = () => {
   // init use next router
   const router = useRouter();
-
+  
   // role
-  const { canAccess } = useRole();
+  const {canAccess} = useRole();
   const canViewUser = useMemo(() => canAccess(PERMISSIONS.VIEW_USER), []);
   const canEditUser = useMemo(() => canAccess(PERMISSIONS.CRUD_USER), []);
   const canApproveUser = useMemo(
@@ -66,12 +67,12 @@ const OrganizationContent = () => {
   const theme = useTheme();
   const canViewUnit = useMemo(() => canAccess(PERMISSIONS.VIEW_UNIT), []);
   const canEditUnit = useMemo(() => canAccess(PERMISSIONS.CRUD_UNIT), []);
-
+  
   // selected
   const [selected, setSelected] = React.useState([]);
   // modal
   const [, setIsOpenBottomNav] = React.useState(false);
-
+  
   // state
   const [actionType, setActionType] = useState(0); // 0 add, 1 update
   const [isOpen, setIsOpen] = useState(false);
@@ -84,68 +85,68 @@ const OrganizationContent = () => {
   const [isOpenActive, setIsOpenActive] = useState(false);
   const [actionTypeActive, setActionTypeActive] = useState(0); // 1 active 0 inactive
   const [valueTabInviteForm, setValueTabInviteForm] = useState(0);
-
+  const [expand, setExpand] = useState([]);
   const handleRedirectViewAllMember = (id) => {
-    return router.push({ pathname: `${router.pathname}/${id}` }, undefined, {
+    return router.push({pathname: `${router.pathname}/${id}`}, undefined, {
       shallow: true,
     });
   };
-
+  
   const getOrganizationAdmin = () => {
     return ListOrganization?.find((item) => item.parentOrganizationId === null)
       ?.id;
   };
-
+  
   const handleOpenListInvite = () => {
     setValueTabInviteForm(1);
     setIsOpenInviteForm(true);
   };
-
+  
   const handleOpenInviteForm = () => {
     setValueTabInviteForm(0);
     setIsOpenInviteForm(true);
   };
-
+  
   // create form
   const handleOpenForm = () => {
     setIsOpen(true);
     setParentNode(null);
   };
-
+  
   const handleCloseForm = () => {
     setIsOpen(false);
     setParentNode(null);
   };
-
+  
   // preview form
   const handleOpenPreview = () => {
     setIsOpenPreview(true);
   };
-
+  
   const handleClosePreview = () => {
     setIsOpenPreview(false);
   };
-
+  
   const handleGetParentNode = (node) => {
     setParentNode(node);
   };
-
-  const { data: { items: ListOrganization } = [], isLoading } =
+  
+  const {data: {items: ListOrganization} = [], isLoading} =
     useGetListOrganizationWithChildQuery();
-  const { data: { items: ListUserAdmin } = [] } =
+  const {data: {items: ListUserAdmin} = []} =
     useGetAllAdminByOrganizationIdQuery({
       organizationId: ListOrganization?.find(
         (item) => item.parentOrganizationId === null
       )?.id,
     });
-
+  
   const handleCloseBottomNav = () => {
     setIsOpenBottomNav(false);
     setSelected([]);
   };
-
+  
   const [valueSearch, setValueSearch] = useState("");
-
+  
   const treeData = useMemo(() => {
     const loopFilterTree = (tree = [], query = "") => {
       return tree.filter((node) => {
@@ -168,15 +169,25 @@ const OrganizationContent = () => {
       valueSearch
     );
   }, [ListOrganization, valueSearch]);
-
+  
   const onChangeSearch = (event) => {
-    const { value } = event.target;
+    const {value} = event.target;
     setSelected([]);
     setValueSearch(value);
+    setDataExpand();
   };
-
-  if (isLoading) return <LoadingScreen />;
-
+  
+  const setDataExpand = () => {
+    setTimeout(() => {
+      let dataExpand = []
+      treeData.forEach(node => {
+        dataExpand.push(...getIDsExpandFilter(node));
+      })
+      setExpand(dataExpand)
+    }, 300);
+  }
+  
+  if (isLoading) return <LoadingScreen/>;
   return (
     <Box
       sx={{
@@ -201,9 +212,9 @@ const OrganizationContent = () => {
                 (organization) => organization.parentOrganizationId === null
               )?.avatar
             }`}
-            sx={{ width: 60, height: 60 }}
+            sx={{width: 60, height: 60}}
           />
-          <Stack sx={{ ml: 2 }}>
+          <Stack sx={{ml: 2}}>
             <Typography
               sx={{
                 fontSize: "16px",
@@ -240,82 +251,70 @@ const OrganizationContent = () => {
               title={"Danh sách mời"}
               color={"default"}
               onClick={() => handleOpenListInvite()}
-              startIcon={<Iconify icon="mdi:folder-upload-outline" />}
-              sx={{ fontWeight: 550, marginRight: 1 }}
+              startIcon={<Iconify icon="mdi:folder-upload-outline"/>}
+              sx={{fontWeight: 550, marginRight: 1}}
             />
           )}
-
+          
           {(canEditUnit || canEditUser) && (
             <MuiButton
               title={"Mời người dùng"}
               color={"primary"}
               onClick={() => handleOpenInviteForm()}
-              startIcon={<AddIcon />}
-              sx={{ fontWeight: 550 }}
+              startIcon={<AddIcon/>}
+              sx={{fontWeight: 550}}
             />
           )}
         </Stack>
       </Stack>
-      <Box sx={{ mb: 3, mt: 0 }}>
-        <Typography
-          sx={{
-            color: theme.palette.common.borderObject,
-            fontSize: 13,
-            fontWeight: 600,
-          }}
-        >
-          Quản trị viên
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          {ListUserAdmin?.map((user) => {
-            return (
-              <Stack
-                flexDirection="row"
-                sx={{ mt: 2, mr: 2, mb: 2 }}
-                key={user?.id}
-              >
-                <Box sx={{ position: "relative" }}>
-                  <Avatar variant="rounded" sx={{ width: 40, height: 40 }} />
-                  <span style={{ position: "absolute", top: -12, right: -6 }}>
-                    <CrownIcon />
-                  </span>
-                </Box>
-                <Stack sx={{ ml: 1.5 }}>
-                  <Typography
-                    sx={{
-                      color: theme.palette.common.neutral800,
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {(_.get(user, "lastName") && _.get(user, "lastName")) || ""}
-                    {_.get(user, "firstName") && _.get(user, "firstName")}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      color: theme.palette.common.neutral700,
-                      fontSize: 12,
-                      fontWeight: 400,
-                    }}
-                  >
-                    {_.get(user, "email") && _.get(user, "email")}
-                  </Typography>
+      <Box sx={{mb: 3, mt: 0}}>
+        <Typography sx={{color: theme.palette.common.borderObject, fontSize: 13, fontWeight: 600}}>Quản trị
+          viên</Typography>
+        <Box sx={{display: 'flex', alignItems: 'center'}}>
+          {
+            ListUserAdmin?.map(user => {
+              return (
+                <Stack flexDirection="row" sx={{mt: 2, mr: 2, mb: 2}} key={user?.id}>
+                  <Box sx={{position: 'relative'}}>
+                    <Avatar variant="rounded" sx={{width: 40, height: 40}}
+                            sx={{backgroundColor: theme.palette.common.bgrObject}}
+                            children={
+                              <img
+                                src={"/assets/icons/userImage.svg"}
+                                height={25}
+                              />
+                            }
+                    />
+                    <span style={{position: 'absolute', top: -12, right: -6}}>
+                          <CrownIcon/>
+                        </span>
+                  </Box>
+                  <Stack sx={{ml: 1.5}}>
+                    <Typography sx={{color: theme.palette.common.neutral800, fontSize: 14, fontWeight: 600}}>
+                      {_.get(user, 'lastName') && _.get(user, 'lastName') || ''}
+                      {_.get(user, 'firstName') && _.get(user, 'firstName')}
+                    </Typography>
+                    <Typography sx={{color: theme.palette.common.neutral700, fontSize: 12, fontWeight: 400}}>
+                      {_.get(user, 'email') && _.get(user, 'email')}
+                    </Typography>
+                  </Stack>
                 </Stack>
-              </Stack>
-            );
-          })}
+              )
+            })
+          }
         </Box>
         <Box>
           <MuiButton
             title={"Xem danh sách toàn bộ nhân viên"}
             color={"default"}
             onClick={() => handleRedirectViewAllMember(getOrganizationAdmin())}
-            startIcon={<UserIcon />}
+            startIcon={<UserIcon/>}
             sx={{
-              fontWeight: 550,
+              fontWeight: 600,
               marginRight: 1,
-              padding: "0px 6px",
-              backgroundColor: "transparent",
+              padding: '0px 6px',
+              backgroundColor: 'transparent',
+              color: theme.palette.common.blue700
             }}
           />
         </Box>
@@ -324,6 +323,12 @@ const OrganizationContent = () => {
         <InputFilter
           name="search"
           placeholder="Tìm kiếm theo tên đơn vị hoặc mã đơn vị"
+          sx={{
+            width: '100%',
+            height: '44px',
+            backgroundColor: theme.palette.common.bgrMaster,
+            marginBottom: 3,
+          }}
           sx={{
             width: "100%",
             height: "44px",
@@ -335,11 +340,8 @@ const OrganizationContent = () => {
           value={valueSearch}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start" sx={{ ml: 1.5 }}>
-                <Iconify
-                  icon={"eva:search-fill"}
-                  sx={{ color: "text.disabled", width: 20, height: 20 }}
-                />
+              <InputAdornment position='start' sx={{mr: "unset"}}>
+                <RiSearch2Line size={18} color={theme.palette.common.neutral600}/>
               </InputAdornment>
             ),
           }}
@@ -350,6 +352,7 @@ const OrganizationContent = () => {
           <OrganizationTree
             data={convertFlatDataToTree(ListOrganization)}
             treeData={treeData}
+            expandValue={expand}
             dataRoot={_.pick(convertFlatDataToTree(ListOrganization)[0], [
               "id",
               "name",
@@ -363,7 +366,7 @@ const OrganizationContent = () => {
             setSelected={setSelected}
           />
         ) : (
-          <OrganizationEmptyChildren onOpenForm={handleOpenForm} />
+          <OrganizationEmptyChildren onOpenForm={handleOpenForm}/>
         )}
       </Box>
       {isOpen && (
@@ -412,8 +415,8 @@ const OrganizationContent = () => {
           setActionType={setActionType}
           setActionTypeActive={setActionTypeActive}
           status={ListOrganization?.filter((item) => item.parentOrganizationId)
-            .filter((item) => selected.includes(item.id))
-            .every((item) => item.isActivated === true)}
+          .filter((item) => selected.includes(item.id))
+          .every((item) => item.isActivated === true)}
           onOpenForm={handleOpenForm}
         />
       )}

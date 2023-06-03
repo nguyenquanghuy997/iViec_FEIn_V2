@@ -200,10 +200,10 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
         <CardContent
           sx={{
             display: "flex",
-            width: "100%",
             color: "text.secondary",
             padding: "16px",
             borderRadius: isLastItem ? "" : "6px",
+            width: "85%",
           }}
           onClick={() => handleClickDialog(data)}
         >

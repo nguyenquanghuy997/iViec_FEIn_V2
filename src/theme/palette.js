@@ -114,7 +114,7 @@ const COMMON = {
     black: "#000",
     bgrMaster: "#F2F4F5",
     bgrObject: "#EFF3F6",
-    bgrUnActive: "#E9EAEE",
+    bgrUnActive: "#EFF3F7",
     strokeDividerLine: "#CCD4DC",
     borderObject: "#5C6A82",
 
