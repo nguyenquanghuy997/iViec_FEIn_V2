@@ -49,19 +49,20 @@ export const Activities = ({
   const [itemLog, setItemLog] = useState();
   const renderInfo = (title, reason) => {
     return (
-      <View flexRow atCenter mt={16}>
-        <Text
-          disableTranslate
-          width={64}
-          fontSize={13}
-          color={theme.palette.common.neutral600}
-        >
-          {`${title}:`}
-        </Text>
+      <View flexRow mt={16}>
+        <View mr={8} width={64}>
+          <Text
+            disableTranslate
+            fontSize={13}
+            color={theme.palette.common.neutral600}
+          >
+            {`${title}:`}
+          </Text>
+        </View>
 
         <Text
+          flex1
           disableTranslate
-          ml={8}
           fontSize={13}
           fontWeight={500}
           color={theme.palette.common.neutral800}

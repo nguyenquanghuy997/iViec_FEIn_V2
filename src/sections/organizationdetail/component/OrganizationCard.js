@@ -7,6 +7,7 @@ import Iconify from "@/components/Iconify";
 import SvgIcon from "@/components/SvgIcon";
 import Switch from "@/components/form/Switch";
 import { DOMAIN_SERVER_API } from "@/config";
+import useAuth from "@/hooks/useAuth";
 import { BoxFlex } from "@/sections/emailform/style";
 import {
   CardUserFormItemContentStyle,
@@ -16,16 +17,17 @@ import {
 import { STYLE_CONSTANT as style } from "@/theme/palette";
 import { fDate } from "@/utils/formatTime";
 import {
-  Box, CardContent,
+  Box,
+  CardContent,
   Checkbox,
   Divider,
   IconButton,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
-import useAuth from "@/hooks/useAuth";
 import Collapse from "@mui/material/Collapse";
 
 const OrganizationCard = ({
@@ -39,14 +41,14 @@ const OrganizationCard = ({
   onOpenFormModal,
   handleOpenActive,
 }) => {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const theme = useTheme();
   const [showAll, setShowAll] = useState(false);
-  
+
   const toggleShow = () => {
     setShowAll(!showAll);
   };
-  
+
   return (
     <CardUserStyle className="card-user-item" expanded={expanded}>
       <BoxFlex alignItems={"flex-start"}>
@@ -56,8 +58,8 @@ const OrganizationCard = ({
               value={item}
               checked={checked}
               onChange={onChangeSelected}
-              icon={<CheckboxIconDefault/>}
-              checkedIcon={<CheckboxIconChecked/>}
+              icon={<CheckboxIconDefault />}
+              checkedIcon={<CheckboxIconChecked />}
             />
           )}
           <AvatarDS
@@ -100,13 +102,13 @@ const OrganizationCard = ({
           {item.isActive ? (
             "Đang hoạt động"
           ) : (
-            <span style={{color: style.COLOR_TEXT_BLACK}}>
-                Không hoạt động
-              </span>
+            <span style={{ color: style.COLOR_TEXT_BLACK }}>
+              Không hoạt động
+            </span>
           )}
         </Typography>
       </BoxFlex>
-      {showAll && <Divider style={{marginBottom: "16px"}}/>}
+      {showAll && <Divider style={{ marginBottom: "16px" }} />}
       <BoxFlex>
         <BoxFlex>
           <CardUserFormItemContentStyle className="card-user-item-content-text">
@@ -122,6 +124,7 @@ const OrganizationCard = ({
                 cursor: "pointer",
                 display: showAll ? "none" : "block",
               }}
+              onClick={toggleShow}
             >
               <Typography
                 sx={{
@@ -162,7 +165,7 @@ const OrganizationCard = ({
                     icon={"material-symbols:arrow-drop-down"}
                     height={16}
                     width={16}
-                    sx={{ml: 1}}
+                    sx={{ ml: 1 }}
                   />
                 </Typography>
               )}
@@ -170,33 +173,38 @@ const OrganizationCard = ({
           )}
         </BoxFlex>
         <BoxFlex>
-          {showAll || selected?.length > 1 ? null : (
-            user.email !== item.email &&
-            <>
-              <IconButton
-                size="small"
-                sx={{color: theme.palette.common.borderObject, ml: 2}}
-                onClick={onOpenFormModal}
-              >
-                <SvgIcon>
-                  {
-                    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153006)"> <path d="M6.162 12.6667H14V14H2V11.1713L8.6 4.57133L11.428 7.40066L6.16133 12.6667H6.162ZM9.542 3.62933L10.9567 2.21466C11.0817 2.08968 11.2512 2.01947 11.428 2.01947C11.6048 2.01947 11.7743 2.08968 11.8993 2.21466L13.7853 4.10066C13.9103 4.22568 13.9805 4.39522 13.9805 4.57199C13.9805 4.74877 13.9103 4.91831 13.7853 5.04333L12.3707 6.45733L9.54267 3.62933H9.542Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153006"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
-                  }
-                </SvgIcon>
-              </IconButton>
-              <IconButton
-                size="small"
-                sx={{color: theme.palette.common.borderObject, ml: 2}}
-                onClick={onOpenConfirmDelete}
-              >
-                <SvgIcon>
-                  {
-                    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153079)"> <path d="M4.66634 2.66665V1.33331H11.333V2.66665H14.6663V3.99998H13.333V14C13.333 14.1768 13.2628 14.3464 13.1377 14.4714C13.0127 14.5964 12.8432 14.6666 12.6663 14.6666H3.33301C3.1562 14.6666 2.98663 14.5964 2.8616 14.4714C2.73658 14.3464 2.66634 14.1768 2.66634 14V3.99998H1.33301V2.66665H4.66634ZM3.99967 3.99998V13.3333H11.9997V3.99998H3.99967ZM5.99967 5.99998H7.33301V11.3333H5.99967V5.99998ZM8.66634 5.99998H9.99967V11.3333H8.66634V5.99998Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153079"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
-                  }
-                </SvgIcon>
-              </IconButton>
-            </>
-          )}
+          {showAll || selected?.length > 1
+            ? null
+            : user.email !== item.email && (
+                <>
+                  <Tooltip title={"Chỉnh sửa"}>
+                    <IconButton
+                      size="small"
+                      sx={{ color: theme.palette.common.borderObject, ml: 2 }}
+                      onClick={onOpenFormModal}
+                    >
+                      <SvgIcon>
+                        {
+                          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153006)"> <path d="M6.162 12.6667H14V14H2V11.1713L8.6 4.57133L11.428 7.40066L6.16133 12.6667H6.162ZM9.542 3.62933L10.9567 2.21466C11.0817 2.08968 11.2512 2.01947 11.428 2.01947C11.6048 2.01947 11.7743 2.08968 11.8993 2.21466L13.7853 4.10066C13.9103 4.22568 13.9805 4.39522 13.9805 4.57199C13.9805 4.74877 13.9103 4.91831 13.7853 5.04333L12.3707 6.45733L9.54267 3.62933H9.542Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153006"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
+                        }
+                      </SvgIcon>
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={"Xóa"}>
+                    <IconButton
+                      size="small"
+                      sx={{ color: theme.palette.common.borderObject, ml: 2 }}
+                      onClick={onOpenConfirmDelete}
+                    >
+                      <SvgIcon>
+                        {
+                          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153079)"> <path d="M4.66634 2.66665V1.33331H11.333V2.66665H14.6663V3.99998H13.333V14C13.333 14.1768 13.2628 14.3464 13.1377 14.4714C13.0127 14.5964 12.8432 14.6666 12.6663 14.6666H3.33301C3.1562 14.6666 2.98663 14.5964 2.8616 14.4714C2.73658 14.3464 2.66634 14.1768 2.66634 14V3.99998H1.33301V2.66665H4.66634ZM3.99967 3.99998V13.3333H11.9997V3.99998H3.99967ZM5.99967 5.99998H7.33301V11.3333H5.99967V5.99998ZM8.66634 5.99998H9.99967V11.3333H8.66634V5.99998Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153079"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
+                        }
+                      </SvgIcon>
+                    </IconButton>
+                  </Tooltip>
+                </>
+              )}
         </BoxFlex>
       </BoxFlex>
       <Collapse in={showAll} timeout={600} unmountOnExit>
@@ -207,7 +215,7 @@ const OrganizationCard = ({
               alignItems: "center",
               flexWrap: "wrap",
               my: 1.5,
-              "& .organization-card:last-child": {mr: 0},
+              "& .organization-card:last-child": { mr: 0 },
             }}
           >
             {item?.organizations?.map((organization) => (
@@ -290,7 +298,7 @@ const OrganizationCard = ({
               justifyContent: "space-between",
             }}
           >
-            <Box sx={{display: "flex", alignItems: "center"}}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography
                 sx={{
                   fontSize: 12,
@@ -325,7 +333,7 @@ const OrganizationCard = ({
                     icon={"material-symbols:arrow-drop-up"}
                     height={16}
                     width={16}
-                    sx={{ml: 1}}
+                    sx={{ ml: 1 }}
                   />
                 </Typography>
               </Box>
@@ -339,28 +347,32 @@ const OrganizationCard = ({
                       handleOpenActive(e.target.checked);
                     }}
                   />
-                  <IconButton
-                    size="small"
-                    sx={{color: theme.palette.common.borderObject}}
-                    onClick={onOpenFormModal}
-                  >
-                    <SvgIcon>
-                      {
-                        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153006)"> <path d="M6.162 12.6667H14V14H2V11.1713L8.6 4.57133L11.428 7.40066L6.16133 12.6667H6.162ZM9.542 3.62933L10.9567 2.21466C11.0817 2.08968 11.2512 2.01947 11.428 2.01947C11.6048 2.01947 11.7743 2.08968 11.8993 2.21466L13.7853 4.10066C13.9103 4.22568 13.9805 4.39522 13.9805 4.57199C13.9805 4.74877 13.9103 4.91831 13.7853 5.04333L12.3707 6.45733L9.54267 3.62933H9.542Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153006"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
-                      }
-                    </SvgIcon>
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    sx={{color: theme.palette.common.borderObject, ml: 2}}
-                    onClick={onOpenConfirmDelete}
-                  >
-                    <SvgIcon>
-                      {
-                        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153079)"> <path d="M4.66634 2.66665V1.33331H11.333V2.66665H14.6663V3.99998H13.333V14C13.333 14.1768 13.2628 14.3464 13.1377 14.4714C13.0127 14.5964 12.8432 14.6666 12.6663 14.6666H3.33301C3.1562 14.6666 2.98663 14.5964 2.8616 14.4714C2.73658 14.3464 2.66634 14.1768 2.66634 14V3.99998H1.33301V2.66665H4.66634ZM3.99967 3.99998V13.3333H11.9997V3.99998H3.99967ZM5.99967 5.99998H7.33301V11.3333H5.99967V5.99998ZM8.66634 5.99998H9.99967V11.3333H8.66634V5.99998Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153079"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
-                      }
-                    </SvgIcon>
-                  </IconButton>
+                  <Tooltip title={"Chỉnh sửa"}>
+                    <IconButton
+                      size="small"
+                      sx={{ color: theme.palette.common.borderObject }}
+                      onClick={onOpenFormModal}
+                    >
+                      <SvgIcon>
+                        {
+                          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153006)"> <path d="M6.162 12.6667H14V14H2V11.1713L8.6 4.57133L11.428 7.40066L6.16133 12.6667H6.162ZM9.542 3.62933L10.9567 2.21466C11.0817 2.08968 11.2512 2.01947 11.428 2.01947C11.6048 2.01947 11.7743 2.08968 11.8993 2.21466L13.7853 4.10066C13.9103 4.22568 13.9805 4.39522 13.9805 4.57199C13.9805 4.74877 13.9103 4.91831 13.7853 5.04333L12.3707 6.45733L9.54267 3.62933H9.542Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153006"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
+                        }
+                      </SvgIcon>
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={"Xóa"}>
+                    <IconButton
+                      size="small"
+                      sx={{ color: theme.palette.common.borderObject, ml: 2 }}
+                      onClick={onOpenConfirmDelete}
+                    >
+                      <SvgIcon>
+                        {
+                          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_9022_153079)"> <path d="M4.66634 2.66665V1.33331H11.333V2.66665H14.6663V3.99998H13.333V14C13.333 14.1768 13.2628 14.3464 13.1377 14.4714C13.0127 14.5964 12.8432 14.6666 12.6663 14.6666H3.33301C3.1562 14.6666 2.98663 14.5964 2.8616 14.4714C2.73658 14.3464 2.66634 14.1768 2.66634 14V3.99998H1.33301V2.66665H4.66634ZM3.99967 3.99998V13.3333H11.9997V3.99998H3.99967ZM5.99967 5.99998H7.33301V11.3333H5.99967V5.99998ZM8.66634 5.99998H9.99967V11.3333H8.66634V5.99998Z" fill="#5C6A82"/> </g> <defs> <clipPath id="clip0_9022_153079"> <rect width="16" height="16" fill="white"/> </clipPath> </defs> </svg>'
+                        }
+                      </SvgIcon>
+                    </IconButton>
+                  </Tooltip>
                 </>
               )}
             </BoxFlex>
@@ -372,4 +384,3 @@ const OrganizationCard = ({
 };
 
 export default React.memo(OrganizationCard);
-  
