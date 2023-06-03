@@ -18,6 +18,7 @@ import OrganizationUserInviteTab from "@/sections/organization/component/Organiz
 import {
   useDeleteInviteUserMutation,
   useInviteUserMutation,
+  useLazyGetAllApplicantUserOrganizationByIdQuery,
   useResendEmailMutation,
 } from "@/sections/organization/override/OverrideOrganizationSlice";
 import { useGetRoleGroupListQuery } from "@/sections/rolegroup";
@@ -34,6 +35,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { memo, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -68,6 +70,7 @@ const OrganizationInviteForm = ({
   valueTabDefault,
   organizationId,
 }) => {
+  const router = useRouter();
   const [valueTab, setValueTab] = useState(valueTabDefault);
   const theme = useTheme();
   const [isShowResult, setIsShowResult] = useState(false);
@@ -79,6 +82,8 @@ const OrganizationInviteForm = ({
 
   const dataSubmitRef = useRef();
   const selectRef = useRef();
+
+  const [getAllApplicantUserOrganizationById] = useLazyGetAllApplicantUserOrganizationByIdQuery();
 
   const onClose = () => {
     setIsOpenInviteForm(false);
@@ -128,6 +133,7 @@ const OrganizationInviteForm = ({
 
   const {
     handleSubmit,
+    setValue,
     control,
     formState: { isValid },
   } = methods;
@@ -208,6 +214,27 @@ const OrganizationInviteForm = ({
       throw e;
     }
   };
+
+  const handleSearchUser = async (index, value) => {
+    setValue(`invite.${index}.email`, value)
+    setValue(`invite.${index}.fullName`, '')
+    setValue(`invite.${index}.roleGroupId`, null)
+    setValue(`invite.${index}.organizationIds`, [])
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+      const listUser = await getAllApplicantUserOrganizationById(
+        {
+          OrganizationId: router.query?.id,
+          SearchKey: value
+        }
+      ).unwrap()
+      if (listUser.items.length > 0) {
+        const firstUser = listUser.items[0];
+        setValue(`invite.${index}.fullName`, firstUser?.firstName)
+        setValue(`invite.${index}.roleGroupId`, firstUser?.applicationUserRoleGroups[0]?.id)
+        setValue(`invite.${index}.organizationIds`, firstUser?.organizations.map(x => x.id))
+      }
+    }
+  }
 
   const { data: { items: ListRoleGroup = [] } = {} } =
     useGetRoleGroupListQuery();
@@ -394,6 +421,9 @@ const OrganizationInviteForm = ({
                           <View flex1>
                             <RHFTextField
                               name={`invite.${index}.email`}
+                              onChange={(e) => {
+                                handleSearchUser(index, e.target.value)
+                              }}
                               isRequired
                               title="Email"
                               placeholder="Nhập email người được mời"
@@ -412,6 +442,7 @@ const OrganizationInviteForm = ({
                             <RHFTextField
                               name={`invite.${index}.fullName`}
                               isRequired
+                              disabled
                               title="Họ và tên"
                               placeholder="Họ và tên người được mời"
                               sx={{
@@ -437,6 +468,7 @@ const OrganizationInviteForm = ({
                               }))}
                               ref={selectRef}
                               name={`invite.${index}.roleGroupId`}
+                              disabled
                               placeholder="Chọn 1 vai trò"
                               sx={{
                                 backgroundColor: theme.palette.common.white,
@@ -458,7 +490,9 @@ const OrganizationInviteForm = ({
                             parentOrganizationId: item.parentOrganizationId,
                           }))}
                           name={`invite.${index}.organizationIds`}
+                          disabled
                           isRequired
+                          readOnly
                           title="Đơn vị"
                           multiple
                           placeholder="Chọn 1 hoặc nhiều đơn vị"
@@ -493,7 +527,7 @@ const OrganizationInviteForm = ({
                 <MuiButton
                   variant="outlined"
                   title={"Thêm lời mời"}
-                  sx={{ mt: 3, fontWeight: 600,  fontFamily:'Inter' }}
+                  sx={{ mt: 3, fontWeight: 600, fontFamily: 'Inter' }}
                   startIcon={
                     <Iconify
                       icon={"material-symbols:add"}
@@ -520,8 +554,8 @@ const OrganizationInviteForm = ({
                 onClick={onClose}
                 className={"btn-actions btn-confirm"}
                 sx={{
-                  fontWeight:600,
-                  fontSize:'14px',
+                  fontWeight: 600,
+                  fontSize: '14px',
                   "&:hover": {
                     boxShadow: "none",
                     backgroundColor: "transparent",
@@ -534,8 +568,8 @@ const OrganizationInviteForm = ({
                 disabled={!isValid || fields.length === 0}
                 type={"submit"}
                 sx={{
-                  fontWeight:600,
-                  fontSize:'14px',
+                  fontWeight: 600,
+                  fontSize: '14px',
                   color: theme.palette.common.white,
                 }}
               />
