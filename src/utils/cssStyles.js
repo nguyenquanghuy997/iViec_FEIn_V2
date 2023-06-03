@@ -67,8 +67,8 @@ export const ViewModel = styled("div")(({ theme }) => ({
   display: 'flex',
   marginTop: "64px",
   // height: "calc(100% - 64px)",
-  // background: theme.palette.background.paper,
-  background: '#FFFFFF',
+  background: theme.palette.background.paper,
+  // background: '#FFFFFF',
   flexDirection: "column",
   boxShadow:
     "-3px 0px 5px rgba(9, 30, 66, 0.2), 0px 0px 1px rgba(9, 30, 66, 0.3)",
