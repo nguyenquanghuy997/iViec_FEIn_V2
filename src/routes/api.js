@@ -30,6 +30,8 @@ export const API_GET_APPLICATION_BY_ROLE_GROUP =
   "/identity/Identity/GetApplicationUsersByRoleGroup";
 export const API_DELETE_USER_ORGANIZATION =
   "/identity/Identity/RemoveApplicationUsers";
+  export const API_DELETE_SINGLE_USER_ORGANIZATION =
+  "/identity/Identity/RemoveApplicationUser";
 export const API_UPDATE_USER_ROLE_ORGANIZATION =
   "/identity/Identity/ApplicationUserUpdateRole";
 export const API_SET_ACTIVE_USER =
