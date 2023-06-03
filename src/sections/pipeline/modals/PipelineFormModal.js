@@ -321,6 +321,7 @@ export const PipelineFormModal = ({data, show, onClose}) => {
             </View>
           </View>
           {/* footer */}
+          <Divider m={0}/>
           <View
             sx={{
               padding: '0px 0px 16px',

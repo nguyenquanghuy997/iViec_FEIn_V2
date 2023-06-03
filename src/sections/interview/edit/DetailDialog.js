@@ -1,5 +1,5 @@
 import {convertDurationTimeToSeconds, convertStoMs} from "../config";
-import {ButtonDS} from "@/components/DesignSystem";
+import {AvatarDS, ButtonDS} from "@/components/DesignSystem";
 import {Text, View} from "@/components/DesignSystem/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
 import {BOOKING_CALENDAR_PROCCESS_STATUS, DOMAIN_SERVER_API} from "@/config";
@@ -214,7 +214,7 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
                     key={index}
                   >
                     <ListItemAvatar style={{width: "40px", height: "40px"}}>
-                      <img
+                      <AvatarDS
                         alt=""
                         src={
                           DOMAIN_SERVER_API +
