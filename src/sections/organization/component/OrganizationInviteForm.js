@@ -271,7 +271,7 @@ const OrganizationInviteForm = ({
           aria-label="basic tabs example"
           sx={{
             "& .MuiTab-root": {
-              minHeight: "36px",
+              minHeight: "44px",
               textTransform: "unset",
               padding: "8px 12px",
             },
@@ -292,7 +292,7 @@ const OrganizationInviteForm = ({
               fontWeight: 600,
               "&:not(:last-of-type)": {
                 marginRight: "16px",
-                marginLeft:"15px",
+                // marginLeft:"15px",
               },
               "& button": {
                 fontSize: "14px",
@@ -303,6 +303,7 @@ const OrganizationInviteForm = ({
             label="Danh sách mời"
             {...a11yProps(1)}
             sx={{
+              fontWeight: 600,
               "&:not(:last-of-type)": {
                 marginRight: "16px",
               },
@@ -550,7 +551,7 @@ const OrganizationInviteForm = ({
             alignItems: "center",
             flexDirection: "column",
             px: 3,
-            py: 0,
+            pb: 3,
           }}
         >
           <OrganizationUserInviteTab
