@@ -28,6 +28,7 @@ const NotificationBoard = ({
   isReview,
   recruitmentId,
   reviewFormCriterias,
+  expanded,
 }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -234,6 +235,8 @@ const NotificationBoard = ({
               {children}
             </Collapse>
           ) : null}
+
+          {expanded}
 
           {isReview && isOpenReview && (
             <ApplicantReviewModal
