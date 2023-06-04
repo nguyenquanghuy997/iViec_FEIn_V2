@@ -35,7 +35,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { memo, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -70,7 +69,6 @@ const OrganizationInviteForm = ({
   valueTabDefault,
   organizationId,
 }) => {
-  const router = useRouter();
   const [valueTab, setValueTab] = useState(valueTabDefault);
   const theme = useTheme();
   const [isShowResult, setIsShowResult] = useState(false);
@@ -223,7 +221,6 @@ const OrganizationInviteForm = ({
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
       const listUser = await getAllApplicantUserOrganizationById(
         {
-          OrganizationId: router.query?.id,
           SearchKey: value
         }
       ).unwrap()
