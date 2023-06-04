@@ -4,7 +4,10 @@ import {
 } from "../applicant";
 import { RejectApplicantModal } from "../applicant/modals/RejectApplicantModal";
 import { useLazyGetCompanyInfoQuery } from "../companyinfor/companyInforSlice";
-import { useGetApplicantByPipeLineQuery, useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery } from "../interview";
+import {
+  useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery,
+  useLazyGetApplicantByPipeLineQuery,
+} from "../interview";
 import { FormCalendar } from "../interview/components/FormCalendar";
 import ExaminerModal from "../recruitment/modals/ExaminerModal";
 import { CircleLineIcon, EditIcon } from "@/assets/ActionIcon";
@@ -21,7 +24,8 @@ import {
   Box,
   Button,
   ButtonGroup,
-  ClickAwayListener, Divider,
+  ClickAwayListener,
+  Divider,
   Grid,
   MenuItem,
   MenuList,
@@ -79,11 +83,11 @@ function Baseitem(props) {
       <Box pl={1}>
         <Typography
           fontSize="12px"
-          lineHeight={'20px'}
+          lineHeight={"20px"}
           display="flex"
           fontWeight="600"
           alignItems="center"
-          mb={'4px'}
+          mb={"4px"}
           onClick={() =>
             router.push(
               {
@@ -103,7 +107,9 @@ function Baseitem(props) {
           {item?.fullName}
         </Typography>
         <Stack direction="row" spacing={2} color="#172B4D">
-          <Typography fontSize="12px" lineHeight={'18px'}>{item.phoneNumber}</Typography>
+          <Typography fontSize="12px" lineHeight={"18px"}>
+            {item.phoneNumber}
+          </Typography>
         </Stack>
       </Box>
     </Grid>
@@ -202,11 +208,9 @@ function InterviewItem(props) {
       },
       { skip: !item }
     );
-  const { data: { items: dataApplicant = [] } = {} } =
-    useGetApplicantByPipeLineQuery(
-      { RecruitmentPipelineStateId: item?.recruitmentPipelineStateId },
-      { skip: !item?.recruitmentPipelineStateId }
-    );
+  const [dataApplicant, setDataApplicant] = useState([]);
+  const [getDataApplicant] = useLazyGetApplicantByPipeLineQuery();
+
   const lastInterview = interview[interview.length - 1];
   var timeEnd = moment(lastInterview?.interviewTime).add(
     lastInterview?.interviewDuration
@@ -228,6 +232,19 @@ function InterviewItem(props) {
     window.open(await getLink(id));
   };
 
+  useEffect(() => {
+    setDataApplicant([]);
+    const id = item?.recruitmentPipelineStateId;
+    if (!id) return;
+
+    (async () => {
+      const res = (await getDataApplicant({ RecruitmentPipelineStateId: id }))
+        .data?.items;
+      if (!Array.isArray(res)) return;
+      setDataApplicant(res);
+    })();
+  }, [item?.recruitmentPipelineStateId]);
+
   return (
     <div>
       <Baseitem item={item} />
@@ -235,9 +252,13 @@ function InterviewItem(props) {
         {/* Lịch sử cuộc pv */}
         {interview &&
           interview?.map((item, index) => {
-            if (index < interview?.length && (interview[index].applicantInterviewState !==
-              (ApplicantInterviewState.COMPLETED &&
-              ApplicantInterviewState.CONFIRMED && ApplicantInterviewState.INTERVIEWING))) {
+            if (
+              index < interview?.length &&
+              interview[index].applicantInterviewState !==
+                (ApplicantInterviewState.COMPLETED &&
+                  ApplicantInterviewState.CONFIRMED &&
+                  ApplicantInterviewState.INTERVIEWING)
+            ) {
               return (
                 <Box
                   key={index}
@@ -279,8 +300,10 @@ function InterviewItem(props) {
         <Box>
           {lastInterview?.applicantInterviewState ==
             (ApplicantInterviewState.COMPLETED &&
-            ApplicantInterviewState.CONFIRMED &&
-            ApplicantInterviewState.INTERVIEWING)  && moment().format("DD/MM/YYYY") ==  moment(lastInterview?.interviewTime).format("DD/MM/YYYY")? (
+              ApplicantInterviewState.CONFIRMED &&
+              ApplicantInterviewState.INTERVIEWING) &&
+          moment().format("DD/MM/YYYY") ==
+            moment(lastInterview?.interviewTime).format("DD/MM/YYYY") ? (
             <Box
               sx={{
                 background: "#4CAF50",
@@ -315,10 +338,10 @@ function InterviewItem(props) {
                   >
                     {lastInterview?.interviewTime
                       ? fDate(lastInterview?.interviewTime) +
-                      " " +
-                      fTime(lastInterview?.interviewTime) +
-                      " - " +
-                      fTime(timeEnd)
+                        " " +
+                        fTime(lastInterview?.interviewTime) +
+                        " - " +
+                        fTime(timeEnd)
                       : ""}
                   </Typography>
                 </Box>
@@ -342,19 +365,21 @@ function InterviewItem(props) {
                   padding: "10px",
                 }}
               >
-                <Box sx={{
-                  display: 'inline-flex',
-                }}>
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                  }}
+                >
                   <Typography
                     sx={{
-                      display: 'inline-block',
+                      display: "inline-block",
                       fontSize: "12px",
                       color: "#5C6A82",
                       fontWeight: "500",
                       textOverflow: "ellipsis",
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      width: '217px',
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      width: "217px",
                     }}
                   >
                     {`${window.location.origin}/phong-van.html`}
@@ -365,18 +390,17 @@ function InterviewItem(props) {
                   width={20}
                   height={20}
                   color="#5C6A82"
-                  onClick={() => copyToClipboard(lastInterview?.bookingCalendarId)}
+                  onClick={() =>
+                    copyToClipboard(lastInterview?.bookingCalendarId)
+                  }
                 />
               </Box>
             </Box>
           ) : (
             <>
-              {
-                dataApplicant?.length > 0 && <Divider style={{ margin: 0 }} />
-              }
+              {dataApplicant?.length > 0 && <Divider style={{ margin: 0 }} />}
               <Box style={{ padding: "12px 12px" }}>
-                {
-                  dataApplicant?.length > 0 &&
+                {dataApplicant?.length > 0 && (
                   <ButtonDS
                     tittle={"Đặt lịch phỏng vấn"}
                     type="submit"
@@ -398,7 +422,7 @@ function InterviewItem(props) {
                     }}
                     onClick={() => handleClick(item)}
                   />
-                }
+                )}
               </Box>
             </>
           )}
@@ -430,7 +454,7 @@ function ResultItem(props) {
             <Box
               sx={{
                 bgcolor: "background.paper",
-                borderRadius: '6px',
+                borderRadius: "6px",
               }}
             >
               <ButtonGroup
@@ -441,7 +465,7 @@ function ResultItem(props) {
                   type="submit"
                   sx={{
                     border: "none",
-                    borderRadius: '6px 0px 0px 6px',
+                    borderRadius: "6px 0px 0px 6px",
                     color:
                       item.pipelineStateResultType === 0
                         ? "#FDFDFD"
@@ -491,7 +515,7 @@ function ResultItem(props) {
                   type="submit"
                   sx={{
                     border: "none",
-                    borderRadius: '0px 6px 6px 0px',
+                    borderRadius: "0px 6px 6px 0px",
                     color:
                       item.pipelineStateResultType === 2
                         ? "#FDFDFD"
@@ -814,13 +838,13 @@ function TaskCard({ item, index, pipelineStateType }) {
                 </Box>
                 <LightTooltip
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    padding: '0px',
-                    position: 'relative',
-                    width: '200px',
-                    height: '132px',
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    padding: "0px",
+                    position: "relative",
+                    width: "200px",
+                    height: "132px",
                   }}
                   placement="bottom-start"
                   onClose={handleCloseGroup}
@@ -856,15 +880,15 @@ function TaskCard({ item, index, pipelineStateType }) {
                         <MenuItem
                           onClick={pressEdit}
                           sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            padding: '10px 12px 10px 16px',
-                            gap: '12px',
-                            width: '200px',
-                            height: '44px',
-                            background: '#FDFDFD',
-                            boxShadow: 'inset',
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            padding: "10px 12px 10px 16px",
+                            gap: "12px",
+                            width: "200px",
+                            height: "44px",
+                            background: "#FDFDFD",
+                            boxShadow: "inset",
                             // 0px -1px 0px #E7E9ED;
                           }}
                         >
@@ -873,22 +897,25 @@ function TaskCard({ item, index, pipelineStateType }) {
                             Chỉnh sửa
                           </Typography>
                         </MenuItem>
-                        <Divider sx={{
-                          margin: '0 !important'
-                        }} />
+                        <Divider
+                          sx={{
+                            margin: "0 !important",
+                          }}
+                        />
                         <MenuItem
                           onClick={pressDelete}
                           sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            padding: '10px 12px 10px 16px',
-                            gap: '12px',
-                            width: '200px',
-                            height: '44px',
-                            background: '#FDFDFD',
-                            boxShadow: 'inset',
-                          }}>
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            padding: "10px 12px 10px 16px",
+                            gap: "12px",
+                            width: "200px",
+                            height: "44px",
+                            background: "#FDFDFD",
+                            boxShadow: "inset",
+                          }}
+                        >
                           <CircleLineIcon sx={{ mr: "12px" }} />
                           <Typography
                             color={theme.palette.text.warning}
@@ -908,12 +935,12 @@ function TaskCard({ item, index, pipelineStateType }) {
                     style={{ minWidth: 0, padding: 0 }}
                     onClick={handleOpenGroup}
                     sx={{
-                      ':hover': {
-                        background: '#EFF3F6',
+                      ":hover": {
+                        background: "#EFF3F6",
                       },
-                      borderRadius: '6px',
-                      width: '28px',
-                      height: '28px',
+                      borderRadius: "6px",
+                      width: "28px",
+                      height: "28px",
                     }}
                   >
                     <Iconify
