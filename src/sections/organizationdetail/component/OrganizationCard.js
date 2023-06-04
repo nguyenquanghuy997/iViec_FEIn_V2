@@ -111,14 +111,13 @@ const OrganizationCard = ({
       {showAll && <Divider style={{ marginBottom: "16px" }} />}
       <BoxFlex>
         <BoxFlex>
-          <CardUserFormItemContentStyle className="card-user-item-content-text">
+          <CardUserFormItemContentStyle className="card-user-item-content-text" sx={{mr: 1}}>
             {item?.applicationUserRoleGroups[0]?.name}
           </CardUserFormItemContentStyle>
           {item?.organizations?.length == 1 ? (
             <Box
               sx={{
                 padding: "5px 8px",
-                ml: 1,
                 backgroundColor: theme.palette.common.bgrObject,
                 borderRadius: "100px",
                 cursor: "pointer",
@@ -136,13 +135,18 @@ const OrganizationCard = ({
                 }}
               >
                 {item?.organizations[0].name}
+                <Iconify
+                  icon={"material-symbols:arrow-drop-down"}
+                  height={16}
+                  width={16}
+                  sx={{ ml: 1 }}
+                />
               </Typography>
             </Box>
           ) : (
             <Box
               sx={{
                 padding: "5px 8px",
-                ml: 1,
                 backgroundColor: theme.palette.common.bgrObject,
                 borderRadius: "100px",
                 cursor: "pointer",
@@ -208,7 +212,7 @@ const OrganizationCard = ({
         </BoxFlex>
       </BoxFlex>
       <Collapse in={showAll} timeout={600} unmountOnExit>
-        <CardContent>
+        <CardContent sx={{padding: "unset !important"}}>
           <Box
             sx={{
               display: "flex",
