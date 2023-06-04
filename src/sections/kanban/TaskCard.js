@@ -147,7 +147,7 @@ function ExaminationItem(props) {
             {item?.processStatus == 4 ? "15/16" : "3/16"}
           </Typography>
         </Stack> */}
-        <Box p={"8px 12px"} width={"100%"} pt={0}>
+        {/* <Box p={"8px 12px"} width={"100%"} pt={0}>
           <ButtonDS
             tittle={"Chấm thi"}
             type="submit"
@@ -158,7 +158,7 @@ function ExaminationItem(props) {
             }}
             onClick={() => setShowExam(true)}
           />
-        </Box>
+        </Box> */}
 
         <Stack
           direction="row"
@@ -168,7 +168,7 @@ function ExaminationItem(props) {
           color={"#F2F4F5"}
         >
           <Typography fontSize="14px" fontWeight="600" color="#172B4D">
-            {"Đã hoàn thành bài thi"}
+            {"Hoàn thành thi tuyển"}
           </Typography>
 
           <Typography fontSize="14px" fontWeight="600">
@@ -236,7 +236,7 @@ function InterviewItem(props) {
         {interview &&
           interview?.map((item, index) => {
             if (index < interview?.length && (interview[index].applicantInterviewState !==
-              ApplicantInterviewState.PENDING &&
+              // ApplicantInterviewState.PENDING &&
               ApplicantInterviewState.CONFIRMED && ApplicantInterviewState.INTERVIEWING)) {
               return (
                 <Box
@@ -278,9 +278,9 @@ function InterviewItem(props) {
           })}
         <Box>
           {lastInterview?.applicantInterviewState ===
-            ApplicantInterviewState.PENDING &&
+            // ApplicantInterviewState.PENDING &&
             ApplicantInterviewState.CONFIRMED &&
-            ApplicantInterviewState.INTERVIEWING ? (
+            ApplicantInterviewState.INTERVIEWING  && moment().format("DD/MM/YYYY") ==  moment(lastInterview?.interviewTime).format("DD/MM/YYYY")? (
             <Box
               sx={{
                 background: "#4CAF50",

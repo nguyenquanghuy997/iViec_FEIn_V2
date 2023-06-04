@@ -12,9 +12,6 @@ import { useTheme } from "@mui/material/styles";
 import { useMemo } from "react";
 
 const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
-  // const { data: Detaildata } = useGetDetailCalendarsQuery({
-  //   BookingCalendarId: id,
-  // });
   const { user } = useAuth();
   const theme = useTheme();
   const { canAccess } = useRole();

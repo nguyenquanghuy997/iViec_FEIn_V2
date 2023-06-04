@@ -35,6 +35,7 @@ const FilterFieldItem = ({ column = {}, watch, setValue }) => {
     type,
     remoteUrl,
     remoteMethod = "GET",
+    remoteIdsField,
     label = title,
     name = dataIndex,
     placeholder = "Tìm kiếm...",
@@ -70,6 +71,7 @@ const FilterFieldItem = ({ column = {}, watch, setValue }) => {
         <SelectCheckboxField
           {...fieldProps}
           search={hasSearch}
+          remoteIdsField={remoteIdsField}
           options={options}
           remoteUrl={remoteUrl}
           remoteMethod={remoteMethod}

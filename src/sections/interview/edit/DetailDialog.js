@@ -31,8 +31,8 @@ import {forwardRef, useState} from "react";
 
 const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
   const {data: DetailData} = useGetDetailCalendarsQuery(
-    {BookingCalendarId: item?.id},
-    {skip: !item?.id}
+    {BookingCalendarId: item?.id, DateSelector: item?.startTime},
+    {skip: !item?.id && !item?.startTime}
   );
   const theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
@@ -110,6 +110,7 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
     convertDurationTimeToSeconds(moment(time?.[0]).format("HH:mm:ss")) +
     convertDurationTimeToSeconds(duration?.[0])
   );
+
   const {user} = useAuth();
   const getLink = async (id) => {
     return `${window.location.origin}/phong-van.html?DisplayName=${user?.firstName}&&Email=${user?.email}&&Role=1&&RoomName=${id}`;
@@ -163,11 +164,12 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
               {item?.name}
             </Text>
 
+            {renderText("Tin tuyển dụng:", DetailData?.recruitmentName || "Không có")}
             {renderText(
               "Hình thức phỏng vấn:",
               DetailData?.interviewType === 0 ? "Online" : "Trực tiếp"
             )}
-            {renderText("Thời gian:", `${moment(time?.[0]).format("HH:mm")}`)}
+            {renderText("Thời gian phỏng vấn:", `${moment(time?.[0]).format("HH:mm")} Ngày ${moment(time?.[0]).format("DD/MM/yyyy")} - ${startTime.substring(startTime.length - 3, startTime.length - 8)} Ngày ${moment(time?.[0]).format("DD/MM/yyyy")}`)}
             {renderText(
               "Loại phỏng vấn:",
               DetailData?.bookingCalendarGroups.map(
