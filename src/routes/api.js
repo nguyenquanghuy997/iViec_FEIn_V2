@@ -30,7 +30,7 @@ export const API_GET_APPLICATION_BY_ROLE_GROUP =
   "/identity/Identity/GetApplicationUsersByRoleGroup";
 export const API_DELETE_USER_ORGANIZATION =
   "/identity/Identity/RemoveApplicationUsers";
-  export const API_DELETE_SINGLE_USER_ORGANIZATION =
+export const API_DELETE_SINGLE_USER_ORGANIZATION =
   "/identity/Identity/RemoveApplicationUser";
 export const API_UPDATE_USER_ROLE_ORGANIZATION =
   "/identity/Identity/ApplicationUserUpdateRole";
@@ -292,6 +292,8 @@ export const API_GET_BOOKING_CALENDER_BY_RECRUITMENT =
   "applicant/BookingCalendar/GetBookingCalendarsByRecruitment";
 export const API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE =
   "applicant/BookingCalendar/GetBookingCalendarsByApplicantRecruitmentPipelineState";
+export const API_GET_BOOKING_CALENDER_BY_DATE =
+  "applicant/BookingCalendar/GetBookingCalendarByDate";
 export const API_GET_CALENDAR = "applicant/BookingCalendar/GetBookingCalendars";
 export const API_GET_CALENDAR_DETAIL =
   "applicant/BookingCalendar/GetBookingCalendar";
@@ -317,7 +319,8 @@ export const API_UPDATE_STATUS_EXAM =
 export const API_CREATE_EXAM = "/examination/Examination/CreateExamination";
 export const API_UPDATE_EXAM = "/examination/Examination/UpdateExamination";
 export const API_DELETE_EXAMS = "/examination/Examination/RemoveExaminations";
-export const API_GET_EXAM_APPLICANT_WITH_RESULT = "/examination/Examination/GetExamApplicantWithResult";
+export const API_GET_EXAM_APPLICANT_WITH_RESULT =
+  "/examination/Examination/GetExamApplicantWithResult";
 
 // QuestionGroup
 export const API_GET_QUESTION_GROUP =

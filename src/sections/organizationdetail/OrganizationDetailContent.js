@@ -1,3 +1,4 @@
+import { useGetListUserInGroupCanBeCustomizedQuery } from "../companyinfor/companyInforSlice";
 import { DeleteIcon, EditIcon } from "@/assets/ActionIcon";
 import FolderIcon from "@/assets/FolderIcon";
 import BottomNavModal from "@/components/BaseComponents/BottomNavModal";
@@ -10,6 +11,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import SvgIcon from "@/components/SvgIcon";
 import Switch from "@/components/form/Switch";
 import { TBL_FILTER_TYPE } from "@/config";
+import useAuth from "@/hooks/useAuth";
 import { modalSlice } from "@/redux/common/modalSlice";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
@@ -103,6 +105,8 @@ const columns = [
 ];
 
 const OrganizationDetailContent = () => {
+  const { user } = useAuth();
+
   const router = useRouter();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -115,6 +119,9 @@ const OrganizationDetailContent = () => {
     },
     { skip: !query?.id }
   );
+
+  const { data: userInGroupCanBeCustomized = [] } =
+    useGetListUserInGroupCanBeCustomizedQuery(user?.id);
 
   const { data: { items: ListUser = [] } = {}, isLoading: loadingUser } =
     useGetAllApplicantUserOrganizationByIdQuery(
@@ -523,6 +530,7 @@ const OrganizationDetailContent = () => {
                   onOpenFormModal={() => handleOpenFormUser(column)}
                   handleOpenActive={handleOpenActive}
                   selected={selected}
+                  userInGroupCanBeCustomized={userInGroupCanBeCustomized.items}
                 />
               );
             })}

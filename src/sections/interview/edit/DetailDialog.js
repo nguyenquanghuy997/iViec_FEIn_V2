@@ -31,8 +31,8 @@ import {forwardRef, useState} from "react";
 
 const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
   const {data: DetailData} = useGetDetailCalendarsQuery(
-    {BookingCalendarId: item?.id},
-    {skip: !item?.id}
+    {BookingCalendarId: item?.id, DateSelector: item?.startTime},
+    {skip: !item?.id && !item?.startTime}
   );
   const theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
