@@ -78,7 +78,7 @@ export default function InterviewSchedule({ Data }) {
                       color: "white",
                     }}
                   >
-                    {item.length}
+                    {moment(key).format("DD")}
                   </Box>
                 )}
 
