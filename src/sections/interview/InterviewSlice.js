@@ -3,14 +3,13 @@ import {
   API_POST_BOOK_CALENDAR,
   API_GET_ALL_REVIEW_FORM,
   API_GET_CALENDAR,
-  API_GET_CALENDAR_DETAIL,
   API_UPDATE_CALENDAR,
   API_GET_APPLICANT_BY_PIPELINES_STATE,
   API_GET_RELATE_CALENDAR,
   API_DELETE_CALENDAR,
   API_GET_RECRUITMENT_PERSON_IN_CHARGE_IDS,
   API_GET_BOOKING_CALENDER_BY_RECRUITMENT,
-  API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE, API_GET_BOOKING_CALENDER_BY_RECRUITMENT_ID,
+  API_GET_BOOKING_CALENDER_BY_APPLICANT_PIPELINE, API_GET_BOOKING_CALENDER_BY_RECRUITMENT_ID, API_GET_BOOKING_CALENDER_BY_DATE,
 } from "@/routes/api";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
@@ -103,7 +102,7 @@ export const calendarServiceApi = createApi({
 
     getDetailCalendars: builder.query({
       query: (params) => ({
-        url: API_GET_CALENDAR_DETAIL,
+        url: API_GET_BOOKING_CALENDER_BY_DATE,
         method: "GET",
         params,
       }),
