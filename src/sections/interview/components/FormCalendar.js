@@ -67,8 +67,8 @@ export const FormCalendar = ({
   const { enqueueSnackbar } = useSnackbar();
   const isEditMode = !!data?.id;
   const { data: DetailData = {} } = useGetDetailCalendarsQuery(
-    { BookingCalendarId: data?.id },
-    { skip: !data?.id }
+    { BookingCalendarId: data?.id, DateSelector: data?.startTime },
+    { skip: !data?.id &&  !data?.startTime}
   );
   const isLoading = isEditMode && !DetailData?.id;
   const [addCalendar] = useAddCalendarMutation();

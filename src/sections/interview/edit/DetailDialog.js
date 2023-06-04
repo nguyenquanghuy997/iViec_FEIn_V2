@@ -1,15 +1,15 @@
-import {convertDurationTimeToSeconds, convertStoMs} from "../config";
-import {AvatarDS, ButtonDS} from "@/components/DesignSystem";
-import {Text, View} from "@/components/DesignSystem/FlexStyled";
+import { convertDurationTimeToSeconds, convertStoMs } from "../config";
+import { AvatarDS, ButtonDS } from "@/components/DesignSystem";
+import { Text, View } from "@/components/DesignSystem/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
-import {BOOKING_CALENDAR_PROCCESS_STATUS, DOMAIN_SERVER_API} from "@/config";
+import { BOOKING_CALENDAR_PROCCESS_STATUS, DOMAIN_SERVER_API } from "@/config";
 import useAuth from "@/hooks/useAuth";
-import {BoxFlex} from "@/sections/emailform/style";
+import { BoxFlex } from "@/sections/emailform/style";
 import {
-  useDeleteCalendarMutation,
+  useCancelBookingCalendarMutation,
   useGetDetailCalendarsQuery,
 } from "@/sections/interview/InterviewSlice";
-import {FormCalendar} from "@/sections/interview/components/FormCalendar";
+import { FormCalendar } from "@/sections/interview/components/FormCalendar";
 import {
   ApplicantCalendarState,
   BookingCalendarProcessStatus,
@@ -24,25 +24,25 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import moment from "moment";
-import {useSnackbar} from "notistack";
-import {forwardRef, useState} from "react";
+import { useSnackbar } from "notistack";
+import { forwardRef, useState } from "react";
 
-const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
-  const {data: DetailData} = useGetDetailCalendarsQuery(
-    {BookingCalendarId: item?.id, DateSelector: item?.startTime},
-    {skip: !item?.id && !item?.startTime}
+const DetailDialog = forwardRef(({ item, title, open, onClose }, ref) => {
+  const { data: DetailData } = useGetDetailCalendarsQuery(
+    { BookingCalendarId: item?.id, DateSelector: item?.startTime },
+    { skip: !item?.id || !item?.startTime }
   );
+  // const DetailData = [];
   const theme = useTheme();
   const [openForm, setOpenForm] = useState(false);
-  const [deleteCalendar] = useDeleteCalendarMutation();
-  const {enqueueSnackbar} = useSnackbar();
+  const [cancelBookingCalendar] = useCancelBookingCalendarMutation();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleClose = async (ids) => {
-    const res = [ids];
+  const handleClose = async (id) => {
     try {
-      await deleteCalendar({ids: res, removeReason: ""}).unwrap();
+      await cancelBookingCalendar(id).unwrap();
       enqueueSnackbar("Hủy lịch thành công!", {
         autoHideDuration: 2000,
       });
@@ -61,16 +61,16 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
         <span
           style={{
             width: "140px",
-            height: '24px',
+            height: "24px",
             fontSize: 13,
             fontWeight: 500,
             // color: theme.palette.common.neutral700,
-            color: '#5C6A82',
-            fontFamily: 'Inter',
-            fontStyle: 'normal',
-            lineHeight: '20px',
-            display: 'flex',
-            alignItems: 'center',
+            color: "#5C6A82",
+            fontFamily: "Inter",
+            fontStyle: "normal",
+            lineHeight: "20px",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           {title}
@@ -81,14 +81,14 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
             fontSize: 13,
             fontWeight: 500,
             // color: theme.palette.common.neutral700,
-            color: '#172B4D',
-            width: '608px',
-            height: '24px',
-            fontFamily: 'Inter',
-            fontStyle: 'normal',
-            lineHeight: '20px',
-            display: 'flex',
-            alignItems: 'center',
+            color: "#172B4D",
+            width: "608px",
+            height: "24px",
+            fontFamily: "Inter",
+            fontStyle: "normal",
+            lineHeight: "20px",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           {content}
@@ -108,10 +108,10 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
 
   const startTime = convertStoMs(
     convertDurationTimeToSeconds(moment(time?.[0]).format("HH:mm:ss")) +
-    convertDurationTimeToSeconds(duration?.[0])
+      convertDurationTimeToSeconds(duration?.[0])
   );
 
-  const {user} = useAuth();
+  const { user } = useAuth();
   const getLink = async (id) => {
     return `${window.location.origin}/phong-van.html?DisplayName=${user?.firstName}&&Email=${user?.email}&&Role=1&&RoomName=${id}`;
   };
@@ -128,7 +128,7 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          ".MuiModal-backdrop": {background: "rgba(9, 30, 66, 0.25)"},
+          ".MuiModal-backdrop": { background: "rgba(9, 30, 66, 0.25)" },
         }}
         onBackdropClick={onClose}
         ref={ref}
@@ -153,23 +153,34 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
               </SvgIcon>
             </IconButton>
           </View>
-          <Divider/>
+          <Divider />
 
-          <View style={{
-            overflowY: "auto",
-            height: "684px",
-            padding: 24
-          }}>
+          <View
+            style={{
+              overflowY: "auto",
+              height: "684px",
+              padding: 24,
+            }}
+          >
             <Text fontsize={16} fontweight={600}>
               {item?.name}
             </Text>
 
-            {renderText("Tin tuyển dụng:", DetailData?.recruitmentName || "Không có")}
+            {renderText(
+              "Tin tuyển dụng:",
+              DetailData?.recruitmentName || "Không có"
+            )}
             {renderText(
               "Hình thức phỏng vấn:",
               DetailData?.interviewType === 0 ? "Online" : "Trực tiếp"
             )}
-            {renderText("Thời gian phỏng vấn:", `${moment(time?.[0]).format("HH:mm")} Ngày ${moment(time?.[0]).format("DD/MM/yyyy")} - ${startTime.substring(startTime.length - 3, startTime.length - 8)} Ngày ${moment(time?.[0]).format("DD/MM/yyyy")}`)}
+            {renderText(
+              "Thời gian phỏng vấn:",
+              `${moment(time?.[0]).format("HH:mm")} - ${startTime.substring(
+                startTime.length - 3,
+                startTime.length - 8
+              )} Ngày ${moment(time?.[0]).format("DD/MM/yyyy")}`
+            )}
             {renderText(
               "Loại phỏng vấn:",
               DetailData?.bookingCalendarGroups.map(
@@ -190,9 +201,9 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
               )
             )}
             {renderText("Lý do hủy:", DetailData?.removeReason || "Không có")}
-            <Divider style={{marginTop: "18px"}}/>
+            <Divider style={{ marginTop: "18px" }} />
 
-            <List sx={{pt: "16px", pb: "16px"}}>
+            <List sx={{ pt: "16px", pb: "16px" }}>
               <Typography
                 sx={{
                   color: theme.palette.common.neutral700,
@@ -215,7 +226,7 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
                     }}
                     key={index}
                   >
-                    <ListItemAvatar style={{width: "40px", height: "40px"}}>
+                    <ListItemAvatar style={{ width: "40px", height: "40px" }}>
                       <AvatarDS
                         alt=""
                         src={
@@ -226,27 +237,27 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
                           width: "40px",
                           height: "40px",
                           borderRadius: "11px",
-                          backgroundColor: '#FFFFFF',
+                          backgroundColor: "#FFFFFF",
                         }}
                       />
                     </ListItemAvatar>
-                    <ListItemText sx={{width: "30%"}}>
-                      <Typography sx={{fontSize: 13, fontWeight: 600}}>
+                    <ListItemText sx={{ width: "30%" }}>
+                      <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
                         {item?.applicant?.fullName}
                       </Typography>
-                      <Typography sx={{fontSize: 12, fontWeight: 400}}>
+                      <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
                         {item?.applicant?.phoneNumber}
                       </Typography>
                     </ListItemText>
                     <ListItemText>
-                      <Typography sx={{fontSize: 13, fontWeight: 600}}>
+                      <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
                         {moment(time?.[index]).format("HH:mm")} - {startTime}
                       </Typography>
                     </ListItemText>
                     <ListItemText
-                      sx={{display: "flex", justifyContent: "flex-end"}}
+                      sx={{ display: "flex", justifyContent: "flex-end" }}
                     >
-                      <Typography sx={{fontSize: 13, fontWeight: 600}}>
+                      <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
                         {ApplicantCalendarState(item?.applicantInterviewState)}
                       </Typography>
                     </ListItemText>
@@ -254,9 +265,9 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
                 )
               )}
             </List>
-            <Divider/>
+            <Divider />
 
-            <List sx={{pt: "16px"}}>
+            <List sx={{ pt: "16px" }}>
               <Typography
                 sx={{
                   color: theme.palette.common.neutral700,
@@ -276,18 +287,18 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
                         : theme.palette.common.bgrMaster,
                   }}
                 >
-                  <ListItemAvatar style={{width: "40px", height: "40px"}}>
+                  <ListItemAvatar style={{ width: "40px", height: "40px" }}>
                     <img
                       alt=""
                       src="https://i.pinimg.com/236x/b0/52/90/b0529099591d1f7f70732fa5e4f60e83.jpg"
-                      style={{width: "40px", height: "40px"}}
+                      style={{ width: "40px", height: "40px" }}
                     />
                   </ListItemAvatar>
                   <ListItemText>
-                    <Typography sx={{fontSize: 13, fontWeight: 600}}>
+                    <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
                       {item?.name}
                     </Typography>
-                    <Typography sx={{fontSize: 12, fontWeight: 400}}>
+                    <Typography sx={{ fontSize: 12, fontWeight: 400 }}>
                       {item?.email}
                     </Typography>
                   </ListItemText>
@@ -295,7 +306,7 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
               ))}
             </List>
           </View>
-          <Divider/>
+          <Divider />
 
           <View pv={16} ph={24} flexrow="row" jcbetween="true">
             <BoxFlex justifyContent="start">
@@ -326,75 +337,82 @@ const DetailDialog = forwardRef(({item, title, open, onClose}, ref) => {
             </BoxFlex>
 
             <BoxFlex justifyContent="end" gap={2}>
-              <ButtonDS
-                tittle={"Hủy lịch"}
-                type="button"
-                onClick={() => handleClose(DetailData?.id)}
-                sx={{
-                  color: theme.palette.common.neutral700,
-                  fontWeight: 500,
-                  backgroundColor: theme.palette.common.neutral50,
-                  boxShadow: "none",
-                  ":hover": {
-                    backgroundColor: theme.palette.common.neutral100,
-                  },
-                  textTransform: "none",
-                }}
-              />
               {DetailData?.bookingCalendarProcessStatus ==
-                BOOKING_CALENDAR_PROCCESS_STATUS.CALENDED_ONLY && (
+                BOOKING_CALENDAR_PROCCESS_STATUS.PENDING && (
+                <ButtonDS
+                  tittle={"Hủy lịch"}
+                  type="button"
+                  onClick={() => handleClose(DetailData?.id)}
+                  sx={{
+                    color: theme.palette.common.neutral700,
+                    fontWeight: 500,
+                    backgroundColor: theme.palette.common.neutral50,
+                    boxShadow: "none",
+                    ":hover": {
+                      backgroundColor: theme.palette.common.neutral100,
+                    },
+                    textTransform: "none",
+                  }}
+                />
+              )}
+              {DetailData?.bookingCalendarProcessStatus ==
+                BOOKING_CALENDAR_PROCCESS_STATUS.PENDING && (
+                <ButtonDS
+                  tittle={"Chỉnh sửa"}
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    setOpenForm(true);
+                  }}
+                  sx={{
+                    color: "white",
+                    fontWeight: 600,
+                    backgroundColor: theme.palette.common.blue700,
+                    boxShadow: "none",
+                    ":hover": {
+                      backgroundColor: theme.palette.common.blue800,
+                    },
+                    textTransform: "none",
+                  }}
+                />
+              )}
+              {DetailData?.bookingCalendarProcessStatus !=
+                BOOKING_CALENDAR_PROCCESS_STATUS.REFUSE &&
+                moment().format("DD/MM/YYYY") ==
+                  moment(time?.[0]).format("DD/MM/YYYY") && (
                   <ButtonDS
-                    tittle={"Chỉnh sửa"}
-                    type="button"
                     onClick={() => {
-                      onClose();
-                      setOpenForm(true);
+                      window.open(
+                        window.location.origin +
+                          "/phong-van.html?DisplayName=" +
+                          user?.firstName +
+                          "&&Email=" +
+                          user?.email +
+                          "&&RoomName=" +
+                          DetailData?.id
+                      );
                     }}
+                    tittle="Tham gia phòng họp"
                     sx={{
                       color: "white",
                       fontWeight: 600,
-                      backgroundColor: theme.palette.common.blue700,
+                      backgroundColor: theme.palette.common.green600,
                       boxShadow: "none",
                       ":hover": {
-                        backgroundColor: theme.palette.common.blue800,
+                        backgroundColor: "#388E3C",
                       },
                       textTransform: "none",
                     }}
                   />
                 )}
-
-              <ButtonDS
-                onClick={() => {
-                  window.open(
-                    window.location.origin +
-                    "/phong-van.html?DisplayName=" +
-                    user?.firstName +
-                    "&&Email=" +
-                    user?.email +
-                    "&&RoomName=" +
-                    DetailData?.id
-                  );
-                }}
-                tittle="Tham gia phòng họp"
-                sx={{
-                  color: "white",
-                  fontWeight: 600,
-                  backgroundColor: theme.palette.common.green600,
-                  boxShadow: "none",
-                  ":hover": {
-                    backgroundColor: "#388E3C",
-                  },
-                  textTransform: "none",
-                }}
-              />
             </BoxFlex>
           </View>
         </View>
       </Modal>
-
-      <FormCalendar open={openForm} data={item} setOpen={setOpenForm}/>
+      {openForm && (
+        <FormCalendar open={openForm} data={item} setOpen={setOpenForm} />
+      )}
     </>
-  )
-    ;
+  );
 });
 export default DetailDialog;

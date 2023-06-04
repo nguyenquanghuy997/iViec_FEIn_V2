@@ -1,5 +1,6 @@
 import { DOMAIN_SERVER_API } from "@/config";
 import {
+  API_CANCEL_BOOKING_CALENDAR,
   API_DELETE_CALENDAR,
   API_GET_ALL_REVIEW_FORM,
   API_GET_APPLICANT_BY_PIPELINES_STATE,
@@ -142,7 +143,13 @@ export const calendarServiceApi = createApi({
       }),
       invalidatesTags: ["BookCalendar"],
     }),
-
+    cancelBookingCalendar: builder.mutation({
+      query: (id) => ({
+        url: `${API_CANCEL_BOOKING_CALENDAR}/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["BookCalendar"],
+    }),
     getBookingCalendarsByRecruitmentId: builder.query({
       query: (params) => ({
         url: API_GET_BOOKING_CALENDER_BY_RECRUITMENT_ID,
@@ -168,4 +175,5 @@ export const {
   useGetBookingCalendarsByRecruitmentQuery,
   useGetBookingCalendarsByApplicantRecruitmentPipelineStateQuery,
   useGetBookingCalendarsByRecruitmentIdQuery,
+  useCancelBookingCalendarMutation
 } = calendarServiceApi;

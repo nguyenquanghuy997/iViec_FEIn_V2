@@ -236,8 +236,8 @@ function InterviewItem(props) {
         {interview &&
           interview?.map((item, index) => {
             if (index < interview?.length && (interview[index].applicantInterviewState !==
-              // ApplicantInterviewState.PENDING &&
-              ApplicantInterviewState.CONFIRMED && ApplicantInterviewState.INTERVIEWING)) {
+              (ApplicantInterviewState.COMPLETED &&
+              ApplicantInterviewState.CONFIRMED && ApplicantInterviewState.INTERVIEWING))) {
               return (
                 <Box
                   key={index}
@@ -277,10 +277,10 @@ function InterviewItem(props) {
             }
           })}
         <Box>
-          {lastInterview?.applicantInterviewState ===
-            // ApplicantInterviewState.PENDING &&
+          {lastInterview?.applicantInterviewState ==
+            (ApplicantInterviewState.COMPLETED &&
             ApplicantInterviewState.CONFIRMED &&
-            ApplicantInterviewState.INTERVIEWING  && moment().format("DD/MM/YYYY") ==  moment(lastInterview?.interviewTime).format("DD/MM/YYYY")? (
+            ApplicantInterviewState.INTERVIEWING)  && moment().format("DD/MM/YYYY") ==  moment(lastInterview?.interviewTime).format("DD/MM/YYYY")? (
             <Box
               sx={{
                 background: "#4CAF50",

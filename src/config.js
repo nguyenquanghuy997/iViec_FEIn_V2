@@ -228,6 +228,13 @@ export const RECRUITMENT_CREATE_TYPE = {
   OFFICIAL: 1,
 }
 
+export const BOOKING_CALENDAR_PROCCESS_STATUS = {
+  PENDING: 0, // Đã lên lịch
+  INTERVIEWING: 1, // Đang phỏng vấn
+  COMPLETED: 2, // Kết thúc phỏng vấn
+  REFUSE: 3 // Đã hủy lịch
+}
+
 export const ApplicantInterviewState = {
   PENDING: 0, // chờ xác nhận pv // k dc pv
   CONFIRMED: 1, // xác nhận pv
@@ -273,10 +280,4 @@ export const QUESTION_TYPE = {
   MULTI_CHOICE_ONE_ANSWER: 0,
   MULTI_CHOICE_MANY_ANSWER: 1,
   ESSAY: 2,
-}
-export const BOOKING_CALENDAR_PROCCESS_STATUS= {
-  CALENDED_ONLY: 0,
-  INTERVIEWING: 1,
-  END_INTERVIEWING: 2,
-  CANCEL_INTERVIEWING: 3,
 }

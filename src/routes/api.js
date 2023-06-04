@@ -307,6 +307,8 @@ export const API_DELETE_CALENDAR =
   "/applicant/BookingCalendar/RemoveBookingCalendar";
 export const API_GET_BOOKING_CALENDER_BY_RECRUITMENT_ID =
   "applicant/BookingCalendar/GetBookingCalendars";
+export const API_CANCEL_BOOKING_CALENDAR =
+  "/applicant/BookingCalendar/CancelBookingCalendar";
 // Thi tuyển
 export const API_GET_EXAMINATION = "/examination/Examination/GetExaminations";
 export const API_GET_EXAMINATION_BY_ID =

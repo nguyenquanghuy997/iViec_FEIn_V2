@@ -2,13 +2,14 @@ import { EditIcon } from "@/assets/ActionIcon";
 import { ButtonDS } from "@/components/DesignSystem";
 import { View } from "@/components/FlexStyled";
 import SvgIcon from "@/components/SvgIcon";
-import { PERMISSIONS } from "@/config";
+import { BOOKING_CALENDAR_PROCCESS_STATUS, PERMISSIONS } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
 import { ButtonIcon } from "@/utils/cssStyles";
 import { fTime } from "@/utils/formatTime";
 import { Box, CardContent, Divider, Tooltip, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import moment from "moment";
 import { useMemo } from "react";
 
 const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
@@ -226,25 +227,30 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
             width: "15%",
             alignItems: "center",
             padding: "16px",
+            justifyContent: "flex-end",
           }}
         >
-          {canEdit && data?.bookingCalendarProcessStatus < 2 && (
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => handleClick(data)}
-            >
-              <ButtonIcon
-                tooltip="Sửa"
-                icon={<EditIcon width={12} height={12} />}
-                size="small"
-                sx={{ color: theme.palette.common.borderObject, mx: 1 }}
+          {canEdit &&
+            data?.bookingCalendarProcessStatus ==
+              BOOKING_CALENDAR_PROCCESS_STATUS.PENDING && (
+              <div
+                style={{ cursor: "pointer" }}
                 onClick={() => handleClick(data)}
-              ></ButtonIcon>
-            </div>
-          )}
-          {
-            // interviewing status
-            data?.bookingCalendarProcessStatus < 2 && (
+              >
+                <ButtonIcon
+                  tooltip="Sửa"
+                  icon={<EditIcon width={12} height={12} />}
+                  size="small"
+                  sx={{ color: theme.palette.common.borderObject, mx: 1 }}
+                  onClick={() => handleClick(data)}
+                ></ButtonIcon>
+              </div>
+            )}
+          {/* interviewing status */}
+          {data?.bookingCalendarProcessStatus !=
+            BOOKING_CALENDAR_PROCCESS_STATUS.REFUSE &&
+            moment().format("DD/MM/YYYY") ==
+              moment(data?.startTime).format("DD/MM/YYYY") && (
               <ButtonDS
                 tittle="Tham gia"
                 onClick={() => {
@@ -271,8 +277,7 @@ const ViewSchedule = ({ data, isLastItem, handleClick, handleClickDialog }) => {
                   },
                 }}
               />
-            )
-          }
+            )}
         </Box>
       </Box>
     </>
