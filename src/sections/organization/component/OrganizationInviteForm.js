@@ -103,6 +103,7 @@ const OrganizationInviteForm = ({
         fullName: "",
         roleGroupId: "",
         organizationIds: organizationId ? [organizationId] : [],
+        isExistUser: false,
       },
     ],
   };
@@ -132,6 +133,7 @@ const OrganizationInviteForm = ({
   const {
     handleSubmit,
     setValue,
+    watch,
     control,
     formState: { isValid },
   } = methods;
@@ -218,6 +220,7 @@ const OrganizationInviteForm = ({
     setValue(`invite.${index}.fullName`, '')
     setValue(`invite.${index}.roleGroupId`, null)
     setValue(`invite.${index}.organizationIds`, [])
+    setValue(`invite.${index}.isExistUser`, false)
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
       const listUser = await getAllApplicantUserOrganizationById(
         {
@@ -229,6 +232,7 @@ const OrganizationInviteForm = ({
         setValue(`invite.${index}.fullName`, firstUser?.firstName)
         setValue(`invite.${index}.roleGroupId`, firstUser?.applicationUserRoleGroups[0]?.id)
         setValue(`invite.${index}.organizationIds`, firstUser?.organizations.map(x => x.id))
+        setValue(`invite.${index}.isExistUser`, true)
       }
     }
   }
@@ -439,7 +443,7 @@ const OrganizationInviteForm = ({
                             <RHFTextField
                               name={`invite.${index}.fullName`}
                               isRequired
-                              disabled
+                              disabled={watch(`invite.${index}.isExistUser`)}
                               title="Họ và tên"
                               placeholder="Họ và tên người được mời"
                               sx={{
@@ -465,7 +469,7 @@ const OrganizationInviteForm = ({
                               }))}
                               ref={selectRef}
                               name={`invite.${index}.roleGroupId`}
-                              disabled
+                              disabled={watch(`invite.${index}.isExistUser`)}
                               placeholder="Chọn 1 vai trò"
                               sx={{
                                 backgroundColor: theme.palette.common.white,
@@ -487,9 +491,9 @@ const OrganizationInviteForm = ({
                             parentOrganizationId: item.parentOrganizationId,
                           }))}
                           name={`invite.${index}.organizationIds`}
-                          disabled
                           isRequired
-                          readOnly
+                          disabled={watch(`invite.${index}.isExistUser`)}
+                          readOnly={watch(`invite.${index}.isExistUser`)}
                           title="Đơn vị"
                           multiple
                           placeholder="Chọn 1 hoặc nhiều đơn vị"
