@@ -94,6 +94,13 @@ export const convertDurationTimeToSeconds = (time) => {
   );
 };
 
+export const convertDurationTimeToMinutes = (time) => {
+  const splitToString = time?.split(":");
+  return (
+    +splitToString?.[0] * 60 * 60 + +splitToString?.[1] * 60
+  );
+};
+
 export const convertStoMs = (s) => {
   const totalMinutes = Math.floor(s / 60);
   const seconds = s % 60;
