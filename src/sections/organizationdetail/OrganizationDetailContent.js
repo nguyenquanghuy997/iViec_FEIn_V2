@@ -86,7 +86,7 @@ const columns = [
     title: "Người tạo",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "ReferenceUserId",
+      name: "ReferenceUserIds",
       placeholder: "Chọn 1 hoặc nhiều người",
       remoteUrl: API_GET_ORGANIZATION_USERS,
       showAvatar: true,
@@ -97,7 +97,7 @@ const columns = [
     title: "Vai trò",
     colFilters: {
       type: TBL_FILTER_TYPE.SELECT_CHECKBOX,
-      name: "RoleGroupId",
+      name: "RoleGroupIds",
       placeholder: "Chọn 1 hoặc nhiều vai trò",
       remoteUrl: API_GET_LIST_ROLE_GROUP,
     },

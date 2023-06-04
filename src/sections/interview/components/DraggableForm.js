@@ -11,11 +11,11 @@ import {
   pushMin,
 } from "@/sections/interview/config";
 import { Avatar, Box, Button, Card, Collapse, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useFormContext } from "react-hook-form";
-import {useTheme} from "@mui/material/styles";
 
 function DraggableForm({ model, index, removeItem }) {
   const {
@@ -112,7 +112,7 @@ function DraggableForm({ model, index, removeItem }) {
       setOpen(false);
     }
   };
-  
+
   return (
     <Draggable key={model.id} draggableId={model.id} index={index}>
       {(provided) => (
@@ -168,7 +168,7 @@ function DraggableForm({ model, index, removeItem }) {
                         sx={{
                           fontSize: "13px",
                           fontWeight: "600",
-                          marginBottom: "4px"
+                          marginBottom: "4px",
                         }}
                       >
                         {model.name}
@@ -219,6 +219,7 @@ function DraggableForm({ model, index, removeItem }) {
                           <Label required={true}> Giờ phỏng vấn</Label>
                           <MuiTimePicker
                             name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewTime`}
+                            placeholder={"Chọn giờ"}
                             style={{
                               width: "100%",
                               background: "white",
@@ -239,6 +240,18 @@ function DraggableForm({ model, index, removeItem }) {
                           <MuiInputNumber
                             name={`bookingCalendarGroups.[0].bookingCalendarApplicants.${index}.interviewDuration`}
                             placeholder="Nhập số phút"
+                            InputProps={{
+                              endAdornment: (
+                                <span
+                                  style={{
+                                    marginRight: 16,
+                                    color: theme.palette.common.neutral600,
+                                  }}
+                                >
+                                  {"Phút"}
+                                </span>
+                              ),
+                            }}
                           />
                         </Box>
                       </Collapse>
