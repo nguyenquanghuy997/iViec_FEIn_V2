@@ -147,6 +147,15 @@ export const companyServiceApi = createApi({
       }),
       invalidatesTags: ["CompanyInfor"],
     }),
+
+    getListUserInGroupCanBeCustomized: builder.query({
+      query: (ApplicationUserId) => ({
+        url: `${API_GET_COMPANY_INFOR_BY_IDS}?${ApplicationUserId}`,
+        method: "get",
+      }),
+      invalidatesTags: ["CompanyInfor"],
+      keepUnusedDataFor: 0,
+    }),
   }),
 });
 
@@ -164,4 +173,5 @@ export const {
   useUpdateCompanyEndingMutation,
   useUpdateCompanyEnvironmentMutation,
   useAddOrganizationBusinessMutation,
+  useGetListUserInGroupCanBeCustomizedQuery
 } = companyServiceApi;
