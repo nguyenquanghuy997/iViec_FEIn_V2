@@ -75,13 +75,13 @@ export const LIST_EXPERIENCE_NUMBER = [
 
 export const LIST_STEP_RECRUITMENT = [
   { value: 0, name: "Ứng tuyển" },
-  { value: 1, name: "Thi tuyển" },
-  { value: 2, name: "Phỏng vấn máy" },
+  // { value: 1, name: "Thi tuyển" },
+  // { value: 2, name: "Phỏng vấn máy" },
   { value: 3, name: "Phỏng vấn" },
   { value: 4, name: "Kết quả - Đạt" },
   { value: 5, name: "Kết quả - Cân nhắc" },
   { value: 6, name: "Kết quả - Loại" },
-  { value: 7, name: "Mời nhận việc" },
+  // { value: 7, name: "Mời nhận việc" },
 ]
 
 export const LIST_PIPELINESTATE = [
