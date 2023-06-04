@@ -16,7 +16,7 @@ import PersonalInterview from "@/sections/interview/components/PersonalInterview
 import {
   convertDataGet,
   convertDurationTimeToSeconds,
-  convertStoMs,
+  convertStoMs, timeToMinutes,
   toHhMmSs,
 } from "@/sections/interview/config";
 import { ViewModel } from "@/utils/cssStyles";
@@ -112,7 +112,16 @@ export const FormCalendar = ({
             date: Yup.string().nullable().required("Chưa chọn ngày phỏng vấn"),
             interviewTime: Yup.string()
               .nullable()
-              .required("Chưa chọn giờ phỏng vấn"),
+              .required("Chưa chọn giờ phỏng vấn")
+              .when('date', (date, schema) => {
+                return (new Date(date)).setHours(0,0,0,0) === (new Date).setHours(0,0,0,0) ?
+                  schema.test('interviewTime',
+                    'Cần lớn hơn thời gian hiện tại',
+                    (value) => {
+                    return timeToMinutes(value) > timeToMinutes((new moment).format("HH:mm"))
+                    }
+                  ) : schema;
+              }),
             interviewDuration: Yup.number()
               .transform((value) => (isNaN(value) ? undefined : value))
               .min(1, "Thời lượng phải lớn hơn 0")
@@ -123,7 +132,7 @@ export const FormCalendar = ({
       })
     ),
   });
-
+  
   const methods = useForm({
     mode: "onChange",
     defaultValues,
@@ -136,7 +145,7 @@ export const FormCalendar = ({
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
-
+  
   useEffect(() => {
     if (!DetailData?.id) return;
     setValue("id", DetailData.id);
@@ -177,7 +186,7 @@ export const FormCalendar = ({
     });
     setValue("councilIds", arrayCouncil);
   }, [DetailData]);
-
+  
   const pressSave = handleSubmit(async (d) => {
     const body = {
       id: d.id,
@@ -369,6 +378,7 @@ export const FormCalendar = ({
                         <ListCandidate
                           detailCandidate={item}
                           option={options}
+                          isEditMode={isEditMode}
                           applicantId={options?.applicantId}
                           error={errors}
                         />

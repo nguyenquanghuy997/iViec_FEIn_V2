@@ -8,33 +8,33 @@ import moment from "moment";
 import "moment/locale/vi";
 import { useMemo, useState } from "react";
 
-export default function InterviewSchedule({ Data }) {
+export default function InterviewSchedule({Data}) {
   const check = false;
-  const { palette } = useTheme();
+  const {palette} = useTheme();
   const [openForm, setOpenForm] = useState(false);
   const [itemSelect, setItemSelect] = useState({});
   const [itemDialog, setItemDialog] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
-
-  const { canAccess } = useRole();
+  
+  const {canAccess} = useRole();
   const canEdit = useMemo(() => canAccess(PERMISSIONS.CRUD_INTV_SCHE), []);
-
+  
   const handleClick = (data) => {
     setOpenForm(true);
     setItemSelect(data);
   };
-
+  
   const handleClickDialog = (data) => {
     setOpenDialog(true);
     setItemDialog(data);
   };
-
+  
   const getTotalResult = () => {
     return Object.keys(Data?.result ?? {}).reduce((a, b) => {
       return a + Data?.result[b]?.length;
     }, 0);
   };
-
+  
   const getDateFormat = (date) => {
     return `${
       moment(date).day() == 0
@@ -42,7 +42,7 @@ export default function InterviewSchedule({ Data }) {
         : "Thứ " + (parseInt(moment(date).day()) + 1)
     }, Ngày ${moment(date).format("DD/MM/yyyy")}`;
   };
-
+  
   return (
     <>
       <Typography mb={2} fontSize={13} fontWeight={500}>
@@ -60,7 +60,7 @@ export default function InterviewSchedule({ Data }) {
                 boxShadow: "none",
               }}
             >
-              <CardContent sx={{ display: "flex", p: 0, pb: "12px" }}>
+              <CardContent sx={{display: "flex", p: 0, pb: "12px"}}>
                 {moment(key).format("DD/MM/yyyy") ==
                   moment(new Date()).format("DD/MM/yyyy") && (
                   <Box
@@ -100,7 +100,7 @@ export default function InterviewSchedule({ Data }) {
                   </b>
                 </Typography>
               </CardContent>
-
+              
               {item.map((p, index) => (
                 <>
                   <ViewSchedule
@@ -116,9 +116,7 @@ export default function InterviewSchedule({ Data }) {
             </Card>
           </>
         ))}
-      {openForm && (
-        <FormCalendar open={openForm} data={itemSelect} setOpen={setOpenForm} />
-      )}
+      <FormCalendar open={openForm} data={itemSelect} setOpen={setOpenForm}/>
       {canEdit && (
         <DetailDialog
           title="Chi tiết lịch phỏng vấn"
