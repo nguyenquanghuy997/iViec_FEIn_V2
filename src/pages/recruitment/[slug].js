@@ -272,6 +272,7 @@ export default function Recruitment() {
               display: "flex",
               justifyContent: "left",
               height: `calc(100vh - ${height}px)`,
+              padding: '24px 0',
               overflowX: "auto",
               overflowY: "hidden",
               "&::-webkit-scrollbar": {

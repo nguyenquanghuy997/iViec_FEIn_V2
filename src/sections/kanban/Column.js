@@ -86,7 +86,6 @@ const Column = ({ droppableId, column, windowHeight }) => {
                     padding: 8,
                     borderRadius: "8px",
                     height: `calc(100vh - ${windowHeight}px - 110px)`,
-                    overflowX: "auto",
                   }}
                 >
                   {column?.items?.map((item, index) => {
